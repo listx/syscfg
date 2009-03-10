@@ -1,0 +1,137 @@
+" Based on the <asmdev> color scheme
+" Author  : Linus Arver
+" Date    : July 27, 2008
+
+set background=light
+hi clear
+if exists("syntax_on")
+  syntax reset
+endif
+let g:colors_name = "asmdev_mod"
+
+
+
+
+
+
+
+
+hi Normal	guifg=grey96 guibg=#3f5369
+
+" highlight groups
+hi Cursor	guibg=khaki guifg=slategrey
+"hi CursorIM
+"hi Directory
+"hi DiffAdd
+"hi DiffChange
+"hi DiffDelete
+"hi DiffText
+"hi ErrorMsg
+hi VertSplit	guibg=#102030 guifg=#102030 gui=none
+hi Folded	guifg=#203040 guibg=#405060
+hi FoldColumn	guibg=grey30 guifg=tan
+hi IncSearch	guifg=slategrey guibg=khaki
+"hi LineNr
+hi ModeMsg	guifg=goldenrod
+hi MoreMsg	guifg=SeaGreen
+hi NonText	guifg=LightBlue guibg=grey30
+hi Question	guifg=springgreen
+hi Search	guibg=peru guifg=wheat
+hi SpecialKey	guifg=yellowgreen
+hi StatusLine	guibg=#102030 guifg=grey70 gui=none
+hi StatusLineNC	guibg=#203040 guifg=grey50 gui=none
+hi Title	guifg=indianred
+hi Visual	gui=none guifg=khaki guibg=olivedrab
+"hi VisualNOS
+hi WarningMsg	guifg=salmon
+"hi WildMenu
+"hi Menu
+"hi Scrollbar
+"hi Tooltip
+
+" syntax highlighting groups
+hi Comment	guifg=#81a181
+hi Constant	 guifg=#ff6070 gui=bold
+hi Number guifg=cyan
+hi Identifier	 guifg=#70d080 gui=bold
+hi Statement	 guifg=lightyellow
+
+hi PreProc	 guifg=#ffcfaf gui=bold
+hi Type		 guifg=#95ffdc
+hi Special	 guifg=navajowhite
+"hi Underlined
+hi Ignore	 guifg=grey40
+"hi Error
+hi Todo		 guifg=white guibg=#8090a0
+
+" color terminal definitions
+hi SpecialKey	 ctermfg=darkgreen
+hi NonText	 cterm=bold ctermfg=darkblue
+hi Directory	 ctermfg=darkcyan
+hi ErrorMsg	 cterm=bold ctermfg=7 ctermbg=1
+hi IncSearch	 cterm=NONE ctermfg=yellow ctermbg=green
+hi Search	 cterm=NONE ctermfg=grey ctermbg=blue
+hi MoreMsg	 ctermfg=darkgreen
+hi ModeMsg	 cterm=NONE ctermfg=brown
+hi LineNr	 ctermfg=3
+hi Question	 ctermfg=green
+hi StatusLine	 cterm=bold,reverse
+hi StatusLineNC  cterm=reverse
+hi VertSplit	 cterm=reverse
+hi Title	 ctermfg=5
+hi Visual	 cterm=reverse
+hi VisualNOS	 cterm=bold,underline
+hi WarningMsg	 ctermfg=1
+hi WildMenu	 ctermfg=0 ctermbg=3
+hi Folded	 ctermfg=darkgrey ctermbg=NONE
+hi FoldColumn	 ctermfg=darkgrey ctermbg=NONE
+hi DiffAdd	 ctermbg=4
+hi DiffChange	 ctermbg=5
+hi DiffDelete	 cterm=bold ctermfg=4 ctermbg=6
+hi DiffText	 cterm=bold ctermbg=1
+hi Comment	 ctermfg=darkcyan
+hi Constant	 ctermfg=brown
+hi Special	 ctermfg=5
+hi Identifier	 ctermfg=6
+hi Statement	 ctermfg=3
+hi PreProc	 ctermfg=5
+hi Type		 ctermfg=2
+hi Underlined	 cterm=underline ctermfg=5
+hi Ignore	 cterm=bold ctermfg=7
+hi Error	 cterm=bold ctermfg=7 ctermbg=1
+
+
+
+hi String guifg=#ff6070
+
+
+
+
+
+
+
+
+
+
+hi link Boolean Constant
+hi link Character String
+hi link Conditional Statement
+hi link Debug Special
+hi link Define PreProc
+hi link Delimiter Special
+hi link Exception Statement
+hi link Float Constant
+hi link Function Identifier
+hi link Include PreProc
+hi link Keyword Statement
+hi link Macro PreProc
+hi link Operator Statement
+hi link PreCondit PreProc
+hi link Repeat Statement
+hi link SpecialChar Special
+hi link SpecialComment Special
+hi link StorageClass Type
+hi link Structure Type
+hi link Tag Special
+hi link Typedef Type
+

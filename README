@@ -1,0 +1,20 @@
+You must have "make -f /FULL/PATH/TO/syscfg/makefile -B syscopy" in your /etc/rc.local
+for the copysys functionality to work by default!
+
+DO NOT include any config files that have a password in them -- since this means
+that should the computer holding syscfg fall into the wrong hands, they will
+have a complete history of ALL the passwords used for the entire duration of
+the git repo!! (You could ignore this warning if you're sure that (1) the program
+using the password is harmless, and (2) the password is unique to that program.)
+
+Some config files do not need to be symlinked at all -- these are the config
+files for the applications that do not require a default path, which means that
+these applications can be run with options to make it point to files already inside
+syscfg, or anywhere else on the system. The following programs are like this:
+    * alpine
+    * icecast
+    * irssi
+
+After updating a core system file (those tracked in syscfg/sys), run the
+"makefile -B syscopy" command to reflect those changes and commit them while the
+changes are fresh.

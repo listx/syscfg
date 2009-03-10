@@ -1,0 +1,6 @@
+[user]
+	name = listdata
+	email = linus@ucla.edu
+[color]
+	branch = auto
+	diff = auto

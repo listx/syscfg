@@ -1,0 +1,24 @@
+# 
+# /etc/fstab: static file system information
+#
+# <file system>        <dir>         <type>    <options>          <dump> <pass>
+none                   /dev/pts      devpts    defaults            0      0
+none                   /dev/shm      tmpfs     defaults            0      0
+
+
+/dev/cdrom /media/cdrom   auto    ro,user,noauto,unhide   0      0
+/dev/cdrom1 /media/cdrom1   auto    ro,user,noauto,unhide   0      0
+/dev/dvd /media/dvd   auto    ro,user,noauto,unhide   0      0
+/dev/dvd1 /media/dvd1   auto    ro,user,noauto,unhide   0      0
+UUID=4d2bce35-1f99-4d08-b329-142e2edb1f25 swap swap defaults 0 0
+UUID=96a26b06-5fca-44e3-bb45-87a5d31755d3 /home ext3 defaults 0 1
+UUID=eda3dd3d-bc4b-41ac-946b-90a36a790b72 / ext3 defaults 0 1
+
+UUID=10B854DEB854C43E /mnt/hd1installed ntfs-3g defaults,locale=en_US.UTF-8 0 0 # /dev/sdb1
+#UUID=4480383D8038382E /mnt/hd1backup3 ntfs-3g defaults,locale=en_US.UTF-8 0 0 # /dev/sdb2
+UUID=F85C87F55C87ACC6 /mnt/hd1backup1 ntfs-3g defaults,locale=en_US.UTF-8 0 0 # /dev/sdb5
+UUID=B884938084934034 /mnt/hd1backup2 ntfs-3g defaults,locale=en_US.UTF-8 0 0 # /dev/sdb6
+
+UUID=58E031CEE031B35C /mnt/hd2backup4 ntfs-3g defaults,locale=en_US.UTF-8 0 0 # /dev/sda1
+UUID=70674f56-b99e-42f4-af6d-c760abe21ec4 /mnt/hd2xubuntu ext3 defaults 0 1 # /dev/sda7
+UUID=22fc79bb-2d0e-4478-99cc-1ad2a4829ba2 /mnt/hd1ext3bkup ext3 defaults 0 1 # /dev/sdb2

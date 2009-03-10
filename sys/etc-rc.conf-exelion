@@ -1,0 +1,93 @@
+#
+# /etc/rc.conf - Main Configuration for Arch Linux
+#
+
+# -----------------------------------------------------------------------
+# LOCALIZATION
+# -----------------------------------------------------------------------
+#
+# LOCALE: available languages can be listed with the 'locale -a' command
+# HARDWARECLOCK: set to "UTC" or "localtime"
+# USEDIRECTISA: use direct I/O requests instead of /dev/rtc for hwclock
+# TIMEZONE: timezones are found in /usr/share/zoneinfo
+# KEYMAP: keymaps are found in /usr/share/kbd/keymaps
+# CONSOLEFONT: found in /usr/share/kbd/consolefonts (only needed for non-US)
+# CONSOLEMAP: found in /usr/share/kbd/consoletrans
+# USECOLOR: use ANSI color sequences in startup messages
+#
+LOCALE="en_US.utf8"
+HARDWARECLOCK="localtime"
+USEDIRECTISA="no"
+TIMEZONE="US/Pacific"
+KEYMAP="us"
+CONSOLEFONT="ter-114f"
+CONSOLEMAP=
+USECOLOR="yes"
+
+# -----------------------------------------------------------------------
+# HARDWARE
+# -----------------------------------------------------------------------
+#
+# MOD_AUTOLOAD: Allow autoloading of modules at boot and when needed
+# MOD_BLACKLIST: Prevent udev from loading these modules
+# MODULES: Modules to load at boot-up. Prefix with a ! to blacklist.
+#
+# NOTE: Use of 'MOD_BLACKLIST' is deprecated. Please use ! in the MODULES array.
+#
+MOD_AUTOLOAD="yes"
+#MOD_BLACKLIST=() #deprecated
+MODULES=(forcedeth slhc snd-mixer-oss snd-pcm-oss snd-seq-oss snd-seq-device snd-seq-midi-event snd-seq snd-hwdep snd-page-alloc snd-pcm snd-rawmidi snd-timer snd snd-hda-intel soundcore snd-usb-audio snd-usb-lib !pcspkr !snd_pcsp)
+
+# Scan for LVM volume groups at startup, required if you use LVM
+USELVM="no"
+
+# -----------------------------------------------------------------------
+# NETWORKING
+# -----------------------------------------------------------------------
+#
+# HOSTNAME: Hostname of machine. Should also be put in /etc/hosts
+#
+HOSTNAME="exelion"
+
+# Use 'ifconfig -a' or 'ls /sys/class/net/' to see all available interfaces.
+#
+# Interfaces to start at boot-up (in this order)
+# Declare each interface then list in INTERFACES
+#   - prefix an entry in INTERFACES with a ! to disable it
+#   - no hyphens in your interface names - Bash doesn't like it
+# 
+# DHCP:     Set your interface to "dhcp" (eth0="dhcp")
+# Wireless: See network profiles below
+#
+#eth0="eth0 192.168.0.2 netmask 255.255.255.0 broadcast 192.168.0.255"
+# i don't use eth0... it's the other ethernet port... besides, eth1's MAC address is recognized by the router right now for convenient static IP assignment
+eth1="dhcp"
+INTERFACES=(eth1)
+
+# Routes to start at boot-up (in this order)
+# Declare each route then list in ROUTES
+#   - prefix an entry in ROUTES with a ! to disable it
+#
+gateway="default gw 192.168.0.1"
+ROUTES=(!gateway)
+ 
+# Enable these network profiles at boot-up.  These are only useful
+# if you happen to need multiple network configurations (ie, laptop users)
+#   - set to 'menu' to present a menu during boot-up (dialog package required)
+#   - prefix an entry with a ! to disable it
+#
+# Network profiles are found in /etc/network.d
+#
+# This now requires the netcfg package
+#
+#NETWORKS=(main)
+
+# -----------------------------------------------------------------------
+# DAEMONS
+# -----------------------------------------------------------------------
+#
+# Daemons to start at boot-up (in this order)
+#   - prefix a daemon with a ! to disable it
+#   - prefix a daemon with a @ to start it up in the background
+#
+DAEMONS=(syslog-ng network !netfs crond alsa hal @httpd @mysqld @sshd @openntpd @cups @bitlbee)

@@ -1,0 +1,4 @@
+source ~/.vim/cfg
+
+" toggle the menu bar
+nmap <F7> :if &guioptions=~'m' \| set guioptions-=m \| else \| set guioptions+=m \| endif<CR>

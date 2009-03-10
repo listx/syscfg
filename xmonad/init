@@ -1,0 +1,34 @@
+#!/bin/bash
+
+# for some reason, not all the default settings like font and scrollbar are NOT loaded when this
+# script is executed from Xmonad's hotkey system, so, I need to add these settings manually
+# into the command line (notice that, this gives me the added advantage of giving certain
+# programs DIFFERENT colors, fonts, and so on)!
+
+# check for HOSTNAME
+HOSTNAME=$(hostname)
+case "${HOSTNAME}" in
+    exelion)
+        urxvtc -e ncmpcpp
+        urxvtc -e htop
+        urxvtc -e alsamixer
+        # make irssi track everything under syscfg EXCEPT for the config file containing sensitive password information (I have to manually check that the syscfg/irssi/cfg-nopassword file stays up-to-date with the untracked config file)
+        urxvtc -e irssi --config=~/.irssi-untracked --home=~/syscfg/irssi
+        # the -passfile option ONLY WORKS if alpine is compiled with
+        # "--with-passfile=some-default-file-without-directory-structure", and alpine will then
+        # by default ask if you want to save passwords to disk, and use the file specified in
+        # the --with-passfile option at compile/configure time; setting this option gives alpine
+        # the ability to use a DIFFERENT location for a password file at each time it is run, with
+        # the "-passfile" option
+        urxvtc -e alpine -p ~/syscfg/alpine/cfg -passfile ~/.alpine-pass
+        firefox
+        #blender
+    ;;
+    luxion)
+        urxvtc -e htop
+        urxvtc -e alsamixer
+        urxvtc
+    ;;
+    *)
+    ;;
+esac

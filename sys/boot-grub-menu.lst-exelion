@@ -1,0 +1,75 @@
+# Config file for GRUB - The GNU GRand Unified Bootloader
+# /boot/grub/menu.lst
+
+# DEVICE NAME CONVERSIONS 
+#
+#  Linux           Grub
+# -------------------------
+#  /dev/fd0        (fd0)
+#  /dev/hda        (hd0)
+#  /dev/hdb2       (hd1,1)
+#  /dev/hda3       (hd0,2)
+#
+
+#  FRAMEBUFFER RESOLUTION SETTINGS
+#     +-------------------------------------------------+
+#          | 640x480    800x600    1024x768   1280x1024
+#      ----+--------------------------------------------
+#      256 | 0x301=769  0x303=771  0x305=773   0x307=775
+#      32K | 0x310=784  0x313=787  0x316=790   0x319=793
+#      64K | 0x311=785  0x314=788  0x317=791   0x31A=794
+#      16M | 0x312=786  0x315=789  0x318=792   0x31B=795
+#     +-------------------------------------------------+
+
+# general configuration:
+timeout   3
+default   0
+color light-blue/black light-cyan/blue
+
+# boot sections follow
+# each is implicitly numbered from 0 in the order of appearance below
+#
+# TIP: If you want a 1024x768 framebuffer, add "vga=773" to your kernel line.
+#
+#-*
+
+# (0) Arch Linux
+title  Arch Linux
+root   (hd0,4)
+kernel /boot/vmlinuz26 root=/dev/disk/by-uuid/eda3dd3d-bc4b-41ac-946b-90a36a790b72 ro vga=0x0369
+initrd /boot/kernel26.img
+
+# (1) Arch Linux
+title  Arch Linux Fallback
+root   (hd0,4)
+kernel /boot/vmlinuz26 root=/dev/disk/by-uuid/eda3dd3d-bc4b-41ac-946b-90a36a790b72 ro
+initrd /boot/kernel26-fallback.img
+
+# (2) Xubuntu Hardy Heron 8.04.1
+title	Ubuntu 8.04.1, kernel 2.6.24-22-generic
+root	(hd0,6)
+kernel	/boot/vmlinuz-2.6.24-22-generic root=UUID=70674f56-b99e-42f4-af6d-c760abe21ec4 ro vga=0x0368
+initrd	/boot/initrd.img-2.6.24-22-generic
+quiet
+
+# (3) Xubuntu hardy heron
+title	Ubuntu 8.04.1, kernel 2.6.24-22-generic (recovery mode)
+root	(hd0,6)
+kernel	/boot/vmlinuz-2.6.24-22-generic root=UUID=70674f56-b99e-42f4-af6d-c760abe21ec4 ro single
+initrd	/boot/initrd.img-2.6.24-22-generic
+
+
+# (4) Xubuntu memtest
+title	Ubuntu 8.04.1, memtest86+
+root	(hd0,6)
+kernel	/boot/memtest86+.bin
+quiet
+
+
+# (5) Windows
+title Windows XP Professional
+rootnoverify (hd1,0)
+map (hd0) (hd1)
+map (hd1) (hd0)
+makeactive
+chainloader +1

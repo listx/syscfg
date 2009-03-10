@@ -1,0 +1,83 @@
+set number "line numbers
+set nobackup
+set tabstop=4
+set shiftwidth=4
+set expandtab
+syntax enable "enable syntax highlighting
+set hlsearch "turn on search highlighting
+filetype indent on "turn on automatic indenting, as well as filetype recognition
+
+set guioptions-=T  "remove toolbar
+set guioptions-=m  "remove menu
+set guioptions-=r  "remove scrollbar
+set lbr "for word wrapping to be based on words, not characters
+set gfn=Terminus\ 11
+" so zenburn's background is properly loaded ... 2008/12/23
+set t_Co=256
+colorscheme zenburn_mod
+
+" Turn off blinking for the n, v, & c states:
+"let &guicursor = substitute(&guicursor, "n-v-c:", "n-v-c:blinkon0-", "")
+" NOTE: To stop all blinking:
+" let &guicursor = &guicursor . ",a:blinkon0"
+set guicursor+=a:block-blinkon0 "make cursor look square, and prevent cursor blinking
+
+
+" we only want to load autocommands ONCE (esp. for gvim, which sources the
+" vimrc
+if !exists("autocommands_loaded")
+    let autocommands_loaded = 1
+    " custom configobj (python module) syntax highlighting
+    au BufRead,BufNewFile *.configobj set filetype=configobj
+    au! Syntax configobj source $HOME/.vim/syntax/configobj.vim
+    au BufRead,BufNewFile *.lhp set filetype=lhp
+    au! Syntax lhp source $HOME/.vim/syntax/lhp.vim
+    au BufRead,BufNewFile *.rb set textwidth=100
+" Note that vim's 'textwidth' only really works for COMMENT lines, as doing so otherwise would break whitespace-sensitive code (like Python)
+    au BufRead,BufNewFile *.py set textwidth=100
+    au BufRead,BufNewFile *.c set textwidth=100
+    au BufRead,BufNewFile *.C set textwidth=100
+    au BufRead,BufNewFile *.cpp set textwidth=100
+    au BufRead,BufNewFile *.cxx set textwidth=100
+    au BufRead .vimperatorrc set syn=vim " use vim script syntax highlighting
+
+    " Integration with the "boxes" program by Thomas Jensen.
+    " Default width is set at 100 characters
+    au BufEnter * nmap ,mc !!boxes -d pound-alt -s 100<CR>
+    au BufEnter * vmap ,mc !boxes -d pound-alt -s 100<CR>
+    au BufEnter * nmap ,xc !!boxes -d pound-alt -r<CR>
+    au BufEnter * vmap ,xc !boxes -d pound-alt -r<CR> 
+    au BufEnter *.C,*.cpp,*.cxx nmap ,mc !!boxes -d cc -s 100<CR>
+    au BufEnter *.C,*.cpp,*.cxx vmap ,mc !boxes -d cc -s 100<CR>
+    au BufEnter *.C,*.cpp,*.cxx nmap ,xc !!boxes -d cc -r<CR>
+    au BufEnter *.C,*.cpp,*.cxx vmap ,xc !boxes -d cc -r<CR>
+    au BufEnter .vimrc,.gvimrc,.vimperatorrc nmap ,mc !!boxes -d vim-cmt -s 100<CR>
+    au BufEnter .vimrc,.gvimrc,.vimperatorrc vmap ,mc !boxes -d vim-cmt -s 100<CR>
+    au BufEnter .vimrc,.gvimrc,.vimperatorrc nmap ,xc !!boxes -d vim-cmt -r<CR>
+    au BufEnter .vimrc,.gvimrc,.vimperatorrc vmap ,xc !boxes -d vim-cmt -r<CR>
+endif
+
+" quicksave files
+map <F4> :w<CR>
+imap <F4> <Esc>:w<CR>a
+
+" toggle search highlighting
+map <F3> :set hls!<CR>
+imap <F3> <Esc>:set hls!<CR>
+
+" toggle line numbers
+map <F2> :set number!<CR>
+imap <F2> <Esc>:set number!<CR>
+
+" programming commands
+imap <F5> <Esc>:!g++ -Wall -mtune=native -m32 % -o ~/prog/temp32<CR>
+imap <F6> <Esc>:!xterm -hold -e ~/prog/temp32<CR>
+map <F6> <Esc>:!xterm -hold -e ~/prog/temp32<CR>
+
+" makes j and k move up or down 1 "line" as it appears on the screen -- not by
+" the actual number of lines in the text file
+nnoremap k gk
+nnoremap j gj
+
+nnoremap <C-n> :tabnext<CR>
+nnoremap <C-p> :tabprevious<CR>

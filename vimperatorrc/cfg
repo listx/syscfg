@@ -1,0 +1,29 @@
+" 1.2 (created: 2008/08/16 18:51:52)
+" Mappings
+
+" Options
+
+" Abbreviations
+
+source! ~/.vimperatorrc.local
+
+" vim: set ft=vimperator:
+
+" duplicate current tab
+:map <F2> :1tabd<CR> 
+
+" make default vertical scrolling go faster
+:no j 6j
+:no k 6k
+
+" change some of the default keys!
+
+" unmap the make C-p and C-n behave like default h and l (scroll horizontally)
+
+:no <C-p> h
+:no <C-n> l
+
+" make h and l browse tabs left and right instead of scrolling horizontally (which happens very rarely)
+
+:no h :tabprevious<CR>
+:no l :tabnext<CR>

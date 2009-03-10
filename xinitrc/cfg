@@ -1,0 +1,50 @@
+#!/bin/bash
+
+# change X's cursor (mouse pointer) from the default "X" to an arrow pointer
+xsetroot -cursor_name left_ptr
+
+# use the 'unclutter' program to disable showing the mouse pointer after X seconds
+# however, disable 'unclutter' for mouse-intensive programs like Blender and Gimp
+# unclutter -grab -idle 2 -not Blender Gimp
+
+# DISABLE CAPSLOCK KEY, and instead use it as the MODKEY in xmonad!!
+xmodmap -e "remove Lock = Caps_Lock"
+#xmodmap -e "clear mod3" <--- unnecessary b/c 'xmodmap' returns BLANK for mod3 on default settings
+xmodmap -e "add mod3 = Caps_Lock"
+
+# set default repeat rate (miliseconds delay, keystroke speed)
+xset r rate 400 50
+
+# start urxvt daemon
+urxvtd -q -f -o
+
+HOSTNAME=$(hostname)
+case "${HOSTNAME}" in
+    exelion)
+        # start Music Player Demon (mpd) with customized config file (instead of making an ugly symlink at the default-looked-at /etc/mpd.conf
+        mpd /home/listdata/.mpd/cfg-alsa
+        # start second MPD for remote listening via icecast
+        # NOTE: this is necessary even though MPD can output to multiple audio streams at the same time, since we DON'T want this remote listener, with his mpd client, change what comes out of the physical speakers located at the server
+        mpd /home/listdata/.mpd/cfg-icecast
+
+        # start icecast to stream mpd music over the LAN
+        # NOTE: the -b flag daemonizes it (necessary here for purposes of xinit going through every command; see "man init" for details about xinitrc and init's behavior)
+        # the -c flag points to the configuration file
+        icecast -b -c /home/listdata/syscfg/icecast/cfg.xml
+
+        # change to 'lhp' directory, then start the ruby on rails app there, and daemonize this process too
+        thin -c /home/listdata/prog/lhp -d start
+    ;;
+    luxion)
+    ;;
+    *)
+    ;;
+esac
+
+# start SCIM
+export XMODIFIERS=@im=SCIM
+export GTK_IM_MODULE="scim"
+export QT_IM_MODULE="scim"
+scim -d  
+
+exec xmonad

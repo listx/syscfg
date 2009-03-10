@@ -1,0 +1,16 @@
+#!/bin/bash
+#
+# /etc/rc.local: Local multi-user startup script.
+#
+
+HOSTNAME=$(hostname)
+case "${HOSTNAME}" in
+    exelion)
+        make -f /home/listdata/syscfg/makefile -B syscopy
+    ;;
+    luxion)
+        make -f /home/listdata2/syscfg/makefile -B syscopy
+    ;;
+    *)
+    ;;
+esac

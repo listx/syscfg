@@ -1,0 +1,176 @@
+autoload -U compinit
+compinit
+
+fpath=(~/.zsh/func $fpath) # add ~/.zsh/func to $fpath
+autoload -U ~/.zsh/func/*(:t) # load all functions in ~/.zsh/func
+
+autoload -U promptinit
+promptinit
+
+# This will set the default prompt to the listdata theme
+prompt listdata
+
+# history settings
+HISTSIZE=1000
+SAVEHIST=1000
+HISTFILE=~/.zsh-untracked/history
+setopt INC_APPEND_HISTORY
+setopt HIST_IGNORE_ALL_DUPS
+
+# Directory stack
+DIRSTACKSIZE=20
+# Make cd push the old directory onto the directory stack.
+setopt auto_pushd
+# don't list dir stack each time we use cd
+setopt pushdsilent
+# don't push in duplicate dirs into the dir stack
+setopt pushdignoredups
+# make 'ds' prompt the user to select a dir from the dir stack, instead of just listing the dir stick
+# with a plain 'dirs -v'
+# NOTE: 'cd +$n' makes it go to the number listed, whereas 'cd -$n' reverses it... don't know why
+# you'd ever want to use 'cd -$n'
+alias ds='dirs -v ; echo -n "\nSelect directory: " ; read n ; d +$n'
+# just show a list of dir stack without choose prompt
+alias dl='dirs -v'
+
+# change colors just for the ls command
+# 
+# di = directory
+# 01;37 = ansi color code for bold white
+# 01;33 is bolded yellow (BRIGHT yellow)
+export LS_COLORS='di=01;33:ex=31:ln=36:*.gz=32:*.bz2=32:*.zip=32:*.rar=32:*.tar=32'
+
+# LESS's settings (for manpages with color!)
+export LESS_TERMCAP_mb=$'\E[01;32m'
+export LESS_TERMCAP_md=$'\E[01;32m'
+export LESS_TERMCAP_me=$'\E[0m'
+export LESS_TERMCAP_se=$'\E[0m'                           
+export LESS_TERMCAP_so=$'\E[01;44;33m'                                 
+export LESS_TERMCAP_ue=$'\E[0m'
+export LESS_TERMCAP_us=$'\E[01;33m'
+
+#--------------------------------------------------------------------------------------------------#
+# Useful change dirs (first change to the directory, and then list the contents within; notice how #
+# you can use aliases within aliases! (the "l" is an alias here defined below)                     #
+#--------------------------------------------------------------------------------------------------#
+
+alias k="cd ..;ll"
+alias kk="cd ../../;ll"
+alias kkk="cd ../../../;ll"
+alias kkkk="cd ../../../../;ll"
+alias kkkkk="cd ../../../../../;ll"
+alias kkkkkk="cd ../../../../../../;ll"
+alias kkkkkkk="cd ../../../../../../../;ll"
+alias kkkkkkkk="cd ../../../../../../../../;ll"
+alias kkkkkkkkk="cd ../../../../../../../../../;ll"
+#--------------------------------------------------------------------------------------------------#
+# alias 1-="cd +1"                                                                                 #
+# alias 2-="cd +2"                                                                                 #
+# alias 3-="cd +3"                                                                                 #
+# alias 4-="cd +4"                                                                                 #
+# alias 5-="cd +5"                                                                                 #
+# alias 6-="cd +6"                                                                                 #
+# alias 7-="cd +7"                                                                                 #
+# alias 7-="cd +8"                                                                                 #
+# alias 9-="cd +9"                                                                                 #
+#--------------------------------------------------------------------------------------------------#
+
+#--------------------------------------------------------------------------------------------------#
+# Custom aliases                                                                                   #
+#--------------------------------------------------------------------------------------------------#
+
+# call custom function 'cd_ls'
+alias d='cd_ls'
+
+alias ll='ls -Ahs --color=auto'
+alias l='ls -Ahl --color=auto'
+
+alias q='exit'
+
+alias n='netcfg'
+
+alias g='git'
+alias gdf='git diff'
+alias gbr='git branch'
+alias gcm='git commit'
+alias glg='git log'
+alias gpl='git pull'
+alias gps='git push'
+
+alias v='vim'
+alias vv='gvim'
+
+alias se='ssh listdata@192.168.0.110'
+alias sl='ssh listdata2@192.168.0.111'
+alias sm='ssh mozart@192.168.0.120'
+
+# GLOBAL aliases for quick scp operations
+# E.g. scp FILE L ------> scp FILE listdata2@192.168.0.111:
+alias -g E='listdata@192.168.0.110:'
+alias -g L='listdata2@192.168.0.111:'
+alias -g M='mozart@192.168.0.120:'
+
+# sync the following with visudo to disable passwords!
+#
+# Template (in visudo):
+#
+# user  hostname=NOPASSWD:  path-to-command
+#
+# E.g.:
+#
+# listdata2 luxion=NOPASSWD: /usr/sbin/iftop
+
+alias usbon='sudo mount /dev/sdc1 /mnt/usb1'
+alias usboff='sudo umount /dev/sdc1'
+
+alias of='sudo poweroff'
+alias ofo='sudo reboot' # i.e., OFf, and back On
+
+alias p='sudo pacman'
+alias pu='sudo pacman -Syu'
+alias pa='sudo pacman -Sy'
+alias pq='sudo pacman -Q'
+
+alias pp='sudo powerpill'
+alias ppu='sudo powerpill -Syu'
+alias ppa='sudo powerpill -Sy'
+
+alias y='sudo yaourt'
+alias yu='sudo yaourt -Sybu --aur'
+alias yaa='sudo yaourt -Sy'
+
+#--------------------------------------------------------------------------------------------------#
+# Host-specific settings (different aliases, etc. for different computers                          #
+#     from http://www.jauu.net/data/jauu_backup/data/dotfiles/zshrc.html                           #
+#--------------------------------------------------------------------------------------------------#
+
+## check for HOSTNAME
+#HOSTNAME=$(hostname 2>/dev/null || hostname -f) # see 'man hostname' for details; '2' means
+#stderror output, and /dev/null is the null device...?
+HOSTNAME=$(hostname)
+case "${HOSTNAME}" in
+    exelion)
+        alias iftop='sudo iftop -B -i eth1'
+        alias m1='d /mnt/hd1installed'
+        alias m2='d /mnt/hd1backup1'
+        alias m3='d /mnt/hd1backup2'
+        alias m4='d /mnt/hd1ext3bkup'
+        alias m5='d /mnt/hd2backup4'
+        alias m6='d /mnt/hd2xubuntu'
+        alias m7='d /mnt/usb1'
+    ;;
+    luxion)
+        alias m1='d /mnt/windows'
+        alias m2='d /mnt/usb1'
+        alias iftope='sudo iftop -B -i eth0'
+        alias iftopw='sudo iftop -B -i wlan0'
+        alias neu='cd /etc/network.d; sudo netcfg -c luxion-wired'
+        alias ned='cd /etc/network.d; sudo netcfg -d luxion-wired'
+        alias nwu='cd /etc/network.d; sudo netcfg -c luxion-wireless-home'
+        alias nwd='cd /etc/network.d; sudo netcfg -d luxion-wireless-home'
+        alias ms='mplayer -ao alsa -prefer-ipv4 http://192.168.0.110:8000/mpd.ogg' 
+    ;;
+
+    *)
+    ;;
+esac
