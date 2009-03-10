@@ -120,9 +120,6 @@ alias -g M='mozart@192.168.0.120:'
 #
 # listdata2 luxion=NOPASSWD: /usr/sbin/iftop
 
-alias usbon='sudo mount /dev/sdc1 /mnt/usb1'
-alias usboff='sudo umount /dev/sdc1'
-
 alias of='sudo poweroff'
 alias ofo='sudo reboot' # i.e., OFf, and back On
 
@@ -158,12 +155,16 @@ case "${HOSTNAME}" in
         alias m5='d /mnt/hd2backup4'
         alias m6='d /mnt/hd2xubuntu'
         alias m7='d /mnt/usb1'
+        alias usbon='sudo mount /dev/sdc1 /mnt/usb1'
+        alias usboff='sudo umount /dev/sdc1'
     ;;
     luxion)
-        alias m1='d /mnt/windows'
-        alias m2='d /mnt/usb1'
         alias iftope='sudo iftop -B -i eth0'
         alias iftopw='sudo iftop -B -i wlan0'
+        alias m1='d /mnt/windows'
+        alias m2='d /mnt/usb1'
+        alias usbon='sudo mount /dev/sdb1 /mnt/usb1'
+        alias usboff='sudo umount /dev/sdb1'
         alias neu='cd /etc/network.d; sudo netcfg -c luxion-wired'
         alias ned='cd /etc/network.d; sudo netcfg -d luxion-wired'
         alias nwu='cd /etc/network.d; sudo netcfg -c luxion-wireless-home'
