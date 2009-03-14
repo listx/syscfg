@@ -11,7 +11,8 @@ case "${HOSTNAME}" in
     exelion)
         urxvtc -e ncmpcpp
         urxvtc -e htop
-        urxvtc -e alsamixer
+        # since the physical speaker buttons are easier to use, forget about alsamixer
+        # urxvtc -e alsamixer
         # make irssi track everything under syscfg EXCEPT for the config file containing sensitive password information (I have to manually check that the syscfg/irssi/cfg-nopassword file stays up-to-date with the untracked config file)
         urxvtc -e irssi --config=~/.irssi-untracked --home=~/syscfg/irssi
         # the -passfile option ONLY WORKS if alpine is compiled with
