@@ -22,10 +22,10 @@ HOSTNAME=$(hostname)
 case "${HOSTNAME}" in
     exelion)
         # start Music Player Demon (mpd) with customized config file (instead of making an ugly symlink at the default-looked-at /etc/mpd.conf
-        mpd /home/listdata/.mpd/cfg-alsa
+        mpd /home/listdata/syscfg/mpd/cfg-alsa
         # start second MPD for remote listening via icecast
         # NOTE: this is necessary even though MPD can output to multiple audio streams at the same time, since we DON'T want this remote listener, with his mpd client, change what comes out of the physical speakers located at the server
-        mpd /home/listdata/.mpd/cfg-icecast
+        mpd /home/listdata/syscfg/mpd/cfg-icecast
 
         # start icecast to stream mpd music over the LAN
         # NOTE: the -b flag daemonizes it (necessary here for purposes of xinit going through every command; see "man init" for details about xinitrc and init's behavior)

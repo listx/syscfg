@@ -8,11 +8,6 @@ git:
 	ln -fs $(CFGROOT)/git/cfg           ${HOME}/.gitconfig
 galculator:
 	ln -fs $(CFGROOT)/galculator/cfg    ${HOME}/.galculator
-mpd:
-ifeq ('$(HOSTNAME)','exelion')
-	ln -fns $(CFGROOT)/mpd              ${HOME}/.mpd
-else
-endif
 mplayer:
 	ln -fns $(CFGROOT)/mplayer          ${HOME}/.mplayer
 ncmpcpp:
