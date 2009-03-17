@@ -45,28 +45,7 @@ root   (hd0,4)
 kernel /boot/vmlinuz26 root=/dev/disk/by-uuid/eda3dd3d-bc4b-41ac-946b-90a36a790b72 ro
 initrd /boot/kernel26-fallback.img
 
-# (2) Xubuntu Hardy Heron 8.04.1
-title	Ubuntu 8.04.1, kernel 2.6.24-22-generic
-root	(hd0,6)
-kernel	/boot/vmlinuz-2.6.24-22-generic root=UUID=70674f56-b99e-42f4-af6d-c760abe21ec4 ro vga=0x0368
-initrd	/boot/initrd.img-2.6.24-22-generic
-quiet
-
-# (3) Xubuntu hardy heron
-title	Ubuntu 8.04.1, kernel 2.6.24-22-generic (recovery mode)
-root	(hd0,6)
-kernel	/boot/vmlinuz-2.6.24-22-generic root=UUID=70674f56-b99e-42f4-af6d-c760abe21ec4 ro single
-initrd	/boot/initrd.img-2.6.24-22-generic
-
-
-# (4) Xubuntu memtest
-title	Ubuntu 8.04.1, memtest86+
-root	(hd0,6)
-kernel	/boot/memtest86+.bin
-quiet
-
-
-# (5) Windows
+# (2) Windows
 title Windows XP Professional
 rootnoverify (hd1,0)
 map (hd0) (hd1)
