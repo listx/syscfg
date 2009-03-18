@@ -20,5 +20,5 @@ UUID=F85C87F55C87ACC6 /mnt/hd1backup1 ntfs-3g defaults,locale=en_US.UTF-8 0 0 # 
 UUID=B884938084934034 /mnt/hd1backup2 ntfs-3g defaults,locale=en_US.UTF-8 0 0 # /dev/sdb6
 
 UUID=58E031CEE031B35C /mnt/hd2backup4 ntfs-3g defaults,locale=en_US.UTF-8 0 0 # /dev/sda1
-UUID=70674f56-b99e-42f4-af6d-c760abe21ec4 /mnt/hd2backup5 ext3 defaults 0 1 # /dev/sda7
+UUID=3c2005a6-c9ac-4666-b974-9ee2a0230478 /mnt/hd2backup5 ext3 defaults 0 1 # /dev/sda7
 UUID=22fc79bb-2d0e-4478-99cc-1ad2a4829ba2 /mnt/hd1ext3bkup ext3 defaults 0 1 # /dev/sdb2
