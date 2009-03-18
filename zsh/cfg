@@ -169,7 +169,6 @@ case "${HOSTNAME}" in
         alias ned='cd /etc/network.d; sudo netcfg -d luxion-wired'
         alias nwu='cd /etc/network.d; sudo netcfg -c luxion-wireless-home'
         alias nwd='cd /etc/network.d; sudo netcfg -d luxion-wireless-home'
-        alias ms='mplayer -ao alsa -prefer-ipv4 http://192.168.0.110:8000/mpd.ogg' 
     ;;
 
     *)
