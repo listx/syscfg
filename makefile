@@ -1,7 +1,7 @@
 CFGROOT := $(shell pwd)
 HOSTNAME := $(shell hostname)
 # add the -n flag for directories, as otherwise, stray symlinks will be created inside the CFGROOT directory itself
-all: boxes galculator git mpd mplayer ncmpcpp shellscripts vim vimperatorrc xdefaults xinitrc xmonad zsh
+all: boxes galculator git mpd mplayer ncmpcpp rtorrent shellscripts vim vimperatorrc xdefaults xinitrc xmonad zsh
 boxes:
 	ln -fs $(CFGROOT)/boxes/cfg         ${HOME}/.boxes
 git:
@@ -17,6 +17,8 @@ ifeq ('$(HOSTNAME)','exelion')
 else
 	ln -fs $(CFGROOT)/ncmpcpp/cfg-luxion ${HOME}/.ncmpcpp/config
 endif
+rtorrent:
+	ln -fs $(CFGROOT)/rtorrent/cfg      ${HOME}/.rtorrent.rc
 shellscripts:
 	ln -fns $(CFGROOT)/shellscripts     ${HOME}/shellscripts
 vim:
