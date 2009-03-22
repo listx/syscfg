@@ -90,4 +90,4 @@ ROUTES=(!gateway)
 #   - prefix a daemon with a ! to disable it
 #   - prefix a daemon with a @ to start it up in the background
 #
-DAEMONS=(syslog-ng network !netfs crond alsa hal @httpd @mysqld @sshd @openntpd @cups bitlbee)
+DAEMONS=(syslog-ng network bitlbee !netfs crond alsa hal @httpd @mysqld @sshd @openntpd @cups)
