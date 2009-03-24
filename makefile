@@ -12,6 +12,7 @@ mplayer:
 	ln -fns $(CFGROOT)/mplayer          ${HOME}/.mplayer
 ncmpcpp:
 	ln -fns $(CFGROOT)/ncmpcpp          ${HOME}/.ncmpcpp
+	ln -fs $(CFGROOT)/ncmpcpp/hotkeys   ${HOME}/.ncmpcpp/keys
 ifeq ('$(HOSTNAME)','exelion')
 	ln -fs $(CFGROOT)/ncmpcpp/cfg       ${HOME}/.ncmpcpp/config
 else
@@ -57,6 +58,8 @@ ifeq ('$(HOSTNAME)','exelion')
 	rm ${HOME}/.mpd
 endif
 	rm ${HOME}/.mplayer
+	rm ${HOME}/.ncmpcpp/config
+	rm ${HOME}/.ncmpcpp/keys
 	rm ${HOME}/.ncmpcpp
 	rm ${HOME}/.vim
 	rm ${HOME}/.vimrc

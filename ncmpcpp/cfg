@@ -114,7 +114,7 @@
 #
 #incremental_seeking = "yes"
 #
-#seek_time = "1"
+seek_time = "2"
 #
 #autocenter_mode = "no"
 #
@@ -126,7 +126,7 @@
 #
 #default_find_mode = "wrapped" (wrapped/normal)
 #
-#default_space_mode = "add" (add/select)
+default_space_mode = "select" (add/select)
 #
 #default_tag_editor_left_col = "albums" (albums/dirs)
 #
@@ -140,11 +140,11 @@
 #
 #follow_now_playing_lyrics = "no"
 #
-#ncmpc_like_songs_adding = "no" (enabled - add/remove, disabled - always add)
+ncmpc_like_songs_adding = "yes" (enabled - add/remove, disabled - always add)
 #
 #display_screens_numbers_on_start = "yes"
 #
-#clock_display_seconds = "no"
+clock_display_seconds = "yes"
 #
 ##
 ## Note: If below is enabled, ncmpcpp will ignore leading
