@@ -162,6 +162,14 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
     , ((mod4Mask              , xK_m     ), spawn "blender")
     , ((mod4Mask              , xK_f     ), spawn "gnucash")
     , ((mod4Mask              , xK_p     ), spawn "evince")
+    -- ncmpcpp (mpd) controls
+    , ((mod4Mask .|. controlMask, xK_p     ), spawn "ncmpcpp toggle")
+    , ((mod4Mask .|. controlMask, xK_j     ), spawn "ncmpcpp next")
+    , ((mod4Mask .|. controlMask, xK_k     ), spawn "ncmpcpp prev")
+    -- volume controls
+    , ((modMask              , xK_backslash ), spawn "amixer -q set Master toggle")
+    , ((modMask              , xK_minus     ), spawn "amixer -q set Master 1- unmute")
+    , ((modMask              , xK_equal     ), spawn "amixer -q set Master 1+ unmute")
     --, ((mod4Mask              , xK_s     ), spawn "~/.xmonad/some-custom-multiapp-setup.sh")
     ]
     ++
