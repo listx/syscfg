@@ -67,7 +67,7 @@ myNumlockMask   = mod2Mask
 --
 -- > workspaces = ["web", "irc", "code" ] ++ map show [4..9]
 --
-myWorkspaces    = ["net","comm","study","music","photo","multimedia","sysutil"] ++ map show [8..9]
+myWorkspaces    = ["net","comm","study","music","photo","multimedia","sysutil","share"] ++ map show [9]
 -- Border colors for unfocused and focused windows, respectively.
 --
 myNormalBorderColor  = "#000000"
@@ -277,6 +277,7 @@ myManageHook = composeAll
     , stringProperty "WM_NAME"  =? "mplayer"           --> doShift "music"
     , stringProperty "WM_NAME"  =? "irssi"             --> doShift "comm"
     , stringProperty "WM_NAME"  =? "alpine"            --> doShift "comm"
+    , stringProperty "WM_NAME"  =? "rtorrent"          --> doShift "share"
     --, stringProperty "WM_NAME"  =? "xmonad-init-notes (~) - GVIM1"             --> doShift "study"
     , className  =? "Gran Paradiso"    --> doShift "net"
     , className  =? "Mirage"    --> doShift "photo"

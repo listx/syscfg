@@ -157,6 +157,10 @@ case "${HOSTNAME}" in
         alias m7='d /mnt/usb1'
         alias usbon='sudo mount /dev/sdc1 /mnt/usb1'
         alias usboff='sudo umount /dev/sdc1'
+        # CUSTOM SCRIPTS
+        #
+        # encoding/decoding
+        alias rgmp3='/home/listdata/syscfg/shellscripts/replaygain/mp3/tmwrg.sh'
     ;;
     luxion)
         alias iftope='sudo iftop -B -i eth0'
