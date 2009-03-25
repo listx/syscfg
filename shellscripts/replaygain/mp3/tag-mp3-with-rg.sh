@@ -37,7 +37,7 @@ mp3num=`ls "$1" | grep -c \\.mp3`
 # then exit without error.
 if [ $mp3num -lt 1 ]
 then
-	echo -e "\033[1;33m"$1" \033[1;37m--> (No mp3 files, moving on)\033[0m"
+	echo -e "\033[1;33m"$1" \033[1;37m--> (No mp3 files found)\033[0m"
 	exit 0
 else
 	echo -e "\033[1;36m"$1" \033[1;37m--> (\033[1;32m"$mp3num"\033[1;37m mp3 files)\033[0m"
@@ -60,25 +60,29 @@ echo -e ""
 ~/syscfg/shellscripts/replaygain/mp3/ape2id3.py -df "$1"/*.mp3
 echo -e ""
 echo -e "\033[1;37mDone.\033[0m"
-echo -e ""
-# Output the newly-created Replay Gain values for the mp3
-# files in this directory.
-echo -e "\033[1;37mNewly-calculated Replay Gain (APE) values are:\033[0m"
-mp3files=`ls -1 "$1"/*.mp3`
-IFS=$'\012' # separate file names correctly (use newlines)
-for file in $mp3files
-do
-	if [ ! -e "$file" ]
-	then
-        # This should not happen -- unless these files get deleted or corrupt since the script began.
-		echo -e "\033[1;31mError: file "$file" not found.\033[0m"
-		exit $FILE_NOT_FOUND
-	fi
-
-	echo -e "\033[1;32m"$file"\033[0m"
-	mp3gain -s c "$file"
-	echo -e ""
-done
+#-----------------------------------------------------------------------------------------------------#
+## NOTE: This section is not needed, since the calls to mp3gain above by themselves generate output   #
+## about replay gain information.                                                                     #
+##                                                                                                    #
+## Output the newly-created Replay Gain values for the mp3                                            #
+## files in this directory.                                                                           #
+#echo -e "\033[1;37mNewly-calculated Replay Gain (APE) values are:\033[0m"                            #
+#mp3files=`ls -1 "$1"/*.mp3`                                                                          #
+#IFS=$'\012' # separate file names correctly (use newlines)                                           #
+#for file in $mp3files                                                                                #
+#do                                                                                                   #
+#        if [ ! -e "$file" ]                                                                          #
+#        then                                                                                         #
+#        # This should not happen -- unless these files get deleted or corrupt since the script began.#
+#                echo -e "\033[1;31mError: file "$file" not found.\033[0m"                            #
+#                exit $FILE_NOT_FOUND                                                                 #
+#        fi                                                                                           #
+#                                                                                                     #
+#        echo -e "\033[1;32m"$file"\033[0m"                                                           #
+#        mp3gain -s c "$file"                                                                         #
+#        echo -e ""                                                                                   #
+#done                                                                                                 #
+#-----------------------------------------------------------------------------------------------------#
 
 echo -e ""
 echo -e "\033[1;37mReplay gain tags (both APE and ID3) successfully added recursively.\033[0m"
