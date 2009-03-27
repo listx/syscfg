@@ -83,8 +83,8 @@ ROUTES=(!gateway)
 # listdata: also, add net-profiles into the DAEMONS=()
 # 
 # the NETWORKS=() includes those profiles that will be started on boot
-NETWORKS=()
-AUTO_NETWORKS=(luxion-wired auto-wireless wlan0)
+NETWORKS=(luxion-wired)
+AUTO_NETWORKS=(auto-wireless wlan0)
 
 # -----------------------------------------------------------------------
 # DAEMONS
