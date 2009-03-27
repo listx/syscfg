@@ -18,6 +18,9 @@ xset r rate 400 50
 # start urxvt daemon
 urxvtd -q -f -o
 
+# start xscreensaver
+xscreensaver -no-splash &
+
 HOSTNAME=$(hostname)
 case "${HOSTNAME}" in
     exelion)
