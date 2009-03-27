@@ -96,7 +96,6 @@ else
 	cat /etc/inittab >              /home/listdata2/syscfg/sys/etc-inittab-luxion
 	cat /etc/makepkg.conf >         /home/listdata2/syscfg/sys/etc-makepkg.conf-luxion
 	cat /etc/network.d/luxion-wired > /home/listdata2/syscfg/sys/etc-network.d-luxion-wired
-	cat /etc/network.d/luxion-wireless-home-nopassword > /home/listdata2/syscfg/sys/etc-network.d-luxion-wireless-home-nopassword
 	cat /etc/rc.conf >              /home/listdata2/syscfg/sys/etc-rc.conf-luxion
 	cat /etc/rc.local >             /home/listdata2/syscfg/sys/etc-rc.local-luxion
 	cat /etc/rc.local.shutdown >    /home/listdata2/syscfg/sys/etc-rc.local.shutdown-luxion

@@ -82,9 +82,9 @@ ROUTES=(!gateway)
 #
 # listdata: also, add net-profiles into the DAEMONS=()
 # 
-# we don't load the luxion-wireless-school one since that's going to take too long
-NETWORKS=(luxion-wired luxion-wireless-home !luxion-wireless-school)
-AUTO_NETWORKS=(eth0 !wlan0)
+# the NETWORKS=() includes those profiles that will be started on boot
+NETWORKS=()
+AUTO_NETWORKS=(luxion-wired auto-wireless wlan0)
 
 # -----------------------------------------------------------------------
 # DAEMONS
@@ -95,4 +95,4 @@ AUTO_NETWORKS=(eth0 !wlan0)
 #   - prefix a daemon with a @ to start it up in the background
 #
 # net-auto disabled b/c they take too damn long to start up
-DAEMONS=(syslog-ng hal !wicd network !netfs crond alsa fam @openntpd @net-profiles !net-auto @keytouch @bitlbee @laptop-mode-tools sshd @cups)
+DAEMONS=(syslog-ng !network net-profiles net-auto bitlbee crond alsa hal @sshd @openntpd @laptop-mode-tools @cups )
