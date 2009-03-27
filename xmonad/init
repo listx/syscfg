@@ -27,8 +27,8 @@ case "${HOSTNAME}" in
         #blender
     ;;
     luxion)
-        urxvtc -e htop
         urxvtc -e alsamixer
+        urxvtc -e htop
         urxvtc
     ;;
     *)
