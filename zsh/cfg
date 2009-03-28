@@ -101,14 +101,14 @@ alias v='vim'
 alias vv='gvim'
 
 alias se='ssh listdata@192.168.0.110'
-alias sle='ssh listdata2@192.168.0.111'
-alias slw='ssh listdata2@192.168.0.112'
+alias sle='ssh listdata@192.168.0.111'
+alias slw='ssh listdata@192.168.0.112'
 alias sc='ssh kimberly@192.168.0.120'
 
 # GLOBAL aliases for quick scp operations
 # E.g. scp FILE L ------> scp FILE listdata2@192.168.0.111:
 alias -g E='listdata@192.168.0.110:'
-alias -g L='listdata2@192.168.0.111:'
+alias -g L='listdata@192.168.0.111:'
 alias -g C='kimberly@192.168.0.120:'
 
 # sync the following with visudo to disable passwords!
