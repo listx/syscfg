@@ -103,6 +103,8 @@ alias vv='gvim'
 alias se='ssh listdata@192.168.0.110'
 alias sle='ssh listdata@192.168.0.111'
 alias slw='ssh listdata@192.168.0.112'
+alias sae='ssh listdata@192.168.0.113'
+alias saw='ssh listdata@192.168.0.204'
 alias sc='ssh kimberly@192.168.0.120'
 
 # GLOBAL aliases for quick scp operations
