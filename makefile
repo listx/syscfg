@@ -15,7 +15,8 @@ ncmpcpp:
 	ln -fs $(CFGROOT)/ncmpcpp/hotkeys   ${HOME}/.ncmpcpp/keys
 ifeq ('$(HOSTNAME)','exelion')
 	ln -fs $(CFGROOT)/ncmpcpp/cfg       ${HOME}/.ncmpcpp/config
-else
+endif
+ifeq ('$(HOSTNAME)','luxion')
 	ln -fs $(CFGROOT)/ncmpcpp/cfg-luxion ${HOME}/.ncmpcpp/config
 endif
 rtorrent:
@@ -43,7 +44,8 @@ xmonad:
 #--------------------------------------------------------------------------------------------------#
 ifeq ('$(HOSTNAME)','exelion')
 	ln -fs $(CFGROOT)/xmonad/cfg        ${HOME}/.xmonad/xmonad.hs
-else
+endif
+ifeq ('$(HOSTNAME)','luxion')
 	ln -fs $(CFGROOT)/xmonad/cfg-luxion ${HOME}/.xmonad/xmonad.hs
 endif
 
@@ -88,7 +90,8 @@ ifeq ('$(HOSTNAME)','exelion')
 	cat /etc/rc.local.shutdown >    /home/listdata/syscfg/sys/etc-rc.local.shutdown-exelion
 	cat /etc/yaourtrc >             /home/listdata/syscfg/sys/etc-yaourtrc-exelion
 	cat /etc/sudoers >              /home/listdata/syscfg/sys/etc-sudoers-exelion # requires superuser privileges to read!
-else
+endif
+ifeq ('$(HOSTNAME)','luxion')
 	cat /boot/grub/menu.lst >       /home/listdata2/syscfg/sys/boot-grub-menu.lst-luxion
 	cat /etc/X11/xorg.conf >        /home/listdata2/syscfg/sys/etc-X11-xorg.conf-luxion
 	cat /etc/fstab >                /home/listdata2/syscfg/sys/etc-fstab-luxion
