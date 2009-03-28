@@ -19,6 +19,9 @@ endif
 ifeq ('$(HOSTNAME)','luxion')
 	ln -fs $(CFGROOT)/ncmpcpp/cfg-luxion ${HOME}/.ncmpcpp/config
 endif
+ifeq ('$(HOSTNAME)','aether')
+	ln -fs $(CFGROOT)/ncmpcpp/cfg-luxion ${HOME}/.ncmpcpp/config
+endif
 rtorrent:
 	ln -fs $(CFGROOT)/rtorrent/cfg      ${HOME}/.rtorrent.rc
 shellscripts:
@@ -47,6 +50,9 @@ ifeq ('$(HOSTNAME)','exelion')
 endif
 ifeq ('$(HOSTNAME)','luxion')
 	ln -fs $(CFGROOT)/xmonad/cfg-luxion ${HOME}/.xmonad/xmonad.hs
+endif
+ifeq ('$(HOSTNAME)','aether')
+	ln -fs $(CFGROOT)/xmonad/cfg-aether ${HOME}/.xmonad/xmonad.hs
 endif
 
 zsh:
@@ -104,4 +110,11 @@ ifeq ('$(HOSTNAME)','luxion')
 	cat /etc/rc.local.shutdown >    /home/listdata2/syscfg/sys/etc-rc.local.shutdown-luxion
 	cat /etc/yaourtrc >             /home/listdata2/syscfg/sys/etc-yaourtrc-luxion
 	cat /etc/sudoers >              /home/listdata2/syscfg/sys/etc-sudoers-luxion
+endif
+ifeq ('$(HOSTNAME)','aether')
+	cat /boot/grub/menu.lst >       /home/listdata3/syscfg/sys/boot-grub-menu.lst-aether
+	cat /etc/X11/xorg.conf >        /home/listdata3/syscfg/sys/etc-X11-xorg.conf-aether
+	cat /etc/fstab >                /home/listdata3/syscfg/sys/etc-fstab-aether
+	cat /etc/makepkg.conf >         /home/listdata3/syscfg/sys/etc-makepkg.conf-aether
+	cat /etc/rc.conf >              /home/listdata3/syscfg/sys/etc-rc.conf-aether
 endif
