@@ -98,23 +98,23 @@ ifeq ('$(HOSTNAME)','exelion')
 	cat /etc/sudoers >              /home/listdata/syscfg/sys/etc-sudoers-exelion # requires superuser privileges to read!
 endif
 ifeq ('$(HOSTNAME)','luxion')
-	cat /boot/grub/menu.lst >       /home/listdata2/syscfg/sys/boot-grub-menu.lst-luxion
-	cat /etc/X11/xorg.conf >        /home/listdata2/syscfg/sys/etc-X11-xorg.conf-luxion
-	cat /etc/fstab >                /home/listdata2/syscfg/sys/etc-fstab-luxion
-	cat /etc/hosts >                /home/listdata2/syscfg/sys/etc-hosts-luxion
-	cat /etc/inittab >              /home/listdata2/syscfg/sys/etc-inittab-luxion
-	cat /etc/makepkg.conf >         /home/listdata2/syscfg/sys/etc-makepkg.conf-luxion
-	cat /etc/network.d/luxion-wired > /home/listdata2/syscfg/sys/etc-network.d-luxion-wired
-	cat /etc/rc.conf >              /home/listdata2/syscfg/sys/etc-rc.conf-luxion
-	cat /etc/rc.local >             /home/listdata2/syscfg/sys/etc-rc.local-luxion
-	cat /etc/rc.local.shutdown >    /home/listdata2/syscfg/sys/etc-rc.local.shutdown-luxion
-	cat /etc/yaourtrc >             /home/listdata2/syscfg/sys/etc-yaourtrc-luxion
-	cat /etc/sudoers >              /home/listdata2/syscfg/sys/etc-sudoers-luxion
+	cat /boot/grub/menu.lst >       /home/listdata/syscfg/sys/boot-grub-menu.lst-luxion
+	cat /etc/X11/xorg.conf >        /home/listdata/syscfg/sys/etc-X11-xorg.conf-luxion
+	cat /etc/fstab >                /home/listdata/syscfg/sys/etc-fstab-luxion
+	cat /etc/hosts >                /home/listdata/syscfg/sys/etc-hosts-luxion
+	cat /etc/inittab >              /home/listdata/syscfg/sys/etc-inittab-luxion
+	cat /etc/makepkg.conf >         /home/listdata/syscfg/sys/etc-makepkg.conf-luxion
+	cat /etc/network.d/luxion-wired > /home/listdata/syscfg/sys/etc-network.d-luxion-wired
+	cat /etc/rc.conf >              /home/listdata/syscfg/sys/etc-rc.conf-luxion
+	cat /etc/rc.local >             /home/listdata/syscfg/sys/etc-rc.local-luxion
+	cat /etc/rc.local.shutdown >    /home/listdata/syscfg/sys/etc-rc.local.shutdown-luxion
+	cat /etc/yaourtrc >             /home/listdata/syscfg/sys/etc-yaourtrc-luxion
+	cat /etc/sudoers >              /home/listdata/syscfg/sys/etc-sudoers-luxion
 endif
 ifeq ('$(HOSTNAME)','aether')
-	cat /boot/grub/menu.lst >       /home/listdata3/syscfg/sys/boot-grub-menu.lst-aether
-	cat /etc/X11/xorg.conf >        /home/listdata3/syscfg/sys/etc-X11-xorg.conf-aether
-	cat /etc/fstab >                /home/listdata3/syscfg/sys/etc-fstab-aether
-	cat /etc/makepkg.conf >         /home/listdata3/syscfg/sys/etc-makepkg.conf-aether
-	cat /etc/rc.conf >              /home/listdata3/syscfg/sys/etc-rc.conf-aether
+	cat /boot/grub/menu.lst >       /home/listdata/syscfg/sys/boot-grub-menu.lst-aether
+	cat /etc/X11/xorg.conf >        /home/listdata/syscfg/sys/etc-X11-xorg.conf-aether
+	cat /etc/fstab >                /home/listdata/syscfg/sys/etc-fstab-aether
+	cat /etc/makepkg.conf >         /home/listdata/syscfg/sys/etc-makepkg.conf-aether
+	cat /etc/rc.conf >              /home/listdata/syscfg/sys/etc-rc.conf-aether
 endif

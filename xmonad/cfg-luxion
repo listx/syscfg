@@ -316,7 +316,7 @@ myLogHook = return ()
 -- By default, do nothing.
 --myStartupHook = return ()
 myStartupHook = do
-    spawn "/home/listdata2/.xmonad/init.sh"
+    spawn "/home/listdata/.xmonad/init.sh"
  
 ------------------------------------------------------------------------
 -- Now run xmonad with all the defaults we set up.

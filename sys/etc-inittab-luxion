@@ -25,7 +25,7 @@ su:S:wait:/sbin/sulogin -p
 
 # -8 options fixes umlauts problem on login
 #c1:2345:respawn:/sbin/agetty -8 38400 vc/1 linux
-c1:2345:respawn:/sbin/agetty -8 -n -l /usr/local/sbin/autologinlistdata2 38400 vc/1 linux
+c1:2345:respawn:/sbin/agetty -8 -n -l /usr/local/sbin/autologinlistdata 38400 vc/1 linux
 c2:2345:respawn:/sbin/agetty -8 38400 vc/2 linux
 c3:2345:respawn:/sbin/agetty -8 38400 vc/3 linux
 c4:2345:respawn:/sbin/agetty -8 38400 vc/4 linux
@@ -35,7 +35,7 @@ c6:2345:respawn:/sbin/agetty -8 38400 vc/6 linux
 ca::ctrlaltdel:/sbin/shutdown -t3 -r now
 
 # Example lines for starting a login manager
-x:5:once:/bin/su listdata2 -l -c "/bin/bash --login -c startx >/dev/null 2>&1"
+x:5:once:/bin/su listdata -l -c "/bin/bash --login -c startx >/dev/null 2>&1"
 #x:5:respawn:/usr/bin/xdm -nodaemon
 #x:5:respawn:/usr/sbin/gdm -nodaemon
 #x:5:respawn:/opt/kde/bin/kdm -nodaemon

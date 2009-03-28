@@ -19,7 +19,7 @@
 
 # User privilege specification
 root	ALL=(ALL) ALL
-listdata2	ALL=(ALL) ALL
+listdata	ALL=(ALL) ALL
 
 # Uncomment to allow people in group wheel to run all commands
 # %wheel	ALL=(ALL) ALL
@@ -31,12 +31,12 @@ listdata2	ALL=(ALL) ALL
 # %users  ALL=/sbin/mount /cdrom,/sbin/umount /cdrom
 # %users  localhost=/sbin/shutdown -h now
 
-listdata2 luxion=NOPASSWD: /sbin/poweroff
-listdata2 luxion=NOPASSWD: /sbin/reboot
-listdata2 luxion=NOPASSWD: /usr/bin/netcfg
-listdata2 luxion=NOPASSWD: /usr/sbin/iftop
-listdata2 luxion=NOPASSWD: /bin/mount
-listdata2 luxion=NOPASSWD: /bin/umount
-listdata2 luxion=NOPASSWD: /usr/bin/pacman
-listdata2 luxion=NOPASSWD: /usr/bin/powerpill
-listdata2 luxion=NOPASSWD: /usr/bin/yaourt
+listdata luxion=NOPASSWD: /sbin/poweroff
+listdata luxion=NOPASSWD: /sbin/reboot
+listdata luxion=NOPASSWD: /usr/bin/netcfg
+listdata luxion=NOPASSWD: /usr/sbin/iftop
+listdata luxion=NOPASSWD: /bin/mount
+listdata luxion=NOPASSWD: /bin/umount
+listdata luxion=NOPASSWD: /usr/bin/pacman
+listdata luxion=NOPASSWD: /usr/bin/powerpill
+listdata luxion=NOPASSWD: /usr/bin/yaourt
