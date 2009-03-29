@@ -4,4 +4,11 @@
 
 #<ip-address>	<hostname.domain.org>	<hostname>
 127.0.0.1		exelion.localdomain      exelion	
+
+192.168.0.110   exelion
+192.168.0.111   luxion.e
+192.168.0.112   luxion.w
+192.168.0.113   aether.e
+192.168.0.204   aether.w
+192.168.0.120   caterpillar
 # End of file
