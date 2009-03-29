@@ -100,21 +100,22 @@ alias gps='git push'
 alias v='vim'
 alias vv='gvim'
 
-alias se='ssh listdata@192.168.0.110'
-alias sle='ssh listdata@192.168.0.111'
-alias slw='ssh listdata@192.168.0.112'
-alias sae='ssh listdata@192.168.0.113'
-alias saw='ssh listdata@192.168.0.204'
-alias sc='ssh kimberly@192.168.0.120'
+# these sane hostnames depend on the /etc/hosts file!
+alias se='ssh listdata@exelion'
+alias sle='ssh listdata@luxion.e'
+alias slw='ssh listdata@luxion.w'
+alias sae='ssh listdata@aether.e'
+alias saw='ssh listdata@aether.w'
+alias sc='ssh kimberly@caterpillar'
 
 # GLOBAL aliases for quick scp operations
 # E.g. scp FILE L ------> scp FILE listdata2@192.168.0.111:
-alias -g E='listdata@192.168.0.110:'
-alias -g LE='listdata@192.168.0.111:'
-alias -g LW='listdata@192.168.0.112:'
-alias -g AE='listdata@192.168.0.113:'
-alias -g AW='listdata@192.168.0.204:'
-alias -g C='kimberly@192.168.0.120:'
+alias -g E='listdata@exelion:'
+alias -g LE='listdata@luxion.e:'
+alias -g LW='listdata@luxion.w:'
+alias -g AE='listdata@aether.e:'
+alias -g AW='listdata@aether.w:'
+alias -g C='kimberly@caterpillar:'
 
 # sync the following with visudo to disable passwords!
 #

@@ -115,6 +115,7 @@ ifeq ('$(HOSTNAME)','aether')
 	cat /boot/grub/menu.lst >       /home/listdata/syscfg/sys/boot-grub-menu.lst-aether
 	cat /etc/X11/xorg.conf >        /home/listdata/syscfg/sys/etc-X11-xorg.conf-aether
 	cat /etc/fstab >                /home/listdata/syscfg/sys/etc-fstab-aether
+	cat /etc/hosts >                /home/listdata/syscfg/sys/etc-hosts-aether
 	cat /etc/makepkg.conf >         /home/listdata/syscfg/sys/etc-makepkg.conf-aether
 	cat /etc/rc.conf >              /home/listdata/syscfg/sys/etc-rc.conf-aether
 	cat /etc/rc.local >             /home/listdata/syscfg/sys/etc-rc.local-aether
