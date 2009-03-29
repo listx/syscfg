@@ -95,4 +95,4 @@ AUTO_NETWORKS=(auto-wireless wlan0)
 #   - prefix a daemon with a @ to start it up in the background
 #
 # net-auto disabled b/c they take too damn long to start up
-DAEMONS=(syslog-ng !network net-profiles net-auto bitlbee crond alsa hal @sshd @openntpd @laptop-mode-tools @cups )
+DAEMONS=(syslog-ng !network net-profiles net-auto bitlbee crond alsa hal @sshd @openntpd @cups )
