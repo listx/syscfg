@@ -117,4 +117,5 @@ ifeq ('$(HOSTNAME)','aether')
 	cat /etc/fstab >                /home/listdata/syscfg/sys/etc-fstab-aether
 	cat /etc/makepkg.conf >         /home/listdata/syscfg/sys/etc-makepkg.conf-aether
 	cat /etc/rc.conf >              /home/listdata/syscfg/sys/etc-rc.conf-aether
+	cat /etc/rc.local >             /home/listdata/syscfg/sys/etc-rc.local-aether
 endif

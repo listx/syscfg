@@ -190,7 +190,14 @@ case "${HOSTNAME}" in
         alias nwu='cd /etc/network.d; sudo netcfg -c luxion-wireless-home'
         alias nwd='cd /etc/network.d; sudo netcfg -d luxion-wireless-home'
     ;;
-
+    aether)
+        alias iftope='sudo iftop -B -i eth0'
+        alias iftopw='sudo iftop -B -i wlan0'
+        alias neu='cd /etc/network.d; sudo netcfg -c aether-wired'
+        alias ned='cd /etc/network.d; sudo netcfg -d aether-wired'
+        alias nwu='cd /etc/network.d; sudo netcfg -c aether-wireless-home'
+        alias nwd='cd /etc/network.d; sudo netcfg -d aether-wireless-home'
+    ;;
     *)
     ;;
 esac
