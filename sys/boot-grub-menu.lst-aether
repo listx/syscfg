@@ -24,8 +24,8 @@
 #  http://wiki.archlinux.org/index.php/GRUB#Framebuffer_Resolution 
 
 # general configuration:
-timeout   3
-default   0
+timeout   15
+default   2
 color light-blue/black light-cyan/blue
 
 # boot sections follow

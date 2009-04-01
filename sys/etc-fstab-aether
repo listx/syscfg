@@ -9,6 +9,14 @@ none                   /dev/shm      tmpfs     defaults            0      0
 #/dev/dvd               /media/dvd  auto    ro,user,noauto,unhide   0      0
 #/dev/fd0               /media/fl   auto    user,noauto             0      0
 
+#/dev/sda2
 UUID=c73de463-9d46-49ec-9e49-cae2d7c80d90 / ext3 defaults 0 1
+#/dev/sda5
 UUID=d6eb5f4d-e8c7-4ec4-806b-2ec1da100b5f /home ext3 defaults 0 1
+#/dev/sda7
 UUID=e08faca4-24ef-4b13-b221-039de3bf93e5 swap swap defaults 0 0
+
+#/dev/sda1
+UUID=572C8DDF568B4261 /mnt/vista ntfs-3g defaults,locale=en_US.UTF-8 0 0
+#/dev/sda6
+UUID=1cc07d85-7820-4989-9f7a-4e3248f97f22 /mnt/data ext3 defaults 0 1
