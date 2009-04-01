@@ -23,7 +23,12 @@ ifeq ('$(HOSTNAME)','aether')
 	ln -fs $(CFGROOT)/ncmpcpp/cfg-luxion ${HOME}/.ncmpcpp/config
 endif
 rtorrent:
-	ln -fs $(CFGROOT)/rtorrent/cfg      ${HOME}/.rtorrent.rc
+ifeq ('$(HOSTNAME)','exelion')
+	ln -fs $(CFGROOT)/rtorrent/cfg       ${HOME}/.rtorrent.rc
+endif
+ifeq ('$(HOSTNAME)','aether')
+	ln -fs $(CFGROOT)/rtorrent/cfg-aether ${HOME}/.rtorrent.rc
+endif
 shellscripts:
 	ln -fns $(CFGROOT)/shellscripts     ${HOME}/shellscripts
 vim:

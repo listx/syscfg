@@ -194,6 +194,8 @@ case "${HOSTNAME}" in
     aether)
         alias iftope='sudo iftop -B -i eth0'
         alias iftopw='sudo iftop -B -i wlan0'
+        alias m1='d /mnt/vista'
+        alias m2='d /mnt/data'
         alias neu='cd /etc/network.d; sudo netcfg -c aether-wired'
         alias ned='cd /etc/network.d; sudo netcfg -d aether-wired'
         alias nwu='cd /etc/network.d; sudo netcfg -c aether-wireless-home'
