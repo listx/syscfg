@@ -30,14 +30,18 @@ session = /home/listdata/Desktop/bittor/session
 schedule = watch_directory,5,5,load_start=/home/listdata/Desktop/bittor/*.torrent
 schedule = untied_directory,5,5,stop_untied=
 
+# Enable the default ratio group.
+ratio.enable=
+# Change the limits, the defaults should be sufficient.
+#min ratio of 1.0, max ratio of 2.0
+ratio.min.set=100
+ratio.max.set=200
+ratio.upload.set=20M
+# Changing the command triggered when the ratio is reached.
+system.method.set = group.seeding.ratio.command, d.close=, d.erase= 
+
 # Close torrents when diskspace is low.
 schedule = low_diskspace,5,60,close_low_diskspace=100M
-
-# Stop torrents when reaching upload ratio in percent,
-# when also reaching total upload in bytes, or when
-# reaching final upload ratio in percent.
-# example: stop at ratio 2.0 with at least 200 MB uploaded, or else ratio 20.0
-schedule = ratio,60,60,"stop_on_ratio=200,2M,2100"
 
 # The ip address reported to the tracker.
 #ip = 127.0.0.1
