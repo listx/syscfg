@@ -96,7 +96,7 @@ hi Folded          guifg=#93b3a3 guibg=#3f4040
 hi Function        guifg=#efef8f
 hi Identifier      guifg=#efdcbc
 "hi IncSearch       guibg=#f8f893 guifg=#385f38
-hi IncSearch       guibg=#0000ff guifg=#ffff00
+hi IncSearch       guibg=#ffff00 guifg=#0000ff
 hi Keyword         guifg=#f0dfaf gui=bold
 hi Label           guifg=#dfcfaf gui=underline
 hi LineNr          guifg=#9fafaf guibg=#262626
@@ -227,7 +227,7 @@ if &t_Co > 255
     hi Identifier      ctermfg=223  
     " notice that incsearch's fg is search's bg
     "hi IncSearch       ctermbg=228   ctermfg=238    
-    hi IncSearch       ctermbg=21   ctermfg=226
+    hi IncSearch       ctermbg=226   ctermfg=21
     hi Keyword         ctermfg=223   cterm=bold
     hi Label           ctermfg=187   cterm=underline
     hi LineNr          ctermfg=248   ctermbg=235    
