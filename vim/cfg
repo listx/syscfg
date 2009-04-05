@@ -22,7 +22,6 @@ colorscheme zenburn_mod
 " let &guicursor = &guicursor . ",a:blinkon0"
 set guicursor+=a:block-blinkon0 "make cursor look square, and prevent cursor blinking
 
-
 " we only want to load autocommands ONCE (esp. for gvim, which sources the
 " vimrc
 if !exists("autocommands_loaded")
@@ -40,6 +39,10 @@ if !exists("autocommands_loaded")
     au BufRead,BufNewFile *.cpp set textwidth=100
     au BufRead,BufNewFile *.cxx set textwidth=100
     au BufRead .vimperatorrc set syn=vim " use vim script syntax highlighting
+    " load lilypond-specific stuff
+    au BufRead,BufNewFile *.ly set filetype=lilypond
+    au! Syntax lilypond source $HOME/.vim/syntax/lilypond.vim
+    "au! Syntax lilypond source /usr/share/lilypond/2.12.2/vim/syntax/lilypond.vim
 
     " Integration with the "boxes" program by Thomas Jensen.
     " Default width is set at 100 characters
