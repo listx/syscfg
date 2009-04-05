@@ -34,6 +34,7 @@ case "${HOSTNAME}" in
     aether)
         urxvtc -e alsamixer
         urxvtc -e htop
+        urxvtc -e rtorrent
         urxvtc
     ;;
     *)
