@@ -32,13 +32,14 @@ setlocal shiftwidth=2
 "map <buffer> <S-F6> :!xdvi %<.dvi &<Return>
 "
 " <F7>  prev error
-map <buffer> <F7> :cp<Return>
+map <buffer> <F7> :cp<CR>
 "
 " <F8>  next error
-map <buffer> <F8> :cn<Return>
+map <buffer> <F8> :cn<CR>
 "
 " <F9>  make
-map <buffer> <F9> :w<Return>:se makeprg=lilypond\ %<Return>:make<Return>
+map <buffer> <F9> :w<CR>:se makeprg=lilypond\ %<CR>:make<CR>
+imap <buffer> <F9> <Esc>:w<CR>:se makeprg=lilypond\ %<CR>:make<CR>
 "
 " <F10> menu
 "source $VIMRUNTIME/menu.vim
