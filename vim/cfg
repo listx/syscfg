@@ -46,18 +46,30 @@ if !exists("autocommands_loaded")
 
     " Integration with the "boxes" program by Thomas Jensen.
     " Default width is set at 100 characters
-    au BufEnter * nmap ,mc !!boxes -d pound-alt -s 100<CR>
-    au BufEnter * vmap ,mc !boxes -d pound-alt -s 100<CR>
+    au BufEnter * nmap ,mc !!boxes -d pound-alt<CR>
+    au BufEnter * vmap ,mc !boxes -d pound-alt<CR>
+    au BufEnter * nmap ,MC !!boxes -d pound-alt -s 100<CR>
+    au BufEnter * vmap ,MC !boxes -d pound-alt -s 100<CR>
     au BufEnter * nmap ,xc !!boxes -d pound-alt -r<CR>
     au BufEnter * vmap ,xc !boxes -d pound-alt -r<CR> 
-    au BufEnter *.C,*.cpp,*.cxx nmap ,mc !!boxes -d cc -s 100<CR>
-    au BufEnter *.C,*.cpp,*.cxx vmap ,mc !boxes -d cc -s 100<CR>
+    au BufEnter *.C,*.cpp,*.cxx nmap ,mc !!boxes -d cc<CR>
+    au BufEnter *.C,*.cpp,*.cxx vmap ,mc !boxes -d cc<CR>
+    au BufEnter *.C,*.cpp,*.cxx nmap ,MC !!boxes -d cc -s 100<CR>
+    au BufEnter *.C,*.cpp,*.cxx vmap ,MC !boxes -d cc -s 100<CR>
     au BufEnter *.C,*.cpp,*.cxx nmap ,xc !!boxes -d cc -r<CR>
     au BufEnter *.C,*.cpp,*.cxx vmap ,xc !boxes -d cc -r<CR>
-    au BufEnter .vimrc,.gvimrc,.vimperatorrc nmap ,mc !!boxes -d vim-cmt -s 100<CR>
-    au BufEnter .vimrc,.gvimrc,.vimperatorrc vmap ,mc !boxes -d vim-cmt -s 100<CR>
+    au BufEnter .vimrc,.gvimrc,.vimperatorrc nmap ,mc !!boxes -d vim-cmt<CR>
+    au BufEnter .vimrc,.gvimrc,.vimperatorrc vmap ,mc !boxes -d vim-cmt<CR>
+    au BufEnter .vimrc,.gvimrc,.vimperatorrc nmap ,MC !!boxes -d vim-cmt -s 100<CR>
+    au BufEnter .vimrc,.gvimrc,.vimperatorrc vmap ,MC !boxes -d vim-cmt -s 100<CR>
     au BufEnter .vimrc,.gvimrc,.vimperatorrc nmap ,xc !!boxes -d vim-cmt -r<CR>
     au BufEnter .vimrc,.gvimrc,.vimperatorrc vmap ,xc !boxes -d vim-cmt -r<CR>
+    au BufEnter *.ly nmap ,mc !!boxes -d netdata<CR>
+    au BufEnter *.ly vmap ,mc !boxes -d netdata<CR>
+    au BufEnter *.ly nmap ,MC !!boxes -d netdata -s 100<CR>
+    au BufEnter *.ly vmap ,MC !boxes -d netdata -s 100<CR>
+    au BufEnter *.ly nmap ,xc !!boxes -d netdata -r<CR>
+    au BufEnter *.ly vmap ,xc !boxes -d netdata -r<CR>
 endif
 
 " quicksave files
