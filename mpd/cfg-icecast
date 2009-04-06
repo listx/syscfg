@@ -187,7 +187,7 @@ audio_output {
 # bits is the quality used on cd's. The third number is the number of channels; 1 channel is       #
 # mono, 2 channels is stereo.                                                                      #
 #--------------------------------------------------------------------------------------------------#
-    format			"44100:16:2"
+    format			"48000:16:2"
     protocol		"icecast2"		# optional
     user			"source"		# optional
     #description		"My Stream Description"	# optional

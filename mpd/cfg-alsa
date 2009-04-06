@@ -159,7 +159,7 @@ audio_output {
     type			"alsa"
     name			"Exelion ALSA output"
 #   device			"hw:0,0"	# optional
-#   format			"44100:16:2"	# optional
+    format			"192000:24:2"	# optional
 }
 #
 # An example of an OSS output:
