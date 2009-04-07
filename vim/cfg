@@ -64,12 +64,12 @@ if !exists("autocommands_loaded")
     au BufEnter .vimrc,.gvimrc,.vimperatorrc vmap ,MC !boxes -d vim-cmt -s 100<CR>
     au BufEnter .vimrc,.gvimrc,.vimperatorrc nmap ,xc !!boxes -d vim-cmt -r<CR>
     au BufEnter .vimrc,.gvimrc,.vimperatorrc vmap ,xc !boxes -d vim-cmt -r<CR>
-    au BufEnter *.ly nmap ,mc !!boxes -d netdata<CR>
-    au BufEnter *.ly vmap ,mc !boxes -d netdata<CR>
-    au BufEnter *.ly nmap ,MC !!boxes -d netdata -s 100<CR>
-    au BufEnter *.ly vmap ,MC !boxes -d netdata -s 100<CR>
-    au BufEnter *.ly nmap ,xc !!boxes -d netdata -r<CR>
-    au BufEnter *.ly vmap ,xc !boxes -d netdata -r<CR>
+    au BufEnter *.ly nmap ,mc !!boxes -d percent<CR>
+    au BufEnter *.ly vmap ,mc !boxes -d percent<CR>
+    au BufEnter *.ly nmap ,MC !!boxes -d percent -s 100<CR>
+    au BufEnter *.ly vmap ,MC !boxes -d percent -s 100<CR>
+    au BufEnter *.ly nmap ,xc !!boxes -d percent -r<CR>
+    au BufEnter *.ly vmap ,xc !boxes -d percent -r<CR>
 endif
 
 " quicksave files

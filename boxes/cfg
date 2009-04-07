@@ -2011,3 +2011,25 @@ padding { h 1 }
 elastic (n,s,e, w)
 
 END pound-alt
+
+BOX percent
+
+author "Linus Arver"
+revision "1.0"
+created "April, 2009"
+
+sample
+    %----------%
+    %          %
+    %----------%
+ends
+
+shapes { nw ("%") ne ("%") sw ("%") se ("%")
+         n  ("-") e  ("%") s  ("-") w  ("%")
+}
+
+padding { h 1 }
+
+elastic (n,s,e, w)
+
+END percent
