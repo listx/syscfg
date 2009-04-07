@@ -176,8 +176,8 @@ case "${HOSTNAME}" in
         # CUSTOM SCRIPTS
         #
         # encoding/decoding
-        alias rgmp3='/home/listdata/syscfg/shellscripts/replaygain/mp3/tmwrg.sh'
-        alias rgflac='/home/listdata/syscfg/shellscripts/replaygain/flac/tfwrg.sh'
+        alias rgmp3='/home/listdata/syscfg/shellscripts/audio/replaygain/mp3/tmwrg.sh'
+        alias rgflac='/home/listdata/syscfg/shellscripts/audio/replaygain/flac/tfwrg.sh'
     ;;
     luxion)
         alias iftope='sudo iftop -B -i eth0'
