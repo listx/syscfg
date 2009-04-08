@@ -12,7 +12,7 @@ mpd_host = "192.168.0.110"
 #
 mpd_port = "6601"
 #
-#mpd_music_dir = ""
+mpd_music_dir = "/home/listdata/.mpd-untracked/music"
 #
 #mpd_connection_timeout = "5"
 #

@@ -7,11 +7,11 @@
 #
 ## set it in order to make tag editor and renaming files work properly
 #
-#mpd_host = "localhost"
+mpd_host = "localhost"
 #
-#mpd_port = "6600"
+mpd_port = "6600"
 #
-#mpd_music_dir = ""
+mpd_music_dir = "/home/listdata/.mpd-untracked/music"
 #
 #mpd_connection_timeout = "5"
 #
