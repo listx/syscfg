@@ -33,6 +33,9 @@ alias ds='dirs -v ; echo -n "\nSelect directory: " ; read n ; d +$n'
 # just show a list of dir stack without choose prompt
 alias dl='dirs -v'
 
+#--------------------------------------------------------------------------------------------------#
+# Environment variables                                                                            #
+#--------------------------------------------------------------------------------------------------#
 # change colors just for the ls command
 # 
 # di = directory
@@ -48,6 +51,9 @@ export LESS_TERMCAP_se=$'\E[0m'
 export LESS_TERMCAP_so=$'\E[01;44;33m'                                 
 export LESS_TERMCAP_ue=$'\E[0m'
 export LESS_TERMCAP_us=$'\E[01;33m'
+
+# default text editor--set it to vim, not vi
+export VISUAL=/usr/bin/vim
 
 #--------------------------------------------------------------------------------------------------#
 # Useful change dirs (first change to the directory, and then list the contents within; notice how #
