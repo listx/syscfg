@@ -72,17 +72,20 @@ if !exists("autocommands_loaded")
     au BufEnter *.ly vmap ,xc !boxes -d percent -r<CR>
 endif
 
-" quicksave files
-map <F4> :w<CR>
-imap <F4> <Esc>:w<CR>a
+" quickly enter current date and time
+imap <F1> <C-R>=strftime("%F (%a) %T")<Esc><Space>-><Space>
+
+" toggle line numbers
+map <F2> :set number!<CR>
+imap <F2> <Esc>:set number!<CR>
 
 " toggle search highlighting
 map <F3> :set hls!<CR>
 imap <F3> <Esc>:set hls!<CR>
 
-" toggle line numbers
-map <F2> :set number!<CR>
-imap <F2> <Esc>:set number!<CR>
+" quicksave files
+map <F4> :w<CR>
+imap <F4> <Esc>:w<CR>a
 
 " programming commands
 imap <F5> <Esc>:!g++ -Wall -mtune=native -m32 % -o ~/prog/temp32<CR>
