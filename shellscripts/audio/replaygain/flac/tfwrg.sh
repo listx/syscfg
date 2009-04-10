@@ -36,4 +36,4 @@ echo "********************************************************"
 echo "Calling tag-flac-with-rg.sh on each directory in:"
 echo $1
 echo ""
-find "$1" -type d -exec /home/listdata/syscfg/shellscripts/replaygain/flac/tag-flac-with-rg.sh '{}' \;
+find "$1" -type d -exec /home/listdata/syscfg/shellscripts/audio/replaygain/flac/tag-flac-with-rg.sh '{}' \;
