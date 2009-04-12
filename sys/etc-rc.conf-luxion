@@ -37,7 +37,7 @@ USECOLOR="yes"
 #
 MOD_AUTOLOAD="yes"
 #MOD_BLACKLIST=() #deprecated
-MODULES=(e100 eepro100 mii slhc b43 ac97_bus snd-mixer-oss snd-pcm-oss snd-page-alloc snd-pcm snd-timer snd snd-ac97-codec snd-intel8x0 soundcore)
+MODULES=(e100 !eepro100 mii slhc b43 ac97_bus snd-mixer-oss snd-pcm-oss snd-page-alloc snd-pcm snd-timer snd snd-ac97-codec snd-intel8x0 soundcore)
 
 # Scan for LVM volume groups at startup, required if you use LVM
 USELVM="no"
