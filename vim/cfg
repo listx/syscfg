@@ -75,9 +75,9 @@ endif
 " quickly enter current date and time
 imap <F1> <C-R>=strftime("%F (%a) %T")<Esc><Space>-><Space>
 
-" toggle line numbers
-map <F2> :set number!<CR>
-imap <F2> <Esc>:set number!<CR>
+" exit
+map <F2> :q<CR>
+imap <F2> <Esc>:q<CR>
 
 " toggle search highlighting
 map <F3> :set hls!<CR>
@@ -91,6 +91,10 @@ imap <F4> <Esc>:w<CR>a
 imap <F5> <Esc>:!g++ -Wall -mtune=native -m32 % -o ~/prog/temp32<CR>
 imap <F6> <Esc>:!xterm -hold -e ~/prog/temp32<CR>
 map <F6> <Esc>:!xterm -hold -e ~/prog/temp32<CR>
+
+" toggle line numbers
+map <F12> :set number!<CR>
+imap <F12> <Esc>:set number!<CR>
 
 " makes j and k move up or down 1 "line" as it appears on the screen -- not by
 " the actual number of lines in the text file
