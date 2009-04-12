@@ -534,7 +534,7 @@ personal-print-command=
 personal-print-category=
 
 # Patterns and their actions are stored here.
-patterns-roles=LIT:pattern="/NICK=linusarver/FLDTYPE=SPEC/FOLDER={imap.gmail.com\/ssl\/user=linusarver@gmail.com}INBOX" action="/ROLE=1/FROM=Linus Arver <linus@ucla.edu>/SMTP=smtp.gmail.com\/tls\/user=linusarver@gmail.com/RTYPE=YES/FTYPE=YES/CTYPE=YES",
+patterns-roles=LIT:pattern="/NICK=linusarver/FLDTYPE=SPEC/FOLDER={imap.gmail.com\/ssl\/user=linusarver@gmail.com}INBOX" action="/ROLE=1/FROM=Linus Arver <linusarver@gmail.com>/SMTP=smtp.gmail.com\/tls\/user=linusarver@gmail.com/RTYPE=YES/FTYPE=YES/CTYPE=YES",
 	LIT:pattern="/NICK=firepotion/FLDTYPE=SPEC/FOLDER={imap.gmail.com\/ssl\/user=firepotion@gmail.com}INBOX" action="/ROLE=1/FROM=Linus Arver <ingravity@hotmail.com>/SMTP=smtp.gmail.com\/tls\/user=firepotion@gmail.com/RTYPE=YES/FTYPE=YES/CTYPE=YES"
 
 # Patterns and their actions are stored here.
