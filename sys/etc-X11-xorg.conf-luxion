@@ -21,8 +21,8 @@ Section "Module"
 	Load  "extmod"
 	Load  "glx"
 	Load  "dri"
-	Load  "xtrap"
-	Load  "freetype"
+	#Load  "xtrap"
+	#Load  "freetype"
     Load  "synaptics"
 EndSection
 
@@ -105,6 +105,7 @@ Section "Device"
 	BusID       "PCI:0:2:0"
 	Option "AccelMethod" "exa"
 	Option "MigrationHeuristic" "greedy"
+    Option "Legacy3D" "off"
 EndSection
 
 #Section "Device"
