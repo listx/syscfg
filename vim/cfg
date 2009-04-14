@@ -73,7 +73,14 @@ if !exists("autocommands_loaded")
 endif
 
 " quickly enter current date and time
-imap <F1> <C-R>=strftime("%F (%a) %T")<Esc><Space>-><Space>
+" NOTE: the <F1> key in normal mode is mapped to ":help" by default
+function Insert_newline_smartly()
+    if col(".") != 1
+        normal o
+    endif
+endfunction
+map <F1> :call Insert_newline_smartly()<CR>i<C-R>=strftime("%F (%a) %T")<Esc><Space>-><Space>
+imap <F1> <Esc>:call Insert_newline_smartly()<CR>i<C-R>=strftime("%F (%a) %T")<Esc><Space>-><Space>
 
 " exit
 map <F2> :q<CR>
