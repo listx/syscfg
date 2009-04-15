@@ -269,6 +269,9 @@ myManageHook = composeAll
     -- and then have it automatically place these programs in these given
     -- workspaces!
     --
+    --    * resource is the first element in WM_CLASS(STRING)
+    --    * className is the second element in WM_CLASS(STRING)
+    --    * title is WM_NAME(STRING)
     -- the settings here are used in conjunction with the startup commands in ~/.xmonad/init.sh
     -- also, notice that ones with className mean that ANY and ALL instances of this will
     -- ALWAYS be shifted to the workspace specified
@@ -276,7 +279,7 @@ myManageHook = composeAll
     , stringProperty "WM_NAME"  =? "alsamixer"         --> doShift "sysutil"
     , stringProperty "WM_NAME"  =? "htop"              --> doShift "sysutil"
     , stringProperty "WM_NAME"  =? "mplayer"           --> doShift "music"
-    , className  =? "WeeChat"    --> doShift "comm"
+    , resource  =? "WeeChat"    --> doShift "comm"
     , stringProperty "WM_NAME"  =? "alpine"            --> doShift "comm"
     , stringProperty "WM_NAME"  =? "rtorrent"          --> doShift "share"
     --, stringProperty "WM_NAME"  =? "xmonad-init-notes (~) - GVIM1"             --> doShift "study"
