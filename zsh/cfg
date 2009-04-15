@@ -97,6 +97,7 @@ alias n='netcfg'
 
 alias g='git'
 alias gdf='git diff'
+alias gdfc='git diff --cached'
 alias gbr='git branch'
 alias gcm='git commit'
 alias glg='git log'
