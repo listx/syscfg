@@ -150,7 +150,7 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
     , ((modMask               , xK_BackSpace), warpToWindow 1 1)
     , ((mod4Mask              , xK_x     ), spawn "urxvtc")
     , ((mod4Mask              , xK_n     ), spawn "firefox")
-    , ((mod4Mask .|. shiftMask, xK_n     ), spawn "urxvtc -e irssi --config=~/.irssi-untracked --home=~/syscfg/irssi")
+    , ((mod4Mask .|. shiftMask, xK_n     ), spawn "urxvtc -e weechat-curses")
     , ((mod4Mask              , xK_t     ), spawn "gvim")
     , ((mod4Mask .|. shiftMask, xK_t     ), spawn "xclock -d -update 1 -render -strftime \"%F %a %T Week %W\" -face terminus")
     , ((mod4Mask              , xK_c     ), spawn "galculator")
@@ -276,7 +276,7 @@ myManageHook = composeAll
     , stringProperty "WM_NAME"  =? "alsamixer"         --> doShift "sysutil"
     , stringProperty "WM_NAME"  =? "htop"              --> doShift "sysutil"
     , stringProperty "WM_NAME"  =? "mplayer"           --> doShift "music"
-    , stringProperty "WM_NAME"  =? "irssi"             --> doShift "comm"
+    , className  =? "WeeChat"    --> doShift "comm"
     , stringProperty "WM_NAME"  =? "alpine"            --> doShift "comm"
     , stringProperty "WM_NAME"  =? "rtorrent"          --> doShift "share"
     --, stringProperty "WM_NAME"  =? "xmonad-init-notes (~) - GVIM1"             --> doShift "study"

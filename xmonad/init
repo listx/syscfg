@@ -13,8 +13,14 @@ case "${HOSTNAME}" in
         urxvtc -e htop
         # since the physical speaker buttons are easier to use, forget about alsamixer
         # urxvtc -e alsamixer
+
+        # IRSSI
         # make irssi track everything under syscfg EXCEPT for the config file containing sensitive password information (I have to manually check that the syscfg/irssi/cfg-nopassword file stays up-to-date with the untracked config file)
-        urxvtc -e irssi --config=~/.irssi-untracked --home=~/syscfg/irssi
+        # urxvtc -e irssi --config=~/.irssi-untracked --home=~/syscfg/irssi
+
+        # WEECHAT
+        urxvtc -name WeeChat -e weechat-curses
+
         # the -passfile option ONLY WORKS if alpine is compiled with
         # "--with-passfile=some-default-file-without-directory-structure", and alpine will then
         # by default ask if you want to save passwords to disk, and use the file specified in

@@ -37,9 +37,6 @@ case "${HOSTNAME}" in
 
         # change to 'lhp' directory, then start the ruby on rails app there, and daemonize this process too
         thin -c /home/listdata/prog/lhp -d start
-
-        # start bitlbee
-        bitlbee -F
     ;;
     luxion)
     ;;
