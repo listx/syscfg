@@ -1993,17 +1993,17 @@ END underline
 BOX pound-alt
 
 author "Linus Arver"
-revision "1.0"
-created "February 8, 2009"
+revision "1.1"
+created "April, 2009"
 
 sample
-    #----------#
+    #==========#
     #          #
-    #----------#
+    #==========#
 ends
 
 shapes { nw ("#") ne ("#") sw ("#") se ("#")
-         n  ("-") e  ("#") s  ("-") w  ("#")
+         n  ("=") e  ("#") s  ("=") w  ("#")
 }
 
 padding { h 1 }
@@ -2019,13 +2019,13 @@ revision "1.0"
 created "April, 2009"
 
 sample
-    %----------%
+    %==========%
     %          %
-    %----------%
+    %==========%
 ends
 
 shapes { nw ("%") ne ("%") sw ("%") se ("%")
-         n  ("-") e  ("%") s  ("-") w  ("%")
+         n  ("=") e  ("%") s  ("=") w  ("%")
 }
 
 padding { h 1 }
@@ -2033,3 +2033,25 @@ padding { h 1 }
 elastic (n,s,e, w)
 
 END percent
+
+BOX c-single
+
+author "Linus Arver"
+revision "1.0"
+created "April, 2009"
+
+sample
+    //==========//
+    //          //
+    //==========//
+ends
+
+shapes { nw ("//") ne ("//") sw ("//") se ("//")
+         n  ("=") e  ("//") s  ("=") w  ("//")
+}
+
+padding { h 1 }
+
+elastic (n,s,e, w)
+
+END c-single
