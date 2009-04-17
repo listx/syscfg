@@ -86,9 +86,10 @@ imap <F1> <Esc>:call Insert_newline_smartly()<CR>i<C-R>=strftime("%F (%a) %T")<E
 map <F2> :q<CR>
 imap <F2> <Esc>:q<CR>
 
-" toggle search highlighting
-map <F3> :set hls!<CR>
-imap <F3> <Esc>:set hls!<CR>
+" turn off search highlighting (to turn on, press 'n' in normal mode for next
+" term)
+map <F3> :noh<CR>
+imap <F3> <Esc>:noh<CR>
 
 " quicksave files
 map <F4> :w<CR>
