@@ -70,15 +70,15 @@ if !exists("autocommands_loaded")
     au BufEnter *.ly vmap ,MC !boxes -d percent -s 100<CR>
     au BufEnter *.ly nmap ,xc !!boxes -d percent -r<CR>
     au BufEnter *.ly vmap ,xc !boxes -d percent -r<CR>
+    function Insert_newline_smartly()
+        if col(".") != 1
+            normal o
+        endif
+    endfunction
 endif
 
 " quickly enter current date and time
 " NOTE: the <F1> key in normal mode is mapped to ":help" by default
-function Insert_newline_smartly()
-    if col(".") != 1
-        normal o
-    endif
-endfunction
 map <F1> :call Insert_newline_smartly()<CR>i<C-R>=strftime("%F (%a) %T")<Esc><Space>-><Space>
 imap <F1> <Esc>:call Insert_newline_smartly()<CR>i<C-R>=strftime("%F (%a) %T")<Esc><Space>-><Space>
 
