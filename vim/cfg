@@ -15,7 +15,7 @@ set gfn=Terminus\ 11
 " so zenburn's background is properly loaded ... 2008/12/23
 set t_Co=256
 if has('gui_running')
-    colorscheme colorful
+    colorscheme colorful_mod
 else
     colorscheme zenburn_mod
 endif
