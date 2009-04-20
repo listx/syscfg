@@ -10,7 +10,7 @@ endif
 let g:colors_name = "colorful_mod"
 
 " Normal {{{1
-hi Normal guifg=DarkBlue guibg=#ededed
+hi Normal guifg=DarkBlue guibg=#fdfdfd
 
 " Search {{{1
 hi IncSearch cterm=UNDERLINE ctermfg=Black ctermbg=brown gui=UNDERLINE guifg=White guibg=NavyBlue
