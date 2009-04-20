@@ -14,7 +14,11 @@ set lbr "for word wrapping to be based on words, not characters
 set gfn=Terminus\ 11
 " so zenburn's background is properly loaded ... 2008/12/23
 set t_Co=256
-colorscheme zenburn_mod
+if has('gui_running')
+    colorscheme colorful
+else
+    colorscheme zenburn_mod
+endif
 
 " Turn off blinking for the n, v, & c states:
 "let &guicursor = substitute(&guicursor, "n-v-c:", "n-v-c:blinkon0-", "")
