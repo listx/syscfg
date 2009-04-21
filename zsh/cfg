@@ -107,6 +107,9 @@ alias gps='git push'
 alias v='vim'
 alias vv='gvim'
 
+alias tm='tmux'
+alias tma='tmux attach-session'
+
 # these sane hostnames depend on the /etc/hosts file!
 alias se='ssh listdata@exelion'
 alias sle='ssh listdata@luxion.e'
@@ -123,15 +126,6 @@ alias -g LW='listdata@luxion.w:'
 alias -g AE='listdata@aether.e:'
 alias -g AW='listdata@aether.w:'
 alias -g C='kimberly@caterpillar:'
-
-# sync the following with visudo to disable passwords!
-#
-# Template (in visudo):
-#
-# user  hostname=NOPASSWD:  path-to-command
-#
-# E.g.::'
-alias -g C='kimberly@192.168.0.120:'
 
 # sync the following with visudo to disable passwords!
 #
@@ -157,7 +151,7 @@ alias ppa='sudo powerpill -Sy'
 
 alias y='sudo yaourt'
 alias yu='sudo yaourt -Sybu --aur'
-alias yaa='sudo yaourt -Sy'
+alias ya='sudo yaourt -Sy'
 
 #--------------------------------------------------------------------------------------------------#
 # Host-specific settings (different aliases, etc. for different computers                          #
