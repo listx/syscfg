@@ -176,7 +176,7 @@ case "${HOSTNAME}" in
         alias m3='d /mnt/hd1backup2'
         alias m4='d /mnt/hd1ext3bkup'
         alias m5='d /mnt/hd2backup4'
-        alias m6='d /mnt/hd2xubuntu'
+        alias m6='d /mnt/hd2backup5'
         alias m7='d /mnt/usb1'
         alias usbon='sudo mount /dev/sdc1 /mnt/usb1'
         alias usboff='sudo umount /dev/sdc1'
