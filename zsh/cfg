@@ -153,6 +153,12 @@ alias y='sudo yaourt'
 alias yu='sudo yaourt -Sybu --aur'
 alias ya='sudo yaourt -Sy'
 
+# CUSTOM SCRIPTS
+#
+# encoding/decoding
+alias rgmp3='/home/listdata/syscfg/shellscripts/audio/replaygain/mp3/tmwrg.sh'
+alias rgflac='/home/listdata/syscfg/shellscripts/audio/replaygain/flac/tfwrg.sh'
+
 #--------------------------------------------------------------------------------------------------#
 # Host-specific settings (different aliases, etc. for different computers                          #
 #     from http://www.jauu.net/data/jauu_backup/data/dotfiles/zshrc.html                           #
@@ -174,11 +180,6 @@ case "${HOSTNAME}" in
         alias m7='d /mnt/usb1'
         alias usbon='sudo mount /dev/sdc1 /mnt/usb1'
         alias usboff='sudo umount /dev/sdc1'
-        # CUSTOM SCRIPTS
-        #
-        # encoding/decoding
-        alias rgmp3='/home/listdata/syscfg/shellscripts/audio/replaygain/mp3/tmwrg.sh'
-        alias rgflac='/home/listdata/syscfg/shellscripts/audio/replaygain/flac/tfwrg.sh'
     ;;
     luxion)
         alias iftope='sudo iftop -B -i eth0'

@@ -57,7 +57,7 @@ echo -e ""
 echo -e "\033[1;37mAdding ID3 tags with the same calculated info from above...\033[0m"
 echo -e ""
 # the -d is for debug messages if there are any errors, and the -f is for overwriting any existing ID3 replay gain tags
-~/syscfg/shellscripts/replaygain/mp3/ape2id3.py -df "$1"/*.mp3
+~/syscfg/shellscripts/audio/replaygain/mp3/ape2id3.py -df "$1"/*.mp3
 echo -e ""
 echo -e "\033[1;37mDone.\033[0m"
 #-----------------------------------------------------------------------------------------------------#
