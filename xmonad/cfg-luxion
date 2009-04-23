@@ -284,6 +284,8 @@ myManageHook = composeAll
     , className  =? "Blender"    --> doShift "multimedia"
     , className  =? "Blender:Render"    --> doFloat
     , className  =? "XClock"    --> doFloat
+    , className  =? "Audacity"    --> doFloat
+    , className  =? "Gitk"    --> doFloat
     -- the following are NOT in the init.sh file -- so these are ones that should always be
     -- in a certain workspace, when started with a hotkey
     --, stringProperty "WM_NAME"  =? "[No Name] - GVIM"             --> doShift "study"
