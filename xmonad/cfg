@@ -294,6 +294,7 @@ myManageHook = composeAll
     , className  =? "Audacity"    --> doFloat
     , className  =? "Gitk"    --> doFloat
     , className  =? "Gcalctool"    --> doFloat
+    , className  =? "Scid"    --> doFloat
     --, className  =? "Luxrender"    --> doFloat
     -- the following are NOT in the init.sh file -- so these are ones that should always be
     -- in a certain workspace, when started with a hotkey

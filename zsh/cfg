@@ -150,9 +150,9 @@ alias pp='sudo powerpill'
 alias ppu='sudo powerpill -Syu'
 alias ppa='sudo powerpill -Sy'
 
-alias y='sudo yaourt'
-alias yu='sudo yaourt -Sybu --aur'
-alias ya='sudo yaourt -Sy'
+alias y='yaourt'
+alias yu='yaourt -Sybu --aur'
+alias ya='yaourt -Sy'
 
 # CUSTOM SCRIPTS
 #
