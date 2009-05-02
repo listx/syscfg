@@ -86,7 +86,8 @@ Section "Monitor"
     VendorName     "Unknown"
     ModelName      "Acer X222W"
     HorizSync       31.0 - 81.0
-    VertRefresh     56.0 - 75.0
+    #VertRefresh     56.0 - 75.0 # original
+    VertRefresh     60.0
     Option         "DPMS"
 EndSection
 

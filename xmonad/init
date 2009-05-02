@@ -10,9 +10,8 @@ HOSTNAME=$(hostname)
 case "${HOSTNAME}" in
     exelion)
         urxvtc -e ncmpcpp
+        urxvtc -e alsamixer
         urxvtc -e htop
-        # since the physical speaker buttons are easier to use, forget about alsamixer
-        # urxvtc -e alsamixer
 
         # IRSSI
         # make irssi track everything under syscfg EXCEPT for the config file containing sensitive password information (I have to manually check that the syscfg/irssi/cfg-nopassword file stays up-to-date with the untracked config file)

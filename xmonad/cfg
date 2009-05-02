@@ -291,6 +291,10 @@ myManageHook = composeAll
     , className  =? "XClock"    --> doFloat
     , className =? "Dolphin"        --> doFloat -- dolphin emulator menu
     , stringProperty "WM_ICON_NAME"  =? "GPU"            --> doFloat -- dolphine emulator popup
+    , className  =? "Audacity"    --> doFloat
+    , className  =? "Gitk"    --> doFloat
+    , className  =? "Gcalctool"    --> doFloat
+    , className  =? "Scid"    --> doFloat
     --, className  =? "Luxrender"    --> doFloat
     -- the following are NOT in the init.sh file -- so these are ones that should always be
     -- in a certain workspace, when started with a hotkey
@@ -299,7 +303,7 @@ myManageHook = composeAll
  
 -- Whether focus follows the mouse pointer.
 myFocusFollowsMouse :: Bool
-myFocusFollowsMouse = False
+myFocusFollowsMouse = True
  
  
 ------------------------------------------------------------------------
