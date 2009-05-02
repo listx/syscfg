@@ -89,6 +89,7 @@ Section "Monitor"
     #VertRefresh     56.0 - 75.0 # original
     VertRefresh     60.0
     Option         "DPMS"
+    Option "Rotate" "Right" # for portrait mode
 EndSection
 
 Section "Device"
@@ -96,6 +97,11 @@ Section "Device"
     Driver         "nvidia"
     VendorName     "NVIDIA Corporation"
     BoardName      "GeForce 8800 GTS"
+
+    # allows Monitor section's '"Rotate" "Right"' option
+    #   * alternatively, instead of messing with the Monitor section in this config file,
+    #   you could instead just do "xrandr -o right" in your ~/.xinitrc
+    Option         "RandRRotation" "on"
 EndSection
 
 Section "Screen"
@@ -105,9 +111,15 @@ Section "Screen"
     DefaultDepth    24
     Option         "TwinView" "1"
     Option         "TwinViewXineramaInfoOrder" "DFP-1"
-    Option         "metamodes" "DFP-0: 1680x1050 +1680+0, DFP-1: 1680x1050 +0+0"
+
+    # original version (landscape -- i.e., normal mode)
+    #Option         "metamodes" "DFP-0: 1680x1050 +1680+0, DFP-1: 1680x1050 +0+0"
+
+    # for portrait mode
+    Option         "metamodes" "DFP-0: 1680x1050 +0+1050, DFP-1: 1680x1050 +0+0"
+    Option         "TwinViewOrientation" "Below"
+
     SubSection     "Display"
         Depth       24
     EndSubSection
 EndSection
-
