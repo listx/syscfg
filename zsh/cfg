@@ -41,7 +41,7 @@ alias dl='dirs -v'
 # di = directory
 # 01;37 = ansi color code for bold white
 # 01;33 is bolded yellow (BRIGHT yellow)
-export LS_COLORS='di=01;33:ex=31:ln=36:*.gz=32:*.bz2=32:*.zip=32:*.rar=32:*.tar=32'
+export LS_COLORS='di=01;33:ow=01;34:tw=01;34;44:ex=31:ln=36:*.gz=32:*.bz2=32:*.zip=32:*.rar=32:*.tar=32'
 
 # LESS's settings (for manpages with color!)
 export LESS_TERMCAP_mb=$'\E[01;32m'
