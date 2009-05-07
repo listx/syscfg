@@ -288,6 +288,8 @@ myManageHook = composeAll
     , className  =? "Audacity"    --> doFloat
     , className  =? "Gitk"    --> doFloat
     , className  =? "Gcalctool"    --> doFloat
+    , className  =? "Scid"    --> doFloat
+    , className  =? "Pychess"    --> doFloat
     -- the following are NOT in the init.sh file -- so these are ones that should always be
     -- in a certain workspace, when started with a hotkey
     --, stringProperty "WM_NAME"  =? "[No Name] - GVIM"             --> doShift "study"
