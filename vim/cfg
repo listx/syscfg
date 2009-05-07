@@ -60,6 +60,8 @@ if !exists("autocommands_loaded")
     au BufEnter *.C,*.cpp,*.cxx,*.h vmap ,mc !boxes -d c-single<CR>
     au BufEnter *.C,*.cpp,*.cxx,*.h nmap ,MC !!boxes -d c-single -s 100<CR>
     au BufEnter *.C,*.cpp,*.cxx,*.h vmap ,MC !boxes -d c-single -s 100<CR>
+    au BufEnter *.C,*.cpp,*.cxx,*.h nmap ,mw !!boxes -d c-single -s 120<CR>
+    au BufEnter *.C,*.cpp,*.cxx,*.h vmap ,mw !boxes -d c-single -s 120<CR>
     au BufEnter *.C,*.cpp,*.cxx,*.h nmap ,xc !!boxes -d c-single -r<CR>
     au BufEnter *.C,*.cpp,*.cxx,*.h vmap ,xc !boxes -d c-single -r<CR>
     au BufEnter .vimrc,.gvimrc,.vimperatorrc nmap ,mc !!boxes -d vim-cmt<CR>
