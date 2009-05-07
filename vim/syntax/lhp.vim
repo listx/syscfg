@@ -52,15 +52,15 @@ syn match  lhpString    "\s'[^']*'\(\s\|$\)"   containedin=ALLBUT,@lhpQuotations
 "syn match  lhpString      "[^\[\s*a-zA-Z\s+=].*" contains=comma
 
 syn cluster lhpHeaders  contains=lhpHeader1,lhpHeader2,lhpHeader3,lhpHeader4,lhpHeader5,lhpHeader6,lhpHeader7,lhpHeader8,lhpHeader9
-syn match  lhpHeader1   "^\(\s\|1\)" containedin=ALL
-syn match  lhpHeader2   "^\s\{4}\(\s\|2\)" containedin=ALL
-syn match  lhpHeader3   "^\s\{8}\(\s\|3\)" containedin=ALL
-syn match  lhpHeader4   "^\s\{12}\(\s\|4\)" containedin=ALL
-syn match  lhpHeader5   "^\s\{16}\(\s\|5\)" containedin=ALL
-syn match  lhpHeader6   "^\s\{20}\(\s\|6\)" containedin=ALL
-syn match  lhpHeader7   "^\s\{24}\(\s\|7\)" containedin=ALL
-syn match  lhpHeader8   "^\s\{28}\(\s\|8\)" containedin=ALL
-syn match  lhpHeader9   "^\s\{32}\(\s\|9\)" containedin=ALL
+syn match  lhpHeader1   "^\(\s\|1\)\s" containedin=ALL
+syn match  lhpHeader2   "^\s\{4}\(\s\|2\)\s" containedin=ALL
+syn match  lhpHeader3   "^\s\{8}\(\s\|3\)\s" containedin=ALL
+syn match  lhpHeader4   "^\s\{12}\(\s\|4\)\s" containedin=ALL
+syn match  lhpHeader5   "^\s\{16}\(\s\|5\)\s" containedin=ALL
+syn match  lhpHeader6   "^\s\{20}\(\s\|6\)\s" containedin=ALL
+syn match  lhpHeader7   "^\s\{24}\(\s\|7\)\s" containedin=ALL
+syn match  lhpHeader8   "^\s\{28}\(\s\|8\)\s" containedin=ALL
+syn match  lhpHeader9   "^\s\{32}\(\s\|9\)\s" containedin=ALL
 
 " A Python block starts with ":python" and continues so long as the indent is
 " bigger.
