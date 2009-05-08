@@ -7,7 +7,8 @@ hi link cCommentL Comment
 
 "syn keyword cppConditional break
 
-" so that the 'string' word is highlighted as well
-syn keyword cppType string square_t file_t rank_t sdelta_t
-syn keyword cTodo contained NOTE
+" most of these new keywords are from chess engine development (all except
+" "string")
+syn keyword cppType string square_t file_t rank_t sdelta_t pos_t u64 u32
+syn keyword cTodo contained NOTE IDEA
 
