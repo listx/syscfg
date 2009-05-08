@@ -55,28 +55,30 @@ if !exists("autocommands_loaded")
     " Default width is set at 100 characters
     au BufEnter * nmap ,mc !!boxes -d pound-alt<CR>
     au BufEnter * vmap ,mc !boxes -d pound-alt<CR>
-    au BufEnter * nmap ,MC !!boxes -d pound-alt -s 100<CR>
-    au BufEnter * vmap ,MC !boxes -d pound-alt -s 100<CR>
+    au BufEnter * nmap ,MC !!boxes -d pound-alt -s 120<CR>
+    au BufEnter * vmap ,MC !boxes -d pound-alt -s 120<CR>
     au BufEnter * nmap ,xc !!boxes -d pound-alt -r<CR>
     au BufEnter * vmap ,xc !boxes -d pound-alt -r<CR> 
+    au BufEnter *.C,*.cpp,*.cxx,*.h,*.hpp nmap ,mi !!boxes -d headline<CR>
+    au BufEnter *.C,*.cpp,*.cxx,*.h,*.hpp vmap ,mi !boxes -d headline<CR>
+    au BufEnter *.C,*.cpp,*.cxx,*.h,*.hpp nmap ,xi !!boxes -d headline -r<CR>
+    au BufEnter *.C,*.cpp,*.cxx,*.h,*.hpp vmap ,xi !boxes -d headline -r<CR>
     au BufEnter *.C,*.cpp,*.cxx,*.h,*.hpp nmap ,mc !!boxes -d c-single<CR>
     au BufEnter *.C,*.cpp,*.cxx,*.h,*.hpp vmap ,mc !boxes -d c-single<CR>
-    au BufEnter *.C,*.cpp,*.cxx,*.h,*.hpp nmap ,MC !!boxes -d c-single -s 100<CR>
-    au BufEnter *.C,*.cpp,*.cxx,*.h,*.hpp vmap ,MC !boxes -d c-single -s 100<CR>
-    au BufEnter *.C,*.cpp,*.cxx,*.h,*.hpp nmap ,mw !!boxes -d c-single -s 120<CR>
-    au BufEnter *.C,*.cpp,*.cxx,*.h,*.hpp vmap ,mw !boxes -d c-single -s 120<CR>
+    au BufEnter *.C,*.cpp,*.cxx,*.h,*.hpp nmap ,MC !!boxes -d c-single -s 120<CR>
+    au BufEnter *.C,*.cpp,*.cxx,*.h,*.hpp vmap ,MC !boxes -d c-single -s 120<CR>
     au BufEnter *.C,*.cpp,*.cxx,*.h,*.hpp nmap ,xc !!boxes -d c-single -r<CR>
     au BufEnter *.C,*.cpp,*.cxx,*.h,*.hpp vmap ,xc !boxes -d c-single -r<CR>
     au BufEnter .vimrc,.gvimrc,.vimperatorrc nmap ,mc !!boxes -d vim-cmt<CR>
     au BufEnter .vimrc,.gvimrc,.vimperatorrc vmap ,mc !boxes -d vim-cmt<CR>
-    au BufEnter .vimrc,.gvimrc,.vimperatorrc nmap ,MC !!boxes -d vim-cmt -s 100<CR>
-    au BufEnter .vimrc,.gvimrc,.vimperatorrc vmap ,MC !boxes -d vim-cmt -s 100<CR>
+    au BufEnter .vimrc,.gvimrc,.vimperatorrc nmap ,MC !!boxes -d vim-cmt -s 120<CR>
+    au BufEnter .vimrc,.gvimrc,.vimperatorrc vmap ,MC !boxes -d vim-cmt -s 120<CR>
     au BufEnter .vimrc,.gvimrc,.vimperatorrc nmap ,xc !!boxes -d vim-cmt -r<CR>
     au BufEnter .vimrc,.gvimrc,.vimperatorrc vmap ,xc !boxes -d vim-cmt -r<CR>
     au BufEnter *.ly nmap ,mc !!boxes -d percent<CR>
     au BufEnter *.ly vmap ,mc !boxes -d percent<CR>
-    au BufEnter *.ly nmap ,MC !!boxes -d percent -s 100<CR>
-    au BufEnter *.ly vmap ,MC !boxes -d percent -s 100<CR>
+    au BufEnter *.ly nmap ,MC !!boxes -d percent -s 120<CR>
+    au BufEnter *.ly vmap ,MC !boxes -d percent -s 120<CR>
     au BufEnter *.ly nmap ,xc !!boxes -d percent -r<CR>
     au BufEnter *.ly vmap ,xc !boxes -d percent -r<CR>
     function Insert_newline_smartly()
