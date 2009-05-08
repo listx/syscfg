@@ -30,6 +30,9 @@ set guicursor+=a:block-blinkon0 "make cursor look square, and prevent cursor bli
 " vimrc
 if !exists("autocommands_loaded")
     let autocommands_loaded = 1
+    " Yuri Klubakov's sessionman.vim script: disable automatic session saves
+    " on exit
+    let sessionman_save_on_exit = 0
     " custom configobj (python module) syntax highlighting
     au BufRead,BufNewFile *.configobj set filetype=configobj
     au! Syntax configobj source $HOME/.vim/syntax/configobj.vim
