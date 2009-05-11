@@ -1,8 +1,16 @@
 set number "line numbers
 set nobackup
-set tabstop=8
-set shiftwidth=8
+" default tabstop and shiftwidths
+set tabstop=4
+set shiftwidth=4
 set expandtab
+
+" see ":help statusline" for more information about status lines, as well as
+" the default "standard" one
+"
+" %{&ff} gives the file format, but is not used here because it is hardly ever
+" needed
+set statusline=%<%F\ %h%m%r%=%-14.(%l,%c%V%)\ %P\ %L
 syntax enable "enable syntax highlighting
 set hlsearch "turn on search highlighting
 filetype indent on "turn on automatic indenting, as well as filetype recognition
@@ -15,7 +23,7 @@ set gfn=Terminus\ 11
 " so zenburn's background is properly loaded ... 2008/12/23
 set t_Co=256
 if has('gui_running')
-    colorscheme colorful_mod
+    colorscheme delek
 else
     colorscheme zenburn_mod
 endif
@@ -39,6 +47,10 @@ set tabpagemax=50
 " commands in normal/visual mode
 set timeoutlen=10000
 
+" change the default universal default mod-key for custom key mappings from
+" backslash "\" to ","
+let mapleader = ","
+
 " we only want to load autocommands ONCE (esp. for gvim, which sources the
 " vimrc
 if !exists("autocommands_loaded")
@@ -48,13 +60,18 @@ if !exists("autocommands_loaded")
     au! Syntax configobj source $HOME/.vim/syntax/configobj.vim
     au BufRead,BufNewFile *.lhp set filetype=lhp
     au! Syntax lhp source $HOME/.vim/syntax/lhp.vim
-    au BufRead,BufNewFile *.rb set textwidth=120
+
+    " tabstop is how wide the <TAB> character is, whether it's an actual <TAB>
+    " character or converted into space characters with expandtab
+    au BufRead,BufNewFile *.rb,*.py set tabstop=4
+    " shiftwidth is how many characters are used when auto-indenting, and also
+    " when typing '>>' and '<<' in normal mode
+    au BufRead,BufNewFile *.rb,*.py set shiftwidth=4
 " Note that vim's 'textwidth' only really works for COMMENT lines, as doing so otherwise would break whitespace-sensitive code (like Python)
-    au BufRead,BufNewFile *.py set textwidth=120
-    au BufRead,BufNewFile *.c set textwidth=120
-    au BufRead,BufNewFile *.C set textwidth=120
-    au BufRead,BufNewFile *.cpp set textwidth=120
-    au BufRead,BufNewFile *.cxx set textwidth=120
+    au BufRead,BufNewFile *.rb,*.py set textwidth=120
+    au BufRead,BufNewFile *.c,*.cpp,*.h,*.hpp set tabstop=8
+    au BufRead,BufNewFile *.c,*.cpp,*.h,*.hpp set shiftwidth=8
+    au BufRead,BufNewFile *.c,*.cpp,*.h,*.hpp set textwidth=120
     au BufRead .vimperatorrc set syn=vim " use vim script syntax highlighting
     " load lilypond-specific stuff
     au BufRead,BufNewFile *.ly set filetype=lilypond
@@ -63,53 +80,60 @@ if !exists("autocommands_loaded")
 
     " Integration with the "boxes" program by Thomas Jensen.
     " Default width is set at 100 characters
-    au BufEnter * nmap ,c1 !!boxes -d pound-alt<CR>
-    au BufEnter * vmap ,c1 !boxes -d pound-alt<CR>
-    au BufEnter * nmap ,cw1 !!boxes -d pound-alt -s 120<CR>
-    au BufEnter * vmap ,cw1 !boxes -d pound-alt -s 120<CR>
-    au BufEnter * nmap ,x1 !!boxes -d pound-alt -r<CR>
-    au BufEnter * vmap ,x1 !boxes -d pound-alt -r<CR> 
-    au BufEnter *.C,*.cpp,*.cxx,*.h,*.hpp nmap ,c1 !!boxes -d c-top<CR>
-    au BufEnter *.C,*.cpp,*.cxx,*.h,*.hpp vmap ,c1 !boxes -d c-top<CR>
-    au BufEnter *.C,*.cpp,*.cxx,*.h,*.hpp nmap ,cw1 !!boxes -d c-top -s 120<CR>
-    au BufEnter *.C,*.cpp,*.cxx,*.h,*.hpp vmap ,cw1 !boxes -d c-top -s 120<CR>
-    au BufEnter *.C,*.cpp,*.cxx,*.h,*.hpp nmap ,x1 !!boxes -d c-top -r<CR>
-    au BufEnter *.C,*.cpp,*.cxx,*.h,*.hpp vmap ,x1 !boxes -d c-top -r<CR>
-    au BufEnter *.C,*.cpp,*.cxx,*.h,*.hpp nmap ,c2 !!boxes -d c-mid<CR>
-    au BufEnter *.C,*.cpp,*.cxx,*.h,*.hpp vmap ,c2 !boxes -d c-mid<CR>
-    au BufEnter *.C,*.cpp,*.cxx,*.h,*.hpp nmap ,cw2 !!boxes -d c-mid -s 120<CR>
-    au BufEnter *.C,*.cpp,*.cxx,*.h,*.hpp vmap ,cw2 !boxes -d c-mid -s 120<CR>
-    au BufEnter *.C,*.cpp,*.cxx,*.h,*.hpp nmap ,x2 !!boxes -d c-mid -r<CR>
-    au BufEnter *.C,*.cpp,*.cxx,*.h,*.hpp vmap ,x2 !boxes -d c-mid -r<CR>
-    au BufEnter *.C,*.cpp,*.cxx,*.h,*.hpp nmap ,c3 !!boxes -d c-bot<CR>
-    au BufEnter *.C,*.cpp,*.cxx,*.h,*.hpp vmap ,c3 !boxes -d c-bot<CR>
-    au BufEnter *.C,*.cpp,*.cxx,*.h,*.hpp nmap ,cw3 !!boxes -d c-bot -s 120<CR>
-    au BufEnter *.C,*.cpp,*.cxx,*.h,*.hpp vmap ,cw3 !boxes -d c-bot -s 120<CR>
-    au BufEnter *.C,*.cpp,*.cxx,*.h,*.hpp nmap ,x3 !!boxes -d c-bot -r<CR>
-    au BufEnter *.C,*.cpp,*.cxx,*.h,*.hpp vmap ,x3 !boxes -d c-bot -r<CR>
-    au BufEnter .vimrc,.gvimrc,.vimperatorrc nmap ,c1 !!boxes -d vim-cmt<CR>
-    au BufEnter .vimrc,.gvimrc,.vimperatorrc vmap ,c1 !boxes -d vim-cmt<CR>
-    au BufEnter .vimrc,.gvimrc,.vimperatorrc nmap ,cw1 !!boxes -d vim-cmt -s 120<CR>
-    au BufEnter .vimrc,.gvimrc,.vimperatorrc vmap ,cw1 !boxes -d vim-cmt -s 120<CR>
-    au BufEnter .vimrc,.gvimrc,.vimperatorrc nmap ,x1 !!boxes -d vim-cmt -r<CR>
-    au BufEnter .vimrc,.gvimrc,.vimperatorrc vmap ,x1 !boxes -d vim-cmt -r<CR>
-    au BufEnter *.ly nmap ,c1 !!boxes -d percent<CR>
-    au BufEnter *.ly vmap ,c1 !boxes -d percent<CR>
-    au BufEnter *.ly nmap ,cw1 !!boxes -d percent -s 120<CR>
-    au BufEnter *.ly vmap ,cw1 !boxes -d percent -s 120<CR>
-    au BufEnter *.ly nmap ,x1 !!boxes -d percent -r<CR>
-    au BufEnter *.ly vmap ,x1 !boxes -d percent -r<CR>
+    au BufEnter * nmap <leader>c1 !!boxes -d pound-alt<CR>
+    au BufEnter * vmap <leader>c1 !boxes -d pound-alt<CR>
+    au BufEnter * nmap <leader>cw1 !!boxes -d pound-alt -s 120<CR>
+    au BufEnter * vmap <leader>cw1 !boxes -d pound-alt -s 120<CR>
+    au BufEnter * nmap <leader>x1 !!boxes -d pound-alt -r<CR>
+    au BufEnter * vmap <leader>x1 !boxes -d pound-alt -r<CR> 
+    au BufEnter *.C,*.cpp,*.cxx,*.h,*.hpp nmap <leader>c1 !!boxes -d c-top<CR>
+    au BufEnter *.C,*.cpp,*.cxx,*.h,*.hpp vmap <leader>c1 !boxes -d c-top<CR>
+    au BufEnter *.C,*.cpp,*.cxx,*.h,*.hpp nmap <leader>cw1 !!boxes -d c-top -s 120<CR>
+    au BufEnter *.C,*.cpp,*.cxx,*.h,*.hpp vmap <leader>cw1 !boxes -d c-top -s 120<CR>
+    au BufEnter *.C,*.cpp,*.cxx,*.h,*.hpp nmap <leader>x1 !!boxes -d c-top -r<CR>
+    au BufEnter *.C,*.cpp,*.cxx,*.h,*.hpp vmap <leader>x1 !boxes -d c-top -r<CR>
+    au BufEnter *.C,*.cpp,*.cxx,*.h,*.hpp nmap <leader>c2 !!boxes -d c-mid<CR>
+    au BufEnter *.C,*.cpp,*.cxx,*.h,*.hpp vmap <leader>c2 !boxes -d c-mid<CR>
+    au BufEnter *.C,*.cpp,*.cxx,*.h,*.hpp nmap <leader>cw2 !!boxes -d c-mid -s 120<CR>
+    au BufEnter *.C,*.cpp,*.cxx,*.h,*.hpp vmap <leader>cw2 !boxes -d c-mid -s 120<CR>
+    au BufEnter *.C,*.cpp,*.cxx,*.h,*.hpp nmap <leader>x2 !!boxes -d c-mid -r<CR>
+    au BufEnter *.C,*.cpp,*.cxx,*.h,*.hpp vmap <leader>x2 !boxes -d c-mid -r<CR>
+    au BufEnter *.C,*.cpp,*.cxx,*.h,*.hpp nmap <leader>c3 !!boxes -d c-bot<CR>
+    au BufEnter *.C,*.cpp,*.cxx,*.h,*.hpp vmap <leader>c3 !boxes -d c-bot<CR>
+    au BufEnter *.C,*.cpp,*.cxx,*.h,*.hpp nmap <leader>cw3 !!boxes -d c-bot -s 120<CR>
+    au BufEnter *.C,*.cpp,*.cxx,*.h,*.hpp vmap <leader>cw3 !boxes -d c-bot -s 120<CR>
+    au BufEnter *.C,*.cpp,*.cxx,*.h,*.hpp nmap <leader>x3 !!boxes -d c-bot -r<CR>
+    au BufEnter *.C,*.cpp,*.cxx,*.h,*.hpp vmap <leader>x3 !boxes -d c-bot -r<CR>
+    au BufEnter .vimrc,.gvimrc,.vimperatorrc nmap <leader>c1 !!boxes -d vim-cmt<CR>
+    au BufEnter .vimrc,.gvimrc,.vimperatorrc vmap <leader>c1 !boxes -d vim-cmt<CR>
+    au BufEnter .vimrc,.gvimrc,.vimperatorrc nmap <leader>cw1 !!boxes -d vim-cmt -s 120<CR>
+    au BufEnter .vimrc,.gvimrc,.vimperatorrc vmap <leader>cw1 !boxes -d vim-cmt -s 120<CR>
+    au BufEnter .vimrc,.gvimrc,.vimperatorrc nmap <leader>x1 !!boxes -d vim-cmt -r<CR>
+    au BufEnter .vimrc,.gvimrc,.vimperatorrc vmap <leader>x1 !boxes -d vim-cmt -r<CR>
+    au BufEnter *.ly nmap <leader>c1 !!boxes -d percent<CR>
+    au BufEnter *.ly vmap <leader>c1 !boxes -d percent<CR>
+    au BufEnter *.ly nmap <leader>cw1 !!boxes -d percent -s 120<CR>
+    au BufEnter *.ly vmap <leader>cw1 !boxes -d percent -s 120<CR>
+    au BufEnter *.ly nmap <leader>x1 !!boxes -d percent -r<CR>
+    au BufEnter *.ly vmap <leader>x1 !boxes -d percent -r<CR>
     function Insert_newline_smartly()
         if col(".") != 1
             normal o
+        endif
+    endfunction
+    function Toggle_status_bar()
+        if &laststatus < 2
+            let &laststatus = 2
+        else
+            let &laststatus = 1 " set it back to Vim's default
         endif
     endfunction
 endif
 
 " quickly enter current date and time
 " NOTE: the <F1> key in normal mode is mapped to ":help" by default
-map <F1> :call Insert_newline_smartly()<CR>i<C-R>=strftime("%F (%a) %T")<Esc><Space>-><Space>
-imap <F1> <Esc>:call Insert_newline_smartly()<CR>i<C-R>=strftime("%F (%a) %T")<Esc><Space>-><Space>
+map <silent> <F1> :call Insert_newline_smartly()<CR>i<C-R>=strftime("%F (%a) %T")<Esc><Space>-><Space>
+imap <silent> <F1> <Esc>:call Insert_newline_smartly()<CR>i<C-R>=strftime("%F (%a) %T")<Esc><Space>-><Space>
 
 " exit
 map <F2> :q<CR>
@@ -129,6 +153,10 @@ imap <F5> <Esc>:!g++ -Wall -mtune=native -m32 % -o ~/prog/temp32<CR>
 imap <F6> <Esc>:!xterm -hold -e ~/prog/temp32<CR>
 map <F6> <Esc>:!xterm -hold -e ~/prog/temp32<CR>
 
+" toggle status bar
+map <silent> <F11> :call Toggle_status_bar()<CR>
+imap <silent> <F11> <Esc>:call Toggle_status_bar()<CR>
+
 " toggle line numbers
 map <F12> :set number!<CR>
 imap <F12> <Esc>:set number!<CR>
@@ -138,5 +166,19 @@ imap <F12> <Esc>:set number!<CR>
 nnoremap k gk
 nnoremap j gj
 
-nnoremap <C-n> :tabnext<CR>
-nnoremap <C-p> :tabprevious<CR>
+" integration with the sessionman.vim plugin by Yuri Klubakov
+nmap <leader>so :SessionOpen<space>
+nmap <leader>ss :SessionSave<CR>
+nmap <leader>sa :SessionSaveAs<space>
+
+" tab movement
+nnoremap <C-l> :tabnext<CR>
+nnoremap <C-h> :tabprevious<CR>
+
+" window movement (i.e., moving around INSIDE a tab)
+nmap <C-j> <C-w>j
+nmap <C-k> <C-w>k
+
+" buffer movement (i.e., moving around INSIDE a window)
+nmap <S-h> :bn<CR>
+nmap <S-l> :bp<CR>
