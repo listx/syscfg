@@ -154,6 +154,7 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
     , ((mod4Mask              , xK_t     ), spawn "gvim")
     , ((mod4Mask .|. shiftMask, xK_t     ), spawn "xclock -d -update 1 -render -strftime \"%F %a %T Week %W\" -face terminus")
     , ((mod4Mask              , xK_c     ), spawn "galculator")
+    , ((mod4Mask .|. shiftMask, xK_c     ), spawn "gcalctool")
     , ((mod4Mask              , xK_i     ), spawn "eog")
     , ((mod4Mask .|. shiftMask, xK_i     ), spawn "gimp")
     , ((mod4Mask              , xK_d     ), spawn "amule")
