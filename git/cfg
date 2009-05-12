@@ -4,3 +4,5 @@
 [color]
 	branch = auto
 	diff = auto
+[push]
+    default = matching
