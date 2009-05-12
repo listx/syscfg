@@ -142,7 +142,7 @@ imap <F2> <Esc>:q<CR>
 " turn off search highlighting (to turn on, press 'n' in normal mode for next
 " term)
 map <F3> :noh<CR>
-imap <F3> <Esc>:noh<CR>
+imap <F3> <Esc>:noh<CR>a
 
 " quicksave files
 map <F4> :w<CR>
