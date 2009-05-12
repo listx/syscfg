@@ -174,10 +174,14 @@ nmap <leader>sa :SessionSaveAs<space>
 " tab movement
 nnoremap <C-l> :tabnext<CR>
 nnoremap <C-h> :tabprevious<CR>
+inoremap <C-l> <Esc>:tabnext<CR>
+inoremap <C-h> <Esc>:tabprevious<CR>
 
 " window movement (i.e., moving around INSIDE a tab)
 nmap <C-j> <C-w>j
 nmap <C-k> <C-w>k
+imap <C-j> <Esc><C-w>j
+imap <C-k> <Esc><C-w>k
 
 " buffer movement (i.e., moving around INSIDE a window)
 nmap <S-h> :bn<CR>
