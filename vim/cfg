@@ -153,6 +153,10 @@ imap <F5> <Esc>:!g++ -Wall -mtune=native -m32 % -o ~/prog/temp32<CR>
 imap <F6> <Esc>:!xterm -hold -e ~/prog/temp32<CR>
 map <F6> <Esc>:!xterm -hold -e ~/prog/temp32<CR>
 
+" make windows equal in height/width
+nmap <F10> <C-w>=
+imap <F10> <C-w>=
+
 " toggle status bar
 map <silent> <F11> :call Toggle_status_bar()<CR>
 imap <silent> <F11> <Esc>:call Toggle_status_bar()<CR>
