@@ -117,7 +117,8 @@ alias sle='ssh listdata@luxion.e'
 alias slw='ssh listdata@luxion.w'
 alias sae='ssh listdata@aether.e'
 alias saw='ssh listdata@aether.w'
-alias sc='ssh kimberly@caterpillar'
+alias so='ssh otter@ocean'
+alias sf='ssh tiger@forest'
 
 # GLOBAL aliases for quick scp operations
 # E.g. scp FILE L ------> scp FILE listdata2@192.168.0.111:
@@ -126,7 +127,8 @@ alias -g LE='listdata@luxion.e:'
 alias -g LW='listdata@luxion.w:'
 alias -g AE='listdata@aether.e:'
 alias -g AW='listdata@aether.w:'
-alias -g C='kimberly@caterpillar:'
+alias -g O='otter@ocean:'
+alias -g F='tiger@forest:'
 
 # sync the following with visudo to disable passwords!
 #
