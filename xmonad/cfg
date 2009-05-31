@@ -295,7 +295,9 @@ myManageHook = composeAll
     , className  =? "Audacity"    --> doFloat
     , className  =? "Gitk"    --> doFloat
     , className  =? "Gcalctool"    --> doFloat
+    , stringProperty "WM_NAME"  =? "Scid" --> doFloat
     , className  =? "Scid"    --> doFloat
+    , className  =? "Toplevel"    --> doFloat -- Scid's many popup windows
     , className  =? "Pychess"    --> doFloat
     --, className  =? "Luxrender"    --> doFloat
     -- the following are NOT in the init.sh file -- so these are ones that should always be
