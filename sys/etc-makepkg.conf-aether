@@ -24,14 +24,11 @@ DLAGENTS=('ftp::/usr/bin/wget -c --passive-ftp -t 3 --waitretry=3 -O %o %u'
 #########################################################################
 #
 CARCH="x86_64"
-#CHOST="x86_64-unknown-linux-gnu"
 CHOST="x86_64-pc-linux-gnu"
 
 #-- Exclusive: will only run on -march=x86-64 
 # -march (or -mcpu) builds exclusively for an architecture
 # -mtune optimizes for an architecture, but builds for whole processor family
-#CFLAGS="-march=x86-64 -mtune=generic -O2 -pipe"
-#CXXFLAGS="-march=x86-64 -mtune=generic -O2 -pipe"
 CFLAGS="-march=nocona -O2 -pipe"
 CXXFLAGS="${CFLAGS}"
 #-- Make Flags: change this for DistCC/SMP systems

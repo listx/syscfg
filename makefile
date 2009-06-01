@@ -124,4 +124,5 @@ ifeq ('$(HOSTNAME)','aether')
 	cat /etc/makepkg.conf >         /home/listdata/syscfg/sys/etc-makepkg.conf-aether
 	cat /etc/rc.conf >              /home/listdata/syscfg/sys/etc-rc.conf-aether
 	cat /etc/rc.local >             /home/listdata/syscfg/sys/etc-rc.local-aether
+	cat /etc/rc.local.shutdown >    /home/listdata/syscfg/sys/etc-rc.local.shutdown-aether
 endif

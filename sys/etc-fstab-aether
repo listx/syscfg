@@ -5,18 +5,11 @@
 none                   /dev/pts      devpts    defaults            0      0
 none                   /dev/shm      tmpfs     defaults            0      0
 
-/dev/cdrom             /mnt/cd   auto    ro,user,noauto,unhide   0      0
-/dev/dvd               /mnt/dvd  auto    ro,user,noauto,unhide   0      0
-#/dev/fd0               /media/fl   auto    user,noauto             0      0
+/dev/sr0               /mnt/media-sr0   auto    ro,user,noauto,unhide   0      0
 
-#/dev/sda2
-UUID=c73de463-9d46-49ec-9e49-cae2d7c80d90 / ext3 defaults 0 1
-#/dev/sda5
-UUID=d6eb5f4d-e8c7-4ec4-806b-2ec1da100b5f /home ext3 defaults 0 1
-#/dev/sda7
-UUID=e08faca4-24ef-4b13-b221-039de3bf93e5 swap swap defaults 0 0
+UUID=1f78f1be-f226-4d23-ac68-ff4de9e82581 swap swap defaults 0 0
+UUID=8f7799c8-9a55-4595-8585-6751a770bb47 /home ext4 defaults 0 1
+UUID=bddc1063-51fb-463c-9917-d8a60ebe0bb7 / ext4 defaults 0 1
 
-#/dev/sda1
-UUID=572C8DDF568B4261 /mnt/vista ntfs-3g defaults,locale=en_US.UTF-8 0 0
-#/dev/sda6
-UUID=1cc07d85-7820-4989-9f7a-4e3248f97f22 /mnt/data ext3 defaults 0 1
+UUID=facd6310-1199-4ac0-ae16-6b30f13514e7 /mnt/data ext4 defaults 0 1 # data partition, /dev/sda6
+UUID=F63CE9E73CE9A33B /mnt/windows-xp ntfs-3g defaults,locale=en_US.UTF-8 0 0 # windows, /dev/sda1

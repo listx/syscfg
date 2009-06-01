@@ -37,18 +37,18 @@ color light-blue/black light-cyan/blue
 
 # (0) Arch Linux
 title  Arch Linux
-root   (hd0,1)
-kernel /boot/vmlinuz26 root=/dev/disk/by-uuid/c73de463-9d46-49ec-9e49-cae2d7c80d90 ro vga=773
+root   (hd0,2)
+kernel /boot/vmlinuz26 root=/dev/disk/by-uuid/bddc1063-51fb-463c-9917-d8a60ebe0bb7 ro vga=773
 initrd /boot/kernel26.img
 
 # (1) Arch Linux
 title  Arch Linux Fallback
-root   (hd0,1)
-kernel /boot/vmlinuz26 root=/dev/disk/by-uuid/c73de463-9d46-49ec-9e49-cae2d7c80d90 ro
+root   (hd0,2)
+kernel /boot/vmlinuz26 root=/dev/disk/by-uuid/bddc1063-51fb-463c-9917-d8a60ebe0bb7 ro
 initrd /boot/kernel26-fallback.img
 
 # (2) Windows
-title Windows Vista Home Basic
+title Windows XP Professional
 rootnoverify (hd0,0)
 makeactive
 chainloader +1
