@@ -62,7 +62,7 @@ HOSTNAME="luxion"
 #
 #eth0="eth0 192.168.0.111 netmask 255.255.255.0 broadcast 192.168.0.255"
 eth0="dhcp"
-INTERFACES=(eth0 wlan0)
+INTERFACES=(eth0)
 
 # Routes to start at boot-up (in this order)
 # Declare each route then list in ROUTES
@@ -84,7 +84,7 @@ ROUTES=(!gateway)
 # 
 # the NETWORKS=() includes those profiles that will be started on boot
 NETWORKS=(luxion-wired)
-AUTO_NETWORKS=(auto-wireless wlan0)
+#AUTO_NETWORKS=(auto-wireless wlan0)
 
 # -----------------------------------------------------------------------
 # DAEMONS
@@ -95,4 +95,4 @@ AUTO_NETWORKS=(auto-wireless wlan0)
 #   - prefix a daemon with a @ to start it up in the background
 #
 # net-auto disabled b/c they take too damn long to start up
-DAEMONS=(syslog-ng !network net-profiles net-auto bitlbee crond alsa hal @sshd @openntpd @cups )
+DAEMONS=(syslog-ng net-profiles crond alsa hal @sshd @openntpd @cups )
