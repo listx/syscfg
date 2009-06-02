@@ -201,7 +201,7 @@ if &t_Co > 255
     hi lhpBullet1                   ctermfg=116
     hi link lhpBullet2 lhpBullet1 
     hi link lhpBullet3 lhpBullet1
-    hi lhpCount                     ctermfg=182
+    hi lhpCount                     ctermfg=227
     " XXX: END custom highlighting for .lhp files
 
     hi Boolean         ctermfg=181  

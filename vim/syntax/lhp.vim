@@ -67,10 +67,10 @@ syn match  lhpHeader9   "^\s\{32}\(\s\|9\)\s" containedin=ALL
 syn region lhpHeadersRegion matchgroup=lhpHeaders start="\%^." skip='\n' end=".\%$"
 "syn region aapPythonRegion matchgroup=aapCommand start="\z(\s*\):python" skip='\n\z1\s\|\n\s*\n' end=+$+ contains=@aapPythonScript
 
-syn match lhpBullet1    "^\s*b[^\[].*" " [^\[] because otherwise 'b[[xyz]]' conflicts with this
-syn match lhpBullet2    "^\s*bb.*"
-syn match lhpBullet3    "^\s*bbb.*"
-syn match lhpCount    "^\s*c.*"
+syn match lhpBullet1    "^\s*b[^\[].*" containedin=ALL " [^\[] because otherwise 'b[[xyz]]' conflicts with this
+syn match lhpBullet2    "^\s*bb.*" containedin=ALL
+syn match lhpBullet3    "^\s*bbb.*" containedin=ALL
+syn match lhpCount    "^\s*c.*" containedin=ALL
 
 " Experimental
 "syn match lhpCiteBasic  "\[[^\]]\+\s\{1}v\.\s\{1}[^\]]\+\]" containedin=ALLBUT,@lhpQuotations
