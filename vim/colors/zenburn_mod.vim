@@ -164,10 +164,12 @@ hi link lhpCaps	lhpBold
 hi link lhpSmallcaps lhpBold
 hi lhpCite                      guifg=#87ff00 gui=bold,underline
 
+hi lhpCaret                     guifg=#d7d7ff guibg=#ff00af gui=bold
+
 hi lhpBullet1                   guifg=#87d7d7
 hi link lhpBullet2 lhpBullet1 
 hi link lhpBullet3 lhpBullet1
-hi lhpCount                     guifg=#d7afd7
+hi lhpCount                     guifg=#ffff5f
 " XXX: END custom highlighting for .lhp files
 
 " Entering Kurt zone
@@ -197,6 +199,8 @@ if &t_Co > 255
     hi link lhpCaps	lhpBold
     hi link lhpSmallcaps lhpBold
     hi lhpCite                      ctermfg=118 cterm=bold,underline
+
+    hi lhpCaret                     ctermfg=189 ctermbg=199 cterm=bold
 
     hi lhpBullet1                   ctermfg=116
     hi link lhpBullet2 lhpBullet1 

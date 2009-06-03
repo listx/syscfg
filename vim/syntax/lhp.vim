@@ -33,7 +33,7 @@ syn match lhpURL	    "url\[\[[^\]]*\]\]" containedin=ALL contains=lhpCaret
 syn match lhpFNT	    "fnt\[\[[^\]]*\]\]" containedin=ALL
 syn match lhpIMG	    "img\[\[[^\]]*\]\]" containedin=ALL contains=lhpCaret
 
-syn match lhpCaret      "\^"
+syn match lhpCaret      "\^" containedin=ALL
 
 syn cluster lhpGsubbed  contains=lhpSection,lhpSectionMulti1,lhpSectionMulti2,lhpUSC
 syn match lhpSection      "\$\$ \{,1}[^\$, ]\+" containedin=ALLBUT,@lhpGsubbed
@@ -67,10 +67,10 @@ syn match  lhpHeader9   "^\s\{32}\(\s\|9\)\s" containedin=ALL
 syn region lhpHeadersRegion matchgroup=lhpHeaders start="\%^." skip='\n' end=".\%$"
 "syn region aapPythonRegion matchgroup=aapCommand start="\z(\s*\):python" skip='\n\z1\s\|\n\s*\n' end=+$+ contains=@aapPythonScript
 
-syn match lhpBullet1    "^\s*b[^\[].*" containedin=ALL " [^\[] because otherwise 'b[[xyz]]' conflicts with this
-syn match lhpBullet2    "^\s*bb.*" containedin=ALL
-syn match lhpBullet3    "^\s*bbb.*" containedin=ALL
-syn match lhpCount    "^\s*c.*" containedin=ALL
+syn match lhpBullet1    "^\s*b\s.*" containedin=ALL
+syn match lhpBullet2    "^\s*bb\s.*" containedin=ALL
+syn match lhpBullet3    "^\s*bbb\s.*" containedin=ALL
+syn match lhpCount    "^\s*c\s.*" containedin=ALL
 
 " Experimental
 "syn match lhpCiteBasic  "\[[^\]]\+\s\{1}v\.\s\{1}[^\]]\+\]" containedin=ALLBUT,@lhpQuotations
@@ -92,8 +92,6 @@ if version >= 508 || !exists("did_lhp_syn_inits")
     HiLink lhpURL       Comment
     HiLink lhpFNT       Comment
     HiLink lhpIMG       Comment
-
-    HiLink lhpCaret     String
 
     HiLink lhpString	String
 
