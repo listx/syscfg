@@ -150,6 +150,7 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
     -- move mouse away to bottom-right of currently focused window
     , ((modMask               , xK_BackSpace), warpToWindow 1 1)
     , ((mod4Mask              , xK_x     ), spawn "urxvtc")
+    , ((mod4Mask .|. shiftMask, xK_x     ), spawn "urxvtc -name lhp")
     , ((mod4Mask              , xK_n     ), spawn "firefox")
     , ((mod4Mask .|. shiftMask, xK_n     ), spawn "urxvtc -e irssi --config=~/.irssi-untracked --home=~/syscfg/irssi")
     , ((mod4Mask              , xK_t     ), spawn "gvim")

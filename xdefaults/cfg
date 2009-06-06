@@ -5,6 +5,15 @@ XTerm*cursorColor: green
 XTerm*geometry: 80x34
 XTerm*saveLines: 1000
 
+lhp*font: xft:dejavu\ sans\ mono:pixelsize=16 antialias=true,\
+            xft:Kochi Gothic:antialias=true,\
+            xft:Baekmuk Gulim
+lhp*background: #000000
+lhp*foreground: #dcdccc
+lhp*cursorColor: green
+lhp*geometry: 80x34
+lhp*scrollBar: off
+
 ! urxvt settings
 ! First set base font to Terminus to handle all Latin glyphs
 ! ...then set Japanese font to take care of most Chinese kanji and also hiragana/katakana
