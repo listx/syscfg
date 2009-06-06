@@ -26,7 +26,7 @@ case "${HOSTNAME}" in
         # the --with-passfile option at compile/configure time; setting this option gives alpine
         # the ability to use a DIFFERENT location for a password file at each time it is run, with
         # the "-passfile" option
-        urxvtc -e alpine -p ~/syscfg/alpine/cfg -passfile ~/.alpine-pass
+        urxvtc -e alpine -p ~/.alpine/cfg -passfile ~/.alpine-pass
         urxvtc -e rtorrent
         firefox
         #blender
