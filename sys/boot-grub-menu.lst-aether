@@ -24,8 +24,8 @@
 #  http://wiki.archlinux.org/index.php/GRUB#Framebuffer_Resolution 
 
 # general configuration:
-timeout   15
-default   2
+timeout   3
+default   0
 color light-blue/black light-cyan/blue
 
 # boot sections follow
@@ -37,18 +37,18 @@ color light-blue/black light-cyan/blue
 
 # (0) Arch Linux
 title  Arch Linux
-root   (hd0,2)
-kernel /boot/vmlinuz26 root=/dev/disk/by-uuid/bddc1063-51fb-463c-9917-d8a60ebe0bb7 ro vga=773
+root   (hd0,1)
+kernel /boot/vmlinuz26 root=/dev/disk/by-uuid/84849628-b3c8-435e-9508-3b80931e488e ro vga=773
 initrd /boot/kernel26.img
 
 # (1) Arch Linux
 title  Arch Linux Fallback
-root   (hd0,2)
-kernel /boot/vmlinuz26 root=/dev/disk/by-uuid/bddc1063-51fb-463c-9917-d8a60ebe0bb7 ro
+root   (hd0,1)
+kernel /boot/vmlinuz26 root=/dev/disk/by-uuid/84849628-b3c8-435e-9508-3b80931e488e ro
 initrd /boot/kernel26-fallback.img
 
 # (2) Windows
-title Windows XP Professional
+title Microsoft Windows XP
 rootnoverify (hd0,0)
 makeactive
 chainloader +1

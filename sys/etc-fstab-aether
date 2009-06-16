@@ -7,9 +7,9 @@ none                   /dev/shm      tmpfs     defaults            0      0
 
 /dev/sr0               /mnt/media-sr0   auto    ro,user,noauto,unhide   0      0
 
-UUID=1f78f1be-f226-4d23-ac68-ff4de9e82581 swap swap defaults 0 0
-UUID=8f7799c8-9a55-4595-8585-6751a770bb47 /home ext4 defaults 0 1
-UUID=bddc1063-51fb-463c-9917-d8a60ebe0bb7 / ext4 defaults 0 1
+UUID=84849628-b3c8-435e-9508-3b80931e488e / ext4 defaults 0 1
+UUID=d4b16cdf-292f-4509-9eea-bf84f52e04da /home ext4 defaults 0 1
+UUID=f14490f2-d148-41a9-99cc-ecec35f4ddcc swap swap defaults 0 0
 
-UUID=facd6310-1199-4ac0-ae16-6b30f13514e7 /mnt/data ext4 defaults 0 1 # data partition, /dev/sda6
-UUID=F63CE9E73CE9A33B /mnt/windows-xp ntfs-3g defaults,locale=en_US.UTF-8 0 0 # windows, /dev/sda1
+UUID=8c6dc2dc-f71e-48c0-ba69-e57b04329b7a /mnt/data ext4 defaults 0 1
+UUID=F63CE9E73CE9A33B /mnt/windows-xp ntfs-3g defaults,locale=en_US.UTF-8 0 0
