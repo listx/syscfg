@@ -286,6 +286,7 @@ myManageHook = composeAll
     , stringProperty "WM_NAME"  =? "rtorrent"          --> doShift "share"
     --, stringProperty "WM_NAME"  =? "xmonad-init-notes (~) - GVIM1"             --> doShift "study"
     , className  =? "Gran Paradiso"    --> doShift "net"
+    , stringProperty "WM_NAME"  =? "Gran Paradiso Preferences" --> doFloat
     , className  =? "Galculator"    --> doFloat
     , className  =? "Blender"    --> doShift "multimedia"
     , className  =? "Blender:Render"    --> doFloat
@@ -299,6 +300,7 @@ myManageHook = composeAll
     , className  =? "Scid"    --> doFloat
     , className  =? "Toplevel"    --> doFloat -- Scid's many popup windows
     , className  =? "Pychess"    --> doFloat
+    , className  =? "Glchess"    --> doFloat
     --, className  =? "Luxrender"    --> doFloat
     -- the following are NOT in the init.sh file -- so these are ones that should always be
     -- in a certain workspace, when started with a hotkey

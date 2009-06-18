@@ -282,6 +282,7 @@ myManageHook = composeAll
     , resource  =? "alpine"            --> doShift "comm"
     --, stringProperty "WM_NAME"  =? "xmonad-init-notes (~) - GVIM1"             --> doShift "study"
     , className  =? "Gran Paradiso"    --> doShift "net"
+    , stringProperty "WM_NAME"  =? "Gran Paradiso Preferences" --> doFloat
     , className  =? "Galculator"    --> doFloat
     , className  =? "Blender"    --> doShift "multimedia"
     , className  =? "Blender:Render"    --> doFloat
@@ -291,6 +292,7 @@ myManageHook = composeAll
     , className  =? "Gcalctool"    --> doFloat
     , className  =? "Scid"    --> doFloat
     , className  =? "Pychess"    --> doFloat
+    , className  =? "Glchess"    --> doFloat
     -- the following are NOT in the init.sh file -- so these are ones that should always be
     -- in a certain workspace, when started with a hotkey
     --, stringProperty "WM_NAME"  =? "[No Name] - GVIM"             --> doShift "study"
