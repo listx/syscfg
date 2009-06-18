@@ -1,17 +1,15 @@
-XTerm*faceName: terminus:pixelsize=14 antialias=false
-XTerm*background: #000000
-XTerm*foreground: #ffffff
+XTerm*faceName: dejavu sans mono:pixelsize=12 antialias=false
+XTerm*background: #3a3a3a
+XTerm*foreground: #dcdccc
 XTerm*cursorColor: green
-XTerm*geometry: 80x34
 XTerm*saveLines: 1000
 
-lhp*font: xft:dejavu\ sans\ mono:pixelsize=16 antialias=true,\
-            xft:Kochi Gothic:antialias=true,\
+lhp*font: xft:Terminus:pixelsize=20,\
+            xft:Kochi Gothic:antialias=false,\
             xft:Baekmuk Gulim
 lhp*background: #000000
 lhp*foreground: #dcdccc
 lhp*cursorColor: green
-lhp*geometry: 80x34
 lhp*scrollBar: off
 
 ! urxvt settings
@@ -25,7 +23,6 @@ urxvt*font: xft:Terminus:pixelsize=14,\
 urxvt*background: #3a3a3a
 urxvt*foreground: #dcdccc
 urxvt*cursorColor: green
-urxvt*geometry: 80x34
 urxvt*saveLines: 32767
 urxvt*scrollBar: off
 urxvt*urlLauncher: firefox
