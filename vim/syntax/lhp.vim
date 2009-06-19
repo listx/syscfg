@@ -44,8 +44,8 @@ syn match lhpUSC      "\d*\s\{1}USC\s\{1}\d*" containedin=ALLBUT,@lhpGsubbed
 
 " Quotations
 syn cluster lhpQuotations       contains=lhpString
-syn match  lhpString	"\s\"[^"]*\"\(\s\|$\)" containedin=ALLBUT,@lhpQuotations
-syn match  lhpString    "\s'[^']*'\(\s\|$\)"   containedin=ALLBUT,@lhpQuotations
+syn match  lhpString	"\s\"[^"]*\"" containedin=ALLBUT,@lhpQuotations
+syn match  lhpString    "\s'[^']*'"   containedin=ALLBUT,@lhpQuotations
 
 " List values
 "syn match  lhpLabel       "," containedin=lhpString
