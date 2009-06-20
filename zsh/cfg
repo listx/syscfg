@@ -93,6 +93,8 @@ alias l='ls -Ahl --color=auto'
 
 alias q='exit'
 
+alias m='mplayer'
+
 alias n='netcfg'
 
 alias g='git'
