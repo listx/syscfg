@@ -116,6 +116,15 @@ if !exists("autocommands_loaded")
     au BufEnter *.ly vmap <leader>cw1 !boxes -d percent -s 120<CR>
     au BufEnter *.ly nmap <leader>x1 !!boxes -d percent -r<CR>
     au BufEnter *.ly vmap <leader>x1 !boxes -d percent -r<CR>
+    au BufEnter *.lhp vmap <leader>bb "zdib[[<C-R>z]]<Esc>
+    au BufEnter *.lhp vmap <leader>ii "zdii[[<C-R>z]]<Esc>
+    au BufEnter *.lhp vmap <leader>u "zdiu[[<C-R>z]]<Esc>
+    au BufEnter *.lhp vmap <leader>bi "zdibi[[<C-R>z]]<Esc>
+    au BufEnter *.lhp vmap <leader>bu "zdibu[[<C-R>z]]<Esc>
+    au BufEnter *.lhp vmap <leader>iu "zdiiu[[<C-R>z]]<Esc>
+    au BufEnter *.lhp vmap <leader>cc "zdic[[<C-R>z]]<Esc>
+    au BufEnter *.lhp vmap <leader>cp "zdicp[[<C-R>z]]<Esc>
+    au BufEnter *.lhp vmap <leader>sc "zdisc[[<C-R>z]]<Esc>
     function Insert_newline_smartly()
         if col(".") != 1
             normal o
