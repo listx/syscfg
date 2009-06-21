@@ -224,3 +224,7 @@ imap <C-k> <Esc><C-w>k
 " buffer movement (i.e., moving around INSIDE a window)
 nmap <S-h> :bn<CR>
 nmap <S-l> :bp<CR>
+
+" faster access to normal mode
+imap ii <Esc>
+vmap ii <Esc>
