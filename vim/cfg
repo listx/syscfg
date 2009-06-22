@@ -150,6 +150,10 @@ if !exists("autocommands_loaded")
     au BufEnter *.lhp nmap <leader>cc viw"zdic[[<C-R>z]]<Esc>
     au BufEnter *.lhp nmap <leader>cp viw"zdicp[[<C-R>z]]<Esc>
     au BufEnter *.lhp nmap <leader>sc viw"zdisc[[<C-R>z]]<Esc>
+    " for quickly inserting a newline, but with one less indent than above
+    " (useful for quickly entering a heading 1 - 9; i.e., no more pressing 'o'
+    " and then pressing backspace 4 times
+    au BufEnter *.lhp nmap <CR> o<Backspace><Backspace><Backspace><Backspace>
     function Insert_newline_smartly()
         if col(".") != 1
             normal o
