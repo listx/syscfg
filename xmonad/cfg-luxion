@@ -163,7 +163,7 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
     , ((mod4Mask              , xK_m     ), spawn "blender")
     , ((mod4Mask              , xK_f     ), spawn "gnucash")
     , ((mod4Mask              , xK_h     ), spawn "urxvtc -e ncmpcpp")
-    , ((mod4Mask .|. shiftMask, xK_h     ), spawn "urxvtc -e mplayer -ao alsa -softvol -volume 10 -volstep 1 -prefer-ipv4 http://192.168.0.110:8000/mpd.ogg")
+    , ((mod4Mask .|. shiftMask, xK_h     ), spawn "urxvtc -e mplayer -ao oss -softvol -volume 10 -volstep 1 -prefer-ipv4 http://192.168.0.110:8000/mpd.ogg")
     , ((mod4Mask              , xK_p     ), spawn "apvlv")
     , ((mod4Mask .|. shiftMask, xK_p     ), spawn "evince")
     -- Function keys; the hex numbers correspond to what the XF86 keys mean -- these values are taken directly
