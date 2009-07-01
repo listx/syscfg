@@ -120,36 +120,36 @@ if !exists("autocommands_loaded")
     " useful for selecting multi-word phrases; you can select either
     " right-to-left or left-to-right -- just highlight a portion of the two
     " leftmost and rightmost words in the phrase
-    au BufEnter *.lhp vmap <leader>bb iwoiw"zdib[[<C-R>z]]<Esc>
-    au BufEnter *.lhp vmap <leader>ii iwoiw"zdii[[<C-R>z]]<Esc>
-    au BufEnter *.lhp vmap <leader>u  iwoiw"zdiu[[<C-R>z]]<Esc>
-    au BufEnter *.lhp vmap <leader>bi iwoiw"zdibi[[<C-R>z]]<Esc>
-    au BufEnter *.lhp vmap <leader>bu iwoiw"zdibu[[<C-R>z]]<Esc>
-    au BufEnter *.lhp vmap <leader>iu iwoiw"zdiiu[[<C-R>z]]<Esc>
-    au BufEnter *.lhp vmap <leader>cc iwoiw"zdic[[<C-R>z]]<Esc>
-    au BufEnter *.lhp vmap <leader>cp iwoiw"zdicp[[<C-R>z]]<Esc>
-    au BufEnter *.lhp vmap <leader>sc iwoiw"zdisc[[<C-R>z]]<Esc>
+    au BufEnter *.lhp vmap <leader>bb iwoiw"zsb[[<C-R>z]]<Esc>
+    au BufEnter *.lhp vmap <leader>ii iwoiw"zsi[[<C-R>z]]<Esc>
+    au BufEnter *.lhp vmap <leader>u  iwoiw"zsu[[<C-R>z]]<Esc>
+    au BufEnter *.lhp vmap <leader>bi iwoiw"zsbi[[<C-R>z]]<Esc>
+    au BufEnter *.lhp vmap <leader>bu iwoiw"zsbu[[<C-R>z]]<Esc>
+    au BufEnter *.lhp vmap <leader>iu iwoiw"zsiu[[<C-R>z]]<Esc>
+    au BufEnter *.lhp vmap <leader>cc iwoiw"zsc[[<C-R>z]]<Esc>
+    au BufEnter *.lhp vmap <leader>cp iwoiw"zscp[[<C-R>z]]<Esc>
+    au BufEnter *.lhp vmap <leader>sc iwoiw"zssc[[<C-R>z]]<Esc>
     " useful for manually selecting the exact boundaries
-    au BufEnter *.lhp vmap <leader>mbb "zdib[[<C-R>z]]<Esc>
-    au BufEnter *.lhp vmap <leader>mii "zdii[[<C-R>z]]<Esc>
-    au BufEnter *.lhp vmap <leader>mu  "zdiu[[<C-R>z]]<Esc>
-    au BufEnter *.lhp vmap <leader>mbi "zdibi[[<C-R>z]]<Esc>
-    au BufEnter *.lhp vmap <leader>mbu "zdibu[[<C-R>z]]<Esc>
-    au BufEnter *.lhp vmap <leader>miu "zdiiu[[<C-R>z]]<Esc>
-    au BufEnter *.lhp vmap <leader>mcc "zdic[[<C-R>z]]<Esc>
-    au BufEnter *.lhp vmap <leader>mcp "zdicp[[<C-R>z]]<Esc>
-    au BufEnter *.lhp vmap <leader>msc "zdisc[[<C-R>z]]<Esc>
+    au BufEnter *.lhp vmap <leader>mbb "zsb[[<C-R>z]]<Esc>
+    au BufEnter *.lhp vmap <leader>mii "zsi[[<C-R>z]]<Esc>
+    au BufEnter *.lhp vmap <leader>mu  "zsu[[<C-R>z]]<Esc>
+    au BufEnter *.lhp vmap <leader>mbi "zsbi[[<C-R>z]]<Esc>
+    au BufEnter *.lhp vmap <leader>mbu "zsbu[[<C-R>z]]<Esc>
+    au BufEnter *.lhp vmap <leader>miu "zsiu[[<C-R>z]]<Esc>
+    au BufEnter *.lhp vmap <leader>mcc "zsc[[<C-R>z]]<Esc>
+    au BufEnter *.lhp vmap <leader>mcp "zscp[[<C-R>z]]<Esc>
+    au BufEnter *.lhp vmap <leader>msc "zssc[[<C-R>z]]<Esc>
     " useful for highlighting a single word from normal mode (just hover a
     " cursor over the single word you want to tag)
-    au BufEnter *.lhp nmap <leader>bb viw"zdib[[<C-R>z]]<Esc>
-    au BufEnter *.lhp nmap <leader>ii viw"zdii[[<C-R>z]]<Esc>
-    au BufEnter *.lhp nmap <leader>u  viw"zdiu[[<C-R>z]]<Esc>
-    au BufEnter *.lhp nmap <leader>bi viw"zdibi[[<C-R>z]]<Esc>
-    au BufEnter *.lhp nmap <leader>bu viw"zdibu[[<C-R>z]]<Esc>
-    au BufEnter *.lhp nmap <leader>iu viw"zdiiu[[<C-R>z]]<Esc>
-    au BufEnter *.lhp nmap <leader>cc viw"zdic[[<C-R>z]]<Esc>
-    au BufEnter *.lhp nmap <leader>cp viw"zdicp[[<C-R>z]]<Esc>
-    au BufEnter *.lhp nmap <leader>sc viw"zdisc[[<C-R>z]]<Esc>
+    au BufEnter *.lhp nmap <leader>bb viw"zsb[[<C-R>z]]<Esc>
+    au BufEnter *.lhp nmap <leader>ii viw"zsi[[<C-R>z]]<Esc>
+    au BufEnter *.lhp nmap <leader>u  viw"zsu[[<C-R>z]]<Esc>
+    au BufEnter *.lhp nmap <leader>bi viw"zsbi[[<C-R>z]]<Esc>
+    au BufEnter *.lhp nmap <leader>bu viw"zsbu[[<C-R>z]]<Esc>
+    au BufEnter *.lhp nmap <leader>iu viw"zsiu[[<C-R>z]]<Esc>
+    au BufEnter *.lhp nmap <leader>cc viw"zsc[[<C-R>z]]<Esc>
+    au BufEnter *.lhp nmap <leader>cp viw"zscp[[<C-R>z]]<Esc>
+    au BufEnter *.lhp nmap <leader>sc viw"zssc[[<C-R>z]]<Esc>
     " for quickly inserting a newline, but with one less indent than above
     " (useful for quickly entering a heading 1 - 9; i.e., no more pressing 'o'
     " and then pressing backspace 4 times
