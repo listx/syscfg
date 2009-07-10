@@ -62,8 +62,8 @@ user "listdata"
 # This setting can deny access to control of the daemon.
 #
 # For network
-bind_to_address		"localhost" # if no one else on the LAN wants to use this mpd
-#bind_to_address		"192.168.0.110" # bind it to this computer's IP address if someone on the LAN wants to use this mpd
+#bind_to_address		"localhost" # if no one else on the LAN wants to use this mpd
+bind_to_address		"192.168.0.110" # bind it to this computer's IP address if someone on the LAN wants to use this mpd
 #
 # And for Unix Socket
 #bind_to_address		"/home/listdata/.mpd/socket"
