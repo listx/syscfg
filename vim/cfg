@@ -11,6 +11,7 @@ set expandtab
 " %{&ff} gives the file format, but is not used here because it is hardly ever
 " needed
 set statusline=%<%F\ %h%m%r%=%-14.(%l,%c%V%)\ %P\ %L
+set laststatus=2
 syntax enable "enable syntax highlighting
 set hlsearch "turn on search highlighting
 filetype indent on "turn on automatic indenting, as well as filetype recognition
