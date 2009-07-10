@@ -10,7 +10,7 @@ source! ~/.vimperatorrc.local
 " vim: set ft=vimperator:
 
 " duplicate current tab
-:map <F2> :1tabd<CR> 
+:map <F2> :tabduplicate<CR> 
 
 " make default vertical scrolling go faster
 :no j 6j
