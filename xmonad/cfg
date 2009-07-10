@@ -298,6 +298,7 @@ myManageHook = composeAll
     , className  =? "Toplevel"    --> doFloat -- Scid's many popup windows
     , className  =? "Pychess"    --> doFloat
     , className  =? "Glchess"    --> doFloat
+    , className  =? "linux_client"    --> doFloat
     --, className  =? "Luxrender"    --> doFloat
     -- the following are NOT in the init.sh file -- so these are ones that should always be
     -- in a certain workspace, when started with a hotkey
