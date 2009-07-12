@@ -21,10 +21,10 @@ amixer -q set Master 0 unmute
 ncmpcpp play
 
 # this for loop takes 30s to set volume from 70 to 100
-for ((i = 70; i <= 100; i++)) do
+for ((i = 0; i <= 100; i++)) do
     amixer -q set Master $i\%
     # sleep for 1 second
-    sleep 1s
+    sleep 5s
 done
 
 #--------------------------------------------------------------------------------------------------#

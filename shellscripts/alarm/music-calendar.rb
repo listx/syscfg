@@ -61,9 +61,9 @@ end
 #             done
 #
 
-for i in (70..100)
+for i in (0..100)
     `amixer -q set Master #{i}%`
-    sleep(1) # wait for 1 second
+    sleep(5) # wait for 1 second
 end
 
 puts ""
