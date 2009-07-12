@@ -55,6 +55,15 @@ export LESS_TERMCAP_us=$'\E[01;33m'
 # default text editor--set it to vim, not vi
 export VISUAL=/usr/bin/vim
 
+#==================================================================================================#
+# Custom binds for some common operations. Note, however, that you can enter vi-like "normal mode" #
+# with CTRL+X, CTRL+V for some more advanced operations.                                           #
+#==================================================================================================#
+
+bindkey     "^[[3~"         delete-char         # DELETE key
+bindkey     "^[[7~"         beginning-of-line   # HOME key
+bindkey     "^[[8~"         end-of-line         # END key
+
 #--------------------------------------------------------------------------------------------------#
 # Useful change dirs (first change to the directory, and then list the contents within; notice how #
 # you can use aliases within aliases! (the "l" is an alias here defined below)                     #
