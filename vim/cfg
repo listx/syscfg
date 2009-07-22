@@ -231,5 +231,4 @@ nmap <S-h> :bn<CR>
 nmap <S-l> :bp<CR>
 
 " faster access to normal mode
-imap ii <Esc>
-vmap ii <Esc>
+imap jj <Esc>
