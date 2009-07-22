@@ -24,14 +24,45 @@ def princc(str, width, *color)
     puts output
 end
 
+def graduated_alarm_bell()
+    alive = true
+
+    princ("Press 's' to stop the music.")
+
+    Thread.new {
+        while alive
+            for i in (30..100)
+                `amixer -q set Master #{i}%`
+                # sleep for an ever-increasing duration of seconds -- but after each second, check for user input
+                for j in (1..((i/15)**2))
+                    sleep(j)
+                    if alive == false
+                        Thread.kill
+                    end
+                end
+            end
+        end
+    }
+
+    while true
+        system("stty -echo -icanon min 1 time 0")
+        str = STDIN.getc
+        char = str.chr
+
+        case char
+        when 's'
+            alive = false
+            `ncmpcpp pause`
+            break # exit this method and give control back to the caller
+        else
+            puts "character #{char.inspect} not recognized"
+            princ("Press 's' to stop the music.")
+        end
+    end
+end
+
 width = 80
 
-# display welcome message
-#--------------------------#
-# str = ""                 #
-# width.times {str << "*"} #
-# princ(str)               #
-#--------------------------#
 puts ""
 princc("Good morning!", width)
 puts ""
@@ -46,6 +77,8 @@ a.each do |line|
     puts line
 end
 
+puts ""
+
 
 # unmute if sound is muted, and set the volume to 0
 `amixer -q set Master 0 unmute`
@@ -53,28 +86,26 @@ end
 # start playing song in current playlist
 `ncmpcpp play`
 
-# # this for loop takes 30s to set volume from 70 to 100
-# for ((i = 70; i <= 100; i++)) do
-#     amixer -q set Master $i\%
-#         # sleep for 1 second
-#             sleep 1s
-#             done
-#
-
-for i in (0..100)
-    `amixer -q set Master #{i}%`
-    sleep(5) # wait for 1 second
-end
+graduated_alarm_bell()
 
 puts ""
-princ("Press any key to exit this message...")
+princ("Press 'p' to turn computer power off, or 'q' to exit this message...")
 
-#http://stackoverflow.com/questions/174933/how-to-get-a-single-character-in-ruby-without-pressing-enter
-# Getting a single keystroke input from the user to exit.
+while true
+    system("stty -echo -icanon min 1 time 0")
+    str = STDIN.getc
+    char = str.chr
 
-begin
-  system("stty raw -echo")
-  str = STDIN.getc
-ensure
-  system("stty -raw echo")
+    case char
+    when 'q'
+        puts ""
+        princc("Have an excellent day!", width)
+        puts ""
+        break
+    when 'p'
+        `sudo poweroff`
+    else
+        puts "character #{char.inspect} not recognized"
+        princ("Press 'p' to turn computer power off, or 'q' to exit this message...")
+    end
 end
