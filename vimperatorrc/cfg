@@ -27,3 +27,7 @@ source! ~/.vimperatorrc.local
 
 :no h :tabprevious<CR>
 :no l :tabnext<CR>
+
+" swap S-f and f, since I almost always open links on a new background tab
+:no F f
+:no f F
