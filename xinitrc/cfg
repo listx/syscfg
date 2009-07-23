@@ -50,4 +50,19 @@ export GTK_IM_MODULE="scim"
 export QT_IM_MODULE="scim"
 scim -d  
 
+
+# start a random screensaver
+# dependencies: shantz-xwinwrap-bzr from AUR; xscreensaver
+case $(($RANDOM%3)) in
+    0)
+        xwinwrap -ov -fs -ni -- /usr/lib/xscreensaver/cubicgrid -root -window-id WID -delay 10000 -speed 0.5 -ticks 35 &
+    ;;
+    1)
+        xwinwrap -ov -fs -ni -- /usr/lib/xscreensaver/intermomentary -root -window-id WID &
+    ;;
+    2)
+        xwinwrap -ov -fs -ni -- /usr/lib/xscreensaver/cwaves -root -window-id WID &
+    ;;
+esac
+
 exec xmonad
