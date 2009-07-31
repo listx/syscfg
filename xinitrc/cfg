@@ -61,7 +61,7 @@ case $(($RANDOM%3)) in
         xwinwrap -ov -fs -ni -- /usr/lib/xscreensaver/intermomentary -root -window-id WID &
     ;;
     2)
-        xwinwrap -ov -fs -ni -- /usr/lib/xscreensaver/cwaves -root -window-id WID &
+        xwinwrap -ov -fs -ni -- /usr/lib/xscreensaver/cwaves -root -window-id WID -colors 16000 &
     ;;
 esac
 
