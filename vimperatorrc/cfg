@@ -1,13 +1,8 @@
-" 1.2 (created: 2008/08/16 18:51:52)
-" Mappings
-
-" Options
-
-" Abbreviations
-
-source! ~/.vimperatorrc.local
+" set startup page to a blank page
+:set! browser.startup.page=0
 
 " vim: set ft=vimperator:
+source! ~/.vimperatorrc.local
 
 " duplicate current tab
 :map <F2> :tabduplicate<CR> 
