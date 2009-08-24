@@ -166,6 +166,15 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
     , ((mod4Mask .|. shiftMask, xK_h     ), spawn "urxvtc -e mplayer -ao oss -softvol -volume 100 -volstep 1 -prefer-ipv4 http://192.168.0.110:8000/mpd.ogg")
     , ((mod4Mask              , xK_p     ), spawn "apvlv")
     , ((mod4Mask .|. shiftMask, xK_p     ), spawn "evince")
+    -- ncmpcpp (mpd) controls
+    , ((mod4Mask .|. controlMask, xK_p     ), spawn "ncmpcpp toggle")
+    , ((mod4Mask .|. controlMask, xK_j     ), spawn "ncmpcpp next")
+    , ((mod4Mask .|. controlMask, xK_k     ), spawn "ncmpcpp prev")
+    -- volume controls
+    , ((modMask              , xK_backslash ), spawn "amixer -q set Master toggle")
+    , ((modMask              , xK_minus     ), spawn "amixer -q set Master 1- unmute")
+    , ((modMask              , xK_equal     ), spawn "amixer -q set Master 1+ unmute")
+
     -- Function keys; the hex numbers correspond to what the XF86 keys mean -- these values are taken directly
     --    from /usr/share/X11/XKeysymDB.
     -- XF86AudioMute
