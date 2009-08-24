@@ -34,7 +34,7 @@ def graduated_alarm_bell()
             for i in (30..100)
                 `amixer -q set Master #{i}%`
                 # sleep for an ever-increasing duration of seconds -- but after each second, check for user input
-                for j in (1..((i/15)**2))
+                for j in (1..((i/30)**2))
                     sleep(j)
                     if alive == false
                         Thread.kill
