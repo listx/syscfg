@@ -59,6 +59,8 @@ HOSTNAME="exelion"
 # DHCP:     Set your interface to "dhcp" (eth0="dhcp")
 # Wireless: See network profiles below
 #
+
+#Static IP example
 #eth0="eth0 192.168.0.2 netmask 255.255.255.0 broadcast 192.168.0.255"
 # i don't use eth0... it's the other ethernet port... besides, eth1's MAC address is recognized by the router right now for convenient static IP assignment
 eth1="dhcp"
