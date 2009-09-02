@@ -33,11 +33,16 @@ schedule = untied_directory,5,5,stop_untied=
 # Close torrents when diskspace is low.
 schedule = low_diskspace,5,60,close_low_diskspace=100M
 
-# Stop torrents when reaching upload ratio in percent,
-# when also reaching total upload in bytes, or when
-# reaching final upload ratio in percent.
-# example: stop at ratio 2.0 with at least 200 MB uploaded, or else ratio 20.0
-schedule = ratio,60,60,"stop_on_ratio=150,2M,200"
+# Enable the default ratio group.
+ratio.enable=
+
+# Change the limits, the defaults should be sufficient.
+ratio.min.set=100
+ratio.max.set=150
+ratio.upload.set=1M
+
+# Changing the command triggered when the ratio is reached.
+system.method.set = group.seeding.ratio.command, d.close=, d.erase=
 
 # The ip address reported to the tracker.
 #ip = 127.0.0.1

@@ -44,7 +44,6 @@ ratio.upload.set=1M
 # Changing the command triggered when the ratio is reached.
 system.method.set = group.seeding.ratio.command, d.close=, d.erase=
 
-
 # The ip address reported to the tracker.
 #ip = 127.0.0.1
 #ip = rakshasa.no
