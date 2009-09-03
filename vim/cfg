@@ -171,11 +171,7 @@ if !exists("autocommands_loaded")
     endfunction
 endif
 
-" quickly enter current date and time
 " NOTE: the <F1> key in normal mode is mapped to ":help" by default
-map <silent> <F1> :call Insert_newline_smartly()<CR>i<C-R>=strftime("%F (%a) %T")<Esc><Space>-><Space>
-imap <silent> <F1> <Esc>:call Insert_newline_smartly()<CR>i<C-R>=strftime("%F (%a) %T")<Esc><Space>-><Space>
-
 " quicksave files
 map <F1> :w<CR>
 imap <F1> <Esc>:w<CR>a
@@ -188,6 +184,10 @@ imap <F2> <Esc>:q<CR>
 " term)
 map <F3> :noh<CR>
 imap <F3> <Esc>:noh<CR>a
+
+" quickly enter current date and time
+map <silent> <F4> :call Insert_newline_smartly()<CR>i<C-R>=strftime("%F (%a) %T")<Esc><Space>-><Space>
+imap <silent> <F4> <Esc>:call Insert_newline_smartly()<CR>i<C-R>=strftime("%F (%a) %T")<Esc><Space>-><Space>
 
 " programming commands
 imap <F5> <Esc>:!g++ -Wall -mtune=native -m32 % -o ~/prog/temp32<CR>
