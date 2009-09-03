@@ -155,6 +155,8 @@ if !exists("autocommands_loaded")
     " (useful for quickly entering a heading 1 - 9; i.e., no more pressing 'o'
     " and then pressing backspace 4 times
     au BufEnter *.lhp nmap <CR> o<Backspace><Backspace><Backspace><Backspace>
+    " for automatically creating folds based on the indent
+    au BufEnter *.lhp set foldmethod=indent
     function Insert_newline_smartly()
         if col(".") != 1
             normal o
