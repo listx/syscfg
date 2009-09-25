@@ -34,7 +34,9 @@ def graduated_alarm_bell()
             for i in (30..100)
                 `amixer -q set Master #{i}%`
                 # sleep for an ever-increasing duration of seconds -- but after each second, check for user input
-                for j in (1..((i/30)**2))
+                # the for-loop forces the range into an integer-only range, but the floating-point-only calculations
+                # inside the range still make it more accurate before conversion into an integer
+                for j in (1..((i/30.0)**(i/60.0)**(i/60.0) + 0.5))
                     sleep(j)
                     if alive == false
                         Thread.kill
@@ -61,15 +63,12 @@ def graduated_alarm_bell()
     end
 end
 
-width = 80
-
 puts ""
-princc("Good morning!", width)
+princ("Good morning!")
 puts ""
 
 
 # display calendar
-# the pal program outputs its calendar with a width of 76 characters
 str = `pal -f /home/listdata/syscfg/pal/exelion.cfg`
 a = str.split("\n")
 a.each do |line|
@@ -99,7 +98,7 @@ while true
     case char
     when 'q'
         puts ""
-        princc("Have an excellent day!", width)
+        princ("Have an excellent day!")
         puts ""
         break
     when 'p'
