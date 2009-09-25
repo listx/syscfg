@@ -1,3 +1,4 @@
+set ffs=unix "always interpret all files as if they are unix files
 set number "line numbers
 set nobackup
 " default tabstop and shiftwidths
