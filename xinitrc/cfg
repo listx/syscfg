@@ -53,7 +53,7 @@ scim -d
 
 # start a random screensaver
 # dependencies: shantz-xwinwrap-bzr from AUR; xscreensaver
-case $(($RANDOM%3)) in
+case $(($RANDOM%4)) in
     0)
         xwinwrap -ov -fs -ni -- /usr/lib/xscreensaver/cubicgrid -root -window-id WID -delay 10000 -speed 0.5 -ticks 35 &
     ;;
@@ -62,6 +62,9 @@ case $(($RANDOM%3)) in
     ;;
     2)
         xwinwrap -ov -fs -ni -- /usr/lib/xscreensaver/cwaves -root -window-id WID -colors 16000 &
+    ;;
+    3)
+        xwinwrap -ov -fs -ni -- /usr/lib/xscreensaver/surfaces -root -window-id WID -points -spin -delay 38000 &
     ;;
 esac
 
