@@ -8,16 +8,14 @@
 #
 # LOCALE: available languages can be listed with the 'locale -a' command
 # HARDWARECLOCK: set to "UTC" or "localtime"
-# USEDIRECTISA: use direct I/O requests instead of /dev/rtc for hwclock
 # TIMEZONE: timezones are found in /usr/share/zoneinfo
 # KEYMAP: keymaps are found in /usr/share/kbd/keymaps
 # CONSOLEFONT: found in /usr/share/kbd/consolefonts (only needed for non-US)
 # CONSOLEMAP: found in /usr/share/kbd/consoletrans
 # USECOLOR: use ANSI color sequences in startup messages
 #
-LOCALE="en_US.utf8"
+LOCALE="en_US.UTF-8"
 HARDWARECLOCK="localtime"
-USEDIRECTISA="no"
 TIMEZONE="US/Pacific"
 KEYMAP="us"
 CONSOLEFONT="ter-114f"
