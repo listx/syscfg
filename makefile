@@ -44,22 +44,7 @@ xinitrc:
 xmonad:
 	ln -fns $(CFGROOT)/xmonad           ${HOME}/.xmonad
 	ln -fs $(CFGROOT)/xmonad/init       ${HOME}/.xmonad/init.sh
-#--------------------------------------------------------------------------------------------------#
-# Since it's really painful to do a unified config file across multiple hosts in XMonad v. 0.8.1,  #
-# I have to do it this way.                                                                        #
-# NOTE: As of March 2009, the ifeq and its sibling statements MUST START at the BEGINNING of the   #
-# line!                                                                                            #
-#--------------------------------------------------------------------------------------------------#
-ifeq ('$(HOSTNAME)','exelion')
 	ln -fs $(CFGROOT)/xmonad/cfg        ${HOME}/.xmonad/xmonad.hs
-endif
-ifeq ('$(HOSTNAME)','luxion')
-	ln -fs $(CFGROOT)/xmonad/cfg-luxion ${HOME}/.xmonad/xmonad.hs
-endif
-ifeq ('$(HOSTNAME)','aether')
-	ln -fs $(CFGROOT)/xmonad/cfg-aether ${HOME}/.xmonad/xmonad.hs
-endif
-
 zsh:
 	ln -fns $(CFGROOT)/zsh              ${HOME}/.zsh
 	ln -fs $(CFGROOT)/zsh/cfg           ${HOME}/.zshrc

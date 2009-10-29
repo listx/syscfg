@@ -24,6 +24,8 @@ import XMonad.Actions.GridSelect
 import XMonad.Actions.NoBorders
 -- for forcing the "leftmost" workspace to be where 0,0 is in pixel space
 import XMonad.Actions.PhysicalScreens
+-- for identifying different host systems
+import System.Posix.Unistd
 
 -- The preferred terminal program, which is used in a binding below and by
 -- certain contrib modules.
@@ -246,7 +248,7 @@ myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
 -- The available layouts.  Note that each layout is separated by |||,
 -- which denotes layout choice.
 --
-myLayout = tiled ||| Mirror tiled ||| Full
+myLayout = Mirror tiled ||| tiled ||| Full
   where
     -- default tiling algorithm partitions the screen into two panes
     tiled   = Tall nmaster delta ratio
@@ -367,15 +369,11 @@ myStartupHook = do
  
 -- Run xmonad with the settings you specify. No need to modify this.
 --
-main = xmonad defaults
- 
--- A structure containing your configuration settings, overriding
--- fields in the default config. Any you don't override, will
--- use the defaults defined in xmonad/XMonad/Config.hs
---
--- No need to modify this.
---
-defaults = defaultConfig {
+--main = xmonad defaults
+main = do
+    host <- fmap nodeName getSystemID
+    xmonad $ defaultConfig
+        {
       -- simple stuff
         terminal           = myTerminal,
         focusFollowsMouse  = myFocusFollowsMouse,
@@ -396,4 +394,4 @@ defaults = defaultConfig {
         handleEventHook    = myEventHook,
         logHook            = myLogHook,
         startupHook        = myStartupHook
-    }
+        }
