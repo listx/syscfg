@@ -118,6 +118,12 @@ if !exists("autocommands_loaded")
     au BufEnter *.ly vmap <leader>cw1 !boxes -d percent -s 120<CR>
     au BufEnter *.ly nmap <leader>x1 !!boxes -d percent -r<CR>
     au BufEnter *.ly vmap <leader>x1 !boxes -d percent -r<CR>
+    au BufEnter *.hs nmap <leader>c1 !!boxes -d ada-box<CR>
+    au BufEnter *.hs vmap <leader>c1 !boxes -d ada-box<CR>
+    au BufEnter *.hs nmap <leader>cw1 !!boxes -d ada-box -s 120<CR>
+    au BufEnter *.hs vmap <leader>cw1 !boxes -d ada-box -s 120<CR>
+    au BufEnter *.hs nmap <leader>x1 !!boxes -d ada-box -r<CR>
+    au BufEnter *.hs vmap <leader>x1 !boxes -d ada-box -r<CR>
 
     " useful for selecting multi-word phrases; you can select either
     " right-to-left or left-to-right -- just highlight a portion of the two
