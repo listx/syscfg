@@ -78,6 +78,11 @@ alias kkkkkk="cd ../../../../../../;ll"
 alias kkkkkkk="cd ../../../../../../../;ll"
 alias kkkkkkkk="cd ../../../../../../../../;ll"
 alias kkkkkkkkk="cd ../../../../../../../../../;ll"
+alias kkkkkkkkkk="cd ../../../../../../../../../../;ll"
+alias kkkkkkkkkkk="cd ../../../../../../../../../../../;ll"
+alias kkkkkkkkkkkk="cd ../../../../../../../../../../../../;ll"
+alias kkkkkkkkkkkkk="cd ../../../../../../../../../../../../../;ll"
+alias kkkkkkkkkkkkkk="cd ../../../../../../../../../../../../../../;ll"
 #--------------------------------------------------------------------------------------------------#
 # alias 1-="cd +1"                                                                                 #
 # alias 2-="cd +2"                                                                                 #
@@ -96,6 +101,10 @@ alias kkkkkkkkk="cd ../../../../../../../../../;ll"
 
 # call custom function 'cd_ls'
 alias d='cd_ls'
+
+alias e='evince'
+
+alias i='eog'
 
 alias ll='ls -Ahs --color=auto'
 alias l='ls -Ahl --color=auto'
