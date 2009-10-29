@@ -22,8 +22,6 @@ import XMonad.Actions.Warp
 import XMonad.Actions.GridSelect
 -- for toggling borders on a per-window basis
 import XMonad.Actions.NoBorders
--- for forcing the "leftmost" workspace to be where 0,0 is in pixel space
-import XMonad.Actions.PhysicalScreens
 -- for identifying different host systems
 import System.Posix.Unistd
 
@@ -158,6 +156,7 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((mod4Mask .|. shiftMask, xK_x     ), spawn "urxvtc -name lhp")
     , ((mod4Mask              , xK_n     ), spawn "firefox")
     , ((mod4Mask .|. shiftMask, xK_n     ), spawn "urxvtc -e weechat-curses")
+    , ((mod4Mask .|. shiftMask .|. controlMask, xK_n     ), spawn "urxvtc -e alpine -p ~/.alpine/cfg -passfile ~/.alpine-pass")
     , ((mod4Mask              , xK_t     ), spawn "gvim")
     , ((mod4Mask .|. shiftMask, xK_t     ), spawn "xclock -digital -update 1 -strftime \"%F %a %T Wk %W\" -face terminus-9 -padding 45")
     , ((mod4Mask              , xK_c     ), spawn "galculator")
@@ -208,9 +207,8 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     -- mod-shift-{w,e,r}, Move client to screen 1, 2, or 3
     --
     [((m .|. modm, key), screenWorkspace sc >>= flip whenJust (windows . f))
-        | (key, sc) <- zip [xK_h, xK_l, xK_r] [0..]
+        | (key, sc) <- zip [xK_h, xK_l, xK_r] [1,0]
         , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]]
- 
  
 ------------------------------------------------------------------------
 -- Mouse bindings: default actions bound to mouse events
@@ -295,9 +293,9 @@ myManageHook = composeAll
     , stringProperty "WM_NAME"  =? "htop"              --> doShift "8"
     , stringProperty "WM_NAME"  =? "alsamixer"              --> doShift "8"
     , stringProperty "WM_NAME"  =? "rtorrent"              --> doShift "9"
-    , resource  =? "Browser"    --> doFloat
-    , resource  =? "alpine"     --> doShift "6"
+    , stringProperty "WM_NAME"  =? "alpine"              --> doShift "6"
     , resource  =? "WeeChat"    --> doShift "6"
+    , resource  =? "Browser"    --> doFloat
     , className  =? "Galculator"    --> doFloat
     , className  =? "Blender"    --> doShift "5"
     , className  =? "Blender:Render"    --> doFloat
