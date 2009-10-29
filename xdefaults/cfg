@@ -7,12 +7,28 @@ XTerm*saveLines: 1000
 lhp*font: xft:Terminus:pixelsize=20,\
             xft:Kochi Gothic:antialias=false,\
             xft:Baekmuk Gulim
-lhp*background: #000000
+lhp*background: #3a3a3a
 lhp*foreground: #dcdccc
 lhp*depth: 32
 lhp*fading: 20
 lhp*cursorColor: green
 lhp*scrollBar: off
+lhp*color0: #3f3f3f
+lhp*color1: #d78787
+lhp*color2: #60b48a
+lhp*color3: #d7d7af
+lhp*color4: #506070
+lhp*color5: #dc8cc3
+lhp*color6: #8cd0d3
+lhp*color7: #dcdccc
+lhp*color8: #709080
+lhp*color9: #d75f5f
+lhp*color10: #87af87
+lhp*color11: #ffd7af
+lhp*color12: #94bff3
+lhp*color13: #ec93d3
+lhp*color14: #87d7d7
+lhp*color15: #ffffff
 
 ! urxvt settings
 ! First set base font to Terminus to handle all Latin glyphs
