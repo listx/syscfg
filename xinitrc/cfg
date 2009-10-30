@@ -9,7 +9,7 @@ xsetroot -cursor_name left_ptr
 
 # run the xmonad-utils program 'hhp', which is the haskell version of 'unclutter'
 # by default the mouse is hidden after 10 seconds of inactivity
-hhp
+hhp &
 
 # DISABLE CAPSLOCK KEY, and instead use it as the MODKEY in xmonad!!
 xmodmap -e "remove Lock = Caps_Lock"
