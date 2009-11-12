@@ -164,6 +164,14 @@ if !exists("autocommands_loaded")
     au BufEnter *.lhp nmap <CR> o<Backspace><Backspace><Backspace><Backspace>
     " for automatically creating folds based on the indent
     au BufEnter *.lhp set foldmethod=indent
+
+    " highlight red any trailing whitespace
+    highlight ExtraWhitespace ctermbg=red guibg=red
+    au ColorScheme * highlight ExtraWhitespace guibg=red
+    au BufEnter * match ExtraWhitespace /\s\+$/
+    au InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
+    au InsertLeave * match ExtraWhiteSpace /\s\+$/
+
     function Insert_newline_smartly()
         if col(".") != 1
             normal o
