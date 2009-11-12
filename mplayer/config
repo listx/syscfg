@@ -2,6 +2,3 @@
 
 # default subtitle size (1 - 5)
 subfont-text-scale=3
-
-# loop infinitely
-loop=0

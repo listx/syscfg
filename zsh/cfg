@@ -111,7 +111,8 @@ alias l='ls -Ahl --color=auto'
 
 alias q='exit'
 
-alias m='mplayer'
+alias m='mplayer -loop 0'
+alias mp='mplayer -loop 0 -playlist'
 
 alias n='netcfg'
 
