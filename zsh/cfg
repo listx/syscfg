@@ -11,8 +11,8 @@ promptinit
 prompt listdata
 
 # history settings
-HISTSIZE=1000
-SAVEHIST=1000
+HISTSIZE=10000
+SAVEHIST=10000
 HISTFILE=~/.zsh-untracked/history
 setopt INC_APPEND_HISTORY
 setopt HIST_IGNORE_ALL_DUPS
@@ -37,7 +37,7 @@ alias dl='dirs -v'
 # Environment variables                                                                            #
 #--------------------------------------------------------------------------------------------------#
 # change colors just for the ls command
-# 
+#
 # di = directory
 # 01;37 = ansi color code for bold white
 # 01;33 is bolded yellow (BRIGHT yellow)
@@ -47,8 +47,8 @@ export LS_COLORS='di=01;33:ow=01;34:tw=01;34;44:ex=31:ln=36:*.gz=32:*.bz2=32:*.z
 export LESS_TERMCAP_mb=$'\E[01;32m'
 export LESS_TERMCAP_md=$'\E[01;32m'
 export LESS_TERMCAP_me=$'\E[0m'
-export LESS_TERMCAP_se=$'\E[0m'                           
-export LESS_TERMCAP_so=$'\E[01;44;33m'                                 
+export LESS_TERMCAP_se=$'\E[0m'
+export LESS_TERMCAP_so=$'\E[01;44;33m'
 export LESS_TERMCAP_ue=$'\E[0m'
 export LESS_TERMCAP_us=$'\E[01;33m'
 
