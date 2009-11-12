@@ -5,6 +5,57 @@
 # Program Name: AEX (Auto-EXtractor)
 # Description: Unarchive an archive based on its file extension in an intelligent way
 
+#==================#
+# Global variables #
+#==================#
+Clron = "\e[1;38;5;159m"
+Clrof = "\e[0m"
+
+#==============================================#
+# Pretty string colors (ANSI escape sequences) #
+#==============================================#
+def aex_msg(dir_new, dir_predefined)
+    if dir_new.empty?
+        if File.exists?(dir_predefined) && File.directory?(dir_predefined)
+            puts"#{Clron} --[ aex: Cancelling extraction because \`./#{dir_predefined}\' already exists ]--#{Clrof}"
+        else
+            puts "#{Clron} ,--[ aex: Extracting archive to \`./#{dir_predefined}\' ]--#{Clrof}"
+        end
+    else
+        if File.exists?(dir_new) && File.directory?(dir_new)
+            puts"#{Clron} --[ aex: Cancelling extraction because \`./#{dir_new}\' already exists ]--#{Clrof}"
+        else
+            puts "#{Clron} ,--[ aex: Extracting archive to \`./#{dir_new}\' ]--#{Clrof}"
+        end
+    end
+end
+
+#===============#
+# Pretty output #
+#===============#
+def aex_show(arr)
+    arr.each do |line|
+        puts "#{Clron} |#{Clrof} #{line}\n"
+    end
+
+    print "#{Clron}"
+    print " `"
+    print "-" * (arr.last.size + 1)
+    puts "#{Clrof}"
+end
+
+#==============================================#
+# Checks if a directory does not already exist #
+#==============================================#
+def dne(dir)
+    if File.exists?(dir) && File.directory?(dir)
+        return false
+    else
+        return true
+    end
+
+end
+
 #==========================#
 # Archive-specific methods #
 #==========================#
@@ -12,6 +63,9 @@ def unzip(archive)
     # let's be optimistic, and hope that this archive is NOT a zip bomb (an archive with multiple files/directories at
     # root level); we'll only set this flag to true if we detect a zip bomb
     failflag = false
+
+    # array to prettify before it is shown
+    aexarr = []
 
     # figure out what the archive's name is, without the extension
     leadname = archive.split(".").first(archive.split(".").size - 1).join(".")
@@ -44,20 +98,33 @@ def unzip(archive)
         if failflag == true
             # we use quotes around the archive name, since spaces and other special characters are NOT escaped in the
             # _archive_ variable; likewise, the _leadname_ variable is placed in quotes as well
-            puts `unzip "#{archive}" -d "#{leadname}"`
+            aex_msg(leadname, "")
+            if dne(leadname)
+                `unzip "#{archive}" -d "#{leadname}"`.split("\n").each {|line| aexarr << line}
+                aex_show(aexarr)
+            end
         else
-            # if no zip bomb, simply unzip as-is
-            puts `unzip "#{archive}"`
+            # if no zip bomb, simply unzip as-is (a new directory will be created if it's a single file)
+            aex_msg("", dir)
+            if dne(dir)
+                `unzip "#{archive}"`.split("\n").each {|line| aexarr << line}
+                aex_show(aexarr)
+            end
         end
     else
         # we know that the first item in the archive is NOT a directory, meaning that there are multiple files or
         # directories under the root area!
-            puts `unzip "#{archive}" -d "#{leadname}"`
+            aex_msg(leadname, "")
+            if dne(leadname)
+                `unzip "#{archive}" -d "#{leadname}"`.split("\n").each {|line| aexarr << line}
+                aex_show(aexarr)
+            end
     end
 end
 
 def unrar(archive)
     failflag = false
+    aexarr = []
 
     leadname = archive.split(".").first(archive.split(".").size - 1).join(".")
 
@@ -107,12 +174,66 @@ def unrar(archive)
         end
 
         if failflag == true
-            puts `unrar x "#{archive}" "#{leadname}"/`
+            aex_msg(leadname, "")
+            if dne(leadname)
+                `unrar x "#{archive}" "#{leadname}"/`.split("\n").each {|line| aexarr << line}
+                aex_show(aexarr)
+            end
         else
-            puts `unrar x "#{archive}"`
+            aex_msg("", dir)
+            if dne(dir)
+                `unrar x "#{archive}"`.split("\n").each {|line| aexarr << line}
+                aex_show(aexarr)
+            end
         end
     else
-            puts `unrar x "#{archive}" "#{leadname}"/`
+            aex_msg(leadname, "")
+            if dne(leadname)
+                `unrar x "#{archive}" "#{leadname}"/`.split("\n").each {|line| aexarr << line}
+                aex_show(aexarr)
+            end
+    end
+end
+
+def untargz(archive)
+    failflag = false
+    aexarr = []
+    leadname = archive.split(".").first(archive.split(".").size - 2).join(".") # minus 2, since there's "tar" and "gz"
+    arr = `tar tf "#{archive}"`.split("\n")
+    dir_or_file_name = arr.shift
+    if dir_or_file_name.reverse[0] == "/"
+        dir = dir_or_file_name.chop
+        arr.each do |item|
+            if item.split("/").shift.scan(dir).empty?
+                failflag = true
+                break
+            end
+        end
+
+        if failflag == true
+            aex_msg(leadname, "")
+            if dne(leadname)
+                `mkdir "#{leadname}"`.split("\n").each {|line| aexarr << line}
+
+                # two v's for even more verbosity than a single v
+                `tar zxvvf "#{archive}" -C "#{leadname}"`.split("\n").each {|line| aexarr << line}
+                aex_show(aexarr)
+            end
+        else # a pre-defined, single directory is inside the archive, so we test if this directory already exists
+            aex_msg("", dir)
+            if dne(dir)
+                `tar zxvvf "#{archive}"`.split("\n").each {|line| aexarr << line}
+                aex_show(aexarr)
+            end
+        end
+    else
+            aex_msg(leadname, "")
+            if dne(leadname)
+                `mkdir "#{leadname}"`.split("\n").each {|line| aexarr << line}
+                # two v's for even more verbosity than a single v
+                `tar zxvvf "#{archive}" -C "#{leadname}"`.split("\n").each {|line| aexarr << line}
+                aex_show(aexarr)
+            end
     end
 end
 
@@ -121,12 +242,21 @@ end
 #====================#
 if ARGV.size > 0
     archive = ARGV.shift
-    case archive.split(".").last
-    when /^rar$/i    # rar archive
-        unrar(archive)
-    when /^zip$/i    # zip archive
-        unzip(archive)
+    if File.directory?(archive)
+        puts "#{Clron}--[ aex: `#{archive}' is a directory, not an archive ]--#{Clrof}\n"
+    else
+        case archive
+        when /\.tar\.gz$/i
+            untargz(archive)
+        when /zip$/i    # zip archive
+            unzip(archive)
+        when /rar$/i    # rar archive
+            unrar(archive)
+        else
+            puts "#{Clron}--[ aex: `#{archive}' is not a recognized archive type ]--#{Clrof}\n"
+            puts "#{Clron}--[ aex: .tar.gz, .zip, and .rar are supported ]--#{Clrof}\n"
+        end
     end
 else
-    puts "No archived file specified.\n"
+    puts "#{Clron}--[ aex: No archive specified ]--#{Clrof}\n"
 end
