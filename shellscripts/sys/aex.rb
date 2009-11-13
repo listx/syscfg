@@ -237,6 +237,45 @@ def untargz(archive)
     end
 end
 
+def untarbz2(archive)
+    failflag = false
+    aexarr = []
+    leadname = archive.split(".").first(archive.split(".").size - 2).join(".")
+    arr = `tar tf "#{archive}"`.split("\n")
+    dir_or_file_name = arr.shift
+    if dir_or_file_name.reverse[0] == "/"
+        dir = dir_or_file_name.chop
+        arr.each do |item|
+            if item.split("/").shift.scan(dir).empty?
+                failflag = true
+                break
+            end
+        end
+
+        if failflag == true
+            aex_msg(leadname, "")
+            if dne(leadname)
+                `mkdir "#{leadname}"`.split("\n").each {|line| aexarr << line}
+                `tar jxvvf "#{archive}" -C "#{leadname}"`.split("\n").each {|line| aexarr << line}
+                aex_show(aexarr)
+            end
+        else
+            aex_msg("", dir)
+            if dne(dir)
+                `tar jxvvf "#{archive}"`.split("\n").each {|line| aexarr << line}
+                aex_show(aexarr)
+            end
+        end
+    else
+            aex_msg(leadname, "")
+            if dne(leadname)
+                `mkdir "#{leadname}"`.split("\n").each {|line| aexarr << line}
+                `tar jxvvf "#{archive}" -C "#{leadname}"`.split("\n").each {|line| aexarr << line}
+                aex_show(aexarr)
+            end
+    end
+end
+
 #====================#
 # BEGIN MAIN PROGRAM #
 #====================#
@@ -248,13 +287,15 @@ if ARGV.size > 0
         case archive
         when /\.tar\.gz$/i
             untargz(archive)
+        when /\.tar\.bz2$/i
+            untarbz2(archive)
         when /zip$/i    # zip archive
             unzip(archive)
         when /rar$/i    # rar archive
             unrar(archive)
         else
             puts "#{Clron}--[ aex: `#{archive}' is not a recognized archive type ]--#{Clrof}\n"
-            puts "#{Clron}--[ aex: .tar.gz, .zip, and .rar are supported ]--#{Clrof}\n"
+            puts "#{Clron}--[ aex: .tar.bz2, .tar.gz, .zip, and .rar are supported ]--#{Clrof}\n"
         end
     end
 else
