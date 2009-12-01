@@ -90,44 +90,44 @@ if !exists("autocommands_loaded")
     au BufEnter * vmap <leader>c1 !boxes -d pound-alt<CR>
     au BufEnter * nmap <leader>cw1 !!boxes -d pound-alt -s 120<CR>
     au BufEnter * vmap <leader>cw1 !boxes -d pound-alt -s 120<CR>
-    au BufEnter * nmap <leader>x1 !!boxes -d pound-alt -r<CR>
-    au BufEnter * vmap <leader>x1 !boxes -d pound-alt -r<CR> 
+    au BufEnter * nmap <leader>C1 !!boxes -d pound-alt -r<CR>
+    au BufEnter * vmap <leader>C1 !boxes -d pound-alt -r<CR>
     au BufEnter *.C,*.cpp,*.cxx,*.h,*.hpp nmap <leader>c1 !!boxes -d c-top<CR>
     au BufEnter *.C,*.cpp,*.cxx,*.h,*.hpp vmap <leader>c1 !boxes -d c-top<CR>
     au BufEnter *.C,*.cpp,*.cxx,*.h,*.hpp nmap <leader>cw1 !!boxes -d c-top -s 120<CR>
     au BufEnter *.C,*.cpp,*.cxx,*.h,*.hpp vmap <leader>cw1 !boxes -d c-top -s 120<CR>
-    au BufEnter *.C,*.cpp,*.cxx,*.h,*.hpp nmap <leader>x1 !!boxes -d c-top -r<CR>
-    au BufEnter *.C,*.cpp,*.cxx,*.h,*.hpp vmap <leader>x1 !boxes -d c-top -r<CR>
+    au BufEnter *.C,*.cpp,*.cxx,*.h,*.hpp nmap <leader>C1 !!boxes -d c-top -r<CR>
+    au BufEnter *.C,*.cpp,*.cxx,*.h,*.hpp vmap <leader>C1 !boxes -d c-top -r<CR>
     au BufEnter *.C,*.cpp,*.cxx,*.h,*.hpp nmap <leader>c2 !!boxes -d c-mid<CR>
     au BufEnter *.C,*.cpp,*.cxx,*.h,*.hpp vmap <leader>c2 !boxes -d c-mid<CR>
     au BufEnter *.C,*.cpp,*.cxx,*.h,*.hpp nmap <leader>cw2 !!boxes -d c-mid -s 120<CR>
     au BufEnter *.C,*.cpp,*.cxx,*.h,*.hpp vmap <leader>cw2 !boxes -d c-mid -s 120<CR>
-    au BufEnter *.C,*.cpp,*.cxx,*.h,*.hpp nmap <leader>x2 !!boxes -d c-mid -r<CR>
-    au BufEnter *.C,*.cpp,*.cxx,*.h,*.hpp vmap <leader>x2 !boxes -d c-mid -r<CR>
+    au BufEnter *.C,*.cpp,*.cxx,*.h,*.hpp nmap <leader>C2 !!boxes -d c-mid -r<CR>
+    au BufEnter *.C,*.cpp,*.cxx,*.h,*.hpp vmap <leader>C2 !boxes -d c-mid -r<CR>
     au BufEnter *.C,*.cpp,*.cxx,*.h,*.hpp nmap <leader>c3 !!boxes -d c-bot<CR>
     au BufEnter *.C,*.cpp,*.cxx,*.h,*.hpp vmap <leader>c3 !boxes -d c-bot<CR>
     au BufEnter *.C,*.cpp,*.cxx,*.h,*.hpp nmap <leader>cw3 !!boxes -d c-bot -s 120<CR>
     au BufEnter *.C,*.cpp,*.cxx,*.h,*.hpp vmap <leader>cw3 !boxes -d c-bot -s 120<CR>
-    au BufEnter *.C,*.cpp,*.cxx,*.h,*.hpp nmap <leader>x3 !!boxes -d c-bot -r<CR>
-    au BufEnter *.C,*.cpp,*.cxx,*.h,*.hpp vmap <leader>x3 !boxes -d c-bot -r<CR>
+    au BufEnter *.C,*.cpp,*.cxx,*.h,*.hpp nmap <leader>C3 !!boxes -d c-bot -r<CR>
+    au BufEnter *.C,*.cpp,*.cxx,*.h,*.hpp vmap <leader>C3 !boxes -d c-bot -r<CR>
     au BufEnter .vimrc,.gvimrc,.vimperatorrc nmap <leader>c1 !!boxes -d vim-cmt<CR>
     au BufEnter .vimrc,.gvimrc,.vimperatorrc vmap <leader>c1 !boxes -d vim-cmt<CR>
     au BufEnter .vimrc,.gvimrc,.vimperatorrc nmap <leader>cw1 !!boxes -d vim-cmt -s 120<CR>
     au BufEnter .vimrc,.gvimrc,.vimperatorrc vmap <leader>cw1 !boxes -d vim-cmt -s 120<CR>
-    au BufEnter .vimrc,.gvimrc,.vimperatorrc nmap <leader>x1 !!boxes -d vim-cmt -r<CR>
-    au BufEnter .vimrc,.gvimrc,.vimperatorrc vmap <leader>x1 !boxes -d vim-cmt -r<CR>
+    au BufEnter .vimrc,.gvimrc,.vimperatorrc nmap <leader>C1 !!boxes -d vim-cmt -r<CR>
+    au BufEnter .vimrc,.gvimrc,.vimperatorrc vmap <leader>C1 !boxes -d vim-cmt -r<CR>
     au BufEnter *.ly nmap <leader>c1 !!boxes -d percent<CR>
     au BufEnter *.ly vmap <leader>c1 !boxes -d percent<CR>
     au BufEnter *.ly nmap <leader>cw1 !!boxes -d percent -s 120<CR>
     au BufEnter *.ly vmap <leader>cw1 !boxes -d percent -s 120<CR>
-    au BufEnter *.ly nmap <leader>x1 !!boxes -d percent -r<CR>
-    au BufEnter *.ly vmap <leader>x1 !boxes -d percent -r<CR>
+    au BufEnter *.ly nmap <leader>C1 !!boxes -d percent -r<CR>
+    au BufEnter *.ly vmap <leader>C1 !boxes -d percent -r<CR>
     au BufEnter *.hs nmap <leader>c1 !!boxes -d ada-box<CR>
     au BufEnter *.hs vmap <leader>c1 !boxes -d ada-box<CR>
     au BufEnter *.hs nmap <leader>cw1 !!boxes -d ada-box -s 120<CR>
     au BufEnter *.hs vmap <leader>cw1 !boxes -d ada-box -s 120<CR>
-    au BufEnter *.hs nmap <leader>x1 !!boxes -d ada-box -r<CR>
-    au BufEnter *.hs vmap <leader>x1 !boxes -d ada-box -r<CR>
+    au BufEnter *.hs nmap <leader>C1 !!boxes -d ada-box -r<CR>
+    au BufEnter *.hs vmap <leader>C1 !boxes -d ada-box -r<CR>
 
     " useful for selecting multi-word phrases; you can select either
     " right-to-left or left-to-right -- just highlight a portion of the two
@@ -192,60 +192,62 @@ endif
 
 " NOTE: the <F1> key in normal mode is mapped to ":help" by default
 " quicksave files
-map <F1> :w<CR>
+nmap <F1> :w<CR>
 imap <F1> <Esc>:w<CR>a
+nmap <leader>w :w<CR>
 
 " exit
-map <F2> :q<CR>
+nmap <F2> :q<CR>
 imap <F2> <Esc>:q<CR>
+nmap <leader>q :q<CR>
+nmap <leader>Q :q!<CR>
+
+" save and exit (equivalent to "ZZ")
+nmap <leader>x :x<cr>
 
 " turn off search highlighting (to turn on, press 'n' in normal mode for next
 " term)
-map <F3> :noh<CR>
+nmap <F3> :noh<CR>
 imap <F3> <Esc>:noh<CR>a
 
 " quickly enter current date and time
-map <silent> <F4> :call Insert_newline_smartly()<CR>i<C-R>=strftime("%F (%a) %T")<Esc><Space>-><Space>
+nmap <silent> <F4> :call Insert_newline_smartly()<CR>i<C-R>=strftime("%F (%a) %T")<Esc><Space>-><Space>
 imap <silent> <F4> <Esc>:call Insert_newline_smartly()<CR>i<C-R>=strftime("%F (%a) %T")<Esc><Space>-><Space>
 
 " programming commands
 imap <F5> <Esc>:!g++ -Wall -mtune=native -m32 % -o ~/prog/temp32<CR>
 imap <F6> <Esc>:!xterm -hold -e ~/prog/temp32<CR>
-map <F6> <Esc>:!xterm -hold -e ~/prog/temp32<CR>
+nmap <F6> <Esc>:!xterm -hold -e ~/prog/temp32<CR>
+
+" Use <F9> to toggle between 'paste' and 'nopaste'
+set pastetoggle=<F9>
 
 " make windows equal in height/width
 nmap <F10> <C-w>=
 imap <F10> <C-w>=
 
 " toggle status bar
-map <silent> <F11> :call Toggle_status_bar()<CR>
+nmap <silent> <F11> :call Toggle_status_bar()<CR>
 imap <silent> <F11> <Esc>:call Toggle_status_bar()<CR>
 
 " toggle line numbers
-map <F12> :set number!<CR>
+nmap <F12> :set number!<CR>
 imap <F12> <Esc>:set number!<CR>
-
-" makes j and k move up or down 1 "line" as it appears on the screen -- not by
-" the actual number of lines in the text file
-nnoremap k gk
-nnoremap j gj
 
 " integration with the sessionman.vim plugin by Yuri Klubakov
 nmap <leader>so :SessionOpen<space>
 nmap <leader>ss :SessionSave<CR>
 nmap <leader>sa :SessionSaveAs<space>
 
-" tab movement
+" move across tabs
 nnoremap <C-l> :tabnext<CR>
 nnoremap <C-h> :tabprevious<CR>
 inoremap <C-l> <Esc>:tabnext<CR>
 inoremap <C-h> <Esc>:tabprevious<CR>
 
 " window movement (i.e., moving around INSIDE a tab)
-nmap <C-j> <C-w>j
-nmap <C-k> <C-w>k
-imap <C-j> <Esc><C-w>j
-imap <C-k> <Esc><C-w>k
+nmap <Tab> <C-w><C-w>
+imap <S-Tab> <Esc><C-w><C-w>
 
 " buffer movement (i.e., moving around INSIDE a window)
 nmap <S-h> :bn<CR>
@@ -253,3 +255,19 @@ nmap <S-l> :bp<CR>
 
 " faster access to normal mode
 imap jj <Esc>
+
+" makes j and k move up or down 1 "line" as it appears on the screen -- not by
+" the actual number of lines in the text file
+nnoremap k gk
+nnoremap j gj
+
+" find lines longer than 120 characters
+nmap <leader>fl /^.\{-}\zs.\%>79v<cr>
+
+" create a new blank tab
+nmap <leader>n :tabe<cr>
+
+" horizontally split current window
+nmap <leader>v :sp<cr>
+" vertically split current window
+nmap <leader>h :vsp<cr>
