@@ -17,6 +17,10 @@ syntax enable "enable syntax highlighting
 set hlsearch "turn on search highlighting
 filetype indent on "turn on automatic indenting, as well as filetype recognition
 
+" Use case insensitive search, except when using capital letters
+set ignorecase
+set smartcase
+
 set guioptions-=T  "remove toolbar
 set guioptions-=m  "remove menu
 set guioptions-=r  "remove scrollbar
