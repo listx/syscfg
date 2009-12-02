@@ -1,6 +1,5 @@
 #!/usr/bin/ruby
-# Author: Linus Arver
-# Date: 2009
+# Author: Linus Arver (C) 2009
 # License: GPL3
 # Program Name: AEX (Auto-EXtractor)
 # Description: Unarchive an archive based on its file extension in an intelligent way
