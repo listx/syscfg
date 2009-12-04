@@ -311,6 +311,7 @@ myManageHook = composeAll
     , stringProperty "WM_NAME"  =? "Scid" --> doFloat
     , className  =? "Toplevel"    --> doFloat -- Scid's many popup windows
     , className  =? "linux_client"    --> doFloat
+    , className  =? "Raptor"    --> doFloat
     ]
  
 ------------------------------------------------------------------------
