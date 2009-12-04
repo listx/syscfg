@@ -1,17 +1,14 @@
+" set default mod-key to ","
+let mapleader = ","
+
 " set startup page to a blank page
 :set! browser.startup.page=0
 
-" vim: set ft=vimperator:
 source! ~/.vimperatorrc.local
-
-" duplicate current tab
-:map <F2> :tabduplicate<CR> 
 
 " make default vertical scrolling go faster
 :no j 6j
 :no k 6k
-
-" change some of the default keys!
 
 " unmap the make C-p and C-n behave like default h and l (scroll horizontally)
 
@@ -23,6 +20,24 @@ source! ~/.vimperatorrc.local
 :no h :tabprevious<CR>
 :no l :tabnext<CR>
 
+" physically move the tabs around
+:map <C-h> :tabm! -1<cr>
+:map <C-l> :tabm! +1<cr>
+
 " swap S-f and f, since I almost always open links on a new background tab
 :no F f
 :no f F
+
+" save current session (equiv. to Firefox's "Save and Quit" before closing multiple tabs)
+:map <Leader>x :xa<cr>
+
+" toggle off search highlighting
+:map <F3> :noh<cr>
+
+" duplicate current tab
+:map <Leader>d :tabduplicate<CR>
+
+" add bookmark right away
+:map <Leader>a a<cr>
+
+" vim: set ft=vimperator

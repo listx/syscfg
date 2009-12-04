@@ -21,6 +21,8 @@ filetype indent on "turn on automatic indenting, as well as filetype recognition
 set ignorecase
 set smartcase
 
+set mousehide " hide the mouse cursor when typing (only for GVIM)
+
 set guioptions-=T  "remove toolbar
 set guioptions-=m  "remove menu
 set guioptions-=r  "remove scrollbar
@@ -210,10 +212,6 @@ nmap <leader>x :x<cr>
 nmap <F3> :noh<CR>
 imap <F3> <Esc>:noh<CR>a
 
-" quickly enter current date and time
-nmap <silent> <F4> :call Insert_newline_smartly()<CR>i<C-R>=strftime("%F (%a) %T")<Esc><Space>-><Space>
-imap <silent> <F4> <Esc>:call Insert_newline_smartly()<CR>i<C-R>=strftime("%F (%a) %T")<Esc><Space>-><Space>
-
 " programming commands
 imap <F5> <Esc>:!g++ -Wall -mtune=native -m32 % -o ~/prog/temp32<CR>
 imap <F6> <Esc>:!xterm -hold -e ~/prog/temp32<CR>
@@ -271,3 +269,13 @@ nmap <leader>n :tabe<cr>
 nmap <leader>v :sp<cr>
 " vertically split current window
 nmap <leader>h :vsp<cr>
+
+" Date and time -- various formats
+" show current full date, with day name, followed by arrow
+nmap <silent> <leader>df :call Insert_newline_smartly()<CR>i<C-R>=strftime("%F (%a) %T")<Esc><Space>-><Space>
+" show current full date, with week number (with Sunday as the first day of a "week"), inside a comment box
+nmap <silent> <leader>ds :call Insert_newline_smartly()<CR>i###################<Esc>o#<space><C-R>=strftime("%F (%U)")<esc><space>#<Esc>o###################<esc>o<cr>
+
+" special shortcuts for editing human-made notes quickly
+" replace first "-" in line with an "x" character (task done), and give it a timestamp at the end
+nmap <silent> <leader>td 0sx<esc>A<space>[<space><c-r>=strftime("%F (%a) %T")<esc><space>]<esc>0<cr>
