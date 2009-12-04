@@ -1,3 +1,0 @@
-cd_ls() {
-    builtin cd "$@" && ls -Ahs --color=auto
-}

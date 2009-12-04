@@ -29,7 +29,7 @@ setopt pushdignoredups
 # with a plain 'dirs -v'
 # NOTE: 'cd +$n' makes it go to the number listed, whereas 'cd -$n' reverses it... don't know why
 # you'd ever want to use 'cd -$n'
-alias ds='dirs -v ; echo -n "\nSelect directory: " ; read n ; d +$n'
+alias ds='dirs -v ; echo -n "\nSelect directory: " ; read n ; cd +$n && ls -Ahs --color=auto'
 # just show a list of dir stack without choose prompt
 alias dl='dirs -v'
 
@@ -99,8 +99,7 @@ alias kkkkkkkkkkkkkk="cd ../../../../../../../../../../../../../../;ll"
 # Custom aliases                                                                                   #
 #--------------------------------------------------------------------------------------------------#
 
-# call custom function 'cd_ls'
-alias d='cd_ls'
+alias d='univ_open'
 
 alias e='evince'
 

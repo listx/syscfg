@@ -1,0 +1,16 @@
+univ_open() {
+    if [[ ! -e $@ ]]; then
+        # go to the parent directory if given path does not exist
+        /home/listdata/syscfg/shellscripts/sys/to_parent.rb $@ | read parent
+        echo $parent
+        cd $parent && ls -Ahs --color=auto
+    elif [[ -d $@ ]]; then
+        cd $@ && ls -Ahs --color=auto
+    else # if it does exist, but is not a directory, open it up with the universal reader script, to execute an appropriate program for the extension
+        # this is a bit ugly, but I don't know zsh enough to do it in a better way
+        # we have to use ureader_flags.rb, because apparently the zsh builting "command" command fails when provided with a variable with spaces in it
+        /home/listdata/syscfg/shellscripts/sys/ureader.rb $@ | read outputcmd
+        /home/listdata/syscfg/shellscripts/sys/ureader_flags.rb $@ | read outputcmd_flags
+        command $outputcmd $outputcmd_flags $@
+    fi
+}
