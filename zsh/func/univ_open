@@ -1,16 +1,18 @@
 univ_open() {
+    ls_pretty="ls -Ahs --color=auto"
     if [[ ! -e $@ ]]; then
         # go to the parent directory if given path does not exist
-        /home/listdata/syscfg/shellscripts/sys/to_parent.rb $@ | read parent
-        echo $parent
-        cd $parent && ls -Ahs --color=auto
+        /home/listdata/syscfg/shellscripts/sys/univ_handler.rb $@ "parent" | read parent
+        cd $parent && ${=ls_pretty}
     elif [[ -d $@ ]]; then
-        cd $@ && ls -Ahs --color=auto
+        cd $@ && ${=ls_pretty}
     else # if it does exist, but is not a directory, open it up with the universal reader script, to execute an appropriate program for the extension
-        # this is a bit ugly, but I don't know zsh enough to do it in a better way
-        # we have to use ureader_flags.rb, because apparently the zsh builting "command" command fails when provided with a variable with spaces in it
-        /home/listdata/syscfg/shellscripts/sys/ureader.rb $@ | read outputcmd
-        /home/listdata/syscfg/shellscripts/sys/ureader_flags.rb $@ | read outputcmd_flags
-        command $outputcmd $outputcmd_flags $@
+        /home/listdata/syscfg/shellscripts/sys/univ_handler.rb $@ "extension" | read outputcmd
+        # since zsh does not split words by default, we need to manually do this by invoking
+        # outputcmd with the ${=VAR} syntax; this is because ureader will sometimes give a
+        # multi-word command where we use one or more commandline options, such as "mplayer
+        # -loop 0" or "soffice -writer" -- to prevent zsh from interpreting the entire string
+        # as the name of a command, we have to split it up into an array
+        command ${=outputcmd} $@
     fi
 }
