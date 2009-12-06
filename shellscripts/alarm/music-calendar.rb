@@ -37,7 +37,7 @@ def graduated_alarm_bell()
                 # the for-loop forces the range into an integer-only range, but the floating-point-only calculations
                 # inside the range still make it more accurate before conversion into an integer
                 for j in (1..((i/30.0)**(i/60.0)**(i/60.0) + 0.5))
-                    sleep(j)
+                    sleep(j.to_f/2.5) # make it go 2.5x faster!
                     if alive == false
                         Thread.kill
                     end
