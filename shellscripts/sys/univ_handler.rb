@@ -1,7 +1,4 @@
 #!/usr/bin/ruby
-# Author: Shinobu (http://zuttobenkyou.wordpress.com)
-# License: PUBLIC DOMAIN
-# Program Name: univ_handler.rb
 # Description: with the help of smart input from zsh, this script helps zsh open up directories and files intelligently
 
 class Ext
@@ -30,7 +27,7 @@ arg = ARGV.shift
 # zsh will read whatever we ultimately "print" to STDOUT!
 if file.nil? # if the user does not specify an argument
     print ""
-else # figure out file extension
+else # figure out file extension, or if directory, the parent directory
     if arg == "extension"
         case file.split(".").last.downcase
         when *Ext.doc

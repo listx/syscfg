@@ -6,10 +6,12 @@ univ_open() {
         cd $parent && ${=ls_pretty}
     elif [[ -d $@ ]]; then
         cd $@ && ${=ls_pretty}
-    else # if it does exist, but is not a directory, open it up with the universal reader script, to execute an appropriate program for the extension
+    else
+        # if it does exist, but is not a directory, open it up with the universal readerscript,
+        # to execute an appropriate program for the extension
         /home/listdata/syscfg/shellscripts/sys/univ_handler.rb $@ "extension" | read outputcmd
         # since zsh does not split words by default, we need to manually do this by invoking
-        # outputcmd with the ${=VAR} syntax; this is because ureader will sometimes give a
+        # outputcmd with the ${=VAR} syntax; this is because univ_handler will sometimes give a
         # multi-word command where we use one or more commandline options, such as "mplayer
         # -loop 0" or "soffice -writer" -- to prevent zsh from interpreting the entire string
         # as the name of a command, we have to split it up into an array
