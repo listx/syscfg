@@ -192,6 +192,8 @@ if !exists("autocommands_loaded")
     endfunction
 endif
 
+nmap <backspace> <<
+
 " NOTE: the <F1> key in normal mode is mapped to ":help" by default
 " quicksave files
 nmap <F1> :w<CR>
@@ -277,5 +279,9 @@ nmap <silent> <leader>df :call Insert_newline_smartly()<CR>i<C-R>=strftime("%F (
 nmap <silent> <leader>ds :call Insert_newline_smartly()<CR>i###################<Esc>o#<space><C-R>=strftime("%F (%U)")<esc><space>#<Esc>o###################<esc>o<cr>
 
 " special shortcuts for editing human-made notes quickly
-" replace first "-" in line with an "x" character (task done), and give it a timestamp at the end
-nmap <silent> <leader>td 0sx<esc>A<space>[<space><c-r>=strftime("%F (%a) %T")<esc><space>]<esc>0<cr>
+" append first "-" in line with an "x" character (task done), and give it a timestamp at the end
+nmap <silent> <leader>td 0a><space>[X]<esc>A<space>[<space><c-r>=strftime("%F (%a) %T")<esc><space>]<esc>0<cr>
+" append first "-" in line with "xm" (task modified and completed), and give it a timestamp at the end
+nmap <silent> <leader>tmd 0a><space>[~!]<esc>A<space>[<space><c-r>=strftime("%F (%a) %T")<esc><space>]<space>=><space>
+" append first "-" in line with an "c" character (task cancelled), and give it a timestamp at the end
+nmap <silent> <leader>tc 0a><space>[c]<esc>A<space>[<space><c-r>=strftime("%F (%a) %T")<esc><space>]<space>=><space>
