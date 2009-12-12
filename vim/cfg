@@ -17,9 +17,9 @@ syntax enable "enable syntax highlighting
 set hlsearch "turn on search highlighting
 filetype indent on "turn on automatic indenting, as well as filetype recognition
 
-" Use case insensitive search, except when using capital letters
-set ignorecase
-set smartcase
+" Tip: to search case-insensitive, type \c at the beginning
+
+set incsearch " search any match IMMEDIATELY
 
 set mousehide " hide the mouse cursor when typing (only for GVIM)
 
@@ -257,19 +257,30 @@ imap jj <Esc>
 
 " makes j and k move up or down 1 "line" as it appears on the screen -- not by
 " the actual number of lines in the text file
-nnoremap k gk
-nnoremap j gj
+nmap k gk
+nmap j gj
+nnoremap <c-k> k
+nnoremap <c-j> j
+
+nnoremap <space> 10<c-e>10j
+nnoremap <backspace> 10<c-y>10k
 
 " find lines longer than 120 characters
 nmap <localleader>fl /^.\{-}\zs.\%>79v<cr>
 
+" open buffer to current directory's contents
+nmap <localleader>D :e<space>.<cr>
+
 " create a new blank tab
 nmap <localleader>n :tabe<cr>
+" create a new tab showing the contents of the current directory
+nmap <localleader>N :tabe<space>.<cr>
 
-" horizontally split current window
-nmap <localleader>v :sp<cr>
-" vertically split current window
-nmap <localleader>h :vsp<cr>
+" horizontally/vertically split current window
+nmap <localleader>h :sp<cr>
+nmap <localleader>H :sp<space>.<cr>
+nmap <localleader>v :vsp<cr>
+nmap <localleader>V :vsp<space>.<cr>
 
 " Date and time -- various formats
 " show current full date, with day name, followed by arrow
@@ -279,8 +290,8 @@ nmap <silent> <localleader>ds :call Insert_newline_smartly()<CR>i###############
 
 " special shortcuts for editing human-made notes quickly
 " append first "-" in line with an "x" character (task done), and give it a timestamp at the end
-nmap <silent> <localleader>td 0a><space>[X]<esc>A<space>[<space><c-r>=strftime("%F (%a) %T")<esc><space>]<esc>0<cr>
+nmap <silent> <localleader>td 0^a><space>[X]<esc>A<space>[<space><c-r>=strftime("%F (%a) %T")<esc><space>]<esc>0<cr>
 " append first "-" in line with "xm" (task modified and completed), and give it a timestamp at the end
-nmap <silent> <localleader>tmd 0a><space>[~!]<esc>A<space>[<space><c-r>=strftime("%F (%a) %T")<esc><space>]<space>=><space>
+nmap <silent> <localleader>tmd 0^a><space>[~!]<esc>A<space>[<space><c-r>=strftime("%F (%a) %T")<esc><space>]<space>=><space>
 " append first "-" in line with an "c" character (task cancelled), and give it a timestamp at the end
-nmap <silent> <localleader>tc 0a><space>[c]<esc>A<space>[<space><c-r>=strftime("%F (%a) %T")<esc><space>]<space>=><space>
+nmap <silent> <localleader>tc 0^a><space>[c]<esc>A<space>[<space><c-r>=strftime("%F (%a) %T")<esc><space>]<space>=><space>
