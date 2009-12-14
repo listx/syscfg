@@ -1,38 +1,3 @@
-autoload -U compinit
-compinit
-
-fpath=(~/.zsh/func $fpath) # add ~/.zsh/func to $fpath
-autoload -U ~/.zsh/func/*(:t) # load all functions in ~/.zsh/func
-
-autoload -U promptinit
-promptinit
-
-# This will set the default prompt to the listdata theme
-prompt listdata
-
-# history settings
-HISTSIZE=10000
-SAVEHIST=10000
-HISTFILE=~/.zsh-untracked/history
-setopt INC_APPEND_HISTORY
-setopt HIST_IGNORE_ALL_DUPS
-
-# Directory stack
-DIRSTACKSIZE=20
-# Make cd push the old directory onto the directory stack.
-setopt auto_pushd
-# don't list dir stack each time we use cd
-setopt pushdsilent
-# don't push in duplicate dirs into the dir stack
-setopt pushdignoredups
-# make 'ds' prompt the user to select a dir from the dir stack, instead of just listing the dir stick
-# with a plain 'dirs -v'
-# NOTE: 'cd +$n' makes it go to the number listed, whereas 'cd -$n' reverses it... don't know why
-# you'd ever want to use 'cd -$n'
-alias ds='dirs -v ; echo -n "\nSelect directory: " ; read n ; cd +$n && ls -Ahs --color=auto'
-# just show a list of dir stack without choose prompt
-alias dl='dirs -v'
-
 #--------------------------------------------------------------------------------------------------#
 # Environment variables                                                                            #
 #--------------------------------------------------------------------------------------------------#
@@ -55,6 +20,50 @@ export LESS_TERMCAP_us=$'\E[01;33m'
 # default text editor--set it to vim, not vi
 export VISUAL=/usr/bin/vim
 
+autoload -U compinit
+compinit
+
+zmodload zsh/complist # for the 'menuselect' keymap
+
+fpath=(~/.zsh/func $fpath) # add ~/.zsh/func to $fpath
+autoload -U ~/.zsh/func/*(:t) # load all functions in ~/.zsh/func
+
+autoload -U promptinit
+promptinit
+
+# This will set the default prompt to the listdata theme
+prompt listdata
+
+# history settings
+HISTSIZE=10000
+SAVEHIST=10000
+HISTFILE=~/.zsh-untracked/history
+
+# Directory stack size
+DIRSTACKSIZE=20
+
+setopt INC_APPEND_HISTORY
+setopt EXTENDED_HISTORY # puts timestamps in the history
+setopt HIST_IGNORE_ALL_DUPS
+
+# bring up the completion menu with <tab><tab>, but with just <tab>, behave like the default
+setopt auto_menu
+# automatically complete an ambiguous word to the nearest, partial-word match
+# (combined with auto_menu, this makes it so that you only have to type <tab>
+# once, and only once, in all situations)
+unsetopt listambiguous
+
+# Make cd push the old directory onto the directory stack.
+setopt auto_pushd
+# don't list dir stack each time we use cd
+setopt pushdsilent
+# don't push in duplicate dirs into the dir stack
+setopt pushdignoredups
+
+zstyle ':completion:*' menu select=1 _complete _ignored _approximate
+zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS} # use the LS_COLORS variable to colorize the completion list
+LISTMAX=9999 # don't ask 'do you wish to see all N possibilities' unless N > 9999
+
 #==================================================================================================#
 # Custom binds for some common operations. Note, however, that you can enter vi-like "normal mode" #
 # with CTRL+X, CTRL+V for some more advanced operations.                                           #
@@ -63,6 +72,16 @@ export VISUAL=/usr/bin/vim
 bindkey     "^[[3~"         delete-char         # DELETE key
 bindkey     "^[[7~"         beginning-of-line   # HOME key
 bindkey     "^[[8~"         end-of-line         # END key
+bindkey -M menuselect '' .accept-line # just execute the command when selecting from a menu and pressing <enter>
+
+
+# make 'ds' prompt the user to select a dir from the dir stack, instead of just listing the dir stick
+# with a plain 'dirs -v'
+# NOTE: 'cd +$n' makes it go to the number listed, whereas 'cd -$n' reverses it... don't know why
+# you'd ever want to use 'cd -$n'
+alias ds='dirs -v ; echo -n "\nSelect directory: " ; read n ; cd +$n && ls -Ahs --color=auto'
+# just show a list of dir stack without choose prompt
+alias dl='dirs -v'
 
 #--------------------------------------------------------------------------------------------------#
 # Useful change dirs (first change to the directory, and then list the contents within; notice how #
