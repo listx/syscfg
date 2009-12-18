@@ -40,4 +40,7 @@ source! ~/.vimperatorrc.local
 " add bookmark right away
 :map <Leader>a a<cr>
 
+:map <leader>q :q<cr>
+:map <leader>Q :q!<cr>
+
 " vim: set ft=vimperator
