@@ -177,11 +177,11 @@ if !exists("autocommands_loaded")
     au InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
     au InsertLeave * match ExtraWhiteSpace /\s\+$/
 
-    function Insert_newline_smartly()
-        if col(".") != 1
-            normal o
-        endif
-    endfunction
+    " function Insert_newline_smartly()
+    "     if col(".") != 1
+    "         normal o
+    "     endif
+    " endfunction
     function Toggle_status_bar()
         if &laststatus < 2
             let &laststatus = 2
@@ -284,14 +284,16 @@ nmap <localleader>V :vsp<space>.<cr>
 
 " Date and time -- various formats
 " show current full date, with day name, followed by arrow
-nmap <silent> <localleader>df :call Insert_newline_smartly()<CR>i<C-R>=strftime("%F (%a) %T")<Esc><Space>-><Space>
+nmap <silent> <localleader>df :r<space>!<space>~/syscfg/shellscripts/sys/time.rb<space>0<cr>A<Space>-><Space>
 " show current full date, with week number (with Sunday as the first day of a "week"), inside a comment box
-nmap <silent> <localleader>ds :call Insert_newline_smartly()<CR>i###################<Esc>o#<space><C-R>=strftime("%F (%U)")<esc><space>#<Esc>o###################<esc>o<cr>
+nmap <silent> <localleader>ds i###############<Esc>o#<space><C-R>=strftime("%Y%m%d %U")<esc><space>#<Esc>o###############<esc>
 
 " special shortcuts for editing human-made notes quickly
+" append a line with a timestamp to denote when that note was created
+nmap <silent> <localleader>tc A<space>[@<space><esc>:r<space>!~/syscfg/shellscripts/sys/time.rb<space>1<cr>I<backspace><esc>A]<esc>
 " append first "-" in line with an "x" character (task done), and give it a timestamp at the end
-nmap <silent> <localleader>td 0^a><space>[X]<esc>A<space>[<space><c-r>=strftime("%F (%a) %T")<esc><space>]<esc>0<cr>
+nmap <silent> <localleader>td 0^a><space>[X]<esc>A<space>[<esc>:r<space>!~/syscfg/shellscripts/sys/time.rb<space>0<cr>I<backspace><esc>A]<esc>0<cr>
 " append first "-" in line with "xm" (task modified and completed), and give it a timestamp at the end
-nmap <silent> <localleader>tmd 0^a><space>[~!]<esc>A<space>[<space><c-r>=strftime("%F (%a) %T")<esc><space>]<space>=><space>
+nmap <silent> <localleader>tmd 0^a><space>[X~]<esc>A<space>[<esc>:r<space>!~/syscfg/shellscripts/sys/time.rb<space>0<cr>I<backspace><esc>A]<space>=><space>
 " append first "-" in line with an "c" character (task cancelled), and give it a timestamp at the end
-nmap <silent> <localleader>tc 0^a><space>[c]<esc>A<space>[<space><c-r>=strftime("%F (%a) %T")<esc><space>]<space>=><space>
+nmap <silent> <localleader>tC 0^a><space>[/]<esc>A<space>[<esc>:r<space>!~/syscfg/shellscripts/sys/time.rb<space>0<cr>I<backspace><esc>A]<space>=><space>
