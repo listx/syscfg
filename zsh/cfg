@@ -69,9 +69,12 @@ LISTMAX=9999 # don't ask 'do you wish to see all N possibilities' unless N > 999
 # with CTRL+X, CTRL+V for some more advanced operations.                                           #
 #==================================================================================================#
 
-bindkey     "^[[3~"         delete-char         # DELETE key
-bindkey     "^[[7~"         beginning-of-line   # HOME key
-bindkey     "^[[8~"         end-of-line         # END key
+bindkey -v # use vim bindings!
+# use CTRL-R for history search (^R is bound to the 'redisplay' command by default, which is never used anyway)
+bindkey     '' history-incremental-search-backward
+bindkey     '^[[3~'         delete-char         # DELETE key
+bindkey     '^[[7~'         beginning-of-line   # HOME key
+bindkey     '^[[8~'         end-of-line         # END key
 bindkey -M menuselect '' .accept-line # just execute the command when selecting from a menu and pressing <enter>
 
 
