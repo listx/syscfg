@@ -134,6 +134,7 @@ alias q='exit'
 
 alias m='mplayer -loop 0'
 alias mp='mplayer -loop 0 -playlist'
+alias mg='gnome-mplayer'
 
 alias n='netcfg'
 

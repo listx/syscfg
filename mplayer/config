@@ -7,3 +7,4 @@ subfont-text-scale=3
 
 [gnome-mplayer]
 msglevel=all=5
+ao=alsa
