@@ -189,16 +189,19 @@ alias ofo='sudo reboot' # i.e., OFf, and back On
 
 alias p='sudo pacman'
 alias pu='sudo pacman -Syu'
-alias pa='sudo pacman -Sy'
+alias py='sudo pacman -Syy'
+alias ps='sudo pacman -S'
 alias pq='sudo pacman -Q'
 
 alias pp='sudo powerpill'
 alias ppu='sudo powerpill -Syu'
-alias ppa='sudo powerpill -Sy'
+alias ppy='sudo powerpill -Syy'
+alias pps='sudo powerpill -S'
 
 alias y='yaourt'
 alias yu='yaourt -Sybu --aur'
-alias ya='yaourt -Sy'
+alias yy='yaourt -Syy'
+alias ys='yaourt -S'
 
 # CUSTOM SCRIPTS
 #
