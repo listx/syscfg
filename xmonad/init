@@ -34,13 +34,13 @@ case "${HOSTNAME}" in
     ;;
     luxion)
         urxvtc -e alsamixer
-        urxvtc -n iftop -e sudo iftop -B -i eth1
+        urxvtc -n iftop -e sudo iftop -B -i eth0
         urxvtc -e htop
         urxvtc
     ;;
     aether)
         urxvtc -e alsamixer
-        urxvtc -n iftop -e sudo iftop -B -i eth1
+        urxvtc -n iftop -e sudo iftop -B -i eth0
         urxvtc -e htop
         urxvtc -e rtorrent
         urxvtc
