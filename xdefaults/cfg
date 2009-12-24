@@ -12,6 +12,7 @@ lhp*foreground: #dcdccc
 lhp*depth: 32
 lhp*fading: 20
 lhp*cursorColor: green
+lhp*saveLines: 32767
 lhp*scrollBar: off
 lhp*color0: #3f3f3f
 lhp*color1: #d78787
