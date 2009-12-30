@@ -51,9 +51,9 @@ let sessionman_save_on_exit = 0
 " If you exceed the number of tabs allowed by tabpagemax Vim will simply open the maximum number of tabs, and the other files will be open but not displayed. You can edit the remaining files by using the :next or :last command to move to the files that are not displayed in a tab. Note that this setting only applies to the maximum number of tabs Vim will open on startup -- you can still open more tabs during your Vim session.
 set tabpagemax=50
 
-" wait 10 seconds instead of 0.5 seconds before erasing any "half-finished"
+" wait 1 second instead of 0.5 seconds before erasing any "half-finished"
 " commands in normal/visual mode
-set timeoutlen=10000
+set timeoutlen=1000
 
 " we use a custom, local-to-buffer mod-key so that we don't conflict with any possible bindings provided by a plugin
 let maplocalleader = ","
