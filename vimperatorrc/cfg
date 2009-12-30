@@ -7,40 +7,44 @@ let mapleader = ","
 source! ~/.vimperatorrc.local
 
 " make default vertical scrolling go faster
-:no j 6j
-:no k 6k
+no j 6j
+no k 6k
 
 " unmap the make C-p and C-n behave like default h and l (scroll horizontally)
 
-:no <C-p> h
-:no <C-n> l
+no <C-p> h
+no <C-n> l
 
 " make h and l browse tabs left and right instead of scrolling horizontally (which happens very rarely)
 
-:no h :tabprevious<CR>
-:no l :tabnext<CR>
+no h :tabprevious<CR>
+no l :tabnext<CR>
 
 " physically move the tabs around
-:map <C-h> :tabm! -1<cr>
-:map <C-l> :tabm! +1<cr>
+map <C-h> :tabm! -1<cr>
+map <C-l> :tabm! +1<cr>
 
 " swap S-f and f, since I almost always open links on a new background tab
-:no F f
-:no f F
+no F f
+no f F
 
 " save current session (equiv. to Firefox's "Save and Quit" before closing multiple tabs)
-:map <Leader>x :xa<cr>
+map <leader>x :xa<cr>
 
 " toggle off search highlighting
-:map <F3> :noh<cr>
+map <F3> :noh<cr>
 
 " duplicate current tab
-:map <Leader>d :tabduplicate<CR>
+map <leader>d :tabduplicate<CR>
 
 " add bookmark right away
-:map <Leader>a a<cr>
+map <leader>a a<cr>
 
-:map <leader>q :q<cr>
-:map <leader>Q :q!<cr>
+map <leader>q :q<cr>
+map <leader>Q :q!<cr>
+
+" for some reason, vimperator cannot map <backspace>, but must instead use <BS>
+nnoremap <BS> <PageUp>
+" no need to map <Space>, since it's already (hard-coded) to <PageDown>
 
 " vim: set ft=vimperator
