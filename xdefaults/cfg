@@ -34,9 +34,6 @@ lhp*color15: #ffffff
 bashrun*font: xft:Terminus:bold:pixelsize=14,\
             xft:Kochi Gothic:antialias=false,\
             xft:Baekmuk Gulim
-bashrun*depth: 32
-bashrun*fading: 20
-bashrun*shading: 30
 
 ! urxvt settings
 ! First set base font to Terminus to handle all Latin glyphs

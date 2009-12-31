@@ -24,6 +24,8 @@ import XMonad.Actions.GridSelect
 import XMonad.Actions.NoBorders
 -- for identifying different host systems
 import System.Posix.Unistd
+-- for doCenterFloat
+import XMonad.Hooks.ManageHelpers
 
 -- The preferred terminal program, which is used in a binding below and by
 -- certain contrib modules.
@@ -281,6 +283,7 @@ myManageHook = composeAll
     , className =? "Gimp"           --> doFloat
     , resource  =? "desktop_window" --> doIgnore
     , resource  =? "kdesktop"       --> doIgnore
+    , resource  =? "vlc"       --> doCenterFloat
     -- make certain programs appear on certain workspaces
     -- this is VERY useful for making xmonad start programx X, Y, Z on bootup,
     -- and then have it automatically place these programs in these given
@@ -298,13 +301,13 @@ myManageHook = composeAll
     , stringProperty "WM_NAME"  =? "alpine"              --> doShift "6"
     , resource  =? "WeeChat"    --> doShift "6"
     , resource  =? "Browser"    --> doFloat
-    , className  =? "Galculator"    --> doFloat
+    , className  =? "Galculator"    --> doCenterFloat
     , className  =? "Blender"    --> doShift "5"
     , className  =? "Blender:Render"    --> doFloat
-    , className  =? "XClock"    --> doFloat
+    , className  =? "XClock"    --> doCenterFloat
     , className  =? "Audacity"    --> doFloat
     , className  =? "Gitk"    --> doFloat
-    , className  =? "Gcalctool"    --> doFloat
+    , className  =? "Gcalctool"    --> doCenterFloat
     , className  =? "Scid"    --> doFloat
     , className  =? "Pychess"    --> doFloat
     , className  =? "Glchess"    --> doFloat
@@ -315,8 +318,8 @@ myManageHook = composeAll
     , className  =? "linux_client"    --> doFloat
     , className  =? "Raptor"    --> doFloat
     , className  =? "Gnome-mplayer"    --> doFloat
-    , className  =? "Bsnes"    --> doFloat
-    , resource  =? "bashrun"    --> doFloat
+    , className  =? "Bsnes"    --> doCenterFloat
+    , resource  =? "bashrun"    --> doCenterFloat
     ]
 
 ------------------------------------------------------------------------
