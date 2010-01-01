@@ -173,7 +173,7 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((mod4Mask .|. shiftMask, xK_h     ), spawn "urxvtc -e mplayer -ao oss -softvol -volume 100 -volstep 1 -prefer-ipv4 http://192.168.0.110:8000/mpd.ogg")
     , ((mod4Mask              , xK_p     ), spawn "apvlv")
     , ((mod4Mask .|. shiftMask, xK_p     ), spawn "evince")
-    , ((mod4Mask              , xK_v     ), spawn "gnome-mplayer")
+    , ((mod4Mask              , xK_v     ), spawn "smplayer")
     -- ncmpcpp (mpd) controls
     , ((mod4Mask .|. controlMask, xK_p     ), spawn "ncmpcpp toggle")
     , ((mod4Mask .|. controlMask, xK_j     ), spawn "ncmpcpp next")
@@ -317,7 +317,7 @@ myManageHook = composeAll
     , className  =? "Toplevel"    --> doFloat -- Scid's many popup windows
     , className  =? "linux_client"    --> doFloat
     , className  =? "Raptor"    --> doFloat
-    , className  =? "Gnome-mplayer"    --> doFloat
+    , className  =? "Smplayer"    --> doFloat
     , className  =? "Bsnes"    --> doCenterFloat
     , resource  =? "bashrun"    --> doCenterFloat
     ]
