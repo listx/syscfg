@@ -1,20 +1,51 @@
+# open up directories and files intelligently
+
 univ_open() {
-    ls_pretty="ls -Ahs --color=auto"
-    if [[ ! -e $@ ]]; then
-        # go to the parent directory if given path does not exist
-        /home/listdata/syscfg/shellscripts/sys/univ_handler.rb $@ "parent" | read parent
-        cd $parent && ${=ls_pretty}
+    ls="ls -Ahs --color=auto"
+    if [[ -z $@ ]]; then
+        # if we do not provide any arguments, go to the home directory
+        cd && ${=ls}
+    elif [[ ! -e $@ ]]; then
+        # go to the nearest valid parent directory if file does not exist; we
+        # use a while loop to find the closest valid directory, just in case
+        # the user gave a butchered-up path
+        d=$@:h
+        while [[ ! -d $d ]]
+        do
+            d=$d:h
+        done
+        cd $d && ${=ls}
     elif [[ -d $@ ]]; then
-        cd $@ && ${=ls_pretty}
+        cd $@ && ${=ls}
     else
-        # if it does exist, but is not a directory, open it up with the universal readerscript,
-        # to execute an appropriate program for the extension
-        /home/listdata/syscfg/shellscripts/sys/univ_handler.rb $@ "extension" | read outputcmd
-        # since zsh does not split words by default, we need to manually do this by invoking
-        # outputcmd with the ${=VAR} syntax; this is because univ_handler will sometimes give a
-        # multi-word command where we use one or more commandline options, such as "mplayer
-        # -loop 0" or "soffice -writer" -- to prevent zsh from interpreting the entire string
-        # as the name of a command, we have to split it up into an array
-        command ${=outputcmd} $@
+        case $@:e:l in
+            (doc|odf|odt|rtf)
+                soffice -writer $@ &>/dev/null & disown
+            ;;
+            (htm|html)
+                firefox $@ &>/dev/null & disown
+            ;;
+            (pdf|ps)
+                evince $@ &>/dev/null & disown
+            ;;
+            (bmp|gif|jpg|jpeg|png|svg|tiff)
+                eog $@ &>/dev/null & disown
+            ;;
+            (psd|xcf)
+                gimp $@ &>/dev/null & disown
+            ;;
+            (aac|flac|mp3|ogg|wav|wma)
+                smplayer $@ &>/dev/null & disown
+            ;;
+            (mid|midi)
+                timidity $@
+            ;;
+            (avi|flv|ogv|mkv|mov|mp4|mpg|mpeg|wmv)
+                smplayer $@ &>/dev/null & disown
+            ;;
+            *)
+            vim $@
+            ;;
+        esac
     fi
 }
