@@ -19,6 +19,7 @@ export LESS_TERMCAP_us=$'\E[01;33m'
 
 # default text editor--set it to vim, not vi
 export VISUAL=/usr/bin/vim
+export EDITOR=/usr/bin/vim
 
 autoload -U compinit
 compinit
@@ -127,7 +128,7 @@ alias e='evince'
 
 alias i='eog'
 
-alias ll='ls -Ahs --color=auto'
+alias ll='ls -hs --color=auto'
 alias l='ls -Ahl --color=auto'
 
 alias q='exit'
