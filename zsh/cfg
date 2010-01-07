@@ -225,8 +225,8 @@ alias rgflac='/home/listdata/syscfg/shellscripts/audio/replaygain/flac/tfwrg.sh'
 ## check for HOSTNAME
 #HOSTNAME=$(hostname 2>/dev/null || hostname -f) # see 'man hostname' for details; '2' means
 #stderror output, and /dev/null is the null device...?
-HOSTNAME=$(hostname)
-case "${HOSTNAME}" in
+#HOSTNAME=$(hostname)
+case $(hostname) in
     exelion)
         alias iftop='sudo iftop -B -i eth1'
         alias m1='d /mnt/hd1installed'
