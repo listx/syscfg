@@ -19,6 +19,7 @@ export LESS_TERMCAP_us=$'\E[01;33m'
 
 # default text editor--set it to vim, not vi
 export VISUAL=/usr/bin/vim
+export EDITOR=/usr/bin/vim
 
 autoload -U compinit
 compinit
@@ -127,7 +128,7 @@ alias e='evince'
 
 alias i='eog'
 
-alias ll='ls -Ahs --color=auto'
+alias ll='ls -hs --color=auto'
 alias l='ls -Ahl --color=auto'
 
 alias q='exit'
@@ -225,8 +226,8 @@ alias rgflac='/home/listdata/syscfg/shellscripts/audio/replaygain/flac/tfwrg.sh'
 ## check for HOSTNAME
 #HOSTNAME=$(hostname 2>/dev/null || hostname -f) # see 'man hostname' for details; '2' means
 #stderror output, and /dev/null is the null device...?
-HOSTNAME=$(hostname)
-case "${HOSTNAME}" in
+#HOSTNAME=$(hostname)
+case $(hostname) in
     exelion)
         alias iftop='sudo iftop -B -i eth1'
         alias m1='d /mnt/hd1installed'
@@ -234,13 +235,12 @@ case "${HOSTNAME}" in
         alias m3='d /mnt/hd1backup2'
         alias m4='d /mnt/hd1ext3bkup'
         alias m5='d /mnt/hd2backup4'
-        alias m6='d /mnt/hd2backup5'
-        alias m7='d /mnt/media-sr0'
-        alias m8='d /mnt/media-sr1'
-        alias m9='d /mnt/media-flash'
-        alias discon='sudo mount /dev/sr1' # BLACK PIONEER cd/dvd drive
+        alias m6='d /mnt/media-sr0'
+        alias m7='d /mnt/media-sr1'
+        alias m8='d /mnt/media-flash'
+        alias discon='sudo mount /dev/sr1'
         alias discof='sudo umount /dev/sr1'
-        alias disc2on='sudo mount /dev/sr0' # WHITE LITE-ON cd/dvd drive
+        alias disc2on='sudo mount /dev/sr0'
         alias disc2of='sudo umount /dev/sr0'
         alias usbon='sudo mount -w -t vfat -o uid=listdata,gid=listdata /dev/sdc1 /mnt/media-flash'
         alias usbof='sudo umount /dev/sdc1'
