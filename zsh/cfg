@@ -234,13 +234,12 @@ case $(hostname) in
         alias m3='d /mnt/hd1backup2'
         alias m4='d /mnt/hd1ext3bkup'
         alias m5='d /mnt/hd2backup4'
-        alias m6='d /mnt/hd2backup5'
-        alias m7='d /mnt/media-sr0'
-        alias m8='d /mnt/media-sr1'
-        alias m9='d /mnt/media-flash'
-        alias discon='sudo mount /dev/sr1' # BLACK PIONEER cd/dvd drive
+        alias m6='d /mnt/media-sr0'
+        alias m7='d /mnt/media-sr1'
+        alias m8='d /mnt/media-flash'
+        alias discon='sudo mount /dev/sr1'
         alias discof='sudo umount /dev/sr1'
-        alias disc2on='sudo mount /dev/sr0' # WHITE LITE-ON cd/dvd drive
+        alias disc2on='sudo mount /dev/sr0'
         alias disc2of='sudo umount /dev/sr0'
         alias usbon='sudo mount -w -t vfat -o uid=listdata,gid=listdata /dev/sdc1 /mnt/media-flash'
         alias usbof='sudo umount /dev/sdc1'
