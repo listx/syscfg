@@ -134,6 +134,7 @@ alias q='exit'
 
 alias m='mplayer -loop 0'
 alias mp='mplayer -loop 0 -playlist'
+alias mps='mplayer -loop 0 -shuffle -playlist'
 alias ms='smplayer'
 alias fa='find -maxdepth 1 -type f -iname \*.mp3 -o -iname \*.flac -o -iname \*.ogg -o -iname \*.wav -o -iname \*.aac | sort >'
 
