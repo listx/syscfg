@@ -47,4 +47,6 @@ map <leader>Q :q!<cr>
 nnoremap <BS> <PageUp>
 " no need to map <Space>, since it's already (hard-coded) to <PageDown>
 
+map <leader>b :emenu View.Sidebar.Bookmarks<cr>
+
 " vim: set ft=vimperator
