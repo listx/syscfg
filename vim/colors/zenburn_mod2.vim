@@ -99,7 +99,7 @@ hi Identifier      guifg=#efdcbc
 hi IncSearch       guibg=#ffff00 guifg=#0000ff
 hi Keyword         guifg=#f0dfaf gui=bold
 hi Label           guifg=#dfcfaf gui=underline
-hi LineNr          guifg=#9fafaf guibg=#262626
+hi LineNr          guifg=#9fafaf guibg=#1a1a1f
 hi Macro           guifg=#ffcfaf gui=bold
 hi ModeMsg         guifg=#ffcfaf gui=none
 hi MoreMsg         guifg=#ffffff gui=bold
@@ -232,9 +232,10 @@ if &t_Co > 255
     " notice that incsearch's fg is search's bg
     "hi IncSearch       ctermbg=228   ctermfg=238    
     hi IncSearch       ctermbg=226   ctermfg=21
+    "hi Keyword         ctermfg=223   cterm=bold
     hi Keyword         ctermfg=223   cterm=bold
     hi Label           ctermfg=187   cterm=underline
-    hi LineNr          ctermfg=248   ctermbg=235    
+    hi LineNr          ctermfg=248   ctermbg=234    
     hi Macro           ctermfg=223   cterm=bold
     hi ModeMsg         ctermfg=223   cterm=none
     hi MoreMsg         ctermfg=15    cterm=bold
@@ -254,8 +255,8 @@ if &t_Co > 255
     hi SpecialComment  ctermfg=108   cterm=bold
     hi Special         ctermfg=181  
     hi SpecialKey      ctermfg=151  
-    hi Statement       ctermfg=187   ctermbg=234     cterm=none
-    hi StatusLine      ctermfg=236   ctermbg=186    
+    hi Statement       ctermfg=185   ctermbg=234     cterm=none
+    hi StatusLine      ctermfg=234   ctermbg=186    
     hi StatusLineNC    ctermfg=235   ctermbg=108    
     hi StorageClass    ctermfg=249   cterm=bold
     hi String          ctermfg=174  
@@ -298,7 +299,7 @@ if &t_Co > 255
         "hi incsearch       ctermbg=228
         "hi linenr          ctermbg=238  
         "hi search          ctermbg=238
-        hi statement       ctermbg=237
+        hi statement       ctermbg=235
         hi statusline      ctermbg=144
         hi statuslinenc    ctermbg=108
         hi title           ctermbg=237
