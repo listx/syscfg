@@ -31,7 +31,7 @@ set gfn=Terminus\ 11
 " so zenburn's background is properly loaded ... 2008/12/23
 set t_Co=256
 
-colorscheme zenburn_mod
+colorscheme zenburn_mod2
 
 " Turn off blinking for the n, v, & c states:
 "let &guicursor = substitute(&guicursor, "n-v-c:", "n-v-c:blinkon0-", "")

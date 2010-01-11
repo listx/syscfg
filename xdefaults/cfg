@@ -96,7 +96,7 @@ urxvt*cutchars: "()*,<>[]{}|'
 
 ! theme 2 (modified zenburn)
 urxvt*background: #22222a
-urxvt*foreground: #c0c0c3
+urxvt*foreground: #cccccf
 ! black + red
 urxvt*color0: #3f3f3f
 urxvt*color1: #d78787
