@@ -322,6 +322,7 @@ myManageHook = composeAll
     , className  =? "Raptor"    --> doFloat
     , className  =? "Smplayer"    --> doFloat
     , className  =? "Bsnes"    --> doCenterFloat
+    , className  =? "Wine"    --> doFloat
     , resource  =? "bashrun"    --> doCenterFloat
     ]
 
