@@ -31,10 +31,6 @@ lhp*color13: #ec93d3
 lhp*color14: #87d7d7
 lhp*color15: #ffffff
 
-bashrun*font: xft:Terminus:bold:pixelsize=14,\
-            xft:Kochi Gothic:antialias=false,\
-            xft:Baekmuk Gulim
-
 ! urxvt settings
 ! First set base font to Terminus to handle all Latin glyphs
 ! ...then set Japanese font to take care of most Chinese kanji and also hiragana/katakana

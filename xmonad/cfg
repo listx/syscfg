@@ -71,7 +71,7 @@ myNumlockMask   = mod2Mask
 --
 -- > workspaces = ["web", "irc", "code" ] ++ map show [4..9]
 --
-myWorkspaces    = ["1","2","3","4","5","6","7","8","9","0"]
+myWorkspaces    = ["1","2","3","4","5","6","7","8","9","0","F1","F2","F3","F4","F5","F6","F7","F8","F9","F10","F11","F12"]
 
 -- Border colors for unfocused and focused windows, respectively.
 --
@@ -89,8 +89,8 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     -- launch dmenu
     --, ((modm,               xK_p     ), spawn "exe=`dmenu_path | dmenu` && eval \"exec $exe\"")
 
-    -- launch gmrun
-    , ((modm,                 xK_g     ), spawn "bashrun")
+    -- launch bashrun
+    --, ((modm,                 xK_g     ), spawn "bashrun")
 
     -- close focused window
     , ((modm,               xK_d     ), kill)
@@ -141,10 +141,10 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((modm              , xK_period), sendMessage (IncMasterN (-1)))
 
     -- Quit xmonad
-    , ((modm .|. shiftMask, xK_q     ), io (exitWith ExitSuccess))
+    , ((modm .|. shiftMask, xK_Escape     ), io (exitWith ExitSuccess))
 
     -- Restart xmonad
-    , ((modm              , xK_q     ), spawn "xmonad --recompile; xmonad --restart")
+    , ((modm              , xK_Escape     ), spawn "xmonad --recompile; xmonad --restart")
 
     -- CUSTOM KEYBINDINGS HERE --
 
@@ -201,7 +201,7 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     -- mod-shift-[1..9], Move client to workspace N
     --
     [((m .|. modm, k), windows $ f i)
-        | (i, k) <- zip (XMonad.workspaces conf) ([xK_1 .. xK_9] ++ [xK_0])
+        | (i, k) <- zip (XMonad.workspaces conf) ([xK_1..xK_9] ++ [xK_0] ++ [xK_F1..xK_F11] ++ [xK_F12])
         , (f, m) <- [(W.greedyView, 0), (W.shift, shiftMask)]]
     ++
 
@@ -279,51 +279,40 @@ myLayout = Mirror tiled ||| tiled ||| Full
 -- 'className' and 'resource' are used below.
 --
 myManageHook = composeAll
-    [ className =? "MPlayer"        --> doFloat
-    , className =? "Gimp"           --> doFloat
-    , resource  =? "desktop_window" --> doIgnore
-    , resource  =? "kdesktop"       --> doIgnore
-    , resource  =? "vlc"       --> doCenterFloat
-    -- make certain programs appear on certain workspaces
-    -- this is VERY useful for making xmonad start programx X, Y, Z on bootup,
-    -- and then have it automatically place these programs in these given
-    -- workspaces!
-    --
-    -- the settings here are used in conjunction with the startup commands in ~/.xmonad/init.sh
-    -- also, notice that ones with className mean that ANY and ALL instances of this will
-    -- ALWAYS be shifted to the workspace specified
-    , stringProperty "WM_NAME"  =? "ncmpcpp"              --> doShift "8"
-    , stringProperty "WM_NAME"  =? "mplayer"              --> doShift "8"
-    , stringProperty "WM_NAME"  =? "htop"              --> doShift "9"
-    , stringProperty "WM_ICON_NAME"  =? "iftop"            --> doShift "9"
-    , stringProperty "WM_NAME"  =? "alsamixer"              --> doShift "9"
-    , stringProperty "WM_NAME"  =? "rtorrent"              --> doShift "0"
-    , stringProperty "WM_NAME"  =? "alpine"              --> doShift "7"
-    , resource  =? "WeeChat"    --> doShift "7"
-    , resource  =? "Browser"    --> doFloat
-    , className  =? "Galculator"    --> doCenterFloat
-    , className  =? "Blender"    --> doShift "6"
-    , className  =? "Blender:Render"    --> doFloat
-    , className  =? "XClock"    --> doCenterFloat
-    , className  =? "Audacity"    --> doFloat
-    , className  =? "Gitk"    --> doFloat
-    , className  =? "Lyx"    --> doFloat
-    , className  =? "XDvi"    --> doCenterFloat
-    , stringProperty "WM_NAME"  =? "OpenOffice.org" --> doFloat
-    , className  =? "Gcalctool"    --> doCenterFloat
-    , className  =? "Scid"    --> doFloat
-    , className  =? "Pychess"    --> doFloat
-    , className  =? "Glchess"    --> doFloat
-    , className =? "Dolphin"        --> doFloat -- dolphin emulator menu
-    , stringProperty "WM_ICON_NAME"  =? "GPU"            --> doFloat -- dolphine emulator popup
-    , stringProperty "WM_NAME"  =? "Scid" --> doFloat
-    , className  =? "Toplevel"    --> doFloat -- Scid's many popup windows
-    , className  =? "linux_client"    --> doFloat
-    , className  =? "Raptor"    --> doFloat
-    , className  =? "Smplayer"    --> doFloat
-    , className  =? "Bsnes"    --> doCenterFloat
-    , className  =? "Wine"    --> doFloat
-    , resource  =? "bashrun"    --> doCenterFloat
+    [ className =? "MPlayer"                            --> doFloat
+    , className =? "Gimp"                               --> doFloat
+    , resource  =? "desktop_window"                     --> doIgnore
+    , resource  =? "kdesktop"                           --> doIgnore
+    , resource  =? "vlc"                                --> doCenterFloat
+    , stringProperty "WM_NAME"  =? "rtorrent"           --> doShift "F12"
+    , stringProperty "WM_NAME"  =? "htop"               --> doShift "F11"
+    , stringProperty "WM_ICON_NAME"  =? "iftop"         --> doShift "F11"
+    , stringProperty "WM_NAME"  =? "alsamixer"          --> doShift "F11"
+    , stringProperty "WM_NAME"  =? "alpine"             --> doShift "F10"
+    , resource  =? "WeeChat"                            --> doShift "F9"
+    , stringProperty "WM_NAME"  =? "ncmpcpp"            --> doShift "0"
+    , stringProperty "WM_NAME"  =? "mplayer"            --> doShift "0"
+    --, className  =? "Blender"                           --> doShift "6"
+    , className  =? "Blender:Render"                    --> doFloat
+    , resource  =? "Browser"                            --> doFloat
+    , className  =? "Galculator"                        --> doCenterFloat
+    , className  =? "Gcalctool"                         --> doCenterFloat
+    , className  =? "XClock"                            --> doCenterFloat
+    , className  =? "Audacity"                          --> doFloat
+    , className  =? "Gitk"                              --> doCenterFloat
+    , className  =? "Lyx"                               --> doFloat
+    , className  =? "XDvi"                              --> doCenterFloat
+    , stringProperty "WM_NAME"  =? "OpenOffice.org"     --> doFloat
+    , className  =? "Scid"                              --> doFloat
+    , stringProperty "WM_NAME"  =? "Scid"               --> doFloat
+    , className  =? "Toplevel"                          --> doFloat -- Scid's many popup windows
+    , className  =? "Pychess"                           --> doFloat
+    , className  =? "Glchess"                           --> doFloat
+    , className  =? "Raptor"                            --> doFloat
+    , className  =? "Smplayer"                          --> doFloat
+    , className  =? "linux_client"                      --> doFloat
+    , className  =? "Bsnes"                             --> doCenterFloat
+    , className  =? "Wine"                              --> doFloat
     ]
 
 ------------------------------------------------------------------------
