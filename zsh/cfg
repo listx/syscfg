@@ -77,7 +77,7 @@ bindkey     '^[[3~'         delete-char         # DELETE key
 bindkey     '^[[7~'         beginning-of-line   # HOME key
 bindkey     '^[[8~'         end-of-line         # END key
 bindkey -M menuselect '' .accept-line # just execute the command when selecting from a menu and pressing <enter>
-
+#bindkey     '\t' menu-expand-or-complete   # press <tab> just ONCE to bring up menu *AND* select the first item
 
 # make 'ds' prompt the user to select a dir from the dir stack, instead of just listing the dir stick
 # with a plain 'dirs -v'
