@@ -177,6 +177,10 @@ alias -g AW='listdata@aether.w:'
 alias -g O='otter@ocean:'
 alias -g F='tiger@forest:'
 
+# for detaching a process from the shell (useful for starting GUI apps as standalones, without arguments)
+alias -g D='& disown;'
+alias -g Q='& disown; exit'
+
 # scp alternative, with a progress bar
 alias rscp='rsync -arP --no-whole-file --inplace'
 alias rsmv='rscp --remove-source-files'
