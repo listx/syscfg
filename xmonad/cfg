@@ -71,7 +71,7 @@ myNumlockMask   = mod2Mask
 --
 -- > workspaces = ["web", "irc", "code" ] ++ map show [4..9]
 --
-myWorkspaces    = ["0","1","2","3","4","5","6","7","8","9"]
+myWorkspaces    = ["1","2","3","4","5","6","7","8","9","0"]
 
 -- Border colors for unfocused and focused windows, respectively.
 --
@@ -201,7 +201,7 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     -- mod-shift-[1..9], Move client to workspace N
     --
     [((m .|. modm, k), windows $ f i)
-        | (i, k) <- zip (XMonad.workspaces conf) [xK_0 .. xK_9]
+        | (i, k) <- zip (XMonad.workspaces conf) ([xK_1 .. xK_9] ++ [xK_0])
         , (f, m) <- [(W.greedyView, 0), (W.shift, shiftMask)]]
     ++
 
@@ -292,17 +292,17 @@ myManageHook = composeAll
     -- the settings here are used in conjunction with the startup commands in ~/.xmonad/init.sh
     -- also, notice that ones with className mean that ANY and ALL instances of this will
     -- ALWAYS be shifted to the workspace specified
-    , stringProperty "WM_NAME"  =? "ncmpcpp"              --> doShift "7"
-    , stringProperty "WM_NAME"  =? "mplayer"              --> doShift "7"
-    , stringProperty "WM_NAME"  =? "htop"              --> doShift "8"
-    , stringProperty "WM_ICON_NAME"  =? "iftop"            --> doShift "8"
-    , stringProperty "WM_NAME"  =? "alsamixer"              --> doShift "8"
-    , stringProperty "WM_NAME"  =? "rtorrent"              --> doShift "9"
-    , stringProperty "WM_NAME"  =? "alpine"              --> doShift "6"
-    , resource  =? "WeeChat"    --> doShift "6"
+    , stringProperty "WM_NAME"  =? "ncmpcpp"              --> doShift "8"
+    , stringProperty "WM_NAME"  =? "mplayer"              --> doShift "8"
+    , stringProperty "WM_NAME"  =? "htop"              --> doShift "9"
+    , stringProperty "WM_ICON_NAME"  =? "iftop"            --> doShift "9"
+    , stringProperty "WM_NAME"  =? "alsamixer"              --> doShift "9"
+    , stringProperty "WM_NAME"  =? "rtorrent"              --> doShift "0"
+    , stringProperty "WM_NAME"  =? "alpine"              --> doShift "7"
+    , resource  =? "WeeChat"    --> doShift "7"
     , resource  =? "Browser"    --> doFloat
     , className  =? "Galculator"    --> doCenterFloat
-    , className  =? "Blender"    --> doShift "5"
+    , className  =? "Blender"    --> doShift "6"
     , className  =? "Blender:Render"    --> doFloat
     , className  =? "XClock"    --> doCenterFloat
     , className  =? "Audacity"    --> doFloat
