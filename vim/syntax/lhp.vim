@@ -1,7 +1,7 @@
 " Vim syntax file
 " Language:	Linus's Home Printshop (.lhp) files
 " Maintainer:	Linus Arver
-" Updated:	Feb 18 2009
+" Updated:	Jan 13 2010
 
 " For version 5.x: Clear all syntax items
 " For version 6.x: Quit when a syntax file was already loaded
@@ -71,6 +71,8 @@ syn match lhpBullet1    "^\s*b\s.*" containedin=ALL
 syn match lhpBullet2    "^\s*bb\s.*" containedin=ALL
 syn match lhpBullet3    "^\s*bbb\s.*" containedin=ALL
 syn match lhpCount    "^\s*c\s.*" containedin=ALL
+
+syn match lhpBox    "^\s*0[nxe]" containedin=ALL
 
 " Experimental
 "syn match lhpCiteBasic  "\[[^\]]\+\s\{1}v\.\s\{1}[^\]]\+\]" containedin=ALLBUT,@lhpQuotations
