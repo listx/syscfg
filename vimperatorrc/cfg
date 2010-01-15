@@ -28,6 +28,10 @@ map <C-l> :tabm! +1<cr>
 no F f
 no f F
 
+" swap S-p and p as well
+no P p
+no p P
+
 " save current session (equiv. to Firefox's "Save and Quit" before closing multiple tabs)
 map <leader>x :xa<cr>
 
