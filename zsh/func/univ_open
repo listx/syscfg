@@ -40,7 +40,7 @@ univ_open() {
             (mid|midi)
                 timidity $@
             ;;
-            (avi|flv|ogv|mkv|mov|mp4|mpg|mpeg|wmv)
+            (avi|flv|ogm|ogv|mkv|mov|mp4|mpg|mpeg|rmvb|wmv)
                 smplayer $@ &>/dev/null & disown
             ;;
             *)
