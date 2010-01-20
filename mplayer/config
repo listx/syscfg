@@ -1,11 +1,1 @@
-
-[default]
-# Write your default config options here!
-
-# default subtitle size (1 - 5)
-subfont-text-scale=3
-ao=alsa
-
-[gnome-mplayer]
-msglevel=all=5
-ao=alsa
+cfg
