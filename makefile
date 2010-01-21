@@ -1,7 +1,7 @@
 CFGROOT := $(shell pwd)
 HOSTNAME := $(shell hostname)
 # add the -n flag for directories, as otherwise, stray symlinks will be created inside the CFGROOT directory itself
-all: aex boxes galculator git mpd mplayer ncmpcpp rtorrent shellscripts uzbl vim vimperatorrc xdefaults xinitrc xmonad zsh
+all: aex boxes galculator git mpd mplayer ncmpcpp pal rtorrent shellscripts uzbl vim vimperatorrc xdefaults xinitrc xmonad zsh
 aex:
 	ln -fs $(CFGROOT)/shellscripts/sys/aex.rb   /usr/bin/aex
 boxes:
@@ -24,6 +24,11 @@ endif
 ifeq ('$(HOSTNAME)','aether')
 	ln -fs $(CFGROOT)/ncmpcpp/cfg-luxion ${HOME}/.ncmpcpp/config
 endif
+
+pal:
+	ln -fns $(CFGROOT)/pal              ${HOME}/.pal
+	ln -fs $(CFGROOT)/pal/cfg           ${HOME}/.pal/pal.conf
+
 rtorrent:
 ifeq ('$(HOSTNAME)','exelion')
 	ln -fs $(CFGROOT)/rtorrent/cfg       ${HOME}/.rtorrent.rc
@@ -63,10 +68,13 @@ endif
 	rm ${HOME}/.ncmpcpp/config
 	rm ${HOME}/.ncmpcpp/keys
 	rm ${HOME}/.ncmpcpp
+	rm ${HOME}/.pal/pal.conf
+	rm ${HOME}/.pal
 	rm ${HOME}/.vim
 	rm ${HOME}/.vimrc
 	rm ${HOME}/.gvimrc
 	rm ${HOME}/shellscripts
+	rm ${HOME}/.config/uzbl
 	rm ${HOME}/.vimperatorrc
 	rm ${HOME}/.Xdefaults
 	rm ${HOME}/.xinitrc
