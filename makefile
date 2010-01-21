@@ -34,7 +34,7 @@ endif
 shellscripts:
 	ln -fns $(CFGROOT)/shellscripts     ${HOME}/shellscripts
 uzbl:
-	ln -fns $(CFGROOT)/uzbl             ${HOME}/.uzbl
+	ln -fns $(CFGROOT)/uzbl             ${HOME}/.config/uzbl
 vim:
 	ln -fns $(CFGROOT)/vim              ${HOME}/.vim
 	ln -fs $(CFGROOT)/vim/cfg           ${HOME}/.vimrc
