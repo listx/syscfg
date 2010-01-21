@@ -23,7 +23,7 @@ import XMonad.Actions.GridSelect
 -- for toggling borders on a per-window basis
 import XMonad.Actions.NoBorders
 -- for identifying different host systems
-import System.Posix.Unistd
+--import System.Posix.Unistd
 -- for doCenterFloat
 import XMonad.Hooks.ManageHelpers
 
@@ -370,7 +370,7 @@ myStartupHook = do
 --
 --main = xmonad defaults
 main = do
-    host <- fmap nodeName getSystemID
+    --host <- fmap nodeName getSystemID
     xmonad $ defaultConfig
         {
       -- simple stuff
