@@ -179,17 +179,10 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((mod4Mask .|. controlMask, xK_k     ), spawn "ncmpcpp prev")
     -- volume controls
     , ((modm              , xK_backslash ), spawn "amixer -q set Master toggle")
-    , ((modm              , xK_minus     ), spawn "amixer -q set Master 1- unmute")
-    , ((modm              , xK_equal     ), spawn "amixer -q set Master 1+ unmute")
-
-    -- Function keys; the hex numbers correspond to what the XF86 keys mean -- these values are taken directly
-    --    from /usr/share/X11/XKeysymDB.
-    -- XF86AudioMute
-    , ((0 , 0x1008ff12), spawn "amixer -q set Master toggle")
-    -- XF86AudioLowerVolume
-    , ((0 , 0x1008ff11), spawn "amixer -q set Master 1- unmute")
-    -- XF86AudioRaiseVolume
-    , ((0 , 0x1008ff13), spawn "amixer -q set Master 1+ unmute")
+    , ((modm              , xK_minus     ), spawn "amixer -q set Master 3- unmute")
+    , ((modm              , xK_equal     ), spawn "amixer -q set Master 3+ unmute")
+    -- screen brightness
+    , ((modm     .|. shiftMask, xK_backslash ), spawn "~/syscfg/shellscripts/sys/brightness.sh") -- toggle brightness (100 or 0)
     ]
     ++
 
