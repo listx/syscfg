@@ -280,6 +280,7 @@ myLayout = Mirror tiled ||| tiled ||| Full
 myManageHook = composeAll
     [ className =? "MPlayer"                            --> doFloat
     , className =? "Gimp"                               --> doFloat
+    , className =? "Agave"                              --> doCenterFloat
     , resource  =? "desktop_window"                     --> doIgnore
     , resource  =? "kdesktop"                           --> doIgnore
     , resource  =? "vlc"                                --> doCenterFloat
