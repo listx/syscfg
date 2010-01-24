@@ -11,7 +11,10 @@
 
 univ_open() {
     ls="ls -Ahs --color=auto"
-    if [[ -f $1 || -f ${=@[-1]} ]]; then
+    if [[ -z $@ ]]; then
+        # if we do not provide any arguments, go to the home directory
+        cd && ${=ls} # ("cd" w/o any arguments goes to the home directory)
+    elif [[ -f $1 || -f ${=@[-1]} ]]; then
         # if we're here, it means that the user either (1) provided a single
         # valid file name, or (2) provided a single valid file name PLUS any
         # number of additional arguments; use of the $@ variable ensures that
@@ -69,9 +72,6 @@ univ_open() {
         echo "  path \`$@' does not exist"
         [[ $head == "." ]] && echo "  staying in same directory\n" || echo "  relocating to nearest parent directory \`$head'\n"
         cd $head && ${=ls}
-    elif [[ -z $@ ]]; then
-        # if we do not provide any arguments, go to the home directory
-        cd && ${=ls} # ("cd" w/o any arguments goes to the home directory)
     else
         # possible error -- should re-program the above if this ever happens,
         # but, it seems unlikely
