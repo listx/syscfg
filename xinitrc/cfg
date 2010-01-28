@@ -6,7 +6,7 @@ xsetroot -cursor_name left_ptr
 # use the 'unclutter' program to disable showing the mouse pointer after X seconds
 # however, disable 'unclutter' for mouse-intensive programs like Blender and Gimp
 # '-noevents' flag is for xmonad compatibility
-unclutter -grab -noevents -idle 1 -not Blender Gimp &
+unclutter -grab -noevents -idle 10 -not Blender Gimp &
 
 # run the xmonad-utils program 'hhp', which is the haskell version of 'unclutter'
 # by default the mouse is hidden after 10 seconds of inactivity
