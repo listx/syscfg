@@ -35,7 +35,8 @@ lhp*color15: #ffffff
 ! First set base font to Terminus to handle all Latin glyphs
 ! ...then set Japanese font to take care of most Chinese kanji and also hiragana/katakana
 ! ...then finally only use Korean font for hangul characters
-urxvt*font: xft:Terminus:pixelsize=14,\
+
+urxvt*font: xft:Terminus:size=11,\
             xft:Kochi Gothic:antialias=false,\
             xft:Baekmuk Gulim
 urxvt*depth: 32
