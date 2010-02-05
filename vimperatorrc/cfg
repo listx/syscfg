@@ -39,7 +39,9 @@ map <leader>x :xa<cr>
 map <F3> :noh<cr>
 
 " duplicate current tab
-map <leader>d :tabduplicate<CR>
+map <leader>N :tabduplicate<CR>
+
+map <leader>n :tabopen<CR>
 
 " add bookmark right away
 map <leader>a a<cr>
@@ -52,5 +54,9 @@ nnoremap <BS> <PageUp>
 " no need to map <Space>, since it's already (hard-coded) to <PageDown>
 
 map <leader>b :emenu View.Sidebar.Bookmarks<cr>
+map <leader>h :emenu View.Sidebar.History<cr>
+
+" close the sidebar
+map <leader>c :sbclose<cr>
 
 " vim: set ft=vimperator
