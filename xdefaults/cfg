@@ -7,8 +7,8 @@ XTerm*saveLines: 1000
 lhp*font: xft:Terminus:pixelsize=20,\
             xft:Kochi Gothic:antialias=false,\
             xft:Baekmuk Gulim
-lhp*background: #3a3a3a
-lhp*foreground: #dcdccc
+lhp*background: #22222a
+lhp*foreground: #cccccf
 lhp*depth: 32
 lhp*fading: 20
 lhp*cursorColor: green
