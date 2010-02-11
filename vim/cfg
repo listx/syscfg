@@ -15,7 +15,8 @@ set statusline=%<%F\ %h%m%r%=%-14.(%l,%c%V%)\ %P\ %L
 set laststatus=2
 syntax enable "enable syntax highlighting
 set hlsearch "turn on search highlighting
-filetype indent on "turn on automatic indenting, as well as filetype recognition
+filetype indent on "turn on automatic indenting based on filetype recognition
+filetype plugin on "automatically load the corresponding filetype plugin if we've detected a filetype
 
 " Tip: to search case-insensitive, type \c at the beginning
 
