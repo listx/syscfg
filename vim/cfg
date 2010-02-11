@@ -66,6 +66,9 @@ if !exists("autocommands_loaded")
     au BufRead,BufNewFile *.lhp set filetype=lhp
     au! Syntax lhp source $HOME/.vim/syntax/lhp.vim
 
+    au BufRead,BufNewFile *.toucan set filetype=toucan
+    au! Syntax toucan source $HOME/.vim/syntax/toucan.vim
+
     " tabstop is how wide the <TAB> character is, whether it's an actual <TAB>
     " character or converted into space characters with expandtab
     au BufRead,BufNewFile *.rb,*.py set tabstop=4
@@ -81,7 +84,6 @@ if !exists("autocommands_loaded")
     " load lilypond-specific stuff
     au BufRead,BufNewFile *.ly set filetype=lilypond
     au! Syntax lilypond source $HOME/.vim/syntax/lilypond.vim
-    "au! Syntax lilypond source /usr/share/lilypond/2.12.2/vim/syntax/lilypond.vim
 
     " Integration with the "boxes" program by Thomas Jensen.
     " Default width is set at 100 characters
