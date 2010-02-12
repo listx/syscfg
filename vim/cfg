@@ -189,9 +189,15 @@ if !exists("autocommands_loaded")
             let &laststatus = 1 " set it back to Vim's default
         endif
     endfunction
-endif
 
-nmap <backspace> <<
+    function ToggleHLSearch()
+       if &hls
+            set nohls
+       else
+            set hls
+       endif
+    endfunction
+endif
 
 " NOTE: the <F1> key in normal mode is mapped to ":help" by default
 " quicksave files
@@ -208,10 +214,8 @@ nmap <localleader>Q :q!<CR>
 " save and exit (equivalent to "ZZ")
 nmap <localleader>x :x<cr>
 
-" turn off search highlighting (to turn on, press 'n' in normal mode for next
-" term)
-nmap <F3> :noh<CR>
-imap <F3> <Esc>:noh<CR>a
+" toggle search highlighting
+map <F3> <esc>:call ToggleHLSearch()<CR>
 
 " programming commands
 imap <F5> <Esc>:!g++ -Wall -mtune=native -m32 % -o ~/prog/temp32<CR>
@@ -246,7 +250,7 @@ inoremap <C-h> <Esc>:tabprevious<CR>
 
 " window movement (i.e., moving around INSIDE a tab)
 nmap <Tab> <C-w><C-w>
-imap <S-Tab> <Esc><C-w><C-w>
+"inoremap <S-Tab> <Esc><C-w><C-w>
 
 " buffer movement (i.e., moving around INSIDE a window)
 nmap <S-h> :bn<CR>
