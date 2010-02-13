@@ -140,7 +140,7 @@ hi SpellLocal guisp=#7cac7c guifg=#9ccc9c
 
 " XXX: custom highlighting for .lhp files!
 hi lhpHeader1                   guifg=#ffffff guibg=#005fff gui=bold
-hi lhpHeader2                   guifg=#ffffff guibg=#ffaf5f gui=bold
+hi lhpHeader2                   guifg=#000000 guibg=#ffaf5f gui=bold
 hi lhpHeader3                   guifg=#ffffff guibg=#ff5fd7 gui=bold
 hi lhpHeader4                   guifg=#ffffff guibg=#ff5f87 gui=bold
 hi lhpHeader5                   guifg=#ffffff guibg=#8787d7 gui=bold
@@ -166,18 +166,18 @@ hi lhpCite                      guifg=#87ff00 gui=bold,underline
 
 hi lhpCaret                     guifg=#d7d7ff guibg=#ff00af gui=bold
 
-hi lhpBullet1                   guifg=#87d7d7
+hi lhpBullet1                   guifg=#000000 guibg=#00ffff gui=bold
 hi link lhpBullet2 lhpBullet1
 hi link lhpBullet3 lhpBullet1
-hi lhpCount                     guifg=#ffff5f
-hi lhpBox                       guifg=#000000 guibg=#ffffff gui=bold
+hi lhpCount                     guifg=#000000 guibg=#ffff00 gui=bold
+hi lhpBox                       guifg=#ffffff guibg=#0000ff gui=bold
 " XXX: END custom highlighting for .lhp files
 
 " Entering Kurt zone
 if &t_Co > 255
     " XXX: custom highlighting for .lhp files!
     hi lhpHeader1                   ctermfg=231 ctermbg=27 cterm=bold
-    hi lhpHeader2                   ctermfg=231 ctermbg=215 cterm=bold
+    hi lhpHeader2                   ctermfg=16 ctermbg=215 cterm=bold
     hi lhpHeader3                   ctermfg=231 ctermbg=206 cterm=bold
     hi lhpHeader4                   ctermfg=231 ctermbg=204 cterm=bold
     hi lhpHeader5                   ctermfg=231 ctermbg=104 cterm=bold
@@ -203,11 +203,11 @@ if &t_Co > 255
 
     hi lhpCaret                     ctermfg=189 ctermbg=199 cterm=bold
 
-    hi lhpBullet1                   ctermfg=116
-    hi link lhpBullet2 lhpBullet1 
+    hi lhpBullet1                   ctermfg=16  ctermbg=51 cterm=bold
+    hi link lhpBullet2 lhpBullet1
     hi link lhpBullet3 lhpBullet1
-    hi lhpCount                     ctermfg=227
-    hi lhpBox                       ctermbg=231 ctermfg=16 cterm=bold
+    hi lhpCount                     ctermfg=16  ctermbg=226 cterm=bold
+    hi lhpBox                       ctermfg=231 ctermbg=21 cterm=bold
     " XXX: END custom highlighting for .lhp files
 
     hi Boolean         ctermfg=181  
