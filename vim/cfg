@@ -189,14 +189,6 @@ if !exists("autocommands_loaded")
             let &laststatus = 1 " set it back to Vim's default
         endif
     endfunction
-
-    function ToggleHLSearch()
-       if &hls
-            set nohls
-       else
-            set hls
-       endif
-    endfunction
 endif
 
 " NOTE: the <F1> key in normal mode is mapped to ":help" by default
@@ -215,7 +207,7 @@ nmap <localleader>Q :q!<CR>
 nmap <localleader>x :x<cr>
 
 " toggle search highlighting
-map <F3> <esc>:call ToggleHLSearch()<CR>
+map <F3> <esc>:noh<cr>
 
 " programming commands
 imap <F5> <Esc>:!g++ -Wall -mtune=native -m32 % -o ~/prog/temp32<CR>
