@@ -177,6 +177,10 @@ if !exists("autocommands_loaded")
     au InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
     au InsertLeave * match ExtraWhiteSpace /\s\+$/
 
+    " always run highlighting regex from the beginning of the file, not just
+    " what is displayed on-screen (useful for multiline highlighting patterns)
+    au BufEnter *.toucan :syntax sync fromstart
+
     " function Insert_newline_smartly()
     "     if col(".") != 1
     "         normal o

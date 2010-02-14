@@ -170,6 +170,7 @@ hi lhpBullet1                   guifg=#000000 guibg=#00ffff gui=bold
 hi link lhpBullet2 lhpBullet1
 hi link lhpBullet3 lhpBullet1
 hi lhpCount                     guifg=#000000 guibg=#ffff00 gui=bold
+hi lhpPar1                      guifg=#000000 guibg=#00ff00 gui=bold
 hi lhpBox                       guifg=#ffffff guibg=#0000ff gui=bold
 " XXX: END custom highlighting for .lhp files
 
@@ -207,6 +208,7 @@ if &t_Co > 255
     hi link lhpBullet2 lhpBullet1
     hi link lhpBullet3 lhpBullet1
     hi lhpCount                     ctermfg=16  ctermbg=226 cterm=bold
+    hi lhpPar1                      ctermfg=16  ctermbg=46 cterm=bold
     hi lhpBox                       ctermfg=231 ctermbg=21 cterm=bold
     " XXX: END custom highlighting for .lhp files
 
