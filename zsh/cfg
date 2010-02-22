@@ -128,8 +128,10 @@ alias e='evince'
 
 alias i='eog'
 
-alias ll='ls -hs --color=auto'
 alias l='ls -Ahl --color=auto'
+alias ll='ls -hs --color=auto'
+alias lj='ls -AhlSr --color=auto' # sort by size, and reverse it (bigger files @ bottom)
+alias llj='ls -hsSr --color=auto'
 
 alias q='exit'
 
