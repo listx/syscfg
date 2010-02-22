@@ -18,7 +18,7 @@ xmodmap -e "remove Lock = Caps_Lock"
 xmodmap -e "add mod3 = Caps_Lock"
 
 # set default repeat rate (miliseconds delay, keystroke speed)
-xset r rate 400 50
+xset r rate 300 80
 
 # start urxvt daemon
 urxvtd -q -f -o
