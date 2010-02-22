@@ -1,32 +1,39 @@
 #!/usr/bin/ruby
 #===============================================================================================================#
-# Program name: Autolily                                                                                        #
+# Program name: Autocall                                                                                        #
 # LICENSE: PUBLIC DOMAIN                                                                                        #
-# This program takes 1 argument, the name of a lilypond file (*.ly), and watches it for changes every 1 second. #
-# If there has been any change, it simply calls lilypond on it to create a new .pdf/.ps/.midi of it.            #
+#                                                                                                               #
+# This program takes 2 or 3 arguments; the first 2 is the command and file, while the third optional arg is the #
+# delay b/n each possible execution of the command. By default this delay is 1 second (it checks if the file has#
+# been modified every second)                                                                                   #
 #                                                                                                               #
 # Place this script somewhere, like in ~/scripts                                                                #
-# Then, open up a terminal and call it like so: ~/scripts/autolily.rb [file]                                    #
+# Then, open up a terminal and call it like so: ~/scripts/autocall.rb [file]                                    #
 # [file] must be a LilyPond file (.ly), but it can be located anywhere -- i.e., you may include paths in your   #
 # file, such as "~/sheet-music/classical/bach2.ly" or "../../bach3.ly".                                         #
 #                                                                                                               #
-# You might want to do a "sudo ln -s" of autolily.rb to one of your system's $PATH directories (e.g., /usr/bin) #
-# to avoid typing out the path to autolily.rb every time you use it. Continuing the example from above,         #
-# something like "sudo ln -s ~/scripts/autolily.rb /usr/bin/autolily" should do (make sure that                 #
-# /usr/bin/autolily does not exist already, as the above comman will overwrite that file if it exists).         #
+# You might want to do a "sudo ln -s" of autocall.rb to one of your system's $PATH directories (e.g., /usr/bin) #
+# to avoid typing out the path to autocall.rb every time you use it. Continuing the example from above,         #
+# something like "sudo ln -s ~/scripts/autocall.rb /usr/bin/autocall" should do (make sure that                 #
+# /usr/bin/autocall does not exist already, as the above comman will overwrite that file if it exists).         #
 #                                                                                                               #
 # Now you can just do:                                                                                          #
 #                                                                                                               #
-#     autolily [file]                                                                                           #
+#     autocall [command] [file]                                                                                 #
 #                                                                                                               #
 # from anywhere in your system!                                                                                 #
 #                                                                                                               #
 # To exit, press CTRL-C.                                                                                        #
 #===============================================================================================================#
 
-if ARGV.size > 0
+if ARGV.size > 1
     file_data_orig = ""
+    call = ARGV.shift
     file = ARGV.shift
+    delay = 1
+    if ARGV.size > 0
+        delay = ARGV.shift.to_i
+    end
     pathsize = file.split("/").size
     ls_call = "ls --full-time"
 
@@ -61,16 +68,16 @@ if ARGV.size > 0
 
         # if there is any change detected, run lilypond on it
         if file_data_orig != file_data_new
-            puts "\n\e[1;4;38;5;226mAutolily: Change detected in given file; invoking lilypond...\e[0m\n"
+            puts "\n\e[1;4;38;5;226mAutocall: Change detected in given file; invoking `#{call}'...\e[0m\n"
             if pathsize > 1
-            `lilypond "#{path_to_file}/#{file}"`
+            `#{call} "#{path_to_file}/#{file}"`
             else
-            `lilypond "#{file}"`
+            `#{call} "#{file}"`
             end
             file_data_orig = file_data_new
         end
-        sleep 1
+        sleep delay
     end
 else
-    puts "No .ly file specified.\n"
+    puts "Usage: autocall [command] [file]\n"
 end
