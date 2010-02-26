@@ -1,21 +1,21 @@
-# 
+#
 # /etc/fstab: static file system information
 #
 # <file system>        <dir>         <type>    <options>          <dump> <pass>
-none                   /dev/pts      devpts    defaults            0      0
-none                   /dev/shm      tmpfs     defaults            0      0
+devpts                 /dev/pts      devpts    defaults            0      0
+shm                    /dev/shm      tmpfs     nodev,nosuid        0      0
 
-/dev/sr0       /mnt/media-sr0    auto    ro,user,noauto,unhide   0      0 # WHITE LITE-ON cd/dvd drive
-/dev/sr1       /mnt/media-sr1    auto    ro,user,noauto,unhide   0      0 # BLACK PIONEER cd/dvd drive
+/dev/sr0       /mnt/media-sr0    auto    ro,user,noauto,unhide   0      0
+/dev/sr1       /mnt/media-sr1    auto    ro,user,noauto,unhide   0      0
 
-UUID=4d2bce35-1f99-4d08-b329-142e2edb1f25 swap swap defaults 0 0
-UUID=96a26b06-5fca-44e3-bb45-87a5d31755d3 /home ext3 defaults 0 1
-UUID=eda3dd3d-bc4b-41ac-946b-90a36a790b72 / ext3 defaults 0 1
+# 100 GB
+UUID=58E031CEE031B35C /mnt/hd2backup4 ntfs-3g defaults,locale=en_US.UTF-8 0 0   # /dev/sda1
+UUID=96a26b06-5fca-44e3-bb45-87a5d31755d3 /home ext3 defaults 0 1               # /dev/sda2
+UUID=eda3dd3d-bc4b-41ac-946b-90a36a790b72 / ext3 defaults 0 1                   # /dev/sda5
+UUID=4d2bce35-1f99-4d08-b329-142e2edb1f25 swap swap defaults 0 0                # /dev/sda6
 
+# 320 GB
 UUID=10B854DEB854C43E /mnt/hd1installed ntfs-3g defaults,locale=en_US.UTF-8 0 0 # /dev/sdb1
-UUID=F85C87F55C87ACC6 /mnt/hd1backup1 ntfs-3g defaults,locale=en_US.UTF-8 0 0 # /dev/sdb5
-UUID=B884938084934034 /mnt/hd1backup2 ntfs-3g defaults,locale=en_US.UTF-8 0 0 # /dev/sdb6
-
-UUID=58E031CEE031B35C /mnt/hd2backup4 ntfs-3g defaults,locale=en_US.UTF-8 0 0 # /dev/sda1
-UUID=3c2005a6-c9ac-4666-b974-9ee2a0230478 /mnt/hd2backup5 ext3 defaults 0 1 # /dev/sda7
-UUID=22fc79bb-2d0e-4478-99cc-1ad2a4829ba2 /mnt/hd1ext3bkup ext3 defaults 0 1 # /dev/sdb2
+UUID=22fc79bb-2d0e-4478-99cc-1ad2a4829ba2 /mnt/hd1ext3bkup ext3 defaults 0 1    # /dev/sdb2
+UUID=F85C87F55C87ACC6 /mnt/hd1backup1 ntfs-3g defaults,locale=en_US.UTF-8 0 0   # /dev/sdb5
+UUID=B884938084934034 /mnt/hd1backup2 ntfs-3g defaults,locale=en_US.UTF-8 0 0   # /dev/sdb6

@@ -5,4 +5,5 @@
 
 # backup the home directory to secondary hard drive
 # --exclude-special-files is to avoid "AF_UNIX path too long" errors with socket files
-rdiff-backup --print-statistics --exclude-special-files --exclude '**mp3' --exclude '**mpg' --exclude '**mpeg' --exclude '**mov' --exclude '**avi' --exclude '**wmv' --exclude /home/listdata/.mozilla/firefox /home/listdata /mnt/hd1ext3bkup/bkup-exelion
+# also, all dotfiles from the home directory are excluded
+rdiff-backup --print-statistics --exclude-special-files --exclude '**mp3' --exclude '**mpg' --exclude '**mpeg' --exclude '**mov' --exclude '**avi' --exclude '**wmv' --exclude '/home/listdata/.**' /home/listdata /mnt/hd1ext3bkup/bkup-exelion
