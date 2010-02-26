@@ -13,6 +13,8 @@ Section "Files"
 	FontPath     "/usr/share/fonts/75dpi:unscaled"
 	FontPath     "/usr/share/fonts/TTF"
 	FontPath     "/usr/share/fonts/Type1"
+	FontPath     "/usr/share/fonts/local"
+	FontPath     "/home/listdata/.fonts"
 EndSection
 
 Section "Module"

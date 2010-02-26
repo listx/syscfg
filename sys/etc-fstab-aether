@@ -1,11 +1,13 @@
-# 
+#
 # /etc/fstab: static file system information
 #
 # <file system>        <dir>         <type>    <options>          <dump> <pass>
-none                   /dev/pts      devpts    defaults            0      0
-none                   /dev/shm      tmpfs     defaults            0      0
+devpts                 /dev/pts      devpts    defaults            0      0
+shm                    /dev/shm      tmpfs     nodev,nosuid        0      0
 
 /dev/sr0               /mnt/media-sr0   auto    ro,user,noauto,unhide   0      0
+#/dev/dvd               /media/dvd  auto    ro,user,noauto,unhide   0      0
+#/dev/fd0               /media/fl   auto    user,noauto             0      0
 
 UUID=84849628-b3c8-435e-9508-3b80931e488e / ext4 defaults 0 1
 UUID=d4b16cdf-292f-4509-9eea-bf84f52e04da /home ext4 defaults 0 1
