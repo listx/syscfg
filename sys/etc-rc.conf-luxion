@@ -7,21 +7,20 @@
 # -----------------------------------------------------------------------
 #
 # LOCALE: available languages can be listed with the 'locale -a' command
-# HARDWARECLOCK: set to "UTC" or "localtime"
-# USEDIRECTISA: use direct I/O requests instead of /dev/rtc for hwclock
+# HARDWARECLOCK: set to "UTC" or "localtime", any other value will result
+#   in the hardware clock being left untouched (useful for virtualization)
 # TIMEZONE: timezones are found in /usr/share/zoneinfo
 # KEYMAP: keymaps are found in /usr/share/kbd/keymaps
 # CONSOLEFONT: found in /usr/share/kbd/consolefonts (only needed for non-US)
 # CONSOLEMAP: found in /usr/share/kbd/consoletrans
 # USECOLOR: use ANSI color sequences in startup messages
 #
-LOCALE="en_US.utf8"
+LOCALE="en_US.UTF-8"
 HARDWARECLOCK="localtime"
-USEDIRECTISA="no"
-TIMEZONE="US/Pacific"
+TIMEZONE="America/Los_Angeles"
 KEYMAP="us"
 # use terminus font for default
-CONSOLEFONT="ter-114f" # from http://bbs.archlinux.org/viewtopic.php?id=44562
+CONSOLEFONT="ter-114n" # from http://bbs.archlinux.org/viewtopic.php?id=44562
 CONSOLEMAP=
 USECOLOR="yes"
 
@@ -37,7 +36,7 @@ USECOLOR="yes"
 #
 MOD_AUTOLOAD="yes"
 #MOD_BLACKLIST=() #deprecated
-MODULES=(e100 !eepro100 mii slhc b43 ac97_bus snd-mixer-oss snd-pcm-oss snd-page-alloc snd-pcm snd-timer snd snd-ac97-codec snd-intel8x0 soundcore)
+MODULES=(e100 b43 !eepro100 mii slhc b43 ac97_bus snd-mixer-oss snd-pcm-oss snd-page-alloc snd-pcm snd-timer snd snd-ac97-codec snd-intel8x0 soundcore)
 
 # Scan for LVM volume groups at startup, required if you use LVM
 USELVM="no"
@@ -95,4 +94,4 @@ NETWORKS=(luxion-wired)
 #   - prefix a daemon with a @ to start it up in the background
 #
 # net-auto disabled b/c they take too damn long to start up
-DAEMONS=(syslog-ng net-profiles crond alsa hal @sshd @openntpd @cups )
+DAEMONS=(syslog-ng net-profiles crond alsa hal @sshd @openntpd @cups @timidity++)
