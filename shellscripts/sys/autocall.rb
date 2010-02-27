@@ -68,7 +68,7 @@ if ARGV.size > 1
 
         # if there is any change detected, run lilypond on it
         if file_data_orig != file_data_new
-            puts "\n\e[1;4;38;5;226mAutocall: Change detected in given file; invoking `#{call}'...\e[0m\n"
+            puts "\n\e[1;38;5;226mautocall: change detected @ #{Time.now.ctime} in file `#{file}'; invoking `#{call}'...\e[0m\n"
             if pathsize > 1
             `#{call} "#{path_to_file}/#{file}"`
             else
