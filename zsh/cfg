@@ -213,6 +213,11 @@ alias ppu='sudo powerpill -Syu'
 alias ppy='sudo powerpill -Syy'
 alias pps='sudo powerpill -S'
 
+alias b='sudo bauerbill'
+alias bu='sudo bauerbill -Syu --aur --build-as $USER'
+alias by='sudo bauerbill -Syy'
+alias bs='sudo bauerbill -S --aur --build-as $USER'
+
 alias y='yaourt'
 alias yu='yaourt -Sybu --aur'
 alias yy='yaourt -Syy'
