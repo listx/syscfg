@@ -188,6 +188,7 @@ alias rscp='rsync -arP --no-whole-file --inplace'
 alias rsmv='rscp --remove-source-files'
 #'rscp' means 'cp' with 'rsync'. The '-a' (archive) option ensures that all file properties (date, permissions, owner, etc.) are copied, too. '-r' makes it recurse into directories. '-P' enables the progress bar. The next two options are a matter of taste but are usefull if you copy files to a USB stick: '--inplace' disables the usage of a hidden file for the partial data during the copy process. '--no-whole-file' re-enables the synchronisation modus, i.e. in this case: a previous partially copied file is continued instead of overwritten.
 #The 'rsmv' is the move version of 'rscp' and simply adds '--remove-source-files' to delete the original files after the copy process.
+alias cp2='rsync -aP'
 
 # sync the following with visudo to disable passwords!
 #
