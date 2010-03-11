@@ -8,9 +8,7 @@
 # been modified every second)                                                                                   #
 #                                                                                                               #
 # Place this script somewhere, like in ~/scripts                                                                #
-# Then, open up a terminal and call it like so: ~/scripts/autocall.rb [file]                                    #
-# [file] must be a LilyPond file (.ly), but it can be located anywhere -- i.e., you may include paths in your   #
-# file, such as "~/sheet-music/classical/bach2.ly" or "../../bach3.ly".                                         #
+# Then, open up a terminal and call it like so: ~/scripts/autocall.rb [program] [file]                          #
 #                                                                                                               #
 # You might want to do a "sudo ln -s" of autocall.rb to one of your system's $PATH directories (e.g., /usr/bin) #
 # to avoid typing out the path to autocall.rb every time you use it. Continuing the example from above,         #
