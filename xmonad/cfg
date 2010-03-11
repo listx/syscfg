@@ -30,7 +30,7 @@ import XMonad.Hooks.ManageHelpers
 -- The preferred terminal program, which is used in a binding below and by
 -- certain contrib modules.
 --
-myTerminal      = "urxvtc"
+myTerminal      = "urxvt"
 
 -- Whether focus follows the mouse pointer.
 myFocusFollowsMouse :: Bool
@@ -154,8 +154,8 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((modm,  xK_b ),   withFocused toggleBorder)
     -- move mouse away to bottom-right of currently focused window
     , ((modm               , xK_BackSpace), warpToWindow 1 1)
-    , ((mod4Mask              , xK_x     ), spawn "urxvtc")
-    , ((mod4Mask .|. shiftMask, xK_x     ), spawn "urxvtc -name lhp")
+    , ((mod4Mask              , xK_x     ), spawn "urxvt")
+    , ((mod4Mask .|. shiftMask, xK_x     ), spawn "urxvt -name lhp")
     , ((mod4Mask              , xK_n     ), spawn "firefox")
     , ((mod4Mask .|. shiftMask, xK_n     ), spawn "uzbl-tabbed")
     , ((mod4Mask              , xK_t     ), spawn "gvim")
@@ -168,8 +168,8 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((mod4Mask              , xK_w     ), spawn "soffice")
     , ((mod4Mask              , xK_m     ), spawn "blender")
     , ((mod4Mask .|. shiftMask, xK_f     ), spawn "gnucash")
-    , ((mod4Mask              , xK_h     ), spawn "urxvtc -e ncmpcpp")
-    , ((mod4Mask .|. shiftMask, xK_h     ), spawn "urxvtc -e mplayer -ao oss -softvol -volume 100 -volstep 1 -prefer-ipv4 http://192.168.0.110:8000/mpd.ogg")
+    , ((mod4Mask              , xK_h     ), spawn "urxvt -e ncmpcpp")
+    , ((mod4Mask .|. shiftMask, xK_h     ), spawn "urxvt -e mplayer -ao oss -softvol -volume 100 -volstep 1 -prefer-ipv4 http://192.168.0.110:8000/mpd.ogg")
     , ((mod4Mask              , xK_p     ), spawn "apvlv")
     , ((mod4Mask .|. shiftMask, xK_p     ), spawn "evince")
     , ((mod4Mask              , xK_v     ), spawn "smplayer")

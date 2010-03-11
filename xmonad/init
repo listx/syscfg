@@ -9,17 +9,13 @@
 HOSTNAME=$(hostname)
 case "${HOSTNAME}" in
     exelion)
-        urxvtc -e ncmpcpp
-        urxvtc -e alsamixer
-        urxvtc -n iftop -e sudo iftop -B -i eth1
-        urxvtc -e htop
-
-        # IRSSI
-        # make irssi track everything under syscfg EXCEPT for the config file containing sensitive password information (I have to manually check that the syscfg/irssi/cfg-nopassword file stays up-to-date with the untracked config file)
-        # urxvtc -e irssi --config=~/.irssi-untracked --home=~/syscfg/irssi
+        urxvt -e ncmpcpp
+        urxvt -e alsamixer
+        urxvt -n iftop -e sudo iftop -B -i eth1
+        urxvt -e htop
 
         # WEECHAT
-        urxvtc -name WeeChat -e weechat-curses
+        urxvt -name WeeChat -e weechat-curses
 
         # the -passfile option ONLY WORKS if alpine is compiled with
         # "--with-passfile=some-default-file-without-directory-structure", and alpine will then
@@ -27,23 +23,23 @@ case "${HOSTNAME}" in
         # the --with-passfile option at compile/configure time; setting this option gives alpine
         # the ability to use a DIFFERENT location for a password file at each time it is run, with
         # the "-passfile" option
-        urxvtc -e alpine -p ~/.alpine/cfg -passfile ~/.alpine-pass
-        #urxvtc -e rtorrent
+        urxvt -e alpine -p ~/.alpine/cfg -passfile ~/.alpine-pass
+        #urxvt -e rtorrent
         firefox
         #blender
     ;;
     luxion)
-        urxvtc -e alsamixer
-        urxvtc -n iftop -e sudo iftop -B -i eth0
-        urxvtc -e htop
-        urxvtc
+        urxvt -e alsamixer
+        urxvt -n iftop -e sudo iftop -B -i eth0
+        urxvt -e htop
+        urxvt
     ;;
     aether)
-        urxvtc -e alsamixer
-        urxvtc -n iftop -e sudo iftop -B -i eth0
-        urxvtc -e htop
-        urxvtc -e rtorrent
-        urxvtc
+        urxvt -e alsamixer
+        urxvt -n iftop -e sudo iftop -B -i eth0
+        urxvt -e htop
+        urxvt -e rtorrent
+        urxvt
     ;;
     *)
     ;;

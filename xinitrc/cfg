@@ -20,9 +20,6 @@ xmodmap -e "add mod3 = Caps_Lock"
 # set default repeat rate (miliseconds delay, keystroke speed)
 xset r rate 300 80
 
-# start urxvt daemon
-urxvtd -q -f -o
-
 # start xscreensaver
 xscreensaver -no-splash &
 
