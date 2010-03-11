@@ -9,13 +9,13 @@
 HOSTNAME=$(hostname)
 case "${HOSTNAME}" in
     exelion)
-        urxvt -e ncmpcpp
-        urxvt -e alsamixer
-        urxvt -n iftop -e sudo iftop -B -i eth1
-        urxvt -e htop
+        urxvt -e ncmpcpp &
+        urxvt -e alsamixer &
+        urxvt -n iftop -e sudo iftop -B -i eth1 &
+        urxvt -e htop &
 
         # WEECHAT
-        urxvt -name WeeChat -e weechat-curses
+        urxvt -name WeeChat -e weechat-curses &
 
         # the -passfile option ONLY WORKS if alpine is compiled with
         # "--with-passfile=some-default-file-without-directory-structure", and alpine will then
@@ -23,22 +23,22 @@ case "${HOSTNAME}" in
         # the --with-passfile option at compile/configure time; setting this option gives alpine
         # the ability to use a DIFFERENT location for a password file at each time it is run, with
         # the "-passfile" option
-        urxvt -e alpine -p ~/.alpine/cfg -passfile ~/.alpine-pass
+        urxvt -e alpine -p ~/.alpine/cfg -passfile ~/.alpine-pass &
         #urxvt -e rtorrent
         firefox
         #blender
     ;;
     luxion)
-        urxvt -e alsamixer
-        urxvt -n iftop -e sudo iftop -B -i eth0
-        urxvt -e htop
+        urxvt -e alsamixer &
+        urxvt -n iftop -e sudo iftop -B -i eth0 &
+        urxvt -e htop &
         urxvt
     ;;
     aether)
-        urxvt -e alsamixer
-        urxvt -n iftop -e sudo iftop -B -i eth0
-        urxvt -e htop
-        urxvt -e rtorrent
+        urxvt -e alsamixer &
+        urxvt -n iftop -e sudo iftop -B -i eth0 &
+        urxvt -e htop &
+        urxvt -e rtorrent &
         urxvt
     ;;
     *)
