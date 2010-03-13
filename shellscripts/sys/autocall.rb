@@ -50,7 +50,7 @@ if ARGV.size > 1
     end
     file_data_new = ""
 
-    # enter infinite loop -- keep compiling the given lilypond file if it has changed in the past 1 second
+    # enter infinite loop -- keep compiling the given file if it has changed in the past 1 second
     while true
         # detect the file size and also timestamp
         lsarr = `#{ls_call}`.split("\n")
@@ -64,7 +64,7 @@ if ARGV.size > 1
             end
         end
 
-        # if there is any change detected, run lilypond on it
+        # if there is any change detected, run the given command on it
         if file_data_orig != file_data_new
             puts "\n\e[1;38;5;226mautocall: change detected @ #{Time.now.ctime} in file `#{file}'; invoking `#{call}'...\e[0m\n"
             if pathsize > 1
