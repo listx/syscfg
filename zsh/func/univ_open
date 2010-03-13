@@ -33,7 +33,7 @@ univ_open() {
             (pdf|ps)
                 evince -f $@ &>/dev/null & disown
             ;;
-            (bmp|gif|jpg|jpeg|png|svg|tiff)
+            (bmp|gif|jpg|jpeg|png|svg|tga|tiff)
                 eog $@ &>/dev/null & disown
             ;;
             (psd|xcf)
