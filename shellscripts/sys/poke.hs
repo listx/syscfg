@@ -90,15 +90,12 @@ showrand = do
     key <- getChar
     r <- getStdRandom $ randomR (0,(length keys) - 1)
     case key of
+        'q' -> puts "\npoke: exiting...\n"
         'j' -> puts $ keys!!((mod r 10) + 26)
         'k' -> puts $ keys!!((mod r 32) + 36)
         'l' -> puts $ keys!!(mod r 26)
         _   -> puts $ keys!!r
-    if key /= 'q'
-        then do
-            showrand
-        else do
-            puts "\npoke: exiting...\n"
+    if key /= 'q' then showrand else return ()
 
 main :: IO ()
 main = do
