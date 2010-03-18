@@ -48,6 +48,9 @@ univ_open() {
             (avi|flv|ogm|ogv|mkv|mov|mp4|mpg|mpeg|rmvb|wmv)
                 smplayer $@ &>/dev/null & disown
             ;;
+            (djvu)
+                djview $@
+            ;;
             *)
                 vim $@
             ;;
