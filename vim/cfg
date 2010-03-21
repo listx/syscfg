@@ -117,18 +117,31 @@ if !exists("autocommands_loaded")
     au BufEnter .vimrc,.gvimrc,.vimperatorrc vmap <localleader>cw1 !boxes -d vim-cmt -s 120<CR>
     au BufEnter .vimrc,.gvimrc,.vimperatorrc nmap <localleader>C1 !!boxes -d vim-cmt -r<CR>
     au BufEnter .vimrc,.gvimrc,.vimperatorrc vmap <localleader>C1 !boxes -d vim-cmt -r<CR>
-    au BufEnter *.ly nmap <localleader>c1 !!boxes -d percent<CR>
-    au BufEnter *.ly vmap <localleader>c1 !boxes -d percent<CR>
-    au BufEnter *.ly nmap <localleader>cw1 !!boxes -d percent -s 120<CR>
-    au BufEnter *.ly vmap <localleader>cw1 !boxes -d percent -s 120<CR>
-    au BufEnter *.ly nmap <localleader>C1 !!boxes -d percent -r<CR>
-    au BufEnter *.ly vmap <localleader>C1 !boxes -d percent -r<CR>
+    au BufEnter *.ly,*.tex nmap <localleader>c1 !!boxes -d percent<CR>
+    au BufEnter *.ly,*.tex vmap <localleader>c1 !boxes -d percent<CR>
+    au BufEnter *.ly,*.tex nmap <localleader>cw1 !!boxes -d percent -s 120<CR>
+    au BufEnter *.ly,*.tex vmap <localleader>cw1 !boxes -d percent -s 120<CR>
+    au BufEnter *.ly,*.tex nmap <localleader>C1 !!boxes -d percent -r<CR>
+    au BufEnter *.ly,*.tex vmap <localleader>C1 !boxes -d percent -r<CR>
     au BufEnter *.hs nmap <localleader>c1 !!boxes -d ada-box<CR>
     au BufEnter *.hs vmap <localleader>c1 !boxes -d ada-box<CR>
     au BufEnter *.hs nmap <localleader>cw1 !!boxes -d ada-box -s 120<CR>
     au BufEnter *.hs vmap <localleader>cw1 !boxes -d ada-box -s 120<CR>
     au BufEnter *.hs nmap <localleader>C1 !!boxes -d ada-box -r<CR>
     au BufEnter *.hs vmap <localleader>C1 !boxes -d ada-box -r<CR>
+
+    au BufEnter *.tex vmap <localleader>bb iwoiw"zs\textbf{<C-R>z}<Esc>
+    au BufEnter *.tex vmap <localleader>ii iwoiw"zs\textit{<C-R>z}<Esc>
+    au BufEnter *.tex vmap <localleader>bi iwoiw"zs\textbf{\textit{<C-R>z}}<Esc>
+    au BufEnter *.tex vmap <localleader>sc iwoiw"zs\textsc{<C-R>z}<Esc>
+    au BufEnter *.tex vmap <localleader>mbb "zs\textbf{<C-R>z}<Esc>
+    au BufEnter *.tex vmap <localleader>mii "zs\textit{<C-R>z}<Esc>
+    au BufEnter *.tex vmap <localleader>mbi "zs\textbf{\textit{<C-R>z}}<Esc>
+    au BufEnter *.tex vmap <localleader>msc "zs\textsc{<C-R>z}<Esc>
+    au BufEnter *.tex nmap <localleader>bb viw"zs\textbf{<C-R>z}<Esc>
+    au BufEnter *.tex nmap <localleader>ii viw"zs\textit{<C-R>z}<Esc>
+    au BufEnter *.tex nmap <localleader>bi viw"zs\textbf{\textit{<C-R>z}}<Esc>
+    au BufEnter *.tex nmap <localleader>sc viw"zs\textsc{<C-R>z}<Esc>
 
     " useful for selecting multi-word phrases; you can select either
     " right-to-left or left-to-right -- just highlight a portion of the two
