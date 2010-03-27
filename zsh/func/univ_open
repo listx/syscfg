@@ -30,7 +30,7 @@ univ_open() {
             (htm|html)
                 firefox $@ &>/dev/null & disown
             ;;
-            (pdf|ps)
+            (eps|pdf|ps)
                 evince -f $@ &>/dev/null & disown
             ;;
             (bmp|gif|jpg|jpeg|png|svg|tga|tiff)
