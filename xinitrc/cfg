@@ -36,6 +36,9 @@ case "${HOSTNAME}" in
         # NOTE: the -b flag daemonizes it (necessary here for purposes of xinit going through every command; see "man init" for details about xinitrc and init's behavior)
         # the -c flag points to the configuration file
         icecast -b -c /home/listdata/syscfg/icecast/cfg.xml
+
+        # turn on numlock for keypad by default
+        numlockx &
     ;;
     luxion)
     ;;
