@@ -39,6 +39,7 @@ lhp*color15: #ffffff
 urxvt*font: xft:Terminus:size=11,\
             xft:Kochi Gothic:antialias=false,\
             xft:Baekmuk Gulim
+urxvt*geometry: 100x70
 urxvt*depth: 32
 urxvt*fading: 20
 urxvt*cursorColor: green
