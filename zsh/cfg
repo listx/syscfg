@@ -191,6 +191,10 @@ alias rsmv='rscp --remove-source-files'
 #The 'rsmv' is the move version of 'rscp' and simply adds '--remove-source-files' to delete the original files after the copy process.
 alias cp2='rsync -aP'
 
+# play safe! warn before overwrites
+alias cp='cp -i'
+alias mv='mv -i'
+
 # sync the following with visudo to disable passwords!
 #
 # Template (in visudo):
