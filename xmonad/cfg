@@ -158,7 +158,7 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((mod4Mask .|. shiftMask, xK_x     ), spawn "urxvt -name lhp")
     , ((mod4Mask              , xK_n     ), spawn "firefox")
     , ((mod4Mask .|. shiftMask, xK_n     ), spawn "uzbl-tabbed")
-    , ((mod4Mask              , xK_t     ), spawn "gvim")
+    , ((mod4Mask              , xK_t     ), spawn "gvim -geom 120x60")
     , ((mod4Mask .|. shiftMask, xK_t     ), spawn "xclock -digital -update 1 -strftime \"%F %a %T Wk %W\" -face terminus-9 -padding 45")
     , ((mod4Mask              , xK_c     ), spawn "galculator")
     , ((mod4Mask .|. shiftMask, xK_c     ), spawn "gcalctool")
@@ -306,6 +306,7 @@ myManageHook = composeAll
     , className  =? "linux_client"                      --> doFloat
     , className  =? "Bsnes"                             --> doCenterFloat
     , className  =? "Wine"                              --> doFloat
+    , className  =? "Gvim"                              --> doCenterFloat
     ]
 
 ------------------------------------------------------------------------
