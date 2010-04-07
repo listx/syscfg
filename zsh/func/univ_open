@@ -27,6 +27,9 @@ univ_open() {
             (doc|odf|odt|rtf)
                 soffice -writer $@ &>/dev/null & disown
             ;;
+            (pps|ppt)
+                soffice -impress $@ &>/dev/null & disown
+            ;;
             (htm|html)
                 firefox $@ &>/dev/null & disown
             ;;
