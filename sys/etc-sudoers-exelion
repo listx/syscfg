@@ -39,4 +39,5 @@ listdata exelion=NOPASSWD: /bin/umount
 
 listdata exelion=NOPASSWD: /usr/bin/pacman
 listdata exelion=NOPASSWD: /usr/bin/powerpill
+listdata exelion=NOPASSWD: /usr/bin/bauerbill
 listdata exelion=NOPASSWD: /usr/bin/yaourt

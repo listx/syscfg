@@ -1,5 +1,3 @@
-#    a
-#    a
 #    ~/yaourtrc  - Configuration for yaourt
 # 
 #   See yaourt(8) for more information
@@ -22,8 +20,9 @@
 #   LastCommentsNumber 5
 #   LastCommentsOrder asc
 #   NoConfirm no
-   PacmanBin /usr/bin/powerpill
-   PkgbuildEditor vim
+#   PacmanBin /usr/bin/pacman-color
+#   PkgbuildEditor gvim
+#   DiffEditor vimdiff
 #   SearchInAurUnsupported yes
 #   ShowAurComment yes
 #   TmpDirectory /where/you/want
