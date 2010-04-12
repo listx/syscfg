@@ -12,6 +12,32 @@ import IO
 import System.IO
 
 keys = [
+    "a",
+    "b",
+    "c",
+    "d",
+    "e",
+    "f",
+    "g",
+    "h",
+    "i",
+    "j",
+    "k",
+    "l",
+    "m",
+    "n",
+    "o",
+    "p",
+    "q",
+    "r",
+    "s",
+    "t",
+    "u",
+    "v",
+    "w",
+    "x",
+    "y",
+    "z",
     "A",
     "B",
     "C",
@@ -91,9 +117,9 @@ showrand = do
     r <- getStdRandom $ randomR (0,(length keys) - 1)
     case key of
         'q' -> puts "\npoke: exiting...\n"
-        'j' -> puts $ keys!!((mod r 10) + 26)
-        'k' -> puts $ keys!!((mod r 32) + 36)
-        'l' -> puts $ keys!!(mod r 26)
+        'j' -> puts $ keys!!((mod r 10) + 52)
+        'k' -> puts $ keys!!((mod r 32) + 62)
+        'l' -> puts $ keys!!(mod r 52)
         _   -> puts $ keys!!r
     if key /= 'q' then showrand else return ()
 
