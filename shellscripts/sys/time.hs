@@ -2,10 +2,13 @@ module Main where
 
 -- for all the nice time functions
 import Data.Time
+
 -- for monthLength
 import Data.Time.Calendar.MonthDay
+
 -- for getting commandline args
 import System.Environment
+
 -- for defaultTimeLocale
 import System.Locale
 
