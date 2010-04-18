@@ -10,7 +10,6 @@ user "listdata"
 bind_to_address		"192.168.0.110" # bind it to this computer's IP address if someone on the LAN wants to use this mpd
 port				"6600"
 save_absolute_paths_in_playlists "yes"
-auto_update "yes"
 follow_outside_symlinks "yes"
 follow_inside_symlinks "yes"
 audio_output {
