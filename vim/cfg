@@ -158,46 +158,6 @@ if !exists("autocommands_loaded")
     au BufEnter *.tex nmap <localleader>bi viw"zs\textbf{\textit{<C-R>z}}<Esc>
     au BufEnter *.tex nmap <localleader>sc viw"zs\textsc{<C-R>z}<Esc>
 
-    " useful for selecting multi-word phrases; you can select either
-    " right-to-left or left-to-right -- just highlight a portion of the two
-    " leftmost and rightmost words in the phrase
-    au BufEnter *.lhp vmap <localleader>bb iwoiw"zsb[[<C-R>z]]<Esc>
-    au BufEnter *.lhp vmap <localleader>ii iwoiw"zsi[[<C-R>z]]<Esc>
-    au BufEnter *.lhp vmap <localleader>u  iwoiw"zsu[[<C-R>z]]<Esc>
-    au BufEnter *.lhp vmap <localleader>bi iwoiw"zsbi[[<C-R>z]]<Esc>
-    au BufEnter *.lhp vmap <localleader>bu iwoiw"zsbu[[<C-R>z]]<Esc>
-    au BufEnter *.lhp vmap <localleader>iu iwoiw"zsiu[[<C-R>z]]<Esc>
-    au BufEnter *.lhp vmap <localleader>cc iwoiw"zsc[[<C-R>z]]<Esc>
-    au BufEnter *.lhp vmap <localleader>cp iwoiw"zscp[[<C-R>z]]<Esc>
-    au BufEnter *.lhp vmap <localleader>sc iwoiw"zssc[[<C-R>z]]<Esc>
-    " useful for manually selecting the exact boundaries
-    au BufEnter *.lhp vmap <localleader>mbb "zsb[[<C-R>z]]<Esc>
-    au BufEnter *.lhp vmap <localleader>mii "zsi[[<C-R>z]]<Esc>
-    au BufEnter *.lhp vmap <localleader>mu  "zsu[[<C-R>z]]<Esc>
-    au BufEnter *.lhp vmap <localleader>mbi "zsbi[[<C-R>z]]<Esc>
-    au BufEnter *.lhp vmap <localleader>mbu "zsbu[[<C-R>z]]<Esc>
-    au BufEnter *.lhp vmap <localleader>miu "zsiu[[<C-R>z]]<Esc>
-    au BufEnter *.lhp vmap <localleader>mcc "zsc[[<C-R>z]]<Esc>
-    au BufEnter *.lhp vmap <localleader>mcp "zscp[[<C-R>z]]<Esc>
-    au BufEnter *.lhp vmap <localleader>msc "zssc[[<C-R>z]]<Esc>
-    " useful for highlighting a single word from normal mode (just hover a
-    " cursor over the single word you want to tag)
-    au BufEnter *.lhp nmap <localleader>bb viw"zsb[[<C-R>z]]<Esc>
-    au BufEnter *.lhp nmap <localleader>ii viw"zsi[[<C-R>z]]<Esc>
-    au BufEnter *.lhp nmap <localleader>u  viw"zsu[[<C-R>z]]<Esc>
-    au BufEnter *.lhp nmap <localleader>bi viw"zsbi[[<C-R>z]]<Esc>
-    au BufEnter *.lhp nmap <localleader>bu viw"zsbu[[<C-R>z]]<Esc>
-    au BufEnter *.lhp nmap <localleader>iu viw"zsiu[[<C-R>z]]<Esc>
-    au BufEnter *.lhp nmap <localleader>cc viw"zsc[[<C-R>z]]<Esc>
-    au BufEnter *.lhp nmap <localleader>cp viw"zscp[[<C-R>z]]<Esc>
-    au BufEnter *.lhp nmap <localleader>sc viw"zssc[[<C-R>z]]<Esc>
-    " for quickly inserting a newline, but with one less indent than above
-    " (useful for quickly entering a heading 1 - 9; i.e., no more pressing 'o'
-    " and then pressing backspace 4 times
-    au BufEnter *.lhp nmap <CR> o<Backspace><Backspace><Backspace><Backspace>
-    " for automatically creating folds based on the indent
-    au BufEnter *.lhp set foldmethod=indent
-
     " highlight red any trailing whitespace
     highlight ExtraWhitespace ctermbg=red guibg=red
     au ColorScheme * highlight ExtraWhitespace guibg=red
