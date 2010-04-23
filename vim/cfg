@@ -93,6 +93,10 @@ if !exists("autocommands_loaded")
     au BufEnter * vmap <localleader>cw1 !boxes -d pound-alt -s 120<CR>
     au BufEnter * nmap <localleader>C1 !!boxes -d pound-alt -r<CR>
     au BufEnter * vmap <localleader>C1 !boxes -d pound-alt -r<CR>
+    au BufEnter * nmap <localleader>c2 !!boxes -d pound-cmt<CR>
+    au BufEnter * vmap <localleader>c2 !boxes -d pound-cmt<CR>
+    au BufEnter * nmap <localleader>C2 !!boxes -d pound-cmt -r<CR>
+    au BufEnter * vmap <localleader>C2 !boxes -d pound-cmt -r<CR>
     au BufEnter *.C,*.cpp,*.cxx,*.h,*.hpp nmap <localleader>c1 !!boxes -d c-top<CR>
     au BufEnter *.C,*.cpp,*.cxx,*.h,*.hpp vmap <localleader>c1 !boxes -d c-top<CR>
     au BufEnter *.C,*.cpp,*.cxx,*.h,*.hpp nmap <localleader>cw1 !!boxes -d c-top -s 120<CR>
@@ -111,6 +115,10 @@ if !exists("autocommands_loaded")
     au BufEnter *.C,*.cpp,*.cxx,*.h,*.hpp vmap <localleader>cw3 !boxes -d c-bot -s 120<CR>
     au BufEnter *.C,*.cpp,*.cxx,*.h,*.hpp nmap <localleader>C3 !!boxes -d c-bot -r<CR>
     au BufEnter *.C,*.cpp,*.cxx,*.h,*.hpp vmap <localleader>C3 !boxes -d c-bot -r<CR>
+    au BufEnter *.C,*.cpp,*.cxx,*.h,*.hpp nmap <localleader>c4 !!boxes -d java-cmt<CR>
+    au BufEnter *.C,*.cpp,*.cxx,*.h,*.hpp vmap <localleader>c4 !boxes -d java-cmt<CR>
+    au BufEnter *.C,*.cpp,*.cxx,*.h,*.hpp nmap <localleader>C4 !!boxes -d java-cmt -r<CR>
+    au BufEnter *.C,*.cpp,*.cxx,*.h,*.hpp vmap <localleader>C4 !boxes -d java-cmt -r<CR>
     au BufEnter .vimrc,.gvimrc,.vimperatorrc nmap <localleader>c1 !!boxes -d vim-cmt<CR>
     au BufEnter .vimrc,.gvimrc,.vimperatorrc vmap <localleader>c1 !boxes -d vim-cmt<CR>
     au BufEnter .vimrc,.gvimrc,.vimperatorrc nmap <localleader>cw1 !!boxes -d vim-cmt -s 120<CR>
@@ -123,13 +131,20 @@ if !exists("autocommands_loaded")
     au BufEnter *.ly,*.tex vmap <localleader>cw1 !boxes -d percent -s 120<CR>
     au BufEnter *.ly,*.tex nmap <localleader>C1 !!boxes -d percent -r<CR>
     au BufEnter *.ly,*.tex vmap <localleader>C1 !boxes -d percent -r<CR>
+    au BufEnter *.ly,*.tex nmap <localleader>c2 !!boxes -d percent-line<CR>
+    au BufEnter *.ly,*.tex vmap <localleader>c2 !boxes -d percent-line<CR>
+    au BufEnter *.ly,*.tex nmap <localleader>C2 !!boxes -d percent-line -r<CR>
+    au BufEnter *.ly,*.tex vmap <localleader>C2 !boxes -d percent-line -r<CR>
     au BufEnter *.hs nmap <localleader>c1 !!boxes -d ada-box<CR>
     au BufEnter *.hs vmap <localleader>c1 !boxes -d ada-box<CR>
     au BufEnter *.hs nmap <localleader>cw1 !!boxes -d ada-box -s 120<CR>
     au BufEnter *.hs vmap <localleader>cw1 !boxes -d ada-box -s 120<CR>
     au BufEnter *.hs nmap <localleader>C1 !!boxes -d ada-box -r<CR>
     au BufEnter *.hs vmap <localleader>C1 !boxes -d ada-box -r<CR>
-
+    au BufEnter *.hs nmap <localleader>c2 !!boxes -d ada-cmt<CR>
+    au BufEnter *.hs vmap <localleader>c2 !boxes -d ada-cmt<CR>
+    au BufEnter *.hs nmap <localleader>C2 !!boxes -d ada-cmt -r<CR>
+    au BufEnter *.hs vmap <localleader>C2 !boxes -d ada-cmt -r<CR>
     au BufEnter *.tex vmap <localleader>bb iwoiw"zs\textbf{<C-R>z}<Esc>
     au BufEnter *.tex vmap <localleader>ii iwoiw"zs\textit{<C-R>z}<Esc>
     au BufEnter *.tex vmap <localleader>bi iwoiw"zs\textbf{\textit{<C-R>z}}<Esc>
