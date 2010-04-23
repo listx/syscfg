@@ -2037,6 +2037,29 @@ END percent
 
 #======================================================================================================================#
 
+BOX percent-line
+
+author "Linus Arver"
+revision "1.0"
+created "April, 2010"
+
+sample
+    %
+    % comments
+    %
+ends
+
+shapes {
+    w  ("%")
+}
+
+padding {lef 1}
+
+elastic (w)
+
+END percent-line
+#======================================================================================================================#
+
 BOX c-top
 
 author "Linus Arver"
