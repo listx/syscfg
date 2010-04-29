@@ -123,6 +123,8 @@ alias kkkkkkkkkkkkkk="cd ../../../../../../../../../../../../../../;ll"
 #--------------------------------------------------------------------------------------------------#
 
 alias d='univ_open'
+alias df='df -h'
+alias du='du -h'
 
 alias e='evince'
 alias asyp='asy -f pdf'
