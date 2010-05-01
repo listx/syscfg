@@ -14,4 +14,4 @@ UUID=d4b16cdf-292f-4509-9eea-bf84f52e04da /home ext4 defaults 0 1
 UUID=f14490f2-d148-41a9-99cc-ecec35f4ddcc swap swap defaults 0 0
 
 UUID=8c6dc2dc-f71e-48c0-ba69-e57b04329b7a /mnt/data ext4 defaults 0 1
-UUID=F63CE9E73CE9A33B /mnt/windows-xp ntfs-3g defaults,locale=en_US.UTF-8 0 0
+UUID=F63CE9E73CE9A33B /mnt/windows-xp ntfs-3g defaults,locale=en_US.UTF-8 0 2
