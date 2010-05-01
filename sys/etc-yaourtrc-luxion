@@ -22,6 +22,7 @@
 #   NoConfirm no
    PacmanBin /usr/bin/powerpill
    PkgbuildEditor vim
+#   DiffEditor vimdiff
 #   SearchInAurUnsupported yes
 #   ShowAurComment yes
 #   TmpDirectory /where/you/want

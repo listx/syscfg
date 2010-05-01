@@ -39,4 +39,5 @@ listdata luxion=NOPASSWD: /bin/mount
 listdata luxion=NOPASSWD: /bin/umount
 listdata luxion=NOPASSWD: /usr/bin/pacman
 listdata luxion=NOPASSWD: /usr/bin/powerpill
+listdata luxion=NOPASSWD: /usr/bin/bauerbill
 listdata luxion=NOPASSWD: /usr/bin/yaourt
