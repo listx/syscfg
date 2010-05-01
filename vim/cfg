@@ -183,6 +183,9 @@ if !exists("autocommands_loaded")
     endfunction
 endif
 
+" Remove K from being mapped to interactive man pages
+nmap K <Esc>
+
 " NOTE: the <F1> key in normal mode is mapped to ":help" by default
 " quicksave files
 nmap <F1> :w<CR>
