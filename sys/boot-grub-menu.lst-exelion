@@ -1,7 +1,7 @@
 # Config file for GRUB - The GNU GRand Unified Bootloader
 # /boot/grub/menu.lst
 
-# DEVICE NAME CONVERSIONS 
+# DEVICE NAME CONVERSIONS
 #
 #  Linux           Grub
 # -------------------------
@@ -21,7 +21,7 @@
 #      16M | 0x312=786  0x315=789  0x318=792   0x31B=795
 #     +-------------------------------------------------+
 #  for more details and different resolutions see
-#  http://wiki.archlinux.org/index.php/GRUB#Framebuffer_Resolution 
+#  http://wiki.archlinux.org/index.php/GRUB#Framebuffer_Resolution
 
 # general configuration:
 timeout   3
@@ -47,10 +47,10 @@ root   (hd0,4)
 kernel /boot/vmlinuz26 root=/dev/disk/by-uuid/eda3dd3d-bc4b-41ac-946b-90a36a790b72 ro
 initrd /boot/kernel26-fallback.img
 
-# (2) Windows
-title Windows XP Professional
-rootnoverify (hd1,0)
-map (hd0) (hd1)
-map (hd1) (hd0)
-makeactive
-chainloader +1
+# (2) Windows -- works if it's the very first partition of hd1
+# title Windows XP Professional
+# rootnoverify (hd1,0)
+# map (hd0) (hd1)
+# map (hd1) (hd0)
+# makeactive
+# chainloader +1

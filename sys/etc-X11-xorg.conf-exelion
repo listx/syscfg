@@ -1,10 +1,9 @@
 Section "ServerLayout"
     Identifier     "Layout0"
-    #Screen      0  "Screen0" RightOf "Screen1" # put it on the RIGHT (other options are Below, Above, LeftOf, RightOf;
-                                                # alternatively, you can put an absolute, pixel X and Y offset (so RightOf
-                                                # would be 1680 0
-    Screen      0  "Screen0" 0 345 # put this screen on the bottom left, but adjust it up a little bit to match the portrait screen on the right
-    Screen      1  "Screen1" 1680 0 # NOTE: Screen 0 MUST be defined BEFORE Screen 1!!!
+    #Screen      0  "Screen0" 0 345
+    Screen      0  "Screen0" 0 0
+    #Screen      1  "Screen1" 1680 0 # NOTE: Screen 0 MUST be defined BEFORE Screen 1!!!
+    Screen      1  "Screen1" 1050 295 # NOTE: Screen 0 MUST be defined BEFORE Screen 1!!!
     InputDevice    "Keyboard0" "CoreKeyboard"
     InputDevice    "Mouse0" "CorePointer"
 EndSection
@@ -87,6 +86,7 @@ Section "Monitor"
     HorizSync       31.0 - 81.0
     VertRefresh     56.0 - 75.0
     Option         "DPMS"
+    Option         "Rotate" "Left" # for portrait mode
 EndSection
 
 Section "Monitor"
@@ -96,7 +96,7 @@ Section "Monitor"
     HorizSync       31.0 - 81.0
     VertRefresh     56.0 - 75.0
     Option         "DPMS"
-    Option         "Rotate" "Right" # for portrait mode
+    #Option         "Rotate" "Right" # for portrait mode
 EndSection
 
 Section "Device"
@@ -105,6 +105,7 @@ Section "Device"
     VendorName     "NVIDIA Corporation"
     BoardName      "GeForce 8800 GTS"
     BusID          "PCI:1:0:0"
+    Option         "NoLogo" "True"
     Screen          0 # i.e., the monitor on the LEFT (physically)
 EndSection
 
@@ -114,8 +115,8 @@ Section "Device"
     VendorName     "NVIDIA Corporation"
     BoardName      "GeForce 8800 GTS"
     BusID          "PCI:1:0:0"
+    Option         "NoLogo" "True"
     Screen          1 # the monitor on the RIGHT (physically)
-    Option         "RandRRotation" "on"
 EndSection
 
 Section "Screen"
