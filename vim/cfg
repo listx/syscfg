@@ -181,6 +181,16 @@ if !exists("autocommands_loaded")
             let &laststatus = 1 " set it back to Vim's default
         endif
     endfunction
+
+    " kill trailing whitespace
+    function KillWhiteSpace()
+      %s/\s\+$//
+    endfunction
+
+    " replace all /r/n () with /n
+    function KillWinNL()
+      %s///
+    endfunction
 endif
 
 " Remove K from being mapped to interactive man pages
@@ -208,6 +218,12 @@ map <F3> <esc>:noh<cr>
 imap <F5> <Esc>:!g++ -Wall -mtune=native -m32 % -o ~/prog/temp32<CR>
 imap <F6> <Esc>:!xterm -hold -e ~/prog/temp32<CR>
 nmap <F6> <Esc>:!xterm -hold -e ~/prog/temp32<CR>
+
+" remove all trailing whitespace
+nmap <silent> <localleader>e :call KillWhiteSpace()<cr>
+
+" replace all /r/n () with /n
+nmap <silent> <localleader>E :call KillWinNL()<cr>
 
 " Use <F9> to toggle between 'paste' and 'nopaste'
 set pastetoggle=<F9>
