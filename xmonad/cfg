@@ -175,6 +175,7 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((mod4Mask              , xK_v     ), spawn "smplayer")
     -- ncmpcpp (mpd) controls
     , ((mod4Mask .|. controlMask, xK_p     ), spawn "ncmpcpp toggle")
+    , ((mod4Mask .|. controlMask, xK_h     ), spawn "ncmpcpp stop")
     , ((mod4Mask .|. controlMask, xK_j     ), spawn "ncmpcpp next")
     , ((mod4Mask .|. controlMask, xK_k     ), spawn "ncmpcpp prev")
     -- volume controls
