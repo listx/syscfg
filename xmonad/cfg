@@ -271,6 +271,10 @@ myLayout = Mirror tiled ||| tiled ||| Full
 -- To match on the WM_NAME, you can use 'title' in the same way that
 -- 'className' and 'resource' are used below.
 --
+-- e.g. WM_CLASS(STRING) = "Qt-subapplication", "VirtualBox"
+-- here, Qt-subapplication is resource, and
+-- VirtualBox is className
+--
 myManageHook = composeAll
     [ className =? "MPlayer"                            --> doFloat
     , className =? "Gimp"                               --> doFloat
@@ -308,6 +312,7 @@ myManageHook = composeAll
     , className  =? "Bsnes"                             --> doCenterFloat
     , className  =? "Wine"                              --> doFloat
     , className  =? "Gvim"                              --> doCenterFloat
+    , className  =? "VirtualBox"                        --> doFloat
     ]
 
 ------------------------------------------------------------------------
