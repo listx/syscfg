@@ -61,7 +61,7 @@ prompt_listdata_setup () {
   prompt_r_paren="%B%F{white}]"
 
   hostcolor=""
-  case $(hostname) in
+  case $HOST in
     exelion)
         hostcolor=$prompt_listdata_color4
     ;;
@@ -82,7 +82,20 @@ prompt_listdata_setup () {
     ;;
   esac
 
-  prompt_user_host="%b%F{$prompt_listdata_color3}%n%B%F{$prompt_listdata_color4}@%b%F{$hostcolor}%m"
+  charcolor=""
+  case $USERNAME in
+    listdata)
+        charcolor=$prompt_listdata_color4
+    ;;
+    root)
+        charcolor=$prompt_listdata_color5
+    ;;
+    *)
+        charcolor=$prompt_listdata_color2
+    ;;
+  esac
+
+  prompt_user_host="%b%F{$charcolor}%n%B%F{$prompt_listdata_color4}@%b%F{$hostcolor}%m"
 
   prompt_line_1a="$prompt_gfx_tbox$prompt_l_paren%b%F{$prompt_listdata_color3}%* %B%F{$prompt_listdata_color4}| %F{$prompt_listdata_color1}%~ $prompt_r_paren%b%F{$prompt_listdata_color1}"
   prompt_line_1b="$prompt_l_paren$prompt_user_host$prompt_r_paren%b%F{$prompt_listdata_color1}${prompt_gfx_hyphen}"
@@ -103,19 +116,6 @@ prompt_listdata_precmd() {
   local prompt_line_1
 
   prompt_listdata_choose_prompt
-
-  charcolor=""
-  case $(whoami) in
-    listdata)
-        charcolor=$prompt_listdata_color4
-    ;;
-    root)
-        charcolor=$prompt_listdata_color5
-    ;;
-    *)
-        charcolor=$prompt_listdata_color2
-    ;;
-  esac
 
   PS1="$prompt_line_1$prompt_newline$prompt_line_2%B%F{$charcolor}$prompt_char %b%f%k"
   #PS2="$prompt_line_2$prompt_gfx_bbox_to_mbox%B%F{white}%_> %b%f%k"
