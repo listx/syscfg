@@ -44,8 +44,13 @@ prompt_listdata_setup () {
   prompt_listdata_color2=${2:-'blue'}   # current directory
   prompt_listdata_color3=${3:-'default'}    # user@host
   prompt_listdata_color4=${4:-'white'}   # user input
+  # misc colors
+  prompt_listdata_color5=${5:-'red'}
+  prompt_listdata_color6=${6:-'green'}
+  prompt_listdata_color7=${7:-'yellow'}
+  prompt_listdata_color8=${8:-'magenta'}
 
-  local prompt_gfx_bbox 
+  local prompt_gfx_bbox
   prompt_gfx_tbox="%B%F{$prompt_listdata_color1}${prompt_gfx_tlc}%b%F{$prompt_listdata_color1}${prompt_gfx_hyphen}"
   prompt_gfx_bbox="%B%F{$prompt_listdata_color1}${prompt_gfx_blc}${prompt_gfx_hyphen}%b%F{$prompt_listdata_color1}"
 
@@ -55,15 +60,36 @@ prompt_listdata_setup () {
   prompt_l_paren="%B%F{white}["
   prompt_r_paren="%B%F{white}]"
 
-  prompt_user_host="%b%F{$prompt_listdata_color3}%n%B%F{$prompt_listdata_color4}@%b%F{$prompt_listdata_color3}%m"
+  hostcolor=""
+  case $(hostname) in
+    exelion)
+        hostcolor=$prompt_listdata_color4
+    ;;
+    luxion)
+        hostcolor=$prompt_listdata_color6
+    ;;
+    aether)
+        hostcolor=$prompt_listdata_color1
+    ;;
+    ocean)
+        hostcolor=$prompt_listdata_color7
+    ;;
+    forest)
+        hostcolor=$prompt_listdata_color8
+    ;;
+    *)
+        hostcolor=$prompt_listdata_color5
+    ;;
+  esac
+
+  prompt_user_host="%b%F{$prompt_listdata_color3}%n%B%F{$prompt_listdata_color4}@%b%F{$hostcolor}%m"
 
   prompt_line_1a="$prompt_gfx_tbox$prompt_l_paren%b%F{$prompt_listdata_color3}%* %B%F{$prompt_listdata_color4}| %F{$prompt_listdata_color1}%~ $prompt_r_paren%b%F{$prompt_listdata_color1}"
   prompt_line_1b="$prompt_l_paren$prompt_user_host$prompt_r_paren%b%F{$prompt_listdata_color1}${prompt_gfx_hyphen}"
 
   prompt_line_2="$prompt_gfx_bbox${prompt_gfx_hyphen}%B%F{white}"
 
-  prompt_char="%(!.# .>" # the original one (see below) had it so that if I did a "su -m", I would see a prompt with a "#" character, but no space after it like for the regular user, which ends like "> " with a space after the character; so I added a space character. Jan. 17 2009
-  #prompt_char="%(!.#.>"
+  prompt_char="%(!.# .>"
 
   prompt_opts=(cr subst percent)
 
@@ -78,10 +104,23 @@ prompt_listdata_precmd() {
 
   prompt_listdata_choose_prompt
 
-  PS1="$prompt_line_1$prompt_newline$prompt_line_2%B%F{white}$prompt_char %b%f%k"
+  charcolor=""
+  case $(whoami) in
+    listdata)
+        charcolor=$prompt_listdata_color4
+    ;;
+    root)
+        charcolor=$prompt_listdata_color5
+    ;;
+    *)
+        charcolor=$prompt_listdata_color2
+    ;;
+  esac
+
+  PS1="$prompt_line_1$prompt_newline$prompt_line_2%B%F{$charcolor}$prompt_char %b%f%k"
   #PS2="$prompt_line_2$prompt_gfx_bbox_to_mbox%B%F{white}%_> %b%f%k"
   #PS3="$prompt_line_2$prompt_gfx_bbox_to_mbox%B%F{white}?# %b%f%k"
-  zle_highlight[(r)default:*]="default:fg=$prompt_listdata_color4,bold"
+  zle_highlight[(r)default:*]="default:fg=$charcolor,bold"
 }
 
 # resize the prompt according to the working directory's length
@@ -112,7 +151,7 @@ prompt_listdata_choose_prompt () {
     return
   fi
 
-  # Still didn't fit; truncate 
+  # Still didn't fit; truncate
   local prompt_pwd_size=$(( COLUMNS - 5 ))
   prompt_line_1="$prompt_gfx_tbox$prompt_l_paren%B%F{$prompt_listdata_color2}%$prompt_pwd_size<...<%~%<<$prompt_r_paren%b%F{$prompt_listdata_color1}$prompt_gfx_hyphen"
 }
