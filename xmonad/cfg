@@ -174,10 +174,12 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((mod4Mask .|. shiftMask, xK_p     ), spawn "evince")
     , ((mod4Mask              , xK_v     ), spawn "smplayer")
     -- ncmpcpp (mpd) controls
-    , ((mod4Mask .|. controlMask, xK_p     ), spawn "ncmpcpp toggle")
-    , ((mod4Mask .|. controlMask, xK_h     ), spawn "ncmpcpp stop")
+    , ((mod4Mask .|. controlMask, xK_o     ), spawn "ncmpcpp toggle")
+    , ((mod4Mask .|. controlMask, xK_h     ), spawn "ncmpcpp stop; ncmpcpp play") -- "reset" current song to beginning
     , ((mod4Mask .|. controlMask, xK_j     ), spawn "ncmpcpp next")
     , ((mod4Mask .|. controlMask, xK_k     ), spawn "ncmpcpp prev")
+    , ((mod4Mask .|. controlMask, xK_l     ), spawn "ncmpcpp stop")
+    , ((mod4Mask .|. controlMask, xK_semicolon ), spawn "ncmpcpp play")
     -- volume controls
     , ((modm              , xK_backslash ), spawn "amixer -q set Master toggle")
     , ((modm              , xK_minus     ), spawn "amixer -q set Master 3- unmute")
