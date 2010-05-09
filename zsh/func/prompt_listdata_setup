@@ -42,7 +42,7 @@ prompt_listdata_setup () {
   # Colour scheme
   prompt_listdata_color1=${1:-'cyan'}    # hyphens
   prompt_listdata_color2=${2:-'blue'}   # current directory
-  prompt_listdata_color3=${3:-'default'}    # user@host
+  prompt_listdata_color3=${3:-'default'}    # user@host (also color of all regular text from commands like ls, cat, etc)
   prompt_listdata_color4=${4:-'white'}   # user input
   # misc colors
   prompt_listdata_color5=${5:-'red'}
@@ -63,7 +63,7 @@ prompt_listdata_setup () {
   hostcolor=""
   case $HOST in
     exelion)
-        hostcolor=$prompt_listdata_color4
+        hostcolor=$prompt_listdata_color3
     ;;
     luxion)
         hostcolor=$prompt_listdata_color6
@@ -72,10 +72,10 @@ prompt_listdata_setup () {
         hostcolor=$prompt_listdata_color1
     ;;
     ocean)
-        hostcolor=$prompt_listdata_color7
+        hostcolor=$prompt_listdata_color8
     ;;
     forest)
-        hostcolor=$prompt_listdata_color8
+        hostcolor=$prompt_listdata_color2
     ;;
     *)
         hostcolor=$prompt_listdata_color5
