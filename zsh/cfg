@@ -187,14 +187,18 @@ alias -g D='& disown;'
 alias -g Q='& disown; exit'
 
 # scp alternative, with a progress bar
-alias rscp='rsync -arP --no-whole-file --inplace'
-alias rsmv='rscp --remove-source-files'
-#'rscp' means 'cp' with 'rsync'. The '-a' (archive) option ensures that all file properties (date, permissions, owner, etc.) are copied, too. '-r' makes it recurse into directories. '-P' enables the progress bar. The next two options are a matter of taste but are usefull if you copy files to a USB stick: '--inplace' disables the usage of a hidden file for the partial data during the copy process. '--no-whole-file' re-enables the synchronisation modus, i.e. in this case: a previous partially copied file is continued instead of overwritten.
-#The 'rsmv' is the move version of 'rscp' and simply adds '--remove-source-files' to delete the original files after the copy process.
-alias cp2='rsync -aP'
+alias rsy='rsync -ahP --no-whole-file --inplace'
+#'rscp' means 'cp' with 'rsync'. The '-a' (archive) option ensures that all
+#file properties (date, permissions, owner, etc.) are copied, too, recursively.
+#'-P' enables the progress bar. The next two options are a matter of taste but
+#are useful if you copy files to a USB stick: '--inplace' writes updated data
+#directly into the target file if it exists (instead of creating a temp copy,
+#deleting the target, and renaming the temp into the target). '--no-whole-file'
+#forces rsync to always use the incremental rsync algorithm.
+alias cp2='rsync -ahP'
 
-# play safe! warn before overwrites
-alias cp='cp -i'
+# play safe! warn before overwrites, and also enable recursive option by default (useful when using only directory names)
+alias cp='cp -ir'
 alias mv='mv -i'
 
 # sync the following with visudo to disable passwords!
