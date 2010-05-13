@@ -197,9 +197,10 @@ alias rsy='rsync -ahP --no-whole-file --inplace'
 #forces rsync to always use the incremental rsync algorithm.
 alias cp2='rsync -ahP'
 
-# play safe! warn before overwrites, and also enable recursive option by default (useful when using only directory names)
-alias cp='cp -ir'
-alias mv='mv -i'
+# play safe! warn before overwrites, display verbose output, and also enable recursive option by default (useful when using only directory names)
+alias cp='cp -ivr'
+alias mv='mv -iv'
+alias rm='rm -Iv'
 
 # sync the following with visudo to disable passwords!
 #
