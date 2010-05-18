@@ -48,11 +48,14 @@ univ_open() {
             (mid|midi)
                 timidity $@
             ;;
-            (avi|flv|ogm|ogv|mkv|mov|mp4|mpg|mpeg|rmvb|wmv)
+            (asf|avi|flv|ogm|ogv|mkv|mov|mp4|mpg|mpeg|rmvb|wmv)
                 smplayer $@ &>/dev/null & disown
             ;;
             (djvu)
                 djview $@
+            ;;
+            (exe)
+                wine $@ &>/dev/null & disown
             ;;
             *)
                 vim $@
