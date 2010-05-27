@@ -3,6 +3,7 @@
 dir_info() {
     size=`ls -Ahl | head -n1`
     simple=false
+    # show variation of `ls` based on given argument
     case $1 in
         0) # simple
             ls -hs --color | tail -n +2
@@ -23,6 +24,9 @@ dir_info() {
             ls --color
             ;;
     esac
+
+    # show number of files or number of shown vs hidden (as a fraction),
+    # depending on which version of `ls` was used
     if $simple; then
         numer=`ls -1 | wc -l`
         denom=`ls -A1 | wc -l`
@@ -34,5 +38,14 @@ dir_info() {
     else
         echo -n "\n`ls -A1 | wc -l` files; "
     fi
-    echo $size
+    echo -n $size
+
+    # if there is more than 1 file, print name and size of largest file
+    if [[ `ls -A1 | wc -l` -gt 1 ]]; then
+        big_size=$(ls -hs "$(ls -AS | head -1)" --color | cut -d " " -f1)
+        big_name=$(ls -hs "$(ls -AS | head -1)" --color | cut -d " " -f2-)
+        echo "; $big_name is $big_size"
+    else
+        echo
+    fi
 }
