@@ -1,9 +1,9 @@
 [user]
-	name = listdata
-	email = linus@ucla.edu
+    name = listdata
+    email = linus@ucla.edu
 [color]
-	branch = auto
-	diff = auto
+    branch = auto
+    diff = auto
     status = auto
 [push]
     default = matching
