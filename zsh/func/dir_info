@@ -1,51 +1,128 @@
 #!/bin/zsh
 
-dir_info() {
-    size=`ls -Ahl | head -n1`
-    simple=false
-    # show variation of `ls` based on given argument
-    case $1 in
-        0) # simple
-            ls -hs --color | tail -n +2
-            simple=true
-            ;;
-        1) # verbose
-            ls -Ahl --color | tail -n +2
-            ;;
-        2) # simple, but sorted by size
-            ls -hsSr --color | tail -n +2
-            simple=true
-            ;;
-        3) # verbose, but sorted by size
-            ls -AhlSr --color | tail -n +2
-            ;;
-        *)
-            simple=true
-            ls --color
-            ;;
-    esac
-
-    # show number of files or number of shown vs hidden (as a fraction),
-    # depending on which version of `ls` was used
-    if $simple; then
-        numer=`ls -1 | wc -l`
-        denom=`ls -A1 | wc -l`
-        if [[ $numer != $denom ]]; then
-            echo -n "\n$numer/$denom files; "
+    countcolor() {
+        # colors
+        c1="\033[1;38;5;120m" # bright green
+        c2="\033[1;38;5;228m" # bright yellow
+        c3="\033[1;38;5;214m" # bright orange
+        c4="\033[1;38;5;159m" # bright cyan
+        c5="\033[1;38;5;175m" # bright purple
+        c6="\033[1;38;5;160m" # bright red
+        if [[ $1 -eq 0 ]]; then
+            echo $c4
+        elif [[ $1 -le 25 ]]; then
+            echo $c1
+        elif [[ $1 -le 50 ]]; then
+            echo $c2
+        elif [[ $1 -le 100 ]]; then
+            echo $c3
+        elif [[ $1 -le 200 ]]; then
+            echo $c5
         else
-            echo -n "\n$denom files; "
+            echo $c6
         fi
-    else
-        echo -n "\n`ls -A1 | wc -l` files; "
-    fi
-    echo -n $size
+    }
 
-    # if there is more than 1 file, print name and size of largest file
-    if [[ `ls -A1 | wc -l` -gt 1 ]]; then
-        big_size=$(ls -hs "$(ls -AS | head -1)" --color | cut -d " " -f1)
-        big_name=$(ls -hs "$(ls -AS | head -1)" --color | cut -d " " -f2-)
-        echo "; $big_name is $big_size"
-    else
-        echo
+    sizecolor() {
+        # colors
+        c1="\033[1;38;5;120m" # bright green
+        c2="\033[1;38;5;228m" # bright yellow
+        c3="\033[1;38;5;214m" # bright orange
+        c4="\033[1;38;5;159m" # bright cyan
+        c5="\033[1;38;5;175m" # bright purple
+        c6="\033[1;38;5;160m" # bright red
+        case $1 in
+            K)
+                echo $c1
+                ;;
+            M)
+                echo $c2
+                ;;
+            G)
+                echo $c3
+                ;;
+            T)
+                echo $c5
+                ;;
+            *)
+                echo $c4
+                ;;
+        esac
+    }
+    ce="\033[0m"
+
+    ctag_size=""
+
+    # only show information if the directory is not empty
+    if [[ $(ls -A1 | wc -l) -gt 0 ]]; then
+        size=$(ls -Ahl | head -n1 | head -c -2)
+        suff=$(ls -Ahl | head -n1 | tail -c -2)
+        size_num=$(echo -n $size | cut -d " " -f2 | head -c -1)
+        ctag_size=$(sizecolor $suff)
+        simple=false
+        # show variation of `ls` based on given argument
+        case $1 in
+            0) # simple
+                ls -hs --color | tail -n +2
+                simple=true
+                ;;
+            1) # verbose
+                ls -Ahl --color | tail -n +2
+                ;;
+            2) # simple, but sorted by size
+                ls -hsSr --color | tail -n +2
+                simple=true
+                ;;
+            3) # verbose, but sorted by size
+                ls -AhlSr --color | tail -n +2
+                ;;
+            *)
+                simple=true
+                ls --color
+                ;;
+        esac
+
+        # show number of files or number of shown vs hidden (as a fraction),
+        # depending on which version of `ls` was used
+        denom=$(ls -A1 | wc -l)
+        numer=$denom
+        # redefine numer to be a smaller number if we're in simple mode (and only showing non-dotfiles/non-dotdirectories
+        $simple && numer=$(ls -1 | wc -l)
+        ctag_count=$(countcolor $denom)
+
+        if [[ $numer != $denom ]]; then
+            if [[ $numer -gt 1 ]]; then
+                echo -n "\nfiles $numer/$ctag_count$denom$ce | "
+            else
+                dotfilecnt=$(($denom - $numer))
+                s=""
+                [[ $dotfilecnt -gt 1 ]] && s="s" || s=""
+                echo -n "\nfiles $numer/$ctag_count$denom$ce ($dotfilecnt dotfile$s) | "
+            fi
+        else
+            echo -n "\nfiles $ctag_count$denom$ce | "
+        fi
+
+        if [[ $suff != "0" ]]; then
+            echo -n "size $ctag_size$size_num$suff$ce"
+        else
+            echo -n "size$ctag_size nil$ce"
+        fi
+
+        # if there is more than 1 file, print name and size of largest file
+        if [[ $(ls -A1 | wc -l) -gt 1 ]]; then
+            # only print information about the biggest file, if that file itself is a regular file (e.g., not a directory or symbolically-linked directory)
+            suff=$(ls -hs $(ls -AS | head -1) | cut -d " " -f1 | tail -c -2)
+            ctag_size=$(sizecolor $suff)
+            big=$(ls -AS | head -1)
+            if [[ -f $big ]]; then
+                big_size=$(ls -hs "$big" --color | cut -d " " -f1)
+                big_name=$(ls -hs "$big" --color | cut -d " " -f2-)
+                echo " | \`$big_name' $ctag_size$big_size$ce"
+            else
+                echo
+            fi
+        else
+            echo
+        fi
     fi
-}
