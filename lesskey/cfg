@@ -1,0 +1,9 @@
+#command
+
+# map backspace to back-screen
+      back-screen
+
+#env
+
+# make lower-case-only searches case insensitive (mixed-case searches are automatically case-sensitive!)
+LESS = -i
