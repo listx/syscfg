@@ -131,10 +131,10 @@ alias asyp='asy -f pdf'
 
 alias i='eog'
 
-alias l='ls -Ahl --color=auto'
-alias ll='ls -hs --color=auto'
-alias lj='ls -AhlSr --color=auto' # sort by size, and reverse it (bigger files @ bottom)
-alias llj='ls -hsSr --color=auto'
+alias l='dir_info 1'
+alias ll='dir_info 0'
+alias lj='dir_info 3' # sort by size, and reverse it (bigger files @ bottom)
+alias llj='dir_info 2'
 
 alias q='exit'
 

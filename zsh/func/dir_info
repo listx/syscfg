@@ -1,0 +1,38 @@
+#!/bin/zsh
+
+dir_info() {
+    size=`ls -Ahl | head -n1`
+    simple=false
+    case $1 in
+        0) # simple
+            ls -hs --color | tail -n +2
+            simple=true
+            ;;
+        1) # verbose
+            ls -Ahl --color | tail -n +2
+            ;;
+        2) # simple, but sorted by size
+            ls -hsSr --color | tail -n +2
+            simple=true
+            ;;
+        3) # verbose, but sorted by size
+            ls -AhlSr --color | tail -n +2
+            ;;
+        *)
+            simple=true
+            ls --color
+            ;;
+    esac
+    if $simple; then
+        numer=`ls -1 | wc -l`
+        denom=`ls -A1 | wc -l`
+        if [[ $numer != $denom ]]; then
+            echo -n "\n$numer/$denom files; "
+        else
+            echo -n "\n$denom files; "
+        fi
+    else
+        echo -n "\n`ls -A1 | wc -l` files; "
+    fi
+    echo $size
+}
