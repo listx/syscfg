@@ -1,5 +1,6 @@
 #!/bin/zsh
 
+dir_info() {
     countcolor() {
         # colors
         c1="\033[1;38;5;120m" # bright green
@@ -25,6 +26,7 @@
 
     sizecolor() {
         # colors
+        c0="\033[1;37m" # bright white
         c1="\033[1;38;5;120m" # bright green
         c2="\033[1;38;5;228m" # bright yellow
         c3="\033[1;38;5;214m" # bright orange
@@ -32,6 +34,9 @@
         c5="\033[1;38;5;175m" # bright purple
         c6="\033[1;38;5;160m" # bright red
         case $1 in
+            B)
+                echo $c0
+                ;;
             K)
                 echo $c1
                 ;;
@@ -104,25 +109,42 @@
         fi
 
         if [[ $suff != "0" ]]; then
-            echo -n "size $ctag_size$size_num$suff$ce"
+            echo -n "size $ctag_size$size_num $suff$ce"
         else
             echo -n "size$ctag_size nil$ce"
         fi
 
-        # if there is more than 1 file, print name and size of largest file
-        if [[ $(ls -A1 | wc -l) -gt 1 ]]; then
-            # only print information about the biggest file, if that file itself is a regular file (e.g., not a directory or symbolically-linked directory)
-            suff=$(ls -hs "$(ls -AS | head -1)" | cut -d " " -f1 | tail -c -2)
-            ctag_size=$(sizecolor $suff)
-            big=$(ls -AS | head -1)
-            if [[ -f $big ]]; then
-                big_size=$(ls -hs "$big" --color | cut -d " " -f1)
-                big_name=$(ls -hs "$big" --color | cut -d " " -f2-)
-                echo " | \`$big_name' $ctag_size$big_size$ce"
+        # Find the biggest file in this directory.
+        #
+        # We first use ls to list all contents, sorted by size; then, we strip
+        # all non-regular file entries (such as directories and symlinks);
+        # then, we truncate our result to kill all newlines with 'tr' (e.g., if
+        # there is a tiny file (say, 5 bytes) and there are directories and
+        # symlinks, it's likely that the file is NOT the biggest "file"
+        # according to 'ls', which means that the output up to this point will
+        # have trailing whitespaces (thus making the next command 'tail -n 1'
+        # fail, even though there is a valid file!)); we then fetch the last
+        # line of this list, which is the biggest file, then make it so that
+        # all multiple-continguous spaces are replaced with a single space --
+        # and using this new property, we can safely call 'cut' by specifying
+        # the single space " " as a delimiter to finally get our filename.
+        big=$(ls -lSr | sed 's/^[^-].\+//' | tr -s "\n" | tail -n 1 | sed 's/ \+/ /g' | cut -d " " -f9-)
+        if [[ -f "$big" ]]; then
+            # since $suff needs a file size suffix (K,M,G, etc.), we reassign
+            # $big_size here from pure block size to human-readable notation
+            # make $big_size more "accurate" (not in terms of disk space usage, but in terms of actual number of bytes inside the file) if it is smaller than 4096 bytes
+            suff=""
+            if [[ $(du -b "$big" | cut -f1) -lt 4096 ]]; then
+                big_num="$(du -b "$big" | cut -f1)"
+                suff="B"
             else
-                echo
+                big_num=$(ls -hs "$big" | cut -d " " -f1 | sed 's/[a-zA-Z]//')
+                suff=$(ls -hs "$big" | cut -d " " -f1 | tail -c -2)
             fi
+            ctag_size=$(sizecolor "$suff")
+            echo " | \`$big' $ctag_size$big_num $suff$ce"
         else
             echo
         fi
     fi
+}
