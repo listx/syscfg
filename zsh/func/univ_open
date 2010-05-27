@@ -61,15 +61,7 @@ univ_open() {
                 wine $@ &>/dev/null & disown
             ;;
             *)
-                # if it's a file of size 0 or a text file, then open with vim;
-                # otherwise, tell user that this is an unknown binary format
-                # and do nothing
-
-                if [[ `ls -s $1 | cut -d " " -f1` == "0" || `file -bizL $1 | cut -d/ -f1` == "text" ]]; then
-                    vim $@
-                else
-                    echo "univ_open: unknown binary format detected\nuniv_open: operation aborted (no change)"
-                fi
+                vim $@
             ;;
         esac
     elif [[ -d $1 ]]; then
