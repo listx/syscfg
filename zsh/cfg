@@ -122,6 +122,8 @@ alias kkkkkkkkkkkkkk="cd ../../../../../../../../../../../../../../;ll"
 # Custom aliases                                                                                   #
 #--------------------------------------------------------------------------------------------------#
 
+alias x='. ~/syscfg/shellscripts/sys/aex.sh'
+
 alias d='univ_open'
 alias df='df -h'
 alias du='du -h'
