@@ -112,7 +112,7 @@
         # if there is more than 1 file, print name and size of largest file
         if [[ $(ls -A1 | wc -l) -gt 1 ]]; then
             # only print information about the biggest file, if that file itself is a regular file (e.g., not a directory or symbolically-linked directory)
-            suff=$(ls -hs $(ls -AS | head -1) | cut -d " " -f1 | tail -c -2)
+            suff=$(ls -hs "$(ls -AS | head -1)" | cut -d " " -f1 | tail -c -2)
             ctag_size=$(sizecolor $suff)
             big=$(ls -AS | head -1)
             if [[ -f $big ]]; then
