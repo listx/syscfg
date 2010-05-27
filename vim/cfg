@@ -87,12 +87,12 @@ if !exists("autocommands_loaded")
 
     " Integration with the "boxes" program by Thomas Jensen.
     " Default width is set at 100 characters
-    au BufEnter * nmap <localleader>c1 !!boxes -d pound-alt<CR>
-    au BufEnter * vmap <localleader>c1 !boxes -d pound-alt<CR>
-    au BufEnter * nmap <localleader>cw1 !!boxes -d pound-alt -s 120<CR>
-    au BufEnter * vmap <localleader>cw1 !boxes -d pound-alt -s 120<CR>
-    au BufEnter * nmap <localleader>C1 !!boxes -d pound-alt -r<CR>
-    au BufEnter * vmap <localleader>C1 !boxes -d pound-alt -r<CR>
+    au BufEnter * nmap <localleader>c1 !!boxes -d pound-alt2<CR>
+    au BufEnter * vmap <localleader>c1 !boxes -d pound-alt2<CR>
+    au BufEnter * nmap <localleader>cw1 !!boxes -d pound-alt2 -s 120<CR>
+    au BufEnter * vmap <localleader>cw1 !boxes -d pound-alt2 -s 120<CR>
+    au BufEnter * nmap <localleader>C1 !!boxes -d pound-alt2 -r<CR>
+    au BufEnter * vmap <localleader>C1 !boxes -d pound-alt2 -r<CR>
     au BufEnter * nmap <localleader>c2 !!boxes -d pound-cmt<CR>
     au BufEnter * vmap <localleader>c2 !boxes -d pound-cmt<CR>
     au BufEnter * nmap <localleader>C2 !!boxes -d pound-cmt -r<CR>
