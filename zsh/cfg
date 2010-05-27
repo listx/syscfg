@@ -9,13 +9,15 @@
 export LS_COLORS='di=01;33:ow=01;34:tw=01;34;44:ex=31:ln=36:*.gz=32:*.bz2=32:*.zip=32:*.rar=32:*.tar=32:*.toucan=0;38;5;48'
 
 # LESS's settings (for manpages with color!)
-export LESS_TERMCAP_mb=$'\E[01;32m'
-export LESS_TERMCAP_md=$'\E[01;32m'
-export LESS_TERMCAP_me=$'\E[0m'
-export LESS_TERMCAP_se=$'\E[0m'
-export LESS_TERMCAP_so=$'\E[01;44;33m'
-export LESS_TERMCAP_ue=$'\E[0m'
-export LESS_TERMCAP_us=$'\E[01;33m'
+export LESS_TERMCAP_mb=$'\E[1;31;5;196;5m'    # begin blinking (the last "5" actually makes it blink)
+export LESS_TERMCAP_md=$'\E[1;38;5;39m'    # begin bold (the "39", since it follows the "5", is a 256-color code)
+# NOTE: staring with "1", like \E[1;... too much results in extraneous "\e[0m"-like effects, so that's why we don't use it here for the search highlight
+# Also, 38;5;xxxm is the 256-color palette for foreground, and 48;5;xxxm is the pattern for the background
+export LESS_TERMCAP_so=$'\E[38;5;21;48;5;226m' # begin standout-mode - (search highlight)
+export LESS_TERMCAP_us=$'\E[4;38;5;214m'    # begin underline
+export LESS_TERMCAP_me=$'\E[0m'       # end bold/blinking
+export LESS_TERMCAP_se=$'\E[0m'       # end standout-mode
+export LESS_TERMCAP_ue=$'\E[0m'       # end underline
 
 # default text editor--set it to vim, not vi
 export VISUAL=/usr/bin/vim
