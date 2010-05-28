@@ -1,6 +1,7 @@
 #!/bin/zsh
 
 dir_info() {
+    echo
     countcolor() {
         # colors
         c1="\033[1;38;5;120m" # bright green
