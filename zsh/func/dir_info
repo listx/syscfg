@@ -68,14 +68,14 @@ dir_info() {
         # show variation of `ls` based on given argument
         case $1 in
             0) # simple
-                ls -hs --color | tail -n +2
+                ls -Chs --color | tail -n +2
                 simple=true
                 ;;
             1) # verbose
                 ls -Ahl --color | tail -n +2
                 ;;
             2) # simple, but sorted by size
-                ls -hsSr --color | tail -n +2
+                ls -ChsSr --color | tail -n +2
                 simple=true
                 ;;
             3) # verbose, but sorted by size
