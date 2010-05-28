@@ -197,7 +197,8 @@ for f in $@; do
     # if there were any eggs, move the children up to $fb's level
     if [[ $eggs -gt 0 ]]; then
         echo "aex: moving contents of non-nested directory \`$c4`echo $PWD:t`$ce' to \`$c2$dir1$ce'\n"
-        mv -v * $dir1 2>&1 | sed 's/^/  > /'
+        # the *(D) simply means the same as '*', but will also match dotfiles ('D' does this)
+        mv -v *(D) $dir1 2>&1 | sed 's/^/  > /'
 
         # move back to root of destination directory, to remove the lineage of eggs (everything
         # below $dir2 contains a single lineage of nested directories -- so we remove them all with
