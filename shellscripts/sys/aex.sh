@@ -75,6 +75,9 @@ aex_fb() {
         *.tar.gz)
             fb=`basename $1 .tar.gz`
             ;;
+        *.tar.xz)
+            fb=`basename $1 .tar.xz`
+            ;;
         *)
             # use zsh's built-in ':r' extension-remover
             fb=$1:r
@@ -91,7 +94,7 @@ aex_fb() {
 for f in $@; do
     # ensure that we recognize all arguments' archive types
     case $f in
-        *.tar|*.tar.bz2|*.tbz2|*.bz2|*.tar.gz|*.tgz|*.gz|*.zip|*.rar|*.7z)
+        *.tar|*.tar.bz2|*.tbz2|*.bz2|*.tar.gz|*.tgz|*.gz|*.tar.xz|*.txz|*.xz|*.zip|*.rar|*.7z)
             ;;
         *)
             echo "aex: $f: \`$f:e' is not a recognized archive file format"
@@ -153,6 +156,16 @@ for f in $@; do
             cd $fb
             aex_msg 9 $f $fb "bzip2 -dv ../$f"
             bzip2 -dv ../$f 2>&1 | sed 's/^/  > /' || aex_msg 2 $f
+            cd ..
+            ;;
+        *.tar.xz|*.txz)
+            aex_msg 9 $f $fb "tar Jxvvf $f -C $fb"
+            tar Jxvvf $f -C $fb 2>&1 | sed 's/^/  > /' || aex_msg 2 $f
+            ;;
+        *.xz)
+            cd $fb
+            aex_msg 9 $f $fb "xz -dv ../$f"
+            xz -dv ../$f 2>&1 | sed 's/^/  > /' || aex_msg 2 $f
             cd ..
             ;;
         *.zip)
