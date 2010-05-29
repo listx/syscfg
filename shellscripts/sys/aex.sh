@@ -197,7 +197,7 @@ for f in $@; do
     if [[ $(ls -A1 | wc -l) -eq 1 && -d $(ls -A) ]]; then
         echo -n $c4
         while [[ $(ls -A1 | wc -l) -eq 1 && -d $(ls -A) ]]; do
-            [[ $(ls -A1 | wc -l$) -eq 1 ]] && echo -n "$(ls -A) "
+            [[ $(ls -A1 | wc -l) -eq 1 ]] && echo -n "$(ls -A) "
             cd $(ls -A)
             [[ eggs -eq 0 ]] && dir2=$PWD # name the very first egg "dir2"
             let eggs=eggs+1
