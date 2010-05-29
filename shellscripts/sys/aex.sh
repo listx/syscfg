@@ -214,23 +214,24 @@ for f in $@; do
     dir2=""
 
     eggs=0
-    echo -n "\naex: nested directories detected: "
+    echo -n "\naex: nested directories detected inside \`$c2$fb$ce': "
     if [[ $(ls -A1 | wc -l) -eq 1 && -d $(ls -A) ]]; then
-        echo -n $c4
+        echo -n "$c4$(ls -A)$ce "
+        cd $(ls -A)
         while [[ $(ls -A1 | wc -l) -eq 1 && -d $(ls -A) ]]; do
-            [[ $(ls -A1 | wc -l) -eq 1 ]] && echo -n "$(ls -A) "
+            echo -n $c2"->"$ce $c4$(ls -A)$ce" "
             cd $(ls -A)
             [[ eggs -eq 0 ]] && dir2=$PWD # name the very first egg "dir2"
             let eggs=eggs+1
         done
-        echo $ce
+        echo
     else
         echo "none"
     fi
 
     # if there were any eggs, move the children up to $fb's level
     if [[ $eggs -gt 0 ]]; then
-        echo "aex: moving contents of non-nested directory \`$c4$(echo $PWD:t)$ce' to \`$c2$dir1$ce'\n"
+        echo "aex: moving contents of non-nested directory \`$c4$(echo $PWD:t)$ce' to \`$c2$dir1:t$ce'\n"
         # the *(D) simply means the same as '*', but will also match dotfiles ('D' does this)
         mv -v *(D) $dir1 2>&1 | sed 's/^/  > /'
 
