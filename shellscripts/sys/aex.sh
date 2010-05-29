@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/zsh
 # Program: aex
 # Version: 1.0
 # Author: Linus Arver
@@ -70,13 +70,13 @@ aex_fb() {
     # get basename of archive file
     case $1 in
         *.tar.bz2)
-            fb=`basename $1 .tar.bz2`
+            fb=$(basename $1 .tar.bz2)
             ;;
         *.tar.gz)
-            fb=`basename $1 .tar.gz`
+            fb=$(basename $1 .tar.gz)
             ;;
         *.tar.xz)
-            fb=`basename $1 .tar.xz`
+            fb=$(basename $1 .tar.xz)
             ;;
         *)
             # use zsh's built-in ':r' extension-remover
@@ -102,7 +102,7 @@ for f in $@; do
             ;;
     esac
 
-    fb=`aex_fb $f`
+    fb=$(aex_fb $f)
 
     # ensure that the given file(s) actually exist (as a regular file, not a
     # special file or directory)
@@ -122,7 +122,7 @@ dir0=$PWD
 # begin extraction!
 current=1
 for f in $@; do
-    fb=`aex_fb $f`
+    fb=$(aex_fb $f)
     fbs+=($fb) # append $fb as an element into the $fbs array
     echo "\naex: ($current/$#): processing \`$c1$f$ce' ..."
     echo -n "aex: creating destination directory \`$c2$fb$ce' ... "
@@ -194,11 +194,11 @@ for f in $@; do
 
     eggs=0
     echo -n "\naex: nested directories detected: "
-    if [[ `ls -A1 | wc -l` -eq 1 && -d `ls -A` ]]; then
+    if [[ $(ls -A1 | wc -l) -eq 1 && -d $(ls -A) ]]; then
         echo -n $c4
-        while [[ `ls -A1 | wc -l` -eq 1 && -d `ls -A` ]]; do
-            [[ `ls -A1 | wc -l` -eq 1 ]] && echo -n "`ls -A` "
-            cd `ls -A`
+        while [[ $(ls -A1 | wc -l) -eq 1 && -d $(ls -A) ]]; do
+            [[ $(ls -A1 | wc -l$) -eq 1 ]] && echo -n "$(ls -A) "
+            cd $(ls -A)
             [[ eggs -eq 0 ]] && dir2=$PWD # name the very first egg "dir2"
             let eggs=eggs+1
         done
@@ -209,7 +209,7 @@ for f in $@; do
 
     # if there were any eggs, move the children up to $fb's level
     if [[ $eggs -gt 0 ]]; then
-        echo "aex: moving contents of non-nested directory \`$c4`echo $PWD:t`$ce' to \`$c2$dir1$ce'\n"
+        echo "aex: moving contents of non-nested directory \`$c4$(echo $PWD:t)$ce' to \`$c2$dir1$ce'\n"
         # the *(D) simply means the same as '*', but will also match dotfiles ('D' does this)
         mv -v *(D) $dir1 2>&1 | sed 's/^/  > /'
 
@@ -244,3 +244,5 @@ for dir_new in $fbs; do
     echo "  $c5$dir_new$ce"
 done
 echo
+
+# vim: syntax=zsh
