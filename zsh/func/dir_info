@@ -1,7 +1,8 @@
 #!/bin/zsh
 
 dir_info() {
-    echo
+    # only pre-emptively give newline to prettify listing of directory contents if the directory is not empty
+    [[ $(ls -A1 | wc -l) -ne 0 ]] && echo
     countcolor() {
         # colors
         c1="\033[1;38;5;120m" # bright green
