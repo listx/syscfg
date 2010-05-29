@@ -50,6 +50,9 @@ aex_msg() {
             echo "aex: extraction of file \`$c1$2$ce' failed (file format/extension mismatch, or damaged archive)"
             exit 1
             ;;
+        8)
+            echo "aex: extracting file \`$c1$2$ce' into current directory with \`"$c3$3$ce"'...\n"
+            ;;
         9)
             echo "aex: extracting file \`$c1$2$ce' into \`$c2$3$ce' with \`"$c3$4$ce"'...\n"
             ;;
@@ -125,18 +128,48 @@ for f in $@; do
     fb=$(aex_fb $f)
     fbs+=($fb) # append $fb as an element into the $fbs array
     echo "\naex: ($current/$#): processing \`$c1$f$ce'..."
-    echo -n "aex: creating destination directory \`$c2$fb$ce'... "
-    mkdir $fb 1>&- 2>&- || aex_msg 1 $fb # raise error and exit if between the starting of this script, and until it finishes, someone manually created a directory with the same name that we are about to extract into (thus making the "mkdir $fb" command fail)
-    # (FYI: the "1>&- 2>&-" syntax manually suppresses stdout and stderr, without using /dev/null)
-    echo "done"
+
+    # For the tar archives (since they are easy to work with uniformly), first
+    # into the archive, and see if (1) the archive holds a SINGLE DIRECTORY
+    # that contains all files and (2) this directory has the SAME NAME as the
+    # archive's basename ($fb) -- if so, we can skip the creation of a
+    # directory named ($fb) (thus avoiding the waste of detecting 1 single
+    # "nested directory") for most archive types
+    dir_create=true
+    case $f in
+        *.tar|*.tar.gz|*.tgz|*.tar.bz|*.tar.bz2|*.tbz|*.tbz2|*.tar.xz|*.txz)
+            top=$(tar tf $f | sort | head -n 1 | sed 's/\///')
+            if [[ $(tar tf $f | sed "s/^$top\//\//g" | sed 's/^\/.*//g' | sed '/^$/d' | wc -l) -eq 0 && $top == $fb ]]; then
+                dir_create=false
+                echo "aex: root directory in archive matches suggested destination directory name"
+                echo "aex: skipping directory creation"
+            fi
+            ;;
+    esac
+
+    if $dir_create; then
+        echo -n "aex: creating destination directory \`$c2$fb$ce'... "
+        # raise error and exit if between the starting of this script, and
+        # until it finishes, someone manually created a directory with the same
+        # name that we are about to extract into (thus making the "mkdir $fb"
+        # command fail)
+        mkdir $fb 1>&- 2>&- || aex_msg 1 $fb
+        # (FYI: the "1>&- 2>&-" syntax manually suppresses stdout and stderr, without using /dev/null)
+        echo "done"
+    fi
 
     case $f in
         *.tar|*.tar.gz|*.tgz|*.tar.bz|*.tar.bz2|*.tbz|*.tbz2|*.tar.xz|*.txz)
             # two -v's for more verbosity than just a single -v
             # extract the file with given info, but if the extracting program fails, then inform user of this (in case the program's own error messages aren't clear enough)
             # the '2>&1' makes stderr print to stdout (so that sed can catch it)
-            aex_msg 9 $f $fb "tar xvvf $f -C $fb"
-            tar xvvf $f -C $fb 2>&1 | sed 's/^/  > /' || aex_msg 2 $f
+            if $dir_create; then
+                aex_msg 9 $f $fb "tar xvf $f -C $fb"
+                tar xvf $f -C $fb 2>&1 | sed 's/^/  > /' || aex_msg 2 $f
+            else
+                aex_msg 8 $f "tar xvf $f"
+                tar xvf $f 2>&1 | sed 's/^/  > /' || aex_msg 2 $f
+            fi
             ;;
         *.gz)
             cd $fb
