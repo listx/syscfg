@@ -5,5 +5,7 @@
     branch = auto
     diff = auto
     status = auto
+[color "diff"]
+    meta = yellow bold
 [push]
     default = matching
