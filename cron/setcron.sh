@@ -9,16 +9,16 @@
 #------------------------------------------------------------------------------#
 
 # we assign different update times for different systems so that we don't step on each other's toes when updating
-pacman0=""
+min=""
 case $HOST in
-    exelion)    pacman0="53" ;;
-    luxion)     pacman0="47" ;;
-    aether)     pacman0="37" ;;
-    forest)     pacman0="27" ;;
-    ocean)      pacman0="14" ;;
-    *)          pacman0="7" ;;
+    exelion)    min="53" ;;
+    luxion)     min="47" ;;
+    aether)     min="37" ;;
+    forest)     min="27" ;;
+    ocean)      min="14" ;;
+    *)          min="7" ;;
 esac
-pacman1=" * * * * ping -c 4 -W 10 wikipedia.org && sudo bauerbill -Syy --rebase"
+pacman="$min * * * * ping -c 4 -W 10 wikipedia.org && sudo bauerbill -Syy --rebase"
 
 #---------------------------------------------------------------#
 # give westminster clock sounds (without hour count) every hour #
@@ -28,4 +28,4 @@ if [[ $HOST == "exelion" ]]; then
     westminster="\n0 * * * * ~/syscfg/shellscripts/alarm/westminster-nohour.sh"
 fi
 
-echo "$pacman0$pacman1$westminster" | crontab -
+echo "$pacman$westminster" | crontab -
