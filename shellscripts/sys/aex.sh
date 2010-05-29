@@ -131,16 +131,12 @@ for f in $@; do
     echo "done"
 
     case $f in
-        *.tar)
-            aex_msg 9 $f $fb "tar xvvf $f -C $fb"
-            tar xvvf $f -C $fb 2>&1 | sed 's/^/  > /' || aex_msg 2 $f
-            ;;
-        *.tar.gz|*.tgz)
+        *.tar|*.tar.gz|*.tgz|*.tar.bz|*.tar.bz2|*.tbz|*.tbz2|*.tar.xz|*.txz)
             # two -v's for more verbosity than just a single -v
-            aex_msg 9 $f $fb "tar zxvvf $f -C $fb"
             # extract the file with given info, but if the extracting program fails, then inform user of this (in case the program's own error messages aren't clear enough)
             # the '2>&1' makes stderr print to stdout (so that sed can catch it)
-            tar zxvvf $f -C $fb 2>&1 | sed 's/^/  > /' || aex_msg 2 $f
+            aex_msg 9 $f $fb "tar xvvf $f -C $fb"
+            tar xvvf $f -C $fb 2>&1 | sed 's/^/  > /' || aex_msg 2 $f
             ;;
         *.gz)
             cd $fb
@@ -148,19 +144,11 @@ for f in $@; do
             gzip -dv ../$f 2>&1 | sed 's/^/  > /' || aex_msg 2 $f
             cd ..
             ;;
-        *.tar.bz|*.tar.bz2|*.tbz|*.tbz2)
-            aex_msg 9 $f $fb "tar jxvvf $f -C $fb"
-            tar jxvvf $f -C $fb 2>&1 | sed 's/^/  > /' || aex_msg 2 $f
-            ;;
         *.bz|*.bz2)
             cd $fb
             aex_msg 9 $f $fb "bzip2 -dv ../$f"
             bzip2 -dv ../$f 2>&1 | sed 's/^/  > /' || aex_msg 2 $f
             cd ..
-            ;;
-        *.tar.xz|*.txz)
-            aex_msg 9 $f $fb "tar Jxvvf $f -C $fb"
-            tar Jxvvf $f -C $fb 2>&1 | sed 's/^/  > /' || aex_msg 2 $f
             ;;
         *.xz)
             cd $fb
