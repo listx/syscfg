@@ -154,8 +154,8 @@ alias fa='find -maxdepth 1 -type f -iname \*.mp3 -o -iname \*.flac -o -iname \*.
 alias n='netcfg'
 
 alias g='git'
-alias gdf='git diff'
-alias gdfc='git diff --cached'
+alias gdf="[[ \$(git diff | wc -l) -gt 0 ]] && git diff || echo \"working tree clean\""
+alias gdfc="[[ \$(git diff --cached | wc -l) -gt 0 ]] && git diff --cached || echo \"index empty\""
 alias gst='git status'
 alias gbr='git branch'
 alias gcm='git commit'
