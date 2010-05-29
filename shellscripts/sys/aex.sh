@@ -51,7 +51,7 @@ aex_msg() {
             exit 1
             ;;
         9)
-            echo "aex: extracting file \`$c1$2$ce' into \`$c2$3$ce' with \`"$c3$4$ce"' ...\n"
+            echo "aex: extracting file \`$c1$2$ce' into \`$c2$3$ce' with \`"$c3$4$ce"'...\n"
             ;;
         99)
             echo "aex: unexpected fatal error while working with file \`$c1$2$ce'"
@@ -124,8 +124,8 @@ current=1
 for f in $@; do
     fb=$(aex_fb $f)
     fbs+=($fb) # append $fb as an element into the $fbs array
-    echo "\naex: ($current/$#): processing \`$c1$f$ce' ..."
-    echo -n "aex: creating destination directory \`$c2$fb$ce' ... "
+    echo "\naex: ($current/$#): processing \`$c1$f$ce'..."
+    echo -n "aex: creating destination directory \`$c2$fb$ce'... "
     mkdir $fb 1>&- 2>&- || aex_msg 1 $fb # raise error and exit if between the starting of this script, and until it finishes, someone manually created a directory with the same name that we are about to extract into (thus making the "mkdir $fb" command fail)
     # (FYI: the "1>&- 2>&-" syntax manually suppresses stdout and stderr, without using /dev/null)
     echo "done"
