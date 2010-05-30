@@ -26,13 +26,22 @@
 
 # Colors (comment out to disable)
 # format: "1;" means bright, and "38;5;{NUM}" means to use the color NUM from the 256-color palette
-c1="\033[1;38;5;120m" # bright green
-c2="\033[1;38;5;228m" # bright yellow
-c3="\033[1;38;5;214m" # bright orange
-c4="\033[1;38;5;159m" # bright cyan
-c5="\033[1;38;5;175m" # bright purple
-c6="\033[1;38;5;160m" # bright red
-ce="\033[0m"
+c1="\e[1;38;5;120m" # bright green
+c2="\e[1;38;5;228m" # bright yellow
+c3="\e[1;38;5;214m" # bright orange
+c4="\e[1;38;5;159m" # bright cyan
+c5="\e[1;38;5;175m" # bright purple
+c6="\e[1;38;5;160m" # bright red
+ce="\e[0m"
+
+# color codes, but for 'sed' command only
+c11="[1;38;5;120m" # bright green
+c22="[1;38;5;228m" # bright yellow
+c33="[1;38;5;214m" # bright orange
+c44="[1;38;5;159m" # bright cyan
+c55="[1;38;5;175m" # bright purple
+c66="[1;38;5;160m" # bright red
+cee="[0m"
 
 # Error messages
 aex_msg() {
@@ -165,41 +174,41 @@ for f in $@; do
             # the '2>&1' makes stderr print to stdout (so that sed can catch it)
             if $dir_create; then
                 aex_msg 9 $f $fb "tar xvf $f -C $fb"
-                tar xvf $f -C $fb 2>&1 | sed 's/^/  > /' || aex_msg 2 $f
+                tar xvf $f -C $fb 2>&1 | sed "s/^/  $c11>$cee /" || aex_msg 2 $f
             else
                 aex_msg 8 $f "tar xvf $f"
-                tar xvf $f 2>&1 | sed 's/^/  > /' || aex_msg 2 $f
+                tar xvf $f 2>&1 | sed "s/^/  $c11>$cee /" || aex_msg 2 $f
             fi
             ;;
         *.gz)
             cd $fb
             aex_msg 9 $f $fb "gzip -dv ../$f"
-            gzip -dv ../$f 2>&1 | sed 's/^/  > /' || aex_msg 2 $f
+            gzip -dv ../$f 2>&1 | sed "s/^/  $c11>$cee /" || aex_msg 2 $f
             cd ..
             ;;
         *.bz|*.bz2)
             cd $fb
             aex_msg 9 $f $fb "bzip2 -dv ../$f"
-            bzip2 -dv ../$f 2>&1 | sed 's/^/  > /' || aex_msg 2 $f
+            bzip2 -dv ../$f 2>&1 | sed "s/^/  $c11>$cee /" || aex_msg 2 $f
             cd ..
             ;;
         *.xz)
             cd $fb
             aex_msg 9 $f $fb "xz -dv ../$f"
-            xz -dv ../$f 2>&1 | sed 's/^/  > /' || aex_msg 2 $f
+            xz -dv ../$f 2>&1 | sed "s/^/  $c11>$cee /" || aex_msg 2 $f
             cd ..
             ;;
         *.zip)
             aex_msg 9 $f $fb "unzip $f -d $fb"
-            unzip $f -d $fb 2>&1 | sed 's/^/  > /' || aex_msg 2 $f
+            unzip $f -d $fb 2>&1 | sed "s/^/  $c11>$cee /" || aex_msg 2 $f
             ;;
         *.rar)
             aex_msg 9 $f $fb "urar x $f $fb"
-            unrar x $f $fb 2>&1 | sed 's/^/  > /' || aex_msg 2 $f
+            unrar x $f $fb 2>&1 | sed "s/^/  $c11>$cee /" || aex_msg 2 $f
             ;;
         *.7z)
             aex_msg 9 $f $fb "7z x -o$fb $f"
-            7z x -o$fb $f 2>&1 | sed 's/^/  > /' || aex_msg 2 $f
+            7z x -o$fb $f 2>&1 | sed "s/^/  $c11>$cee /" || aex_msg 2 $f
             ;;
         *)
             # NOTE: this should never happen (I've tried to make message 99 happen, by starting the extraction on a file, then renaming it before the extraction program is called, but still it does not reach this area!)
@@ -233,7 +242,7 @@ for f in $@; do
     if [[ $eggs -gt 0 ]]; then
         echo "aex: moving contents of non-nested directory \`$c4$(echo $PWD:t)$ce' to \`$c2$dir1:t$ce'\n"
         # the *(D) simply means the same as '*', but will also match dotfiles ('D' does this)
-        mv -v *(D) $dir1 2>&1 | sed 's/^/  > /'
+        mv -v *(D) $dir1 2>&1 | sed "s/^/  $c44>$cee /"
 
         # move back to root of destination directory, to remove the lineage of eggs (everything
         # below $dir2 contains a single lineage of nested directories -- so we remove them all with
@@ -241,10 +250,10 @@ for f in $@; do
 
         cd $dir1
         echo "\naex: removing nested empty directories\n"
-        find $dir2 -depth -type d -empty -exec rmdir -v {} \; 2>&1 | sed 's/^/  > /'
+        find $dir2 -depth -type d -empty -exec rmdir -v {} \; 2>&1 | sed "s/^/  $c55>$cee /"
     fi
 
-    echo "\naex: ($current/$#): \`$c1$f$ce' processed"
+    echo "\naex: ($current/$#): \`$c1$f$ce' processed\n"
     # move back to our original working directory to process the next archive
     cd $dir0
 
