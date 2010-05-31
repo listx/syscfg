@@ -109,8 +109,13 @@ for f in $@; do
         *.tar|*.tar.bz2|*.tbz2|*.bz2|*.tar.gz|*.tgz|*.gz|*.tar.xz|*.txz|*.xz|*.zip|*.rar|*.7z)
             ;;
         *)
-            echo "aex: $f: \`$f:e' is not a recognized archive file format"
-            aex_msg 0
+            if [[ ! -f $f ]]; then
+                echo "aex: invalid file \`$f'"
+                aex_msg 0
+            else
+                echo "aex: $f: \`$f:e' is not a recognized archive file format"
+                aex_msg 0
+            fi
             ;;
     esac
 
@@ -119,7 +124,7 @@ for f in $@; do
     # ensure that the given file(s) actually exist (as a regular file, not a
     # special file or directory)
     if [[ ! -f $f ]]; then
-        echo "aex: \`$f' does not exist"
+        echo "aex: invalid file \`$f'"
         aex_msg 0
     # ensure that a directory with the same basename does not already exist
     elif [[ -d $fb ]]; then
