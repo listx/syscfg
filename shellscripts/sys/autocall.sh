@@ -227,6 +227,7 @@ d=()
 D=()
 l=()
 l_targets=()
+wflag=false
 xflag=false
 tflag=false
 kflag=false
@@ -286,6 +287,7 @@ while getopts ":c:w:f:F:b:d:D:l:t:k:x:a" opt; do
     w)
         if $(is_number "$OPTARG"); then
             if [[ $OPTARG -gt 0 ]]; then
+                wflag=true
                 delay=$OPTARG
             else
                 msg "DELAY must be greater than 0"
@@ -463,6 +465,21 @@ fi
 
 if [[ $xflag == true && $xdelay_factor -le 1 ]]; then
     xdelay_factor=1
+fi
+echo "autocall: command set to \`$c4$com$ce'"
+if [[ $wflag == true ]]; then
+    echo "autocall: modification check interval set to $delay sec"
+else
+    echo "autocall: modification check interval set to $delay sec (default)"
+fi
+if [[ $xflag == true ]]; then
+    echo "autocall: auto-execution interval set to ($delay * $xdelay_factor) = $(($delay*$xdelay_factor)) sec"
+fi
+if [[ $tflag == true ]]; then
+    echo "autocall: TIMEOUT set to $timeout"
+    if [[ $kflag == true ]]; then
+        echo "autocall: KDELAY set to $killdelay"
+    fi
 fi
 echo "autocall: press 'q' to quit"
 echo "autocall: press ENTER or SPACE to execute manually"
