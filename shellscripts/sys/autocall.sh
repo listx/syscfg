@@ -186,7 +186,7 @@ autocall_exec () {
             echo "\nautocall: command exited with error status $com_exit_status$ce"
         else
             echo -n $c1
-            echo "\nautocall: command executed successfully $com_exit_status$ce"
+            echo "\nautocall: command executed successfully"
         fi
     else
         ${(Q)${(z)1}} 2>&1 | sed "s/^/  $col>$ce /"
@@ -196,7 +196,7 @@ autocall_exec () {
             echo "\nautocall: command exited with error status $com_exit_status$ce"
         else
             echo -n $c1
-            echo "\nautocall: command executed successfully $com_exit_status$ce"
+            echo "\nautocall: command executed successfully"
         fi
     fi
 }
