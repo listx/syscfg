@@ -222,7 +222,7 @@ for f in $@; do
     echo -n "\naex: nested directories detected inside \`$c2$fb$ce': "
     if [[ $(ls -A1 | wc -l) -eq 1 && -d $(ls -A) ]]; then
         echo -n "$c4$(ls -A)$ce "
-        cd $(ls -A)
+        cd "$(ls -A)"
         while [[ $(ls -A1 | wc -l) -eq 1 && -d $(ls -A) ]]; do
             echo -n $c2"->"$ce $c4$(ls -A)$ce" "
             cd $(ls -A)
