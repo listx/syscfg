@@ -76,12 +76,26 @@ dir_info() {
             1) # verbose
                 ls -Ahl --color | tail -n +2
                 ;;
-            2) # simple, but sorted by size
+            2) # simple, but sorted by size (biggest file on bottom with -r flag)
                 ls -ChsSr --color | tail -n +2
                 simple=true
                 ;;
-            3) # verbose, but sorted by size
+            3) # verbose, but sorted by size (biggest file on bottom with -r flag)
                 ls -AhlSr --color | tail -n +2
+                ;;
+            4) # simple, but sorted by time (newest file on bottom with -r flag)
+                ls -Chstr --color | tail -n +2
+                simple=true
+                ;;
+            5) # verbose, but sorted by time (newest file on bottom with -r flag)
+                ls -Ahltr --color | tail -n +2
+                ;;
+            6) # simple, but sorted by extension
+                ls -ChsX --color | tail -n +2
+                simple=true
+                ;;
+            7) # verbose, but sorted by extension
+                ls -AhlX --color | tail -n +2
                 ;;
             *)
                 simple=true
