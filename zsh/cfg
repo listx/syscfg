@@ -127,6 +127,7 @@ alias kkkkkkkkkkkkkk="cd ../../../../../../../../../../../../../../;ll"
 # Custom aliases                                                                                   #
 #--------------------------------------------------------------------------------------------------#
 
+alias cls="echo -ne '\x1bc'" # clear the screen buffer (don't just hide it like CTRL-L)
 alias x='~/syscfg/shellscripts/sys/aex.sh'
 
 alias d='univ_open'
