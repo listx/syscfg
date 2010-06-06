@@ -20,12 +20,16 @@ case $HOST in
 esac
 pacman="$min * * * * ping -c 4 -W 10 wikipedia.org && sudo bauerbill -Syy --rebase"
 
-#---------------------------------------------------------------#
-# give westminster clock sounds (without hour count) every hour #
-#---------------------------------------------------------------#
+# westminster clock sounds (without hour count)
+# full bell every 3rd hour (hours 0,3,6,9,12,15,18,21)
+# half-bells (different flavors) for morning/midday and evening
 westminster=""
+westminster_a=""
+westminster_b=""
 if [[ $HOST == "exelion" ]]; then
-    westminster="\n0 * * * * ~/syscfg/shellscripts/alarm/westminster-nohour.sh"
+    westminster="\n0 0,3,6,9,12,15,18,21 * * * ~/syscfg/shellscripts/alarm/westminster-nohour.sh f"
+    westminster_a="\n0 1,2,4,5,7,8,10,11,13,14 * * * ~/syscfg/shellscripts/alarm/westminster-nohour.sh a"
+    westminster_b="\n0 16,17,19,20,22,23 * * * ~/syscfg/shellscripts/alarm/westminster-nohour.sh b"
 fi
 
-echo "$pacman$westminster" | crontab -
+echo "$pacman$westminster$westminster_a$westminster_b" | crontab -
