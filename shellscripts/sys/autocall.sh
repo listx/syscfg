@@ -172,10 +172,10 @@ autocall_exec () {
         # note: if kflag is true, then tflag is always true
         com_exit_status=0
         if [[ $kflag == true ]]; then
-            timeout -k $killdelay $timeout ${(Q)${(z)1}} 2>&1 | sed "s/^/  $col>$ce /"
+            eval timeout -k $killdelay $timeout $1 2>&1 | sed "s/^/  $col>$ce /"
             com_exit_status=$pipestatus[1]
         else
-            timeout $timeout ${(Q)${(z)1}} 2>&1 | sed "s/^/  $col>$ce /"
+            eval timeout $timeout $1 2>&1 | sed "s/^/  $col>$ce /"
             com_exit_status=$pipestatus[1]
         fi
         if [[ $com_exit_status -eq 124 ]]; then
@@ -189,7 +189,7 @@ autocall_exec () {
             echo "\nautocall: command executed successfully"
         fi
     else
-        ${(Q)${(z)1}} 2>&1 | sed "s/^/  $col>$ce /"
+        eval $1 2>&1 | sed "s/^/  $col>$ce /"
         com_exit_status=$pipestatus[1]
         if [[ $com_exit_status -ne 0 ]]; then
             echo -n $c6
