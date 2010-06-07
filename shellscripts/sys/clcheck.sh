@@ -101,7 +101,6 @@ parseline () {
             fi
         fi
     else
-        #let "i++"
         echo -n "$c1"
         echo -n "clcheck: found item "
         # we have a working match!
@@ -404,6 +403,7 @@ while true; do
         fi
         i=0
         for line in $clines; do
+            let "i++"
             parseline $i "$line" 1
         done
 
