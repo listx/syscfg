@@ -233,6 +233,7 @@ while true; do
     if [[ $c -eq 0 ]]; then
         # don't sleep at all, since it's our first iteration
         echo "clcheck: finished initializing\n"
+        echo "clcheck: press 'q' to exit\n"
         let "c++"
     fi
     rawdata_old=$rawdata_new
