@@ -75,7 +75,7 @@ while getopts ":a:e:w:" opt; do
     a)
         addys+=("$OPTARG")
         ;;
-    a)
+    e)
         e_addys+=("$OPTARG")
         ;;
     w)
