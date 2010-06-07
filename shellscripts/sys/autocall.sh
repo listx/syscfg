@@ -201,9 +201,6 @@ autocall_exec () {
     fi
 }
 
-change_detected () {
-}
-
 #------------------#
 # Global variables #
 #------------------#
