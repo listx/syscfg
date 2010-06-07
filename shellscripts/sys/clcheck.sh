@@ -44,6 +44,7 @@ Optional parameters:
                         multiple times to simulate 'AND' behavior of search. (Same as -k paramter
                         if used once alone by itself.) Essentially, all results absolutely require
                         the WORD term given with -K.
+-s                      Silent mode; clcheck will output fewer messages.
 -u URL                  Use custom craigslist listing page URL instead of default
                         (sfbay.craigslist.org). Only give the address, without the \`http://' (no
                         ending slashes).
@@ -173,6 +174,7 @@ e_addys=()
 andflag=false
 orflag=false
 debugflag=false
+silentflag=false
 search_ands=()
 search_ors=()
 search_ands_orig=()
@@ -185,7 +187,7 @@ url="sfbay.craigslist.org"
 url_dir="boa"
 urlflag=false
 delay=0
-while getopts ":a:de:w:k:K:u:U:hv" opt; do
+while getopts ":a:de:k:K:su:U:w:hv" opt; do
     case "$opt" in
     h)  msg "help" ;;
     v)  msg "version" ;;
@@ -194,7 +196,7 @@ while getopts ":a:de:w:k:K:u:U:hv" opt; do
 done
 # re-parse from the beginning again if there were no -h or -v flags
 OPTIND=1
-while getopts ":a:de:w:k:K:u:U:" opt; do
+while getopts ":a:de:k:K:su:U:w:" opt; do
     case "$opt" in
     a)
         addys+=("$OPTARG")
@@ -215,6 +217,9 @@ while getopts ":a:de:w:k:K:u:U:" opt; do
         andflag=true
         search_ands+=("$OPTARG")
         search_ands_orig+=("$OPTARG")
+        ;;
+    s)
+        silentflag=true
         ;;
     u)
         urlflag=true
@@ -296,10 +301,14 @@ if [[ $debugflag == true ]]; then
     echo "clcheck: clcheck will exit immediately after any parsing error"
     sleep 1
 fi
-echo -n "clcheck: (initializing) getting data..."
-# since we're initializing, use $com_base, not $com (don't filter any result just yet)
-rawdata_old=$(eval $com_base)
-echo "done"
+if [[ $silentflag == false ]]; then
+    echo -n "clcheck: (initializing) getting data..."
+    # since we're initializing, use $com_base, not $com (don't filter any result just yet)
+    rawdata_old=$(eval $com_base)
+    echo "done"
+else
+    rawdata_old=$(eval $com_base)
+fi
 
 #------------#
 # Begin loop #
@@ -308,31 +317,34 @@ c=0
 key=""
 while true; do
     if [[ $c -gt 0 ]]; then
+
         # print search/filter terms for easier viewing
-        if [[ $orflag == true || $andflag == true ]]; then
-            echo -n "clcheck: search terms:"
-        else
-            echo "clcheck: no search terms set"
-        fi
-        if [[ $orflag == true ]]; then
-            echo -n " -k: "
-            for t in $search_ors_orig; do
-                echo -n "\`$t' "
-            done
-        fi
-        if [[ $andflag == true ]]; then
-            if [[ $orflag == true ]]; then
-                echo -n "-K: "
+        if [[ $silentflag == false ]]; then
+            if [[ $orflag == true || $andflag == true ]]; then
+                echo -n "clcheck: search terms:"
             else
-                echo -n " -K: "
+                echo "clcheck: no search terms set"
             fi
-            for t in $search_ands_orig; do
-                echo -n "\`$t' "
-            done
+            if [[ $orflag == true ]]; then
+                echo -n " -k: "
+                for t in $search_ors_orig; do
+                    echo -n "\`$t' "
+                done
+            fi
+            if [[ $andflag == true ]]; then
+                if [[ $orflag == true ]]; then
+                    echo -n "-K: "
+                else
+                    echo -n " -K: "
+                fi
+                for t in $search_ands_orig; do
+                    echo -n "\`$t' "
+                done
+            fi
+            echo "; using URL \`http://$url/$url_dir/'"
+            echo "clcheck: looking for changes again in $delay seconds..."
+            echo
         fi
-        echo "clcheck: using URL \`http://$url/$url_dir/'"
-        echo "clcheck: looking for changes again in $delay seconds..."
-        echo
 
         # read single key from user to see if we should exit gracefully or not (only enter this mode after 1st iteration
         # (initialization) finishes)
@@ -351,14 +363,13 @@ while true; do
             displayme=("${(f)$(echo -n "$rawdata_new" | head -n 10)}")
         else # one or more search flags were used -- so filter output via those searches
             displayme=("${(f)$(echo -n "$rawdata_new")}")
-            # for t in $displayme;do
-            #     echo $t
-            # done
             if [[ -z $displayme ]]; then # reset $displayme to latest 10 results if no matches were found
                 echo "clcheck: front page has no successful search matches"
                 echo "clcheck: defaulting to latest 10 posts"
                 rawdata_new=$(eval $com_base) # don't filter our results!
                 displayme=("${(f)$(echo -n "$rawdata_new" | head -n 10)}")
+            else
+                echo "clcheck: displaying matched terms"
             fi
         fi
         j=0
@@ -375,16 +386,22 @@ while true; do
     textarr=() # data to send at end of this iteration -- if any
     clines=() # changed lines, if any
 
-    echo -n "clcheck: getting data..."
-    rawdata_new=$(eval $com)
-    echo "done"
-    echo -n "clcheck: looking for new posts..."
+    if [[ $silentflag == false ]]; then
+        echo -n "clcheck: getting data..."
+        rawdata_new=$(eval $com)
+        echo "done"
+        echo -n "clcheck: looking for new posts..."
+    else
+        rawdata_new=$(eval $com)
+    fi
     rawfresh=""
     # get only the newly-added lines!
     clines=("${(f)$(diff -u0 -B -d <(echo "$rawdata_old") <(echo "$rawdata_new") | sed -e '/^---/d' -e '/^+++/d' -e '/^@/d' -e '/^-/d' | cut -c 2-)}")
     if [[ -n $clines ]]; then
         echo -n "$c1"
-        echo " new posts detected$ce"
+        if [[ $silentflag == false ]]; then
+            echo " new posts detected$ce"
+        fi
         i=0
         for line in $clines; do
             parseline $i "$line" 1
@@ -408,7 +425,9 @@ while true; do
             echo "clcheck: some posts were changed, but no new ones were added$ce"
         fi
     else
-        echo " no new posts"
+        if [[ $silentflag == false ]]; then
+            echo " no new posts"
+        fi
     fi
 
     rawdata_old=$rawdata_new
