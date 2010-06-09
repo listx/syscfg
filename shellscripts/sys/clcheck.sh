@@ -89,7 +89,8 @@ parseline () {
         echo
         if [[ $3 -gt 0 ]]; then # only email if we're not on our very first iteration
             if [[ $debugflag == false ]]; then
-                echo -n "clcheck: emailing maintainer..."
+                timestamp=$(date +%c)
+                echo -n "clcheck: [ $timestamp ] emailing maintainer..."
                 for addr in $e_addys; do
                     echo "failed line: \"$line\"\nsize of match: $#match\nmatch contents: $match\n\nver. $clcheck_ver" | mail -s "error: failed line" $addr
                 done
@@ -410,8 +411,9 @@ while true; do
         # textarr is empty at this point)
         if [[ $#textarr -gt 0 ]]; then
             if [[ $debugflag == false ]]; then
+                timestamp=$(date +%c)
                 echo -n "\n$c4"
-                echo -n "clcheck: emailing data to client..."
+                echo -n "clcheck: [ $timestamp ] emailing data to client..."
                 for addr in $addys; do
                     print -C 1 "$textarr" | mail -s "post update" $addr
                 done
