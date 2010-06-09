@@ -73,7 +73,6 @@ parseline () {
     descr=""
     price=""
     location=""
-    i="$1"
     line="$2"
     # this is the master "key" and should match all strings -- if it
     # does fail, then we email the maintainer right away
@@ -142,13 +141,13 @@ parseline () {
         if [[ $3 -gt 0 ]]; then # only add to textarr if we're not on our very first iteration
             if [[ "$price" != "?" && "$location" != "?" ]]; then # if only both are true
                 # textarr should be visible globally, even though it is not passed to this function explicitly
-                textarr+=("$i. $descr for $price @ $location - $link\n")
+                textarr+=("$1. $descr for $price @ $location - $link")
             elif [[ "$price" != "?" ]]; then # if just price is true
-                textarr+=("$i. $descr for $price - $link\n")
+                textarr+=("$1. $descr for $price - $link")
             elif [[ "$location" != "?" ]]; then # if just location is true
-                textarr+=("$i. $descr @ $location - $link\n")
+                textarr+=("$1. $descr @ $location - $link")
             else # if none are true
-                textarr+=("$i. $descr - $link\n")
+                textarr+=("$1. $descr - $link")
             fi
         fi
     fi
@@ -404,7 +403,7 @@ while true; do
         i=0
         for line in $clines; do
             let "i++"
-            parseline $i "$line" 1
+            parseline "$i" "$line" 1
         done
 
         # only send email if textarr is not empty (it could be that all changed lines all led to errors, in which case
@@ -414,8 +413,9 @@ while true; do
                 echo -n "\n$c4"
                 echo -n "clcheck: emailing data to client..."
                 for addr in $addys; do
-                    echo "$textarr" | mail -s "post update" $addr
+                    print -C 1 "$textarr" | mail -s "post update" $addr
                 done
+                textarr=()
                 echo "done$ce"
             else
                 # if we're in debug mode, don't do anything extra since we didn't fail yet
