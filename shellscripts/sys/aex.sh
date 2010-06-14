@@ -143,7 +143,10 @@ for f in $@; do
     dir_create=true
     case $f in
         *.tar|*.tar.gz|*.tgz|*.tar.bz|*.tar.bz2|*.tbz|*.tbz2|*.tar.xz|*.txz)
-            top=$(tar tf $f | sort | head -n 1 | sed 's/\///')
+            # find the root dir in this archive -- sometimes the root dir is
+            # displayed on its own line, but sometimes not (even though it
+            # exists!) so we have to manually check ourselves
+            top=$(tar tf $f | sort | head -n 1 | sed 's/\/.*//')
             if [[ $(tar tf $f | sed "s/^$top\//\//g" | sed 's/^\/.*//g' | sed '/^$/d' | wc -l) -eq 0 && $top == $fb ]]; then
                 dir_create=false
                 echo "aex: root directory in archive matches suggested destination directory name"
