@@ -141,19 +141,27 @@ for f in $@; do
     # directory named ($fb) (thus avoiding the waste of detecting 1 single
     # "nested directory") for most archive types
     dir_create=true
+    com_info=""
     case $f in
         *.tar|*.tar.gz|*.tgz|*.tar.bz|*.tar.bz2|*.tbz|*.tbz2|*.tar.xz|*.txz)
-            # find the root dir in this archive -- sometimes the root dir is
-            # displayed on its own line, but sometimes not (even though it
-            # exists!) so we have to manually check ourselves
-            top=$(tar tf $f | sort | head -n 1 | sed 's/\/.*//')
-            if [[ $(tar tf $f | sed "s/^$top\//\//g" | sed 's/^\/.*//g' | sed '/^$/d' | wc -l) -eq 0 && $top == $fb ]]; then
-                dir_create=false
-                echo "aex: root directory in archive matches suggested destination directory name"
-                echo "aex: skipping directory creation"
-            fi
+            com_info="tar tf"
+            ;;
+        *.rar)
+            com_info="unrar vb"
+            ;;
+        *.zip)
+            com_info="zipinfo -1"
             ;;
     esac
+    # find the root dir in this archive -- sometimes the root dir is displayed
+    # on its own line, but sometimes not (even though it exists!) so we have to
+    # manually check ourselves
+    top=$(eval $com_info ${(q)f} | sort | head -n 1 | sed 's/\/.*//')
+    if [[ $(eval $com_info ${(q)f} | sed "s/^$top$/\//" | sed "s/^$top\//\//g" | sed 's/^\/.*//g' | sed '/^$/d' | wc -l) -eq 0 && $top == $fb ]]; then
+        dir_create=false
+        echo "aex: root directory in archive matches suggested destination directory name"
+        echo "aex: skipping directory creation"
+    fi
 
     if $dir_create; then
         echo -n "aex: creating destination directory \`$c2$fb$ce'... "
@@ -198,12 +206,22 @@ for f in $@; do
             cd ..
             ;;
         *.zip)
-            aex_msg 9 $f $fb "unzip $f -d $fb"
-            unzip $f -d $fb 2>&1 | sed "s/^/  $c1>$ce /" || aex_msg 2 $f
+            if $dir_create; then
+                aex_msg 9 $f $fb "unzip $f -d $fb"
+                unzip $f -d $fb 2>&1 | sed "s/^/  $c1>$ce /" || aex_msg 2 $f
+            else
+                aex_msg 8 $f "unzip $f"
+                unzip $f 2>&1 | sed "s/^/  $c1>$ce /" || aex_msg 2 $f
+            fi
             ;;
         *.rar)
-            aex_msg 9 $f $fb "urar x $f $fb"
-            unrar x $f $fb 2>&1 | sed "s/^/  $c1>$ce /" || aex_msg 2 $f
+            if $dir_create; then
+                aex_msg 9 $f $fb "urar x $f $fb"
+                unrar x $f $fb 2>&1 | sed "s/^/  $c1>$ce /" || aex_msg 2 $f
+            else
+                aex_msg 8 $f "unrar x $f"
+                unrar x $f 2>&1 | sed "s/^/  $c1>$ce /" || aex_msg 2 $f
+            fi
             ;;
         *.7z)
             aex_msg 9 $f $fb "7z x -o$fb $f"
