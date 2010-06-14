@@ -138,79 +138,79 @@ hi SpellCap   guisp=#6c6c9c guifg=#8c8cbc
 hi SpellRare  guisp=#bc6c9c guifg=#bc8cbc
 hi SpellLocal guisp=#7cac7c guifg=#9ccc9c
 
-" XXX: custom highlighting for .lhp files!
-hi lhpHeader1                   guifg=#ffffff guibg=#005fff gui=bold
-hi lhpHeader2                   guifg=#000000 guibg=#ffaf5f gui=bold
-hi lhpHeader3                   guifg=#ffffff guibg=#ff5fd7 gui=bold
-hi lhpHeader4                   guifg=#ffffff guibg=#ff5f87 gui=bold
-hi lhpHeader5                   guifg=#ffffff guibg=#8787d7 gui=bold
-hi lhpHeader6                   guifg=#ffffff guibg=#af5faf gui=bold
-hi lhpHeader7                   guifg=#ffffff guibg=#00afaf gui=bold
-hi lhpHeader8                   guifg=#ffffff guibg=#d75f5f gui=bold
-hi lhpHeader9                   guifg=#ffffff guibg=#0000ff gui=bold
+" XXX: custom highlighting for .toucan files!
+hi tcHeader1                   guifg=#ffffff guibg=#005fff gui=bold
+hi tcHeader2                   guifg=#000000 guibg=#ffaf5f gui=bold
+hi tcHeader3                   guifg=#ffffff guibg=#ff5fd7 gui=bold
+hi tcHeader4                   guifg=#ffffff guibg=#ff5f87 gui=bold
+hi tcHeader5                   guifg=#ffffff guibg=#8787d7 gui=bold
+hi tcHeader6                   guifg=#ffffff guibg=#af5faf gui=bold
+hi tcHeader7                   guifg=#ffffff guibg=#00afaf gui=bold
+hi tcHeader8                   guifg=#ffffff guibg=#d75f5f gui=bold
+hi tcHeader9                   guifg=#ffffff guibg=#0000ff gui=bold
 
-hi link lhpHeaderPlaceholderBlank Normal
+hi link tcHeaderPlaceholderBlank Normal
 
-hi lhpSection                   guifg=#ffaf00 gui=bold
-hi link lhpSectionMulti1 lhpSection
-hi link lhpSectionMulti2 lhpSection
-hi link lhpUSC lhpSection
+hi tcSection                   guifg=#ffaf00 gui=bold
+hi link tcSectionMulti1 tcSection
+hi link tcSectionMulti2 tcSection
+hi link tcUSC tcSection
 
-hi lhpBold                      guifg=#d75faf gui=bold
-hi link lhpItalic lhpBold
-hi link lhpUnderlined lhpBold
-hi link lhpBoldItalic lhpBold
-hi link lhpCaps	lhpBold
-hi link lhpSmallcaps lhpBold
-hi lhpCite                      guifg=#87ff00 gui=bold,underline
+hi tcBold                      guifg=#d75faf gui=bold
+hi link tcItalic tcBold
+hi link tcUnderlined tcBold
+hi link tcBoldItalic tcBold
+hi link tcCaps	tcBold
+hi link tcSmallcaps tcBold
+hi tcCite                      guifg=#87ff00 gui=bold,underline
 
-hi lhpCaret                     guifg=#d7d7ff guibg=#ff00af gui=bold
+hi tcCaret                     guifg=#d7d7ff guibg=#ff00af gui=bold
 
-hi lhpBullet1                   guifg=#000000 guibg=#00ffff gui=bold
-hi link lhpBullet2 lhpBullet1
-hi link lhpBullet3 lhpBullet1
-hi lhpCount                     guifg=#000000 guibg=#ffff00 gui=bold
-hi lhpPar1                      guifg=#000000 guibg=#00ff00 gui=bold
-hi lhpBox                       guifg=#ffffff guibg=#0000ff gui=bold
-" XXX: END custom highlighting for .lhp files
+hi tcBullet1                   guifg=#000000 guibg=#00ffff gui=bold
+hi link tcBullet2 tcBullet1
+hi link tcBullet3 tcBullet1
+hi tcCount                     guifg=#000000 guibg=#ffff00 gui=bold
+hi tcPar1                      guifg=#000000 guibg=#00ff00 gui=bold
+hi tcBox                       guifg=#ffffff guibg=#0000ff gui=bold
+" XXX: END custom highlighting for .tc files
 
 " Entering Kurt zone
 if &t_Co > 255
-    " XXX: custom highlighting for .lhp files!
-    hi lhpHeader1                   ctermfg=231 ctermbg=27 cterm=bold
-    hi lhpHeader2                   ctermfg=16 ctermbg=215 cterm=bold
-    hi lhpHeader3                   ctermfg=231 ctermbg=206 cterm=bold
-    hi lhpHeader4                   ctermfg=231 ctermbg=204 cterm=bold
-    hi lhpHeader5                   ctermfg=231 ctermbg=104 cterm=bold
-    hi lhpHeader6                   ctermfg=231 ctermbg=133 cterm=bold
-    hi lhpHeader7                   ctermfg=231 ctermbg=37 cterm=bold
-    hi lhpHeader8                   ctermfg=231 ctermbg=167 cterm=bold
-    hi lhpHeader9                   ctermfg=231 ctermbg=21 cterm=bold
+    " XXX: custom highlighting for .tc files!
+    hi tcHeader1                   ctermfg=231 ctermbg=27 cterm=bold
+    hi tcHeader2                   ctermfg=16 ctermbg=215 cterm=bold
+    hi tcHeader3                   ctermfg=231 ctermbg=206 cterm=bold
+    hi tcHeader4                   ctermfg=231 ctermbg=204 cterm=bold
+    hi tcHeader5                   ctermfg=231 ctermbg=104 cterm=bold
+    hi tcHeader6                   ctermfg=231 ctermbg=133 cterm=bold
+    hi tcHeader7                   ctermfg=231 ctermbg=37 cterm=bold
+    hi tcHeader8                   ctermfg=231 ctermbg=167 cterm=bold
+    hi tcHeader9                   ctermfg=231 ctermbg=21 cterm=bold
 
-    hi link lhpHeaderPlaceholderBlank Normal
+    hi link tcHeaderPlaceholderBlank Normal
 
-    hi lhpSection                   ctermfg=214 cterm=bold
-    hi link lhpSectionMulti1 lhpSection
-    hi link lhpSectionMulti2 lhpSection
-    hi link lhpUSC lhpSection
+    hi tcSection                   ctermfg=214 cterm=bold
+    hi link tcSectionMulti1 tcSection
+    hi link tcSectionMulti2 tcSection
+    hi link tcUSC tcSection
 
-    hi lhpBold                      ctermfg=169 cterm=bold
-    hi link lhpItalic lhpBold
-    hi link lhpUnderlined lhpBold
-    hi link lhpBoldItalic lhpBold
-    hi link lhpCaps	lhpBold
-    hi link lhpSmallcaps lhpBold
-    hi lhpCite                      ctermfg=118 cterm=bold,underline
+    hi tcBold                      ctermfg=169 cterm=bold
+    hi link tcItalic tcBold
+    hi link tcUnderlined tcBold
+    hi link tcBoldItalic tcBold
+    hi link tcCaps	tcBold
+    hi link tcSmallcaps tcBold
+    hi tcCite                      ctermfg=118 cterm=bold,underline
 
-    hi lhpCaret                     ctermfg=189 ctermbg=199 cterm=bold
+    hi tcCaret                     ctermfg=189 ctermbg=199 cterm=bold
 
-    hi lhpBullet1                   ctermfg=16  ctermbg=51 cterm=bold
-    hi link lhpBullet2 lhpBullet1
-    hi link lhpBullet3 lhpBullet1
-    hi lhpCount                     ctermfg=16  ctermbg=226 cterm=bold
-    hi lhpPar1                      ctermfg=16  ctermbg=46 cterm=bold
-    hi lhpBox                       ctermfg=231 ctermbg=21 cterm=bold
-    " XXX: END custom highlighting for .lhp files
+    hi tcBullet1                   ctermfg=16  ctermbg=51 cterm=bold
+    hi link tcBullet2 tcBullet1
+    hi link tcBullet3 tcBullet1
+    hi tcCount                     ctermfg=16  ctermbg=226 cterm=bold
+    hi tcPar1                      ctermfg=16  ctermbg=46 cterm=bold
+    hi tcBox                       ctermfg=231 ctermbg=21 cterm=bold
+    " XXX: END custom highlighting for .toucan files
 
     hi Boolean         ctermfg=181  
     hi Character       ctermfg=181   cterm=bold
