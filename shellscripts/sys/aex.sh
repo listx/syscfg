@@ -256,7 +256,7 @@ for f in $@; do
     # move back to our original working directory to process the next archive
     cd $dir0
 
-    echo "\n$c6----------------------------------------$ce"
+    echo "$c6----------------------------------------$ce"
     let current=current+1 # use "let" to tell shell that we're working with integers, not strings
 done
 
