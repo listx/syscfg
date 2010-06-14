@@ -243,11 +243,12 @@ for f in $@; do
     echo -n "\naex: nested directories detected inside \`$c2$fb$ce': "
     if [[ $(ls -A1 | wc -l) -eq 1 && -d $(ls -A) ]]; then
         echo -n "$c4$(ls -A)$ce "
-        cd "$(ls -A)"
+        cd $(ls -A)
+        let eggs=eggs+1
+        [[ eggs -eq 1 ]] && dir2=$PWD # name the very first egg "dir2"
         while [[ $(ls -A1 | wc -l) -eq 1 && -d $(ls -A) ]]; do
             echo -n $c2"->"$ce $c4$(ls -A)$ce" "
             cd $(ls -A)
-            [[ eggs -eq 0 ]] && dir2=$PWD # name the very first egg "dir2"
             let eggs=eggs+1
         done
         echo
@@ -264,7 +265,6 @@ for f in $@; do
         # move back to root of destination directory, to remove the lineage of eggs (everything
         # below $dir2 contains a single lineage of nested directories -- so we remove them all with
         # the 'find' command below)
-
         cd $dir1
         echo "\naex: removing nested empty directories\n"
         find $dir2 -depth -type d -empty -exec rmdir -v {} \; 2>&1 | sed "s/^/  $c5>$ce /"
