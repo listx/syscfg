@@ -93,6 +93,9 @@ aex_fb() {
 # PROGRAM START! #
 #----------------#
 
+# exit if no files were given by the user
+[[ -z $@ ]] && echo "aex: no files specified" && exit 1
+
 # various error checking before we do anything
 for f in $@; do
     # ensure that we recognize all arguments' archive types
