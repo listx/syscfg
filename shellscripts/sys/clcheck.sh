@@ -44,6 +44,9 @@ Optional parameters:
                         multiple times to simulate 'AND' behavior of search. (Same as -k paramter
                         if used once alone by itself.) Essentially, all results absolutely require
                         the WORD term given with -K.
+-q NUMBER               Use an internal database of NUMBER unique items. Any new items are checked
+                        against this database; if the database already has it, then the item is
+                        ignored (useful against repeat posters). Default is 100.
 -s                      Silent mode; clcheck will output fewer messages.
 -u URL                  Use custom craigslist listing page URL instead of default
                         (sfbay.craigslist.org). Only give the address, without the \`http://' (no
@@ -101,55 +104,63 @@ parseline () {
             fi
         fi
     else
-        echo -n "$c1"
-        echo -n "clcheck: found item "
         # we have a working match!
-        # first, get the link and description
         link=$match[1]
         descr=$match[2]
-
-        echo "\`$descr' -> $link$ce"
-
-        # now get the rest: (1) price and/or (2) location from $match[3], if at all
-        meta=$match[3]
-        match=() # clear match array for next regex
-
-        # first extract the location, if any
-        pcre_compile "font.+?\((.+?)\)</font"
-        pcre_match "$meta"
-        if [[ -z $#match ]]; then
-            location="?"
-        else
-            location=$match[1]
-        fi
-        match=() # clear match array for next regex
-
-        # now look for price, if any
-        pcre_compile "^.+?(\\\$\d+)"
-        pcre_match "$meta"
-        if [[ -z $#match ]]; then
-            price="?"
-        else
-            price=$match[1]
-        fi
-        match=() # clear match array for next regex
-
-        echo "  Price: $c2$price$ce"
-        echo "  Where: $c3$location$ce"
-
-        # now add all the data into a single line, and store it into our output array (we send all the new stuff
-        # we found in one email at the end of this loop)
-        if [[ $3 -gt 0 ]]; then # only add to textarr if we're not on our very first iteration
-            if [[ "$price" != "?" && "$location" != "?" ]]; then # if only both are true
-                # textarr should be visible globally, even though it is not passed to this function explicitly
-                textarr+=("$1. $descr for $price @ $location - $link")
-            elif [[ "$price" != "?" ]]; then # if just price is true
-                textarr+=("$1. $descr for $price - $link")
-            elif [[ "$location" != "?" ]]; then # if just location is true
-                textarr+=("$1. $descr @ $location - $link")
-            else # if none are true
-                textarr+=("$1. $descr - $link")
+        # first, check if the database does not have this item
+        if [[ -z ${db[(r)${(q)link}]} ]]; then # since we don't have it (it is unique), add it to db
+            # get rid of oldest entry if our db is full
+            if [[ $#db -ge $db_size ]]; then
+                shift db
             fi
+            db+=("$link")
+            echo -n "$c1"
+            echo -n "clcheck: found item "
+
+            echo "\`$descr' -> $link$ce"
+
+            # now get the rest: (1) price and/or (2) location from $match[3], if at all
+            meta=$match[3]
+            match=() # clear match array for next regex
+
+            # first extract the location, if any
+            pcre_compile "font.+?\((.+?)\)</font"
+            pcre_match "$meta"
+            if [[ -z $#match ]]; then
+                location="?"
+            else
+                location=$match[1]
+            fi
+            match=() # clear match array for next regex
+
+            # now look for price, if any
+            pcre_compile "^.+?(\\\$\d+)"
+            pcre_match "$meta"
+            if [[ -z $#match ]]; then
+                price="?"
+            else
+                price=$match[1]
+            fi
+            match=() # clear match array for next regex
+
+            echo "  Price: $c2$price$ce"
+            echo "  Where: $c3$location$ce"
+
+            # now add all the data into a single line, and store it into our output array (we send all the new stuff
+            # we found in one email at the end of this loop)
+            if [[ $3 -gt 0 ]]; then # only add to textarr if we're not on our very first iteration
+                if [[ "$price" != "?" && "$location" != "?" ]]; then # if only both are true
+                    # textarr should be visible globally, even though it is not passed to this function explicitly
+                    textarr+=("$1. $descr for $price @ $location - $link")
+                elif [[ "$price" != "?" ]]; then # if just price is true
+                    textarr+=("$1. $descr for $price - $link")
+                elif [[ "$location" != "?" ]]; then # if just location is true
+                    textarr+=("$1. $descr @ $location - $link")
+                else # if none are true
+                    textarr+=("$1. $descr - $link")
+                fi
+            fi
+        else # since we DO have this item, do nothing (or maybe tell user there has been a repost?)
         fi
     fi
     match=()
@@ -167,9 +178,11 @@ ce="\x1b[0m"
 # PROGRAM START! #
 #----------------#
 
-clcheck_ver="1.1"
+clcheck_ver="1.2"
 addys=()
 e_addys=()
+db=()
+db_size=100
 andflag=false
 orflag=false
 debugflag=false
@@ -186,7 +199,7 @@ url="sfbay.craigslist.org"
 url_dir="boa"
 urlflag=false
 delay=0
-while getopts ":a:de:k:K:su:U:w:hv" opt; do
+while getopts ":a:de:k:K:q:su:U:w:hv" opt; do
     case "$opt" in
     h)  msg "help" ;;
     v)  msg "version" ;;
@@ -195,7 +208,7 @@ while getopts ":a:de:k:K:su:U:w:hv" opt; do
 done
 # re-parse from the beginning again if there were no -h or -v flags
 OPTIND=1
-while getopts ":a:de:k:K:su:U:w:" opt; do
+while getopts ":a:de:k:K:q:su:U:w:" opt; do
     case "$opt" in
     a)
         addys+=("$OPTARG")
@@ -216,6 +229,9 @@ while getopts ":a:de:k:K:su:U:w:" opt; do
         andflag=true
         search_ands+=("$OPTARG")
         search_ands_orig+=("$OPTARG")
+        ;;
+    q)
+        db_size=$OPTARG
         ;;
     s)
         silentflag=true
