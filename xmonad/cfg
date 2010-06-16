@@ -184,8 +184,8 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((modm              , xK_backslash ), spawn "amixer -q set Master toggle")
     , ((modm              , xK_minus     ), spawn "amixer -q set Master 3- unmute")
     , ((modm              , xK_equal     ), spawn "amixer -q set Master 3+ unmute")
-    -- screen brightness
-    , ((modm     .|. shiftMask, xK_backslash ), spawn "~/syscfg/shellscripts/sys/brightness.sh") -- toggle brightness (100 or 0)
+    -- screen brightness toggle
+    , ((modm     .|. shiftMask, xK_backslash ), spawn "sudo brightness") -- toggle brightness (100% or 0%)
     ]
     ++
 
