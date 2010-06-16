@@ -1,0 +1,72 @@
+#!/bin/zsh
+
+# should be called so that $1 is the mode (file, directory, or text), and
+# $2, $3, etc. are search keywords
+#
+# a     ->  case-insensitive search for files and directories
+# aa    ->  case-sensitive search for files and directories
+# d     ->  case-insensitive search for directories
+# dd    ->  case-sensitive search for directories
+# f     ->  case-insensitive search for files
+# ff    ->  case-sensitive search for files
+# t     ->  case-insensitive search for text (in all text files)
+# tt    ->  case-sensitive search for text (in all text files)
+find_quick() {
+    find_type=""
+    find_search=""
+    ack_search=""
+    mode=$1
+    rest=""
+    case $mode in
+        a)
+            find_type=""
+            find_search="-name"
+            ;;
+        aa)
+            find_type=""
+            find_search="-iname"
+            ;;
+        d)
+            find_type="-type d"
+            find_search="-iname"
+            ;;
+        dd)
+            find_type="-type d"
+            find_search="-name"
+            ;;
+        f)
+            find_type="-type f"
+            find_search="-iname"
+            ;;
+        ff)
+            find_type="-type f"
+            find_search="-name"
+            ;;
+        t) ack_search="-i "
+            ;;
+        tt) ack_search=""
+            ;;
+        *)
+            echo "find_quick: mode \`$mode' not supported"
+            ;;
+    esac
+
+    # build search term list
+    shift argv
+    c=0
+    if [[ $mode != "t" && $mode != "tt" ]]; then
+        for term in $argv; do
+            [[ $c -gt 0 ]] && rest+=" -o "
+            rest+="$find_type $find_search *$term*"
+            c+=1
+        done
+        find ${=find_type} ${=rest}
+    else
+        for term in $argv; do
+            [[ $c -gt 0 ]] && rest+="|"
+            rest+="$term"
+            c+=1
+        done
+        ack ${=ack_search} ${=rest}
+    fi
+}

@@ -137,6 +137,16 @@ alias du='du -h'
 alias e='evince'
 alias asyp='asy -f pdf'
 
+# easy find command (see find_quick() function)
+alias fa='find_quick a '
+alias fA='find_quick aa '
+alias ff='find_quick f '
+alias fF='find_quick ff ' # can't use 'find_quick F ' because the F is globally aliased itself (down below)
+alias fd='find_quick d '
+alias fD='find_quick dd '
+alias ft='find_quick t '
+alias fT='find_quick tt '
+
 alias i='eog'
 
 alias ll='dir_info 0'
@@ -154,7 +164,7 @@ alias m='mplayer -loop 0'
 alias mp='mplayer -loop 0 -playlist'
 alias mps='mplayer -loop 0 -shuffle -playlist'
 alias ms='smplayer'
-alias fa='find -maxdepth 1 -type f -iname \*.mp3 -o -iname \*.flac -o -iname \*.ogg -o -iname \*.wav -o -iname \*.aac | sort >>'
+alias make_plist='find -maxdepth 1 -type f -iname \*.mp3 -o -iname \*.flac -o -iname \*.ogg -o -iname \*.wav -o -iname \*.aac | sort >>'
 
 alias n='netcfg'
 
