@@ -93,38 +93,37 @@ aex_fb() {
 # PROGRAM START! #
 #----------------#
 
+#------------------#
+# check for errors #
+#------------------#
+
 # exit if no files were given by the user
 [[ -z $@ ]] && echo "aex: no files specified" && exit 1
 
+fb=""
 # various error checking before we do anything
 for f in $@; do
-    # ensure that we recognize all arguments' archive types
-    case $f in
-        *.tar|*.tar.bz2|*.tbz2|*.bz2|*.tar.gz|*.tgz|*.gz|*.tar.xz|*.txz|*.xz|*.zip|*.rar|*.7z)
-            ;;
-        *)
-            if [[ ! -f $f ]]; then
-                echo "aex: invalid file \`$f'"
-                aex_msg 0
-            else
-                echo "aex: $f: \`$f:e' is not a recognized archive file format"
-                aex_msg 0
-            fi
-            ;;
-    esac
-
-    fb=$(aex_fb $f)
-
-    # ensure that the given file(s) actually exist (as a regular file, not a
-    # special file or directory)
     if [[ ! -f $f ]]; then
         echo "aex: invalid file \`$f'"
         aex_msg 0
-    # ensure that a directory with the same basename does not already exist
-    elif [[ -d $fb ]]; then
-        echo "aex: destination directory \`$fb' already exists"
-        aex_msg 0
     fi
+    # ensure that we recognize all arguments' archive types
+    case $f in
+        *.tar|*.tar.bz2|*.tbz2|*.bz2|*.tar.gz|*.tgz|*.gz|*.tar.xz|*.txz|*.xz|*.zip|*.rar|*.7z)
+            # ensure that the given file(s) actually exist (as a regular file, not a
+            # special file or directory)
+            # ensure that a directory with the same basename does not already exist
+            fb=$(aex_fb $f) # can safely do this because $f is a valid and recognized file type
+            if [[ -d $fb ]]; then
+                echo "aex: destination directory \`$fb' already exists"
+                aex_msg 0
+            fi
+            ;;
+        *)
+            echo "aex: $f: \`$f:e' is not a recognized archive file format"
+            aex_msg 0
+            ;;
+    esac
 done
 
 fbs=() # array to be filled by basename directory names ($fb below)
@@ -133,7 +132,6 @@ dir0=$PWD
 # begin extraction!
 current=1
 for f in $@; do
-    fb=$(aex_fb $f)
     fbs+=($fb) # append $fb as an element into the $fbs array
     echo "\naex: ($current/$#): processing \`$c1$f$ce'..."
 
