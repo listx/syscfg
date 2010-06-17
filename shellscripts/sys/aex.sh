@@ -126,10 +126,12 @@ for f in $@; do
     esac
 done
 
+#-------------------#
+# begin extraction! #
+#-------------------#
+
 fbs=() # array to be filled by basename directory names ($fb below)
 dir0=$PWD
-
-# begin extraction!
 current=1
 for f in $@; do
     fbs+=($fb) # append $fb as an element into the $fbs array
@@ -153,15 +155,20 @@ for f in $@; do
         *.zip)
             com_info="zipinfo -1"
             ;;
+        *.7z)
+            com_info="" # 7z does not support bare listing of archived contents yet (June 2010)
+            ;;
     esac
     # find the root dir in this archive -- sometimes the root dir is displayed
     # on its own line, but sometimes not (even though it exists!) so we have to
     # manually check ourselves
-    top=$(eval $com_info ${(q)f} | sort | head -n 1 | sed 's/\/.*//')
-    if [[ $(eval $com_info ${(q)f} | sed "s/^$top$/\//" | sed "s/^$top\//\//g" | sed 's/^\/.*//g' | sed '/^$/d' | wc -l) -eq 0 && $top == $fb ]]; then
-        dir_create=false
-        echo "aex: root directory in archive matches suggested destination directory name"
-        echo "aex: skipping directory creation"
+    if [[ -n $com_info ]]; then
+        top=$(eval $com_info ${(q)f} | sort | head -n 1 | sed 's/\/.*//')
+        if [[ $(eval $com_info ${(q)f} | sed "s/^$top$/\//" | sed "s/^$top\//\//g" | sed 's/^\/.*//g' | sed '/^$/d' | wc -l) -eq 0 && $top == $fb ]]; then
+            dir_create=false
+            echo "aex: root directory in archive matches suggested destination directory name"
+            echo "aex: skipping directory creation"
+        fi
     fi
 
     if $dir_create; then
