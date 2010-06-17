@@ -17,15 +17,14 @@ case $HOST in
     ;;
     luxion)
         b=$(cat /sys/class/backlight/dell_backlight/actual_brightness)
+        let "bi=$b"
         if [[ $b -lt 7 ]]; then
             # gradually raise backlight, just like xbacklight
-            let "bi=$b"
             while [[ bi -lt 7 ]]; do
                 let "bi=$bi+1"
                 echo $bi > /sys/class/backlight/dell_backlight/brightness
             done
         else
-            let "bi=$b"
             while [[ bi -gt 0 ]]; do
                 let "bi=$bi-1"
                 echo $bi > /sys/class/backlight/dell_backlight/brightness
