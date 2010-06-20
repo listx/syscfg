@@ -464,6 +464,7 @@ while true; do
     fi
 
     rawdata_old=$rawdata_new
+    echo ${(F)db} > /home/$USER/.clcheck/old # save db between each run
 done
 
 # vim:syntax=zsh
