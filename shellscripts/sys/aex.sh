@@ -134,6 +134,7 @@ fbs=() # array to be filled by basename directory names ($fb below)
 dir0=$PWD
 current=1
 for f in $@; do
+    fb=$(aex_fb $f)
     fbs+=($fb) # append $fb as an element into the $fbs array
     echo "\naex: ($current/$#): processing \`$c1$f$ce'..."
 
