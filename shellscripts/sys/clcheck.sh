@@ -160,7 +160,12 @@ parseline () {
                     textarr+=("$1. $descr - $link")
                 fi
             fi
-        else # since we DO have this item, do nothing (or maybe tell user there has been a repost?)
+        else
+            # since we DO have this item in the db, tell user that we have it
+            # in our db (this part will get executed on startup if we see
+            # matching items on the scraped front page that are already in our
+            # db)
+            echo "clcheck: found in db: $link ($descr)"
         fi
     fi
     match=()
@@ -181,7 +186,15 @@ ce="\x1b[0m"
 clcheck_ver="1.2"
 addys=()
 e_addys=()
+
+# read old db, if it exists
 db=()
+if [[ -f /home/$USER/.clcheck/old ]]; then
+    for line in $(cat /home/$USER/.clcheck/old); do
+        db+=("$line")
+    done
+fi
+
 db_size=100
 andflag=false
 orflag=false
@@ -366,6 +379,8 @@ while true; do
         read -s -t $delay -k key # emulate 'sleep $delay'
         if [[ $key == "q" ]]; then
             echo "\nclcheck: exiting..."
+            # save remembered links to ~/.clcheck/old
+            echo ${(F)db} > /home/$USER/.clcheck/old
             exit 0
         fi
     else
