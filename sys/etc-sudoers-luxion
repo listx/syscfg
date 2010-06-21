@@ -41,3 +41,6 @@ listdata luxion=NOPASSWD: /usr/bin/pacman
 listdata luxion=NOPASSWD: /usr/bin/powerpill
 listdata luxion=NOPASSWD: /usr/bin/bauerbill
 listdata luxion=NOPASSWD: /usr/bin/yaourt
+
+# custom brightness changer
+listdata luxion=NOPASSWD: /usr/bin/brightness
