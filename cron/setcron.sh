@@ -30,7 +30,13 @@ if [[ $HOST == "exelion" ]]; then
     str+="\n0 1,2,4,5,7,8,10,11,13,14 * * * ~/syscfg/shellscripts/alarm/westminster-nohour.sh a"
     str+="\n0 16,17,19,20,22,23 * * * ~/syscfg/shellscripts/alarm/westminster-nohour.sh b"
     # set alarm clock to go off
-    str+="\n58 4 * * * urxvt -hold -e ~/syscfg/shellscripts/alarm/alarmclock.sh"
+    str+="\n55 4 * * * urxvt -hold -e ~/syscfg/shellscripts/alarm/alarmclock.sh"
+    # run "mercury routine" every minute to check for all routine tasks (recurring todo lists)
+    str+="\n*/1 * * * * ~/sched/check.sh routine"
+    # display the todo list three times a day
+    str+="\n0 6,12,18 * * * ~/sched/check.sh todo"
+    # display all notes once a day in the evening
+    str+="\n0 18 * * * ~/sched/check.sh notes"
 fi
 
 echo "$str" | crontab -
