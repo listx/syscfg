@@ -2,3 +2,10 @@
 #
 # /etc/rc.local: Local multi-user startup script.
 #
+
+mount -o loop /mnt/b4/GAMES/Total\ Annihilation/G-Total_Annihilation_CD1.iso /mnt/i01
+mount -o loop /mnt/b4/GAMES/Total\ Annihilation/G-Total_Annihilation_CD2.iso /mnt/i02
+mount -o loop /mnt/b4/GAMES/Total\ Annihilation/G-Total_Annihilation_CC.iso  /mnt/i03
+mount -o loop /mnt/b4/GAMES/aoe.iso /mnt/i04
+mount -o loop /mnt/b4/GAMES/Age\ of\ Empires\ 2\ and\ Expansion/Age\ of\ Empires\ 2\ -\ The\ Age\ of\ Kings.iso         /mnt/i05
+mount -o loop /mnt/b4/GAMES/Age\ of\ Empires\ 2\ and\ Expansion/Age\ of\ Empires\ 2\ -\ The\ Conquerors\ Expansion2.iso /mnt/i06

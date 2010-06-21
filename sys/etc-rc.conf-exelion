@@ -34,7 +34,7 @@ USECOLOR="yes"
 #
 MOD_AUTOLOAD="yes"
 #MOD_BLACKLIST=() #deprecated
-MODULES=(forcedeth slhc snd-mixer-oss snd-pcm-oss snd-seq-oss snd-seq-device snd-seq-midi-event snd-seq snd-hwdep snd-page-alloc snd-pcm snd-rawmidi snd-timer snd snd-hda-intel soundcore snd-usb-audio snd-usb-lib !pcspkr !snd_pcsp)
+MODULES=(forcedeth slhc snd-mixer-oss snd-pcm-oss snd-seq-oss snd-seq-device snd-seq-midi-event snd-seq snd-hwdep snd-page-alloc snd-pcm snd-rawmidi snd-timer snd snd-hda-intel soundcore snd-usb-audio snd-usb-lib !pcspkr !snd_pcsp vboxdrv)
 
 # Scan for LVM volume groups at startup, required if you use LVM
 USELVM="no"

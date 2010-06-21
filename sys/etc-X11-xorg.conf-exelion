@@ -1,9 +1,7 @@
 Section "ServerLayout"
     Identifier     "Layout0"
-    #Screen      0  "Screen0" 0 345
-    Screen      0  "Screen0" 0 0
-    #Screen      1  "Screen1" 1680 0 # NOTE: Screen 0 MUST be defined BEFORE Screen 1!!!
-    Screen      1  "Screen1" 1050 295 # NOTE: Screen 0 MUST be defined BEFORE Screen 1!!!
+    Screen      0  "Screen0" 0 0 # NOTE: Screen 0 MUST be defined BEFORE Screen 1!!!
+    Screen      1  "Screen1" 1050 295 # push this screen down (vertically) 295 pixels from the top to match the portrait monitor on the left
     InputDevice    "Keyboard0" "CoreKeyboard"
     InputDevice    "Mouse0" "CorePointer"
 EndSection
@@ -35,6 +33,7 @@ Section "InputDevice"
     Option         "Device" "/dev/psaux"
     Option         "Emulate3Buttons" "no"
     #Option         "ZAxisMapping" "4 5" # for the Logitech MX 400
+
 EndSection
 
 Section "InputDevice"
