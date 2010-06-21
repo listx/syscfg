@@ -18,6 +18,16 @@ echo "alarmclock: The time is now $c1$(date +%A)$ce $c2$(date +%B)$ce $c3$(date 
 # display calendar
 pal -f /home/listdata/syscfg/pal/cfg | sed "s/^/  /"
 
+# display todo list
+echo "\nalarmclock: Things to do:"
+cat ~/sched/todo | sed "s/^/  /"
+
+# display other scheduling notes
+for f in $(ls ~/sched/notes); do
+    echo "\nalarmclock: Displaying note \`$f'"
+    cat ~/sched/notes/$f | sed "s/^/  /"
+done
+
 echo "\nalarmclock: Press 'q' to turn off the music and exit"
 echo "alarmclock: Press 'k' to just exit"
 
