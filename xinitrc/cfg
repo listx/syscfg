@@ -23,8 +23,7 @@ xset r rate 300 80
 # start xscreensaver
 xscreensaver -no-splash &
 
-HOSTNAME=$(hostname)
-case "${HOSTNAME}" in
+case $(hostname) in
     exelion)
         # start Music Player Demon (mpd) with customized config file (instead of making an ugly symlink at the default-looked-at /etc/mpd.conf
         mpd /home/listdata/syscfg/mpd/cfg-alsa
