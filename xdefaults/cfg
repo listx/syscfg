@@ -1,5 +1,5 @@
-XTerm*faceName: dejavu sans mono:pixelsize=12 antialias=false
-XTerm*background: #000000
+XTerm*faceName: xft:dejavu sans mono:size=14
+XTerm*background: #356ace
 XTerm*foreground: #ffffff
 XTerm*cursorColor: green
 XTerm*saveLines: 1000
