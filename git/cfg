@@ -9,3 +9,5 @@
     meta = yellow bold
 [push]
     default = matching
+[gui]
+    spellingdictionary = none
