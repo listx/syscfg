@@ -35,7 +35,7 @@
 # special file types (same, unchanged defaults from 'dircolors -b')
 LS_COLORS='rs=0:di=01;33:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:su=37;41:sg=30;43:ca=30;41:st=37;44:'
 # special file types (different than the ones from 'dircolors -b')
-LS_COLORS+='ln=36:ex=1;31:tw=1;34;42:ow=1;7;34:'
+LS_COLORS+='ln=36:ex=31:tw=1;34;42:ow=1;7;34:'
 # various common filetypes (archives, pictures, movies, and sounds)
 ft_ark=(tar tgz arj taz lzh lzma tlz txz zip z Z dz gz lz xz bz2 bz tbz tbz2 tz deb rpm jar rar ace zoo cpio 7z rz)
 ft_pic=(jpg jpeg gif bmp pbm pgm ppm tga xbm xpm tif tiff png svg svgz mng pcx)
@@ -47,8 +47,16 @@ for t in $ft_mov; do LS_COLORS+="*.$t=1;35:"; done
 for t in $ft_snd; do LS_COLORS+="*.$t=34:"; done
 # custom file types not covered by 'dircolors -p'
 LS_COLORS+="*.toucan=0;38;5;48:"
-
 export LS_COLORS
+
+# colors for the 'less' pager
+export LESS_TERMCAP_md=$'\E[1;34m'    # begin bold (blue)
+export LESS_TERMCAP_us=$'\E[1;35m'    # begin underline (magenta)
+export LESS_TERMCAP_so=$'\E[1;34;5;43m' # begin standout-mode - (search highlight) (blue on yellow)
+export LESS_TERMCAP_mb=$'\E[1;5;31m'    # begin blinking (the last "5" actually makes it blink) (red)
+export LESS_TERMCAP_me=$'\E[0m'       # end bold/blinking
+export LESS_TERMCAP_se=$'\E[0m'       # end standout-mode
+export LESS_TERMCAP_ue=$'\E[0m'       # end underline
 
 # default text editor--set it to vim, not vi
 export VISUAL=/usr/bin/vim

@@ -206,12 +206,12 @@ autocall_exec () {
 #------------------#
 
 # colors
-c1="\x1b[1;38;5;120m" # bright green
-c2="\x1b[1;38;5;228m" # bright yellow
-c3="\x1b[1;38;5;214m" # bright orange
-c4="\x1b[1;38;5;159m" # bright cyan
-c5="\x1b[1;38;5;175m" # bright purple
-c6="\x1b[1;38;5;160m" # bright red
+c1="\x1b[1;32m" # bright green
+c2="\x1b[1;33m" # bright yellow
+c3="\x1b[1;34m" # bright blue
+c4="\x1b[1;36m" # bright cyan
+c5="\x1b[1;35m" # bright purple
+c6="\x1b[1;31m" # bright red
 ce="\x1b[0m"
 
 com=""

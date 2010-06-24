@@ -1,16 +1,16 @@
 #!/bin/zsh
 
 dir_info() {
+    # colors
+    c1="\033[1;32m" # bright green
+    c2="\033[1;33m" # bright yellow
+    c3="\033[1;34m" # bright blue
+    c4="\033[1;36m" # bright cyan
+    c5="\033[1;35m" # bright purple
+    c6="\033[1;31m" # bright red
     # only pre-emptively give newline to prettify listing of directory contents if the directory is not empty
     [[ $(ls -A1 | wc -l) -ne 0 ]] && echo
     countcolor() {
-        # colors
-        c1="\033[1;38;5;120m" # bright green
-        c2="\033[1;38;5;228m" # bright yellow
-        c3="\033[1;38;5;214m" # bright orange
-        c4="\033[1;38;5;159m" # bright cyan
-        c5="\033[1;38;5;175m" # bright purple
-        c6="\033[1;38;5;160m" # bright red
         if [[ $1 -eq 0 ]]; then
             echo $c4
         elif [[ $1 -le 25 ]]; then
@@ -27,14 +27,6 @@ dir_info() {
     }
 
     sizecolor() {
-        # colors
-        c0="\033[1;37m" # bright white
-        c1="\033[1;38;5;120m" # bright green
-        c2="\033[1;38;5;228m" # bright yellow
-        c3="\033[1;38;5;214m" # bright orange
-        c4="\033[1;38;5;159m" # bright cyan
-        c5="\033[1;38;5;175m" # bright purple
-        c6="\033[1;38;5;160m" # bright red
         case $1 in
             B)
                 echo $c0

@@ -2,14 +2,6 @@
 
 # WHITE ON BLUE theme (late 80's-ish, almost videogame-like look)
 
-export LESS_TERMCAP_md=$'\E[1;38;5;118m'    # begin bold
-export LESS_TERMCAP_us=$'\E[1;38;5;205m'    # begin underline
-export LESS_TERMCAP_so=$'\E[38;5;21;48;5;226m' # begin standout-mode - (search highlight)
-export LESS_TERMCAP_mb=$'\E[1;31;5;196;5m'    # begin blinking (the last "5" actually makes it blink)
-export LESS_TERMCAP_me=$'\E[0m'       # end bold/blinking
-export LESS_TERMCAP_se=$'\E[0m'       # end standout-mode
-export LESS_TERMCAP_ue=$'\E[0m'       # end underline
-
 export TERM_COLOR_SCHEME_CURRENT='wB'
 
 # white on blue colors
