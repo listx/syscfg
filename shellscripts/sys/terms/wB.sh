@@ -10,6 +10,8 @@ export LESS_TERMCAP_me=$'\E[0m'       # end bold/blinking
 export LESS_TERMCAP_se=$'\E[0m'       # end standout-mode
 export LESS_TERMCAP_ue=$'\E[0m'       # end underline
 
+export TERM_COLOR_SCHEME_CURRENT='wB'
+
 # white on blue colors
 colors=""
 colors+=" --background #3560ce --color0 #3560ce --color8 #4073f5" # background/black regular/black bold
@@ -19,6 +21,7 @@ colors+=" --color2 #5bde54 --color10 #5bde54" # green
 colors+=" --color4 #0c2b6a --color12 #133377" # blue
 colors+=" --color3 #ffdb00 --color11 #ffdb00" # yellow
 colors+=" --color6 #00dbde --color14 #22ffff" # cyan
+
 urxvt ${(z)colors} & disown
 
 # vim:syntax=zsh

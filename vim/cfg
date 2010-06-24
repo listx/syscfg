@@ -32,7 +32,17 @@ set gfn=Terminus\ 11
 " so zenburn's background is properly loaded ... 2008/12/23
 set t_Co=256
 
-colorscheme zenburn_mod2
+" choose the appropriate colorscheme, based on the custom
+" TERM_COLOR_SCHEME_CURRENT environment variable
+if $TERM_COLOR_SCHEME_CURRENT == 'wb' " white on black
+    colorscheme zenburn_mod2
+elseif $TERM_COLOR_SCHEME_CURRENT == 'wB' " white on blue
+    colorscheme darkblue2-ex
+elseif $TERM_COLOR_SCHEME_CURRENT == 'bw' " white on blue
+    colorscheme summerfruit256
+else
+    colorscheme zenburn_mod2 " always default to the white on black theme
+endif
 
 " Turn off blinking for the n, v, & c states:
 "let &guicursor = substitute(&guicursor, "n-v-c:", "n-v-c:blinkon0-", "")

@@ -12,6 +12,8 @@ export LESS_TERMCAP_me=$'\E[0m'       # end bold/blinking
 export LESS_TERMCAP_se=$'\E[0m'       # end standout-mode
 export LESS_TERMCAP_ue=$'\E[0m'       # end underline
 
+# tell the world that this terminal's colorscheme is wb
+export TERM_COLOR_SCHEME_CURRENT='wb'
 
 urxvt & disown
 

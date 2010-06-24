@@ -10,6 +10,8 @@ export LESS_TERMCAP_me=$'\E[0m'       # end bold/blinking
 export LESS_TERMCAP_se=$'\E[0m'       # end standout-mode
 export LESS_TERMCAP_ue=$'\E[0m'       # end underline
 
+export TERM_COLOR_SCHEME_CURRENT='bw'
+
 colors=""
 colors+=" --background #cccccc --color0 #cccccc --color8 #dddddd" # background/black regular/black bold
 colors+=" --foreground #000000 --color7 #000000 --color15 #000000" # foreground/text regular/text bold
