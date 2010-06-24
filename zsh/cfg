@@ -1,23 +1,54 @@
 #--------------------------------------------------------------------------------------------------#
 # Environment variables                                                                            #
 #--------------------------------------------------------------------------------------------------#
-# change colors just for the ls command
-#
-# di = directory
-# 01;37 = ansi color code for bold white
-# 01;33 is bolded yellow (BRIGHT yellow)
-export LS_COLORS='di=01;33:ow=01;34:tw=01;34;44:ex=31:ln=36:*.7z=32:*.gz=32:*.bz2=32:*.rar=32:*.tar=32:*.xz=32:*.zip=32:*.toucan=0;38;5;48'
 
-# LESS's settings (for manpages with color!)
-export LESS_TERMCAP_mb=$'\E[1;31;5;196;5m'    # begin blinking (the last "5" actually makes it blink)
-export LESS_TERMCAP_md=$'\E[1;38;5;39m'    # begin bold (the "39", since it follows the "5", is a 256-color code)
-# NOTE: staring with "1", like \E[1;... too much results in extraneous "\e[0m"-like effects, so that's why we don't use it here for the search highlight
-# Also, 38;5;xxxm is the 256-color palette for foreground, and 48;5;xxxm is the pattern for the background
-export LESS_TERMCAP_so=$'\E[38;5;21;48;5;226m' # begin standout-mode - (search highlight)
-export LESS_TERMCAP_us=$'\E[4;38;5;214m'    # begin underline
-export LESS_TERMCAP_me=$'\E[0m'       # end bold/blinking
-export LESS_TERMCAP_se=$'\E[0m'       # end standout-mode
-export LESS_TERMCAP_ue=$'\E[0m'       # end underline
+# Set 'ls' command's color theme
+# See "dircolors -p" for more info
+#
+# Below are the color init strings for the basic file types. A color init
+# string consists of one or more of the following numeric codes:
+# Attribute codes:
+# 00=none 01=bold 04=underscore 05=blink 07=reverse 08=concealed
+# Text color codes:
+# 30=black 31=red 32=green 33=yellow 34=blue 35=magenta 36=cyan 37=white
+# Background color codes:
+# 40=black 41=red 42=green 43=yellow 44=blue 45=magenta 46=cyan 47=white
+
+# rs=RESET (reset to normal color)
+# di=DIR
+# ln=LINK (symlink)
+# mh=MULTIHARDLINK
+# pi=FIFO (pipe)
+# so=SOCK
+# do=DOOR
+# bd=BLK (block device driver)
+# cd=CHR
+# or=ORPHAN (symlink to nonexistent file)
+# su=SETUID (file that is setuid (u+s))
+# sg=SETGID (file that is setgid (g+s))
+# ca=CAPABILITY (file with capability)
+# tw=STICKY_OTHER_WRITABLE (dir that is sticky and other-writable (+t,o+w))
+# ow=OTHER_WRITABLE (dir that is other-writable (o+w) and not sticky
+# st=STICKY (dir wit hthe sticky bit set (+t) and not other-writable)
+# ex=EXEC (files with +x execute permission)
+
+# special file types (same, unchanged defaults from 'dircolors -b')
+LS_COLORS='rs=0:di=01;33:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:su=37;41:sg=30;43:ca=30;41:st=37;44:'
+# special file types (different than the ones from 'dircolors -b')
+LS_COLORS+='ln=36:ex=1;31:tw=1;34;42:ow=1;7;34:'
+# various common filetypes (archives, pictures, movies, and sounds)
+ft_ark=(tar tgz arj taz lzh lzma tlz txz zip z Z dz gz lz xz bz2 bz tbz tbz2 tz deb rpm jar rar ace zoo cpio 7z rz)
+ft_pic=(jpg jpeg gif bmp pbm pgm ppm tga xbm xpm tif tiff png svg svgz mng pcx)
+ft_mov=(mov mpg mpeg m2v mkv ogm mp4 m4v mp4v vob qt nuv wmv asf rm rmvb flc avi fli flv gl dl xcf xwd yuv cgm emf axv anx ogv ogx)
+ft_snd=(aac au flac mid midi mka mp3 mpc ogg ra wav axa oga spx xspf)
+for t in $ft_ark; do LS_COLORS+="*.$t=32:"; done
+for t in $ft_pic; do LS_COLORS+="*.$t=35:"; done
+for t in $ft_mov; do LS_COLORS+="*.$t=1;35:"; done
+for t in $ft_snd; do LS_COLORS+="*.$t=34:"; done
+# custom file types not covered by 'dircolors -p'
+LS_COLORS+="*.toucan=0;38;5;48:"
+
+export LS_COLORS
 
 # default text editor--set it to vim, not vi
 export VISUAL=/usr/bin/vim

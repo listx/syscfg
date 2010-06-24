@@ -86,12 +86,6 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     -- launch a terminal
     [ ((modm .|. shiftMask, xK_Return), spawn $ XMonad.terminal conf)
 
-    -- launch dmenu
-    --, ((modm,               xK_p     ), spawn "exe=`dmenu_path | dmenu` && eval \"exec $exe\"")
-
-    -- launch bashrun
-    --, ((modm,                 xK_g     ), spawn "bashrun")
-
     -- close focused window
     , ((modm,               xK_d     ), kill)
 
@@ -154,8 +148,9 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((modm,  xK_b ),   withFocused toggleBorder)
     -- move mouse away to bottom-right of currently focused window
     , ((modm               , xK_BackSpace), warpToWindow 1 1)
-    , ((mod4Mask              , xK_x     ), spawn "urxvt")
-    , ((mod4Mask .|. shiftMask, xK_x     ), spawn "urxvt -name big")
+    , ((mod4Mask              , xK_x     ), spawn "~/syscfg/shellscripts/sys/terms/wb.sh")
+    , ((mod4Mask .|. shiftMask, xK_x     ), spawn "~/syscfg/shellscripts/sys/terms/bw.sh")
+    , ((mod4Mask              , xK_z     ), spawn "~/syscfg/shellscripts/sys/terms/wB.sh")
     , ((mod4Mask              , xK_n     ), spawn "firefox")
     , ((mod4Mask .|. shiftMask, xK_n     ), spawn "uzbl-tabbed")
     , ((mod4Mask              , xK_t     ), spawn "gvim -geom 120x60")
