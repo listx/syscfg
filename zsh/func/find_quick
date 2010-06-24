@@ -64,9 +64,9 @@ find_quick() {
     else
         for term in $argv; do
             [[ $c -gt 0 ]] && rest+="|"
-            rest+="$term"
+            rest+="${(Q)${(z)term}}"
             c+=1
         done
-        ack ${=ack_search} ${=rest}
+        ack ${=ack_search} $rest *
     fi
 }
