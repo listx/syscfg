@@ -20,9 +20,6 @@ xmodmap -e "add mod3 = Caps_Lock"
 # set default repeat rate (miliseconds delay, keystroke speed)
 xset r rate 300 80
 
-# start xscreensaver
-xscreensaver -no-splash &
-
 case $(hostname) in
     exelion)
         # start Music Player Demon (mpd) with customized config file (instead of making an ugly symlink at the default-looked-at /etc/mpd.conf
@@ -38,6 +35,9 @@ case $(hostname) in
 
         # turn on numlock for keypad by default
         numlockx &
+
+        # start xscreensaver
+        xscreensaver -no-splash &
     ;;
     luxion)
     ;;
