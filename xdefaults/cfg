@@ -35,7 +35,7 @@ URxvt*color2:  #60b48a
 URxvt*color10: #87ff87
 ! yellow
 URxvt*color3:  #d7d7af
-URxvt*color11: #ffd75f
+URxvt*color11: #ffd7af
 ! blue
 URxvt*color4:  #94bff3
 URxvt*color12: #94bff3
@@ -49,10 +49,10 @@ URxvt*color14: #afffff
 ! misc urxvt settings
 
 ! bind CTRL+ALT to change to different font sizes
-URxvt.keysym.M-C-6: command:\033]710;xft:dejavu sans mono:pixelsize=12,xft:Kochi Gothic,xft:Baekmuk Gulim\007
-URxvt.keysym.M-C-7: command:\033]710;xft:dejavu sans mono:pixelsize=14,xft:Kochi Gothic,xft:Baekmuk Gulim\007
-URxvt.keysym.M-C-8: command:\033]710;xft:dejavu sans mono:pixelsize=24,xft:Kochi Gothic,xft:Baekmuk Gulim\007
-URxvt.keysym.M-C-9: command:\033]710;xft:dejavu sans mono:pixelsize=48,xft:Kochi Gothic,xft:Baekmuk Gulim\007
+URxvt.keysym.M-C-6: command:\033]710;xft:dejavu sans mono:size=10,xft:Kochi Gothic,xft:Baekmuk Gulim\007
+URxvt.keysym.M-C-7: command:\033]710;xft:dejavu sans mono:size=12,xft:Kochi Gothic,xft:Baekmuk Gulim\007
+URxvt.keysym.M-C-8: command:\033]710;xft:dejavu sans mono:size=36,xft:Kochi Gothic,xft:Baekmuk Gulim\007
+URxvt.keysym.M-C-9: command:\033]710;xft:dejavu sans mono:size=72,xft:Kochi Gothic,xft:Baekmuk Gulim\007
 URxvt.keysym.M-C-0: command:\033]710;xft:Terminus:size=10,xft:Kochi Gothic,xft:Baekmuk Gulim\007
 URxvt.keysym.M-C-minus: command:\033]710;xft:Terminus:size=11,xft:Kochi Gothic,xft:Baekmuk Gulim\007
 URxvt.keysym.M-C-equal: command:\033]710;xft:Terminus:size=16,xft:Kochi Gothic,xft:Baekmuk Gulim\007
