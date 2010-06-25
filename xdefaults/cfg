@@ -18,33 +18,33 @@ URxvt*depth: 32
 URxvt*fading: 20
 URxvt*cursorColor: green
 
-! white-on-black color theme (modified zenburn)
-URxvt*background: #22222a
-URxvt*foreground: #cccccf
-! black (normal, bright; color0 should match background color if white-on-dark)
-URxvt*color0:  #22222a
-URxvt*color8:  #709080
-! white (color7 should match foreground color if white-on-dark)
-URxvt*color7:  #cccccf
+! very basic, elementary-color, black background color theme
+URxvt*background: #000000
+URxvt*foreground: #cccccc
+! black
+URxvt*color0:  #000000
+URxvt*color8:  #333333
+! white
+URxvt*color7:  #cccccc
 URxvt*color15: #ffffff
 ! red
-URxvt*color1:  #d78787
-URxvt*color9:  #d70000
+URxvt*color1:  #cc0000
+URxvt*color9:  #ff3333
 ! green
-URxvt*color2:  #60b48a
-URxvt*color10: #87ff87
+URxvt*color2:  #00cc00
+URxvt*color10: #33ff33
 ! yellow
-URxvt*color3:  #d7d7af
-URxvt*color11: #ffd7af
+URxvt*color3:  #cccc00
+URxvt*color11: #ffff33
 ! blue
-URxvt*color4:  #94bff3
-URxvt*color12: #94bff3
+URxvt*color4:  #0000cc
+URxvt*color12: #3333ff
 ! purple
-URxvt*color5:  #dc8cc3
-URxvt*color13: #d787af
+URxvt*color5:  #cc00cc
+URxvt*color13: #ff33ff
 ! cyan
-URxvt*color6:  #8cd0d3
-URxvt*color14: #afffff
+URxvt*color6:  #00cccc
+URxvt*color14: #33ffff
 
 ! misc urxvt settings
 
