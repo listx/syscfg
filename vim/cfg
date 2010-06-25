@@ -34,14 +34,18 @@ set t_Co=256
 
 " choose the appropriate colorscheme, based on the custom
 " TERM_COLOR_SCHEME_CURRENT environment variable
-if $TERM_COLOR_SCHEME_CURRENT == 'wb' " white on black
-    colorscheme zenburn_mod2
-elseif $TERM_COLOR_SCHEME_CURRENT == 'wB' " white on blue
-    colorscheme darkblue2-ex
-elseif $TERM_COLOR_SCHEME_CURRENT == 'bw' " white on blue
-    colorscheme summerfruit256
-else
-    colorscheme zenburn_mod2 " always default to the white on black theme
+if $TERM != 'linux'
+    if $TERM_COLOR_SCHEME_CURRENT == 'wb' " white on black
+        colorscheme zenburn_mod2
+    elseif $TERM_COLOR_SCHEME_CURRENT == 'wB' " white on blue
+        colorscheme darkblue2-ex
+    elseif $TERM_COLOR_SCHEME_CURRENT == 'bw' " black on white
+        colorscheme summerfruit256
+    else
+        colorscheme zenburn_mod2 " always default to the white on black theme
+    endif
+else " if we are in a virtual console, use a simple colorscheme
+    colorscheme delek
 endif
 
 " Turn off blinking for the n, v, & c states:
