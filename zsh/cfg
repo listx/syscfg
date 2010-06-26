@@ -127,7 +127,7 @@ bindkey -M menuselect '' .accept-line # just execute the command when selecting
 # with a plain 'dirs -v'
 # NOTE: 'cd +$n' makes it go to the number listed, whereas 'cd -$n' reverses it... don't know why
 # you'd ever want to use 'cd -$n'
-alias ds='dirs -v ; echo -n "\nSelect directory: " ; read n ; cd +$n && ls -Ahs --color=auto'
+alias ds='dirs -v ; echo -n "\nSelect directory: " ; read n ; cd +$n && ll'
 # just show a list of dir stack without choose prompt
 alias dl='dirs -v'
 
