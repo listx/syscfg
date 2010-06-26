@@ -4,7 +4,7 @@
 
 export TERM_COLOR_SCHEME_CURRENT='bw'
 
-c_cursor="#404040"    # cursor color
+c_cursor="#202020"    # cursor color
 
 c_bg="#f0f0f0" # background
 c_00="#f0f0f0" # black
