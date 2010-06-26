@@ -38,8 +38,8 @@ LS_COLORS='rs=0:di=01;33:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;0
 LS_COLORS+='ln=36:ex=31:tw=1;34;42:ow=1;7;34:'
 # various common filetypes (archives, pictures, movies, and sounds)
 ft_ark=(tar tgz arj taz lzh lzma tlz txz zip z Z dz gz lz xz bz2 bz tbz tbz2 tz deb rpm jar rar ace zoo cpio 7z rz)
-ft_pic=(jpg jpeg gif bmp pbm pgm ppm tga xbm xpm tif tiff png svg svgz mng pcx)
-ft_mov=(mov mpg mpeg m2v mkv ogm mp4 m4v mp4v vob qt nuv wmv asf rm rmvb flc avi fli flv gl dl xcf xwd yuv cgm emf axv anx ogv ogx)
+ft_pic=(jpg jpeg gif bmp pbm pgm ppm tga xbm xpm tif tiff png svg svgz mng pcx xcf)
+ft_mov=(mov mpg mpeg m2v mkv ogm mp4 m4v mp4v vob qt nuv wmv asf rm rmvb flc avi fli flv gl dl xwd yuv cgm emf axv anx ogv ogx)
 ft_snd=(aac au flac mid midi mka mp3 mpc ogg ra wav axa oga spx xspf)
 for t in $ft_ark; do LS_COLORS+="*.$t=32:"; done
 for t in $ft_pic; do LS_COLORS+="*.$t=35:"; done
