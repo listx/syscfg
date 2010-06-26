@@ -1,21 +1,19 @@
-#!/bin/bash
+#!/bin/zsh
 
-# for some reason, not all the default settings like font and scrollbar are NOT loaded when this
-# script is executed from Xmonad's hotkey system, so, I need to add these settings manually
-# into the command line (notice that, this gives me the added advantage of giving certain
-# programs DIFFERENT colors, fonts, and so on)!
+# set various terminal launcher paths
+term1=~/syscfg/shellscripts/sys/terms/wb.sh
+term2=~/syscfg/shellscripts/sys/terms/bw.sh
+term3=~/syscfg/shellscripts/sys/terms/wB.sh
 
-# check for HOSTNAME
-HOSTNAME=$(hostname)
-case "${HOSTNAME}" in
+# check for hostname
+case $(hostname) in
     exelion)
-        urxvt -e ncmpcpp &
-        urxvt -e alsamixer &
-        urxvt -n iftop -e sudo iftop -B -i eth1 &
-        urxvt -e htop &
-
-        # WEECHAT
-        urxvt -name WeeChat -e weechat-curses &
+        $term2 -e ncmpcpp &
+        $term1 -e alsamixer &
+        $term2 -n iftop -e sudo iftop -B -i eth1 &
+        $term1 -e htop &
+        $term3 -e rtorrent &
+        $term1 -name WeeChat -e weechat-curses &
 
         # the -passfile option ONLY WORKS if alpine is compiled with
         # "--with-passfile=some-default-file-without-directory-structure", and alpine will then
@@ -23,24 +21,24 @@ case "${HOSTNAME}" in
         # the --with-passfile option at compile/configure time; setting this option gives alpine
         # the ability to use a DIFFERENT location for a password file at each time it is run, with
         # the "-passfile" option
-        urxvt -e alpine -p ~/.alpine/cfg -passfile ~/.alpine-pass &
-        #urxvt -e rtorrent
+        $term1 -e alpine -p ~/.alpine/cfg -passfile ~/.alpine-pass &
         firefox
-        #blender
     ;;
     luxion)
-        urxvt -e alsamixer &
-        urxvt -n iftop -e sudo iftop -B -i eth0 &
-        urxvt -e htop &
-        urxvt
+        $term1 -e alsamixer &
+        $term2 -n iftop -e sudo iftop -B -i eth0 &
+        $term1 -e htop &
+        $term1
     ;;
     aether)
-        urxvt -e alsamixer &
-        urxvt -n iftop -e sudo iftop -B -i eth0 &
-        urxvt -e htop &
-        urxvt -e rtorrent &
-        urxvt
+        $term1 -e alsamixer &
+        $term2 -n iftop -e sudo iftop -B -i eth0 &
+        $term1 -e htop &
+        $term3 -e rtorrent &
+        $term1
     ;;
     *)
     ;;
 esac
+
+# vim:syntax=zsh
