@@ -78,6 +78,11 @@ myWorkspaces    = ["1","2","3","4","5","6","7","8","9","0","F1","F2","F3","F4","
 myNormalBorderColor  = "#000000"
 myFocusedBorderColor = "#ffffff"
 
+-- terminals (various different color themes)
+term1 = "~/syscfg/shellscripts/sys/terms/wb.sh"
+term2 = "~/syscfg/shellscripts/sys/terms/bw.sh"
+term3 = "~/syscfg/shellscripts/sys/terms/wB.sh"
+
 ------------------------------------------------------------------------
 -- Key bindings. Add, modify or remove key bindings here.
 --
@@ -163,8 +168,8 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((mod4Mask              , xK_w     ), spawn "soffice")
     , ((mod4Mask              , xK_m     ), spawn "blender")
     , ((mod4Mask .|. shiftMask, xK_f     ), spawn "gnucash")
-    , ((mod4Mask              , xK_h     ), spawn "urxvt -e ncmpcpp")
-    , ((mod4Mask .|. shiftMask, xK_h     ), spawn "urxvt -e mplayer -ao oss -softvol -volume 100 -volstep 1 -prefer-ipv4 http://192.168.0.110:8000/mpd.ogg")
+    , ((mod4Mask              , xK_h     ), spawn (term2 ++ " -e ncmpcpp"))
+    , ((mod4Mask .|. shiftMask, xK_h     ), spawn (term2 ++ " -e mplayer -ao oss -softvol -volume 100 -volstep 1 -prefer-ipv4 http://192.168.0.110:8000/mpd.ogg"))
     , ((mod4Mask              , xK_p     ), spawn "apvlv")
     , ((mod4Mask .|. shiftMask, xK_p     ), spawn "evince")
     , ((mod4Mask              , xK_v     ), spawn "smplayer")
