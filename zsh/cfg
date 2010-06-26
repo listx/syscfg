@@ -208,8 +208,8 @@ alias make_plist='find -maxdepth 1 -type f -iname \*.mp3 -o -iname \*.flac -o -i
 alias n='netcfg'
 
 alias g='git'
-alias gdf="[[ \$(git diff | wc -l) -gt 0 ]] && git diff || echo \"working tree clean\""
-alias gdfc="[[ \$(git diff --cached | wc -l) -gt 0 ]] && git diff --cached || echo \"index empty\""
+alias gdf="[[ \$(git diff | wc -l) -gt 0 ]] && git diff || ([[ \$(git diff 2>&1 | wc -l) -eq 0 ]] && echo \"working tree clean\")"
+alias gdfc="[[ \$(git diff --cached | wc -l) -gt 0 ]] && git diff --cached || ([[ \$(git diff --cached 2>&1 | wc -l) -eq 0 ]] && echo \"index empty\")"
 alias gst='git status'
 alias gbr='git branch'
 alias gcm='git commit'
