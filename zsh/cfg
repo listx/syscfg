@@ -73,8 +73,8 @@ autoload -U ~/.zsh/func/*(:t) # load all functions in ~/.zsh/func
 autoload -U promptinit
 promptinit
 
-# This will set the default prompt to the listdata theme
-prompt listdata
+# This will set the default prompt to the kody theme
+prompt kody
 
 # history settings
 HISTSIZE=10000
