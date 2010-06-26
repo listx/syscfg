@@ -9,7 +9,8 @@ prompt_kody_setup () {
         shift
     fi
 
-    # Color scheme -- use zsh's parameter expansion form ${NAME-WORD} (if NAME is not null, use NAME; otherwise if NAME is null, then use WORD in its place)
+    # Color scheme -- use zsh's parameter expansion form ${NAME:-WORD} (if NAME
+    # is set, use it; otherwise if NAME is not set, use WORD in its place)
     # Here, we use the default WORDs cyan, red, white, etc -- these words are
     # zsh-special and can be found in CHARACTER HIGHLIGHTING in zshzle(1). Most
     # terminals support the colours black, red, green, yellow, blue, magenta,
