@@ -85,9 +85,8 @@ prompt_kody_setup () {
         *)          hostcolor=$prompt_color5 ;;
     esac
     case $USERNAME in
-        listdata)   charcolor=$prompt_color4 ;;
         root)       charcolor=$prompt_color5 ;;
-        *)          charcolor=$prompt_color2 ;;
+        *)          [[ -n "$SSH_CLIENT" ]] && charcolor=$prompt_color2 || charcolor=$prompt_color4 ;;
     esac
     prompt_username="%F{$charcolor}%n%f"
     prompt_at_sign="%B%F{$prompt_color4}@%b%f"
