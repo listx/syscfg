@@ -169,9 +169,9 @@ hi tcCaret                     guifg=#d7d7ff guibg=#ff00af gui=bold
 hi tcBullet1                   guifg=#000000 guibg=#00ffff gui=bold
 hi link tcBullet2 tcBullet1
 hi link tcBullet3 tcBullet1
-hi tcCount                     guifg=#000000 guibg=#ffff00 gui=bold
+hi tcCount1                     guifg=#000000 guibg=#ffff00 gui=bold
 hi tcPar1                      guifg=#000000 guibg=#00ff00 gui=bold
-hi tcBox                       guifg=#ffffff guibg=#0000ff gui=bold
+hi tcBox1                       guifg=#ffffff guibg=#0000ff gui=bold
 " XXX: END custom highlighting for .tc files
 
 " Entering Kurt zone
@@ -207,9 +207,9 @@ if &t_Co > 255
     hi tcBullet1                   ctermfg=16  ctermbg=51 cterm=bold
     hi link tcBullet2 tcBullet1
     hi link tcBullet3 tcBullet1
-    hi tcCount                     ctermfg=16  ctermbg=226 cterm=bold
+    hi tcCount1                     ctermfg=16  ctermbg=226 cterm=bold
     hi tcPar1                      ctermfg=16  ctermbg=46 cterm=bold
-    hi tcBox                       ctermfg=231 ctermbg=21 cterm=bold
+    hi tcBox1                       ctermfg=231 ctermbg=21 cterm=bold
     " XXX: END custom highlighting for .toucan files
 
     hi Boolean         ctermfg=181
