@@ -439,9 +439,10 @@ if [[ -n $l ]]; then
             while read line; do
                 if [[ ! -e "$line" ]]; then
                     msg "\`$listfile': file/path \`$line' does not exist"
+                else
+                    l_targets+=("$line")
                 fi
-            done < $listfile
-            l_targets+=("$line")
+            done < $listfile # read contents of $listfile!
         fi
     done
     tstampl=$(ls --full-time -R $l_targets)
