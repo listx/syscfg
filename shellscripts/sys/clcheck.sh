@@ -189,11 +189,6 @@ e_addys=()
 
 # read old db, if it exists
 db=()
-if [[ -f /home/$USER/.clcheck/old ]]; then
-    for line in $(cat /home/$USER/.clcheck/old); do
-        db+=("$line")
-    done
-fi
 
 db_size=100
 andflag=false
@@ -283,6 +278,11 @@ if [[ -z $e_addys ]]; then
 fi
 if [[ $delay -eq 0 ]]; then
     delay=60 # 60 seconds by default
+fi
+if [[ -f /home/$USER/.clcheck/old-$url_dir ]]; then
+    for line in $(cat /home/$USER/.clcheck/old-$url_dir); do
+        db+=("$line")
+    done
 fi
 # build "filtercom" regex/unix pipe commands
 # the goal is to create a string that looks like " | ..." which can be appended to any other command string to filter
@@ -379,8 +379,8 @@ while true; do
         read -s -t $delay -k key # emulate 'sleep $delay'
         if [[ $key == "q" ]]; then
             echo "\nclcheck: exiting..."
-            # save remembered links to ~/.clcheck/old
-            echo ${(F)db} > /home/$USER/.clcheck/old
+            # save remembered links to ~/.clcheck/old-$url_dir
+            echo ${(F)db} > /home/$USER/.clcheck/old-$url_dir
             exit 0
         fi
     else
@@ -464,7 +464,7 @@ while true; do
     fi
 
     rawdata_old=$rawdata_new
-    echo ${(F)db} > /home/$USER/.clcheck/old # save db between each run
+    echo ${(F)db} > /home/$USER/.clcheck/old-$url_dir # save db between each run
 done
 
 # vim:syntax=zsh
