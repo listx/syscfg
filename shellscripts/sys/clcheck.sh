@@ -44,6 +44,8 @@ Optional parameters:
                         multiple times to simulate 'AND' behavior of search. (Same as -k paramter
                         if used once alone by itself.) Essentially, all results absolutely require
                         the WORD term given with -K.
+-n WORD                 Excludes matches that has WORD (case insensitive) in the line. Behaves as a
+                        'not' operator.
 -q NUMBER               Use an internal database of NUMBER unique items. Any new items are checked
                         against this database; if the database already has it, then the item is
                         ignored (useful against repeat posters). Default is 100.
@@ -193,21 +195,25 @@ db=()
 db_size=100
 andflag=false
 orflag=false
+notflag=false
 debugflag=false
 silentflag=false
 search_ands=()
 search_ors=()
+search_nots=()
 search_ands_orig=()
 search_ors_orig=()
+search_nots_orig=()
 searchands_com=""
 searchors_com=""
+searchnots_com=""
 filtercom=""
 com=""
 url="sfbay.craigslist.org"
 url_dir="boa"
 urlflag=false
 delay=0
-while getopts ":a:de:k:K:q:su:U:w:hv" opt; do
+while getopts ":a:de:k:K:n:q:su:U:w:hv" opt; do
     case "$opt" in
     h)  msg "help" ;;
     v)  msg "version" ;;
@@ -216,7 +222,7 @@ while getopts ":a:de:k:K:q:su:U:w:hv" opt; do
 done
 # re-parse from the beginning again if there were no -h or -v flags
 OPTIND=1
-while getopts ":a:de:k:K:q:su:U:w:" opt; do
+while getopts ":a:de:k:K:n:q:su:U:w:" opt; do
     case "$opt" in
     a)
         addys+=("$OPTARG")
@@ -237,6 +243,11 @@ while getopts ":a:de:k:K:q:su:U:w:" opt; do
         andflag=true
         search_ands+=("$OPTARG")
         search_ands_orig+=("$OPTARG")
+        ;;
+    n)
+        notflag=true
+        search_nots+=("$OPTARG")
+        search_nots_orig+=("$OPTARG")
         ;;
     q)
         db_size=$OPTARG
@@ -322,6 +333,16 @@ else # both search terms were empty
     filtercom=""
 fi
 
+# take care of "-n WORD" arguments, if any
+if [[ $notflag == true ]]; then
+    filtercom+=" | grep -iv \"$search_nots[1]"
+    shift search_nots
+    for term in $search_nots; do
+        filtercom+="\|$term"
+    done
+    filtercom+="\""
+fi
+
 com="$com_base$filtercom"
 
 if [[ $debugflag == true ]]; then
@@ -366,6 +387,12 @@ while true; do
                     echo -n " -K: "
                 fi
                 for t in $search_ands_orig; do
+                    echo -n "\`$t' "
+                done
+            fi
+            if [[ $notflag == true ]]; then
+                echo -n " -n: "
+                for t in $search_nots_orig; do
                     echo -n "\`$t' "
                 done
             fi
