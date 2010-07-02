@@ -16,7 +16,8 @@ dir_info() {
     c4="\033[1;36m" # bright cyan
     c5="\033[1;35m" # bright purple
     c6="\033[1;31m" # bright red
-    # only pre-emptively give newline to prettify listing of directory contents if the directory is not empty
+    # only pre-emptively give newline to prettify listing of directory contents
+    # if the directory is not empty
     [[ $(ls -A1 | wc -l) -ne 0 ]] && echo
     countcolor() {
         if [[ $1 -eq 0 ]]; then
@@ -107,7 +108,8 @@ dir_info() {
         # depending on which version of `ls` was used
         denom=$(ls -A1 | wc -l)
         numer=$denom
-        # redefine numer to be a smaller number if we're in simple mode (and only showing non-dotfiles/non-dotdirectories
+        # redefine numer to be a smaller number if we're in simple mode (and
+        # only showing non-dotfiles/non-dotdirectories
         $simple && numer=$(ls -1 | wc -l)
         ctag_count=$(countcolor $denom)
 
@@ -148,7 +150,9 @@ dir_info() {
         if [[ -f "$big" ]]; then
             # since $suff needs a file size suffix (K,M,G, etc.), we reassign
             # $big_size here from pure block size to human-readable notation
-            # make $big_size more "accurate" (not in terms of disk space usage, but in terms of actual number of bytes inside the file) if it is smaller than 4096 bytes
+            # make $big_size more "accurate" (not in terms of disk space usage,
+            # but in terms of actual number of bytes inside the file) if it is
+            # smaller than 4096 bytes
             suff=""
             if [[ $(du -b "$big" | cut -f1) -lt 4096 ]]; then
                 big_num="$(du -b "$big" | cut -f1)"
