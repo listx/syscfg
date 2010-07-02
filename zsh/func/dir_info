@@ -1,5 +1,13 @@
 #!/bin/zsh
 
+# dir_info(), a function that acts as an intelligent "ls". This function is
+# used by univ_open() to display directory contents, but it should additionally
+# be used by itself. By default, you can call dir_info() without any arguments,
+# but there are 8 presets that are hardcoded below (presets 0-7). Thus, you
+# could do "dir_info [0-7]" to use those modes. You sould alias these modes to
+# something easy like "ll" or "l", etc. from your ~/.zshrc. For a detailed
+# explanation of the 8 presets, see the code below.
+
 dir_info() {
     # colors
     c1="\033[1;32m" # bright green
