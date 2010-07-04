@@ -33,36 +33,36 @@
 # Execute "pdflatex article.tex" every time "article.tex" or "ch1.tex" is
 # modified (if line count changes in either file; modification checked every 5
 # seconds by default):
-#    autocall -c "pdflatex article.tex" -f article.tex -f ch1.tex
+#    autocall -c "pdflatex article.tex" -F article.tex -f ch1.tex
 #
 # Same, but only look at "ch1.tex", and automatically execute every 4 seconds:
-#    autocall -c "pdflatex article.tex" -f ch1.tex -w 1 -x 4
+#    autocall -c "pdflatex article.tex" -F ch1.tex -w 1 -x 4
 #       (-x 0 or -x 1 here would also work)
 #
 # Same, but also automatically execute every 20 (5 * 4) seconds:
-#    autocall -c "pdflatex article.tex" -f ch1.tex -x 4
+#    autocall -c "pdflatex article.tex" -F ch1.tex -x 4
 #
 # Same, but automatically execute every 5 (5 * 1) seconds (-w is 5 by default):
-#    autocall -c "pdflatex article.tex" -f ch1.tex -x 1
+#    autocall -c "pdflatex article.tex" -F ch1.tex -x 1
 #
 # Same, but automatically execute every 1 (1 * 1) second:
-#    autocall -c "pdflatex article.tex" -f ch1.tex -w 1 -x 1
+#    autocall -c "pdflatex article.tex" -F ch1.tex -w 1 -x 1
 #
 # Same, but automatically execute every 17 (1 * 17) seconds:
-#    autocall -c "pdflatex article.tex" -f ch1.tex -w 1 -x 17
+#    autocall -c "pdflatex article.tex" -F ch1.tex -w 1 -x 17
 #
 # Same, but for "ch1.tex", watch its byte size, not line count:
 #    autocall -c "pdflatex article.tex" -b ch1.tex -w 1 -x 17
 #
 # Same, but for "ch1.tex", watch its timestamp instead (i.e., every time
 # this file is saved, the modification timestamp will be different):
-#    autocall -c "pdflatex article.tex" -F ch1.tex -w 1 -x 17
+#    autocall -c "pdflatex article.tex" -f ch1.tex -w 1 -x 17
 #
 # Same, but also look at the contents of directory "images/ocean":
-#    autocall -c "pdflatex article.tex" -F ch1.tex -d images/ocean -w 1 -x 17
+#    autocall -c "pdflatex article.tex" -f ch1.tex -d images/ocean -w 1 -x 17
 #
 # Same, but also look at the contents of directory "other" recursively:
-#    autocall -c "pdflatex article.tex" -F ch1.tex -d images/ocean -D other -w 1 -x 17
+#    autocall -c "pdflatex article.tex" -f ch1.tex -d images/ocean -D other -w 1 -x 17
 #
 # Same, but look at all files and/or directories (recursively) listed in file
 # "watchlist" instead:
@@ -90,8 +90,8 @@ Required parameter:
 -c COMMAND      The command to be executed (put this in quotes).
 
 One or more required parameters (but see -x below):
--f FILE         File to be watched. Modification detected by line-size.
--F FILE         File to be watched. Modification detected by time.
+-f FILE         File to be watched. Modification detected by time.
+-F FILE         File to be watched. Modification detected by line-size.
 -b FILE         File to be watched. Modification detected by bytes.
 -d DIRECTORY    Directory to be watched. Modification detected by time.
 -D DIRECTORY    Directory to be watched, recursively. Modification
@@ -406,16 +406,16 @@ fi
 # Record state of watched files #
 #-------------------------------#
 
-if [[ -n $f ]]; then
-    if [[ $#f -eq 1 ]]; then
-        linestamp=$(wc -l $f)
-    else
-        linestamp=$(wc -l $f | head -n -1) # remove the last "total" line
-    fi
-    tstampf=$(ls --full-time $f)
-fi
 if [[ -n $F ]]; then
+    if [[ $#F -eq 1 ]]; then
+        linestamp=$(wc -l $F)
+    else
+        linestamp=$(wc -l $F | head -n -1) # remove the last "total" line
+    fi
     tstampF=$(ls --full-time $F)
+fi
+if [[ -n $f ]]; then
+    tstampf=$(ls --full-time $f)
 fi
 if [[ -n $b ]]; then
     if [[ $#b -eq 1 ]]; then
@@ -503,14 +503,14 @@ while true; do
         # Case 2: modification is detected among watched files/directories #
         #------------------------------------------------------------------#
         if [[ -n $f ]]; then
-            if [[ $#f -eq 1 ]]; then
-                linestamp_new=$(wc -l $f)
-            else
-                linestamp_new=$(wc -l $f | head -n -1) # remove the last "total" line
-            fi
             tstampf_new=$(ls --full-time $f)
         fi
         if [[ -n $F ]]; then
+            if [[ $#F -eq 1 ]]; then
+                linestamp_new=$(wc -l $F)
+            else
+                linestamp_new=$(wc -l $F | head -n -1) # remove the last "total" line
+            fi
             tstampF_new=$(ls --full-time $F)
         fi
         if [[ -n $b ]]; then
@@ -530,13 +530,13 @@ while true; do
         if [[ -n $l ]]; then
             tstampl_new=$(ls --full-time -R $l_targets)
         fi
-        if [[ -n $f && "$linestamp" != "$linestamp_new" ]]; then
+        if [[ -n $f && "$tstampf" != "$tstampf_new" ]]; then
             autocall_exec $com $timeout $killdelay 1 "change detected" "$tstampf" "$tstampf_new"
-            linestamp=$linestamp_new
             tstampf=$tstampf_new
             continue
-        elif [[ -n $F && "$tstampF" != "$tstampF_new" ]]; then
+        elif [[ -n $F && "$linestamp" != "$linestamp_new" ]]; then
             autocall_exec $com $timeout $killdelay 1 "change detected" "$tstampF" "$tstampF_new"
+            linestamp=$linestamp_new
             tstampF=$tstampF_new
             continue
         elif [[ -n $b && "$bytestamp" != "$bytestamp_new" ]]; then
