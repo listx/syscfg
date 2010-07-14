@@ -217,6 +217,7 @@ alias gco='git checkout'
 alias glg='git log'
 alias gpl='git pull'
 alias gps='git push'
+alias gg='git pull; git push'
 
 alias v='vim'
 alias vv='gvim'
