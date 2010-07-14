@@ -33,7 +33,7 @@ if [[ -n ${laptops[(r)$machine_current]} ]]; then machine_current+=".e"; fi
 
 # first check if ghost is alive
 ghost_alive=false
-ping -c 1 $ghost 2>&- 1>&-
+ping -c 1 -W 1 $ghost 2>&- 1>&-
 if [[ $? -eq 0 ]]; then
     ghost_alive=true;
     # since ghost is online, update the ghost before proceeding
@@ -43,7 +43,7 @@ fi
 
 for r in $remotes; do
     # check if remote is alive, and if so, connect to it and pull/push; otherwise, tell user that this remote was offline
-    ping -c 1 $r 2>&- 1>&-
+    ping -c 1 -W 1 $r 2>&- 1>&-
     if [[ $? -eq 0 ]]; then
         echo "gsy: attempting to sync $r..."
         if [[ $ghost_alive == true ]]; then
