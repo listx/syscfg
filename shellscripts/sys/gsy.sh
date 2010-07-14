@@ -47,11 +47,13 @@ machine_current=$HOST
 if [[ -n ${laptops[(r)$machine_current]} ]]; then machine_current+=".e"; fi
 
 # first check if ghost is alive
+echo "gsy: attempting to sync $ghost..."
 ghost_alive=false
 ping -c 1 -W 1 $ghost 2>&- 1>&-
 if [[ $? -eq 0 ]]; then
     ghost_alive=true;
     # since ghost is online, update the ghost before proceeding
+    echo "gsy: ghost repo online -- syncing with ghost"
     git pull
     git push
 fi
