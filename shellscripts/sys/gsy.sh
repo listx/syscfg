@@ -21,8 +21,23 @@ for m in $machines; do
     fi
 done
 
-# store repo location -- this has to be the same across all remotes as well
-repo=$PWD
+# store repo location -- this has to be the same across all remotes as well;
+# since we could be nested deep inside a directory somewhere in the repo, let's
+# find the toplevel directory (this is required for pulling/pushing
+# bidirectionally)
+repo=""
+while true; do
+    # quit if we did not find a git directory
+    if [[ $PWD == "/" ]]; then echo "gsy: no git repo found here or above"; exit; fi
+    ls .git >/dev/null 2>&1
+    if [[ $? -eq 0 ]]; then
+        repo=$PWD
+        break
+    else
+        cd ..
+    fi
+done
+
 
 # store username (only used if ghost if offline)
 username=$USER
