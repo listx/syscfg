@@ -89,7 +89,6 @@ for c in $remotes; do
         echo "\ngsy: attempting to sync $r..."
         if [[ $ghost_alive == true ]]; then
             echo "gsy: syncing upstream ($ghost <=> $r)"
-            echo "repo is $repo"
             if ssh $c "[[ -d $repo ]]"; then
                 ssh $c "
                 cd $repo; \
