@@ -19,8 +19,8 @@ connections=(listdata@exelion listdata@luxion listdata@aether tiger@forest otter
 # these must be connected with a ".e" appended to it, like "luxion.e" (of course, this is because luxion.e is a predefined address in the /etc/hosts file)
 laptops=(luxion aether)
 
-# online remote connections
-remotes_online=()
+# online clean remote connections
+remotes_clean=()
 
 # identify remote connections
 remotes=()
@@ -55,6 +55,8 @@ while true; do
     fi
 done
 
+echo "${c4}gsy: starting initial sync process...$ce"
+
 # store username and hostname (only for one-way sync)
 username=$USER
 machine_current=$HOST
@@ -62,77 +64,102 @@ if [[ -n ${laptops[(r)$machine_current]} ]]; then machine_current+=".e"; fi
 
 # if we are already on the ghost machine, sync to ghost repo immediately
 if [[ $HOST == $ghost ]]; then
-    echo "gsy: already on ghost machine -- syncing upstream ($ghost <=> $machine_current)"
-    git pull 2>&1 | sed "s/^/  $c1>$ce /"
-    git push 2>&1 | sed "s/^/  $c1>$ce /"
+    echo "\ngsy: already on ghost machine -- syncing upstream ($ghost <=> $c2$machine_current$ce)"
+    # only pull and push if our working tree and staging area are both clean
+    if [[ $(git diff 2>&1 | wc -l) -eq 0 && $(git diff --cached 2>&1 | wc -l) -eq 0 ]]; then
+        git pull 2>&1 | sed -e "s/^/  $c1>$ce /" -e "s/error/${c6}error$ce/"
+        git push 2>&1 | sed -e "s/^/  $c1>$ce /" -e "s/error/${c6}error$ce/"
+    else
+        echo "gsy: ${c6}error$ce: local repo unclean"
+        echo "gsy: ${c6}error$ce: local repo: aborting upstream sync"
+    fi
 else
     # we are not on the ghost machine, so only sync with ghost if ghost is alive
-    echo "gsy: attempting to sync upstream to ghost ($ghost)..."
+    echo "\ngsy: attempting to sync upstream to ghost \`$ghost'..."
     ghost_alive=false
     ping -c 1 -W 1 $ghost >/dev/null 2>&1
     if [[ $? -eq 0 ]]; then
         ghost_alive=true;
         # since ghost is online, update the ghost before proceeding
-        echo "\ngsy: ghost repo$c1 online$ce -- syncing upstream ($ghost <=> $machine_current)"
-        git pull 2>&1 | sed "s/^/  $c1>$ce /"
-        git push 2>&1 | sed "s/^/  $c1>$ce /"
+        echo "gsy: ghost repo ${c1}online$ce -- syncing upstream ($ghost <=> $c2$machine_current$ce)"
+        if [[ $(git diff 2>&1 | wc -l) -eq 0 && $(git diff --cached 2>&1 | wc -l) -eq 0 ]]; then
+            git pull 2>&1 | sed -e "s/^/  $c1>$ce /" -e "s/error/${c6}error$ce/"
+            git push 2>&1 | sed -e "s/^/  $c1>$ce /" -e "s/error/${c6}error$ce/"
+        else
+            echo "gsy: ${c6}error$ce: local repo unclean -- aborting sync"
+        fi
+    else
+        echo "gsy: ghost $ghost ${c6}offline$ce -- skipping sync"
     fi
 fi
 
 for c in $remotes; do
     # check if remote is alive, and if so, connect to it and pull/push; otherwise, tell user that this remote was offline
     r=$(echo -n $c | cut -d "@" -f2)
+    echo "\ngsy: attempting to sync remote \`$r'..."
     ping -c 1 -W 1 $r >/dev/null 2>&1
     if [[ $? -eq 0 ]]; then
-        # since remote is online, we add it to our list of online remotes
-        remotes_online+=($c)
-        echo "\ngsy: attempting to sync $r..."
+        echo "gsy: remote \`$r' ${c1}online$ce"
         if [[ $ghost_alive == true ]]; then
             echo "gsy: syncing upstream ($ghost <=> $r)"
-            echo "repo is $repo"
             if ssh $c "[[ -d $repo ]]"; then
-                ssh $c "
-                cd $repo; \
-                git pull 2>&1 | sed \"s/^/  $c1>$ce /\"; \
-                git push 2>&1 | sed \"s/^/  $c1>$ce /\""
+                if ssh $c "cd $repo && [[ \$(git diff 2>&1 | wc -l) -eq 0 && \$(git diff --cached 2>&1 | wc -l) -eq 0 ]] && echo"; then
+                    # since remote is online and clean, we add it to our list of online remotes
+                    remotes_clean+=($c)
+                    ssh $c "
+                    cd $repo; \
+                    git pull 2>&1 | sed -e \"s/^/  $c1>$ce /\" -e \"s/error/${c6}error$ce/\"; \
+                    git push 2>&1 | sed -e \"s/^/  $c1>$ce /\" -e \"s/error/${c6}error$ce/\""
+                else
+                    echo "gsy: ${c6}error$ce: remote repo \`$r' unclean -- aborting sync"
+                fi
             else
-                echo "gsy: remote does not have this repo --$c5 skipping$ce"
+                echo "gsy: remote does not have this repo -- ${c5}skipping$ce"
             fi
         else
-            # since ghost is offline, we try to pull from the remote (i.e.,
-            # connect to the remote, and then pull from this machine)
-            echo "gsy: ghost repo$c6 offline$ce -- syncing one-way ($machine_current => $r)"
+            # since ghost is offline, we try to pull from the local machine to
+            # the remote (i.e., connect to the remote, and then pull from this
+            # machine)
+            echo "gsy: ghost repo ${c6}offline$ce -- syncing one-way ($c2$machine_current$ce => $r)"
             if ssh $c "[[ -d $repo ]]"; then
-                ssh $c "
-                cd $repo; \
-                git pull ssh://$username@$machine_current$repo master 2>&1 | sed \"s/^/  $c1>$ce /\""
+                if ssh $c "cd $repo && [[ \$(git diff 2>&1 | wc -l) -eq 0 && \$(git diff --cached 2>&1 | wc -l) -eq 0 ]]"; then
+                    ssh $c "
+                    cd $repo; \
+                    git pull ssh://$username@$machine_current$repo master 2>&1 | sed -e \"s/^/  $c1>$ce /\" -e \"s/error/${c6}error$ce/\""
+                else
+                    echo "gsy: ${c6}error$ce: remote repo \`$r' unclean -- aborting sync"
+                fi
             else
-                echo "gsy: remote does not have this repo --$c5 skipping$ce"
+                echo "gsy: remote does not have this repo -- ${c5}skipping$ce"
             fi
         fi
     else
-        echo "\ngsy: remote \`$r'$c6 offline$ce --$c5 skipping$ce"
+        echo "gsy: remote \`$r' ${c6}offline$ce -- ${c5}skipping$ce"
     fi
 done
 
 # since we could have ended up merging upstream at any time we pushed from a
 # remote to the ghost, let's pull across all remotes again to keep the remotes
 # in line
-if [[ $ghost_alive == true ]]; then
-    echo "\ngsy: propagating upstream to all machines"
-    echo "\ngsy: propagating upstream ($ghost <=> $machine_current)"
-    git pull 2>&1 | sed "s/^/  $c1>$ce /"
-    for c in $remotes_online; do
+if [[ $ghost_alive == true && (-n $remotes_clean || $(git diff 2>&1 | wc -l) -eq 0 && $(git diff --cached 2>&1 | wc -l) -eq 0) ]]; then
+    echo "\n${c4}gsy: propagating upstream to all clean machines$ce"
+    if [[ $(git diff 2>&1 | wc -l) -eq 0 && $(git diff --cached 2>&1 | wc -l) -eq 0 ]]; then
+        echo "\ngsy: propagating upstream ($ghost <=> $c2$machine_current$ce)"
+        git pull 2>&1 | sed -e "s/^/  $c1>$ce /" -e "s/error/${c6}error$ce/"
+    fi
+    for c in $remotes_clean; do
         r=$(echo -n $c | cut -d "@" -f2)
         echo "\ngsy: propagating upstream ($ghost => $r)"
         if ssh $c "[[ -d $repo ]]"; then
             ssh $c "
             cd $repo; \
-            git pull 2>&1 | sed \"s/^/  $c1>$ce /\""
+            git pull 2>&1 | sed -e \"s/^/  $c1>$ce /\" -e \"s/error/${c6}error$ce/\""
         else
-            echo "gsy: remote does not have this repo --$c5 skipping$ce"
+            echo "gsy: remote does not have this repo -- ${c5}skipping$ce"
         fi
     done
+else
+    echo "\ngsy: no suitable clean remotes -- aborting upstream propagation"
 fi
 
 # vim:syntax=zsh
