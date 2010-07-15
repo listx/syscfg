@@ -38,6 +38,7 @@ done
 # find the toplevel directory (this is required for pulling/pushing
 # one-way)
 repo=""
+slash=""
 while true; do
     # quit if we did not find a git directory
     if [[ $PWD == "/" ]]; then echo "gsy: no git repo found here or above"; exit; fi
@@ -49,6 +50,7 @@ while true; do
         # on "/home/tiger/syscfg", but using ~/syscfg ensures that it works
         # across all systems
         repo=${PWD/#${HOME}/\~}
+        [[ $repo[1] == "~" ]] && slash="/" # this is used only during the ssh connection when syncing one-way
         break
     else
         cd ..
@@ -62,16 +64,17 @@ username=$USER
 machine_current=$HOST
 if [[ -n ${laptops[(r)$machine_current]} ]]; then machine_current+=".e"; fi
 
+ghost_alive=false
 # if we are already on the ghost machine, sync to ghost repo immediately
 if [[ $HOST == $ghost ]]; then
-    echo "\ngsy: already on ghost machine -- syncing upstream ($ghost <=> $c2$machine_current$ce)"
+    ghost_alive=true; # assume that this machine is connected to the net
+    echo "\ngsy: already on ghost machine -- syncing ${c4}upstream$ce ($ghost <=> $c2$machine_current$ce)"
     # only pull and push if our working tree and staging area are both clean
     if [[ $(git diff 2>&1 | wc -l) -eq 0 && $(git diff --cached 2>&1 | wc -l) -eq 0 ]]; then
         git pull 2>&1 | sed -e "s/^/  $c1>$ce /" -e "s/error/${c6}error$ce/"
         git push 2>&1 | sed -e "s/^/  $c1>$ce /" -e "s/error/${c6}error$ce/"
     else
-        echo "gsy: ${c6}error$ce: local repo unclean"
-        echo "gsy: ${c6}error$ce: local repo: aborting upstream sync"
+        echo "gsy: ${c6}error$ce: local repo unclean -- aborting upstream sync"
     fi
 else
     # we are not on the ghost machine, so only sync with ghost if ghost is alive
@@ -81,7 +84,7 @@ else
     if [[ $? -eq 0 ]]; then
         ghost_alive=true;
         # since ghost is online, update the ghost before proceeding
-        echo "gsy: ghost repo ${c1}online$ce -- syncing upstream ($ghost <=> $c2$machine_current$ce)"
+        echo "gsy: ghost repo ${c1}online$ce -- syncing ${c4}upstream$ce ($ghost <=> $c2$machine_current$ce)"
         if [[ $(git diff 2>&1 | wc -l) -eq 0 && $(git diff --cached 2>&1 | wc -l) -eq 0 ]]; then
             git pull 2>&1 | sed -e "s/^/  $c1>$ce /" -e "s/error/${c6}error$ce/"
             git push 2>&1 | sed -e "s/^/  $c1>$ce /" -e "s/error/${c6}error$ce/"
@@ -101,7 +104,7 @@ for c in $remotes; do
     if [[ $? -eq 0 ]]; then
         echo "gsy: remote \`$r' ${c1}online$ce"
         if [[ $ghost_alive == true ]]; then
-            echo "gsy: syncing upstream ($ghost <=> ${c3}$r$ce)"
+            echo "gsy: syncing ${c4}upstream$ce ($ghost <=> ${c3}$r$ce)"
             if ssh $c "[[ -d $repo ]]"; then
                 if ssh $c "cd $repo && [[ \$(git diff 2>&1 | wc -l) -eq 0 && \$(git diff --cached 2>&1 | wc -l) -eq 0 ]] && echo"; then
                     # since remote is online and clean, we add it to our list of online remotes
@@ -120,12 +123,12 @@ for c in $remotes; do
             # since ghost is offline, we try to pull from the local machine to
             # the remote (i.e., connect to the remote, and then pull from this
             # machine)
-            echo "gsy: ghost repo ${c6}offline$ce -- syncing one-way ($c2$machine_current$ce => ${c3}$r$ce)"
+            echo "gsy: ghost repo ${c6}offline$ce -- syncing ${c5}one-way$ce ($c2$machine_current$ce => ${c3}$r$ce)"
             if ssh $c "[[ -d $repo ]]"; then
                 if ssh $c "cd $repo && [[ \$(git diff 2>&1 | wc -l) -eq 0 && \$(git diff --cached 2>&1 | wc -l) -eq 0 ]]"; then
                     ssh $c "
                     cd $repo; \
-                    git pull ssh://$username@$machine_current$repo master 2>&1 | sed -e \"s/^/  $c1>$ce /\" -e \"s/error/${c6}error$ce/\""
+                    git pull ssh://$username@$machine_current$slash$repo master 2>&1 | sed -e \"s/^/  $c1>$ce /\" -e \"s/error/${c6}error$ce/\""
                 else
                     echo "gsy: ${c6}error$ce: remote repo \`$r' unclean -- aborting sync"
                 fi
