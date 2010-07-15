@@ -2,9 +2,9 @@
     name = listdata
     email = linus@ucla.edu
 [color]
-    branch = auto
-    diff = auto
-    status = auto
+    branch = always
+    diff = always
+    status = always
 [color "diff"]
     meta = yellow bold
 [push]
