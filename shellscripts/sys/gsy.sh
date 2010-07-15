@@ -145,9 +145,9 @@ done
 # remote to the ghost, let's pull across all remotes again to keep the remotes
 # in line
 if [[ $ghost_alive == true && (-n $remotes_clean || $(git diff 2>&1 | wc -l) -eq 0 && $(git diff --cached 2>&1 | wc -l) -eq 0) ]]; then
-    echo "\n${c4}gsy: propagating upstream to all clean machines$ce"
+    echo "\n${c4}gsy: propagating upstream to all clean machines...$ce"
     if [[ $(git diff 2>&1 | wc -l) -eq 0 && $(git diff --cached 2>&1 | wc -l) -eq 0 ]]; then
-        echo "\ngsy: propagating upstream ($ghost <=> $c2$machine_current$ce)"
+        echo "\ngsy: propagating upstream ($ghost => $c2$machine_current$ce)"
         git pull 2>&1 | sed -e "s/^/  $c1>$ce /" -e "s/error/${c6}error$ce/"
     fi
     for c in $remotes_clean; do
