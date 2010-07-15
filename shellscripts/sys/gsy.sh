@@ -101,7 +101,7 @@ for c in $remotes; do
     if [[ $? -eq 0 ]]; then
         echo "gsy: remote \`$r' ${c1}online$ce"
         if [[ $ghost_alive == true ]]; then
-            echo "gsy: syncing upstream ($ghost <=> $r)"
+            echo "gsy: syncing upstream ($ghost <=> ${c3}$r$ce)"
             if ssh $c "[[ -d $repo ]]"; then
                 if ssh $c "cd $repo && [[ \$(git diff 2>&1 | wc -l) -eq 0 && \$(git diff --cached 2>&1 | wc -l) -eq 0 ]] && echo"; then
                     # since remote is online and clean, we add it to our list of online remotes
@@ -120,7 +120,7 @@ for c in $remotes; do
             # since ghost is offline, we try to pull from the local machine to
             # the remote (i.e., connect to the remote, and then pull from this
             # machine)
-            echo "gsy: ghost repo ${c6}offline$ce -- syncing one-way ($c2$machine_current$ce => $r)"
+            echo "gsy: ghost repo ${c6}offline$ce -- syncing one-way ($c2$machine_current$ce => ${c3}$r$ce)"
             if ssh $c "[[ -d $repo ]]"; then
                 if ssh $c "cd $repo && [[ \$(git diff 2>&1 | wc -l) -eq 0 && \$(git diff --cached 2>&1 | wc -l) -eq 0 ]]"; then
                     ssh $c "
@@ -149,7 +149,7 @@ if [[ $ghost_alive == true && (-n $remotes_clean || $(git diff 2>&1 | wc -l) -eq
     fi
     for c in $remotes_clean; do
         r=$(echo -n $c | cut -d "@" -f2)
-        echo "\ngsy: propagating upstream ($ghost => $r)"
+        echo "\ngsy: propagating upstream ($ghost => ${c3}$r$ce)"
         if ssh $c "[[ -d $repo ]]"; then
             ssh $c "
             cd $repo; \
