@@ -50,13 +50,13 @@ LS_COLORS+="*.toucan=0;38;5;48:"
 export LS_COLORS
 
 # colors for the 'less' pager
-export LESS_TERMCAP_md=$'\E[1;34m'    # begin bold (blue)
-export LESS_TERMCAP_us=$'\E[1;35m'    # begin underline (magenta)
+export LESS_TERMCAP_md=$'\E[1;34m'      # begin bold (blue)
+export LESS_TERMCAP_us=$'\E[1;35m'      # begin underline (magenta)
 export LESS_TERMCAP_so=$'\E[1;34;5;43m' # begin standout-mode - (search highlight) (blue on yellow)
 export LESS_TERMCAP_mb=$'\E[1;5;31m'    # begin blinking (the last "5" actually makes it blink) (red)
-export LESS_TERMCAP_me=$'\E[0m'       # end bold/blinking
-export LESS_TERMCAP_se=$'\E[0m'       # end standout-mode
-export LESS_TERMCAP_ue=$'\E[0m'       # end underline
+export LESS_TERMCAP_me=$'\E[0m'         # end bold/blinking
+export LESS_TERMCAP_se=$'\E[0m'         # end standout-mode
+export LESS_TERMCAP_ue=$'\E[0m'         # end underline
 
 # default text editor--set it to vim, not vi
 export VISUAL=/usr/bin/vim
@@ -188,14 +188,14 @@ alias fT='find_quick tt '
 
 alias i='eog'
 
-alias ll='dir_info 0'
-alias l='dir_info 1'
+alias  ll='dir_info 0'
+alias   l='dir_info 1'
 alias llj='dir_info 2'
-alias lj='dir_info 3' # sort by size, and reverse it (bigger files @ bottom)
+alias  lj='dir_info 3' # sort by size, and reverse it (bigger files @ bottom)
 alias llk='dir_info 4' # sort by time, and reverse it (latest files @ bottom)
-alias lk='dir_info 5'
+alias  lk='dir_info 5'
 alias lli='dir_info 6' # sort by extension
-alias li='dir_info 7'
+alias  li='dir_info 7'
 
 alias q='exit'
 
@@ -310,11 +310,7 @@ alias rgflac='/home/listdata/syscfg/shellscripts/audio/replaygain/flac/tfwrg.sh'
 #     from http://www.jauu.net/data/jauu_backup/data/dotfiles/zshrc.html                           #
 #--------------------------------------------------------------------------------------------------#
 
-## check for HOSTNAME
-#HOSTNAME=$(hostname 2>/dev/null || hostname -f) # see 'man hostname' for details; '2' means
-#stderror output, and /dev/null is the null device...?
-#HOSTNAME=$(hostname)
-case $(hostname) in
+case $HOST in
     exelion)
         alias iftop='sudo iftop -B -i eth1'
         alias m1='d /mnt/a1'
