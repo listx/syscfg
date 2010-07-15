@@ -10,13 +10,17 @@ c5="\x1b[1;35m" # bright purple
 c6="\x1b[1;31m" # bright red
 ce="\x1b[0m"
 
-# name of the central bare repo (we only pull/push to this if this machine is online; if this machine is offline, we simply try to pull manually from all the remotes)
+# name of the central bare repo (we only pull/push to this machine if it's
+# online; if it's offline, we sync only among the remotes themselves)
 ghost=(exelion)
 
-# list of machines that have the same git repo (that are ssh-able w/o a password)
+# list of machines that have the same git repo (that are ssh-able w/o a
+# password)
 connections=(listdata@exelion listdata@luxion listdata@aether tiger@forest otter@ocean)
 
-# these must be connected with a ".e" appended to it, like "luxion.e" (of course, this is because luxion.e is a predefined address in the /etc/hosts file)
+# these must be connected with a ".e" appended to it, like "luxion.e" (of
+# course, this is because luxion.e is a predefined address in the /etc/hosts
+# file)
 laptops=(luxion aether)
 
 # online clean remote connections
@@ -27,21 +31,21 @@ remotes=()
 for c in $connections; do
     machine=$(echo -n $c | cut -d "@" -f2)
     if [[ $machine != $HOST ]]; then
-        # if the remote is recognized by laptops() array, connect with an appended ".e"
-        if [[ -n ${laptops[(r)$machine]} ]]; then c+=".e"; fi
+        # if the remote is recognized by laptops() array, connect with an
+        # appended ".e"
+        [[ -n ${laptops[(r)$machine]} ]] && c+=".e"
         remotes+=($c)
     fi
 done
 
 # store repo location -- this has to be the same across all remotes as well;
 # since we could be nested deep inside a directory somewhere in the repo, let's
-# find the toplevel directory (this is required for pulling/pushing
-# one-way)
+# find the toplevel directory (this is required for pulling/pushing one-way)
 repo=""
 slash=""
 while true; do
     # quit if we did not find a git directory
-    if [[ $PWD == "/" ]]; then echo "gsy: no git repo found here or above"; exit; fi
+    [[ $PWD == "/" ]] && echo "gsy: no git repo found here or above" && exit
     ls .git >/dev/null 2>&1
     if [[ $? -eq 0 ]]; then
         # since we have different usenames in the remotes, we have to unify the
@@ -50,19 +54,20 @@ while true; do
         # on "/home/tiger/syscfg", but using ~/syscfg ensures that it works
         # across all systems
         repo=${PWD/#${HOME}/\~}
-        [[ $repo[1] == "~" ]] && slash="/" # this is used only during the ssh connection when syncing one-way
+        # this is used only during the ssh connection when syncing one-way
+        [[ $repo[1] == "~" ]] && slash="/"
         break
     else
         cd ..
     fi
 done
 
-echo "${c4}gsy: starting initial sync process...$ce"
+echo "${c4}gsy: starting initial upstream sync...$ce"
 
 # store username and hostname (only for one-way sync)
 username=$USER
 machine_current=$HOST
-if [[ -n ${laptops[(r)$machine_current]} ]]; then machine_current+=".e"; fi
+[[ -n ${laptops[(r)$machine_current]} ]] && machine_current+=".e"
 
 ghost_alive=false
 # if we are already on the ghost machine, sync to ghost repo immediately
@@ -92,14 +97,18 @@ else
             echo "gsy: ${c6}error$ce: local repo unclean -- aborting sync"
         fi
     else
-        echo "gsy: ghost $ghost ${c6}offline$ce -- skipping sync"
+        echo "gsy: ghost \`$ghost' ${c6}offline$ce -- skipping sync"
     fi
 fi
 
+echo "\n${c4}gsy: starting remote sync...$ce"
+
+n=1
 for c in $remotes; do
-    # check if remote is alive, and if so, connect to it and pull/push; otherwise, tell user that this remote was offline
+    # check if remote is alive, and if so, connect to it and pull/push;
+    # otherwise, tell user that this remote was offline
     r=$(echo -n $c | cut -d "@" -f2)
-    echo "\ngsy: attempting to sync remote \`$r'..."
+    echo "\ngsy: ($n/$#remotes) attempting to sync remote \`$r'..."
     ping -c 1 -W 1 $r >/dev/null 2>&1
     if [[ $? -eq 0 ]]; then
         echo "gsy: remote \`$r' ${c1}online$ce"
@@ -110,8 +119,8 @@ for c in $remotes; do
                     # since remote is online and clean, we add it to our list of online remotes
                     remotes_clean+=($c)
                     ssh $c "
-                    cd $repo; \
-                    git pull 2>&1 | sed -e \"s/^/  $c1>$ce /\" -e \"s/error/${c6}error$ce/\"; \
+                    cd $repo;
+                    git pull 2>&1 | sed -e \"s/^/  $c1>$ce /\" -e \"s/error/${c6}error$ce/\";
                     git push 2>&1 | sed -e \"s/^/  $c1>$ce /\" -e \"s/error/${c6}error$ce/\""
                 else
                     echo "gsy: ${c6}error$ce: remote repo \`$r' unclean -- aborting sync"
@@ -127,7 +136,7 @@ for c in $remotes; do
             if ssh $c "[[ -d $repo ]]"; then
                 if ssh $c "cd $repo && [[ \$(git diff 2>&1 | wc -l) -eq 0 && \$(git diff --cached 2>&1 | wc -l) -eq 0 ]]"; then
                     ssh $c "
-                    cd $repo; \
+                    cd $repo;
                     git pull ssh://$username@$machine_current$slash$repo master 2>&1 | sed -e \"s/^/  $c1>$ce /\" -e \"s/error/${c6}error$ce/\""
                 else
                     echo "gsy: ${c6}error$ce: remote repo \`$r' unclean -- aborting sync"
@@ -139,7 +148,10 @@ for c in $remotes; do
     else
         echo "gsy: remote \`$r' ${c6}offline$ce -- ${c5}skipping$ce"
     fi
+    let n+=1
 done
+
+echo "\n${c4}gsy: attempting upstream propagation...$ce"
 
 # since we could have ended up merging upstream at any time we pushed from a
 # remote to the ghost, let's pull across all remotes again to keep the remotes
@@ -150,19 +162,25 @@ if [[ $ghost_alive == true && (-n $remotes_clean || $(git diff 2>&1 | wc -l) -eq
         echo "\ngsy: propagating upstream ($ghost => $c2$machine_current$ce)"
         git pull 2>&1 | sed -e "s/^/  $c1>$ce /" -e "s/error/${c6}error$ce/"
     fi
+    n=1
     for c in $remotes_clean; do
         r=$(echo -n $c | cut -d "@" -f2)
-        echo "\ngsy: propagating upstream ($ghost => ${c3}$r$ce)"
+        echo "\ngsy: ($n/$#remotes_clean) propagating upstream ($ghost => ${c3}$r$ce)"
         if ssh $c "[[ -d $repo ]]"; then
             ssh $c "
-            cd $repo; \
+            cd $repo;
             git pull 2>&1 | sed -e \"s/^/  $c1>$ce /\" -e \"s/error/${c6}error$ce/\""
         else
             echo "gsy: remote does not have this repo -- ${c5}skipping$ce"
         fi
+        let n+=1
     done
 else
-    echo "\ngsy: no suitable clean remotes -- aborting upstream propagation"
+    if [[ $ghost_alive == false ]]; then
+        echo "\ngsy: ghost repo \`$ghost' ${c6}offline$ce -- aborting upstream propagation"
+    else
+        echo "\ngsy: no suitable clean remotes -- aborting upstream propagation"
+    fi
 fi
 
 # vim:syntax=zsh
