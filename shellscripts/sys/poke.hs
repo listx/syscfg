@@ -24,10 +24,11 @@ showrand = do
     key <- getChar
     r <- getStdRandom $ randomR (0,(length keys) - 1)
     case key of
-        'q' -> puts "\npoke: exiting...\n"
+        'q' -> puts "\n\npoke: exiting...\n"
         'j' -> put $ keys!!((mod r 10) + 52)
-        'k' -> put $ keys!!((mod r 32) + 62)
-        'l' -> put $ keys!!(mod r 52)
+        'k' -> put $ keys!!(mod r 52)
+        'l' -> put $ keys!!(mod r 62)
+        ';' -> put $ keys!!((mod r 32) + 62)
         _   -> put $ keys!!r
     if key /= 'q' then showrand else return ()
 
@@ -38,7 +39,8 @@ main = do
     hSetEcho stdin False -- disable terminal echo
     puts "\npoke: 'q'     quit"
     puts "      'j'     number"
-    puts "      'k'     punctuation"
-    puts "      'l'     letter"
+    puts "      'k'     letter"
+    puts "      'l'     alphanumeric"
+    puts "      ';'     punctuation"
     puts "      else    any\n"
     showrand -- enter loop
