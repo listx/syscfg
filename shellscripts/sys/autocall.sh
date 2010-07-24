@@ -23,6 +23,7 @@
 # Press "h" for help.
 # Pressing a SPACE, ENTER, or "1" key forces execution of COMMAND immediately.
 # Keys 2-9 are hotkeys to extra commands, if there are any.
+# Press "c" for the command list.
 # To exit autocall gracefully, press "q".
 #
 #
@@ -479,7 +480,7 @@ if [[ $xflag == true && $xdelay_factor -le 1 ]]; then
 fi
 com_num=1
 for c in $coms; do
-    echo "autocall: command $com_num set to \`$c4$coms[$com_num]$ce'"
+    echo "autocall: command slot $com_num set to \`$c4$coms[$com_num]$ce'"
     let com_num+=1
 done
 echo "autocall: press keys 1-$#coms to execute a specific command"
@@ -498,8 +499,9 @@ if [[ $tflag == true ]]; then
     fi
 fi
 echo "autocall: press ENTER or SPACE to execute manually"
-echo "autocall: press 'q' to quit"
-echo "autocall: press 'h' for help"
+echo "autocall: press \`c' for command list"
+echo "autocall: press \`h' for help"
+echo "autocall: press \`q' to quit"
 key=""
 while true; do
     for i in {1..$xdelay_factor}; do
@@ -509,10 +511,6 @@ while true; do
         # read a single key from the user
         read -s -t $delay -k key
         case $key in
-            q)
-                echo "\nautocall: exiting..."
-                exit 0
-                ;;
             # note the special notation $'\n' to detect an ENTER key
             $'\n'|" "|1)
                 autocall_exec $coms[1] $timeout $killdelay 4 "manual execution"
@@ -525,23 +523,38 @@ while true; do
                     key=""
                     continue
                 else
-                    echo "autocall: command $key is not set"
+                    echo "autocall: command slot $key is not set"
                     key=""
                     continue
                 fi
                 ;;
+            c)
+                com_num=1
+                echo ""
+                for c in $coms; do
+                    echo "autocall: command slot $com_num set to \`$c4$coms[$com_num]$ce'"
+                    let com_num+=1
+                done
+                key=""
+                continue
+                ;;
             h)
-                echo "\nautocall: press \`h' for help"
+                echo "\nautocall: press \`c' for command list"
+                echo "autocall: press \`h' for help"
                 echo "autocall: press \`q' to exit"
                 com_num=1
                 for c in $coms; do
-                    echo "autocall: command $com_num set to \`$c4$coms[$com_num]$ce'"
+                    echo "autocall: command slot $com_num set to \`$c4$coms[$com_num]$ce'"
                     let com_num+=1
                 done
                 echo "autocall: press keys 1-$#coms to execute a specific command"
                 echo "autocall: press ENTER or SPACE or \`1' to execute first command manually"
                 key=""
                 continue
+                ;;
+            q)
+                echo "\nautocall: exiting..."
+                exit 0
                 ;;
             *) ;;
         esac
