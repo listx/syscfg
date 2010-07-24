@@ -226,7 +226,6 @@ c5="\x1b[1;35m" # bright purple
 c6="\x1b[1;31m" # bright red
 ce="\x1b[0m"
 
-com=""
 coms=()
 delay=5
 xdelay_factor=4
