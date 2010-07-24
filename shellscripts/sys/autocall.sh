@@ -276,7 +276,7 @@ while getopts ":c:w:f:F:b:d:D:l:t:k:x:a" opt; do
     case "$opt" in
     c)
         com="$OPTARG"
-        com_binary=$(echo $com | sed 's/ \+/ /g' | cut -d " " -f1)
+        com_binary=$(echo $com | sed 's/ \+/ /g' | sed 's/;/ /g' | cut -d " " -f1)
         if [[ $(which $com_binary) == "$com_binary not found" ]]; then
             msg "invalid command \`$com_binary'"
         fi
