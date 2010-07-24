@@ -14,7 +14,6 @@ URxvt*geometry: 100x70
 ! urxvt colors
 
 ! dim the colors by 20 percent when the window is inactive
-URxvt*depth: 32
 URxvt*fading: 20
 URxvt*cursorColor: green
 
