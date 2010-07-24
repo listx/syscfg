@@ -8,7 +8,9 @@
 #
 # Autocall watches (1) a single file, (2) directory, and/or (3) a text file
 # containing a list of files/directories, and if the watched files and/or
-# directories become modified, runs the given command.
+# directories become modified, runs the (first) given command string. Multiple
+# commands can be provided (a total of 9 command strings are recognized) to
+# manually execute different commands.
 #
 #
 # USAGE:
@@ -18,7 +20,9 @@
 #
 # USER INTERACTION:
 #
-# Pressing a SPACE or ENTER key forces execution of COMMAND immediately.
+# Press "h" for help.
+# Pressing a SPACE, ENTER, or "1" key forces execution of COMMAND immediately.
+# Keys 2-9 are hotkeys to extra commands, if there are any.
 # To exit autocall gracefully, press "q".
 #
 #
@@ -30,46 +34,50 @@
 #
 # EXAMPLES:
 #
-# Execute "pdflatex article.tex" every time "article.tex" or "ch1.tex" is
+# Execute "pdflatex -halt-on-error report.tex" every time "report.tex" or "ch1.tex" is
 # modified (if line count changes in either file; modification checked every 5
 # seconds by default):
-#    autocall -c "pdflatex article.tex" -F article.tex -f ch1.tex
+#    autocall -c "pdflatex -halt-on-error report.tex" -F report.tex -f ch1.tex
 #
-# Same, but only look at "ch1.tex", and automatically execute every 4 seconds:
-#    autocall -c "pdflatex article.tex" -F ch1.tex -w 1 -x 4
+# Same, but only look at "ch1.tex" (useful, assuming that report.tex includes
+# ch1.tex), and automatically execute every 4 seconds:
+#    autocall -c "pdflatex -halt-on-error report.tex" -F ch1.tex -w 1 -x 4
 #       (-x 0 or -x 1 here would also work)
 #
 # Same, but also automatically execute every 20 (5 * 4) seconds:
-#    autocall -c "pdflatex article.tex" -F ch1.tex -x 4
+#    autocall -c "pdflatex -halt-on-error report.tex" -F ch1.tex -x 4
 #
 # Same, but automatically execute every 5 (5 * 1) seconds (-w is 5 by default):
-#    autocall -c "pdflatex article.tex" -F ch1.tex -x 1
+#    autocall -c "pdflatex -halt-on-error report.tex" -F ch1.tex -x 1
 #
 # Same, but automatically execute every 1 (1 * 1) second:
-#    autocall -c "pdflatex article.tex" -F ch1.tex -w 1 -x 1
+#    autocall -c "pdflatex -halt-on-error report.tex" -F ch1.tex -w 1 -x 1
 #
 # Same, but automatically execute every 17 (1 * 17) seconds:
-#    autocall -c "pdflatex article.tex" -F ch1.tex -w 1 -x 17
+#    autocall -c "pdflatex -halt-on-error report.tex" -F ch1.tex -w 1 -x 17
 #
 # Same, but for "ch1.tex", watch its byte size, not line count:
-#    autocall -c "pdflatex article.tex" -b ch1.tex -w 1 -x 17
+#    autocall -c "pdflatex -halt-on-error report.tex" -b ch1.tex -w 1 -x 17
 #
 # Same, but for "ch1.tex", watch its timestamp instead (i.e., every time
 # this file is saved, the modification timestamp will be different):
-#    autocall -c "pdflatex article.tex" -f ch1.tex -w 1 -x 17
+#    autocall -c "pdflatex -halt-on-error report.tex" -f ch1.tex -w 1 -x 17
 #
 # Same, but also look at the contents of directory "images/ocean":
-#    autocall -c "pdflatex article.tex" -f ch1.tex -d images/ocean -w 1 -x 17
+#    autocall -c "pdflatex -halt-on-error report.tex" -f ch1.tex -d images/ocean -w 1 -x 17
 #
 # Same, but also look at the contents of directory "other" recursively:
-#    autocall -c "pdflatex article.tex" -f ch1.tex -d images/ocean -D other -w 1 -x 17
+#    autocall -c "pdflatex -halt-on-error report.tex" -f ch1.tex -d images/ocean -D other -w 1 -x 17
 #
 # Same, but look at all files and/or directories (recursively) listed in file
 # "watchlist" instead:
-#    autocall -c "pdflatex article.tex" -l watchlist -w 1 -x 17
+#    autocall -c "pdflatex -halt-on-error report.tex" -l watchlist -w 1 -x 17
 #
 # Same, but also look at "newfile.tex":
-#    autocall -c "pdflatex article.tex" -l watchlist -f newfile.tex -w 1 -x 17
+#    autocall -c "pdflatex -halt-on-error report.tex" -l watchlist -f newfile.tex -w 1 -x 17
+#
+# Same, but also allow manual execution of "make clean" with hotkey "2":
+#    autocall -c "pdflatex -halt-on-error report.tex" -c "make clean" -l watchlist -f newfile.tex -w 1 -x 17
 #
 ###############################################################################
 ###############################################################################
@@ -87,7 +95,13 @@ autocall: Usage:
 autocall [OPTIONS]
 
 Required parameter:
--c COMMAND      The command to be executed (put this in quotes).
+-c COMMAND      The command to be executed (put COMMAND in quotes). Note that
+                COMMAND can be a set of multiple commands, e.g. \"make clean;
+                make\". You can also specify multiple commands by invoking
+                -c COMMAND multiple times -- the first 9 of these are set to
+                hotkeys 1 through 9, if present. This is useful if you want to
+                have a separate command that is available and can only be
+                executed manually.
 
 One or more required parameters (but see -x below):
 -f FILE         File to be watched. Modification detected by time.
@@ -145,6 +159,8 @@ is_number () {
 }
 
 autocall_exec () {
+    timeout=$2
+    killdelay=$3
     col=""
     case $4 in
         1) col=$c1 ;;
@@ -179,24 +195,19 @@ autocall_exec () {
             com_exit_status=$pipestatus[1]
         fi
         if [[ $com_exit_status -eq 124 ]]; then
-            echo -n $c6
-            echo "\nautocall: command timed out$ce"
+            echo "\n${c6}autocall: command timed out$ce"
         elif [[ $com_exit_status -ne 0 ]]; then
-            echo -n $c6
-            echo "\nautocall: command exited with error status $com_exit_status$ce"
+            echo "\n${c6}autocall: command exited with error status $com_exit_status$ce"
         else
-            echo -n $c1
-            echo "\nautocall: command executed successfully"
+            echo "\n${c1}autocall: command executed successfully$ce"
         fi
     else
         eval $1 2>&1 | sed "s/^/  $col>$ce /"
         com_exit_status=$pipestatus[1]
         if [[ $com_exit_status -ne 0 ]]; then
-            echo -n $c6
-            echo "\nautocall: command exited with error status $com_exit_status$ce"
+            echo "\n${c6}autocall: command exited with error status $com_exit_status$ce"
         else
-            echo -n $c1
-            echo "\nautocall: command executed successfully"
+            echo "\n${c1}autocall: command executed successfully$ce"
         fi
     fi
 }
@@ -215,6 +226,7 @@ c6="\x1b[1;31m" # bright red
 ce="\x1b[0m"
 
 com=""
+coms=()
 delay=5
 xdelay_factor=4
 f=()
@@ -275,10 +287,11 @@ OPTIND=1
 while getopts ":c:w:f:F:b:d:D:l:t:k:x:a" opt; do
     case "$opt" in
     c)
-        com="$OPTARG"
-        com_binary=$(echo $com | sed 's/ \+/ /g' | sed 's/;/ /g' | cut -d " " -f1)
+        com_binary=$(echo "$OPTARG" | sed 's/ \+/ /g' | sed 's/;/ /g' | cut -d " " -f1)
         if [[ $(which $com_binary) == "$com_binary not found" ]]; then
             msg "invalid command \`$com_binary'"
+        else
+            coms+=("$OPTARG")
         fi
         ;;
     w)
@@ -395,7 +408,7 @@ fi
 #------------------#
 
 # check that the given options are in good working order
-if [[ -z $com ]]; then
+if [[ -z $coms[1] ]]; then
     msg "help"
 elif [[ (-n $f && -n $d && -n $D && -n $l) && $xflag == false ]]; then
     echo "autocall: see help with -h"
@@ -464,7 +477,12 @@ fi
 if [[ $xflag == true && $xdelay_factor -le 1 ]]; then
     xdelay_factor=1
 fi
-echo "autocall: command set to \`$c4$com$ce'"
+com_num=1
+for c in $coms; do
+    echo "autocall: command $com_num set to \`$c4$coms[$com_num]$ce'"
+    let com_num+=1
+done
+echo "autocall: press keys 1-$#coms to execute a specific command"
 if [[ $wflag == true ]]; then
     echo "autocall: modification check interval set to $delay sec"
 else
@@ -479,8 +497,9 @@ if [[ $tflag == true ]]; then
         echo "autocall: KDELAY set to $killdelay"
     fi
 fi
-echo "autocall: press 'q' to quit"
 echo "autocall: press ENTER or SPACE to execute manually"
+echo "autocall: press 'q' to quit"
+echo "autocall: press 'h' for help"
 key=""
 while true; do
     for i in {1..$xdelay_factor}; do
@@ -489,15 +508,43 @@ while true; do
         #------------------------------------------#
         # read a single key from the user
         read -s -t $delay -k key
-        if [[ $key == "q" ]]; then
-            echo "\nautocall: exiting..."
-            exit 0
-        # note the special notation $'\n' to detect an ENTER key
-        elif [[ $key == $'\n' || $key == " " ]]; then
-            autocall_exec $com $timeout $killdelay 4 "manual execution"
-            key=""
-            continue
-        fi
+        case $key in
+            q)
+                echo "\nautocall: exiting..."
+                exit 0
+                ;;
+            # note the special notation $'\n' to detect an ENTER key
+            $'\n'|" "|1)
+                autocall_exec $coms[1] $timeout $killdelay 4 "manual execution"
+                key=""
+                continue
+                ;;
+            2|3|4|5|6|7|8|9)
+                if [[ -n $coms[$key] ]]; then
+                    autocall_exec $coms[$key] $timeout $killdelay 4 "manual execution"
+                    key=""
+                    continue
+                else
+                    echo "autocall: command $key is not set"
+                    key=""
+                    continue
+                fi
+                ;;
+            h)
+                echo "\nautocall: press \`h' for help"
+                echo "autocall: press \`q' to exit"
+                com_num=1
+                for c in $coms; do
+                    echo "autocall: command $com_num set to \`$c4$coms[$com_num]$ce'"
+                    let com_num+=1
+                done
+                echo "autocall: press keys 1-$#coms to execute a specific command"
+                echo "autocall: press ENTER or SPACE or \`1' to execute first command manually"
+                key=""
+                continue
+                ;;
+            *) ;;
+        esac
 
         #------------------------------------------------------------------#
         # Case 2: modification is detected among watched files/directories #
@@ -531,29 +578,29 @@ while true; do
             tstampl_new=$(ls --full-time -R $l_targets)
         fi
         if [[ -n $f && "$tstampf" != "$tstampf_new" ]]; then
-            autocall_exec $com $timeout $killdelay 1 "change detected" "$tstampf" "$tstampf_new"
+            autocall_exec $coms[1] $timeout $killdelay 1 "change detected" "$tstampf" "$tstampf_new"
             tstampf=$tstampf_new
             continue
         elif [[ -n $F && "$linestamp" != "$linestamp_new" ]]; then
-            autocall_exec $com $timeout $killdelay 1 "change detected" "$tstampF" "$tstampF_new"
+            autocall_exec $coms[1] $timeout $killdelay 1 "change detected" "$tstampF" "$tstampF_new"
             linestamp=$linestamp_new
             tstampF=$tstampF_new
             continue
         elif [[ -n $b && "$bytestamp" != "$bytestamp_new" ]]; then
-            autocall_exec $com $timeout $killdelay 1 "change detected" "$tstampb" "$tstampb_new"
+            autocall_exec $coms[1] $timeout $killdelay 1 "change detected" "$tstampb" "$tstampb_new"
             bytestamp=$bytestamp_new
             tstampb=$tstampb_new
             continue
         elif [[ -n $d && "$tstampd" != "$tstampd_new" ]]; then
-            autocall_exec $com $timeout $killdelay 1 "change detected" "$tstampd" "$tstampd_new"
+            autocall_exec $coms[1] $timeout $killdelay 1 "change detected" "$tstampd" "$tstampd_new"
             tstampd=$tstampd_new
             continue
         elif [[ -n $D && "$tstampD" != "$tstampD_new" ]]; then
-            autocall_exec $com $timeout $killdelay 1 "change detected" "$tstampD" "$tstampD_new"
+            autocall_exec $coms[1] $timeout $killdelay 1 "change detected" "$tstampD" "$tstampD_new"
             tstampD=$tstampD_new
             continue
         elif [[ -n $l && "$tstampl" != "$tstampl_new" ]]; then
-            autocall_exec $com $timeout $killdelay 1 "change detected" "$tstampl" "$tstampl_new"
+            autocall_exec $coms[1] $timeout $killdelay 1 "change detected" "$tstampl" "$tstampl_new"
             tstampl=$tstampl_new
             continue
         fi
@@ -562,7 +609,7 @@ while true; do
         # Case 3: periodic, automatic execution was requested #
         #-----------------------------------------------------#
         if [[ $xflag == true && $i -eq $xdelay_factor ]]; then
-            autocall_exec $com $timeout $killdelay 3 "commencing auto-execution ($(($delay*$xdelay_factor)) sec)"
+            autocall_exec $coms[1] $timeout $killdelay 3 "commencing auto-execution ($(($delay*$xdelay_factor)) sec)"
         fi
     done
 done
