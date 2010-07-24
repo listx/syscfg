@@ -1,6 +1,6 @@
 # kody prompt theme, based on adam2
 
-prompt_kody_setup () {
+prompt_kody_setup() {
     # Usage (if customizing the colors at run time):
     # prompt_kody_setup 8bit <color1> <color2> <color3> ... <color8>
 
@@ -26,6 +26,11 @@ prompt_kody_setup () {
     prompt_color7=${7-'yellow'}
     prompt_color8=${8-'magenta'}
 
+    add-zsh-hook precmd prompt_kody_precmd
+}
+
+# the actual prompt
+prompt_kody_precmd() {
     # Special ZSH Prompt Escape Characters (see 'man zshmisc' for more info on these)
     #
     # Visual effects
@@ -53,44 +58,58 @@ prompt_kody_setup () {
     # %#      A `#' if the shell is running with privileges (e.g., logged in as root), a `%' if not. Equivalent to `%(!.#.%%)'.
     # %?      The return status of the last command executed just before the prompt (the prompt is itself a function that is executed after every command).
     # %~      Shows $PWD, but replaced $HOME with `~'.
+    # %*      Current time of day in 24-hour format with seconds (same as %D{%H:%M:%S})
     # %D{string}
     #         string is formatted with the strftime function. See 'man 3 strftime' for more details.
 
-    day=$(date +%a)
-    case $day in
-        Mon) day="M" ;;
-        Tue) day="T" ;;
-        Wed) day="W" ;;
-        Thu) day="R" ;;
-        Fri) day="F" ;;
-        Sat) day="A" ;;
-        Sun) day="U" ;;
+    day=""
+    case $(date +%a) in
+        Mon) day="%B%F{$prompt_color2}M%b%f" ;;
+        Tue) day="%B%F{$prompt_color2}T%b%f" ;;
+        Wed) day="%B%F{$prompt_color2}W%b%f" ;;
+        Thu) day="%B%F{$prompt_color2}R%b%f" ;;
+        Fri) day="%B%F{$prompt_color8}F%b%f" ;;
+        Sat) day="%B%F{$prompt_color6}A%b%f" ;;
+        Sun) day="%B%F{$prompt_color6}U%b%f" ;;
     esac
-    month=$(date +%m)
-    if (( month < 10 )); then
-        month=$month[2]
-    fi
 
-    # set timestamp
-    prompt_kody_time="%B%F{$prompt_color4}[$day]%b%f $month/%D{%e %H:%M:%S}"
+    # determine the percentage of the year that is complete
+    year=$(date +%Y)
+    ydays=0
+    (( ydays = ( ((($year % 4 == 0 && $year % 100 != 0)) || (($year % 400 == 0))) ? 366 : 365 ) ))
+    days=$(date +%j)
+    hours=$(date +%k)
+    mins=$(date +%M)
+    secs=$(date +%S)
+    float secs_year=0
+    secs_elapsed_this_year=0
+    year_perc=0
+    (( secs_year = $ydays*86400))
+    (( secs_elapsed_this_year = ($days*86400)+($hours*3600)+($mins*60)+$secs ))
+    (( year_perc = $secs_elapsed_this_year/$secs_year*100 ))
 
-    hostcolor=""
-    charcolor=""
+    # set timestamps
+    prompt_kody_time_a="%B%F{$prompt_color4}[%b%f$day %D{%d}%B%F{$prompt_color4}]%b%f $(printf "%.4f" $year_perc) %*"
+    prompt_kody_time_b="%B%F{$prompt_color4}[%b%f$day %D{%d}%B%F{$prompt_color4}]%b%f %*"
+    prompt_kody_time_c="%D{%d} %*"
+
+    prompt_hostcolor=""
+    prompt_charcolor=""
     case $HOST in
-        exelion)    hostcolor=$prompt_color3 ;;
-        luxion)     hostcolor=$prompt_color6 ;;
-        aether)     hostcolor=$prompt_color1 ;;
-        ocean)      hostcolor=$prompt_color8 ;;
-        forest)     hostcolor=$prompt_color2 ;;
-        *)          hostcolor=$prompt_color5 ;;
+        exelion)    prompt_hostcolor=$prompt_color3 ;;
+        luxion)     prompt_hostcolor=$prompt_color6 ;;
+        aether)     prompt_hostcolor=$prompt_color1 ;;
+        ocean)      prompt_hostcolor=$prompt_color8 ;;
+        forest)     prompt_hostcolor=$prompt_color2 ;;
+        *)          prompt_hostcolor=$prompt_color5 ;;
     esac
     case $USERNAME in
-        root)       charcolor=$prompt_color5 ;;
-        *)          [[ -n "$SSH_CLIENT" ]] && charcolor=$prompt_color2 || charcolor=$prompt_color4 ;;
+        root)       prompt_charcolor=$prompt_color5 ;;
+        *)          [[ -n "$SSH_CLIENT" ]] && prompt_charcolor=$prompt_color2 || prompt_charcolor=$prompt_color4 ;;
     esac
-    prompt_username="%F{$charcolor}%n%f"
+    prompt_username="%F{$prompt_charcolor}%n%f"
     prompt_at_sign="%B%F{$prompt_color4}@%b%f"
-    prompt_hostname="%F{$hostcolor}%m%f"
+    prompt_hostname="%F{$prompt_hostcolor}%m%f"
     # set user@host
     prompt_userhost="$prompt_username$prompt_at_sign$prompt_hostname"
 
@@ -98,35 +117,28 @@ prompt_kody_setup () {
     prompt_kody_pwd="%B%F{$prompt_color1}%~%b%f"
 
     # three default possibilities for the first prompt line, depending on available screen width space
-    prompt_line_1a="$prompt_kody_time $prompt_userhost $prompt_kody_pwd"
-    prompt_line_1b="$prompt_userhost $prompt_kody_pwd"
-    prompt_line_1c="$prompt_kody_pwd"
+    prompt_line_1a="$prompt_kody_time_a $prompt_userhost $prompt_kody_pwd"
+    prompt_line_1b="$prompt_kody_time_b $prompt_userhost $prompt_kody_pwd"
+    prompt_line_1c="$prompt_kody_time_c $prompt_userhost $prompt_kody_pwd"
+    prompt_line_1d="$prompt_userhost $prompt_kody_pwd"
+    prompt_line_1e="$prompt_kody_pwd"
     prompt_line_2="%B%F{$prompt_color4} "
     prompt_char="%(!.# .>"
 
-    prompt_opts=(cr subst percent) # i think this turns on all PROMPT_BANG, PROMPT_SUBST, and PROMPT_PERCENT options...
-
-    add-zsh-hook precmd prompt_kody_precmd
-}
-
-# the actual prompt
-prompt_kody_precmd() {
-    setopt noxtrace localoptions extendedglob
-    local prompt_line_1
-
+    # choose the correct prompt, depending on screen length
     prompt_kody_choose_prompt
 
     # PS1 -> what you see by default
-    PS1="$prompt_line_1$prompt_newline$prompt_line_2%B%F{$charcolor}$prompt_char %b%f"
+    PS1="$prompt_line_1$prompt_newline$prompt_line_2%B%F{$prompt_charcolor}$prompt_char %b%f"
     # PS2 -> what you see when you enter a multi-line shell command
-    PS2="$prompt_line_2%B%F{$charcolor}..%_ > %b%f" # `%_' is a special character that is expanded
+    PS2="$prompt_line_2%B%F{$prompt_charcolor}..%_ > %b%f" # `%_' is a special character that is expanded
     # PS3 -> what you see when you are given a selection option screen (e.g., selecting a directory in the directory stack)
-    PS3="$prompt_line_2%B%F{$charcolor}?# %b%f"
-    zle_highlight[(r)default:*]="default:fg=$charcolor,bold"
+    PS3="$prompt_line_2%B%F{$prompt_charcolor}?# %b%f"
+    zle_highlight[(r)default:*]="default:fg=$prompt_charcolor,bold"
 }
 
 # resize the prompt according to the working directory's length
-prompt_kody_choose_prompt () {
+prompt_kody_choose_prompt() {
     # get the displayed character width of the candidate prompt lines (excluding color escape sequences)
     # breakdown: ${ -> variable/value
     #              #${ -> the length/size of this value
@@ -142,18 +154,30 @@ prompt_kody_choose_prompt () {
     #                          final "/" (effectively deleting whatever was
     #                          matched, which is what we want to do)
     #
-    # In short, the fancy parameter expansions below serve solely to remove all ZSH color escape sequence characters.
-    local prompt_line_1a_width=${#${(S%%)prompt_line_1a//(\%[FK]\{*\}|\%[Bbfk])}}
-    local prompt_line_1b_width=${#${(S%%)prompt_line_1b//(\%[FK]\{*\}|\%[Bbfk])}}
-    local prompt_line_1c_width=${#${(S%%)prompt_line_1c//(\%[FK]\{*\}|\%[Bbfk])}}
+    # In short, the fancy parameter expansions below serve solely to remove all
+    # ZSH color escape sequence characters:
+    #   e.g., prompt_line_1a_width=${#${(S%%)prompt_line_1a//(\%[FK]\{*\}|\%[Bbfk])}}
 
     # if there is enough screen space for everything, then just use
     # prompt_line_1a (and skip rest of the code below with `return')
+    prompt_line_1a_width=${#${(S%%)prompt_line_1a//(\%[FK]\{*\}|\%[Bbfk])}}
     if (( COLUMNS - prompt_line_1a_width >= 0 )); then prompt_line_1="$prompt_line_1a"; return; fi
-    # try to see if line_1b fits
+
+    # not enough space for line_1a; try to see if line_1b fits
+    prompt_line_1b_width=${#${(S%%)prompt_line_1b//(\%[FK]\{*\}|\%[Bbfk])}}
     if (( COLUMNS - prompt_line_1b_width >= 0 )); then prompt_line_1="$prompt_line_1b"; return; fi
+
     # try to see if line_1c fits
+    prompt_line_1c_width=${#${(S%%)prompt_line_1c//(\%[FK]\{*\}|\%[Bbfk])}}
     if (( COLUMNS - prompt_line_1c_width >= 0 )); then prompt_line_1="$prompt_line_1c"; return; fi
+
+    # etc.
+    prompt_line_1d_width=${#${(S%%)prompt_line_1d//(\%[FK]\{*\}|\%[Bbfk])}}
+    if (( COLUMNS - prompt_line_1d_width >= 0 )); then prompt_line_1="$prompt_line_1d"; return; fi
+
+    prompt_line_1e_width=${#${(S%%)prompt_line_1e//(\%[FK]\{*\}|\%[Bbfk])}}
+    if (( COLUMNS - prompt_line_1e_width >= 0 )); then prompt_line_1="$prompt_line_1e"; return; fi
+
     # our last resort -- use custom truncated version
     prompt_pwd_size=$COLUMNS
     prompt_line_1="$prompt_l_brack%B%F{$prompt_color2}%$prompt_pwd_size<...<%~%<<$prompt_r_brack%b"
