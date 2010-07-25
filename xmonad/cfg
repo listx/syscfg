@@ -169,7 +169,7 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((mod4Mask              , xK_m     ), spawn "blender")
     , ((mod4Mask .|. shiftMask, xK_f     ), spawn "gnucash")
     , ((mod4Mask              , xK_h     ), spawn (term2 ++ " -e ncmpcpp"))
-    , ((mod4Mask .|. shiftMask, xK_h     ), spawn (term2 ++ " -e mplayer -ao oss -softvol -volume 100 -volstep 1 -prefer-ipv4 http://192.168.0.110:8000/mpd.ogg"))
+    , ((mod4Mask .|. shiftMask, xK_h     ), spawn (term2 ++ " -e mplayer -ao oss -softvol -volume 100 -volstep 1 -demuxer ogg -prefer-ipv4 http://192.168.0.110:8000/mpd.ogg"))
     , ((mod4Mask              , xK_p     ), spawn "apvlv")
     , ((mod4Mask .|. shiftMask, xK_p     ), spawn "evince")
     , ((mod4Mask              , xK_v     ), spawn "smplayer")
