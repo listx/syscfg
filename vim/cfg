@@ -221,9 +221,9 @@ nmap K <Esc>
 
 " NOTE: the <F1> key in normal mode is mapped to ":help" by default
 " quicksave files
-nmap <F1> :w<CR>
-imap <F1> <Esc>:w<CR>a
-nmap <localleader>w :w<CR>
+nmap <F1> :up<CR>
+imap <F1> <Esc>:up<CR>a
+nmap <localleader>w :up<CR>
 
 " exit
 nmap <F2> :q<CR>
