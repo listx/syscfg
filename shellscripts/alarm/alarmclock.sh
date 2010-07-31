@@ -52,7 +52,7 @@ while true; do
         read -s -t 0.1 -k key
         case $key in
             "q")
-                echo "alarmclock: Exiting..."
+                echo "alarmclock: $(date +%T): Exiting..."
                 # stop music and restore old values
                 ncmpcpp pause
                 amixer -q set Master "$orig_vol"% unmute
@@ -60,7 +60,7 @@ while true; do
                 exit
                 ;;
             "k")
-                echo "alarmclock: Exiting..."
+                echo "alarmclock: $(date +%T): Exiting..."
                 exit
                 ;;
             "") ;; # don't display anything if user does not press anything
@@ -79,7 +79,7 @@ while true; do
     if [[ -z $fibs ]]; then
         # since user did not quit by this time (after many minutes of loud
         # music), quit automatically, but turn off the music
-        echo "alarmclock: Exiting..."
+        echo "alarmclock: $(date +%T): Exiting..."
         ncmpcpp pause
         amixer -q set Master "$orig_vol"% unmute
         [[ $orig_pwr == "off" ]] && amixer -q set Master mute
