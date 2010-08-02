@@ -39,4 +39,9 @@ if [[ $HOST == "exelion" ]]; then
     str+="\n0 18 * * * ~/sched/check.sh notes"
 fi
 
+if [[ $HOST == "luxion" ]]; then
+    # shut down if still on at 2 in the morning
+    str+="\n0 2 * * * sudo shutdown -t 1 -hP now"
+fi
+
 echo "$str" | crontab -
