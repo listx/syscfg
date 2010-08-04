@@ -1,5 +1,4 @@
-set ffs=unix "always interpret all files as if they are unix files
-set number "line numbers
+set ffs=unix,dos " prefer unix newlines whenever possible, but let dos be dos
 set nobackup
 " default tabstop and shiftwidths
 set tabstop=4
@@ -9,8 +8,6 @@ set expandtab
 " see ":help statusline" for more information about status lines, as well as
 " the default "standard" one
 "
-" %{&ff} gives the file format, but is not used here because it is hardly ever
-" needed
 set statusline=%<%F\ %h%m%r%=%-14.(%l,%c%V%)\ %P\ %L
 set laststatus=2
 syntax enable "enable syntax highlighting
