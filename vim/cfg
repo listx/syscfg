@@ -5,6 +5,9 @@ set tabstop=4
 set shiftwidth=4
 set expandtab
 
+" place help page on its own tab
+cabbrev help tab h
+
 " see ":help statusline" for more information about status lines, as well as
 " the default "standard" one
 "
@@ -88,9 +91,14 @@ if !exists("autocommands_loaded")
     au BufRead,BufNewFile *.rb,*.py set shiftwidth=4
 " Note that vim's 'textwidth' only really works for COMMENT lines, as doing so otherwise would break whitespace-sensitive code (like Python)
     au BufRead,BufNewFile *.rb,*.py set textwidth=120
+    au BufRead,BufNewFile *.sh set textwidth=120
+    au BufRead,BufNewFile *.c,*.cpp,*.h,*.hpp set textwidth=80
+	" use Linux Kernel tab style for C/C++
     au BufRead,BufNewFile *.c,*.cpp,*.h,*.hpp set tabstop=8
+    au BufRead,BufNewFile *.c,*.cpp,*.h,*.hpp set softtabstop=8
     au BufRead,BufNewFile *.c,*.cpp,*.h,*.hpp set shiftwidth=8
-    au BufRead,BufNewFile *.c,*.cpp,*.h,*.hpp set textwidth=120
+    au BufRead,BufNewFile *.c,*.cpp,*.h,*.hpp set noexpandtab
+
     au BufRead .vimperatorrc set syn=vim " use vim script syntax highlighting
     " load lilypond-specific stuff
     au BufRead,BufNewFile *.ly set filetype=lilypond
@@ -108,32 +116,32 @@ if !exists("autocommands_loaded")
     au BufEnter * vmap <localleader>c2 !boxes -d pound-cmt<CR>
     au BufEnter * nmap <localleader>C2 !!boxes -d pound-cmt -r<CR>
     au BufEnter * vmap <localleader>C2 !boxes -d pound-cmt -r<CR>
-    au BufEnter *.c,*.C,*.cpp,*.cxx,*.h,*.hpp nmap <localleader>c1 !!boxes -d c-top<CR>
-    au BufEnter *.c,*.C,*.cpp,*.cxx,*.h,*.hpp vmap <localleader>c1 !boxes -d c-top<CR>
-    au BufEnter *.c,*.C,*.cpp,*.cxx,*.h,*.hpp nmap <localleader>cw1 !!boxes -d c-top -s 120<CR>
-    au BufEnter *.c,*.C,*.cpp,*.cxx,*.h,*.hpp vmap <localleader>cw1 !boxes -d c-top -s 120<CR>
-    au BufEnter *.c,*.C,*.cpp,*.cxx,*.h,*.hpp nmap <localleader>C1 !!boxes -d c-top -r<CR>
-    au BufEnter *.c,*.C,*.cpp,*.cxx,*.h,*.hpp vmap <localleader>C1 !boxes -d c-top -r<CR>
-    au BufEnter *.c,*.C,*.cpp,*.cxx,*.h,*.hpp nmap <localleader>c2 !!boxes -d c-mid<CR>
-    au BufEnter *.c,*.C,*.cpp,*.cxx,*.h,*.hpp vmap <localleader>c2 !boxes -d c-mid<CR>
-    au BufEnter *.c,*.C,*.cpp,*.cxx,*.h,*.hpp nmap <localleader>cw2 !!boxes -d c-mid -s 120<CR>
-    au BufEnter *.c,*.C,*.cpp,*.cxx,*.h,*.hpp vmap <localleader>cw2 !boxes -d c-mid -s 120<CR>
-    au BufEnter *.c,*.C,*.cpp,*.cxx,*.h,*.hpp nmap <localleader>C2 !!boxes -d c-mid -r<CR>
-    au BufEnter *.c,*.C,*.cpp,*.cxx,*.h,*.hpp vmap <localleader>C2 !boxes -d c-mid -r<CR>
-    au BufEnter *.c,*.C,*.cpp,*.cxx,*.h,*.hpp nmap <localleader>c3 !!boxes -d c-bot<CR>
-    au BufEnter *.c,*.C,*.cpp,*.cxx,*.h,*.hpp vmap <localleader>c3 !boxes -d c-bot<CR>
-    au BufEnter *.c,*.C,*.cpp,*.cxx,*.h,*.hpp nmap <localleader>cw3 !!boxes -d c-bot -s 120<CR>
-    au BufEnter *.c,*.C,*.cpp,*.cxx,*.h,*.hpp vmap <localleader>cw3 !boxes -d c-bot -s 120<CR>
-    au BufEnter *.c,*.C,*.cpp,*.cxx,*.h,*.hpp nmap <localleader>C3 !!boxes -d c-bot -r<CR>
-    au BufEnter *.c,*.C,*.cpp,*.cxx,*.h,*.hpp vmap <localleader>C3 !boxes -d c-bot -r<CR>
-    au BufEnter *.c,*.C,*.cpp,*.cxx,*.h,*.hpp nmap <localleader>c4 !!boxes -d java-cmt<CR>
-    au BufEnter *.c,*.C,*.cpp,*.cxx,*.h,*.hpp vmap <localleader>c4 !boxes -d java-cmt<CR>
-    au BufEnter *.c,*.C,*.cpp,*.cxx,*.h,*.hpp nmap <localleader>C4 !!boxes -d java-cmt -r<CR>
-    au BufEnter *.c,*.C,*.cpp,*.cxx,*.h,*.hpp vmap <localleader>C4 !boxes -d java-cmt -r<CR>
-    au BufEnter *.c,*.C,*.cpp,*.cxx,*.h,*.hpp nmap <localleader>c5 !!boxes -d c-cmt<CR>
-    au BufEnter *.c,*.C,*.cpp,*.cxx,*.h,*.hpp vmap <localleader>c5 !boxes -d c-cmt<CR>
-    au BufEnter *.c,*.C,*.cpp,*.cxx,*.h,*.hpp nmap <localleader>C5 !!boxes -d c-cmt -r<CR>
-    au BufEnter *.c,*.C,*.cpp,*.cxx,*.h,*.hpp vmap <localleader>C5 !boxes -d c-cmt -r<CR>
+    au BufEnter *.c,*.cpp,*.h,*.hpp nmap <localleader>c1 !!boxes -d c-top<CR>
+    au BufEnter *.c,*.cpp,*.h,*.hpp vmap <localleader>c1 !boxes -d c-top<CR>
+    au BufEnter *.c,*.cpp,*.h,*.hpp nmap <localleader>cw1 !!boxes -d c-top -s 80<CR>
+    au BufEnter *.c,*.cpp,*.h,*.hpp vmap <localleader>cw1 !boxes -d c-top -s 80<CR>
+    au BufEnter *.c,*.cpp,*.h,*.hpp nmap <localleader>C1 !!boxes -d c-top -r<CR>
+    au BufEnter *.c,*.cpp,*.h,*.hpp vmap <localleader>C1 !boxes -d c-top -r<CR>
+    au BufEnter *.c,*.cpp,*.h,*.hpp nmap <localleader>c2 !!boxes -d c-mid<CR>
+    au BufEnter *.c,*.cpp,*.h,*.hpp vmap <localleader>c2 !boxes -d c-mid<CR>
+    au BufEnter *.c,*.cpp,*.h,*.hpp nmap <localleader>cw2 !!boxes -d c-mid -s 80<CR>
+    au BufEnter *.c,*.cpp,*.h,*.hpp vmap <localleader>cw2 !boxes -d c-mid -s 80<CR>
+    au BufEnter *.c,*.cpp,*.h,*.hpp nmap <localleader>C2 !!boxes -d c-mid -r<CR>
+    au BufEnter *.c,*.cpp,*.h,*.hpp vmap <localleader>C2 !boxes -d c-mid -r<CR>
+    au BufEnter *.c,*.cpp,*.h,*.hpp nmap <localleader>c3 !!boxes -d c-bot<CR>
+    au BufEnter *.c,*.cpp,*.h,*.hpp vmap <localleader>c3 !boxes -d c-bot<CR>
+    au BufEnter *.c,*.cpp,*.h,*.hpp nmap <localleader>cw3 !!boxes -d c-bot -s 80<CR>
+    au BufEnter *.c,*.cpp,*.h,*.hpp vmap <localleader>cw3 !boxes -d c-bot -s 80<CR>
+    au BufEnter *.c,*.cpp,*.h,*.hpp nmap <localleader>C3 !!boxes -d c-bot -r<CR>
+    au BufEnter *.c,*.cpp,*.h,*.hpp vmap <localleader>C3 !boxes -d c-bot -r<CR>
+    au BufEnter *.c,*.cpp,*.h,*.hpp nmap <localleader>c4 !!boxes -d java-cmt<CR>
+    au BufEnter *.c,*.cpp,*.h,*.hpp vmap <localleader>c4 !boxes -d java-cmt<CR>
+    au BufEnter *.c,*.cpp,*.h,*.hpp nmap <localleader>C4 !!boxes -d java-cmt -r<CR>
+    au BufEnter *.c,*.cpp,*.h,*.hpp vmap <localleader>C4 !boxes -d java-cmt -r<CR>
+    au BufEnter *.c,*.cpp,*.h,*.hpp nmap <localleader>c5 !!boxes -d c-cmt<CR>
+    au BufEnter *.c,*.cpp,*.h,*.hpp vmap <localleader>c5 !boxes -d c-cmt<CR>
+    au BufEnter *.c,*.cpp,*.h,*.hpp nmap <localleader>C5 !!boxes -d c-cmt -r<CR>
+    au BufEnter *.c,*.cpp,*.h,*.hpp vmap <localleader>C5 !boxes -d c-cmt -r<CR>
     au BufEnter .vimrc,.gvimrc,.vimperatorrc nmap <localleader>c1 !!boxes -d vim-cmt<CR>
     au BufEnter .vimrc,.gvimrc,.vimperatorrc vmap <localleader>c1 !boxes -d vim-cmt<CR>
     au BufEnter .vimrc,.gvimrc,.vimperatorrc nmap <localleader>cw1 !!boxes -d vim-cmt -s 120<CR>
