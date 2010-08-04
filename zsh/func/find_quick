@@ -67,6 +67,6 @@ find_quick() {
             rest+="${(Q)${(z)term}}"
             c+=1
         done
-        ack ${=ack_search} $rest *
+        ack --color ${=ack_search} $rest *
     fi
 }
