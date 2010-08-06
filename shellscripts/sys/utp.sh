@@ -15,19 +15,19 @@ set_theme() {
             if [[ $#match -gt 1 ]]; then
                 case $match[1] in
                     00|01|02|03|04|05|06|07|08|09|10|11|12|13|14|15)
-                        echo -e "\x1b]4;$match[1];$match[2]\007"
+                        echo -en "\x1b]4;$match[1];$match[2]\007"
                         ;;
                     fg)
-                        echo -e "\x1b]10;$match[2]\007"
+                        echo -en "\x1b]10;$match[2]\007"
                         export TERM_COLOR_FG=$match[2]
                         ;;
                     bg)
-                        echo -e "\x1b]11;$match[2]\007"
-                        echo -e "\x1b]708;$match[2]\007"
+                        echo -en "\x1b]11;$match[2]\007"
+                        echo -en "\x1b]708;$match[2]\007"
                         export TERM_COLOR_BG=$match[2]
                         ;;
                     cursor)
-                        echo -e "\x1b]12;$match[2]\007"
+                        echo -en "\x1b]12;$match[2]\007"
                         export TERM_COLOR_CURSOR=$match[2]
                         ;;
                     *)
