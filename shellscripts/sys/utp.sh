@@ -19,16 +19,13 @@ set_theme() {
                         ;;
                     fg)
                         echo -en "\x1b]10;$match[2]\007"
-                        export TERM_COLOR_FG=$match[2]
                         ;;
                     bg)
                         echo -en "\x1b]11;$match[2]\007"
                         echo -en "\x1b]708;$match[2]\007"
-                        export TERM_COLOR_BG=$match[2]
                         ;;
                     cursor)
                         echo -en "\x1b]12;$match[2]\007"
-                        export TERM_COLOR_CURSOR=$match[2]
                         ;;
                     *)
                         echo "utp: invalid color format in $1.sh"
@@ -37,7 +34,6 @@ set_theme() {
             fi
         fi
     done
-    export TERM_COLOR_SCHEME_CURRENT=$1
 }
 
 if [[ $#@ -eq 1 ]]; then
