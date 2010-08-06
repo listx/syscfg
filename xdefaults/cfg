@@ -56,6 +56,12 @@ URxvt.keysym.M-C-0: command:\033]710;xft:Terminus:size=10,xft:Kochi Gothic,xft:B
 URxvt.keysym.M-C-minus: command:\033]710;xft:Terminus:size=11,xft:Kochi Gothic,xft:Baekmuk Gulim\007
 URxvt.keysym.M-C-equal: command:\033]710;xft:Terminus:size=16,xft:Kochi Gothic,xft:Baekmuk Gulim\007
 
+! some simple vimlike navigation commands
+URxvt.keysym.C-j: command:\033]721;1\007
+URxvt.keysym.C-k: command:\033]720;1\007
+URxvt.keysym.C-l: command:\033]721;10\007
+URxvt.keysym.C-h: command:\033]720;10\007
+
 ! make urxvt the login shell
 URxvt*loginShell:   true
 !cutchars are characterse used as delimiters for double-click word selection
