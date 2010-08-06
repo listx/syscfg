@@ -40,7 +40,7 @@ univ_open() {
                 evince -f $@ &>/dev/null & disown
             ;;
             (bmp|gif|jpg|jpeg|png|svg|tga|tiff)
-                eog $@ &>/dev/null & disown
+                mirage $@ &>/dev/null & disown
             ;;
             (psd|xcf)
                 gimp $@ &>/dev/null & disown
