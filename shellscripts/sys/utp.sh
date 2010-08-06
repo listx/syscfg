@@ -37,6 +37,7 @@ set_theme() {
 }
 
 if [[ $#@ -eq 1 ]]; then
+    # if provided an argument, try to use it if valid; otherwise, spit out an error
     if [[ -f "$root_dir$1.sh" ]]; then
         set_theme $1
     else
@@ -46,6 +47,7 @@ if [[ $#@ -eq 1 ]]; then
         echo "utp: choose desired theme without the .sh extension"
     fi
 else
+    # randomly pick a color theme if no argument was provided
     theme=$(ls "$root_dir" | sort -R | head -n 1)
     set_theme $(basename $theme .sh)
 fi
