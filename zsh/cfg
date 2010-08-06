@@ -166,6 +166,7 @@ alias kkkkkkkkkkkkkk="cd ../../../../../../../../../../../../../../;ll"
 # Custom aliases                                                                                   #
 #--------------------------------------------------------------------------------------------------#
 
+alias c="~/syscfg/shellscripts/sys/utp.sh"
 alias cls="echo -ne '\x1bc'" # clear the screen buffer (don't just hide it like CTRL-L)
 alias x='~/syscfg/shellscripts/sys/aex.sh'
 
