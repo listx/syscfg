@@ -9,7 +9,7 @@ root_dir="/home/$USER/syscfg/shellscripts/sys/terms/"
 pcre_compile "^c_(.+)=\"(#[0-9a-f]+)"
 
 set_theme() {
-    cat "$root_dir$1.sh" | while read line; do
+    <"$root_dir$1.sh" while read line; do
         if [[ -n $line ]]; then
             pcre_match "$line"
             if [[ $#match -gt 1 ]]; then
