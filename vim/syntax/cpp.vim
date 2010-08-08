@@ -2,8 +2,8 @@
 "
 " cComment is the /* ... */ variety, and is controlled by SpecialComment
 " cCommentL is the // variety, and is controlled by Comment
-hi link cComment SpecialComment
-hi link cCommentL Comment
+"hi link cComment SpecialComment
+"hi link cCommentL Comment
 
 "syn keyword cppConditional break
 
