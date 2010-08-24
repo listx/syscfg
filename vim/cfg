@@ -116,32 +116,32 @@ if !exists("autocommands_loaded")
     au BufEnter * vmap <localleader>c2 !boxes -d pound-cmt<CR>
     au BufEnter * nmap <localleader>C2 !!boxes -d pound-cmt -r<CR>
     au BufEnter * vmap <localleader>C2 !boxes -d pound-cmt -r<CR>
-    au BufEnter *.c,*.cpp,*.h,*.hpp nmap <localleader>c1 !!boxes -d c-top<CR>
-    au BufEnter *.c,*.cpp,*.h,*.hpp vmap <localleader>c1 !boxes -d c-top<CR>
-    au BufEnter *.c,*.cpp,*.h,*.hpp nmap <localleader>cw1 !!boxes -d c-top -s 80<CR>
-    au BufEnter *.c,*.cpp,*.h,*.hpp vmap <localleader>cw1 !boxes -d c-top -s 80<CR>
-    au BufEnter *.c,*.cpp,*.h,*.hpp nmap <localleader>C1 !!boxes -d c-top -r<CR>
-    au BufEnter *.c,*.cpp,*.h,*.hpp vmap <localleader>C1 !boxes -d c-top -r<CR>
-    au BufEnter *.c,*.cpp,*.h,*.hpp nmap <localleader>c2 !!boxes -d c-mid<CR>
-    au BufEnter *.c,*.cpp,*.h,*.hpp vmap <localleader>c2 !boxes -d c-mid<CR>
-    au BufEnter *.c,*.cpp,*.h,*.hpp nmap <localleader>cw2 !!boxes -d c-mid -s 80<CR>
-    au BufEnter *.c,*.cpp,*.h,*.hpp vmap <localleader>cw2 !boxes -d c-mid -s 80<CR>
-    au BufEnter *.c,*.cpp,*.h,*.hpp nmap <localleader>C2 !!boxes -d c-mid -r<CR>
-    au BufEnter *.c,*.cpp,*.h,*.hpp vmap <localleader>C2 !boxes -d c-mid -r<CR>
-    au BufEnter *.c,*.cpp,*.h,*.hpp nmap <localleader>c3 !!boxes -d c-bot<CR>
-    au BufEnter *.c,*.cpp,*.h,*.hpp vmap <localleader>c3 !boxes -d c-bot<CR>
-    au BufEnter *.c,*.cpp,*.h,*.hpp nmap <localleader>cw3 !!boxes -d c-bot -s 80<CR>
-    au BufEnter *.c,*.cpp,*.h,*.hpp vmap <localleader>cw3 !boxes -d c-bot -s 80<CR>
-    au BufEnter *.c,*.cpp,*.h,*.hpp nmap <localleader>C3 !!boxes -d c-bot -r<CR>
-    au BufEnter *.c,*.cpp,*.h,*.hpp vmap <localleader>C3 !boxes -d c-bot -r<CR>
-    au BufEnter *.c,*.cpp,*.h,*.hpp nmap <localleader>c4 !!boxes -d java-cmt<CR>
-    au BufEnter *.c,*.cpp,*.h,*.hpp vmap <localleader>c4 !boxes -d java-cmt<CR>
-    au BufEnter *.c,*.cpp,*.h,*.hpp nmap <localleader>C4 !!boxes -d java-cmt -r<CR>
-    au BufEnter *.c,*.cpp,*.h,*.hpp vmap <localleader>C4 !boxes -d java-cmt -r<CR>
-    au BufEnter *.c,*.cpp,*.h,*.hpp nmap <localleader>c5 !!boxes -d c-cmt<CR>
-    au BufEnter *.c,*.cpp,*.h,*.hpp vmap <localleader>c5 !boxes -d c-cmt<CR>
-    au BufEnter *.c,*.cpp,*.h,*.hpp nmap <localleader>C5 !!boxes -d c-cmt -r<CR>
-    au BufEnter *.c,*.cpp,*.h,*.hpp vmap <localleader>C5 !boxes -d c-cmt -r<CR>
+    au BufEnter *.c,*.cpp,*.h,*.hpp nmap <localleader>c1 !!boxes -d c-top -t 8u<CR>
+    au BufEnter *.c,*.cpp,*.h,*.hpp vmap <localleader>c1 !boxes -d c-top -t 8u<CR>
+    au BufEnter *.c,*.cpp,*.h,*.hpp nmap <localleader>cw1 !!boxes -d c-top -s 80 -t 8u<CR>
+    au BufEnter *.c,*.cpp,*.h,*.hpp vmap <localleader>cw1 !boxes -d c-top -s 80 -t 8u<CR>
+    au BufEnter *.c,*.cpp,*.h,*.hpp nmap <localleader>C1 !!boxes -d c-top -r -t 8u<CR>
+    au BufEnter *.c,*.cpp,*.h,*.hpp vmap <localleader>C1 !boxes -d c-top -r -t 8u<CR>
+    au BufEnter *.c,*.cpp,*.h,*.hpp nmap <localleader>c2 !!boxes -d c-mid -t 8u<CR>
+    au BufEnter *.c,*.cpp,*.h,*.hpp vmap <localleader>c2 !boxes -d c-mid -t 8u<CR>
+    au BufEnter *.c,*.cpp,*.h,*.hpp nmap <localleader>cw2 !!boxes -d c-mid -s 80 -t 8u<CR>
+    au BufEnter *.c,*.cpp,*.h,*.hpp vmap <localleader>cw2 !boxes -d c-mid -s 80 -t 8u<CR>
+    au BufEnter *.c,*.cpp,*.h,*.hpp nmap <localleader>C2 !!boxes -d c-mid -r -t 8u<CR>
+    au BufEnter *.c,*.cpp,*.h,*.hpp vmap <localleader>C2 !boxes -d c-mid -r -t 8u<CR>
+    au BufEnter *.c,*.cpp,*.h,*.hpp nmap <localleader>c3 !!boxes -d c-bot -t 8u<CR>
+    au BufEnter *.c,*.cpp,*.h,*.hpp vmap <localleader>c3 !boxes -d c-bot -t 8u<CR>
+    au BufEnter *.c,*.cpp,*.h,*.hpp nmap <localleader>cw3 !!boxes -d c-bot -s 80 -t 8u<CR>
+    au BufEnter *.c,*.cpp,*.h,*.hpp vmap <localleader>cw3 !boxes -d c-bot -s 80 -t 8u<CR>
+    au BufEnter *.c,*.cpp,*.h,*.hpp nmap <localleader>C3 !!boxes -d c-bot -r -t 8u<CR>
+    au BufEnter *.c,*.cpp,*.h,*.hpp vmap <localleader>C3 !boxes -d c-bot -r -t 8u<CR>
+    au BufEnter *.c,*.cpp,*.h,*.hpp nmap <localleader>c4 !!boxes -d java-cmt -t 8u<CR>
+    au BufEnter *.c,*.cpp,*.h,*.hpp vmap <localleader>c4 !boxes -d java-cmt -t 8u<CR>
+    au BufEnter *.c,*.cpp,*.h,*.hpp nmap <localleader>C4 !!boxes -d java-cmt -r -t 8u<CR>
+    au BufEnter *.c,*.cpp,*.h,*.hpp vmap <localleader>C4 !boxes -d java-cmt -r -t 8u<CR>
+    au BufEnter *.c,*.cpp,*.h,*.hpp nmap <localleader>c5 !!boxes -d c-cmt -t 8u<CR>
+    au BufEnter *.c,*.cpp,*.h,*.hpp vmap <localleader>c5 !boxes -d c-cmt -t 8u<CR>
+    au BufEnter *.c,*.cpp,*.h,*.hpp nmap <localleader>C5 !!boxes -d c-cmt -r -t 8u<CR>
+    au BufEnter *.c,*.cpp,*.h,*.hpp vmap <localleader>C5 !boxes -d c-cmt -r -t 8u<CR>
     au BufEnter .vimrc,.gvimrc,.vimperatorrc nmap <localleader>c1 !!boxes -d vim-cmt<CR>
     au BufEnter .vimrc,.gvimrc,.vimperatorrc vmap <localleader>c1 !boxes -d vim-cmt<CR>
     au BufEnter .vimrc,.gvimrc,.vimperatorrc nmap <localleader>cw1 !!boxes -d vim-cmt -s 120<CR>
