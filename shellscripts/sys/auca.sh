@@ -1,12 +1,12 @@
 #!/bin/zsh
-# PROGRAM: autocall
+# PROGRAM: auca
 # AUTHOR: Linus Arver <linus@ucla.edu>
 # LICENSE: PUBLIC DOMAIN
 #
 #
 # DESCRIPTION:
 #
-# Autocall watches (1) a single file, (2) directory, and/or (3) a text file
+# Auca (autocall) watches (1) a single file, (2) directory, and/or (3) a text file
 # containing a list of files/directories, and if the watched files and/or
 # directories become modified, runs the (first) given command string. Multiple
 # commands can be provided (a total of 9 command strings are recognized) to
@@ -24,7 +24,7 @@
 # Pressing a SPACE, ENTER, or "1" key forces execution of COMMAND immediately.
 # Keys 2-9 are hotkeys to extra commands, if there are any.
 # Press "c" for the command list.
-# To exit autocall gracefully, press "q".
+# To exit auca gracefully, press "q".
 #
 #
 # DEFAULT SETTINGS:
@@ -38,47 +38,47 @@
 # Execute "pdflatex -halt-on-error report.tex" every time "report.tex" or "ch1.tex" is
 # modified (if line count changes in either file; modification checked every 5
 # seconds by default):
-#    autocall -c "pdflatex -halt-on-error report.tex" -F report.tex -f ch1.tex
+#    auca -c "pdflatex -halt-on-error report.tex" -F report.tex -f ch1.tex
 #
 # Same, but only look at "ch1.tex" (useful, assuming that report.tex includes
 # ch1.tex), and automatically execute every 4 seconds:
-#    autocall -c "pdflatex -halt-on-error report.tex" -F ch1.tex -w 1 -x 4
+#    auca -c "pdflatex -halt-on-error report.tex" -F ch1.tex -w 1 -x 4
 #       (-x 0 or -x 1 here would also work)
 #
 # Same, but also automatically execute every 20 (5 * 4) seconds:
-#    autocall -c "pdflatex -halt-on-error report.tex" -F ch1.tex -x 4
+#    auca -c "pdflatex -halt-on-error report.tex" -F ch1.tex -x 4
 #
 # Same, but automatically execute every 5 (5 * 1) seconds (-w is 5 by default):
-#    autocall -c "pdflatex -halt-on-error report.tex" -F ch1.tex -x 1
+#    auca -c "pdflatex -halt-on-error report.tex" -F ch1.tex -x 1
 #
 # Same, but automatically execute every 1 (1 * 1) second:
-#    autocall -c "pdflatex -halt-on-error report.tex" -F ch1.tex -w 1 -x 1
+#    auca -c "pdflatex -halt-on-error report.tex" -F ch1.tex -w 1 -x 1
 #
 # Same, but automatically execute every 17 (1 * 17) seconds:
-#    autocall -c "pdflatex -halt-on-error report.tex" -F ch1.tex -w 1 -x 17
+#    auca -c "pdflatex -halt-on-error report.tex" -F ch1.tex -w 1 -x 17
 #
 # Same, but for "ch1.tex", watch its byte size, not line count:
-#    autocall -c "pdflatex -halt-on-error report.tex" -b ch1.tex -w 1 -x 17
+#    auca -c "pdflatex -halt-on-error report.tex" -b ch1.tex -w 1 -x 17
 #
 # Same, but for "ch1.tex", watch its timestamp instead (i.e., every time
 # this file is saved, the modification timestamp will be different):
-#    autocall -c "pdflatex -halt-on-error report.tex" -f ch1.tex -w 1 -x 17
+#    auca -c "pdflatex -halt-on-error report.tex" -f ch1.tex -w 1 -x 17
 #
 # Same, but also look at the contents of directory "images/ocean":
-#    autocall -c "pdflatex -halt-on-error report.tex" -f ch1.tex -d images/ocean -w 1 -x 17
+#    auca -c "pdflatex -halt-on-error report.tex" -f ch1.tex -d images/ocean -w 1 -x 17
 #
 # Same, but also look at the contents of directory "other" recursively:
-#    autocall -c "pdflatex -halt-on-error report.tex" -f ch1.tex -d images/ocean -D other -w 1 -x 17
+#    auca -c "pdflatex -halt-on-error report.tex" -f ch1.tex -d images/ocean -D other -w 1 -x 17
 #
 # Same, but look at all files and/or directories (recursively) listed in file
 # "watchlist" instead:
-#    autocall -c "pdflatex -halt-on-error report.tex" -l watchlist -w 1 -x 17
+#    auca -c "pdflatex -halt-on-error report.tex" -l watchlist -w 1 -x 17
 #
 # Same, but also look at "newfile.tex":
-#    autocall -c "pdflatex -halt-on-error report.tex" -l watchlist -f newfile.tex -w 1 -x 17
+#    auca -c "pdflatex -halt-on-error report.tex" -l watchlist -f newfile.tex -w 1 -x 17
 #
 # Same, but also allow manual execution of "make clean" with hotkey "2":
-#    autocall -c "pdflatex -halt-on-error report.tex" -c "make clean" -l watchlist -f newfile.tex -w 1 -x 17
+#    auca -c "pdflatex -halt-on-error report.tex" -c "make clean" -l watchlist -f newfile.tex -w 1 -x 17
 #
 ###############################################################################
 ###############################################################################
@@ -91,9 +91,9 @@ msg () {
     case $1 in
         "help")
 echo "
-autocall: Usage:
+auca: Usage:
 
-autocall [OPTIONS]
+auca [OPTIONS]
 
 Required parameter:
 -c COMMAND      The command to be executed (put COMMAND in quotes). Note that
@@ -128,7 +128,7 @@ Optional parameters:
                 FACTOR seconds, regardless of whether the watched
                 files/directories were modified. If FACTOR is zero, it is set
                 to 1. If -x is set, then -f, -d, and -l are not required (i.e.,
-                if only the -c and -x options are specified, autocall will
+                if only the -c and -x options are specified, auca will
                 simply act as a while loop executing COMMAND every 20 (or
                 more if FACTOR is greater than 1) seconds). Since the
                 formula is (DELAY * FACTOR) seconds, if DELAY is 1,
@@ -141,11 +141,11 @@ Optional parameters:
             exit 0
             ;;
         "version")
-            echo "autocall version 1.0"
+            echo "auca version 1.0"
             exit 0
             ;;
         *)
-            echo "autocall: $1"
+            echo "auca: $1"
             exit 1
             ;;
     esac
@@ -159,7 +159,7 @@ is_number () {
     fi
 }
 
-autocall_exec () {
+auca_exec () {
     timeout=$2
     killdelay=$3
     col=""
@@ -172,12 +172,12 @@ autocall_exec () {
         6) col=$c6 ;;
         *) col=$c1 ;;
     esac
-    echo "\nautocall:$c2 [$(date --rfc-3339=ns)]$ce$col $5$ce"
+    echo "\nauca:$c2 [$(date --rfc-3339=ns)]$ce$col $5$ce"
     if [[ $# -eq 7 ]]; then
         diff -u0 -B -d <(echo "$6") <(echo "$7") | tail -n +4 | sed -e "/^[@-].\+/d" -e "s/\(\S\+\s\+\S\+\s\+\S\+\s\+\S\+\s\+\)\(\S\+\s\+\)\(\S\+\s\+\S\+\s\+\S\+\s\+\)/\1$c1\2$ce$c2\3$ce/" -e "s/^/  $c1>$ce /"
         echo
     fi
-    echo "autocall: calling command \`$c4$1$ce'..."
+    echo "auca: calling command \`$c4$1$ce'..."
     # see the "z" flag under PARAMTER EXPANSION under "man ZSHEXPN" for more info
     if [[ $tflag == true || $kflag == true ]]; then
         # the 'timeout' command gives nice exit statuses -- it gives 124 if
@@ -196,19 +196,19 @@ autocall_exec () {
             com_exit_status=$pipestatus[1]
         fi
         if [[ $com_exit_status -eq 124 ]]; then
-            echo "\n${c6}autocall: command timed out$ce"
+            echo "\n${c6}auca: command timed out$ce"
         elif [[ $com_exit_status -ne 0 ]]; then
-            echo "\n${c6}autocall: command exited with error status $com_exit_status$ce"
+            echo "\n${c6}auca: command exited with error status $com_exit_status$ce"
         else
-            echo "\n${c1}autocall: command executed successfully$ce"
+            echo "\n${c1}auca: command executed successfully$ce"
         fi
     else
         eval $1 2>&1 | sed "s/^/  $col>$ce /"
         com_exit_status=$pipestatus[1]
         if [[ $com_exit_status -ne 0 ]]; then
-            echo "\n${c6}autocall: command exited with error status $com_exit_status$ce"
+            echo "\n${c6}auca: command exited with error status $com_exit_status$ce"
         else
-            echo "\n${c1}autocall: command executed successfully$ce"
+            echo "\n${c1}auca: command executed successfully$ce"
         fi
     fi
 }
@@ -411,7 +411,7 @@ fi
 if [[ -z $coms[1] ]]; then
     msg "help"
 elif [[ (-n $f && -n $d && -n $D && -n $l) && $xflag == false ]]; then
-    echo "autocall: see help with -h"
+    echo "auca: see help with -h"
     msg "at least one or more of the (1) -f, -d, -D, or -l paramters, or (2) the -x parameter, required"
 fi
 
@@ -479,28 +479,28 @@ if [[ $xflag == true && $xdelay_factor -le 1 ]]; then
 fi
 com_num=1
 for c in $coms; do
-    echo "autocall: command slot $com_num set to \`$c4$coms[$com_num]$ce'"
+    echo "auca: command slot $com_num set to \`$c4$coms[$com_num]$ce'"
     let com_num+=1
 done
-echo "autocall: press keys 1-$#coms to execute a specific command"
+echo "auca: press keys 1-$#coms to execute a specific command"
 if [[ $wflag == true ]]; then
-    echo "autocall: modification check interval set to $delay sec"
+    echo "auca: modification check interval set to $delay sec"
 else
-    echo "autocall: modification check interval set to $delay sec (default)"
+    echo "auca: modification check interval set to $delay sec (default)"
 fi
 if [[ $xflag == true ]]; then
-    echo "autocall: auto-execution interval set to ($delay * $xdelay_factor) = $(($delay*$xdelay_factor)) sec"
+    echo "auca: auto-execution interval set to ($delay * $xdelay_factor) = $(($delay*$xdelay_factor)) sec"
 fi
 if [[ $tflag == true ]]; then
-    echo "autocall: TIMEOUT set to $timeout"
+    echo "auca: TIMEOUT set to $timeout"
     if [[ $kflag == true ]]; then
-        echo "autocall: KDELAY set to $killdelay"
+        echo "auca: KDELAY set to $killdelay"
     fi
 fi
-echo "autocall: press ENTER or SPACE to execute manually"
-echo "autocall: press \`c' for command list"
-echo "autocall: press \`h' for help"
-echo "autocall: press \`q' to quit"
+echo "auca: press ENTER or SPACE to execute manually"
+echo "auca: press \`c' for command list"
+echo "auca: press \`h' for help"
+echo "auca: press \`q' to quit"
 key=""
 while true; do
     for i in {1..$xdelay_factor}; do
@@ -512,17 +512,17 @@ while true; do
         case $key in
             # note the special notation $'\n' to detect an ENTER key
             $'\n'|" "|1)
-                autocall_exec $coms[1] $timeout $killdelay 4 "manual execution"
+                auca_exec $coms[1] $timeout $killdelay 4 "manual execution"
                 key=""
                 continue
                 ;;
             2|3|4|5|6|7|8|9)
                 if [[ -n $coms[$key] ]]; then
-                    autocall_exec $coms[$key] $timeout $killdelay 4 "manual execution"
+                    auca_exec $coms[$key] $timeout $killdelay 4 "manual execution"
                     key=""
                     continue
                 else
-                    echo "autocall: command slot $key is not set"
+                    echo "auca: command slot $key is not set"
                     key=""
                     continue
                 fi
@@ -531,28 +531,28 @@ while true; do
                 com_num=1
                 echo ""
                 for c in $coms; do
-                    echo "autocall: command slot $com_num set to \`$c4$coms[$com_num]$ce'"
+                    echo "auca: command slot $com_num set to \`$c4$coms[$com_num]$ce'"
                     let com_num+=1
                 done
                 key=""
                 continue
                 ;;
             h)
-                echo "\nautocall: press \`c' for command list"
-                echo "autocall: press \`h' for help"
-                echo "autocall: press \`q' to exit"
+                echo "\nauca: press \`c' for command list"
+                echo "auca: press \`h' for help"
+                echo "auca: press \`q' to exit"
                 com_num=1
                 for c in $coms; do
-                    echo "autocall: command slot $com_num set to \`$c4$coms[$com_num]$ce'"
+                    echo "auca: command slot $com_num set to \`$c4$coms[$com_num]$ce'"
                     let com_num+=1
                 done
-                echo "autocall: press keys 1-$#coms to execute a specific command"
-                echo "autocall: press ENTER or SPACE or \`1' to execute first command manually"
+                echo "auca: press keys 1-$#coms to execute a specific command"
+                echo "auca: press ENTER or SPACE or \`1' to execute first command manually"
                 key=""
                 continue
                 ;;
             q)
-                echo "\nautocall: exiting..."
+                echo "\nauca: exiting..."
                 exit 0
                 ;;
             *) ;;
@@ -590,29 +590,29 @@ while true; do
             tstampl_new=$(ls --full-time -R $l_targets)
         fi
         if [[ -n $f && "$tstampf" != "$tstampf_new" ]]; then
-            autocall_exec $coms[1] $timeout $killdelay 1 "change detected" "$tstampf" "$tstampf_new"
+            auca_exec $coms[1] $timeout $killdelay 1 "change detected" "$tstampf" "$tstampf_new"
             tstampf=$tstampf_new
             continue
         elif [[ -n $F && "$linestamp" != "$linestamp_new" ]]; then
-            autocall_exec $coms[1] $timeout $killdelay 1 "change detected" "$tstampF" "$tstampF_new"
+            auca_exec $coms[1] $timeout $killdelay 1 "change detected" "$tstampF" "$tstampF_new"
             linestamp=$linestamp_new
             tstampF=$tstampF_new
             continue
         elif [[ -n $b && "$bytestamp" != "$bytestamp_new" ]]; then
-            autocall_exec $coms[1] $timeout $killdelay 1 "change detected" "$tstampb" "$tstampb_new"
+            auca_exec $coms[1] $timeout $killdelay 1 "change detected" "$tstampb" "$tstampb_new"
             bytestamp=$bytestamp_new
             tstampb=$tstampb_new
             continue
         elif [[ -n $d && "$tstampd" != "$tstampd_new" ]]; then
-            autocall_exec $coms[1] $timeout $killdelay 1 "change detected" "$tstampd" "$tstampd_new"
+            auca_exec $coms[1] $timeout $killdelay 1 "change detected" "$tstampd" "$tstampd_new"
             tstampd=$tstampd_new
             continue
         elif [[ -n $D && "$tstampD" != "$tstampD_new" ]]; then
-            autocall_exec $coms[1] $timeout $killdelay 1 "change detected" "$tstampD" "$tstampD_new"
+            auca_exec $coms[1] $timeout $killdelay 1 "change detected" "$tstampD" "$tstampD_new"
             tstampD=$tstampD_new
             continue
         elif [[ -n $l && "$tstampl" != "$tstampl_new" ]]; then
-            autocall_exec $coms[1] $timeout $killdelay 1 "change detected" "$tstampl" "$tstampl_new"
+            auca_exec $coms[1] $timeout $killdelay 1 "change detected" "$tstampl" "$tstampl_new"
             tstampl=$tstampl_new
             continue
         fi
@@ -621,7 +621,7 @@ while true; do
         # Case 3: periodic, automatic execution was requested #
         #-----------------------------------------------------#
         if [[ $xflag == true && $i -eq $xdelay_factor ]]; then
-            autocall_exec $coms[1] $timeout $killdelay 3 "commencing auto-execution ($(($delay*$xdelay_factor)) sec)"
+            auca_exec $coms[1] $timeout $killdelay 3 "commencing auto-execution ($(($delay*$xdelay_factor)) sec)"
         fi
     done
 done
