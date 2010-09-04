@@ -1,0 +1,1 @@
+/home/listdata/prog/cog/vim/cog-ftplugin.vim

@@ -47,6 +47,7 @@ for t in $ft_mov; do LS_COLORS+="*.$t=1;35:"; done
 for t in $ft_snd; do LS_COLORS+="*.$t=34:"; done
 # custom file types not covered by 'dircolors -p'
 LS_COLORS+="*.toucan=0;38;5;48:"
+LS_COLORS+="*.cog=0;38;5;48:"
 export LS_COLORS
 
 # colors for the 'less' pager
