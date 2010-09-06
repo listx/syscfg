@@ -66,9 +66,6 @@ set tabpagemax=50
 " wait 1 second instead of 0.5 seconds before erasing any "half-finished"
 " commands in normal/visual mode
 "
-" try to mimic Linux Kernel Coding Style's indentation style
-set cinoptions=:0,l1,t0,g0,(0
-
 set timeoutlen=1000
 
 " we use a custom, local-to-buffer mod-key so that we don't conflict with any possible bindings provided by a plugin
@@ -105,6 +102,8 @@ if !exists("autocommands_loaded")
     au BufRead,BufNewFile *.c,*.cpp,*.h,*.hpp set softtabstop=8
     au BufRead,BufNewFile *.c,*.cpp,*.h,*.hpp set shiftwidth=8
     au BufRead,BufNewFile *.c,*.cpp,*.h,*.hpp set noexpandtab
+    " try to mimic Linux Kernel Coding Style's indentation style
+    au BufRead,BufNewFile *.c,*.cpp,*.h,*.hpp set cinoptions=:0,l1,t0,g0,(0
 
     au BufRead .vimperatorrc set syn=vim " use vim script syntax highlighting
     " load lilypond-specific stuff
