@@ -8,7 +8,7 @@
 ! First set base font to Terminus to handle all Latin glyphs
 ! ...then set Japanese font to take care of most Chinese kanji and also hiragana/katakana
 ! ...then finally only use Korean font for hangul characters
-URxvt*font: xft:Terminus:size=11,xft:Kochi Gothic,xft:Baekmuk Gulim
+URxvt*font: xft:Terminus:pixelsize=14,xft:Kochi Gothic,xft:Baekmuk Gulim
 URxvt*geometry: 100x70
 
 ! urxvt colors
@@ -48,13 +48,13 @@ URxvt*color14: #33ffff
 ! misc urxvt settings
 
 ! bind CTRL+ALT to change to different font sizes
-URxvt.keysym.M-C-6: command:\033]710;xft:dejavu sans mono:size=10,xft:Kochi Gothic,xft:Baekmuk Gulim\007
-URxvt.keysym.M-C-7: command:\033]710;xft:dejavu sans mono:size=12,xft:Kochi Gothic,xft:Baekmuk Gulim\007
-URxvt.keysym.M-C-8: command:\033]710;xft:dejavu sans mono:size=24,xft:Kochi Gothic,xft:Baekmuk Gulim\007
-URxvt.keysym.M-C-9: command:\033]710;xft:dejavu sans mono:size=36,xft:Kochi Gothic,xft:Baekmuk Gulim\007
-URxvt.keysym.M-C-0: command:\033]710;xft:Terminus:size=10,xft:Kochi Gothic,xft:Baekmuk Gulim\007
-URxvt.keysym.M-C-minus: command:\033]710;xft:Terminus:size=11,xft:Kochi Gothic,xft:Baekmuk Gulim\007
-URxvt.keysym.M-C-equal: command:\033]710;xft:Terminus:size=16,xft:Kochi Gothic,xft:Baekmuk Gulim\007
+URxvt.keysym.M-C-6: command:\033]710;xft:dejavu sans mono:pixelsize=12,xft:Kochi Gothic,xft:Baekmuk Gulim\007
+URxvt.keysym.M-C-7: command:\033]710;xft:dejavu sans mono:pixelsize=14,xft:Kochi Gothic,xft:Baekmuk Gulim\007
+URxvt.keysym.M-C-8: command:\033]710;xft:dejavu sans mono:pixelsize=24,xft:Kochi Gothic,xft:Baekmuk Gulim\007
+URxvt.keysym.M-C-9: command:\033]710;xft:dejavu sans mono:pixelsize=36,xft:Kochi Gothic,xft:Baekmuk Gulim\007
+URxvt.keysym.M-C-0: command:\033]710;xft:Terminus:pixelsize=10,xft:Kochi Gothic,xft:Baekmuk Gulim\007
+URxvt.keysym.M-C-minus: command:\033]710;xft:Terminus:pixelsize=14,xft:Kochi Gothic,xft:Baekmuk Gulim\007
+URxvt.keysym.M-C-equal: command:\033]710;xft:Terminus:pixelsize=20,xft:Kochi Gothic,xft:Baekmuk Gulim\007
 
 ! some navigation commands
 URxvt.keysym.Control-Down: command:\033]721;1\007
