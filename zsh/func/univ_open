@@ -39,8 +39,8 @@ univ_open() {
             (eps|pdf|ps)
                 evince -f $@ &>/dev/null & disown
             ;;
-            (bmp|gif|jpg|jpeg|png|svg|tga|tiff)
-                mirage $@ &>/dev/null & disown
+            (bmp|gif|jpg|jpeg|png|svg|tga|tif|tiff)
+                feh -g 1024x768 -d -S filename $@ &>/dev/null & disown
             ;;
             (psd|xcf)
                 gimp $@ &>/dev/null & disown
