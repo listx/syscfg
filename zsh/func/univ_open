@@ -60,6 +60,9 @@ univ_open() {
             (exe)
                 wine $@ &>/dev/null & disown
             ;;
+            (otf|ttf)
+                fontforge $@ &>/dev/null & disown
+            ;;
             *)
                 vim $@
             ;;
