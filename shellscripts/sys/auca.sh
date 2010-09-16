@@ -29,56 +29,53 @@
 #
 # DEFAULT SETTINGS:
 #
-# (-w) DELAY    = 5
-# (-x) FACTOR   = 4
+# (-w) DELAY    = 1
+# (-x) FACTOR   = 10
 #
 #
 # EXAMPLES:
 #
 # Execute "pdflatex -halt-on-error report.tex" every time "report.tex" or "ch1.tex" is
-# modified (if line count changes in either file; modification checked every 5
-# seconds by default):
+# modified (if line count changes in either file; modification checked every 1
+# second by default):
 #    auca -c "pdflatex -halt-on-error report.tex" -F report.tex -f ch1.tex
 #
 # Same, but only look at "ch1.tex" (useful, assuming that report.tex includes
 # ch1.tex), and automatically execute every 4 seconds:
-#    auca -c "pdflatex -halt-on-error report.tex" -F ch1.tex -w 1 -x 4
+#    auca -c "pdflatex -halt-on-error report.tex" -F ch1.tex -x 4
 #       (-x 0 or -x 1 here would also work)
 #
-# Same, but also automatically execute every 20 (5 * 4) seconds:
-#    auca -c "pdflatex -halt-on-error report.tex" -F ch1.tex -x 4
+# Same, but also automatically execute every 10 (1 * 10) seconds:
+#    auca -c "pdflatex -halt-on-error report.tex" -F ch1.tex -x 10
 #
-# Same, but automatically execute every 5 (5 * 1) seconds (-w is 5 by default):
-#    auca -c "pdflatex -halt-on-error report.tex" -F ch1.tex -x 1
-#
-# Same, but automatically execute every 1 (1 * 1) second:
-#    auca -c "pdflatex -halt-on-error report.tex" -F ch1.tex -w 1 -x 1
+# Same, but automatically execute every 5 (5 * 1) seconds (-w is 1 by default):
+#    auca -c "pdflatex -halt-on-error report.tex" -F ch1.tex -x 5
 #
 # Same, but automatically execute every 17 (1 * 17) seconds:
-#    auca -c "pdflatex -halt-on-error report.tex" -F ch1.tex -w 1 -x 17
+#    auca -c "pdflatex -halt-on-error report.tex" -F ch1.tex -x 17
 #
 # Same, but for "ch1.tex", watch its byte size, not line count:
-#    auca -c "pdflatex -halt-on-error report.tex" -b ch1.tex -w 1 -x 17
+#    auca -c "pdflatex -halt-on-error report.tex" -b ch1.tex -x 17
 #
 # Same, but for "ch1.tex", watch its timestamp instead (i.e., every time
 # this file is saved, the modification timestamp will be different):
-#    auca -c "pdflatex -halt-on-error report.tex" -f ch1.tex -w 1 -x 17
+#    auca -c "pdflatex -halt-on-error report.tex" -f ch1.tex -x 17
 #
 # Same, but also look at the contents of directory "images/ocean":
-#    auca -c "pdflatex -halt-on-error report.tex" -f ch1.tex -d images/ocean -w 1 -x 17
+#    auca -c "pdflatex -halt-on-error report.tex" -f ch1.tex -d images/ocean -x 17
 #
 # Same, but also look at the contents of directory "other" recursively:
-#    auca -c "pdflatex -halt-on-error report.tex" -f ch1.tex -d images/ocean -D other -w 1 -x 17
+#    auca -c "pdflatex -halt-on-error report.tex" -f ch1.tex -d images/ocean -D other -x 17
 #
 # Same, but look at all files and/or directories (recursively) listed in file
 # "watchlist" instead:
-#    auca -c "pdflatex -halt-on-error report.tex" -l watchlist -w 1 -x 17
+#    auca -c "pdflatex -halt-on-error report.tex" -l watchlist -x 17
 #
 # Same, but also look at "newfile.tex":
-#    auca -c "pdflatex -halt-on-error report.tex" -l watchlist -f newfile.tex -w 1 -x 17
+#    auca -c "pdflatex -halt-on-error report.tex" -l watchlist -f newfile.tex -x 17
 #
 # Same, but also allow manual execution of "make clean" with hotkey "2":
-#    auca -c "pdflatex -halt-on-error report.tex" -c "make clean" -l watchlist -f newfile.tex -w 1 -x 17
+#    auca -c "pdflatex -halt-on-error report.tex" -c "make clean" -l watchlist -f newfile.tex -x 17
 #
 ###############################################################################
 ###############################################################################
@@ -117,7 +114,7 @@ One or more required parameters (but see -x below):
 
 Optional parameters:
 -w DELAY        Wait DELAY seconds before checking on the watched
-                files/directories for modification; default 5.
+                files/directories for modification; default 1.
 -t TIMEOUT      If COMMAND does not finish execution after TIMEOUT seconds,
                 send a SIGTERM signal to it (but do nothing else afterwards).
 -k KDELAY       If COMMAND does not finish execution after TIMEOUT,
@@ -129,12 +126,12 @@ Optional parameters:
                 files/directories were modified. If FACTOR is zero, it is set
                 to 1. If -x is set, then -f, -d, and -l are not required (i.e.,
                 if only the -c and -x options are specified, auca will
-                simply act as a while loop executing COMMAND every 20 (or
-                more if FACTOR is greater than 1) seconds). Since the
-                formula is (DELAY * FACTOR) seconds, if DELAY is 1,
+                simply act as a while loop executing COMMAND every 10 (or
+                more if FACTOR is greater than 10) seconds). Since the
+                formula is (DELAY * FACTOR) seconds, if DELAY is 1 (default),
                 FACTOR's face value itself, if greater than 0, is the seconds
                 amount.
--a              Same as \`-x 1'
+-a              Same as \`-x 10'
 -h              Show this page and exit (regardless of other parameters).
 -v              Show version number and exit (regardless of other parameters).
 "
@@ -227,8 +224,8 @@ c6="\x1b[1;31m" # bright red
 ce="\x1b[0m"
 
 coms=()
-delay=5
-xdelay_factor=4
+delay=1
+xdelay_factor=10
 f=()
 F=()
 b=()
