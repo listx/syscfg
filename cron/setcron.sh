@@ -23,12 +23,12 @@ esac
 str+="$min * * * * ping -c 4 -W 10 wikipedia.org && sudo bauerbill -Syy --rebase"
 
 # westminster clock sounds (without hour count)
-# full bell every 3rd hour (hours 0,3,6,9,12,15,18,21)
+# full bell every 6th hour (hours 0,6,12,18)
 # half-bells (different flavors) for morning/midday and evening
 if [[ $HOST == "exelion" ]]; then
-    str+="\n0 0,3,6,9,12,15,18,21 * * * ~/syscfg/shellscripts/alarm/westminster-nohour.sh f"
-    str+="\n0 1,2,4,5,7,8,10,11,13,14 * * * ~/syscfg/shellscripts/alarm/westminster-nohour.sh a"
-    str+="\n0 16,17,19,20,22,23 * * * ~/syscfg/shellscripts/alarm/westminster-nohour.sh b"
+    str+="\n0 0,6,12,18 * * * ~/syscfg/shellscripts/alarm/westminster-nohour.sh f"
+    str+="\n0 1,2,3,4,5,7,8,9,10,11,13,14 * * * ~/syscfg/shellscripts/alarm/westminster-nohour.sh a"
+    str+="\n0 15,16,17,19,20,21,22,23 * * * ~/syscfg/shellscripts/alarm/westminster-nohour.sh b"
     # set alarm clock to go off
     str+="\n28 4 * * * urxvt -hold -e ~/syscfg/shellscripts/alarm/alarmclock.sh"
     # run "mercury routine" every minute to check for all routine tasks (recurring todo lists)
