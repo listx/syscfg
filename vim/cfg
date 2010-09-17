@@ -76,38 +76,38 @@ let maplocalleader = ","
 if !exists("autocommands_loaded")
     let autocommands_loaded = 1
     " custom configobj (python module) syntax highlighting
-    au BufRead,BufNewFile *.configobj set filetype=configobj
+    au BufRead,BufNewFile *.configobj setlocal filetype=configobj
     au! Syntax configobj source $HOME/.vim/syntax/configobj.vim
-    au BufRead,BufNewFile *.lhp set filetype=lhp
+    au BufRead,BufNewFile *.lhp setlocal filetype=lhp
     au! Syntax lhp source $HOME/.vim/syntax/lhp.vim
 
-    au BufRead,BufNewFile *.toucan set filetype=toucan
+    au BufRead,BufNewFile *.toucan setlocal filetype=toucan
     au! Syntax toucan source $HOME/.vim/syntax/toucan.vim
 
-    au BufRead,BufNewFile *.cog set filetype=cog
+    au BufRead,BufNewFile *.cog setlocal filetype=cog
     au! Syntax cog source $HOME/.vim/syntax/cog.vim
 
     " tabstop is how wide the <TAB> character is, whether it's an actual <TAB>
     " character or converted into space characters with expandtab
-    au BufRead,BufNewFile *.rb,*.py set tabstop=4
+    au BufRead,BufNewFile *.rb,*.py setlocal tabstop=4
     " shiftwidth is how many characters are used when auto-indenting, and also
     " when typing '>>' and '<<' in normal mode
-    au BufRead,BufNewFile *.rb,*.py set shiftwidth=4
+    au BufRead,BufNewFile *.rb,*.py setlocal shiftwidth=4
 " Note that vim's 'textwidth' only really works for COMMENT lines, as doing so otherwise would break whitespace-sensitive code (like Python)
-    au BufRead,BufNewFile *.rb,*.py set textwidth=120
-    au BufRead,BufNewFile *.sh set textwidth=120
-    au BufRead,BufNewFile *.c,*.cpp,*.h,*.hpp set textwidth=80
+    au BufRead,BufNewFile *.rb,*.py setlocal textwidth=120
+    au BufRead,BufNewFile *.sh setlocal textwidth=120
+    au BufRead,BufNewFile *.c,*.cpp,*.h,*.hpp setlocal textwidth=80
 	" use Linux Kernel tab style for C/C++
-    au BufRead,BufNewFile *.c,*.cpp,*.h,*.hpp set tabstop=8
-    au BufRead,BufNewFile *.c,*.cpp,*.h,*.hpp set softtabstop=8
-    au BufRead,BufNewFile *.c,*.cpp,*.h,*.hpp set shiftwidth=8
-    au BufRead,BufNewFile *.c,*.cpp,*.h,*.hpp set noexpandtab
+    au BufRead,BufNewFile *.c,*.cpp,*.h,*.hpp setlocal tabstop=8
+    au BufRead,BufNewFile *.c,*.cpp,*.h,*.hpp setlocal softtabstop=8
+    au BufRead,BufNewFile *.c,*.cpp,*.h,*.hpp setlocal shiftwidth=8
+    au BufRead,BufNewFile *.c,*.cpp,*.h,*.hpp setlocal noexpandtab
     " try to mimic Linux Kernel Coding Style's indentation style
-    au BufRead,BufNewFile *.c,*.cpp,*.h,*.hpp set cinoptions=:0,l1,t0,g0,(0
+    au BufRead,BufNewFile *.c,*.cpp,*.h,*.hpp setlocal cinoptions=:0,l1,t0,g0,(0
 
-    au BufRead .vimperatorrc set syn=vim " use vim script syntax highlighting
+    au BufRead .vimperatorrc setlocal syn=vim " use vim script syntax highlighting
     " load lilypond-specific stuff
-    au BufRead,BufNewFile *.ly set filetype=lilypond
+    au BufRead,BufNewFile *.ly setlocal filetype=lilypond
     au! Syntax lilypond source $HOME/.vim/syntax/lilypond.vim
 
     " Integration with the "boxes" program by Thomas Jensen.
