@@ -231,8 +231,8 @@ alias gps='git push'
 alias gg='git pull && git push'
 alias gsy='~/syscfg/shellscripts/sys/gsy.sh'
 
-alias v='vim'
-alias vv='gvim'
+alias v='gvim'
+alias vv='vim'
 
 alias tm='tmux'
 alias tma='tmux attach-session'
