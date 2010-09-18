@@ -64,7 +64,7 @@ univ_open() {
                 fontforge $@ &>/dev/null & disown
             ;;
             *)
-                vim $@
+                vim -p $@
             ;;
         esac
     elif [[ -d $1 ]]; then
