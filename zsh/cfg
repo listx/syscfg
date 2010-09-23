@@ -294,18 +294,18 @@ alias offo='sudo shutdown -t 1 -Fr now' # reboot, but force fsck on bootup
 alias p='sudo pacman'
 alias pu='sudo pacman -Syu'
 alias py='sudo pacman -Syy'
-alias ps='sudo pacman -Sy'
+alias ps='sudo pacman -S'
 alias pq='sudo pacman -Q'
 
 alias pp='sudo powerpill'
 alias ppu='sudo powerpill -Syu --rebase'
 alias ppy='sudo powerpill -Syy --rebase'
-alias pps='sudo powerpill -Sy --rebase'
+alias pps='sudo powerpill -S --rebase'
 
 alias b='sudo bauerbill'
 alias bu='sudo bauerbill -Syu --aur --rebase --build-as $USER'
 alias by='sudo bauerbill -Syy --rebase'
-alias bs='sudo bauerbill -Sy --aur --rebase --build-as $USER'
+alias bs='sudo bauerbill -S --aur --rebase --build-as $USER'
 
 alias y='yaourt'
 alias yu='yaourt -Sybu --aur'
