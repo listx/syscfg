@@ -33,6 +33,7 @@ for m in $machines; do
     fi
 done
 
+echo "Checking LAN status...\n"
 # Check which systems are offline
 for r in $remotes; do
     ping -c 1 -W 1 $r >/dev/null 2>&1
@@ -45,7 +46,6 @@ done
 
 # Display those systems that are online
 i=0
-echo "LAN status:\n"
 for r in $remotes; do
     ((i++))
     if [[ -n ${online[(r)$r]} ]]; then
