@@ -11,9 +11,18 @@
 usb=/mnt/media-flash
 
 if [[ -z $(df | grep $usb) ]]; then
-    echo error: no USB drive detected
+    echo "error: no USB drive detected"
     exit 1
 fi
+if [[ $# -gt 0 ]]; then
+    if [[ -z $(echo $1 | grep "^[0-9]$") ]]; then
+        echo "error: invalid compression level (must be 0 through 9)"
+        exit 1
+    else
+        level=$(echo $1 | grep "^[0-9]$")
+    fi
+fi
+
 
 repos=$(ls $HOME/ghost)
 
@@ -23,13 +32,12 @@ for r in ${(f)repos}; do
     rm -vf $(basename $r .git).tar
     git archive -v -o $(basename $r .git).tar HEAD
     if [[ $# -gt 0 ]]; then
-        level=$(echo $1 | grep "^[0-9]$")
-        if [[ -n $level ]]; then
-            xz -vfz$level $(basename $r .git).tar
-            rsync -ahP --no-whole-file --inplace $(basename $r .git).tar.xz $usb
-        fi
+        xz -vfz$level $(basename $r .git).tar
+        rsync -ahP --no-whole-file --inplace $(basename $r .git).tar.xz $usb
+        rm -f $(basename $r .git).tar.xz
     else
         rsync -ahP --no-whole-file --inplace $(basename $r .git).tar $usb
+        rm -f $(basename $r .git).tar
     fi
 done
 
