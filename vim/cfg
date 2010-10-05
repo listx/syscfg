@@ -180,6 +180,7 @@ if !exists("autocommands_loaded")
     au BufEnter *.tex vmap <localleader>bu iwoiw"zs\textbf{\uline{<C-R>z}}<Esc>
     au BufEnter *.tex vmap <localleader>u  iwoiw"zs\uline{<C-R>z}<Esc>
     au BufEnter *.tex vmap <localleader>sc iwoiw"zs\textsc{<C-R>z}<Esc>
+    au BufEnter *.tex vmap <localleader>sf iwoiw"zs\textsf{<C-R>z}<Esc>
     au BufEnter *.tex vmap <localleader>tt iwoiw"zs\texttt{<C-R>z}<Esc>
     au BufEnter *.tex vmap <localleader>mbb "zs\textbf{<C-R>z}<Esc>
     au BufEnter *.tex vmap <localleader>mii "zs\textit{<C-R>z}<Esc>
@@ -187,6 +188,7 @@ if !exists("autocommands_loaded")
     au BufEnter *.tex vmap <localleader>mbu "zs\textbf{\uline{<C-R>z}}<Esc>
     au BufEnter *.tex vmap <localleader>mu  "zs\uline{<C-R>z}<Esc>
     au BufEnter *.tex vmap <localleader>msc "zs\textsc{<C-R>z}<Esc>
+    au BufEnter *.tex vmap <localleader>msf "zs\textsf{<C-R>z}<Esc>
     au BufEnter *.tex vmap <localleader>mtt "zs\texttt{<C-R>z}<Esc>
     au BufEnter *.tex nmap <localleader>bb viw"zs\textbf{<C-R>z}<Esc>
     au BufEnter *.tex nmap <localleader>ii viw"zs\textit{<C-R>z}<Esc>
@@ -194,6 +196,7 @@ if !exists("autocommands_loaded")
     au BufEnter *.tex nmap <localleader>bu viw"zs\textbf{\uline{<C-R>z}}<Esc>
     au BufEnter *.tex nmap <localleader>u  viw"zs\uline{<C-R>z}<Esc>
     au BufEnter *.tex nmap <localleader>sc viw"zs\textsc{<C-R>z}<Esc>
+    au BufEnter *.tex nmap <localleader>sf viw"zs\textsf{<C-R>z}<Esc>
     au BufEnter *.tex nmap <localleader>tt viw"zs\texttt{<C-R>z}<Esc>
 
     " highlight red any trailing whitespace
