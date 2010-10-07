@@ -170,6 +170,7 @@ alias kkkkkkkkkkkkkk="cd ../../../../../../../../../../../../../../;ll"
 alias auca="~/syscfg/shellscripts/sys/auca.sh"
 alias c="~/syscfg/shellscripts/sys/utp.sh"
 alias cls="echo -ne '\x1bc'" # clear the screen buffer (don't just hide it like CTRL-L)
+alias fiv='~/syscfg/shellscripts/sys/fiv.sh'
 alias x='~/syscfg/shellscripts/sys/aex.sh'
 alias rsd='~/syscfg/shellscripts/sys/rsd.sh'
 alias rl='~/syscfg/shellscripts/sys/rl.sh'
