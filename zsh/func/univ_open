@@ -51,7 +51,7 @@ univ_open() {
             (mid|midi)
                 timidity $@
             ;;
-            (asf|avi|flv|ogm|ogv|mkv|mov|mp4|mpg|mpeg|rmvb|wmv)
+            (asf|avi|flv|ogm|ogv|mkv|mov|mp4|mpg|mpeg|rm|rmvb|wmv)
                 smplayer $@ &>/dev/null & disown
             ;;
             (djvu)
