@@ -90,12 +90,12 @@ done
 if [[ -n $cfile ]]; then
     echo "${c3}fiv: Verifying sums from file \`$cfile'$ce"
     echo
-    eval sha512sum -c $cfile 2>&1 | sed "s/^/  $c1>$ce /"
+    eval sha1sum -c $cfile 2>&1 | sed "s/^/  $c1>$ce /"
     exit_status=$pipestatus[1]
     if [[ $exit_status -eq 0 ]]; then
         echo "\n${c1}fiv: Everything OK$ce"
     else
-        echo "\n${c6}fiv: sha512sum exited with error status $exit_status$ce"
+        echo "\n${c6}fiv: sha1sum exited with error status $exit_status$ce"
     fi
 else
     # Populate files.
@@ -110,7 +110,7 @@ else
     done
     # Generate sums
     for f in $files; do
-        sha512sum $f
+        sha1sum $f
     done
 fi
 
