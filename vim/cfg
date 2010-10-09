@@ -94,8 +94,8 @@ if !exists("autocommands_loaded")
     " when typing '>>' and '<<' in normal mode
     au BufRead,BufNewFile *.rb,*.py setlocal shiftwidth=4
 " Note that vim's 'textwidth' only really works for COMMENT lines, as doing so otherwise would break whitespace-sensitive code (like Python)
-    au BufRead,BufNewFile *.rb,*.py setlocal textwidth=120
-    au BufRead,BufNewFile *.sh setlocal textwidth=120
+    au BufRead,BufNewFile *.rb,*.py setlocal textwidth=100
+    au BufRead,BufNewFile *.sh setlocal textwidth=100
     au BufRead,BufNewFile *.c,*.cpp,*.h,*.hpp setlocal textwidth=80
 	" use Linux Kernel tab style for C/C++
     au BufRead,BufNewFile *.c,*.cpp,*.h,*.hpp setlocal tabstop=8
@@ -114,8 +114,8 @@ if !exists("autocommands_loaded")
     " Default width is set at 100 characters
     au BufEnter * nmap <localleader>c1 !!boxes -d pound-alt2<CR>
     au BufEnter * vmap <localleader>c1 !boxes -d pound-alt2<CR>
-    au BufEnter * nmap <localleader>cw1 !!boxes -d pound-alt2 -s 120<CR>
-    au BufEnter * vmap <localleader>cw1 !boxes -d pound-alt2 -s 120<CR>
+    au BufEnter * nmap <localleader>cw1 !!boxes -d pound-alt2 -s 100<CR>
+    au BufEnter * vmap <localleader>cw1 !boxes -d pound-alt2 -s 100<CR>
     au BufEnter * nmap <localleader>C1 !!boxes -d pound-alt2 -r<CR>
     au BufEnter * vmap <localleader>C1 !boxes -d pound-alt2 -r<CR>
     au BufEnter * nmap <localleader>c2 !!boxes -d pound-cmt<CR>
@@ -166,8 +166,8 @@ if !exists("autocommands_loaded")
     au BufEnter *.ly,*.tex vmap <localleader>C2 !boxes -d percent-line -r<CR>
     au BufEnter *.hs nmap <localleader>c1 !!boxes -d ada-box<CR>
     au BufEnter *.hs vmap <localleader>c1 !boxes -d ada-box<CR>
-    au BufEnter *.hs nmap <localleader>cw1 !!boxes -d ada-box -s 120<CR>
-    au BufEnter *.hs vmap <localleader>cw1 !boxes -d ada-box -s 120<CR>
+    au BufEnter *.hs nmap <localleader>cw1 !!boxes -d ada-box -s 80<CR>
+    au BufEnter *.hs vmap <localleader>cw1 !boxes -d ada-box -s 80<CR>
     au BufEnter *.hs nmap <localleader>C1 !!boxes -d ada-box -r<CR>
     au BufEnter *.hs vmap <localleader>C1 !boxes -d ada-box -r<CR>
     au BufEnter *.hs nmap <localleader>c2 !!boxes -d ada-cmt<CR>
