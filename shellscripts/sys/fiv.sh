@@ -87,15 +87,6 @@ while getopts ":c:rhv" opt; do
     esac
 done
 
-# Populate files.
-for thing in $@; do
-    if [[ -f $thing ]]; then
-        files+=($thing)
-    elif [[ -d $thing ]]; then
-        files+=($(find $thing -type f))
-    fi
-done
-
 if [[ -n $cfile ]]; then
     echo "${c3}fiv: Verifying sums from file \`$cfile'$ce"
     echo
@@ -107,6 +98,17 @@ if [[ -n $cfile ]]; then
         echo "\n${c6}fiv: sha512sum exited with error status $exit_status$ce"
     fi
 else
+    # Populate files.
+    for thing in $@; do
+        if [[ -f "$thing" ]]; then
+            files+=("$thing")
+        elif [[ -d "$thing" ]]; then
+            find "$thing" -type f | while read line; do
+                files+=("$line")
+            done
+        fi
+    done
+    # Generate sums
     for f in $files; do
         sha512sum $f
     done
