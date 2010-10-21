@@ -23,10 +23,7 @@ fi
 # check if all given source files are valid files, and that links to them don't already exist in the destination
 # directory
 for i in {1..$(($# - 1))}; do
-    if [[ ! -f $PWD/$@[$i] ]]; then
-        echo "error: source file \`$@[$i]\' is not a valid file under the current directory"
-        exit 1
-    elif [[ -a $@[$#]/$@[$i] ]]; then
+    if [[ -a $@[$#]/$@[$i] ]]; then
         echo "error: destination file $@[$#]/$@[$i] already exists"
         exit 1
     fi
