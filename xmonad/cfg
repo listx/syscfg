@@ -147,36 +147,24 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
 
     -- CUSTOM KEYBINDINGS HERE --
 
-    -- gridselect
-    , ((modm, xK_f), goToSelected defaultGSConfig)
-    -- toggle borders
-    , ((modm,  xK_b ),   withFocused toggleBorder)
-    -- move mouse away to bottom-right of currently focused window
-    , ((modm               , xK_BackSpace), warpToWindow 1 1)
-    , ((mod4Mask              , xK_x     ), spawn term1)
-    , ((mod4Mask .|. shiftMask, xK_x     ), spawn term2)
-    , ((mod4Mask              , xK_z     ), spawn term3)
     , ((mod4Mask              , xK_a     ), spawn (term1 ++ " -e ~/sched/mercury.sh todo"))
     , ((mod4Mask .|. shiftMask, xK_a     ), spawn (term1 ++ " -e ~/sched/mercury.sh notes"))
-    , ((mod4Mask              , xK_s     ), spawn (term1 ++ " -e vim ~/sched/todo.cog"))
-    , ((mod4Mask .|. shiftMask, xK_s     ), spawn (term1 ++ " -e vim -p ~/sched/notes/*"))
-    , ((mod4Mask              , xK_n     ), spawn "firefox")
-    , ((mod4Mask              , xK_t     ), spawn "gvim -geom 120x60")
-    , ((mod4Mask .|. shiftMask, xK_t     ), spawn "xclock -digital -update 1 -strftime \"%F %a %T Wk %W\" -face terminus-9 -padding 45")
     , ((mod4Mask              , xK_c     ), spawn "galculator")
     , ((mod4Mask .|. shiftMask, xK_c     ), spawn "gcalctool")
-    , ((mod4Mask              , xK_i     ), spawn "eog")
-    , ((mod4Mask .|. shiftMask, xK_i     ), spawn "gimp")
     , ((mod4Mask              , xK_d     ), spawn "amule")
     , ((mod4Mask              , xK_e     ), spawn (term1 ++ " -e mutt"))
-    , ((mod4Mask              , xK_w     ), spawn "soffice")
-    , ((mod4Mask              , xK_m     ), spawn "blender")
     , ((mod4Mask .|. shiftMask, xK_f     ), spawn "gnucash")
     , ((mod4Mask              , xK_h     ), spawn (term2 ++ " -e ncmpcpp"))
     , ((mod4Mask .|. shiftMask, xK_h     ), spawn (term2 ++ " -e mplayer -ao oss -softvol -volume 100 -volstep 1 -demuxer ogg -prefer-ipv4 http://192.168.0.110:8000/mpd.ogg"))
-    , ((mod4Mask              , xK_p     ), spawn "apvlv")
-    , ((mod4Mask .|. shiftMask, xK_p     ), spawn "evince")
-    , ((mod4Mask              , xK_v     ), spawn "smplayer")
+    , ((mod4Mask              , xK_i     ), spawn "gimp")
+    , ((mod4Mask              , xK_m     ), spawn "blender")
+    , ((mod4Mask              , xK_n     ), spawn "firefox")
+    , ((mod4Mask              , xK_s     ), spawn (term1 ++ " -e vim ~/sched/todo.cog"))
+    , ((mod4Mask .|. shiftMask, xK_s     ), spawn (term1 ++ " -e vim -p ~/sched/notes/*"))
+    , ((mod4Mask              , xK_w     ), spawn "soffice")
+    , ((mod4Mask              , xK_x     ), spawn term1)
+    , ((mod4Mask .|. shiftMask, xK_x     ), spawn term2)
+    , ((mod4Mask              , xK_z     ), spawn term3)
     -- ncmpcpp (mpd) controls
     , ((mod4Mask .|. controlMask, xK_o     ), spawn "ncmpcpp toggle")
     , ((mod4Mask .|. controlMask, xK_h     ), spawn "ncmpcpp stop; ncmpcpp play") -- "reset" current song to beginning
@@ -184,12 +172,18 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((mod4Mask .|. controlMask, xK_k     ), spawn "ncmpcpp prev")
     , ((mod4Mask .|. controlMask, xK_l     ), spawn "ncmpcpp stop")
     , ((mod4Mask .|. controlMask, xK_semicolon ), spawn "ncmpcpp play")
+    -- toggle borders
+    , ((modm              , xK_b ),   withFocused toggleBorder)
+    -- gridselect
+    , ((modm              , xK_f), goToSelected defaultGSConfig)
     -- volume controls
     , ((modm              , xK_backslash ), spawn "amixer -q set Master toggle")
     , ((modm              , xK_minus     ), spawn "amixer -q set Master 1dB- unmute")
     , ((modm              , xK_equal     ), spawn "amixer -q set Master 1.5dB+ unmute")
     -- screen brightness toggle
-    , ((modm     .|. shiftMask, xK_backslash ), spawn "sudo brightness") -- toggle brightness (100% or 0%)
+    , ((modm .|. shiftMask, xK_backslash ), spawn "sudo brightness") -- toggle brightness (100% or 0%)
+    -- move mouse away to bottom-right of currently focused window
+    , ((modm              , xK_BackSpace), warpToWindow 1 1)
     ]
     ++
 
