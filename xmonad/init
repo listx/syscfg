@@ -15,13 +15,6 @@ case $(hostname) in
         $term3 -e rtorrent &
         $term1 -name WeeChat -e weechat-curses &
 
-        # the -passfile option ONLY WORKS if alpine is compiled with
-        # "--with-passfile=some-default-file-without-directory-structure", and alpine will then
-        # by default ask if you want to save passwords to disk, and use the file specified in
-        # the --with-passfile option at compile/configure time; setting this option gives alpine
-        # the ability to use a DIFFERENT location for a password file at each time it is run, with
-        # the "-passfile" option
-        $term1 -e alpine -p ~/.alpine/cfg -passfile ~/.alpine-pass &
         firefox
     ;;
     luxion)

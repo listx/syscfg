@@ -1,7 +1,7 @@
 CFGROOT := $(shell pwd)
 HOSTNAME := $(shell hostname)
 # add the -n flag for directories, as otherwise, stray symlinks will be created inside the CFGROOT directory itself
-all: boxes cron galculator git lesskey mpd mplayer ncmpcpp pal rtorrent shellscripts vim vimperatorrc xdefaults xinitrc xmonad zsh
+all: boxes cron galculator git lesskey mpd mplayer mutt ncmpcpp pal rtorrent shellscripts vim vimperatorrc xdefaults xinitrc xmonad zsh
 boxes:
 	ln -fs $(CFGROOT)/boxes/cfg         ${HOME}/.boxes
 cron:
@@ -15,6 +15,8 @@ lesskey:
 	lesskey
 mplayer:
 	ln -fns $(CFGROOT)/mplayer          ${HOME}/.mplayer
+mutt:
+	ln -fs $(CFGROOT)/mutt/cfg          ${HOME}/.muttrc
 ncmpcpp:
 	ln -fns $(CFGROOT)/ncmpcpp          ${HOME}/.ncmpcpp
 	ln -fs $(CFGROOT)/ncmpcpp/hotkeys   ${HOME}/.ncmpcpp/keys
