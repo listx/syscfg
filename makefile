@@ -1,7 +1,7 @@
 CFGROOT := $(shell pwd)
 HOSTNAME := $(shell hostname)
 # add the -n flag for directories, as otherwise, stray symlinks will be created inside the CFGROOT directory itself
-all: boxes cron galculator git lesskey mpd mplayer mutt ncmpcpp pal rtorrent shellscripts vim vimperatorrc xdefaults xinitrc xmonad zsh
+all: boxes cron galculator git lesskey mpd mplayer mutt ncmpcpp pal rtorrent vim vimperatorrc xdefaults xinitrc xmonad zsh
 boxes:
 	ln -fs $(CFGROOT)/boxes/cfg         ${HOME}/.boxes
 cron:
@@ -41,8 +41,6 @@ endif
 ifeq ('$(HOSTNAME)','aether')
 	ln -fs $(CFGROOT)/rtorrent/cfg-aether ${HOME}/.rtorrent.rc
 endif
-shellscripts:
-	ln -fns $(CFGROOT)/shellscripts     ${HOME}/shellscripts
 vim:
 	ln -fns $(CFGROOT)/vim              ${HOME}/.vim
 	ln -fs $(CFGROOT)/vim/cfg           ${HOME}/.vimrc
@@ -76,7 +74,7 @@ endif
 	rm ${HOME}/.vim
 	rm ${HOME}/.vimrc
 	rm ${HOME}/.gvimrc
-	rm ${HOME}/shellscripts
+	rm ${HOME}/scripts
 	rm ${HOME}/.vimperatorrc
 	rm ${HOME}/.Xdefaults
 	rm ${HOME}/.xinitrc
