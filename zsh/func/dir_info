@@ -153,13 +153,20 @@ dir_info() {
             # make $big_size more "accurate" (not in terms of disk space usage,
             # but in terms of actual number of bytes inside the file) if it is
             # smaller than 4096 bytes
+
+            # also check to see if file begins with a "-",  and use "--"
+            # appropriately
             suff=""
-            if [[ $(du -b "$big" | cut -f1) -lt 4096 ]]; then
-                big_num="$(du -b "$big" | cut -f1)"
+            hyphen_guard=""
+            if [[ $big[1] == '-' ]]; then
+                hyphen_guard="--"
+            fi
+            if [[ $(du -b $hyphen_guard "$big" | cut -f1) -lt 4096 ]]; then
+                big_num="$(du -b $hyphen_guard "$big" | cut -f1)"
                 suff="B"
             else
-                big_num=$(ls -hs "$big" | cut -d " " -f1 | sed 's/[a-zA-Z]//')
-                suff=$(ls -hs "$big" | cut -d " " -f1 | tail -c -2)
+                big_num=$(ls -hs $hyphen_guard "$big" | cut -d " " -f1 | sed 's/[a-zA-Z]//')
+                suff=$(ls -hs $hyphen_guard "$big" | cut -d " " -f1 | tail -c -2)
             fi
             ctag_size=$(sizecolor "$suff")
             echo " | \`$big' $ctag_size$big_num $suff$ce"
