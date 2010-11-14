@@ -17,4 +17,4 @@ fi
 echo "********************************************************"
 echo $1
 echo ""
-find "$1" -type d -exec /home/listdata/syscfg/scripts/audio/convert/ape/ape2flac-b.sh '{}' \;
+find "$1" -type d -exec /home/listdata/syscfg/script/audio/convert/ape/ape2flac-b.sh '{}' \;

@@ -79,9 +79,9 @@ myNormalBorderColor  = "#000000"
 myFocusedBorderColor = "#ffffff"
 
 -- terminals (various different color themes)
-term1 = "~/syscfg/scripts/sys/terms/wb.sh"
-term2 = "~/syscfg/scripts/sys/terms/bw.sh"
-term3 = "~/syscfg/scripts/sys/terms/wB.sh"
+term1 = "~/syscfg/script/sys/terms/wb.sh"
+term2 = "~/syscfg/script/sys/terms/bw.sh"
+term3 = "~/syscfg/script/sys/terms/wB.sh"
 
 ------------------------------------------------------------------------
 -- Key bindings. Add, modify or remove key bindings here.

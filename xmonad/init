@@ -1,9 +1,9 @@
 #!/bin/zsh
 
 # set various terminal launcher paths
-term1=~/syscfg/scripts/sys/terms/wb.sh
-term2=~/syscfg/scripts/sys/terms/bw.sh
-term3=~/syscfg/scripts/sys/terms/wB.sh
+term1=~/syscfg/script/sys/terms/wb.sh
+term2=~/syscfg/script/sys/terms/bw.sh
+term3=~/syscfg/script/sys/terms/wB.sh
 
 # check for hostname
 case $(hostname) in

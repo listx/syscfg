@@ -36,4 +36,4 @@ echo -e "\033[1;37m********************************************************\033[
 echo -e "\033[1;37mCalling tag-mp3-with-rg.sh on each directory in:\033[0m"
 echo -e "\033[1;36m"$1"\033[0m"
 echo ""
-find "$1" -type d -exec ~/syscfg/scripts/audio/replaygain/mp3/tag-mp3-with-rg.sh '{}' \;
+find "$1" -type d -exec ~/syscfg/script/audio/replaygain/mp3/tag-mp3-with-rg.sh '{}' \;

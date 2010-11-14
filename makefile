@@ -74,7 +74,6 @@ endif
 	rm ${HOME}/.vim
 	rm ${HOME}/.vimrc
 	rm ${HOME}/.gvimrc
-	rm ${HOME}/scripts
 	rm ${HOME}/.vimperatorrc
 	rm ${HOME}/.Xdefaults
 	rm ${HOME}/.xinitrc

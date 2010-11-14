@@ -167,14 +167,14 @@ alias kkkkkkkkkkkkkk="cd ../../../../../../../../../../../../../../;ll"
 # Custom aliases                                                                                   #
 #--------------------------------------------------------------------------------------------------#
 
-alias auca="~/syscfg/scripts/sys/auca.sh"
-alias c="~/syscfg/scripts/sys/utp.sh"
+alias auca="~/syscfg/script/sys/auca.sh"
+alias c="~/syscfg/script/sys/utp.sh"
 alias cls="echo -ne '\x1bc'" # clear the screen buffer (don't just hide it like CTRL-L)
-alias fiv='~/syscfg/scripts/sys/fiv.sh'
-alias x='~/syscfg/scripts/sys/aex.sh'
-alias rsd='~/syscfg/scripts/sys/rsd.sh'
-alias rl='~/syscfg/scripts/sys/rl.sh'
-alias rouse='~/syscfg/scripts/sys/rouse.sh'
+alias fiv='~/syscfg/script/sys/fiv.sh'
+alias x='~/syscfg/script/sys/aex.sh'
+alias rsd='~/syscfg/script/sys/rsd.sh'
+alias rl='~/syscfg/script/sys/rl.sh'
+alias rouse='~/syscfg/script/sys/rouse.sh'
 
 alias d='univ_open'
 alias df='df -h'
@@ -232,7 +232,7 @@ alias glg='git log'
 alias gpl='git pull'
 alias gps='git push'
 alias gg='git pull && git push'
-alias gsy='~/syscfg/scripts/sys/gsy.sh'
+alias gsy='~/syscfg/script/sys/gsy.sh'
 
 alias v='gvim -p'
 alias vv='vim -p'
@@ -318,8 +318,8 @@ alias ys='yaourt -S'
 # CUSTOM SCRIPTS
 #
 # encoding/decoding
-alias rgmp3='/home/listdata/syscfg/scripts/audio/replaygain/mp3/tmwrg.sh'
-alias rgflac='/home/listdata/syscfg/scripts/audio/replaygain/flac/tfwrg.sh'
+alias rgmp3='/home/listdata/syscfg/script/audio/replaygain/mp3/tmwrg.sh'
+alias rgflac='/home/listdata/syscfg/script/audio/replaygain/flac/tfwrg.sh'
 
 #--------------------------------------------------------------------------------------------------#
 # Host-specific settings (different aliases, etc. for different computers                          #

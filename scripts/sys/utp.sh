@@ -4,7 +4,7 @@ zmodload zsh/pcre
 
 # usage: utp.sh [name] or just utp.sh (will select a random theme)
 
-root_dir="/home/$USER/syscfg/scripts/sys/terms/"
+root_dir="/home/$USER/syscfg/script/sys/terms/"
 
 pcre_compile "^c_(.+)=\"(#[0-9a-f]+)"
 
@@ -41,7 +41,7 @@ if [[ $#@ -eq 1 ]]; then
     if [[ -f "$root_dir$1.sh" ]]; then
         set_theme $1
     else
-        echo "utp: \`$1.sh' does not exist under ~/syscfg/scripts/sys/terms"
+        echo "utp: \`$1.sh' does not exist under ~/syscfg/script/sys/terms"
         echo "utp: available color themes:"
         echo $(ls "$root_dir")
         echo "utp: choose desired theme without the .sh extension"

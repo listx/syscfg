@@ -26,11 +26,11 @@ str+="$min * * * * ping -c 4 -W 10 wikipedia.org && sudo bauerbill -Syy --rebase
 # full bell every 6th hour (hours 0,6,12,18)
 # half-bells (different flavors) for morning/midday and evening
 if [[ $HOST == "exelion" ]]; then
-    str+="\n0 0,12 * * * ~/syscfg/scripts/alarm/westminster-nohour.sh f"
-    str+="\n0 1,2,3,4,5,6,7,8,9,10,11 * * * ~/syscfg/scripts/alarm/westminster-nohour.sh a"
-    str+="\n0 13,14,15,16,17,18,19,20,21,22,23 * * * ~/syscfg/scripts/alarm/westminster-nohour.sh b"
+    str+="\n0 0,12 * * * ~/syscfg/script/alarm/westminster-nohour.sh f"
+    str+="\n0 1,2,3,4,5,6,7,8,9,10,11 * * * ~/syscfg/script/alarm/westminster-nohour.sh a"
+    str+="\n0 13,14,15,16,17,18,19,20,21,22,23 * * * ~/syscfg/script/alarm/westminster-nohour.sh b"
     # set alarm clock to go off
-    str+="\n28 4 * * * urxvt -hold -e ~/syscfg/scripts/alarm/alarmclock.sh"
+    str+="\n28 4 * * * urxvt -hold -e ~/syscfg/script/alarm/alarmclock.sh"
     # run "mercury routine" every minute to check for all routine tasks (recurring todo lists)
     str+="\n*/1 * * * * ~/sched/check.sh routine"
     # display the todo list three times a day
