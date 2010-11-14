@@ -1,33 +1,48 @@
-#    ~/yaourtrc  - Configuration for yaourt
+#    yaourtrc  - Configuration for yaourt
 # 
-#   See yaourt(8) for more information
+#   See yaourtrc(5) for more information
 #   
 #
-#
-#   AlwaysUpgradeDevel no
-#   AlwaysUpgradeAur no
-#   AlwaysForce no
-#   AurVoteSupport yes
-#   AutoSaveBackupFile no
-#   ColorMod Normal
-#   ColorMod LightBackGround
-#   ColorMod NoColor
-#   ColorMod TextOnly
-#   DontNeedToPressEnter yes
-#   EditPkgbuild yes
-#   ExportToLocalRepository /where/you/want
-#   ForceEnglish no
-#   LastCommentsNumber 5
-#   LastCommentsOrder asc
-#   NoConfirm no
-   PacmanBin /usr/bin/powerpill
-   PkgbuildEditor vim
-#   DiffEditor vimdiff
-#   SearchInAurUnsupported yes
-#   ShowAurComment yes
-#   TmpDirectory /where/you/want
-#   UpdateTerminalTitle yes
-#
-#   Define here your prefered Sourceforge mirror: (none surfnet ufpr heanet easynews umn switch belnet kent mesh optusnet jaist puzzle superb-east nchc superb-west)
-#  SourceforgeMirror heanet
-#
+
+# ABS_REPO list repositories available on archlinux rsync server
+ABS_REPO=(!testing core extra !community-testing community !gnome-unstable !kde-unstable)
+
+# General
+#AUTOSAVEBACKUPFILE=0
+#DEVELBUILDDIR="/var/abs/local/yaourtbuild"
+#DEVEL=0
+#EDITOR="$EDITOR"
+#FORCEENGLISH=0
+#FORCE=0
+#TMPDIR="/tmp"
+#SUDONOVERIF=0      # Avoid multiple sudo checks when timestamp_timeout=0
+
+# AUR 
+#AURCOMMENT=5
+#AURDEVELONLY=0
+#AURSEARCH=1
+#AURUPGRADE=0
+#AURVOTE=1
+
+# Build
+#EXPORT=0           # Export to 1: EXPORTDIR or PKGDEST
+                    # 2: pacman cache (as root)
+#EXPORTSRC=0        # Need EXPORT>0 to be used
+#EXPORTDIR=""       # If empty, use makepkg's connfiguration (see makepkg.conf)
+
+# Prompt
+#NOCONFIRM=0
+#UP_NOCONFIRM=0     # No prompt while build upgrades (including -Sbu)
+#BUILD_NOCONFIRM=0  # Only prompt for editing files
+#EDITFILES=1
+#NOENTER=1
+
+# Output
+#USECOLOR=1
+#DETAILUPGRADE=1
+#SHOWORPHANS=1
+#TERMINALTITLE=1
+
+# Command
+#PACMAN="pacman"
+#DIFFEDITCMD="vimdiff"

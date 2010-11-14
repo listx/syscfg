@@ -2,3 +2,12 @@
 #
 # /etc/rc.local: Local multi-user startup script.
 #
+
+. /etc/rc.conf
+. /etc/rc.d/functions
+
+stat_busy "Enabling WOL"
+ethtool -s eth0 wol g
+stat_done
+
+su -l -c "/home/listdata/clauto.sh" listdata

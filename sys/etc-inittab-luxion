@@ -40,6 +40,6 @@ ca::ctrlaltdel:/sbin/shutdown -t3 -r now
 x:5:once:/bin/su listdata -l -c "/bin/bash --login -c startx >/dev/null 2>&1"
 #x:5:respawn:/usr/sbin/gdm -nodaemon
 #x:5:respawn:/usr/bin/kdm -nodaemon
-#x:5:respawn:/usr/bin/slim >& /dev/null
+#x:5:respawn:/usr/bin/slim >/dev/null 2>&1
 
 # End of file
