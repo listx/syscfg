@@ -21,7 +21,12 @@ EndSection
 
 Section "ServerFlags"
     Option         "AutoAddDevices" "False"
-    Option         "Xinerama" "1"
+    Option         "Xinerama" "1" # XMonad: dual-head won't work properly without this!
+    # Change blank time, etc. to 60 minutes
+    Option "blank time" "60"
+    Option "standby time" "0"
+    Option "suspend time" "0"
+    Option "off time" "0"
 EndSection
 
 Section "InputDevice"

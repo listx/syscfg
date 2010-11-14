@@ -3,9 +3,18 @@
 # /etc/rc.local.shutdown: Local shutdown script.
 #
 
+. /etc/rc.conf
+. /etc/rc.d/functions
+
+stat_busy "Enabling WOL"
+ethtool -s eth1 wol g
+stat_done
+
 # backup the home directory to secondary hard drive
 # --exclude-special-files is to avoid "AF_UNIX path too long" errors with socket files
 # also, all dotfiles and dotfolders (recursively) are not saved
-rdiff-backup --print-statistics --verbosity 5 --exclude-special-files --exclude '**mp3' --exclude '**mpg' --exclude '**mpeg' --exclude '**mov' --exclude '**avi' --exclude '**wmv' --exclude '**/.*' --exclude '~/ghost' /home/listdata /mnt/b2/bkup-exelion
+rdiff-backup --remove-older-than 4W --force /mnt/b2/bkup-exelion
+rdiff-backup --print-statistics --verbosity 5 --exclude-special-files --exclude '**mp3' --exclude '**mpg' --exclude '**mpeg' --exclude '**mov' --exclude '**avi' --exclude '**wmv' --exclude "**jpeg" --exclude "**jpg" --exclude '**/.*' --exclude "**/ghost" --exclude "/home/listdata/download/src" --exclude "**/bittor" /home/listdata /mnt/b2/bkup-exelion
 
+rdiff-backup --remove-older-than 2W --force /mnt/b1/bkup-dcc
 rdiff-backup --print-statistics --verbosity 5 --exclude-special-files --exclude '**mp3' --exclude '**mpg' --exclude '**mpeg' --exclude '**mov' --exclude '**avi' --exclude '**wmv' --exclude '**/.*' /mnt/a1/dcc /mnt/b1/bkup-dcc

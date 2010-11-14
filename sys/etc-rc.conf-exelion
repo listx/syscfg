@@ -7,7 +7,8 @@
 # -----------------------------------------------------------------------
 #
 # LOCALE: available languages can be listed with the 'locale -a' command
-# HARDWARECLOCK: set to "UTC" or "localtime"
+# HARDWARECLOCK: set to "UTC" or "localtime", any other value will result
+#   in the hardware clock being left untouched (useful for virtualization)
 # TIMEZONE: timezones are found in /usr/share/zoneinfo
 # KEYMAP: keymaps are found in /usr/share/kbd/keymaps
 # CONSOLEFONT: found in /usr/share/kbd/consolefonts (only needed for non-US)
@@ -34,7 +35,7 @@ USECOLOR="yes"
 #
 MOD_AUTOLOAD="yes"
 #MOD_BLACKLIST=() #deprecated
-MODULES=(forcedeth slhc snd-mixer-oss snd-pcm-oss snd-seq-oss snd-seq-device snd-seq-midi-event snd-seq snd-hwdep snd-page-alloc snd-pcm snd-rawmidi snd-timer snd snd-hda-intel soundcore snd-usb-audio snd-usb-lib !pcspkr !snd_pcsp vboxdrv)
+MODULES=(forcedeth slhc snd-mixer-oss snd-pcm-oss snd-seq-oss snd-seq-device snd-seq-midi-event snd-seq snd-hwdep snd-page-alloc snd-pcm snd-rawmidi snd-timer snd snd-hda-intel soundcore snd-usb-audio !pcspkr !snd_pcsp vboxdrv)
 
 # Scan for LVM volume groups at startup, required if you use LVM
 USELVM="no"
@@ -71,6 +72,10 @@ INTERFACES=(eth1)
 gateway="default gw 192.168.0.1"
 ROUTES=(!gateway)
  
+# Setting this to "yes" will skip network shutdown.
+# This is required if your root device is on NFS.
+NETWORK_PERSIST="no"
+
 # Enable these network profiles at boot-up.  These are only useful
 # if you happen to need multiple network configurations (ie, laptop users)
 #   - set to 'menu' to present a menu during boot-up (dialog package required)
@@ -90,4 +95,4 @@ ROUTES=(!gateway)
 #   - prefix a daemon with a ! to disable it
 #   - prefix a daemon with a @ to start it up in the background
 #
-DAEMONS=(syslog-ng network bitlbee crond alsa hal @sshd @openntpd @cups @timidity++)
+DAEMONS=(syslog-ng network bitlbee crond alsa hal @sshd @openntpd @cups @timidity++ @sensors)
