@@ -36,7 +36,7 @@ univ_open() {
             (htm|html)
                 firefox $@ &>/dev/null & disown
             ;;
-            (eps|pdf|ps)
+            (djvu|dvi|eps|pdf|ps)
                 evince -f $@ &>/dev/null & disown
             ;;
             (bmp|gif|jpg|jpeg|png|svg|tga|tif|tiff)
@@ -53,9 +53,6 @@ univ_open() {
             ;;
             (asf|avi|flv|ogm|ogv|mkv|mov|mp4|mpg|mpeg|rm|rmvb|wmv)
                 smplayer $@ &>/dev/null & disown
-            ;;
-            (djvu)
-                djview4 $@ & disown
             ;;
             (exe)
                 wine $@ &>/dev/null & disown
