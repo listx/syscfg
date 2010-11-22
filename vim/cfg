@@ -87,6 +87,9 @@ if !exists("autocommands_loaded")
     au BufRead,BufNewFile *.cog setlocal filetype=cog
     au! Syntax cog source $HOME/.vim/syntax/cog.vim
 
+    au BufRead,BufNewFile *.afs setlocal filetype=afs
+    au! Syntax afs source $HOME/.vim/syntax/afs.vim
+
     " tabstop is how wide the <TAB> character is, whether it's an actual <TAB>
     " character or converted into space characters with expandtab
     au BufRead,BufNewFile *.rb,*.py setlocal tabstop=4
