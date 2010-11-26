@@ -3,7 +3,7 @@
 
 batlife=$(acpi | awk '{print $NF}' | sed 's/\%//')
 
-if (( $batlife < 100 )); then
+if (( $batlife < 20 )); then
     urxvt -hold -e zsh -c "echo warning: Battery life is $batlife%"
 fi
 
