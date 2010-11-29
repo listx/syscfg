@@ -180,7 +180,7 @@ alias d='univ_open'
 alias df='df -h'
 alias du='du -h'
 
-alias e='evince'
+alias cryp='gpg2 -e -r linusarver'
 alias asyp='asy -f pdf'
 
 # easy find command (see find_quick() function)
