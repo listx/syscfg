@@ -14,8 +14,7 @@ case $(hostname) in
         $term1 -e htop &
         $term3 -e rtorrent &
         $term1 -name WeeChat -e weechat-curses &
-
-        firefox
+        $term1
     ;;
     luxion)
         $term1 -e alsamixer &
