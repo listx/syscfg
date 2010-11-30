@@ -181,7 +181,9 @@ alias df='df -h'
 alias du='du -h'
 
 alias cryp='gpg2 -e -r linusarver'
-alias asyp='asy -f pdf'
+alias buf1='xsel -p'
+alias buf2='xsel -s'
+alias buf3='xsel -b'
 
 # easy find command (see find_quick() function)
 alias fa='find_quick a '
@@ -219,8 +221,6 @@ alias make_plist="
         || (echo \"make_plist: file \\\`plist' already exists\" \
             && echo \"make_plist: aborting operation\")"
 
-alias n='netcfg'
-
 alias g='git'
 alias gdf="[[ \$(git diff | wc -l) -gt 0 ]] && git diff || ([[ \$(git diff 2>&1 | wc -l) -eq 0 ]] && echo \"working tree clean\")"
 alias gdfc="[[ \$(git diff --cached | wc -l) -gt 0 ]] && git diff --cached || ([[ \$(git diff --cached 2>&1 | wc -l) -eq 0 ]] && echo \"index empty\")"
@@ -231,13 +231,11 @@ alias gco='git checkout'
 alias glg='git log'
 alias gpl='git pull'
 alias gps='git push'
-alias gg='git pull && git push'
 alias gsy='~/syscfg/script/sys/gsy.sh'
 
 alias v='gvim -p'
 alias vv='vim -p'
 
-alias tm='tmux'
 alias tma='tmux attach-session'
 
 # these sane hostnames depend on the /etc/hosts file!
