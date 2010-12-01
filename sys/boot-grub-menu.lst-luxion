@@ -38,7 +38,7 @@ color light-blue/black light-cyan/blue
 # (0) Arch Linux
 title  Arch Linux
 root   (hd0,6)
-kernel /boot/vmlinuz26 root=/dev/disk/by-uuid/13b10fe8-d2df-41af-8580-cfd183466603 ro vga=775
+kernel /boot/vmlinuz26 root=/dev/disk/by-uuid/13b10fe8-d2df-41af-8580-cfd183466603 ro
 initrd /boot/kernel26.img
 
 # (1) Arch Linux
