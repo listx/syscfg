@@ -38,6 +38,11 @@ for c in $connections; do
     fi
 done
 
+# if user gave a directory to go to, then go to that directory first and try to sync from there
+if [[ -n "$1" && -d "$1" ]]; then
+    cd "$1"
+fi
+
 # store repo location -- this has to be the same across all remotes as well;
 # since we could be nested deep inside a directory somewhere in the repo, let's
 # find the toplevel directory (this is required for pulling/pushing one-way)
