@@ -11,10 +11,7 @@ import IO
 -- for hSetEcho
 import System.IO
 
-keys =  ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"] ++ -- 26
-        ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"] ++ -- 52
-        ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"] ++ -- 62
-        ["`", "~", "!", "@", "#", "$", "%", "^", "&", "*", "(", ")", "_", "-", "+", "=", "[", "]", "{", "}", "\\", "|", ";", ":", "'", "\"", ",", ".", "<", ">", "/", "?"]
+keys = ['a'..'z'] ++ ['A'..'Z'] ++ ['0'..'9'] ++ "`~!@#$%^&*()-_=+[{]}\\|;:'\",<.>/? "
 
 puts = putStrLn
 put = putStr
@@ -24,12 +21,13 @@ showrand = do
     key <- getChar
     r <- getStdRandom $ randomR (0,(length keys) - 1)
     case key of
-        'q' -> puts "\n\npoke: exiting...\n"
-        'j' -> put $ keys!!((mod r 10) + 52)
-        'k' -> put $ keys!!(mod r 52)
-        'l' -> put $ keys!!(mod r 62)
-        ';' -> put $ keys!!((mod r 32) + 62)
-        _   -> put $ keys!!r
+        'j' -> putChar $ keys!!((mod r 10) + 52)
+        'k' -> putChar $ keys!!(mod r 52)
+        'l' -> putChar $ keys!!(mod r 62)
+        ';' -> putChar $ keys!!((mod r 33) + 62)
+        '\n' -> putChar '\n'
+        'q' -> puts []
+        _   -> putChar $ keys!!r
     if key /= 'q' then showrand else return ()
 
 main :: IO ()
@@ -42,5 +40,6 @@ main = do
     puts "      'k'     letter"
     puts "      'l'     alphanumeric"
     puts "      ';'     punctuation"
+    puts "      'ENTER' newline"
     puts "      else    any\n"
     showrand -- enter loop
