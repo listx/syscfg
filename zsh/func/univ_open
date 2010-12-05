@@ -46,7 +46,7 @@ univ_open() {
                 gimp $@ &>/dev/null & disown
             ;;
             (aac|flac|mp3|ogg|wav|wma)
-                mplayer $@
+                mplayer -loop 0 $@
             ;;
             (mid|midi)
                 timidity $@
