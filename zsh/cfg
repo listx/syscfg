@@ -175,6 +175,7 @@ alias x='~/syscfg/script/sys/aex.sh'
 alias rsd='~/syscfg/script/sys/rsd.sh'
 alias rl='~/syscfg/script/sys/rl.sh'
 alias rouse='~/syscfg/script/sys/rouse.sh'
+alias guu='~/syscfg/script/sys/guu.sh repos'
 
 alias d='univ_open'
 alias df='df -h'
