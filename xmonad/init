@@ -8,6 +8,7 @@ term3=~/syscfg/script/sys/terms/wB.sh
 # check for hostname
 case $(hostname) in
     exelion)
+        firefox &
         $term2 -e ncmpcpp &
         $term1 -e alsamixer &
         $term2 -n iftop -e sudo iftop -B -i eth1 &
@@ -23,6 +24,7 @@ case $(hostname) in
         $term1
     ;;
     aether)
+        firefox &
         $term1 -e alsamixer &
         $term2 -n iftop -e sudo iftop -B -i eth0 &
         $term1 -e htop &

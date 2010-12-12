@@ -289,6 +289,7 @@ myManageHook = composeAll
     , stringProperty "WM_NAME"  =? "rtorrent"           --> doShift "F9"
     , stringProperty "WM_NAME"  =? "ncmpcpp"            --> doShift "0"
     , stringProperty "WM_NAME"  =? "mplayer"            --> doShift "0"
+    , resource  =? "Navigator"                            --> doShift "1"
     --, className  =? "Blender"                           --> doShift "6"
     , className  =? "Blender:Render"                    --> doFloat
     , resource  =? "Browser"                            --> doFloat
