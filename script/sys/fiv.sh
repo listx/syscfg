@@ -100,7 +100,7 @@ if [[ -n $cfile ]]; then
 else
     # Populate files.
     for thing in $@; do
-        if [[ -e "$thing" ]]; then
+        if [[ -f "$thing" ]]; then
             files+=("$thing")
         elif [[ -d "$thing" ]]; then
             find "$thing" -type f | while read line; do
