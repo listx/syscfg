@@ -6,17 +6,11 @@ let mapleader = ","
 
 source! ~/.vimperatorrc.local
 
-" make default vertical scrolling go faster
-no j 6j
-no k 6k
-
 " unmap the make C-p and C-n behave like default h and l (scroll horizontally)
-
 no <C-p> h
 no <C-n> l
 
 " make h and l browse tabs left and right instead of scrolling horizontally (which happens very rarely)
-
 no h :tabprevious<CR>
 no l :tabnext<CR>
 
