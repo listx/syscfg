@@ -1,0 +1,1 @@
+/home/listdata/prog/afs/vim/afs-syntax.vim
