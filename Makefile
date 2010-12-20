@@ -16,6 +16,7 @@ lesskey:
 mplayer:
 	ln -fns $(CFGROOT)/mplayer          ${HOME}/.mplayer
 mutt:
+	ln -fs $(CFGROOT)/mutt              ${HOME}/.mutt
 	ln -fs $(CFGROOT)/mutt/cfg          ${HOME}/.muttrc
 ncmpcpp:
 	ln -fns $(CFGROOT)/ncmpcpp          ${HOME}/.ncmpcpp
