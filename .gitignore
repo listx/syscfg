@@ -1,3 +1,11 @@
 *.log
 *.hi
 *.o
+ncmpcpp/config
+ncmpcpp/keys
+mutt/hcache
+script/sys/poke
+vim/.VimballRecord
+vim/colors
+xmonad/xmonad-x86_64-linux
+xmonad/xmonad.errors
