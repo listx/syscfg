@@ -199,8 +199,6 @@ alias fD='find_quick dd '
 alias ft='find_quick t '
 alias fT='find_quick tt '
 
-alias i='eog'
-
 alias  ll='dir_info 0'
 alias   l='dir_info 1'
 alias llj='dir_info 2'
