@@ -238,6 +238,11 @@ if !exists("autocommands_loaded")
     endfunction
 endif
 
+" quick copy and paste from CLIPBOARD ("+y and "+p)
+vmap <localleader>y "+y
+nmap <localleader>p "+p
+nmap <localleader>P "+P
+
 " Remove K from being mapped to interactive man pages
 nmap K <Esc>
 
