@@ -29,6 +29,8 @@ OPTIONS:
 FILES           Generate sums of FILES and print them to STDOUT. If a directory
                   is given, recursively find every regular file under it and
                   generate sums for those files as well.
+                You can also feed fiv output from another program with a pipe,
+                  like so: find -type f | fiv
 -c FILE         Read all sums found in FILE and verify them.
 -h              Show this page and exit (regardless of other parameters).
 -v              Show version number and exit (regardless of other parameters).
@@ -37,7 +39,11 @@ EXAMPLES:
 
   fiv *
     This gets all regular files from current directory, recursively, and prints
-    them to STDOUT.
+    their checksums to STDOUT.
+
+  find -type f | fiv
+    This gets all the results from the \`find -type f' command and feeds it to
+    fiv. Fiv will then generate the checksums for each file.
 
   fiv * > checksums
     Same as above, but redirects the output into a (new) file called
