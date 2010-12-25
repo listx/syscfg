@@ -214,14 +214,7 @@ alias m='mplayer -loop 0'
 alias mp='mplayer -loop 0 -playlist'
 alias mps='mplayer -loop 0 -shuffle -playlist'
 alias ms='smplayer'
-alias make_plist="
-    [[ ! -e plist ]] \
-        && (find -maxdepth 1 -type f -iregex \".*\.\(aac\|flac\|mp3\|ogg\|wav\)$\" | sort >> plist \
-            && echo \"make_plist: displaying file \\\`plist':\n\" \
-            && cat plist \
-            && echo \"\nmake_plist: finished displaying file \\\`plist' (\$(cat plist | wc -l) audio files found)\") \
-        || (echo \"make_plist: file \\\`plist' already exists\" \
-            && echo \"make_plist: aborting operation\")"
+alias make_plist="~/syscfg/script/audio/make_plist.sh"
 
 alias g='git'
 alias gdf="[[ \$(git diff | wc -l) -gt 0 ]] && git diff || ([[ \$(git diff 2>&1 | wc -l) -eq 0 ]] && echo \"working tree clean\")"
