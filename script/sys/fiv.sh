@@ -81,7 +81,7 @@ cfile=""
 recursive=0
 
 # check for help and version arguments
-while getopts ":c:rhv" opt; do
+while getopts ":c:hv" opt; do
     case "$opt" in
     h)  msg "help" ;;
     v)  msg "version" ;;
@@ -91,7 +91,7 @@ done
 
 # re-parse from beginning
 OPTIND=1
-while getopts ":c:rhv" opt; do
+while getopts ":c:hv" opt; do
     case "$opt" in
     c)
         cfile="$OPTARG"
