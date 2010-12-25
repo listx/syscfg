@@ -81,7 +81,7 @@ cfile=""
 recursive=0
 
 # check for help and version arguments
-while getopts ":c:hv" opt; do
+while getopts "c:hv" opt; do
     case "$opt" in
     h)  msg "help" ;;
     v)  msg "version" ;;
@@ -98,7 +98,8 @@ while getopts ":c:hv" opt; do
         ;;
     h)  msg "help" ;;
     v)  msg "version" ;;
-    *) echo $OPTARG is optarg;;
+    *)  exit 1
+        ;;
     esac
 done
 
