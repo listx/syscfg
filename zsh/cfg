@@ -310,6 +310,9 @@ alias yu='yaourt -Sybu --aur'
 alias yy='yaourt -Syy'
 alias ys='yaourt -S'
 
+# update all packages ending in "-git" (all git-based packages)
+alias pg='for pkg in $(pq | grep -- "-git" | cut -d " " -f1); do bs $pkg; done'
+
 # CUSTOM SCRIPTS
 #
 # encoding/decoding
