@@ -163,8 +163,8 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((mod4Mask .|. shiftMask, xK_s     ), spawn (term1 ++ " -e vim -p ~/sched/notes/*"))
     , ((mod4Mask              , xK_w     ), spawn "soffice")
     , ((mod4Mask              , xK_x     ), spawn term1)
-    , ((mod4Mask .|. shiftMask, xK_x     ), spawn term2)
-    , ((mod4Mask              , xK_z     ), spawn term3)
+    , ((mod4Mask .|. shiftMask, xK_x     ), spawn term3)
+    , ((mod4Mask              , xK_z     ), spawn term2)
     -- ncmpcpp (mpd) controls
     , ((mod4Mask .|. controlMask, xK_o     ), spawn "ncmpcpp toggle")
     , ((mod4Mask .|. controlMask, xK_h     ), spawn "ncmpcpp stop; ncmpcpp play") -- "reset" current song to beginning
