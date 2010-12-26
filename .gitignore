@@ -1,6 +1,7 @@
 *.log
 *.hi
 *.o
+mplayer/mplayerplug-in.conf
 ncmpcpp/config
 ncmpcpp/keys
 mutt/hcache
@@ -8,5 +9,6 @@ script/sys/poke
 vim/.VimballRecord
 vim/.netrwhist
 vim/colors
+vim/sessions
 xmonad/xmonad-x86_64-linux
 xmonad/xmonad.errors
