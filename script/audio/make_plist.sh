@@ -99,7 +99,7 @@ else
     echo "File \`$pname' already exists."
     echo "Displaying dry run:"
     fnum=$(eval $com | wc -l)
-    eval $com | sed "s/^/  $c1>$ce /"
+    eval $com | sort | sed "s/^/  $c1>$ce /"
     echo "\nFound $fnum audio files (dry run)"
 fi
 
