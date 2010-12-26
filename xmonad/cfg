@@ -27,6 +27,9 @@ import XMonad.Actions.NoBorders
 -- for doCenterFloat
 import XMonad.Hooks.ManageHelpers
 
+-- disable automatic removal of borders for fullscreen
+import XMonad.Layout.NoBorders
+
 -- The preferred terminal program, which is used in a binding below and by
 -- certain contrib modules.
 --
@@ -242,7 +245,7 @@ myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
 -- The available layouts.  Note that each layout is separated by |||,
 -- which denotes layout choice.
 --
-myLayout = Mirror tiled ||| tiled ||| Full
+myLayout = Mirror tiled ||| tiled ||| noBorders Full
   where
     -- default tiling algorithm partitions the screen into two panes
     tiled   = Tall nmaster delta ratio
