@@ -40,7 +40,7 @@ univ_open() {
                 evince -f $@ &>/dev/null & disown
             ;;
             (bmp|gif|jpg|jpeg|png|svg|tga|tif|tiff)
-                feh -g 1024x768 -d -S filename $@ &>/dev/null & disown
+                geeqie -f $@ &>/dev/null & disown
             ;;
             (psd|xcf)
                 gimp $@ &>/dev/null & disown
