@@ -357,3 +357,5 @@ nmap <silent> <localleader>td 0^a><space>[X]<esc>A<space>[<esc>:r<space>!~/syscf
 nmap <silent> <localleader>tmd 0^a><space>[X~]<esc>A<space>[<esc>:r<space>!~/syscfg/script/sys/time.rb<space>0<cr>I<backspace><esc>A]<space>=><space>
 " task CANCELLED
 nmap <silent> <localleader>tC 0^a><space>[/]<esc>A<space>[<esc>:r<space>!~/syscfg/script/sys/time.rb<space>0<cr>I<backspace><esc>A]<space>=><space>
+
+" vim: syntax=vim
