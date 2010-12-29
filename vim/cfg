@@ -29,6 +29,7 @@ set guioptions-=m  "remove menu
 set guioptions-=r  "remove scrollbar
 set lbr "for word wrapping to be based on words, not characters
 set gfn=Terminus\ 11
+set cursorline " highlight cursor horizontally
 " so zenburn's background is properly loaded ... 2008/12/23
 set t_Co=256
 
