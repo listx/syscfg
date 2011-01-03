@@ -314,13 +314,6 @@ nmap <S-l> :bp<CR>
 " faster access to normal mode
 imap jk <Esc>
 
-" makes j and k move up or down 1 "line" as it appears on the screen -- not by
-" the actual number of lines in the text file
-nmap k gk
-nmap j gj
-nnoremap <c-k> k
-nnoremap <c-j> j
-
 nnoremap <space> 10<c-e>10j
 nnoremap <backspace> 10<c-y>10k
 
