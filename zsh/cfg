@@ -184,7 +184,8 @@ alias df='df -h'
 alias du='du -h'
 
 alias enc='gpg2 -e -r linusarver'
-alias dec='~/syscfg/script/sys/decrypt.sh'
+alias dec='~/syscfg/script/sys/decrypt.sh outfile'
+alias decless='~/syscfg/script/sys/decrypt.sh viewfile'
 
 alias buf1='xsel -p'
 alias buf2='xsel -s'
