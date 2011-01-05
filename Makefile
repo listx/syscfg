@@ -85,7 +85,7 @@ endif
 	rm ${HOME}/.zshrc
 
 # copy contents of system files to keep track of them
-syscopy:
+core:
 ifeq ('$(HOSTNAME)','exelion')
 	cat /boot/grub/menu.lst >         /home/listdata/syscfg/core/boot-grub-menu.lst-exelion
 	cat /etc/X11/xorg.conf >          /home/listdata/syscfg/core/etc-X11-xorg.conf-exelion
