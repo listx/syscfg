@@ -87,39 +87,39 @@ endif
 # copy contents of system files to keep track of them
 syscopy:
 ifeq ('$(HOSTNAME)','exelion')
-	cat /boot/grub/menu.lst >       /home/listdata/syscfg/sys/boot-grub-menu.lst-exelion
-	cat /etc/X11/xorg.conf >        /home/listdata/syscfg/sys/etc-X11-xorg.conf-exelion
-	cat /etc/fstab >                /home/listdata/syscfg/sys/etc-fstab-exelion
-	cat /etc/hosts >                /home/listdata/syscfg/sys/etc-hosts-exelion
-	cat /etc/inittab >              /home/listdata/syscfg/sys/etc-inittab-exelion
-	cat /etc/makepkg.conf >         /home/listdata/syscfg/sys/etc-makepkg.conf-exelion
-	cat /etc/rc.conf >              /home/listdata/syscfg/sys/etc-rc.conf-exelion
-	cat /etc/rc.local >             /home/listdata/syscfg/sys/etc-rc.local-exelion
-	cat /etc/rc.local.shutdown >    /home/listdata/syscfg/sys/etc-rc.local.shutdown-exelion
-	cat /etc/yaourtrc >             /home/listdata/syscfg/sys/etc-yaourtrc-exelion
-	cat /etc/sudoers >              /home/listdata/syscfg/sys/etc-sudoers-exelion # requires superuser privileges to read!
+	cat /boot/grub/menu.lst >         /home/listdata/syscfg/core/boot-grub-menu.lst-exelion
+	cat /etc/X11/xorg.conf >          /home/listdata/syscfg/core/etc-X11-xorg.conf-exelion
+	cat /etc/fstab >                  /home/listdata/syscfg/core/etc-fstab-exelion
+	cat /etc/hosts >                  /home/listdata/syscfg/core/etc-hosts-exelion
+	cat /etc/inittab >                /home/listdata/syscfg/core/etc-inittab-exelion
+	cat /etc/makepkg.conf >           /home/listdata/syscfg/core/etc-makepkg.conf-exelion
+	cat /etc/rc.conf >                /home/listdata/syscfg/core/etc-rc.conf-exelion
+	cat /etc/rc.local >               /home/listdata/syscfg/core/etc-rc.local-exelion
+	cat /etc/rc.local.shutdown >      /home/listdata/syscfg/core/etc-rc.local.shutdown-exelion
+	cat /etc/yaourtrc >               /home/listdata/syscfg/core/etc-yaourtrc-exelion
+	cat /etc/sudoers >                /home/listdata/syscfg/core/etc-sudoers-exelion # requires superuser privileges to read!
 endif
 ifeq ('$(HOSTNAME)','luxion')
-	cat /boot/grub/menu.lst >       /home/listdata/syscfg/sys/boot-grub-menu.lst-luxion
-	cat /etc/X11/xorg.conf >        /home/listdata/syscfg/sys/etc-X11-xorg.conf-luxion
-	cat /etc/fstab >                /home/listdata/syscfg/sys/etc-fstab-luxion
-	cat /etc/hosts >                /home/listdata/syscfg/sys/etc-hosts-luxion
-	cat /etc/inittab >              /home/listdata/syscfg/sys/etc-inittab-luxion
-	cat /etc/makepkg.conf >         /home/listdata/syscfg/sys/etc-makepkg.conf-luxion
-	cat /etc/network.d/luxion-wired > /home/listdata/syscfg/sys/etc-network.d-luxion-wired
-	cat /etc/rc.conf >              /home/listdata/syscfg/sys/etc-rc.conf-luxion
-	cat /etc/rc.local >             /home/listdata/syscfg/sys/etc-rc.local-luxion
-	cat /etc/rc.local.shutdown >    /home/listdata/syscfg/sys/etc-rc.local.shutdown-luxion
-	cat /etc/yaourtrc >             /home/listdata/syscfg/sys/etc-yaourtrc-luxion
-	cat /etc/sudoers >              /home/listdata/syscfg/sys/etc-sudoers-luxion
+	cat /boot/grub/menu.lst >         /home/listdata/syscfg/core/boot-grub-menu.lst-luxion
+	cat /etc/X11/xorg.conf >          /home/listdata/syscfg/core/etc-X11-xorg.conf-luxion
+	cat /etc/fstab >                  /home/listdata/syscfg/core/etc-fstab-luxion
+	cat /etc/hosts >                  /home/listdata/syscfg/core/etc-hosts-luxion
+	cat /etc/inittab >                /home/listdata/syscfg/core/etc-inittab-luxion
+	cat /etc/makepkg.conf >           /home/listdata/syscfg/core/etc-makepkg.conf-luxion
+	cat /etc/network.d/luxion-wired > /home/listdata/syscfg/core/etc-network.d-luxion-wired
+	cat /etc/rc.conf >                /home/listdata/syscfg/core/etc-rc.conf-luxion
+	cat /etc/rc.local >               /home/listdata/syscfg/core/etc-rc.local-luxion
+	cat /etc/rc.local.shutdown >      /home/listdata/syscfg/core/etc-rc.local.shutdown-luxion
+	cat /etc/yaourtrc >               /home/listdata/syscfg/core/etc-yaourtrc-luxion
+	cat /etc/sudoers >                /home/listdata/syscfg/core/etc-sudoers-luxion
 endif
 ifeq ('$(HOSTNAME)','aether')
-	cat /boot/grub/menu.lst >       /home/listdata/syscfg/sys/boot-grub-menu.lst-aether
-	cat /etc/X11/xorg.conf >        /home/listdata/syscfg/sys/etc-X11-xorg.conf-aether
-	cat /etc/fstab >                /home/listdata/syscfg/sys/etc-fstab-aether
-	cat /etc/hosts >                /home/listdata/syscfg/sys/etc-hosts-aether
-	cat /etc/makepkg.conf >         /home/listdata/syscfg/sys/etc-makepkg.conf-aether
-	cat /etc/rc.conf >              /home/listdata/syscfg/sys/etc-rc.conf-aether
-	cat /etc/rc.local >             /home/listdata/syscfg/sys/etc-rc.local-aether
-	cat /etc/rc.local.shutdown >    /home/listdata/syscfg/sys/etc-rc.local.shutdown-aether
+	cat /boot/grub/menu.lst >         /home/listdata/syscfg/core/boot-grub-menu.lst-aether
+	cat /etc/X11/xorg.conf >          /home/listdata/syscfg/core/etc-X11-xorg.conf-aether
+	cat /etc/fstab >                  /home/listdata/syscfg/core/etc-fstab-aether
+	cat /etc/hosts >                  /home/listdata/syscfg/core/etc-hosts-aether
+	cat /etc/makepkg.conf >           /home/listdata/syscfg/core/etc-makepkg.conf-aether
+	cat /etc/rc.conf >                /home/listdata/syscfg/core/etc-rc.conf-aether
+	cat /etc/rc.local >               /home/listdata/syscfg/core/etc-rc.local-aether
+	cat /etc/rc.local.shutdown >      /home/listdata/syscfg/core/etc-rc.local.shutdown-aether
 endif
