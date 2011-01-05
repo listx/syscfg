@@ -39,11 +39,6 @@ if [[ $HOST == "exelion" ]]; then
     str+="\n0 18 * * * ~/sched/check.sh notes"
 fi
 
-if [[ $HOST == "luxion" ]]; then
-    # shut down if still on at 2 in the morning
-    str+="\n0 2 * * * sudo shutdown -t 1 -hP now"
-fi
-
 if [[ $HOST == "luxion" || $HOST == "aether" ]]; then
     # check if battery life is below 20% every 5 minutes
     str+="\n*/5 * * * * ~/syscfg/script/sys/batlife.sh"
