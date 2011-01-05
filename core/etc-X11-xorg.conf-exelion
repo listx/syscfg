@@ -145,4 +145,3 @@ Section "Screen"
         Depth       24
     EndSubSection
 EndSection
-
