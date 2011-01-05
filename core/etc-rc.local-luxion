@@ -10,4 +10,4 @@ stat_busy "Enabling WOL"
 ethtool -s eth0 wol g
 stat_done
 
-su -l -c "/home/listdata/clauto.sh" listdata
+#su -l -c "/home/listdata/clauto.sh" listdata

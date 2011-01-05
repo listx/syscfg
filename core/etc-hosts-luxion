@@ -4,6 +4,7 @@
 
 #<ip-address>	<hostname.domain.org>	<hostname>
 127.0.0.1		luxion.localdomain	luxion
+::1		luxion.localdomain	luxion
 
 192.168.0.100   forest
 192.168.0.110   exelion
