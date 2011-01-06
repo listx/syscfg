@@ -257,7 +257,7 @@ alias -g O='otter@ocean:'
 alias -g F='tiger@forest:'
 
 # for detaching a process from the shell (useful for starting GUI apps as standalones, without arguments)
-alias -g D='& disown;'
+alias -g D='& disown'
 alias -g Q='& disown; exit'
 
 # scp alternative, with a progress bar
