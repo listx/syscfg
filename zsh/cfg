@@ -287,9 +287,9 @@ alias rm='rm -Iv'
 # listdata2 luxion=NOPASSWD: /usr/sbin/iftop
 
 # turn off power or reboot gracefully
-alias of='sudo shutdown -t 1 -hP now' # power off
-alias ofo='sudo shutdown -t 1 -r now' # reboot
-alias offo='sudo shutdown -t 1 -Fr now' # reboot, but force fsck on bootup
+alias of='sudo shutdown -t 1 -hP now & disown; exit' # power off
+alias ofo='sudo shutdown -t 1 -r now & disown; exit' # reboot
+alias offo='sudo shutdown -t 1 -Fr now & disown; exit' # reboot, but force fsck on bootup
 
 alias p='sudo pacman'
 alias pu='sudo pacman -Syu'
