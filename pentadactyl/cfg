@@ -1,18 +1,21 @@
+source! ~/.pentadactylrc.local
+
+" disable autocompletion
+set autocomplete=
+
+" always show command line below status line
+set guioptions+=c
+
 " set default mod-key to ","
-let mapleader = ","
-
-" set startup page to a blank page
-:set! browser.startup.page=0
-
-source! ~/.vimperatorrc.local
+set mapleader=","
 
 " unmap the make C-p and C-n behave like default h and l (scroll horizontally)
 no <C-p> h
 no <C-n> l
 
 " make h and l browse tabs left and right instead of scrolling horizontally (which happens very rarely)
-no h :tabprevious<CR>
-no l :tabnext<CR>
+no h gT
+no l gt
 
 " physically move the tabs around
 map <C-h> :tabm! -1<cr>
@@ -53,4 +56,4 @@ map <leader>h :emenu View.Sidebar.History<cr>
 " close the sidebar
 map <leader>c :sbclose<cr>
 
-" vim: set ft=vimperator
+" vim: syntax=vim
