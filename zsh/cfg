@@ -306,6 +306,7 @@ alias b='sudo bauerbill'
 alias bu='sudo bauerbill -Syu --aur --rebase --build-as $USER'
 alias by='sudo bauerbill -Syy --rebase'
 alias bs='sudo bauerbill -S --aur --rebase --build-as $USER'
+alias burc='pkgs=${(s:\n:)$(pacman -Qq | grep -E -- "-(bzr|darcs|git|hg|svn)")}; echo "Syncing: $pkgs\n"; bs ${(s: :)pkgs}'
 
 alias y='yaourt'
 alias yu='yaourt -Sybu --aur'
