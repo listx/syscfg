@@ -69,11 +69,10 @@ while read -s -t 0.1 stdinText; do
     stdinFiles="$stdinFiles '$stdinText'"
 done
 
-# if there was STDIN, process it (convert them to $@ arguments); otherwise, just display help msg
+# if there was STDIN, process it (convert them to $@ arguments); otherwise, just interpret the
+# arguments
 if [[ -n $stdinFiles ]]; then
     eval set -- "$@" $stdinFiles
-else
-    msg "help"
 fi
 
 files=()
@@ -119,7 +118,7 @@ else
         if [[ -f "$thing" ]]; then
             files+=("$thing")
         elif [[ -d "$thing" ]]; then
-            find "$thing" -type f | while read line; do
+            find "$thing" -type f | sort | while read line; do
                 files+=("$line")
             done
         fi
