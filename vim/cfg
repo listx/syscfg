@@ -26,7 +26,12 @@ set mousehide " hide the mouse cursor when typing (only for GVIM)
 
 set guioptions-=T  "remove toolbar
 set guioptions-=m  "remove menu
-set guioptions-=r  "remove scrollbar
+ "remove scrollbars
+set guioptions-=l
+set guioptions-=r
+ "remove scrollbars when there is a vertically split window
+set guioptions-=L
+set guioptions-=R
 set lbr "for word wrapping to be based on words, not characters
 set gfn=Terminus\ 11
 set cursorline " highlight cursor horizontally
