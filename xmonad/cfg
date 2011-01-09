@@ -30,6 +30,9 @@ import XMonad.Hooks.ManageHelpers
 -- disable automatic removal of borders for fullscreen
 import XMonad.Layout.NoBorders
 
+import XMonad.Layout.Circle -- circle layout
+import XMonad.Layout.LayoutHints -- for (among other things) removing GVim's dead borders automatically
+
 -- The preferred terminal program, which is used in a binding below and by
 -- certain contrib modules.
 --
@@ -245,19 +248,22 @@ myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
 -- The available layouts.  Note that each layout is separated by |||,
 -- which denotes layout choice.
 --
-myLayout = Mirror tiled ||| tiled ||| noBorders Full
-  where
-    -- default tiling algorithm partitions the screen into two panes
-    tiled   = Tall nmaster delta ratio
+myLayout = Mirror tiled
+        ||| tiled
+        ||| noBorders Full
+        ||| layoutHints Circle
+    where
+        -- default tiling algorithm partitions the screen into two panes
+        tiled   = Tall nmaster delta ratio
 
-    -- The default number of windows in the master pane
-    nmaster = 1
+        -- The default number of windows in the master pane
+        nmaster = 1
 
-    -- Default proportion of screen occupied by master pane
-    ratio   = 1/2
+        -- Default proportion of screen occupied by master pane
+        ratio   = 1/2
 
-    -- Percent of screen to increment by when resizing panes
-    delta   = 3/100
+        -- Percent of screen to increment by when resizing panes
+        delta   = 3/100
 
 ------------------------------------------------------------------------
 -- Window rules:
