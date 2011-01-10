@@ -24,13 +24,13 @@ case $(hostname) in
         $term1 -e htop &
         $term3 -e rtorrent &
         $term1 -name WeeChat -e weechat-curses &
-        $term1
+        $term1 -name urxvtINIT
     ;;
     luxion)
         $term1 -e alsamixer &
         $term2 -n iftop -e sudo iftop -B -i eth0 &
         $term1 -e htop &
-        $term1
+        $term1 -name urxvtINIT
     ;;
     aether)
         firefox ${(s: :)sites} &
@@ -38,7 +38,7 @@ case $(hostname) in
         $term2 -n iftop -e sudo iftop -B -i eth0 &
         $term1 -e htop &
         $term3 -e rtorrent &
-        $term1
+        $term1 -name urxvtINIT
     ;;
     *)
     ;;
