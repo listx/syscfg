@@ -27,6 +27,7 @@ case $(hostname) in
         $term1 -name urxvtINIT
     ;;
     luxion)
+        firefox ${(s: :)sites} &
         $term1 -e alsamixer &
         $term2 -n iftop -e sudo iftop -B -i eth0 &
         $term1 -e htop &
