@@ -165,6 +165,7 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((mod4Mask              , xK_i     ), spawn "gimp")
     , ((mod4Mask              , xK_m     ), spawn "blender")
     , ((mod4Mask              , xK_n     ), spawn "firefox")
+    , ((mod4Mask .|. shiftMask, xK_n     ), spawn "/home/listdata/.xmonad/ff_news.sh")
     , ((mod4Mask              , xK_s     ), spawn (term1 ++ " -e vim ~/sched/todo.cog"))
     , ((mod4Mask .|. shiftMask, xK_s     ), spawn (term1 ++ " -e vim -p ~/sched/notes/*"))
     , ((mod4Mask              , xK_w     ), spawn "soffice")

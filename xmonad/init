@@ -5,19 +5,10 @@ term1=~/syscfg/script/sys/terms/wb.sh
 term2=~/syscfg/script/sys/terms/bw.sh
 term3=~/syscfg/script/sys/terms/wB.sh
 
-# websites to load
-news=(www.lemonde.fr www.zeit.de www.nikkei.com www.hani.co.kr www.sfgate.com)
-hobs=(www.chessbase.com "http://www.reddit.com/r/programming/top?t=week" http://news.ycombinator.com/best www.linuxfr.org)
-
-# randomize sites within each category
-news_r=$(echo ${(F)news} | sort -R | tr '\n' ' ') # now $news_r is a string, with a space between each element
-hobs_r=$(echo ${(F)hobs} | sort -R | tr '\n' ' ')
-sites="$news_r $hobs_r" # combine the strings into one string
-
 # check for hostname
 case $(hostname) in
     exelion)
-        firefox ${(s: :)sites} & # forcefully split the $sites string into separate words on each space character
+        firefox &
         $term2 -e ncmpcpp &
         $term1 -e alsamixer &
         $term2 -n iftop -e sudo iftop -B -i eth1 &
@@ -27,14 +18,14 @@ case $(hostname) in
         $term1 -name urxvtINIT
     ;;
     luxion)
-        firefox ${(s: :)sites} &
+        firefox &
         $term1 -e alsamixer &
         $term2 -n iftop -e sudo iftop -B -i eth0 &
         $term1 -e htop &
         $term1 -name urxvtINIT
     ;;
     aether)
-        firefox ${(s: :)sites} &
+        firefox &
         $term1 -e alsamixer &
         $term2 -n iftop -e sudo iftop -B -i eth0 &
         $term1 -e htop &
