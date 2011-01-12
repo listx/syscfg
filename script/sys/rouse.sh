@@ -22,6 +22,7 @@ laptops=(luxion aether)
 remotes=()
 online=()
 offline=()
+lanip="192.168.0.255"
 
 # Populate remotes_foreign
 for m in $machines; do
@@ -71,13 +72,13 @@ if [[ $#offline -gt 0 ]]; then
                 echo "Chose system ${c3}$system$ce"
                 case $system in
                 exelion)
-                    wol -i exelion 00:04:4B:02:51:47
+                    wol -i $lanip 00:04:4B:02:51:47
                     ;;
                 aether.e)
-                    wol -i aether.e 00:23:26:5C:07:37
+                    wol -i $lanip 00:23:26:5C:07:37
                     ;;
                 luxion.e)
-                    wol -i luxion.e 00:12:3F:05:85:FE
+                    wol -i $lanip 00:12:3F:05:85:FE
                     ;;
                 forest)
                     # Gigabyte GA-P35-DS3L does not support wake-on-lan (WOL) with its own built-in ethernet ports; you
@@ -85,7 +86,7 @@ if [[ $#offline -gt 0 ]]; then
                     echo "Unfortunately, system ${c3}$system$ce does not support WOL"
                     ;;
                 ocean)
-                    wol -i ocean 00:50:8D:BC:9B:72
+                    wol -i $lanip 00:50:8D:BC:9B:72
                     ;;
                 *)
                     echo "System \`$system' not yet supported"
