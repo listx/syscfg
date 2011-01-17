@@ -319,7 +319,7 @@ myManageHook = composeAll
     , className  =? "Smplayer"                          --> doFloat
     , className  =? "linux_client"                      --> doFloat
     , className  =? "Bsnes"                             --> doCenterFloat
-    , className  =? "Wine"                              --> doFloat
+    --, className  =? "Wine"                              --> doFloat
     --, className  =? "Gvim"                              --> doCenterFloat
     , className  =? "VirtualBox"                        --> doFloat
     ]
