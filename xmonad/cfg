@@ -77,6 +77,8 @@ myNumlockMask   = mod2Mask
 data MyWSGroup = Net | Work | Work2 | Music | Net2 | Sys
     deriving (Eq, Ord, Enum, Show)
 
+_MYWSGROUPS = [Net ..] -- list of all MyWSGroup
+
 -- Use an association list for more flexible custom workspace manipulation.
 --
 -- The fact that we do not necessarily follow the ordering of the MYWSGroup data type allows for
@@ -235,9 +237,9 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     [
       ((modm .|. altMask,   xK_j),              moveTo Next nonEmptyGrpWS) -- go to next non-empty WS, in current Group
     , ((modm .|. altMask,   xK_k),              moveTo Prev nonEmptyGrpWS) -- go to prev non-empty WS, in current Group
-    , ((modm .|. altMask,   xK_l),              moveToNogreed Next $ diffGrpWS 1)     -- go to next WS Group
-    , ((modm .|. altMask,   xK_h),              moveToNogreed Next $ diffGrpWS (-1))  -- go to previous WS Group (the "moveTo Next" part here ensures that, after getting our desired new WSGroup, that we always display the top WS of that Group
-    , ((modm .|. altMask,   xK_o),              moveTo Next emptyGrpWS >> spawn term1)    -- go to next hidden empty WS, in current Group, and spawn a terminal there (will spawn at current WS, if there are no empty WS in current Group)
+    , ((modm .|. altMask,   xK_l),              moveTo Next $ diffGrpWS 1)     -- go to next WS Group
+    , ((modm .|. altMask,   xK_h),              moveTo Next $ diffGrpWS (-1))  -- go to previous WS Group (the "moveTo Next" part here ensures that, after getting our desired new WSGroup, that we always display the top WS of that Group
+    , ((modm .|. altMask,   xK_o),              action_o)    -- go to next hidden empty WS (if possible), in current Group, and spawn a new "window" there (depends on group)
     , ((modm .|. altMask,   xK_n),              moveTo Next $ nonEmptyWSExceptGrps [Net2, Sys])    -- go to any non-empty WS, except those WS belonging to the given WS Groups (for making sure that our "desk" is clean before we log off/shutdown)
     , ((modm .|. altMask .|. shiftMask, xK_j),  shiftTo Next grpWS) -- move window to next WS, in current Group
     , ((modm .|. altMask .|. shiftMask, xK_k),  shiftTo Prev grpWS) -- move window to prev WS, in current Group
@@ -256,6 +258,23 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
         | (key, sc) <- zip [xK_l, xK_h, xK_r] [1,0]
         , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]]
 
+-- Depending on the current MyWSGroup, open up different new "windows" that make sense for that
+-- workspace group.
+action_o :: X ()
+action_o =
+    do  { currentWS <- gets (W.currentTag . windowset)
+        ; let currentWSGrp = case lookup currentWS myWorkspaceGroups of
+                            Just foundGrp -> foundGrp
+                            otherwise -> Net
+        -- first try to move to the next empty WS in the group
+        ; moveTo Next emptyGrpWS
+        -- now do a specific action that suits this WS group
+        ; case currentWSGrp of
+            Net         -> spawn "firefox"
+            otherwise   -> spawn term1
+        }
+
+-- An empty WS belonging to the same group as the current one.
 emptyGrpWS :: WSType
 emptyGrpWS =
     WSIs $ do
@@ -268,6 +287,7 @@ emptyGrpWS =
     ; return (\w -> isEmpty w && isCurrentWSGrp w)
     }
 
+-- A non-empty WS belonging to the same group as the current one.
 nonEmptyGrpWS :: WSType
 nonEmptyGrpWS =
     WSIs $ do {
@@ -280,6 +300,7 @@ nonEmptyGrpWS =
     ; return (\w -> isNonEmpty w && isCurrentWSGrp w)
     }
 
+-- A non-empty WS belonging to any group except those in the given group list.
 nonEmptyWSExceptGrps :: [MyWSGroup] -> WSType
 nonEmptyWSExceptGrps grps =
     WSIs $ do {
@@ -292,6 +313,7 @@ nonEmptyWSExceptGrps grps =
     ; return (\w -> isNonEmpty w && not (isMemberOfGivenGrps w))
     }
 
+-- A WS belonging to a different group (next/prev group) than the current one.
 diffGrpWS :: Int -> WSType
 diffGrpWS dir =
     WSIs $ do {
@@ -308,6 +330,7 @@ diffGrpWS dir =
             }
     }
 
+-- Any WS in the current group.
 grpWS :: WSType
 grpWS =
     WSIs $ do {
@@ -318,16 +341,14 @@ grpWS =
     ; return (\w -> isWSGroup currentWSGrp . W.tag $ w)
     }
 
-_WSGROUPS = [Net ..] -- list of all WSGroups
-
 nextGrp, prevGrp :: MyWSGroup -> Maybe MyWSGroup
-nextGrp g = if g == last _WSGROUPS
+nextGrp g = if g == last _MYWSGROUPS
                 then Nothing
-                else Just $ head [x | x <- _WSGROUPS, x > g]
+                else Just $ head [x | x <- _MYWSGROUPS, x > g]
 
-prevGrp g = if g == head _WSGROUPS
+prevGrp g = if g == head _MYWSGROUPS
                 then Nothing
-                else Just $ last [x | x <- _WSGROUPS, x < g]
+                else Just $ last [x | x <- _MYWSGROUPS, x < g]
 
 -- Confirms if a given String str is part of a given MyWSGroup g.
 --
@@ -437,7 +458,6 @@ myManageHook = composeAll
     , stringProperty "WM_NAME"  =? "rtorrent"           --> doShift "F10"
     , stringProperty "WM_NAME"  =? "ncmpcpp"            --> doShift "0"
     , stringProperty "WM_NAME"  =? "mplayer"            --> doShift "0"
-    , resource  =? "Navigator"                            --> doShift "1"
     --, className  =? "Blender"                           --> doShift "6"
     , className  =? "Blender:Render"                    --> doFloat
     , resource  =? "Browser"                            --> doFloat
