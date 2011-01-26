@@ -232,8 +232,7 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((modm .|. altMask,   xK_k),              moveTo Prev nonEmptyGrpWS) -- go to prev non-empty WS, in current Group
     , ((modm .|. altMask,   xK_l),              moveToNogreed Next $ diffGrpWS 1)     -- go to next WS Group
     , ((modm .|. altMask,   xK_h),              moveToNogreed Next $ diffGrpWS (-1))  -- go to previous WS Group (the "moveTo Next" part here ensures that, after getting our desired new WSGroup, that we always display the top WS of that Group
-    , ((modm .|. altMask,   xK_o),              moveTo Next emptyGrpWS)    -- go to next hidden empty WS, in current Group
-    -- for sending a window into another WS in the same group
+    , ((modm .|. altMask,   xK_o),              moveTo Next emptyGrpWS >> spawn term1)    -- go to next hidden empty WS, in current Group, and spawn a terminal there (will spawn at current WS, if there are no empty WS in current Group)
     , ((modm .|. altMask .|. shiftMask, xK_j),  shiftTo Next grpWS) -- move window to next WS, in current Group
     , ((modm .|. altMask .|. shiftMask, xK_k),  shiftTo Prev grpWS) -- move window to prev WS, in current Group
     , ((modm .|. altMask .|. shiftMask, xK_l),  shiftTo Next $ diffGrpWS 1) -- move window to next WS group
