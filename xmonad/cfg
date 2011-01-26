@@ -238,6 +238,7 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((modm .|. altMask,   xK_l),              moveToNogreed Next $ diffGrpWS 1)     -- go to next WS Group
     , ((modm .|. altMask,   xK_h),              moveToNogreed Next $ diffGrpWS (-1))  -- go to previous WS Group (the "moveTo Next" part here ensures that, after getting our desired new WSGroup, that we always display the top WS of that Group
     , ((modm .|. altMask,   xK_o),              moveTo Next emptyGrpWS >> spawn term1)    -- go to next hidden empty WS, in current Group, and spawn a terminal there (will spawn at current WS, if there are no empty WS in current Group)
+    , ((modm .|. altMask,   xK_n),              moveTo Next $ nonEmptyWSExceptGrps [Net2, Sys])    -- go to any non-empty WS, except those WS belonging to the given WS Groups (for making sure that our "desk" is clean before we log off/shutdown)
     , ((modm .|. altMask .|. shiftMask, xK_j),  shiftTo Next grpWS) -- move window to next WS, in current Group
     , ((modm .|. altMask .|. shiftMask, xK_k),  shiftTo Prev grpWS) -- move window to prev WS, in current Group
     , ((modm .|. altMask .|. shiftMask, xK_l),  shiftTo Next $ diffGrpWS 1) -- move window to next WS group
@@ -279,6 +280,18 @@ nonEmptyGrpWS =
     ; return (\w -> isNonEmpty w && isCurrentWSGrp w)
     }
 
+nonEmptyWSExceptGrps :: [MyWSGroup] -> WSType
+nonEmptyWSExceptGrps grps =
+    WSIs $ do {
+      currentWS <- gets (W.currentTag . windowset)
+    ; let currentWSGrp = case lookup currentWS myWorkspaceGroups of
+                            Just foundGrp -> foundGrp
+                            otherwise -> Net
+    ; let isNonEmpty = isJust . W.stack
+    ; let isMemberOfGivenGrps = isWSGroups grps . W.tag
+    ; return (\w -> isNonEmpty w && not (isMemberOfGivenGrps w))
+    }
+
 diffGrpWS :: Int -> WSType
 diffGrpWS dir =
     WSIs $ do {
@@ -316,11 +329,22 @@ prevGrp g = if g == head _WSGROUPS
                 then Nothing
                 else Just $ last [x | x <- _WSGROUPS, x < g]
 
--- confirms if a given MyWSGGroup matches that of the given workspace string's designated MyWSGroup
+-- Confirms if a given String str is part of a given MyWSGroup g.
+--
+-- The order of the arguments is "backwards" because we compose this function with StackSet's tag
+-- function, which returns the WS name as a String, e.g., "(\w -> isWSGroup Net . W.tag $ w)".
 isWSGroup :: MyWSGroup -> String -> Bool
 isWSGroup grp str
     | lookup str myWorkspaceGroups == Just grp = True
     | otherwise = False
+
+-- Same as isWSGroup, but takes a list of valid MyWSGroups instead of just a single MyWSGroup.
+isWSGroups :: [MyWSGroup] -> String -> Bool
+isWSGroups grps str
+    | lookup str myWorkspaceGroups' /= Nothing = True
+    | otherwise = False
+    where myWorkspaceGroups' = filter (\(x,y) -> any (==y) grps) myWorkspaceGroups
+
 
 -- same as CycleWS's moveTo, but w/ view instead of greedyView
 moveToNogreed :: Direction1D -> WSType -> X ()
