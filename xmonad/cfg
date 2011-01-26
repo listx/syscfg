@@ -232,11 +232,11 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     ++
 
     [
-      ((modm .|. altMask,   xK_j),              moveTo Next hiddenNonEmptyGrpWS) -- go to next non-empty WS, in current Group
-    , ((modm .|. altMask,   xK_k),              moveTo Prev hiddenNonEmptyGrpWS) -- go to prev non-empty WS, in current Group
+      ((modm .|. altMask,   xK_j),              moveTo Next nonEmptyGrpWS) -- go to next non-empty WS, in current Group
+    , ((modm .|. altMask,   xK_k),              moveTo Prev nonEmptyGrpWS) -- go to prev non-empty WS, in current Group
     , ((modm .|. altMask,   xK_l),              moveToNogreed Next $ diffWSGrpWS 1)     -- go to next WS Group
     , ((modm .|. altMask,   xK_h),              moveToNogreed Next $ diffWSGrpWS (-1))  -- go to previous WS Group (the "moveTo Next" part here ensures that, after getting our desired new WSGroup, that we always display the top WS of that Group
-    , ((modm .|. altMask,   xK_o),              moveTo Next hiddenEmptyGrpWS)    -- go to next hidden empty WS, in current Group
+    , ((modm .|. altMask,   xK_o),              moveTo Next emptyGrpWS)    -- go to next hidden empty WS, in current Group
     -- for sending a window into another WS in the same group
     , ((modm .|. altMask .|. shiftMask, xK_j),  shiftTo Next grpWS) -- move window to next WS, in current Group
     , ((modm .|. altMask .|. shiftMask, xK_k),  shiftTo Prev grpWS) -- move window to prev WS, in current Group
@@ -262,8 +262,8 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
 -- hiddenNonEmptyWorkWS: same as built-in HiddenNonEmptyWS, but only for "Work" category of WS
 
 -- WSIs :: X (WindowSpace -> Bool)
-hiddenEmptyGrpWS :: WSType
-hiddenEmptyGrpWS =
+emptyGrpWS :: WSType
+emptyGrpWS =
     WSIs $ do
     { currentWS <- gets (W.currentTag . windowset)
     ; let currentWSGrp = case lookup currentWS myWorkspaceGroups of
@@ -271,14 +271,13 @@ hiddenEmptyGrpWS =
                             otherwise -> None
     ; let isEmpty = isNothing . W.stack
     ; let isCurrentWSGrp = isWSGroup currentWSGrp . W.tag
-    ; hs <- gets (map W.tag . W.hidden . windowset)
     ; if currentWSGrp /= None
-        then return (\w -> isEmpty w && isCurrentWSGrp w && W.tag w `elem` hs)
+        then return (\w -> isEmpty w && isCurrentWSGrp w)
         else return (\w -> False) -- don't do anything if current workspace was not found (although this is theoretically impossible...)
     }
 
-hiddenNonEmptyGrpWS :: WSType
-hiddenNonEmptyGrpWS =
+nonEmptyGrpWS :: WSType
+nonEmptyGrpWS =
     WSIs $ do {
       currentWS <- gets (W.currentTag . windowset)
     ; let currentWSGrp = case lookup currentWS myWorkspaceGroups of
@@ -286,9 +285,8 @@ hiddenNonEmptyGrpWS =
                             otherwise -> None
     ; let isNonEmpty = isJust . W.stack
     ; let isCurrentWSGrp = isWSGroup currentWSGrp . W.tag
-    ; hs <- gets (map W.tag . W.hidden . windowset)
     ; if currentWSGrp /= None
-        then return (\w -> isNonEmpty w && isCurrentWSGrp w && W.tag w `elem` hs)
+        then return (\w -> isNonEmpty w && isCurrentWSGrp w)
         else return (\w -> False)
     }
 
