@@ -324,9 +324,7 @@ diffGrpWS dir =
     ; do    { let diffGrp = if dir > 0
                                 then nextGrp currentWSGrp
                                 else prevGrp currentWSGrp
-            ; case diffGrp of
-                Just g -> return (\w -> isWSGroup g . W.tag $ w)
-                otherwise -> return (\w -> False)
+            ; return (\w -> isWSGroup diffGrp . W.tag $ w)
             }
     }
 
@@ -341,14 +339,16 @@ grpWS =
     ; return (\w -> isWSGroup currentWSGrp . W.tag $ w)
     }
 
-nextGrp, prevGrp :: MyWSGroup -> Maybe MyWSGroup
+-- The next or previous group of given group. Will cycle back to the first group if the given one is
+-- the last group.
+nextGrp, prevGrp :: MyWSGroup -> MyWSGroup
 nextGrp g = if g == last _MYWSGROUPS
-                then Nothing
-                else Just $ head [x | x <- _MYWSGROUPS, x > g]
+                then head _MYWSGROUPS
+                else head [x | x <- _MYWSGROUPS, x > g]
 
 prevGrp g = if g == head _MYWSGROUPS
-                then Nothing
-                else Just $ last [x | x <- _MYWSGROUPS, x < g]
+                then last _MYWSGROUPS
+                else last [x | x <- _MYWSGROUPS, x < g]
 
 -- Confirms if a given String str is part of a given MyWSGroup g.
 --
