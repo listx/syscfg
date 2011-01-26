@@ -74,7 +74,7 @@ myNumlockMask   = mod2Mask
 -- > workspaces = ["web", "irc", "code" ] ++ map show [4..9]
 --
 
-data MyWSGroup = Net | Work | Work2 | Music | Net2 | Sys | None
+data MyWSGroup = Net | Work | Work2 | Music | Net2 | Sys
     deriving (Eq, Ord, Enum, Show)
 
 -- Use an association list for more flexible custom workspace manipulation.
@@ -261,12 +261,10 @@ emptyGrpWS =
     { currentWS <- gets (W.currentTag . windowset)
     ; let currentWSGrp = case lookup currentWS myWorkspaceGroups of
                             Just foundGrp -> foundGrp
-                            otherwise -> None
+                            otherwise -> Net
     ; let isEmpty = isNothing . W.stack
     ; let isCurrentWSGrp = isWSGroup currentWSGrp . W.tag
-    ; if currentWSGrp /= None
-        then return (\w -> isEmpty w && isCurrentWSGrp w)
-        else return (\w -> False) -- don't do anything if current workspace was not found (although this is theoretically impossible...)
+    ; return (\w -> isEmpty w && isCurrentWSGrp w)
     }
 
 nonEmptyGrpWS :: WSType
@@ -275,12 +273,10 @@ nonEmptyGrpWS =
       currentWS <- gets (W.currentTag . windowset)
     ; let currentWSGrp = case lookup currentWS myWorkspaceGroups of
                             Just foundGrp -> foundGrp
-                            otherwise -> None
+                            otherwise -> Net
     ; let isNonEmpty = isJust . W.stack
     ; let isCurrentWSGrp = isWSGroup currentWSGrp . W.tag
-    ; if currentWSGrp /= None
-        then return (\w -> isNonEmpty w && isCurrentWSGrp w)
-        else return (\w -> False)
+    ; return (\w -> isNonEmpty w && isCurrentWSGrp w)
     }
 
 diffGrpWS :: Int -> WSType
@@ -289,16 +285,14 @@ diffGrpWS dir =
       currentWS <- gets (W.currentTag . windowset)
     ; let currentWSGrp = case lookup currentWS myWorkspaceGroups of
                             Just foundGrp -> foundGrp
-                            otherwise -> None
-    ; if currentWSGrp /= None
-        then do { let diffGrp = if dir > 0
-                                    then nextGrp currentWSGrp
-                                    else prevGrp currentWSGrp
-                ; case diffGrp of
-                    Just g -> return (\w -> isWSGroup g . W.tag $ w)
-                    otherwise -> return (\w -> False)
-                }
-        else return (\w -> False) -- this case is theoretically impossible
+                            otherwise -> Net
+    ; do    { let diffGrp = if dir > 0
+                                then nextGrp currentWSGrp
+                                else prevGrp currentWSGrp
+            ; case diffGrp of
+                Just g -> return (\w -> isWSGroup g . W.tag $ w)
+                otherwise -> return (\w -> False)
+            }
     }
 
 grpWS :: WSType
@@ -307,13 +301,11 @@ grpWS =
       currentWS <- gets (W.currentTag . windowset)
     ; let currentWSGrp = case lookup currentWS myWorkspaceGroups of
                             Just foundGrp -> foundGrp
-                            otherwise -> None
-    ; if currentWSGrp /= None
-        then return (\w -> isWSGroup currentWSGrp . W.tag $ w)
-        else return (\w -> False) -- this case is theoretically impossible
+                            otherwise -> Net
+    ; return (\w -> isWSGroup currentWSGrp . W.tag $ w)
     }
 
-_WSGROUPS = init [Net ..] -- list of all WSGroups (except None)
+_WSGROUPS = [Net ..] -- list of all WSGroups
 
 nextGrp, prevGrp :: MyWSGroup -> Maybe MyWSGroup
 nextGrp g = if g == last _WSGROUPS
