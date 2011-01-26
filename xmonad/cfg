@@ -26,6 +26,8 @@ import XMonad.Layout.NoBorders -- enable borderless layouts
 import XMonad.Layout.Circle -- circle layout
 import XMonad.Layout.LayoutHints -- for (among other things) removing GVim's dead borders automatically
 
+import XMonad.Util.WorkspaceCompare (getSortByIndex)
+
 -- The preferred terminal program, which is used in a binding below and by
 -- certain contrib modules.
 --
@@ -232,8 +234,8 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     [
       ((modm .|. altMask,   xK_j),              moveTo Next hiddenNonEmptyGrpWS) -- go to next non-empty WS, in current Group
     , ((modm .|. altMask,   xK_k),              moveTo Prev hiddenNonEmptyGrpWS) -- go to prev non-empty WS, in current Group
-    , ((modm .|. altMask,   xK_l),              moveTo Next $ diffWSGrpWS 1)     -- go to next WS Group
-    , ((modm .|. altMask,   xK_h),              moveTo Next $ diffWSGrpWS (-1))  -- go to previous WS Group (the "moveTo Next" part here ensures that, after getting our desired new WSGroup, that we always display the top WS of that Group
+    , ((modm .|. altMask,   xK_l),              moveToNogreed Next $ diffWSGrpWS 1)     -- go to next WS Group
+    , ((modm .|. altMask,   xK_h),              moveToNogreed Next $ diffWSGrpWS (-1))  -- go to previous WS Group (the "moveTo Next" part here ensures that, after getting our desired new WSGroup, that we always display the top WS of that Group
     , ((modm .|. altMask,   xK_o),              moveTo Next hiddenEmptyGrpWS)    -- go to next hidden empty WS, in current Group
     -- for sending a window into another WS in the same group
     , ((modm .|. altMask .|. shiftMask, xK_j),  shiftTo Next grpWS) -- move window to next WS, in current Group
@@ -337,6 +339,10 @@ isWSGroup grp str
     | lookup str myWorkspaceGroups == Just grp = True
     | otherwise = False
 
+-- same as CycleWS's moveTo, but w/ view instead of greedyView
+moveToNogreed :: Direction1D -> WSType -> X ()
+moveToNogreed dir t = findWorkspace getSortByIndex dir t 1 >>= windows . W.view
+
 ------------------------------------------------------------------------
 -- Mouse bindings: default actions bound to mouse events
 --
@@ -416,7 +422,7 @@ myManageHook = composeAll
     , resource  =? "desktop_window"                     --> doIgnore
     , resource  =? "kdesktop"                           --> doIgnore
     , resource  =? "vlc"                                --> doCenterFloat
-    , stringProperty "WM_NAME"  =? "urxvtINIT"          --> doShift "2"
+    , stringProperty "WM_NAME"  =? "urxvtINIT"          --> doShift "3"
     , stringProperty "WM_NAME"  =? "htop"               --> doShift "F12"
     , stringProperty "WM_ICON_NAME"  =? "iftop"         --> doShift "F11"
     , stringProperty "WM_NAME"  =? "alsamixer"          --> doShift "F11"
