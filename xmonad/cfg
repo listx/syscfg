@@ -7,29 +7,22 @@
 -- Normally, you'd only override those defaults you care about.
 --
 
+-- required imports
 import XMonad
 import Data.Monoid
 import System.Exit
-
 import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
 
--- CUSTOM IMPORTS --
+-- optional imports
+import Data.Maybe (isJust, isNothing)
+import XMonad.Actions.Warp -- for mouse warping
+import XMonad.Actions.GridSelect -- for selecting workspaces, etc. from a 2D, pretty grid
+import XMonad.Actions.NoBorders -- for toggling borders on a per-window basis
+import XMonad.Actions.CycleWS -- for workspace-to-workspace navigation
+import XMonad.Hooks.ManageHelpers -- for doCenterFloat
 
--- for mouse warping
-import XMonad.Actions.Warp
--- for selecting workspaces, etc. from a 2D, pretty grid
-import XMonad.Actions.GridSelect
--- for toggling borders on a per-window basis
-import XMonad.Actions.NoBorders
--- for identifying different host systems
---import System.Posix.Unistd
--- for doCenterFloat
-import XMonad.Hooks.ManageHelpers
-
--- disable automatic removal of borders for fullscreen
-import XMonad.Layout.NoBorders
-
+import XMonad.Layout.NoBorders -- enable borderless layouts
 import XMonad.Layout.Circle -- circle layout
 import XMonad.Layout.LayoutHints -- for (among other things) removing GVim's dead borders automatically
 
@@ -52,6 +45,7 @@ myBorderWidth   = 1
 -- "windows key" is usually mod4Mask.
 -- You can double-check which key is which modmask by running 'xmodmap'
 myModMask       = mod3Mask -- use the CAPSLOCK key
+altMask         = mod1Mask -- alias "altMask" for left alt key
 
 -- The mask for the numlock key. Numlock status is "masked" from the
 -- current modifier status, so the keybindings will work with numlock on or
@@ -77,7 +71,37 @@ myNumlockMask   = mod2Mask
 --
 -- > workspaces = ["web", "irc", "code" ] ++ map show [4..9]
 --
-myWorkspaces    = ["1","2","3","4","5","6","7","8","9","0","F1","F2","F3","F4","F5","F6","F7","F8","F9","F10","F11","F12"]
+
+data MyWSGroup = Net | Work | Play | Misc | Sys | None
+    deriving (Eq, Ord, Enum, Show)
+
+-- use an association list for more flexible custom workspace manipulation
+myWorkspaceGroups :: [(String, MyWSGroup)]
+myWorkspaceGroups = [ ("1",   Net)
+                    , ("2",   Net)
+                    , ("3",   Work)
+                    , ("4",   Work)
+                    , ("5",   Work)
+                    , ("6",   Work)
+                    , ("7",   Work)
+                    , ("8",   Work)
+                    , ("9",   Work)
+                    , ("0",   Play)
+                    , ("F1",  Play)
+                    , ("F2",  Play)
+                    , ("F3",  Play)
+                    , ("F4",  Play)
+                    , ("F5",  Misc)
+                    , ("F6",  Misc)
+                    , ("F7",  Misc)
+                    , ("F8",  Misc)
+                    , ("F9",  Sys)
+                    , ("F10", Sys)
+                    , ("F11", Sys)
+                    , ("F12", Sys)
+                    ]
+
+myWorkspaces = map fst myWorkspaceGroups -- 1..9, 0, F1-F12
 
 -- Border colors for unfocused and focused windows, respectively.
 --
@@ -205,6 +229,20 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
         , (f, m) <- [(W.greedyView, 0), (W.shift, shiftMask)]]
     ++
 
+    [
+      ((modm .|. altMask,   xK_j),              moveTo Next hiddenNonEmptyGrpWS) -- go to next non-empty WS, in current Group
+    , ((modm .|. altMask,   xK_k),              moveTo Prev hiddenNonEmptyGrpWS) -- go to prev non-empty WS, in current Group
+    , ((modm .|. altMask,   xK_l),              moveTo Next $ diffWSGrpWS 1)     -- go to next WS Group
+    , ((modm .|. altMask,   xK_h),              moveTo Next $ diffWSGrpWS (-1))  -- go to previous WS Group (the "moveTo Next" part here ensures that, after getting our desired new WSGroup, that we always display the top WS of that Group
+    , ((modm .|. altMask,   xK_o),              moveTo Next hiddenEmptyGrpWS)    -- go to next hidden empty WS, in current Group
+    -- for sending a window into another WS in the same group
+    , ((modm .|. altMask .|. shiftMask, xK_j),  shiftTo Next grpWS) -- move window to next WS, in current Group
+    , ((modm .|. altMask .|. shiftMask, xK_k),  shiftTo Prev grpWS) -- move window to prev WS, in current Group
+    , ((modm, xK_semicolon),                    toggleWS) -- go to WS displayed previously
+    ]
+
+    ++
+
     --
     -- mod-{w,e,r}, Switch to physical/Xinerama screens 1, 2, or 3
     -- mod-shift-{w,e,r}, Move client to screen 1, 2, or 3
@@ -212,6 +250,92 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     [((m .|. modm, key), screenWorkspace sc >>= flip whenJust (windows . f))
         | (key, sc) <- zip [xK_l, xK_h, xK_r] [1,0]
         , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]]
+
+-- Here are some custom WSType (window types that can be used by Cycle.WS) declaration.
+--
+-- hiddenEmptyWorkWS: same as built-in EmptyWS, but only for those workspaces designated as "Work"
+-- in myWorkspaceGroups, and are hidden (not current workspace and also not any other workspace that
+-- is displayed on another monitor's screen (if any))
+--
+-- hiddenNonEmptyWorkWS: same as built-in HiddenNonEmptyWS, but only for "Work" category of WS
+
+-- WSIs :: X (WindowSpace -> Bool)
+hiddenEmptyGrpWS :: WSType
+hiddenEmptyGrpWS =
+    WSIs $ do
+    { currentWS <- gets (W.currentTag . windowset)
+    ; let currentWSGrp = case lookup currentWS myWorkspaceGroups of
+                            Just foundGrp -> foundGrp
+                            otherwise -> None
+    ; let isEmpty = isNothing . W.stack
+    ; let isCurrentWSGrp = isWSGroup currentWSGrp . W.tag
+    ; hs <- gets (map W.tag . W.hidden . windowset)
+    ; if currentWSGrp /= None
+        then return (\w -> isEmpty w && isCurrentWSGrp w && W.tag w `elem` hs)
+        else return (\w -> False) -- don't do anything if current workspace was not found (although this is theoretically impossible...)
+    }
+
+hiddenNonEmptyGrpWS :: WSType
+hiddenNonEmptyGrpWS =
+    WSIs $ do {
+      currentWS <- gets (W.currentTag . windowset)
+    ; let currentWSGrp = case lookup currentWS myWorkspaceGroups of
+                            Just foundGrp -> foundGrp
+                            otherwise -> None
+    ; let isNonEmpty = isJust . W.stack
+    ; let isCurrentWSGrp = isWSGroup currentWSGrp . W.tag
+    ; hs <- gets (map W.tag . W.hidden . windowset)
+    ; if currentWSGrp /= None
+        then return (\w -> isNonEmpty w && isCurrentWSGrp w && W.tag w `elem` hs)
+        else return (\w -> False)
+    }
+
+diffWSGrpWS :: Int -> WSType
+diffWSGrpWS dir =
+    WSIs $ do {
+      currentWS <- gets (W.currentTag . windowset)
+    ; let currentWSGrp = case lookup currentWS myWorkspaceGroups of
+                            Just foundGrp -> foundGrp
+                            otherwise -> None
+    ; if currentWSGrp /= None
+        then do { let diffGrp = if dir > 0
+                                    then nextGrp currentWSGrp
+                                    else prevGrp currentWSGrp
+                ; case diffGrp of
+                    Just g -> return (\w -> isWSGroup g . W.tag $ w)
+                    otherwise -> return (\w -> False)
+                }
+        else return (\w -> False) -- this case is theoretically impossible
+    }
+
+grpWS :: WSType
+grpWS =
+    WSIs $ do {
+      currentWS <- gets (W.currentTag . windowset)
+    ; let currentWSGrp = case lookup currentWS myWorkspaceGroups of
+                            Just foundGrp -> foundGrp
+                            otherwise -> None
+    ; if currentWSGrp /= None
+        then return (\w -> isWSGroup currentWSGrp . W.tag $ w)
+        else return (\w -> False) -- this case is theoretically impossible
+    }
+
+_WSGROUPS = init [Net ..] -- list of all WSGroups (except None)
+
+nextGrp, prevGrp :: MyWSGroup -> Maybe MyWSGroup
+nextGrp g = if g == last _WSGROUPS
+                then Nothing
+                else Just $ head [x | x <- _WSGROUPS, x > g]
+
+prevGrp g = if g == head _WSGROUPS
+                then Nothing
+                else Just $ last [x | x <- _WSGROUPS, x < g]
+
+-- confirms if a given MyWSGGroup matches that of the given workspace string's designated MyWSGroup
+isWSGroup :: MyWSGroup -> String -> Bool
+isWSGroup grp str
+    | lookup str myWorkspaceGroups == Just grp = True
+    | otherwise = False
 
 ------------------------------------------------------------------------
 -- Mouse bindings: default actions bound to mouse events
@@ -404,3 +528,5 @@ main = do
         logHook            = myLogHook,
         startupHook        = myStartupHook
         }
+
+-- vim:syntax=haskell
