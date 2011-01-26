@@ -74,10 +74,15 @@ myNumlockMask   = mod2Mask
 -- > workspaces = ["web", "irc", "code" ] ++ map show [4..9]
 --
 
-data MyWSGroup = Net | Work | Play | Misc | Sys | None
+data MyWSGroup = Net | Work | Work2 | Music | Net2 | Sys | None
     deriving (Eq, Ord, Enum, Show)
 
--- use an association list for more flexible custom workspace manipulation
+-- Use an association list for more flexible custom workspace manipulation.
+--
+-- The fact that we do not necessarily follow the ordering of the MYWSGroup data type allows for
+-- maximum flexibility: we can either directly choose, via xK_1 ... xK_F12 keys what we want (like
+-- we did in the past), but at the same time we can also choose to navigate via the ordering in
+-- MyWSGroup via the custom diffGrpWS function.
 myWorkspaceGroups :: [(String, MyWSGroup)]
 myWorkspaceGroups = [ ("1",   Net)
                     , ("2",   Net)
@@ -88,17 +93,17 @@ myWorkspaceGroups = [ ("1",   Net)
                     , ("7",   Work)
                     , ("8",   Work)
                     , ("9",   Work)
-                    , ("0",   Play)
-                    , ("F1",  Play)
-                    , ("F2",  Play)
-                    , ("F3",  Play)
-                    , ("F4",  Play)
-                    , ("F5",  Misc)
-                    , ("F6",  Misc)
-                    , ("F7",  Misc)
-                    , ("F8",  Misc)
-                    , ("F9",  Sys)
-                    , ("F10", Sys)
+                    , ("0",   Music) -- ncmpcpp
+                    , ("F1",  Work2)
+                    , ("F2",  Work2)
+                    , ("F3",  Work2)
+                    , ("F4",  Work2)
+                    , ("F5",  Work2)
+                    , ("F6",  Work2)
+                    , ("F7",  Work2)
+                    , ("F8",  Work2)
+                    , ("F9",  Net2) -- IRC
+                    , ("F10", Net2)
                     , ("F11", Sys)
                     , ("F12", Sys)
                     ]
@@ -409,11 +414,11 @@ myManageHook = composeAll
     , resource  =? "kdesktop"                           --> doIgnore
     , resource  =? "vlc"                                --> doCenterFloat
     , stringProperty "WM_NAME"  =? "urxvtINIT"          --> doShift "3"
-    , stringProperty "WM_NAME"  =? "htop"               --> doShift "F12"
-    , stringProperty "WM_ICON_NAME"  =? "iftop"         --> doShift "F11"
-    , stringProperty "WM_NAME"  =? "alsamixer"          --> doShift "F11"
-    , resource  =? "WeeChat"                            --> doShift "F10"
-    , stringProperty "WM_NAME"  =? "rtorrent"           --> doShift "F9"
+    , stringProperty "WM_NAME"  =? "htop"               --> doShift "F11"
+    , stringProperty "WM_ICON_NAME"  =? "iftop"         --> doShift "F12"
+    , stringProperty "WM_NAME"  =? "alsamixer"          --> doShift "F12"
+    , resource  =? "WeeChat"                            --> doShift "F9"
+    , stringProperty "WM_NAME"  =? "rtorrent"           --> doShift "F10"
     , stringProperty "WM_NAME"  =? "ncmpcpp"            --> doShift "0"
     , stringProperty "WM_NAME"  =? "mplayer"            --> doShift "0"
     , resource  =? "Navigator"                            --> doShift "1"
