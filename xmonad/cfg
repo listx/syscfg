@@ -223,12 +223,18 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     ++
 
     --
-    -- mod-{w,e,r}, Switch to physical/Xinerama screens 1, 2, or 3
-    -- mod-shift-{w,e,r}, Move client to screen 1, 2, or 3
+    -- mod-{h,l}, Switch to prev/next Xinerama screens
+    -- mod-shift-{h,l}, Move client to prev/next screen
     --
-    [((m .|. modm, key), screenWorkspace sc >>= flip whenJust (windows . f))
-        | (key, sc) <- zip [xK_l, xK_h, xK_r] [1,0]
+    [((m .|. modm, key), (screenWorkspace =<< sc) >>= flip whenJust (windows . f))
+        | (key, sc) <- [(xK_h, screenBy (-1)),(xK_l, screenBy 1)]
         , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]]
+
+-- since CycleWS does not export this useful function, we have to copy/paste it in here...
+screenBy :: Int -> X (ScreenId)
+screenBy d = do ws <- gets windowset
+                let now = W.screen (W.current ws)
+                return $ (now + fromIntegral d) `mod` fromIntegral (length (W.screens ws))
 
 -- Depending on the current MyWSGroup, open up different new "windows" that make sense for that
 -- workspace group.
