@@ -344,13 +344,17 @@ isWSGroups grps str
 moveToNogreed :: Direction1D -> WSType -> X ()
 moveToNogreed dir t = findWorkspace getSortByIndex dir t 1 >>= windows . W.view
 
--- Find an empty workspace that is part of the given MyWSGroup, and return its name. If no such WS,
--- then return the name of the current WS. This function is intended to be used for doShift.
+-- Try to find an empty WSID belonging to the given group, and return its
+-- name.  If group is full, then return the current WSID.
 tryGetEmptyWSIDofGroup :: MyWSGroup -> X WorkspaceId
-tryGetEmptyWSIDofGroup g = findWSID Next $ emptyWSGrp g
-
-findWSID :: Direction1D -> WSType -> X WorkspaceId
-findWSID dir t = findWorkspace getSortByIndex dir t 1
+tryGetEmptyWSIDofGroup g =
+    do  {
+        ; ws0 <- findWorkspace getSortByIndex Next (emptyWSGrp g) 0 -- an empty WS of group g 0 WSs away from current WS
+        ; ws1 <- findWorkspace getSortByIndex Next (emptyWSGrp g) 1 -- an empty WS of group g 1 WSs away from current WS
+        ; if isWSGroup g ws0
+            then return ws0 -- if current WS also happens to be an empty WS of the group g, then return this WSID
+            else return ws1 -- the empty WS of group g, NOT counting the current WS; if such a WS does not exist, then ws1 is just the current WS
+        }
 
 myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
 
