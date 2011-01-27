@@ -1,12 +1,3 @@
---
--- xmonad example config file.
---
--- A template showing all available configuration hooks,
--- and how to override the defaults in your own xmonad.hs conf file.
---
--- Normally, you'd only override those defaults you care about.
---
-
 -- required imports
 import XMonad
 import Data.Monoid
@@ -27,18 +18,14 @@ import XMonad.Layout.Circle -- circle layout
 import XMonad.Layout.LayoutHints -- for (among other things) removing GVim's dead borders automatically
 
 import XMonad.Util.WorkspaceCompare (getSortByIndex)
+import System.Posix.Unistd -- for getting hostname
 
 -- The preferred terminal program, which is used in a binding below and by
 -- certain contrib modules.
 --
 myTerminal      = "urxvt"
 
--- Whether focus follows the mouse pointer.
-myFocusFollowsMouse :: Bool
 myFocusFollowsMouse = True
-
--- Width of the window border in pixels.
---
 myBorderWidth   = 1
 
 -- modMask lets you specify which modkey you want to use. The default
@@ -63,16 +50,6 @@ altMask         = mod1Mask -- alias "altMask" for left alt key
 -- numlock status separately.
 --
 myNumlockMask   = mod2Mask
-
--- The default number of workspaces (virtual screens) and their names.
--- By default we use numeric strings, but any string may be used as a
--- workspace name. The number of workspaces is determined by the length
--- of this list.
---
--- A tagging example:
---
--- > workspaces = ["web", "irc", "code" ] ++ map show [4..9]
---
 
 data MyWSGroup = Net | Work | Work2 | Music | Net2 | Sys
     deriving (Eq, Ord, Enum, Show)
@@ -112,8 +89,6 @@ myWorkspaceGroups = [ ("1",   Net)
 
 myWorkspaces = map fst myWorkspaceGroups -- 1..9, 0, F1-F12
 
--- Border colors for unfocused and focused windows, respectively.
---
 myNormalBorderColor  = "#000000"
 myFocusedBorderColor = "#ffffff"
 
@@ -122,9 +97,6 @@ term1 = "~/syscfg/script/sys/terms/wb.sh"
 term2 = "~/syscfg/script/sys/terms/bw.sh"
 term3 = "~/syscfg/script/sys/terms/wB.sh"
 
-------------------------------------------------------------------------
--- Key bindings. Add, modify or remove key bindings here.
---
 myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
 
     -- launch a terminal
@@ -379,9 +351,6 @@ getEmptyWSIDofGroup g = findWSID Next $ emptyWSGrp g
 findWSID :: Direction1D -> WSType -> X WorkspaceId
 findWSID dir t = findWorkspace getSortByIndex dir t 1
 
-------------------------------------------------------------------------
--- Mouse bindings: default actions bound to mouse events
---
 myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
 
     -- mod-button1, Set the window to floating mode and move by dragging
@@ -398,23 +367,6 @@ myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
     -- you may also bind events to the mouse scroll wheel (button4 and button5)
     ]
 
-------------------------------------------------------------------------
--- Layouts:
-
--- You can specify and transform your layouts by modifying these values.
--- If you change layout bindings be sure to use 'mod-shift-space' after
--- restarting (with 'mod-q') to reset your layout state to the new
--- defaults, as xmonad preserves your old layout settings by default.
---
--- * NOTE: XMonad.Hooks.EwmhDesktops users must remove the obsolete
--- ewmhDesktopsLayout modifier from layoutHook. It no longer exists.
--- Instead use the 'ewmh' function from that module to modify your
--- defaultConfig as a whole. (See also logHook, handleEventHook, and
--- startupHook ewmh notes.)
---
--- The available layouts.  Note that each layout is separated by |||,
--- which denotes layout choice.
---
 myLayout = Mirror tiled
         ||| tiled
         ||| noBorders Full
@@ -467,7 +419,6 @@ myManageHook = composeAll
     , stringProperty "WM_NAME"  =? "ncmpcpp"            --> doShift =<< liftX (getEmptyWSIDofGroup Music)
     , stringProperty "WM_NAME"  =? "mplayer"            --> doShift  =<< liftX (getEmptyWSIDofGroup Music)
     , resource  =? "Navigator"                           --> doShift =<< liftX (getEmptyWSIDofGroup Net)
-    --, className  =? "Blender"                           --> doShift "6"
     , className  =? "Blender:Render"                    --> doFloat
     , resource  =? "Browser"                            --> doFloat
     , className  =? "Galculator"                        --> doCenterFloat
@@ -485,71 +436,34 @@ myManageHook = composeAll
     , className  =? "Smplayer"                          --> doFloat
     , className  =? "linux_client"                      --> doFloat
     , className  =? "Bsnes"                             --> doCenterFloat
-    --, className  =? "Wine"                              --> doFloat
-    --, className  =? "Gvim"                              --> doCenterFloat
     , className  =? "VirtualBox"                        --> doFloat
     ]
 
-------------------------------------------------------------------------
--- Event handling
-
--- Defines a custom handler function for X Events. The function should
--- return (All True) if the default handler is to be run afterwards. To
--- combine event hooks use mappend or mconcat from Data.Monoid.
---
--- * NOTE: EwmhDesktops users should use the 'ewmh' function from
--- XMonad.Hooks.EwmhDesktops to modify their defaultConfig as a whole.
--- It will add EWMH event handling to your custom event hooks by
--- combining them with ewmhDesktopsEventHook.
---
 myEventHook = mempty
-
-------------------------------------------------------------------------
--- Status bars and logging
-
--- Perform an arbitrary action on each internal state change or X event.
--- See the 'DynamicLog' extension for examples.
---
--- To emulate dwm's status bar
---
--- > logHook = dynamicLogDzen
---
--- * NOTE: EwmhDesktops users should use the 'ewmh' function from
--- XMonad.Hooks.EwmhDesktops to modify their defaultConfig as a whole.
--- It will add EWMH logHook actions to your custom log hook by
--- combining it with ewmhDesktopsLogHook.
---
 myLogHook = return ()
 
-------------------------------------------------------------------------
--- Startup hook
+myStartupHook :: String -> X ()
+myStartupHook hostname =
+    do  {
+          spawn $ term1 ++ " -name urxvtINIT"
+        ; spawn "firefox"
+        ; spawn $ term1 ++ " -e alsamixer"
+        ; spawn $ term2 ++ " -n iftop -e sudo iftop -B -i eth1"
+        ; spawn $ term1 ++ " -e htop"
+        ; case hostname of
+            "exelion" -> do { spawn $ term2 ++ " -e ncmpcpp"
+                            ; spawn $ term3 ++ " -e rtorrent"
+                            ; spawn $ term1 ++ " -name WeeChat -e weechat-curses"
+                            }
+            "aether" -> do  { spawn $ term3 ++ " -e rtorrent"
+                            }
+            _ -> return ()
+        }
 
--- Perform an arbitrary action each time xmonad starts or is restarted
--- with mod-q.  Used by, e.g., XMonad.Layout.PerWorkspace to initialize
--- per-workspace layout choices.
---
--- By default, do nothing.
---
--- * NOTE: EwmhDesktops users should use the 'ewmh' function from
--- XMonad.Hooks.EwmhDesktops to modify their defaultConfig as a whole.
--- It will add initialization of EWMH support to your custom startup
--- hook by combining it with ewmhDesktopsStartup.
---
---myStartupHook = return ()
-myStartupHook = do
-    spawn "/home/listdata/.xmonad/init.sh"
-
-------------------------------------------------------------------------
--- Now run xmonad with all the defaults we set up.
-
--- Run xmonad with the settings you specify. No need to modify this.
---
---main = xmonad defaults
 main = do
-    --host <- fmap nodeName getSystemID
+    hostname <- fmap nodeName getSystemID
     xmonad $ defaultConfig
         {
-      -- simple stuff
         terminal           = myTerminal,
         focusFollowsMouse  = myFocusFollowsMouse,
         borderWidth        = myBorderWidth,
@@ -558,17 +472,13 @@ main = do
         workspaces         = myWorkspaces,
         normalBorderColor  = myNormalBorderColor,
         focusedBorderColor = myFocusedBorderColor,
-
-      -- key bindings
         keys               = myKeys,
         mouseBindings      = myMouseBindings,
-
-      -- hooks, layouts
         layoutHook         = myLayout,
         manageHook         = myManageHook,
         handleEventHook    = myEventHook,
         logHook            = myLogHook,
-        startupHook        = myStartupHook
+        startupHook        = myStartupHook hostname
         }
 
 -- vim:syntax=haskell

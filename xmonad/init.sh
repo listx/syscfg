@@ -1,1 +1,0 @@
-/home/listdata/syscfg/xmonad/init
