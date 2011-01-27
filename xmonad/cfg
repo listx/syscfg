@@ -234,7 +234,8 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
 -- workspace group.
 action_o :: X ()
 action_o =
-    do  { currentWS <- gets (W.currentTag . windowset)
+    do  {
+        ; currentWS <- gets (W.currentTag . windowset)
         ; let currentWSGrp = getWSGroup currentWS
         -- first try to move to the next empty WS in the group
         ; moveTo Next emptyGrpWS
@@ -446,13 +447,13 @@ myLogHook = return ()
 myStartupHook :: String -> X ()
 myStartupHook hostname =
     do  {
-        ; spawnIfGrpNotFull Net "firefox"
+        ; spawnIfGrpTopWSNotFull Net "firefox"
         ; spawnIfGrpTopWSNotFull Work $ term1 ++ " -name urxvtINIT"
         ; spawnIfGrpNotFull Sys $ term1 ++ " -e alsamixer"
         ; spawnIfGrpNotFull Sys $ term2 ++ " -n iftop -e sudo iftop -B -i eth1"
         ; spawnIfGrpNotFull Sys $ term1 ++ " -e htop"
         ; case hostname of
-            "exelion" -> do { spawnIfGrpNotFull Music $ term2 ++ " -e ncmpcpp"
+            "exelion" -> do { spawnIfGrpTopWSNotFull Music $ term2 ++ " -e ncmpcpp"
                             ; spawnIfGrpNotFull Net2 $ term1 ++ " -name WeeChat -e weechat-curses"
                             ; spawnIfGrpNotFull Net2 $ term3 ++ " -e rtorrent"
                             }
@@ -463,7 +464,8 @@ myStartupHook hostname =
 
 spawnIfGrpNotFull :: MyWSGroup -> String -> X ()
 spawnIfGrpNotFull g command =
-    do  { wsid <- tryGetEmptyWSIDofGroup g
+    do  {
+        ; wsid <- tryGetEmptyWSIDofGroup g
         ; if isWSGroup g wsid
             then spawn command
             else return ()
@@ -471,7 +473,8 @@ spawnIfGrpNotFull g command =
 
 spawnIfGrpTopWSNotFull :: MyWSGroup -> String -> X ()
 spawnIfGrpTopWSNotFull g command =
-    do  { wsid <- tryGetEmptyWSIDofGroup g
+    do  {
+        ; wsid <- tryGetEmptyWSIDofGroup g
         ; if (isWSGroup g wsid && (wsid == head (getWSids . getWSGroup $ wsid)))
             then spawn command
             else return ()
@@ -480,22 +483,21 @@ spawnIfGrpTopWSNotFull g command =
 main = do
     hostname <- fmap nodeName getSystemID
     xmonad $ defaultConfig
-        {
-        terminal           = myTerminal,
-        focusFollowsMouse  = myFocusFollowsMouse,
-        borderWidth        = myBorderWidth,
-        modMask            = myModMask,
-        numlockMask        = myNumlockMask,
-        workspaces         = myWorkspaces,
-        normalBorderColor  = myNormalBorderColor,
-        focusedBorderColor = myFocusedBorderColor,
-        keys               = myKeys,
-        mouseBindings      = myMouseBindings,
-        layoutHook         = myLayout,
-        manageHook         = myManageHook,
-        handleEventHook    = myEventHook,
-        logHook            = myLogHook,
-        startupHook        = myStartupHook hostname
+        { terminal           = myTerminal
+        , focusFollowsMouse  = myFocusFollowsMouse
+        , borderWidth        = myBorderWidth
+        , modMask            = myModMask
+        , numlockMask        = myNumlockMask
+        , workspaces         = myWorkspaces
+        , normalBorderColor  = myNormalBorderColor
+        , focusedBorderColor = myFocusedBorderColor
+        , keys               = myKeys
+        , mouseBindings      = myMouseBindings
+        , layoutHook         = myLayout
+        , manageHook         = myManageHook
+        , handleEventHook    = myEventHook
+        , logHook            = myLogHook
+        , startupHook        = myStartupHook hostname
         }
 
 -- vim:syntax=haskell
