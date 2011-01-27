@@ -85,7 +85,7 @@ _MYWSGROUPS = [Net ..] -- list of all MyWSGroup
 -- maximum flexibility: we can either directly choose, via xK_1 ... xK_F12 keys what we want (like
 -- we did in the past), but at the same time we can also choose to navigate via the ordering in
 -- MyWSGroup via the custom diffGrpWS function.
-myWorkspaceGroups :: [(String, MyWSGroup)]
+myWorkspaceGroups :: [(WorkspaceId, MyWSGroup)]
 myWorkspaceGroups = [ ("1",   Net)
                     , ("2",   Net)
                     , ("3",   Work)
@@ -96,7 +96,7 @@ myWorkspaceGroups = [ ("1",   Net)
                     , ("8",   Work)
                     , ("9",   Work)
                     , ("0",   Music) -- ncmpcpp
-                    , ("F1",  Work2)
+                    , ("F1",  Music) -- terminal named "mplayer" (used when streaming music on LAN)
                     , ("F2",  Work2)
                     , ("F3",  Work2)
                     , ("F4",  Work2)
@@ -263,9 +263,7 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
 action_o :: X ()
 action_o =
     do  { currentWS <- gets (W.currentTag . windowset)
-        ; let currentWSGrp = case lookup currentWS myWorkspaceGroups of
-                            Just foundGrp -> foundGrp
-                            otherwise -> Net
+        ; let currentWSGrp = getWSGroup currentWS
         -- first try to move to the next empty WS in the group
         ; moveTo Next emptyGrpWS
         -- now do a specific action that suits this WS group
@@ -279,9 +277,7 @@ emptyGrpWS :: WSType
 emptyGrpWS =
     WSIs $ do
     { currentWS <- gets (W.currentTag . windowset)
-    ; let currentWSGrp = case lookup currentWS myWorkspaceGroups of
-                            Just foundGrp -> foundGrp
-                            otherwise -> Net
+    ; let currentWSGrp = getWSGroup currentWS
     ; let isEmpty = isNothing . W.stack
     ; let isCurrentWSGrp = isWSGroup currentWSGrp . W.tag
     ; return (\w -> isEmpty w && isCurrentWSGrp w)
@@ -292,23 +288,26 @@ nonEmptyGrpWS :: WSType
 nonEmptyGrpWS =
     WSIs $ do {
       currentWS <- gets (W.currentTag . windowset)
-    ; let currentWSGrp = case lookup currentWS myWorkspaceGroups of
-                            Just foundGrp -> foundGrp
-                            otherwise -> Net
+    ; let currentWSGrp = getWSGroup currentWS
     ; let isNonEmpty = isJust . W.stack
     ; let isCurrentWSGrp = isWSGroup currentWSGrp . W.tag
     ; return (\w -> isNonEmpty w && isCurrentWSGrp w)
+    }
+
+-- An empty WS belonging to the given group.
+emptyWSGrp :: MyWSGroup -> WSType
+emptyWSGrp grp =
+    WSIs $ do {
+      let isEmpty = isNothing . W.stack
+    ; let isMemberOfGivenGrp = isWSGroup grp . W.tag
+    ; return (\w -> isEmpty w && isMemberOfGivenGrp w)
     }
 
 -- A non-empty WS belonging to any group except those in the given group list.
 nonEmptyWSExceptGrps :: [MyWSGroup] -> WSType
 nonEmptyWSExceptGrps grps =
     WSIs $ do {
-      currentWS <- gets (W.currentTag . windowset)
-    ; let currentWSGrp = case lookup currentWS myWorkspaceGroups of
-                            Just foundGrp -> foundGrp
-                            otherwise -> Net
-    ; let isNonEmpty = isJust . W.stack
+      let isNonEmpty = isJust . W.stack
     ; let isMemberOfGivenGrps = isWSGroups grps . W.tag
     ; return (\w -> isNonEmpty w && not (isMemberOfGivenGrps w))
     }
@@ -318,9 +317,7 @@ diffGrpWS :: Int -> WSType
 diffGrpWS dir =
     WSIs $ do {
       currentWS <- gets (W.currentTag . windowset)
-    ; let currentWSGrp = case lookup currentWS myWorkspaceGroups of
-                            Just foundGrp -> foundGrp
-                            otherwise -> Net
+    ; let currentWSGrp = getWSGroup currentWS
     ; do    { let diffGrp = if dir > 0
                                 then nextGrp currentWSGrp
                                 else prevGrp currentWSGrp
@@ -333,9 +330,7 @@ grpWS :: WSType
 grpWS =
     WSIs $ do {
       currentWS <- gets (W.currentTag . windowset)
-    ; let currentWSGrp = case lookup currentWS myWorkspaceGroups of
-                            Just foundGrp -> foundGrp
-                            otherwise -> Net
+    ; let currentWSGrp = getWSGroup currentWS
     ; return (\w -> isWSGroup currentWSGrp . W.tag $ w)
     }
 
@@ -350,26 +345,39 @@ prevGrp g = if g == head _MYWSGROUPS
                 then last _MYWSGROUPS
                 else last [x | x <- _MYWSGROUPS, x < g]
 
--- Confirms if a given String str is part of a given MyWSGroup g.
+getWSids :: MyWSGroup -> [WorkspaceId]
+getWSids g = map fst $ filter (\(x,y) -> y == g) myWorkspaceGroups
+
+getWSGroup :: WorkspaceId -> MyWSGroup
+getWSGroup wsid = head . map snd $ filter (\(x,y) -> x == wsid) myWorkspaceGroups
+
+-- Confirms if a given WorkspaceId str is part of a given MyWSGroup g.
 --
 -- The order of the arguments is "backwards" because we compose this function with StackSet's tag
--- function, which returns the WS name as a String, e.g., "(\w -> isWSGroup Net . W.tag $ w)".
-isWSGroup :: MyWSGroup -> String -> Bool
+-- function, which returns the WorkspaceId, e.g., "(\w -> isWSGroup Net . W.tag $ w)".
+isWSGroup :: MyWSGroup -> WorkspaceId -> Bool
 isWSGroup grp str
     | lookup str myWorkspaceGroups == Just grp = True
     | otherwise = False
 
 -- Same as isWSGroup, but takes a list of valid MyWSGroups instead of just a single MyWSGroup.
-isWSGroups :: [MyWSGroup] -> String -> Bool
+isWSGroups :: [MyWSGroup] -> WorkspaceId -> Bool
 isWSGroups grps str
     | lookup str myWorkspaceGroups' /= Nothing = True
     | otherwise = False
     where myWorkspaceGroups' = filter (\(x,y) -> any (==y) grps) myWorkspaceGroups
 
-
 -- same as CycleWS's moveTo, but w/ view instead of greedyView
 moveToNogreed :: Direction1D -> WSType -> X ()
 moveToNogreed dir t = findWorkspace getSortByIndex dir t 1 >>= windows . W.view
+
+-- Find an empty workspace that is part of the given MyWSGroup, and return its name. If no such WS,
+-- then return the name of the current WS. This function is intended to be used for doShift.
+getEmptyWSIDofGroup :: MyWSGroup -> X WorkspaceId
+getEmptyWSIDofGroup g = findWSID Next $ emptyWSGrp g
+
+findWSID :: Direction1D -> WSType -> X WorkspaceId
+findWSID dir t = findWorkspace getSortByIndex dir t 1
 
 ------------------------------------------------------------------------
 -- Mouse bindings: default actions bound to mouse events
@@ -451,13 +459,14 @@ myManageHook = composeAll
     , resource  =? "kdesktop"                           --> doIgnore
     , resource  =? "vlc"                                --> doCenterFloat
     , stringProperty "WM_NAME"  =? "urxvtINIT"          --> doShift "3"
+    , resource  =? "WeeChat"                            --> doShift "F9"
+    , stringProperty "WM_NAME"  =? "rtorrent"           --> doShift "F10"
     , stringProperty "WM_NAME"  =? "htop"               --> doShift "F11"
     , stringProperty "WM_ICON_NAME"  =? "iftop"         --> doShift "F12"
     , stringProperty "WM_NAME"  =? "alsamixer"          --> doShift "F12"
-    , resource  =? "WeeChat"                            --> doShift "F9"
-    , stringProperty "WM_NAME"  =? "rtorrent"           --> doShift "F10"
-    , stringProperty "WM_NAME"  =? "ncmpcpp"            --> doShift "0"
-    , stringProperty "WM_NAME"  =? "mplayer"            --> doShift "0"
+    , stringProperty "WM_NAME"  =? "ncmpcpp"            --> doShift =<< liftX (getEmptyWSIDofGroup Music)
+    , stringProperty "WM_NAME"  =? "mplayer"            --> doShift  =<< liftX (getEmptyWSIDofGroup Music)
+    , resource  =? "Navigator"                           --> doShift =<< liftX (getEmptyWSIDofGroup Net)
     --, className  =? "Blender"                           --> doShift "6"
     , className  =? "Blender:Render"                    --> doFloat
     , resource  =? "Browser"                            --> doFloat
