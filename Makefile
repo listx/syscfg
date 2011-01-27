@@ -53,8 +53,6 @@ xinitrc:
 	ln -fs $(CFGROOT)/xinitrc/cfg       ${HOME}/.xinitrc
 xmonad:
 	ln -fns $(CFGROOT)/xmonad           ${HOME}/.xmonad
-	ln -fs $(CFGROOT)/xmonad/init       ${HOME}/.xmonad/init.sh
-	ln -fs $(CFGROOT)/xmonad/cfg        ${HOME}/.xmonad/xmonad.hs
 zsh:
 	ln -fns $(CFGROOT)/zsh              ${HOME}/.zsh
 	ln -fs $(CFGROOT)/zsh/cfg           ${HOME}/.zshrc
