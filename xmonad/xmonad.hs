@@ -218,6 +218,7 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((modm .|. altMask .|. shiftMask, xK_l),  shiftTo Next $ diffGrpWS 1) -- move window to next WS group
     , ((modm .|. altMask .|. shiftMask, xK_h),  shiftTo Next $ diffGrpWS (-1)) -- move window to prev WS group
     , ((modm, xK_semicolon),                    toggleWS) -- go to WS displayed previously
+    , ((modm .|. altMask, xK_BackSpace),        resetScreensToWSTops) -- reset each Xinerama screen so that they point to the heads of each group
     ]
 
     ++
@@ -470,7 +471,25 @@ myStartupHook hostname =
             "aether" -> do  { spawnIfGrpNotFull Net2 $ term3 ++ " -e rtorrent"
                             }
             _ -> return ()
+        ; case hostname of
+            "exelion" -> resetScreensToWSTops
+            _ -> return ()
         }
+
+-- reset all xinerama screens to point to top WS of each group
+resetScreensToWSTops :: X ()
+resetScreensToWSTops = gets (W.screens . windowset) >>= myloop . length
+    where myloop :: Int -> X ()
+          myloop ss = recurse (S 0) (S (ss - 1))
+            where   recurse :: ScreenId -> ScreenId -> X ()
+                    recurse acc until = if acc <= until
+                                            then do {
+                                                    ; screenWorkspace acc >>= flip whenJust (windows . W.view)
+                                                    ; windows $ W.greedyView (head (getWSids (_MYWSGROUPS!!(toint acc))))
+                                                    ; recurse (acc + 1) until
+                                                    }
+                                            else return ()
+                        where toint (S a) = a
 
 spawnIfGrpNotFull :: MyWSGroup -> String -> X ()
 spawnIfGrpNotFull g command =
