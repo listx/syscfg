@@ -212,7 +212,7 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((modm .|. altMask,   xK_l),              moveTo Next $ diffGrpWS 1)     -- go to next WS Group
     , ((modm .|. altMask,   xK_h),              moveTo Next $ diffGrpWS (-1))  -- go to previous WS Group (the "moveTo Next" part here ensures that, after getting our desired new WSGroup, that we always display the top WS of that Group
     , ((modm .|. altMask,   xK_o),              action_o)    -- go to next hidden empty WS (if possible), in current Group, and spawn a new "window" there (depends on group)
-    , ((modm .|. altMask,   xK_n),              moveTo Next $ nonEmptyWSExceptGrps [Net2, Sys])    -- go to any non-empty WS, except those WS belonging to the given WS Groups (for making sure that our "desk" is clean before we log off/shutdown)
+    , ((modm, xK_n),                            moveTo Next $ nonEmptyWSExceptGrps [Net2, Sys])    -- go to any non-empty WS, except those WS belonging to the given WS Groups (for making sure that our "desk" is clean before we log off/shutdown)
     , ((modm .|. altMask .|. shiftMask, xK_j),  shiftTo Next grpWS) -- move window to next WS, in current Group
     , ((modm .|. altMask .|. shiftMask, xK_k),  shiftTo Prev grpWS) -- move window to prev WS, in current Group
     , ((modm .|. altMask .|. shiftMask, xK_l),  shiftTo Next $ diffGrpWS 1) -- move window to next WS group
