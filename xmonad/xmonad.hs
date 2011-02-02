@@ -461,7 +461,7 @@ myStartupHook hostname =
         ; spawnIfGrpTopWSNotFull Net "firefox"
         ; spawnIfGrpTopWSNotFull Work $ term1 ++ " -name urxvtINIT"
         ; spawnIfGrpNotFull Sys $ term1 ++ " -e alsamixer"
-        ; spawnIfGrpNotFull Sys $ term2 ++ " -n iftop -e sudo iftop -B -i eth1"
+        ; spawnIfGrpNotFull Sys $ term2 ++ " -n iftop -e sudo iftop -B -i eth" ++ (if hostname == "exelion" then "1" else "0")
         ; spawnIfGrpNotFull Sys $ term1 ++ " -e htop"
         ; case hostname of
             "exelion" -> do { spawnIfGrpTopWSNotFull Music $ term2 ++ " -e ncmpcpp"
