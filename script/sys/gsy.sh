@@ -166,6 +166,7 @@ if [[ $ghost_alive == true && (-n $remotes_clean || $(git diff 2>&1 | wc -l) -eq
     if [[ $(git diff 2>&1 | wc -l) -eq 0 && $(git diff --cached 2>&1 | wc -l) -eq 0 ]]; then
         echo "\ngsy: propagating upstream ($ghost => $c2$machine_current$ce)"
         git pull 2>&1 | sed -e "s/^/  $c1>$ce /" -e "s/error/${c6}error$ce/"
+        git gc   2>&1 | sed -e "s/^/  $c1>$ce /" -e "s/error/${c6}error$ce/"
     fi
     n=1
     for c in $remotes_clean; do
@@ -174,7 +175,8 @@ if [[ $ghost_alive == true && (-n $remotes_clean || $(git diff 2>&1 | wc -l) -eq
         if ssh $c "[[ -d $repo ]]"; then
             ssh $c "
             cd $repo;
-            git pull 2>&1 | sed -e \"s/^/  $c1>$ce /\" -e \"s/error/${c6}error$ce/\""
+            git pull 2>&1 | sed -e \"s/^/  $c1>$ce /\" -e \"s/error/${c6}error$ce/\";
+            git gc   2>&1 | sed -e \"s/^/  $c1>$ce /\" -e \"s/error/${c6}error$ce/\""
         else
             echo "gsy: remote does not have this repo -- ${c5}skipping$ce"
         fi
