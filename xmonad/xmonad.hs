@@ -465,7 +465,7 @@ myStartupHook hostname =
         ; spawnIfGrpNotFull Sys $ term1 ++ " -e htop"
         ; case hostname of
             "exelion" -> do { spawnIfGrpTopWSNotFull Music $ term2 ++ " -e ncmpcpp"
-                            ; spawnIfGrpNotFull Net2 $ term1 ++ " -name WeeChat -e weechat-curses"
+                            ; spawnIfGrpNotFull Net2 $ term2 ++ " -name WeeChat -e weechat-curses"
                             ; spawnIfGrpNotFull Net2 $ term3 ++ " -e rtorrent"
                             }
             "aether" -> do  { spawnIfGrpNotFull Net2 $ term3 ++ " -e rtorrent"
