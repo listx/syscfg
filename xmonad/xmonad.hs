@@ -158,6 +158,7 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
 
     -- CUSTOM KEYBINDINGS HERE --
 
+    , ((mod4Mask              , xK_1     ), spawn (term1 ++ " -e ~/prog/timeflux/src/term.sh ~/sched/sched.tf intraday"))
     , ((mod4Mask              , xK_a     ), spawn (term1 ++ " -e ~/sched/mercury.sh todo"))
     , ((mod4Mask .|. shiftMask, xK_a     ), spawn (term1 ++ " -e ~/sched/mercury.sh notes"))
     , ((mod4Mask              , xK_c     ), spawn "galculator")
