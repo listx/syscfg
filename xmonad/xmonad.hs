@@ -158,7 +158,7 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
 
     -- CUSTOM KEYBINDINGS HERE --
 
-    , ((mod4Mask              , xK_1     ), spawn (term1 ++ " -e ~/prog/timeflux/src/term.sh ~/sched/sched.tf intraday"))
+    , ((mod4Mask              , xK_1     ), spawn (term1 ++ " -name floatme -e ~/prog/timeflux/src/term.sh ~/sched/sched.tf intraday"))
     , ((mod4Mask              , xK_a     ), spawn (term1 ++ " -e ~/sched/mercury.sh todo"))
     , ((mod4Mask .|. shiftMask, xK_a     ), spawn (term1 ++ " -e ~/sched/mercury.sh notes"))
     , ((mod4Mask              , xK_c     ), spawn "galculator")
@@ -429,6 +429,7 @@ myManageHook = composeAll
     , stringProperty "WM_NAME"  =? "htop"               --> doShift "F11"
     , stringProperty "WM_ICON_NAME"  =? "iftop"         --> doShift "F12"
     , stringProperty "WM_NAME"  =? "alsamixer"          --> doShift "F12"
+    , resource  =? "floatme"                            --> doCenterFloat
     , stringProperty "WM_NAME"  =? "ncmpcpp"            --> doShift =<< liftX (tryGetEmptyWSIDofGroup Music)
     , stringProperty "WM_NAME"  =? "mplayer"            --> doShift =<< liftX (tryGetEmptyWSIDofGroup Music)
     , resource  =? "Navigator"                          --> doShift =<< liftX (tryGetEmptyWSIDofGroup Net)
