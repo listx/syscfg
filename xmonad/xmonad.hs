@@ -159,8 +159,7 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     -- CUSTOM KEYBINDINGS HERE --
 
     , ((mod4Mask              , xK_1     ), spawn (term1 ++ " -name floatme -e ~/prog/timeflux/src/term.sh intraday ~/sched/life.cog @@@"))
-    , ((mod4Mask              , xK_a     ), spawn (term1 ++ " -e ~/sched/mercury.sh todo"))
-    , ((mod4Mask .|. shiftMask, xK_a     ), spawn (term1 ++ " -e ~/sched/mercury.sh notes"))
+    , ((mod4Mask              , xK_a     ), spawn (term1 ++ " -e vim ~/sched/life.cog"))
     , ((mod4Mask              , xK_c     ), spawn "galculator")
     , ((mod4Mask .|. shiftMask, xK_c     ), spawn "gcalctool")
     , ((mod4Mask              , xK_d     ), spawn "amule")
@@ -172,8 +171,6 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((mod4Mask              , xK_m     ), spawn "blender")
     , ((mod4Mask              , xK_n     ), spawn "firefox")
     , ((mod4Mask .|. shiftMask, xK_n     ), spawn "/home/listdata/.xmonad/ff_news.sh")
-    , ((mod4Mask              , xK_s     ), spawn (term1 ++ " -e vim ~/sched/todo.cog"))
-    , ((mod4Mask .|. shiftMask, xK_s     ), spawn (term1 ++ " -e vim -p ~/sched/notes/*"))
     , ((mod4Mask              , xK_w     ), spawn "soffice")
     , ((mod4Mask              , xK_x     ), spawn term1)
     , ((mod4Mask .|. shiftMask, xK_x     ), spawn term3)
