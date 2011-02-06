@@ -58,9 +58,9 @@ else
 fi
 
 case $1 in
-    "a") timidity --volume $tvol ~/syscfg/sys/sound/00a-westminster-FX3_ReverbMax.mid ;;
-    "b") timidity --volume $tvol ~/syscfg/sys/sound/00b-westminster-FX3_ReverbMax.mid ;;
-    "f") timidity --volume $tvol ~/syscfg/sys/sound/00-westminster-FX3_ReverbMax.mid ;;
+    "a") timidity --volume $tvol ~/syscfg/core/sound/00a-westminster-FX3_ReverbMax.mid ;;
+    "b") timidity --volume $tvol ~/syscfg/core/sound/00b-westminster-FX3_ReverbMax.mid ;;
+    "f") timidity --volume $tvol ~/syscfg/core/sound/00-westminster-FX3_ReverbMax.mid ;;
     *) ;;
 esac
 
