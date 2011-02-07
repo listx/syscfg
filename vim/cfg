@@ -92,6 +92,7 @@ if !exists("autocommands_loaded")
     au! Syntax toucan source $HOME/.vim/syntax/toucan.vim
 
     au BufRead,BufNewFile *.cog setlocal filetype=cog
+    au BufRead,BufNewFile *.cog setlocal cursorline! " disable cursorline for .cog files
     au! Syntax cog source $HOME/.vim/syntax/cog.vim
 
     au BufRead,BufNewFile *.afs setlocal filetype=afs
