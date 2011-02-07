@@ -255,6 +255,7 @@ nmap <localleader>P "+P
 
 " Remove K from being mapped to interactive man pages
 nmap K <Esc>
+vmap K <Esc>
 
 " NOTE: the <F1> key in normal mode is mapped to ":help" by default
 " quicksave files
