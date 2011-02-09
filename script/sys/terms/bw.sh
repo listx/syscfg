@@ -4,6 +4,15 @@
 
 export TERM_COLOR_SCHEME_CURRENT='bw'
 
+case $HOST in
+    aether)
+        geom="100x50"
+    ;;
+    *)
+        geom="100x70"
+    ;;
+esac
+
 c_cursor="#202020"    # cursor color
 
 c_bg="#f0f0f0" # background
@@ -38,13 +47,14 @@ export TERM_COLOR_CURSOR=$c_cursor
 export TERM_COLOR_BG=$c_bg
 export TERM_COLOR_FG=$c_fg
 
-colors=""
-colors+=" --cursorColor $c_cursor"
-colors+=" --background $c_bg"
-colors+=" --foreground $c_fg"
-colors+=" --color0 $c_00 --color1 $c_01 --color2 $c_02 --color3 $c_03 --color4 $c_04 --color5 $c_05 --color6 $c_06 --color7 $c_07 --color8 $c_08 --color9 $c_09 --color10 $c_10 --color11 $c_11 --color12 $c_12 --color13 $c_13 --color14 $c_14 --color15 $c_15"
-colors+=" -fade $c_fade"
+opts=""
+opts+=" -geometry $geom"
+opts+=" --cursorColor $c_cursor"
+opts+=" --background $c_bg"
+opts+=" --foreground $c_fg"
+opts+=" --color0 $c_00 --color1 $c_01 --color2 $c_02 --color3 $c_03 --color4 $c_04 --color5 $c_05 --color6 $c_06 --color7 $c_07 --color8 $c_08 --color9 $c_09 --color10 $c_10 --color11 $c_11 --color12 $c_12 --color13 $c_13 --color14 $c_14 --color15 $c_15"
+opts+=" -fade $c_fade"
 
-urxvt ${(z)colors} -fn "xft:dejavu sans mono:pixelsize=12,xft:Kochi Gothic,xft:Baekmuk Gulim" $@ & disown
+urxvt ${(z)opts} -fn "xft:dejavu sans mono:pixelsize=12,xft:Kochi Gothic,xft:Baekmuk Gulim" $@ & disown
 
 # vim:syntax=zsh
