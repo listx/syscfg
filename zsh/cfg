@@ -214,6 +214,7 @@ alias q='exit'
 
 alias m='mplayer -loop 0'
 alias mp='mplayer -loop 0 -playlist'
+alias mpf='mplayer -loop 0 -fs -playlist'
 alias mps='mplayer -loop 0 -shuffle -playlist'
 alias ms='smplayer'
 alias make_plist="~/syscfg/script/audio/make_plist.sh"
