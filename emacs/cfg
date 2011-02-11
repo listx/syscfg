@@ -80,6 +80,17 @@
 ; Change cursor color depending on SCIM status
 (setq scim-cursor-color '("red" "blue" "limegreen"))
 
+; vimpulse (requires viper.el and vimpulse.el)
+(require 'vimpulse)
+; some keymaps from ~/.vimrc
+(vimpulse-map ",w" 'save-buffer) ; save
+(vimpulse-map ",q" 'kill-buffer) ; quit (current buffer; have to press RETURN)
+(vimpulse-map ",x" 'save-buffers-kill-emacs) ; save and quit
+
+; make vimpulse work for org-mode!
+(vimpulse-map "<<" 'org-promote-subtree)
+(vimpulse-map ">>" 'org-demote-subtree)
+
 ; auto-generated stuff by emacs itself...
 (custom-set-variables
   ;; custom-set-variables was added by Custom.
