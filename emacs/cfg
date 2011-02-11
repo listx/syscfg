@@ -90,6 +90,13 @@
 ; make vimpulse work for org-mode!
 (vimpulse-map "<<" 'org-promote-subtree)
 (vimpulse-map ">>" 'org-demote-subtree)
+(vimpulse-map "o" (lambda ()
+                     (interactive)
+                     (end-of-line)
+                     (viper-append "")
+                     (org-insert-heading)
+                     (viper-append "")))
+(vimpulse-map ";a" 'org-agenda-list)
 
 ; auto-generated stuff by emacs itself...
 (custom-set-variables
