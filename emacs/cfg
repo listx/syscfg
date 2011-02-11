@@ -53,8 +53,10 @@
 ; some default hotkeys for org-mode
 (global-set-key "\C-cl" 'org-store-link)
 (global-set-key "\C-cc" 'org-capture)
-(global-set-key "\C-ca" 'org-agenda)
 (global-set-key "\C-cb" 'org-iswitchb)
+(setq org-log-done t) ; write timestamp when a TODO changes to DONE
+(setq org-agenda-files (list "~/org"))
+
 
 ;(global-set-key (kbd "<return>") 'org-insert-heading)
 
@@ -86,17 +88,69 @@
 (vimpulse-map ",w" 'save-buffer) ; save
 (vimpulse-map ",q" 'kill-buffer) ; quit (current buffer; have to press RETURN)
 (vimpulse-map ",x" 'save-buffers-kill-emacs) ; save and quit
+; make "jk" behave as ESC key
+(defun viper-escape-if-next-char (c)
+    "Watches the next letter.  If c, then switch to viper mode, otherwise insert a j and forward unpressed key to unread-command-events"
+      (self-insert-command 1)
+        (let ((next-key (read-event)))
+              (if (= c next-key)
+                        (progn
+                                    (delete-backward-char 1)
+                                              (viper-mode))
+                              (setq unread-command-events (list next-key)))))
+
+(defun viper-escape-if-next-char-is-k (arg)
+    (interactive "p")
+      (if (= arg 1)
+              (viper-escape-if-next-char ?k)
+                  (self-insert-command arg)))
+
+(define-key viper-insert-basic-map (kbd "j") 'viper-escape-if-next-char-is-k)
 
 ; make vimpulse work for org-mode!
-(vimpulse-map "<<" 'org-promote-subtree)
-(vimpulse-map ">>" 'org-demote-subtree)
 (vimpulse-map "o" (lambda ()
                      (interactive)
                      (end-of-line)
-                     (viper-append "")
                      (org-insert-heading)
-                     (viper-append "")))
-(vimpulse-map ";a" 'org-agenda-list)
+                     (viper-append nil)
+                     ))
+(vimpulse-map "t" (lambda ()
+                     (interactive)
+                     (end-of-line)
+                     (org-insert-todo-heading nil)
+                     (viper-append nil)
+                     ))
+(vimpulse-map (kbd "M-o") (lambda ()
+                     (interactive)
+                     (end-of-line)
+                     (org-insert-heading)
+                     (org-metaright)
+                     (viper-append nil)
+                     ))
+(vimpulse-map (kbd "M-t") (lambda ()
+                     (interactive)
+                     (end-of-line)
+                     (org-insert-todo-heading nil)
+                     (org-metaright)
+                     (viper-append nil)
+                     ))
+(vimpulse-map "T" 'org-todo) ; mark a TODO item as DONE
+(vimpulse-map ";a" 'org-agenda) ; access agenda buffer
+
+; allow us to access org-mode keys directly from viper's "Normal" mode
+(vimpulse-map "L" 'org-shiftright)
+(vimpulse-map "H" 'org-shiftleft)
+(vimpulse-map "K" 'org-shiftup)
+(vimpulse-map "J" 'org-shiftdown)
+(vimpulse-map (kbd "M-l") 'org-metaright)
+(vimpulse-map (kbd "M-h") 'org-metaleft)
+(vimpulse-map (kbd "M-k") 'org-metaup)
+(vimpulse-map (kbd "M-j") 'org-metadown)
+(vimpulse-map (kbd "M-L") 'org-shiftmetaright)
+(vimpulse-map (kbd "M-H") 'org-shiftmetaleft)
+(vimpulse-map (kbd "M-K") 'org-shiftmetaup)
+(vimpulse-map (kbd "M-J") 'org-shiftmetadown)
+
 (vimpulse-map (kbd "<f12>") 'org-export-as-html)
 
 ; auto-generated stuff by emacs itself...
