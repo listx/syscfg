@@ -97,6 +97,7 @@
                      (org-insert-heading)
                      (viper-append "")))
 (vimpulse-map ";a" 'org-agenda-list)
+(vimpulse-map (kbd "<f12>") 'org-export-as-html)
 
 ; auto-generated stuff by emacs itself...
 (custom-set-variables
