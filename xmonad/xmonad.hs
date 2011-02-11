@@ -159,8 +159,8 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
 
     -- CUSTOM KEYBINDINGS HERE --
 
-    , ((mod4Mask              , xK_1     ), spawn (term1 ++ " -name floatme -e ~/prog/timeflux/src/term.sh intraday ~/sched/life.cog @@@"))
-    , ((mod4Mask              , xK_a     ), spawn (term1 ++ " -e vim ~/sched/life.cog"))
+    , ((mod4Mask              , xK_1     ), spawn (term1 ++ " -name floatme -e ~/prog/timeflux/src/term.sh intraday ~/org/legacy.cog @@@"))
+    , ((mod4Mask              , xK_a     ), spawn (term1 ++ " -e vim ~/org/legacy.cog"))
     , ((mod4Mask              , xK_c     ), spawn "galculator")
     , ((mod4Mask .|. shiftMask, xK_c     ), spawn "gcalctool")
     , ((mod4Mask              , xK_d     ), spawn "amule")
