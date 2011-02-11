@@ -19,6 +19,7 @@ import XMonad.Layout.LayoutHints -- for (among other things) removing GVim's dea
 
 import XMonad.Util.WorkspaceCompare (getSortByIndex)
 import System.Posix.Unistd -- for getting hostname
+import XMonad.Hooks.EwmhDesktops -- for _NET_WINDOW_WINDOW (emacs + SCIM bridge)
 
 -- The preferred terminal program, which is used in a binding below and by
 -- certain contrib modules.
@@ -171,6 +172,7 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((mod4Mask              , xK_m     ), spawn "blender")
     , ((mod4Mask              , xK_n     ), spawn "firefox")
     , ((mod4Mask .|. shiftMask, xK_n     ), spawn "/home/listdata/.xmonad/ff_news.sh")
+    , ((mod4Mask              , xK_t     ), spawn "emacs ~/sched/life.org")
     , ((mod4Mask              , xK_w     ), spawn "soffice")
     , ((mod4Mask              , xK_x     ), spawn term1)
     , ((mod4Mask .|. shiftMask, xK_x     ), spawn term3)
@@ -510,7 +512,7 @@ spawnIfGrpTopWSNotFull g command =
 
 main = do
     hostname <- fmap nodeName getSystemID
-    xmonad $ defaultConfig
+    xmonad $ ewmh defaultConfig
         { terminal           = myTerminal
         , focusFollowsMouse  = myFocusFollowsMouse
         , borderWidth        = myBorderWidth

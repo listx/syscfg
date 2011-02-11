@@ -1,9 +1,12 @@
+! disable XIM input for emacs (use SCIM-bridge instead)
+Emacs*useXIM: false
+
 ! default urxvt settings for all urxvt windows, unless overridden
 ! with commandline arguments
 ! NOTE: "URxvt" is a class name and applies to all urxvt windows, unless the
-! specific setting is overridden; if it's just "urxvt" here instead, then any
+! specific setting is overridden; if it is just "urxvt" here instead, then any
 ! urxvt window with a specified name (e.g., urxvt -name name_of_window) will
-! NOT use the "urxvt" settings! That's why we use URxvt here.
+! NOT use the "urxvt" settings! That is why we use URxvt here.
 
 ! First set base font to Terminus to handle all Latin glyphs
 ! ...then set Japanese font to take care of most Chinese kanji and also hiragana/katakana
@@ -65,7 +68,7 @@ URxvt.keysym.Control-Left: command:\033]720;10\007
 ! make urxvt the login shell
 URxvt*loginShell:   true
 !cutchars are characterse used as delimiters for double-click word selection
-URxvt*cutchars: "()*,<>[]{}|'
+URxvt*cutchars: "\"()*,<>[]{}|\'"
 URxvt*saveLines: 32767
 URxvt*scrollBar: off
 URxvt*urlLauncher: firefox
