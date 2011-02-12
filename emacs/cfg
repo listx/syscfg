@@ -136,6 +136,7 @@
                      ))
 (vimpulse-map "T" 'org-todo) ; mark a TODO item as DONE
 (vimpulse-map ";a" 'org-agenda) ; access agenda buffer
+(vimpulse-map "-" 'org-cycle-list-bullet) ; change bullet style
 
 ; allow us to access org-mode keys directly from viper's "Normal" mode
 (vimpulse-map "L" 'org-shiftright)
