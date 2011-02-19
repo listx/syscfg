@@ -231,7 +231,7 @@ alias gpl='git pull'
 alias gps='git push'
 alias gsy='~/syscfg/script/sys/gsy.sh'
 
-alias ocm="gpl && gcm -am \"$HOST\"; gps"
+alias ocm="gpl; gcm -am \"$HOST\"; gpl && gps"
 alias clisp='clisp -q' # suppress banner
 
 alias v='gvim -p'
