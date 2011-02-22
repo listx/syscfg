@@ -154,6 +154,12 @@
 
 (vimpulse-map (kbd "<f12>") 'org-export-as-html)
 
+; put all auto-saves/backups to the temp directory
+(setq backup-directory-alist
+                `((".*" . ,temporary-file-directory)))
+(setq auto-save-file-name-transforms
+                `((".*" ,temporary-file-directory t)))
+
 ; auto-generated stuff by emacs itself...
 (custom-set-variables
   ;; custom-set-variables was added by Custom.
