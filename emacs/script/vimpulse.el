@@ -716,6 +716,11 @@ On by default."
   :group 'vimpulse
   :type  'boolean)
 
+(defcustom vimpulse-want-Viper-checkout nil
+  "Whether Viper handles versioning, off by default."
+  :group 'vimpulse
+  :type  'boolean)
+
 (defcustom vimpulse-enhanced-paren-matching t
   "Enhanced matching of parentheses, on by default."
   :group 'vimpulse
@@ -2141,6 +2146,14 @@ docstring. The variable becomes buffer-local whenever set.")
 (defalias 'viper-end-of-word 'vimpulse-end-of-word)
 (defalias 'viper-end-of-Word 'vimpulse-end-of-Word)
 
+;; dirty fix that gets rid of the checkout message Viper shows when
+;; using :w on a file in SVN (among others)
+(defadvice viper-maybe-checkout (around vimpulse activate)
+  "Disable if `vimpulse-want-Viper-checkout' is nil."
+  (if vimpulse-want-Viper-checkout
+      ad-do-it
+    (setq ad-return-value t)))
+
 ;; `ex-cmd-read-exit', bound by Viper to SPC, is buggy: e.g.,
 ;; ":s/foo/set bar" exits the minibuffer before "bar" is typed
 (defun vimpulse-ex-cmd-read-exit ()
@@ -3325,8 +3338,8 @@ Don't use this function directly; see `vimpulse-map',
     (if modes
         (dolist (mode modes)
           (if (eq mode t)
-              (vimpulse-global-set-key 'vi-state key def t)
-            (vimpulse-define-major-key mode 'vi-state key def t)))
+              (vimpulse-global-set-key state key def t)
+            (vimpulse-define-major-key mode state key def t)))
       (vimpulse-with-state state
         (vimpulse-make-careful-binding basic-map key def)))))
 
@@ -5755,12 +5768,16 @@ insert or remove any spaces."
 (vimpulse-define-operator vimpulse-fill (beg end)
   "Fill text."
   :move-point nil
-  (setq end (save-excursion
-              (goto-char end)
-              (skip-chars-backward " ")
-              (point)))
+  :whole-lines t
+  (setq end
+        (save-excursion
+          (goto-char end)
+          (skip-chars-backward " ")
+          (max beg (point))))
   (save-excursion
-    (fill-region beg end)))
+    (condition-case nil
+        (fill-region beg end)
+      (error nil))))
 
 (vimpulse-define-operator vimpulse-downcase (beg end)
   "Convert text to lower case."
@@ -7097,6 +7114,69 @@ Search backwards if a match isn't found."
          '(try-expand-line
            try-expand-line-all-buffers)))
     (hippie-expand arg)))
+
+;;; i_CTRL-Y, i_CTRL-E
+
+(defun vimpulse-copy-from-above (arg)
+  "Copy characters from preceding non-blank line.
+The copied text is inserted before point.
+ARG is the number of lines to move backward."
+  (interactive
+   (cond
+    ;; if a prefix argument was given, repeat it for subsequent calls
+    ((and (null current-prefix-arg)
+          (eq last-command 'vimpulse-copy-from-above))
+     (setq current-prefix-arg last-prefix-arg)
+     (list (prefix-numeric-value current-prefix-arg)))
+    (t
+     (list (prefix-numeric-value current-prefix-arg)))))
+  (insert (vimpulse-copy-chars-from-line 1 (- arg))))
+
+(defun vimpulse-copy-from-below (arg)
+  "Copy characters from following non-blank line.
+The copied text is inserted before point.
+ARG is the number of lines to move forward."
+  (interactive
+   (cond
+    ((and (null current-prefix-arg)
+          (eq last-command 'vimpulse-copy-from-below))
+     (setq current-prefix-arg last-prefix-arg)
+     (list (prefix-numeric-value current-prefix-arg)))
+    (t
+     (list (prefix-numeric-value current-prefix-arg)))))
+  (insert (vimpulse-copy-chars-from-line 1 arg)))
+
+;; adapted from `copy-from-above-command' from misc.el
+(defun vimpulse-copy-chars-from-line (n num &optional col)
+  "Return N characters from line NUM, starting at column COL.
+NUM is relative to the current line and can be negative.
+COL defaults to the current column."
+  (interactive "p")
+  (let ((col (or col (current-column))) prefix)
+    (save-excursion
+      (forward-line num)
+      (when (looking-at "[[:space:]]*$")
+        (if (< num 0)
+            (skip-chars-backward " \t\n")
+          (skip-chars-forward " \t\n")))
+      (beginning-of-line)
+      (move-to-column col)
+      ;; if the column winds up in middle of a tab,
+      ;; return the appropriate number of spaces
+      (when (< col (current-column))
+        (if (eq (preceding-char) ?\t)
+            (let ((len (min n (- (current-column) col))))
+              (setq prefix (make-string len ?\s)
+                    n (- n len)))
+          ;; if in middle of a control char, return the whole char
+          (backward-char 1)))
+      (concat prefix
+              (buffer-substring (point)
+                                (min (line-end-position)
+                                     (+ n (point))))))))
+
+(define-key viper-insert-basic-map "\C-y" 'vimpulse-copy-from-above)
+(define-key viper-insert-basic-map "\C-e" 'vimpulse-copy-from-below)
 
 ;;;; This code integrates Viper with the outside world
 
