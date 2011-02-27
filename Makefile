@@ -21,6 +21,7 @@ mplayer:
 mutt:
 	ln -fs $(CFGROOT)/mutt              ${HOME}/.mutt
 	ln -fs $(CFGROOT)/mutt/cfg          ${HOME}/.muttrc
+	ln -fs $(CFGROOT)/mutt/mailcap      ${HOME}/.mailcap
 ncmpcpp:
 	ln -fns $(CFGROOT)/ncmpcpp          ${HOME}/.ncmpcpp
 	ln -fs $(CFGROOT)/ncmpcpp/hotkeys   ${HOME}/.ncmpcpp/keys
