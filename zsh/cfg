@@ -240,6 +240,14 @@ alias clisp='clisp -q' # suppress banner
 alias v='gvim -p'
 alias vv='vim -p'
 
+alias -g galias_find_haskell='$(find -maxdepth 8 -type f -iregex ".*\.hs" | sort)'
+alias -g galias_find_cheader='$(find -maxdepth 4 -type f -iregex ".*\.h" | sort)'
+alias -g galias_find_csrc='$(find -maxdepth 4 -type f -iregex ".*\.c" | sort)'
+alias vh='v galias_find_haskell D'
+alias vc='v galias_find_cheader galias_find_csrc D'
+alias vvh='vv galias_find_haskell'
+alias vvc='vv galias_find_cheader galias_find_csrc'
+
 alias tma='tmux attach-session'
 
 # these sane hostnames depend on the /etc/hosts file!
