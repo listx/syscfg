@@ -107,6 +107,19 @@
 
 (define-key viper-insert-basic-map (kbd "j") 'viper-escape-if-next-char-is-k)
 
+; simulate vim's "nnoremap <space> 10<c-e>10j"
+(vimpulse-map " " (lambda ()
+                     (interactive)
+                     (next-line 10)
+                     (viper-scroll-up-one 10)
+                     ))
+; simulate vim's "nnoremap <backspace> 10<c-y>10k"
+(define-key viper-vi-global-user-map [backspace] (lambda ()
+                     (interactive)
+                     (previous-line 10)
+                     (viper-scroll-down-one 10)
+                     ))
+
 ; make vimpulse work for org-mode!
 (vimpulse-map "o" (lambda ()
                      (interactive)
