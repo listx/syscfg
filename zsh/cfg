@@ -389,5 +389,10 @@ case $HOST in
         alias nwd='sudo netcfg -d aether-wireless-home'
     ;;
     *)
+        alias discon='sudo mount /dev/sr0'
+        alias discof='sudo umount /dev/sr0'
+        alias usbon='~/syscfg/script/sys/usbmnt.sh ext2'
+        alias usbwon='~/syscfg/script/sys/usbmnt.sh'
+        alias usbof='sudo umount /mnt/media-flash'
     ;;
 esac
