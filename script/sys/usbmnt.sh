@@ -13,7 +13,7 @@ dev=$devBracket[2,4] # e.g., extract "sdb" out of "[sdb]"
 if [[ $fstype == "ext2" ]]; then
     sudo mount -t ext2 -o rw,relatime /dev/${dev}1 /mnt/media-flash
 else # try the vfat filesystem otherwise
-    sudo mount -t vfat -o rw,uid=listdata,gid=listdata /dev/${dev}1 /mnt/media-flash
+    sudo mount -t vfat -o rw,uid=$USER,gid=$USER /dev/${dev}1 /mnt/media-flash
 fi
 
 # vim: syntax=zsh
