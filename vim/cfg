@@ -187,6 +187,18 @@ if !exists("autocommands_loaded")
     au BufEnter *.hs vmap <localleader>c2 !boxes -d ada-cmt<CR>
     au BufEnter *.hs nmap <localleader>C2 !!boxes -d ada-cmt -r<CR>
     au BufEnter *.hs vmap <localleader>C2 !boxes -d ada-cmt -r<CR>
+    au BufEnter *.html vmap <localleader>bb iwoiw"zs<strong><C-R>z</strong><Esc>
+    au BufEnter *.html vmap <localleader>ii iwoiw"zs<em><C-R>z</em><Esc>
+    au BufEnter *.html vmap <localleader>bi iwoiw"zs<em><strong><C-R>z</strong></em><Esc>
+    au BufEnter *.html vmap <localleader>tt iwoiw"zs<pre><C-R>z</pre><Esc>
+    au BufEnter *.html vmap <localleader>mbb "zs<strong><C-R>z</strong><Esc>
+    au BufEnter *.html vmap <localleader>mii "zs<em><C-R>z</em><Esc>
+    au BufEnter *.html vmap <localleader>mbi "zs<em><strong><C-R>z</strong></em><Esc>
+    au BufEnter *.html vmap <localleader>mtt "zs<pre><C-R>z</pre><Esc>
+    au BufEnter *.html nmap <localleader>bb viw"zs<strong><C-R>z</strong><Esc>
+    au BufEnter *.html nmap <localleader>ii viw"zs<em><C-R>z</em><Esc>
+    au BufEnter *.html nmap <localleader>bi viw"zs<em><strong><C-R>z</strong></em><Esc>
+    au BufEnter *.html nmap <localleader>tt viw"zs<pre><C-R>z</pre><Esc>
     au BufEnter *.tex vmap <localleader>bb iwoiw"zs\textbf{<C-R>z}<Esc>
     au BufEnter *.tex vmap <localleader>ii iwoiw"zs\textit{<C-R>z}<Esc>
     au BufEnter *.tex vmap <localleader>bi iwoiw"zs\textbf{\textit{<C-R>z}}<Esc>
