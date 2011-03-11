@@ -31,12 +31,6 @@ if [[ $HOST == "exelion" ]]; then
     str+="\n0 13,14,15,16,17,18,19,20,21,22,23 * * * ~/syscfg/script/alarm/westminster-nohour.sh b"
     # set alarm clock to go off
     str+="\n28 4 * * * urxvt -hold -e ~/syscfg/script/alarm/alarmclock.sh"
-    # run "mercury routine" every minute to check for all routine tasks (recurring todo lists)
-    str+="\n*/1 * * * * ~/sched/check.sh routine"
-    # display the todo list three times a day
-    str+="\n0 6,12,18 * * * ~/sched/check.sh todo"
-    # display all notes once a day in the evening
-    str+="\n0 18 * * * ~/sched/check.sh notes"
 fi
 
 if [[ $HOST == "luxion" || $HOST == "aether" ]]; then
