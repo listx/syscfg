@@ -17,7 +17,7 @@ backup_src=$2
 backup_dest=$3
 
 # store increment to backup folder
-bup index -uv --exclude-from $manual --exclude-from $dots $backup_src
-BUP_DIR=$backup_dest bup save -n exelion-home $backup_src
+BUP_DIR=$backup_dest bup index -uvx --exclude-from $manual --exclude-from $dots $backup_src
+BUP_DIR=$backup_dest bup save -vn exelion-home $backup_src
 
 # vim:syntax=zsh
