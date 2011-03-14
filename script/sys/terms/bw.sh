@@ -7,9 +7,15 @@ export TERM_COLOR_SCHEME_CURRENT='bw'
 case $HOST in
     aether)
         geom="100x50"
+        fonts="xft:Terminus:pixelsize=14,xft:Kochi Gothic,xft:Baekmuk Gulim"
+    ;;
+    ocean)
+        geom="80x20"
+        fonts="xft:dejavu sans mono:pixelsize=36,xft:Kochi Gothic,xft:Baekmuk Gulim"
     ;;
     *)
         geom="100x70"
+        fonts="xft:Terminus:pixelsize=14,xft:Kochi Gothic,xft:Baekmuk Gulim"
     ;;
 esac
 
@@ -55,6 +61,6 @@ opts+=" --foreground $c_fg"
 opts+=" --color0 $c_00 --color1 $c_01 --color2 $c_02 --color3 $c_03 --color4 $c_04 --color5 $c_05 --color6 $c_06 --color7 $c_07 --color8 $c_08 --color9 $c_09 --color10 $c_10 --color11 $c_11 --color12 $c_12 --color13 $c_13 --color14 $c_14 --color15 $c_15"
 opts+=" -fade $c_fade"
 
-urxvt ${(z)opts} -fn "xft:dejavu sans mono:pixelsize=12,xft:Kochi Gothic,xft:Baekmuk Gulim" $@ & disown
+urxvt ${(z)opts} -fn $fonts $@ & disown
 
 # vim:syntax=zsh
