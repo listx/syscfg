@@ -235,6 +235,7 @@ if !exists("autocommands_loaded")
     " what is displayed on-screen (useful for multiline highlighting patterns)
     au BufEnter *.toucan :syntax sync fromstart
     au BufEnter *.cog :syntax sync fromstart
+    au BufEnter *.hs :syntax sync fromstart
 
     " function Insert_newline_smartly()
     "     if col(".") != 1
