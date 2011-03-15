@@ -98,7 +98,8 @@ term1 = "~/syscfg/script/sys/terms/wb.sh"
 term2 = "~/syscfg/script/sys/terms/bw.sh"
 term3 = "~/syscfg/script/sys/terms/wB.sh"
 
-myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
+myKeys :: String -> XConfig Layout -> M.Map (KeyMask, KeySym) (X ())
+myKeys hostname conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
 
     -- launch a terminal
     [ ((modm .|. shiftMask, xK_Return), spawn $ XMonad.terminal conf)
@@ -193,6 +194,9 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((modm              , xK_equal     ), spawn "amixer -q set Master 1.5dB+ unmute")
     -- screen brightness toggle
     , ((modm .|. shiftMask, xK_backslash ), spawn "sudo brightness") -- toggle brightness (100% or 0%)
+    , ((modm .|. shiftMask, xK_minus ), cpufreqSet "powersave" hostname)
+    , ((modm .|. shiftMask, xK_equal ), cpufreqSet "conservative" hostname)
+    , ((modm .|. shiftMask, xK_BackSpace ), cpufreqSet "performance" hostname)
     -- move mouse away to bottom-right of currently focused window
     , ((modm              , xK_BackSpace), warpToWindow 1 1)
     ]
@@ -229,6 +233,15 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     [((m .|. modm, key), (screenWorkspace =<< sc) >>= flip whenJust (windows . f))
         | (key, sc) <- [(xK_h, screenBy (-1)),(xK_l, screenBy 1)]
         , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]]
+
+cpufreqSet :: String -> String -> X ()
+cpufreqSet governor hostname = case hostname of
+    "aether" -> do
+        spawn $ "sudo cpufreq-set -c 0 -g " ++ governor
+        spawn $ "sudo cpufreq-set -c 1 -g " ++ governor
+    "luxion" -> do
+        spawn $ "sudo cpufreq-set -c 0 -g " ++ governor
+    _ -> return ()
 
 -- since CycleWS does not export this useful function, we have to copy/paste it in here...
 screenBy :: Int -> X (ScreenId)
@@ -520,7 +533,7 @@ main = do
         , workspaces         = myWorkspaces
         , normalBorderColor  = myNormalBorderColor
         , focusedBorderColor = myFocusedBorderColor
-        , keys               = myKeys
+        , keys               = myKeys hostname
         , mouseBindings      = myMouseBindings
         , layoutHook         = myLayout
         , manageHook         = myManageHook
