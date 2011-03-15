@@ -195,7 +195,7 @@ myKeys hostname conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     -- screen brightness toggle
     , ((modm .|. shiftMask, xK_backslash ), spawn "sudo brightness") -- toggle brightness (100% or 0%)
     , ((modm .|. shiftMask, xK_minus ), cpufreqSet "powersave" hostname)
-    , ((modm .|. shiftMask, xK_equal ), cpufreqSet "conservative" hostname)
+    , ((modm .|. shiftMask, xK_equal ), cpufreqSet "ondemand" hostname)
     , ((modm .|. shiftMask, xK_BackSpace ), cpufreqSet "performance" hostname)
     -- move mouse away to bottom-right of currently focused window
     , ((modm              , xK_BackSpace), warpToWindow 1 1)
@@ -236,12 +236,12 @@ myKeys hostname conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
 
 cpufreqSet :: String -> String -> X ()
 cpufreqSet governor hostname = case hostname of
-    "aether" -> do
-        spawn $ "sudo cpufreq-set -c 0 -g " ++ governor
-        spawn $ "sudo cpufreq-set -c 1 -g " ++ governor
-    "luxion" -> do
-        spawn $ "sudo cpufreq-set -c 0 -g " ++ governor
+    "exelion"   -> mapM_ (spawn . cpu) [0..3]
+    "aether"    -> mapM_ (spawn . cpu) [0..1]
+    "luxion"    -> mapM_ (spawn . cpu) [0]
     _ -> return ()
+    where
+        cpu n = "sudo cpufreq-set -c " ++ show n ++ " -g " ++ governor
 
 -- since CycleWS does not export this useful function, we have to copy/paste it in here...
 screenBy :: Int -> X (ScreenId)
