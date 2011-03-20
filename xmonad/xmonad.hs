@@ -161,7 +161,10 @@ myKeys hostname conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     -- CUSTOM KEYBINDINGS HERE --
 
     , ((mod4Mask              , xK_1     ), spawn (term1 ++ " -name floatme -e ~/prog/timeflux/src/term.sh intraday ~/org/life.org @@@"))
-    , ((mod4Mask              , xK_2     ), spawn "emacs /home/listdata/org/life.org")
+    , ((mod4Mask              , xK_2     ), spawn (term1 ++ " -name floatme -e ~/prog/timeflux/src/term.sh plans5w ~/org/life.org @@@"))
+    , ((mod4Mask              , xK_3     ), spawn (term1 ++ " -name floatme -e ~/prog/timeflux/src/term.sh goals10w ~/org/life.org @@@"))
+    , ((mod4Mask              , xK_9     ), spawn (term1 ++ " -name floatme -e ~/prog/timeflux/src/term.sh lefttoday ~/org/life.org @@@"))
+    , ((mod4Mask              , xK_0     ), spawn "emacs /home/listdata/org/life.org")
     , ((mod4Mask              , xK_c     ), spawn "galculator")
     , ((mod4Mask .|. shiftMask, xK_c     ), spawn "gcalctool")
     , ((mod4Mask              , xK_d     ), spawn "amule")
