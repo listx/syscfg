@@ -54,6 +54,9 @@ univ_open() {
             (asf|avi|flv|ogm|ogv|m4v|mkv|mov|mp4|mpg|mpeg|rm|rmvb|wmv)
                 smplayer $@ &>/dev/null & disown
             ;;
+            (mts)
+                vlc $@ &>/dev/null & disown
+            ;;
             (exe)
                 wine $@ &>/dev/null & disown
             ;;
