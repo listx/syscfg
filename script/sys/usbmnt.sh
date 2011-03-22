@@ -7,7 +7,12 @@ fstype=$1
 
 # Get the very latest usb-inserted device node; it will be "[sdb]" or "[sdc]", etc.
 devBracket=$(dmesg | grep "Attached SCSI removable" | tail -n 1 | cut -d " " -f 3)
-dev=$devBracket[2,4] # e.g., extract "sdb" out of "[sdb]"
+
+if [[ -n $2 ]]; then
+    dev=sd$2
+else
+    dev=$devBracket[2,4] # e.g., extract "sdb" out of "[sdb]"
+fi
 
 # Now mount it to /mnt/usb, depending on fstype
 if [[ $fstype == "ext2" ]]; then
