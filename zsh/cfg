@@ -240,7 +240,7 @@ alias clisp='clisp -q' # suppress banner
 alias e='gvim -p'
 alias ee='vim -p'
 
-alias -g galias_find_src='$(find -maxdepth 5 -type f -iregex ".*\.\(c\|factor\|h\|hs\|pl\|py\|rb\|sh\)$" | sort)'
+alias -g galias_find_src='$(find -maxdepth 5 -type f -iregex ".*\.\(c\|cpp\|factor\|h\|hs\|pl\|py\|rb\|sh\)$" | sort)'
 alias es='e galias_find_src D'
 alias ees='ee galias_find_src'
 
