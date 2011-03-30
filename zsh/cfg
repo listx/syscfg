@@ -233,6 +233,7 @@ alias glg='git log'
 alias gpl='git pull'
 alias gps='git push'
 alias gsy='~/syscfg/script/sys/gsy.sh'
+alias gtag='~/syscfg/script/sys/gtag.sh'
 
 alias ocm="gpl; gcm -am \"$HOST\"; gpl && gps"
 alias clisp='clisp -q' # suppress banner
