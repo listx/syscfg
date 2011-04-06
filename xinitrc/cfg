@@ -45,12 +45,10 @@ case $(hostname) in
     ;;
 esac
 
-# start SCIM
-export XMODIFIERS=@im=SCIM
-export GTK_IM_MODULE="scim"
-export QT_IM_MODULE="scim"
-scim -d
-
+# set input method to ibus
+export GTK_IM_MODULE=ibus
+export XMODIFIERS=@im=ibus
+export QT_IM_MODULE=ibus
 
 # start a random screensaver
 # dependencies: shantz-xwinwrap-bzr from AUR; xscreensaver
