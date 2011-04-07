@@ -286,6 +286,10 @@ alias cp='cp -ivr'
 alias mv='mv -iv'
 alias rm='rm -Iv'
 
+# clean up botched permissions
+alias clean_dirs='find -type d -exec chmod 755 {} \;'
+alias clean_files='find -type f -exec chmod 644 {} \;'
+
 # sync the following with visudo to disable passwords!
 #
 # Template (in visudo):
