@@ -16,6 +16,7 @@ unclutter -grab -noevents -idle 10 -not Blender Gimp &
 xmodmap -e "remove Lock = Caps_Lock"
 #xmodmap -e "clear mod3" <--- unnecessary b/c 'xmodmap' returns BLANK for mod3 on default settings
 xmodmap -e "add mod3 = Caps_Lock"
+xmodmap ~/.xmodmap
 
 # set default repeat rate (miliseconds delay, keystroke speed)
 xset r rate 250 80
