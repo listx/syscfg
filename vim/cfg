@@ -47,7 +47,6 @@ if $TERM != 'linux'
         colorscheme darkblue2-ex
     elseif $TERM_COLOR_SCHEME_CURRENT == 'bw' " black on white
         colorscheme mayansmoke
-        set gfn=DejaVu\ Sans\ Mono\ 12
     else
         colorscheme zenburn_mod2 " always default to the white on black theme
     endif
