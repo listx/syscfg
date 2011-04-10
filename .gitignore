@@ -1,6 +1,7 @@
 *.log
 *.hi
 *.o
+emacs/auto-save-list
 mplayer/mplayerplug-in.conf
 ncmpcpp/config
 ncmpcpp/keys
