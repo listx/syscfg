@@ -1,7 +1,7 @@
 CFGROOT := $(shell pwd)
 HOSTNAME := $(shell hostname)
 # add the -n flag for directories, as otherwise, stray symlinks will be created inside the CFGROOT directory itself
-all: boxes cron emacs galculator git lesskey mpd mplayer mutt ncmpcpp pal pentadactyl rtorrent vim xdefaults xinitrc xmodmap xmonad zsh
+all: boxes cron emacs galculator git lesskey mpd mplayer mutt ncmpcpp pal pentadactyl rtorrent vim xdefaults xinitrc xmodmap xmonad xorg zsh
 boxes:
 	ln -fs $(CFGROOT)/boxes/cfg         ${HOME}/.boxes
 cron:
@@ -59,6 +59,16 @@ xmodmap:
 	ln -fs $(CFGROOT)/xmodmap/cfg           ${HOME}/.xmodmap
 xmonad:
 	ln -fns $(CFGROOT)/xmonad           ${HOME}/.xmonad
+xorg:
+	ln -fns $(CFGROOT)/xorg/10-keyboard.conf	/etc/X11/xorg.conf.d/
+ifeq ('$(HOSTNAME)','exelion')
+endif
+ifeq ('$(HOSTNAME)','luxion')
+	ln -fns $(CFGROOT)/xorg/10-synaptics.conf	/etc/X11/xorg.conf.d/
+endif
+ifeq ('$(HOSTNAME)','aether')
+	ln -fns $(CFGROOT)/xorg/10-synaptics.conf	/etc/X11/xorg.conf.d/
+endif
 zsh:
 	ln -fns $(CFGROOT)/zsh              ${HOME}/.zsh
 	ln -fs $(CFGROOT)/zsh/cfg           ${HOME}/.zshrc
@@ -91,7 +101,6 @@ endif
 core:
 ifeq ('$(HOSTNAME)','exelion')
 	cat /boot/grub/menu.lst >         /home/listdata/syscfg/core/boot-grub-menu.lst-exelion
-	cat /etc/X11/xorg.conf >          /home/listdata/syscfg/core/etc-X11-xorg.conf-exelion
 	cat /etc/fstab >                  /home/listdata/syscfg/core/etc-fstab-exelion
 	cat /etc/hosts >                  /home/listdata/syscfg/core/etc-hosts-exelion
 	cat /etc/inittab >                /home/listdata/syscfg/core/etc-inittab-exelion
@@ -104,7 +113,6 @@ ifeq ('$(HOSTNAME)','exelion')
 endif
 ifeq ('$(HOSTNAME)','luxion')
 	cat /boot/grub/menu.lst >         /home/listdata/syscfg/core/boot-grub-menu.lst-luxion
-	cat /etc/X11/xorg.conf >          /home/listdata/syscfg/core/etc-X11-xorg.conf-luxion
 	cat /etc/fstab >                  /home/listdata/syscfg/core/etc-fstab-luxion
 	cat /etc/hosts >                  /home/listdata/syscfg/core/etc-hosts-luxion
 	cat /etc/inittab >                /home/listdata/syscfg/core/etc-inittab-luxion
@@ -118,7 +126,6 @@ ifeq ('$(HOSTNAME)','luxion')
 endif
 ifeq ('$(HOSTNAME)','aether')
 	cat /boot/grub/menu.lst >         /home/listdata/syscfg/core/boot-grub-menu.lst-aether
-	cat /etc/X11/xorg.conf >          /home/listdata/syscfg/core/etc-X11-xorg.conf-aether
 	cat /etc/fstab >                  /home/listdata/syscfg/core/etc-fstab-aether
 	cat /etc/hosts >                  /home/listdata/syscfg/core/etc-hosts-aether
 	cat /etc/makepkg.conf >           /home/listdata/syscfg/core/etc-makepkg.conf-aether
