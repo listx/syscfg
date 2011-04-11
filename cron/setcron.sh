@@ -20,7 +20,7 @@ case $HOST in
     ocean)      min="14" ;;
     *)          min="7" ;;
 esac
-str+="$min * * * * ping -c 4 -W 10 wikipedia.org && sudo bauerbill -Syy --rebase"
+str+="$min 12 * * * ping -c 4 -W 10 wikipedia.org && sudo pacman -Syy"
 
 # westminster clock sounds (without hour count)
 # full bell every 6th hour (hours 0,6,12,18)
