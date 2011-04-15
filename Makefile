@@ -63,7 +63,6 @@ xorg:
 	ln -fns $(CFGROOT)/xorg/10-keyboard.conf	/etc/X11/xorg.conf.d/
 ifeq ('$(HOSTNAME)','exelion')
 	ln -fns $(CFGROOT)/xorg/10-dual-monitor-hybrid.conf		/etc/X11/xorg.conf.d/
-	ln -fns $(CFGROOT)/xorg/20-nvidia.conf		/etc/X11/xorg.conf.d/
 endif
 ifeq ('$(HOSTNAME)','luxion')
 	ln -fns $(CFGROOT)/xorg/10-synaptics.conf	/etc/X11/xorg.conf.d/
