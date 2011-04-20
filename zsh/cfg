@@ -183,7 +183,6 @@ alias x='~/syscfg/script/sys/terms/wb.sh D'
 alias rsd='~/syscfg/script/sys/rsd.sh'
 alias rl='~/syscfg/script/sys/rl.sh'
 alias rouse='~/syscfg/script/sys/rouse.sh'
-alias guu='~/syscfg/script/sys/guu.sh repos'
 
 alias d='univ_open'
 alias df='df -h'
@@ -235,7 +234,7 @@ alias gco='git checkout'
 alias glg='git log'
 alias gpl='git pull'
 alias gps='git push'
-alias gsy='~/syscfg/script/sys/gsy.sh'
+alias gp='gsy -p '
 alias gtag='~/syscfg/script/sys/gtag.sh'
 
 alias ocm="gpl; gcm -am \"$HOST\"; gpl && gps"
