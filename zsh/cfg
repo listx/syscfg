@@ -66,6 +66,9 @@ export EDITOR=/usr/bin/vim
 # wine directory (prevent wine/msiexec from creating a default .wine folder)
 export WINEPREFIX=~/.win32
 
+# haskell AUR packages: enable profiling (-p) option
+export PKGBUILD_HASKELL_ENABLE_PROFILING=1
+
 autoload -U compinit
 compinit
 
