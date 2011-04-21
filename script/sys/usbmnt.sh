@@ -6,7 +6,7 @@
 fstype=$1
 
 # Get the very latest usb-inserted device node; it will be "[sdb]" or "[sdc]", etc.
-devBracket=$(dmesg | grep "Attached SCSI removable" | tail -n 1 | cut -d " " -f 3)
+devBracket=$(dmesg | grep "Attached SCSI removable" | tail -n 1 | cut -d " " -f 5)
 
 if [[ -n $2 ]]; then
     dev=sd$2
