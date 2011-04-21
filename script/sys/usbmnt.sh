@@ -3,15 +3,21 @@
 # Author: Linus Arver
 # Date: 2011
 
-fstype=$1
+zmodload zsh/pcre
 
-# Get the very latest usb-inserted device node; it will be "[sdb]" or "[sdc]", etc.
-devBracket=$(dmesg | grep "Attached SCSI removable" | tail -n 1 | cut -d " " -f 5)
+pcre_compile "sd([^\\s])"
+
+fstype=$1
 
 if [[ -n $2 ]]; then
     dev=sd$2
 else
-    dev=$devBracket[2,4] # e.g., extract "sdb" out of "[sdb]"
+    # e.g., get the 'c' in "sdc"
+    devLine=$(dmesg | grep "Attached SCSI removable" | tail -n 1)
+    pcre_match $devLine
+    if [[ $#match -gt 0 ]]; then
+        dev=sd$match
+    fi
 fi
 
 # Now mount it to /mnt/usb, depending on fstype
