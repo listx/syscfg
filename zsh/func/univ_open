@@ -14,8 +14,13 @@
 
 univ_open() {
     if [[ -z $@ ]]; then
-        # if we do not provide any arguments, go to the home directory
-        cd && dir_info # ("cd" w/o any arguments goes to the home directory)
+        if [[ -d /mnt/usb/h ]]; then
+            # if we do not provide any arguments, try to go to the 'home' directory on the USB drive
+            cd /mnt/usb/h && dir_info
+        else
+            # otherwise, go to the default home directory
+            cd && dir_info # ("cd" w/o any arguments goes to the home directory)
+        fi
     elif [[ -f $1 || -f ${=@[-1]} ]]; then
         # if we're here, it means that the user either (1) provided a single valid file name, or (2) a number of
         # commandline arguments PLUS a single valid file name; use of the $@ variable ensures that we preserve all the
