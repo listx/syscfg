@@ -196,6 +196,9 @@ alias buf1='xsel -p'
 alias buf2='xsel -s'
 alias buf3='xsel -b'
 
+# sanitize directory/file permissions
+alias sanitize_files='find -type d -exec chmod 755 {} \; ; find -type f -exec chmod 644 {} \;'
+
 # easy find command (see find_quick() function)
 alias fa='find_quick a '
 alias fA='find_quick aa '
