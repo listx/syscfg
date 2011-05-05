@@ -15,11 +15,13 @@
 univ_open() {
     if [[ -z $@ ]]; then
         if [[ -d /mnt/usb/h ]]; then
-            # if we do not provide any arguments, try to go to the 'home' directory on the USB drive
-            cd /mnt/usb/h && dir_info
+            if [[ $PWD == "/mnt/usb/h" ]]; then
+                cd && dir_info # ("cd" w/o any arguments goes to the home directory)
+            else
+                cd /mnt/usb/h && dir_info
+            fi
         else
-            # otherwise, go to the default home directory
-            cd && dir_info # ("cd" w/o any arguments goes to the home directory)
+            cd && dir_info
         fi
     elif [[ -f $1 || -f ${=@[-1]} ]]; then
         # if we're here, it means that the user either (1) provided a single valid file name, or (2) a number of
