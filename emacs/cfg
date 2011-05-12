@@ -70,18 +70,6 @@
 (yas/initialize)
 (yas/load-directory "/usr/share/emacs/site-lisp/yas/snippets")
 
-; allow SCIM
-(require 'scim-bridge)
-(add-hook 'after-init-hook 'scim-mode-on)
-; Setup input status switch keystroke. (SUPER-space)
-(scim-define-common-key (kbd "s-SPC") t)
-; Use C-SPC for Set Mark command
-(scim-define-common-key (kbd "C-SPC") nil)
-; Use C-/ for Undo command
-(scim-define-common-key (kbd "C-/") nil)
-; Change cursor color depending on SCIM status
-(setq scim-cursor-color '("red" "blue" "limegreen"))
-
 ; vimpulse (requires viper.el and vimpulse.el)
 (require 'vimpulse)
 ; some keymaps from ~/.vimrc
