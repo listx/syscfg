@@ -156,7 +156,7 @@ myKeys hostname conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((modm .|. shiftMask, xK_Escape     ), io (exitWith ExitSuccess))
 
     -- Restart xmonad
-    , ((modm              , xK_Escape     ), spawn "xmonad --recompile; xmonad --restart")
+    , ((modm .|. altMask,   xK_Escape     ), spawn "xmonad --recompile; xmonad --restart")
 
     -- CUSTOM KEYBINDINGS HERE --
 
@@ -187,6 +187,8 @@ myKeys hostname conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((mod4Mask .|. controlMask, xK_k     ), spawn "ncmpcpp prev")
     , ((mod4Mask .|. controlMask, xK_l     ), spawn "ncmpcpp stop")
     , ((mod4Mask .|. controlMask, xK_semicolon ), spawn "ncmpcpp play")
+    -- change keyboard layouts
+    , ((modm              , xK_Escape), spawn "/home/listdata/syscfg/script/sys/layout_switch.sh")
     -- toggle borders
     , ((modm              , xK_b ),   withFocused toggleBorder)
     -- gridselect
