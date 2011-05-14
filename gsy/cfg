@@ -4,11 +4,6 @@ luxion:luxion.e
 ocean:ocean
 forest:forest
 
-/mnt/usb/ghost/org.git
-listdata@exelion:~/org
-listdata@aether.e:~/org
-listdata@luxion.e:~/org
-
 listdata@exelion:~/ghost/syscfg.git
 /mnt/usb/repos/syscfg
 listdata@exelion:~/syscfg
