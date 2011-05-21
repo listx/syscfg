@@ -52,7 +52,7 @@ altMask         = mod1Mask -- alias "altMask" for left alt key
 --
 myNumlockMask   = mod2Mask
 
-data MyWSGroup = Net | Work | Misc | Music | Net2 | Sys
+data MyWSGroup = Work | Net | Misc | Music | Net2 | Sys
     deriving (Eq, Ord, Enum, Show)
 
 _MYWSGROUPS = [Net ..] -- list of all MyWSGroup
@@ -64,17 +64,17 @@ _MYWSGROUPS = [Net ..] -- list of all MyWSGroup
 -- we did in the past), but at the same time we can also choose to navigate via the ordering in
 -- MyWSGroup via the custom diffGrpWS function.
 myWorkspaceGroups :: [(WorkspaceId, MyWSGroup)]
-myWorkspaceGroups = [ ("1",   Net)
-                    , ("2",   Net)
+myWorkspaceGroups = [ ("1",   Work)
+                    , ("2",   Work)
                     , ("3",   Work)
                     , ("4",   Work)
                     , ("5",   Work)
                     , ("6",   Work)
                     , ("7",   Work)
-                    , ("8",   Work)
-                    , ("9",   Work)
-                    , ("0",   Music) -- ncmpcpp
-                    , ("F1",  Music) -- terminal named "mplayer" (used when streaming music on LAN)
+                    , ("8",   Net)
+                    , ("9",   Net)
+                    , ("0",   Music) -- ncmpcpp, terminal named "mplayer" (used when streaming music on LAN)
+                    , ("F1",  Misc)
                     , ("F2",  Misc)
                     , ("F3",  Misc)
                     , ("F4",  Misc)
@@ -439,7 +439,13 @@ myManageHook = composeAll
     , resource  =? "desktop_window"                     --> doIgnore
     , resource  =? "kdesktop"                           --> doIgnore
     , resource  =? "vlc"                                --> doCenterFloat
-    , stringProperty "WM_NAME"  =? "urxvtINIT"          --> doShift "3"
+    , stringProperty "WM_NAME"  =? "urxvtINIT1"         --> doShift "1"
+    , stringProperty "WM_NAME"  =? "urxvtINIT2"         --> doShift "2"
+    , stringProperty "WM_NAME"  =? "urxvtINIT3"         --> doShift "3"
+    , stringProperty "WM_NAME"  =? "urxvtINIT4"         --> doShift "4"
+    , stringProperty "WM_NAME"  =? "urxvtINIT5"         --> doShift "5"
+    , stringProperty "WM_NAME"  =? "urxvtINIT6"         --> doShift "6"
+    , stringProperty "WM_NAME"  =? "urxvtINIT7"         --> doShift "7"
     , resource  =? "WeeChat"                            --> doShift "F9"
     , stringProperty "WM_NAME"  =? "rtorrent"           --> doShift "F10"
     , stringProperty "WM_NAME"  =? "htop"               --> doShift "F11"
@@ -477,7 +483,13 @@ myStartupHook :: String -> X ()
 myStartupHook hostname =
     do  {
         ; spawnIfGrpTopWSNotFull Net "firefox"
-        ; spawnIfGrpTopWSNotFull Work $ term1 ++ " -name urxvtINIT"
+        ; spawnIfGrpNotFull Work $ term1 ++ " -name urxvtINIT1"
+        ; spawnIfGrpNotFull Work $ term1 ++ " -name urxvtINIT2"
+        ; spawnIfGrpNotFull Work $ term1 ++ " -name urxvtINIT3"
+        ; spawnIfGrpNotFull Work $ term1 ++ " -name urxvtINIT4"
+        ; spawnIfGrpNotFull Work $ term1 ++ " -name urxvtINIT5"
+        ; spawnIfGrpNotFull Work $ term1 ++ " -name urxvtINIT6"
+        ; spawnIfGrpNotFull Work $ term1 ++ " -name urxvtINIT7"
         ; spawnIfGrpNotFull Sys $ term1 ++ " -e alsamixer"
         ; spawnIfGrpNotFull Sys $ term2 ++ " -n iftop -e sudo iftop -B -i eth" ++ (if hostname == "exelion" then "1" else "0")
         ; spawnIfGrpNotFull Sys $ term1 ++ " -e htop"
@@ -489,9 +501,9 @@ myStartupHook hostname =
             "aether" -> do  { spawnIfGrpNotFull Net2 $ term3 ++ " -e rtorrent"
                             }
             _ -> return ()
-        ; case hostname of
-            "exelion" -> resetScreensToWSTops
-            _ -> return ()
+        -- ; case hostname of
+        --     "exelion" -> resetScreensToWSTops
+        --     _ -> return ()
         }
 
 -- reset all xinerama screens to point to top WS of each group
