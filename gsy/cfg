@@ -13,7 +13,7 @@ otter@ocean:~/syscfg
 tiger@forest:~/syscfg
 
 listdata@exelion:~/ghost/study.git
-/mnt/usb/repos/study
+/mnt/usb/h/study
 listdata@exelion:~/study
 listdata@aether.e:~/study
 listdata@luxion.e:~/study
@@ -72,7 +72,7 @@ listdata@luxion.e:~/prog/gsy
 otter@ocean:~/prog/gsy
 
 listdata@exelion:~/ghost/klipp.git
-/mnt/usb/repos/chess/klipp
+/mnt/usb/h/prog/chess/klipp
 listdata@exelion:~/prog/chess/klipp
 listdata@aether.e:~/prog/chess/klipp
 listdata@luxion.e:~/prog/chess/klipp
@@ -112,14 +112,14 @@ listdata@luxion.e:~/prog/mako
 otter@ocean:~/prog/mako
 
 listdata@exelion:~/ghost/meteor.git
-/mnt/usb/repos/chess/meteor
+/mnt/usb/h/prog/chess/meteor
 listdata@exelion:~/prog/chess/meteor
 listdata@aether.e:~/prog/chess/meteor
 listdata@luxion.e:~/prog/chess/meteor
 otter@ocean:~/prog/chess/meteor
 
 listdata@exelion:~/ghost/meteor_old.git
-/mnt/usb/repos/chess/meteor_old
+/mnt/usb/h/prog/chess/meteor_old
 listdata@exelion:~/prog/chess/meteor_old
 listdata@aether.e:~/prog/chess/meteor_old
 listdata@luxion.e:~/prog/chess/meteor_old
@@ -133,7 +133,7 @@ listdata@luxion.e:~/prog/moxi
 otter@ocean:~/prog/moxi
 
 listdata@exelion:~/ghost/omtex.git
-/mnt/usb/repos/omtex
+/mnt/usb/h/prog/omtex
 listdata@exelion:~/prog/omtex
 listdata@aether.e:~/prog/omtex
 listdata@luxion.e:~/prog/omtex
@@ -160,21 +160,21 @@ listdata@luxion.e:~/prog/simtic
 otter@ocean:~/prog/simtic
 
 listdata@exelion:~/ghost/spektra.git
-/mnt/usb/repos/chess/spektra
+/mnt/usb/h/prog/chess/spektra
 listdata@exelion:~/prog/chess/spektra
 listdata@aether.e:~/prog/chess/spektra
 listdata@luxion.e:~/prog/chess/spektra
 otter@ocean:~/prog/chess/spektra
 
 listdata@exelion:~/ghost/timeflux.git
-/mnt/usb/repos/timeflux
+/mnt/usb/h/prog/timeflux
 listdata@exelion:~/prog/timeflux
 listdata@aether.e:~/prog/timeflux
 listdata@luxion.e:~/prog/timeflux
 otter@ocean:~/prog/timeflux
 
 listdata@exelion:~/ghost/tinybar.git
-/mnt/usb/repos/tinybar
+/mnt/usb/h/tinybar
 listdata@exelion:~/tinybar
 listdata@aether.e:~/tinybar
 listdata@luxion.e:~/tinybar
