@@ -19,6 +19,33 @@ listdata@aether.e:~/study
 listdata@luxion.e:~/study
 otter@ocean:~/study
 
+listdata@exelion:~/ghost/tinybar.git
+/mnt/usb/h/tinybar
+listdata@exelion:~/tinybar
+listdata@aether.e:~/tinybar
+listdata@luxion.e:~/tinybar
+
+listdata@exelion:~/ghost/timeflux.git
+/mnt/usb/h/prog/timeflux
+listdata@exelion:~/prog/timeflux
+listdata@aether.e:~/prog/timeflux
+listdata@luxion.e:~/prog/timeflux
+otter@ocean:~/prog/timeflux
+
+listdata@exelion:~/ghost/omtex.git
+/mnt/usb/h/prog/omtex
+listdata@exelion:~/prog/omtex
+listdata@aether.e:~/prog/omtex
+listdata@luxion.e:~/prog/omtex
+otter@ocean:~/prog/omtex
+
+listdata@exelion:~/ghost/meteor.git
+/mnt/usb/h/prog/chess/meteor
+listdata@exelion:~/prog/chess/meteor
+listdata@aether.e:~/prog/chess/meteor
+listdata@luxion.e:~/prog/chess/meteor
+otter@ocean:~/prog/chess/meteor
+
 listdata@exelion:~/ghost/abax.git
 /mnt/usb/repos/abax
 listdata@exelion:~/prog/abax
@@ -111,13 +138,6 @@ listdata@aether.e:~/prog/mako
 listdata@luxion.e:~/prog/mako
 otter@ocean:~/prog/mako
 
-listdata@exelion:~/ghost/meteor.git
-/mnt/usb/h/prog/chess/meteor
-listdata@exelion:~/prog/chess/meteor
-listdata@aether.e:~/prog/chess/meteor
-listdata@luxion.e:~/prog/chess/meteor
-otter@ocean:~/prog/chess/meteor
-
 listdata@exelion:~/ghost/meteor_old.git
 /mnt/usb/h/prog/chess/meteor_old
 listdata@exelion:~/prog/chess/meteor_old
@@ -131,13 +151,6 @@ listdata@exelion:~/prog/moxi
 listdata@aether.e:~/prog/moxi
 listdata@luxion.e:~/prog/moxi
 otter@ocean:~/prog/moxi
-
-listdata@exelion:~/ghost/omtex.git
-/mnt/usb/h/prog/omtex
-listdata@exelion:~/prog/omtex
-listdata@aether.e:~/prog/omtex
-listdata@luxion.e:~/prog/omtex
-otter@ocean:~/prog/omtex
 
 listdata@exelion:~/ghost/quicksilver.git
 /mnt/usb/repos/game/quicksilver
@@ -165,19 +178,6 @@ listdata@exelion:~/prog/chess/spektra
 listdata@aether.e:~/prog/chess/spektra
 listdata@luxion.e:~/prog/chess/spektra
 otter@ocean:~/prog/chess/spektra
-
-listdata@exelion:~/ghost/timeflux.git
-/mnt/usb/h/prog/timeflux
-listdata@exelion:~/prog/timeflux
-listdata@aether.e:~/prog/timeflux
-listdata@luxion.e:~/prog/timeflux
-otter@ocean:~/prog/timeflux
-
-listdata@exelion:~/ghost/tinybar.git
-/mnt/usb/h/tinybar
-listdata@exelion:~/tinybar
-listdata@aether.e:~/tinybar
-listdata@luxion.e:~/tinybar
 
 listdata@exelion:~/ghost/toucan.git
 /mnt/usb/repos/toucan
