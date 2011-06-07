@@ -153,7 +153,7 @@ myKeys hostname conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((modm              , xK_period), sendMessage (IncMasterN (-1)))
 
     -- Quit xmonad
-    , ((modm .|. shiftMask, xK_Escape     ), io (exitWith ExitSuccess))
+    , ((modm .|. controlMask, xK_Escape     ), io (exitWith ExitSuccess))
 
     -- Restart xmonad
     , ((modm .|. altMask,   xK_Escape     ), spawn "xmonad --recompile; xmonad --restart")
