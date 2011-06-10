@@ -21,7 +21,7 @@ fi
 <$file while read line; do
     # skip comment lines
     if [[ ! $line[1] == '#' ]]; then
-        clean=$(echo "$line" | sed 's/\*\+//')
+        clean=$(echo "$line" | sed -e 's/\*\+//' -e 's/^\s//')
         line_arr+=("$clean")
     fi
 done
@@ -29,7 +29,7 @@ done
 # Convert each line into its own ogg file (and print $num 4 digits wide with leading zeroes)
 for line in $line_arr; do
     let num+=1
-    echo "$line" | text2wave | oggenc - -o $out_dir/${(l:4::0:)num}.ogg
+    echo "$line" | text2wave | oggenc - -o "$out_dir/${(l:4::0:)num} - $line.ogg"
 done
 
 echo "Done."
