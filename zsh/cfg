@@ -183,6 +183,7 @@ alias x='~/syscfg/script/sys/terms/wb.sh D'
 alias rsd='~/syscfg/script/sys/rsd.sh'
 alias rl='~/syscfg/script/sys/rl.sh'
 alias rouse='~/syscfg/script/sys/rouse'
+alias org2wav='~/syscfg/script/sys/org2wav.sh'
 
 alias d='univ_open'
 alias df='df -h'
