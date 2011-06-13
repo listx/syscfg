@@ -76,9 +76,9 @@
 (vimpulse-map ",w" 'save-buffer) ; save
 (vimpulse-map ",q" 'kill-buffer) ; quit (current buffer; have to press RETURN)
 (vimpulse-map ",x" 'save-buffers-kill-emacs) ; save and quit
-; make "jk" behave as ESC key
+; make "kj" behave as ESC key
 (defun viper-escape-if-next-char (c)
-    "Watches the next letter.  If c, then switch to viper mode, otherwise insert a j and forward unpressed key to unread-command-events"
+    "Watches the next letter.  If c, then switch to viper mode, otherwise insert a k and forward unpressed key to unread-command-events"
       (self-insert-command 1)
         (let ((next-key (read-event)))
               (if (= c next-key)
@@ -87,13 +87,13 @@
                                               (viper-mode))
                               (setq unread-command-events (list next-key)))))
 
-(defun viper-escape-if-next-char-is-k (arg)
+(defun viper-escape-if-next-char-is-j (arg)
     (interactive "p")
       (if (= arg 1)
-              (viper-escape-if-next-char ?k)
+              (viper-escape-if-next-char ?j)
                   (self-insert-command arg)))
 
-(define-key viper-insert-basic-map (kbd "j") 'viper-escape-if-next-char-is-k)
+(define-key viper-insert-basic-map (kbd "k") 'viper-escape-if-next-char-is-j)
 
 ; simulate vim's "nnoremap <space> 10<c-e>10j"
 (vimpulse-map " " (lambda ()
