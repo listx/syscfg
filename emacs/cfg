@@ -73,6 +73,8 @@
 ; vimpulse (requires viper.el and vimpulse.el)
 (require 'vimpulse)
 ; some keymaps from ~/.vimrc
+(vimpulse-imap [f1] 'save-buffer) ; save
+(vimpulse-map [f1] 'save-buffer) ; save
 (vimpulse-map ",w" 'save-buffer) ; save
 (vimpulse-map ",q" 'kill-buffer) ; quit (current buffer; have to press RETURN)
 (vimpulse-map ",x" 'save-buffers-kill-emacs) ; save and quit
