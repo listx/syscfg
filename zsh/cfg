@@ -184,6 +184,7 @@ alias rsd='~/syscfg/script/sys/rsd.sh'
 alias rl='~/syscfg/script/sys/rl.sh'
 alias rouse='~/syscfg/script/sys/rouse'
 alias org2ogg='~/syscfg/script/sys/org2ogg.sh'
+alias cascade='~/syscfg/script/sys/cascade.sh'
 
 alias d='univ_open'
 alias df='df -h'
