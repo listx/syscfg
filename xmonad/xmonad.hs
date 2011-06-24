@@ -432,20 +432,14 @@ myLayout = Mirror tiled
 -- here, Qt-subapplication is resource, and
 -- VirtualBox is className
 --
-myManageHook = composeAll
+myManageHook :: ManageHook
+myManageHook = composeAll $
     [ className =? "MPlayer"                            --> doFloat
     , className =? "Gimp"                               --> doFloat
     , className =? "Agave"                              --> doCenterFloat
     , resource  =? "desktop_window"                     --> doIgnore
     , resource  =? "kdesktop"                           --> doIgnore
     , resource  =? "vlc"                                --> doCenterFloat
-    , stringProperty "WM_NAME"  =? "urxvtINIT1"         --> doShift "1"
-    , stringProperty "WM_NAME"  =? "urxvtINIT2"         --> doShift "2"
-    , stringProperty "WM_NAME"  =? "urxvtINIT3"         --> doShift "3"
-    , stringProperty "WM_NAME"  =? "urxvtINIT4"         --> doShift "4"
-    , stringProperty "WM_NAME"  =? "urxvtINIT5"         --> doShift "5"
-    , stringProperty "WM_NAME"  =? "urxvtINIT6"         --> doShift "6"
-    , stringProperty "WM_NAME"  =? "urxvtINIT7"         --> doShift "7"
     , resource  =? "WeeChat"                            --> doShift "F9"
     , stringProperty "WM_NAME"  =? "rtorrent"           --> doShift "F10"
     , stringProperty "WM_NAME"  =? "htop"               --> doShift "F11"
@@ -475,6 +469,10 @@ myManageHook = composeAll
     , className  =? "Bsnes"                             --> doCenterFloat
     , className  =? "VirtualBox"                        --> doFloat
     ]
+    ++ map (\s -> resource =? ("atWorkspace" ++ s) --> doShift s) (s1 ++ s2)
+    where
+        s1 = map show $ [0..9]
+        s2 = map (("F" ++) . show) $ [1..12]
 
 myEventHook = mempty
 myLogHook = return ()
@@ -483,13 +481,13 @@ myStartupHook :: String -> X ()
 myStartupHook hostname =
     do  {
         ; spawnIfGrpTopWSNotFull Net "firefox"
-        ; spawnIfGrpNotFull Work $ term1 ++ " -name urxvtINIT1"
-        ; spawnIfGrpNotFull Work $ term1 ++ " -name urxvtINIT2"
-        ; spawnIfGrpNotFull Work $ term1 ++ " -name urxvtINIT3"
-        ; spawnIfGrpNotFull Work $ term1 ++ " -name urxvtINIT4"
-        ; spawnIfGrpNotFull Work $ term1 ++ " -name urxvtINIT5"
-        ; spawnIfGrpNotFull Work $ term1 ++ " -name urxvtINIT6"
-        ; spawnIfGrpNotFull Work $ term1 ++ " -name urxvtINIT7"
+        ; spawnIfGrpNotFull Work $ term1 ++ " -name atWorkspace1"
+        ; spawnIfGrpNotFull Work $ term1 ++ " -name atWorkspace2"
+        ; spawnIfGrpNotFull Work $ term1 ++ " -name atWorkspace3"
+        ; spawnIfGrpNotFull Work $ term1 ++ " -name atWorkspace4"
+        ; spawnIfGrpNotFull Work $ term1 ++ " -name atWorkspace5"
+        ; spawnIfGrpNotFull Work $ term1 ++ " -name atWorkspace6"
+        ; spawnIfGrpNotFull Work $ term1 ++ " -name atWorkspace7"
         ; spawnIfGrpNotFull Sys $ term1 ++ " -e alsamixer"
         ; spawnIfGrpNotFull Sys $ term2 ++ " -n iftop -e sudo iftop -B -i eth" ++ (if hostname == "exelion" then "1" else "0")
         ; spawnIfGrpNotFull Sys $ term1 ++ " -e htop"
