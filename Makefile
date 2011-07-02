@@ -65,6 +65,7 @@ xmonad:
 	ln -fns $(CFGROOT)/xmonad           ${HOME}/.xmonad
 xorg:
 	ln -fns $(CFGROOT)/xorg/10-keyboard.conf	/etc/X11/xorg.conf.d/
+	ln -fns $(CFGROOT)/xorg/10-server-flags.conf	/etc/X11/xorg.conf.d/
 ifeq ('$(HOSTNAME)','exelion')
 	ln -fns $(CFGROOT)/xorg/10-dual-monitor-hybrid.conf		/etc/X11/xorg.conf.d/
 endif
