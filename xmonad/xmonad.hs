@@ -469,10 +469,9 @@ myManageHook = composeAll $
     , className  =? "Bsnes"                             --> doCenterFloat
     , className  =? "VirtualBox"                        --> doFloat
     ]
-    ++ map (\s -> resource =? ("atWorkspace" ++ s) --> doShift s) (s1 ++ s2)
-    where
-        s1 = map show $ [0..9]
-        s2 = map (("F" ++) . show) $ [1..12]
+    ++  [ resource =? ("atWorkspace" ++ s) --> doShift s
+        | s <- map show [0..9] ++ map (('F':) . show) [1..12]
+        ]
 
 myEventHook = mempty
 myLogHook = return ()
