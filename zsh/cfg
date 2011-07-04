@@ -185,6 +185,7 @@ alias rl='~/syscfg/script/sys/rl.sh'
 alias rouse='~/syscfg/script/sys/rouse'
 alias org2ogg='~/syscfg/script/sys/org2ogg.sh'
 alias cascade='~/syscfg/script/sys/cascade.sh'
+alias ssr='~/syscfg/script/sys/ssr.sh'
 
 alias d='univ_open'
 alias df='df -h'
@@ -356,6 +357,8 @@ case $HOST in
         alias usbon='~/syscfg/script/sys/usbmnt.sh ext2'
         alias usbwon='~/syscfg/script/sys/usbmnt.sh'
         alias usbof='sudo umount /mnt/usb'
+        alias net_seal='sudo ifconfig eth1 down'
+        alias net_unseal='sudo ifconfig eth1 up'
     ;;
     luxion)
         alias iftope='sudo iftop -B -i eth0'
@@ -372,6 +375,8 @@ case $HOST in
         alias ned='sudo netcfg -d luxion-wired'
         alias nwu='sudo netcfg -c luxion-wireless-home'
         alias nwd='sudo netcfg -d luxion-wireless-home'
+        alias net_seal='sudo ifconfig eth0 down'
+        alias net_unseal='sudo ifconfig eth0 up'
     ;;
     aether)
         alias iftope='sudo iftop -B -i eth0'
@@ -389,6 +394,8 @@ case $HOST in
         alias ned='sudo netcfg -d aether-wired'
         alias nwu='sudo netcfg -c aether-wireless-home'
         alias nwd='sudo netcfg -d aether-wireless-home'
+        alias net_seal='sudo ifconfig eth0 down'
+        alias net_unseal='sudo ifconfig eth0 up'
     ;;
     *)
         alias discon='sudo mount /dev/sr0'
@@ -396,5 +403,7 @@ case $HOST in
         alias usbon='~/syscfg/script/sys/usbmnt.sh ext2'
         alias usbwon='~/syscfg/script/sys/usbmnt.sh'
         alias usbof='sudo umount /mnt/usb'
+        alias net_seal='sudo ifconfig eth0 down'
+        alias net_unseal='sudo ifconfig eth0 up'
     ;;
 esac
