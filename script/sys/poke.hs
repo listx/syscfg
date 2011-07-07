@@ -5,6 +5,7 @@ import IO
 import System.Random    -- for random numbers
 import System.IO        -- for hSetEcho
 
+keysChar, keysNum, keysPunc, keysCharNum, keysAll :: String
 keysChar = ['a'..'z'] ++ ['A'..'Z']
 keysNum = ['0'..'9']
 keysPunc = "`~!@#$%^&*()-_=+[{]}\\|;:'\",<.>/? "

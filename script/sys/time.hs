@@ -12,11 +12,10 @@ import System.Environment
 -- for defaultTimeLocale
 import System.Locale
 
-puts = putStrLn
-
 ftime :: String -> LocalTime -> String
 ftime s t = formatTime defaultTimeLocale s t
 
+days :: String
 days = "UMTWRFA"
 
 ydaycount :: Integer -> Integer
@@ -28,7 +27,7 @@ mdaycount :: Integer -> Integer
 mdaycount y = toInteger (monthLength (isLeapYear y) (fromIntegral y)::Int)
 
 percent :: Integer -> Integer -> Int
-percent n d = truncate $ (fromInteger n / fromInteger d) * 100
+percent n d = truncate $ ((fromInteger n / fromInteger d)::Double) * 100
 
 main :: IO ()
 main = do
