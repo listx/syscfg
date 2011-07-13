@@ -310,8 +310,16 @@ nmap <silent> <F11> :call Toggle_status_bar()<CR>
 imap <silent> <F11> <Esc>:call Toggle_status_bar()<CR>
 
 " toggle line numbers
-nmap <F12> :set number!<CR>
-imap <F12> <Esc>:set number!<CR>
+nmap <F12> :if exists("g:syntax_on") <Bar>
+    \   syntax off <Bar>
+    \ else <Bar>
+    \   syntax enable <Bar>
+    \ endif <CR>
+imap <F12> <Esc>:if exists("g:syntax_on") <Bar>
+    \   syntax off <Bar>
+    \ else <Bar>
+    \   syntax enable <Bar>
+    \ endif <CR>
 
 " integration with the sessionman.vim plugin by Yuri Klubakov
 nmap <localleader>so :SessionOpen<space>
