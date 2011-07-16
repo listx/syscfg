@@ -319,12 +319,13 @@ alias py='sudo pacman -Syy'
 alias ps='sudo pacman -S'
 alias pq='sudo pacman -Q'
 
-alias y='sudo yaourt'
-alias yu='sudo yaourt -Sybu --aur'
-alias yy='sudo yaourt -Syy'
-alias ys='sudo yaourt -S'
+# use of yaourt with root privileges is a big security hole!
+alias y='yaourt'
+alias yu='yaourt -Sybu --aur'
+alias yy='yaourt -Syy'
+alias ys='yaourt -S'
 alias yurc='pkgs=${(s:\n:)$(pacman -Qq | grep -E -- "-(bzr|darcs|git|hg|svn)")}; echo "Syncing: $pkgs\n"; ys ${(s: :)pkgs}'
-alias yc='sudo yaourt -C'
+alias yc='yaourt -C'
 
 # update all packages ending in "-git" (all git-based packages)
 alias pg='for pkg in $(pq | grep -- "-git" | cut -d " " -f1); do bs $pkg; done'
