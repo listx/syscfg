@@ -467,6 +467,7 @@ myManageHook = composeAll $
     , className  =? "Smplayer"                          --> doFloat
     , className  =? "linux_client"                      --> doFloat
     , className  =? "Bsnes"                             --> doCenterFloat
+    , className  =? "Phoenix"                           --> doCenterFloat
     , className  =? "VirtualBox"                        --> doFloat
     ]
     ++  [ resource =? ("atWorkspace" ++ s) --> doShift s
