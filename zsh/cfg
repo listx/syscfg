@@ -336,6 +336,11 @@ alias pg='for pkg in $(pq | grep -- "-git" | cut -d " " -f1); do bs $pkg; done'
 alias rgmp3='/home/listdata/syscfg/script/audio/replaygain/mp3/tmwrg.sh'
 alias rgflac='/home/listdata/syscfg/script/audio/replaygain/flac/tfwrg.sh'
 
+# mount/unmount USB drives
+alias usbon='~/syscfg/script/sys/usbmnt -f ext2'
+alias usbwon='~/syscfg/script/sys/usbmnt -f vfat'
+alias usbof='sudo umount /mnt/usb'
+
 #--------------------------------------------------------------------------------------------------#
 # Host-specific settings (different aliases, etc. for different computers                          #
 #     from http://www.jauu.net/data/jauu_backup/data/dotfiles/zshrc.html                           #
@@ -356,9 +361,6 @@ case $HOST in
         alias discof='sudo umount /dev/sr1'
         alias disc2on='sudo mount /dev/sr0'
         alias disc2of='sudo umount /dev/sr0'
-        alias usbon='~/syscfg/script/sys/usbmnt.sh ext2'
-        alias usbwon='~/syscfg/script/sys/usbmnt.sh'
-        alias usbof='sudo umount /mnt/usb'
         alias net_seal='sudo ifconfig eth1 down'
         alias net_unseal='sudo ifconfig eth1 up'
     ;;
@@ -370,9 +372,6 @@ case $HOST in
         alias m3='d /mnt/usb'
         alias discon='sudo mount /dev/sr0'
         alias discof='sudo umount /dev/sr0'
-        alias usbon='~/syscfg/script/sys/usbmnt.sh ext2'
-        alias usbwon='~/syscfg/script/sys/usbmnt.sh'
-        alias usbof='sudo umount /mnt/usb'
         alias neu='sudo netcfg -c luxion-wired'
         alias ned='sudo netcfg -d luxion-wired'
         alias nwu='sudo netcfg -c luxion-wireless-home'
@@ -389,9 +388,6 @@ case $HOST in
         alias m4='d /mnt/usb'
         alias discon='sudo mount /dev/sr0'
         alias discof='sudo umount /dev/sr0'
-        alias usbon='~/syscfg/script/sys/usbmnt.sh ext2'
-        alias usbwon='~/syscfg/script/sys/usbmnt.sh'
-        alias usbof='sudo umount /mnt/usb'
         alias neu='sudo netcfg -c aether-wired'
         alias ned='sudo netcfg -d aether-wired'
         alias nwu='sudo netcfg -c aether-wireless-home'
@@ -402,9 +398,6 @@ case $HOST in
     *)
         alias discon='sudo mount /dev/sr0'
         alias discof='sudo umount /dev/sr0'
-        alias usbon='~/syscfg/script/sys/usbmnt.sh ext2'
-        alias usbwon='~/syscfg/script/sys/usbmnt.sh'
-        alias usbof='sudo umount /mnt/usb'
         alias net_seal='sudo ifconfig eth0 down'
         alias net_unseal='sudo ifconfig eth0 up'
     ;;
