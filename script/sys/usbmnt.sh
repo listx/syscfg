@@ -3,28 +3,28 @@
 # Author: Linus Arver
 # Date: 2011
 
-zmodload zsh/pcre
+success() {
+    echo "USB device /dev/sd${d}1 ($fmt) mounted at /mnt/usb" \
+    && exit
+}
 
-pcre_compile "sd([^\\s])"
-
-fstype=$1
-
-if [[ -n $2 ]]; then
-    dev=sd$2
+if [[ $1 == "ext2" ]]; then
+    cmd="ext2 -o rw,relatime"
+    fmt=ext2
 else
-    # e.g., get the 'c' in "sdc"
-    devLine=$(dmesg | grep "Attached SCSI removable" | tail -n 1)
-    pcre_match $devLine
-    if [[ $#match -gt 0 ]]; then
-        dev=sd$match
-    fi
+    cmd="vfat -o rw,uid=$USER,gid=$USER"
+    fmt=vfat
 fi
 
-# Now mount it to /mnt/usb, depending on fstype
-if [[ $fstype == "ext2" ]]; then
-    sudo mount -t ext2 -o rw,relatime /dev/${dev}1 /mnt/usb
-else # try the vfat filesystem otherwise
-    sudo mount -t vfat -o rw,uid=$USER,gid=$USER /dev/${dev}1 /mnt/usb
+if [[ -n $2 ]]; then
+    sudo mount -t ${(z)cmd} /dev/sd${2}1 /mnt/usb && success()
+else
+    devices=(b c d e f g h i j k l m n o p q r s t u v w x y z)
+    for d in $devices; do
+        sudo mount -t ${(z)cmd} /dev/sd${d}1 /mnt/usb &>/dev/null && success()
+    done
+    echo "devices sdb through sdz are already mounted"
+    exit 1
 fi
 
 # vim: syntax=zsh
