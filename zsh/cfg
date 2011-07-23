@@ -337,8 +337,10 @@ alias rgmp3='/home/listdata/syscfg/script/audio/replaygain/mp3/tmwrg.sh'
 alias rgflac='/home/listdata/syscfg/script/audio/replaygain/flac/tfwrg.sh'
 
 # mount/unmount USB drives
-alias usbon='~/syscfg/script/sys/usbmnt -f ext2'
-alias usbwon='~/syscfg/script/sys/usbmnt -f vfat'
+alias usbon='~/syscfg/script/sys/usbmnt'
+alias usbonn='~/syscfg/script/sys/usbmnt -a'
+alias usbof='~/syscfg/script/sys/usbmnt -u'
+alias usboff='~/syscfg/script/sys/usbmnt -U'
 
 #--------------------------------------------------------------------------------------------------#
 # Host-specific settings (different aliases, etc. for different computers                          #

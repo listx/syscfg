@@ -6,18 +6,25 @@ import System.IO
 import System.Environment
 import System.Exit
 import System.Process
-import Control.Monad (when)
-import Char
+
+import Text.Parsec.Char hiding (upper)
+import Text.Parsec.Combinator
+import Text.Parsec.Prim
+import Text.Parsec.String
+import Control.Monad.Identity
+--import qualified Text.Show.Pretty as Pr
 
 data Opts = Opts
-    { device :: String
-    , fsys :: String
+    { all_devices :: Bool
+    , unmount :: Bool
+    , unmount_all :: Bool
     } deriving (Data, Typeable, Show, Eq)
 
 progOpts :: Opts
 progOpts = Opts
-    { device = "" &= typ "DEVICE" &= help "the device letter in the /dev/sdX naming scheme, where X is the device letter (if more than 26 devices, then aa, ab, etc.); default \"b\""
-    , fsys = "vfat" &= typ "FILE SYSTEM" &= help "file system of the device; valid inputs are ext2 or vfat; default is vfat"
+    { all_devices = def &= help "mount all mountable USB devices; default FALSE"
+    , unmount = def &= help "choose a USB device to unmount"
+    , unmount_all = def &= name "U" &= help "unmount all USB devices"
     }
 
 getOpts :: IO Opts
@@ -35,17 +42,48 @@ _PROGRAM_INFO = _PROGRAM_NAME ++ " version " ++ _PROGRAM_VERSION
 _PROGRAM_DESC = "mounts a USB flash drive"
 _COPYRIGHT = "(C) Linus Arver 2011"
 
-_FILE_SYSTEMS :: [String]
-_FILE_SYSTEMS = [ "ext2"
-                , "vfat"
-                ]
+data BlockDevice = BlockDevice
+    { shortname :: String
+    , uuid :: String
+    , fsys :: String
+    , mountPoint :: MountPoint
+    } deriving (Eq)
+
+data MountPoint = MPath { path :: FilePath }
+                | Swap
+                | Unmounted
+                | UnknownBlkidVal
+    deriving (Eq)
+
+instance Show BlockDevice where
+    show BlockDevice{..} = unwords  [ shortname
+                                    , fsys
+                                    , uuid
+                                    , show mountPoint
+                                    ]
+
+instance Show MountPoint where
+    show (MPath path) = path
+    show Swap = "Swap"
+    show Unmounted = "Unmounted"
+    show UnknownBlkidVal = "UnknownBlkidVal"
+
+_BLOCKDEVICE_DEFAULT :: BlockDevice
+_BLOCKDEVICE_DEFAULT = BlockDevice
+    { shortname = ""
+    , uuid = ""
+    , fsys = ""
+    , mountPoint = MPath {path = ""}
+    }
+
+_ALPHANUM :: String
+_ALPHANUM = ['a'..'z'] ++ ['A'..'Z'] ++ ['0'..'9']
 
 main :: IO ()
 main = do
     hSetBuffering stdout NoBuffering
     hSetBuffering stderr NoBuffering
-    arguments <- getArgs
-    opts <- (if null arguments then withArgs ["--help"] else id) getOpts
+    opts <- getOpts
     user <- getEnv "USER"
     errNo <- argsCheck opts user
     when (errNo > 0) $ exitWith $ ExitFailure errNo
@@ -54,36 +92,78 @@ main = do
 argsCheck :: Opts -> String -> IO Int
 argsCheck Opts{..} user
     | null user = e "could not get environment variable $USER" 1
-    | not (null device) && not (all isAlphaLower device) = e "device must be one or more lowercase ASCII characters" 1
-    | not $ elem fsys _FILE_SYSTEMS = e ("file system must be one of " ++ unwords _FILE_SYSTEMS) 1
     | otherwise = return 0
     where
         e :: String -> Int -> IO Int
         e str num = errMsg str >> return num
-        isAlphaLower :: Char -> Bool
-        isAlphaLower c = 'a' >= c && c <= 'z'
 
 prog :: Opts -> String -> IO ()
-prog Opts{..} user
-    -- specific device requested
-    | not (null device) = do
-        (_, _, _, p) <- createProcess $ cmd argExtra (devicePath device)
-        _ <- waitForProcess p
+prog opts@Opts{..} user = do
+    (devs, takenPaths) <- getDevices opts
+    let mountablePaths = filter (\p -> not $ elem p takenPaths) $ map (\p -> "/mnt/u" ++ show p) [(0::Int)..]
+        devsKV = zip (map show [(1::Int)..]) . zip devs $ mountablePaths
+    putStrLn (if (unmount || unmount_all)
+        then "device(s) to unmount:"
+        else "mounted device(s):")
+    mapM_ (\(n, (d, _)) -> putStrLn $ "    " ++ n ++ ") " ++ show d) devsKV
+    putStrLn ""
+    mountMenu opts user devsKV
+
+mountMenu :: Opts -> String -> [(String, (BlockDevice, FilePath))] -> IO ()
+mountMenu Opts{..} user devsKV
+    | unmount = if length devsKV == 1
+        then do putStrLn "only 1 USB device to unmount"
+                tryMount False user (snd . head $ devsKV) >>= exitWith
+        else do putStrLn "choose USB device to unmount (q to exit)"
+                chooseDev user devsKV (tryMount False)
+    | unmount_all = do
+        putStrLn "unmounting all USB devices..."
+        mapM_ (tryMount False user) (map snd devsKV)
         return ()
-    -- look for devices sdb, sdc, sdd, etc.
+    | all_devices = do
+        putStrLn "mounting all USB devices..."
+        mapM_ (tryMount True user) (map snd devsKV)
+        return ()
+    | length devsKV == 1 = do
+        putStrLn "only 1 USB device to mount"
+        tryMount True user (snd . head $ devsKV) >>= exitWith
     | otherwise = do
-        devicesAvail <- getDevices
-        mapM_ tryMount devicesAvail
-        errMsg $ "discovered devices are already mounted"
+        putStrLn "choose USB device to mount (q to exit)"
+        chooseDev user devsKV (tryMount True)
+
+chooseDev :: String -> [(String, (BlockDevice, FilePath))] -> (String -> (BlockDevice, FilePath) -> IO ExitCode) -> IO ()
+chooseDev user devsKV func = do
+    key <- getLine
+    case lookup key devsKV of
+        Just dev -> func user dev >>= exitWith
+        _ -> case key of
+            "q" -> return ()
+            _ -> putStrLn "invalid input; try again" >> chooseDev user devsKV func
+
+tryMount :: Bool -> String -> (BlockDevice, FilePath) -> IO ExitCode
+tryMount mount usr (BlockDevice{..}, mp) = do
+    when (null $ mountArgs fsys usr) $ do
+        errMsg $ "invalid file system " ++ squote fsys
         exitWith (ExitFailure 1)
+    putStr $ (if mount == False then "un" else "")
+        ++ "mounting USB device "
+        ++ shortname
+        ++ " (" ++ fsys ++ ") "
+        ++ (if mount == False then "from " ++ show mountPoint else "to " ++ mp)
+        ++ ".."
+    (_, _, _, p) <- createProcess $ cmd (mountArgs fsys usr) shortname
+    exitStatus <- waitForProcess p
+    if (exitStatus == ExitSuccess)
+        then do putStrLn "OK"
+                return ExitSuccess
+        else do putStr "FAILED\n"
+                errMsg $ "mount error (perhaps " ++ squote mp ++ " does not exist)"
+                return (ExitFailure 1)
     where
-        argExtra = if fsys == "ext2"
-            then "ext2 -o rw,relatime"
-            else ("vfat -o rw,uid=" ++ user ++ ",gid=" ++ user)
-        devicePath :: String -> String
-        devicePath dev = "/dev/sd" ++ dev ++ "1"
-        cmd arg devP = CreateProcess
-            { cmdspec = ShellCommand ("sudo mount -t " ++ arg ++ " " ++ devP ++ " /mnt/u0 &>/dev/null")
+        cmd arguments devPath = CreateProcess
+            { cmdspec = ShellCommand (if mount == False
+                then "sudo umount " ++ show mountPoint
+                else "sudo mount -t " ++ arguments ++ " " ++ devPath ++ " " ++ mp ++ " &>/dev/null")
             , cwd = Nothing
             , env = Nothing
             , std_in = CreatePipe
@@ -91,32 +171,43 @@ prog Opts{..} user
             , std_err = Inherit
             , close_fds = False
             }
-        tryMount dev = do
-            putStr $ "mounting " ++ dev ++ "1..."
-            (_, _, _, p) <- createProcess $ cmd argExtra (dev ++ "1")
-            exitStatus <- waitForProcess p
-            when (exitStatus == ExitSuccess) $ do
-                putStrLn $ "OK\nUSB device " ++ dev ++ "1 (" ++ fsys ++ ") mounted at /mnt/usb"
-                exitWith ExitSuccess
-            putStr "SKIP\n"
 
-getDevices :: IO [String]
-getDevices = do
-    (_, sout, _, p) <- createProcess cmd
+mountArgs :: String -> String -> String
+mountArgs fsys user = case fsys of
+    "ext2" -> "ext2 -o rw,relatime"
+    "vfat" -> "vfat -o rw,uid=" ++ user ++ ",gid=" ++ user
+    _ -> []
+
+getDevices :: Opts -> IO ([BlockDevice], [String])
+getDevices Opts{..} = do
+    (_, sout, _, p) <- createProcess cmdBlkid
     devs <- case sout of
         Just h -> hGetContents h
         Nothing -> return []
     _ <- waitForProcess p
-    let devs' = filter (not . any isDigit) . words $ devs
-    putStrLn "discovered devices:"
-    mapM_ (\d -> putStrLn $ "    " ++ d) devs'
-    when (null devs) $ do
-        errMsg $ "cannot find any sdX devices under /dev"
+    let devs' = (map (unwords . words)) . drop 2 . lines $ devs
+    devs'' <- mapM parseBlkid devs'
+    let toMount = filter (\BlockDevice{..} -> mountPoint == Unmounted) devs''
+        toUnmount = filter (\dev -> not $ null $ getUSBMountPath dev) devs''
+        takenPaths = filter (not . null) . map getUSBMountPath $ devs''
+    when (null toMount && (not (unmount || unmount_all))) $ do
+        errMsg $ "cannot find any mountable devices"
         exitWith (ExitFailure 1)
-    return devs'
+    when (null toUnmount && (unmount || unmount_all)) $ do
+        errMsg $ "cannot find any devices to unmount"
+        exitWith (ExitFailure 1)
+    if ((unmount || unmount_all) == True)
+        then return (toUnmount, takenPaths)
+        else return (toMount, takenPaths)
     where
-        cmd = CreateProcess
-            { cmdspec = ShellCommand ("ls /dev/sd*")
+        getUSBMountPath :: BlockDevice -> String
+        getUSBMountPath BlockDevice{..} = case mountPoint of
+            MPath str -> if take 6 str == "/mnt/u" && (elem (last str) ['0'..'9'])
+                then str
+                else ""
+            _ -> ""
+        cmdBlkid = CreateProcess
+            { cmdspec = ShellCommand ("sudo blkid -o list")
             , cwd = Nothing
             , env = Nothing
             , std_in = CreatePipe
@@ -127,3 +218,69 @@ getDevices = do
 
 errMsg :: String -> IO ()
 errMsg msg = hPutStrLn stderr $ "error: " ++ msg
+
+squote :: String -> String
+squote s = "`" ++ s ++ "'"
+
+-- Parsing
+parserIdentifier :: Parser String
+parserIdentifier = many1 $ oneOf $ _ALPHANUM ++ "/-_"
+
+parserWhitespace :: Parser String
+parserWhitespace = many1 $ oneOf " \t\n\r"
+
+parserMP :: Parser MountPoint
+parserMP =
+    try (   do  a <- oneOf "<("
+                b <- manyTill anyChar (lookAhead $ (oneOf ">)"))
+                _ <- oneOf ">)"
+                let mp = case a of
+                        '<' -> Swap
+                        '(' -> case b of
+                            "not mounted" -> Unmounted
+                            _ -> UnknownBlkidVal
+                        _ -> UnknownBlkidVal
+                return mp
+        )
+    <|> (parserIdentifier >>= (\s -> return MPath {path = s}))
+    <?> "blkid's mount point description"
+
+blkidParser :: Parser BlockDevice
+blkidParser =
+    try (   do  sname <- parserIdentifier
+                _ <- parserWhitespace
+                fs <- parserIdentifier
+                _ <- parserWhitespace
+                _ <- parserIdentifier -- leave out the "label" column, even if it exists
+                _ <- parserWhitespace
+                mp <- parserMP
+                _ <- parserWhitespace
+                uid <- parserIdentifier
+                eof
+                return BlockDevice  { shortname = sname
+                                    , uuid = uid
+                                    , fsys = fs
+                                    , mountPoint = mp
+                                    }
+        )
+    <|>
+    do  sname <- parserIdentifier
+        _ <- parserWhitespace
+        fs <- parserIdentifier
+        _ <- parserWhitespace
+        mp <- parserMP
+        _ <- parserWhitespace
+        uid <- parserIdentifier
+        eof
+        return BlockDevice  { shortname = sname
+                            , uuid = uid
+                            , fsys = fs
+                            , mountPoint = mp
+                            }
+    <?> "5 or 4 fields to parse"
+
+parseBlkid :: String -> IO BlockDevice
+parseBlkid src =
+    case parse blkidParser "output of `sudo blkid -o list'" src of
+        Left parseError -> errMsg (show parseError) >> return _BLOCKDEVICE_DEFAULT
+        Right result -> return result
