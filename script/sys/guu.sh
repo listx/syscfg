@@ -14,7 +14,7 @@ c6="\x1b[1;31m" # bright red
 ce="\x1b[0m"
 
 # set default usb directory
-usb=/mnt/usb
+usb=/mnt/u0
 repodir=$1
 
 if [[ -z $(df | grep $usb) ]]; then
@@ -23,16 +23,16 @@ if [[ -z $(df | grep $usb) ]]; then
 elif [[ -z $repodir ]]; then
     echo "usage: guu [parent directory of repos in USB]"
     exit 1
-elif [[ ! -d /mnt/usb/"$repodir" ]]; then
+elif [[ ! -d /mnt/u0/"$repodir" ]]; then
     echo "error: no parent directory of repositories specified"
     exit 1
 fi
 
-cd /mnt/usb/"$repodir"
+cd /mnt/u0/"$repodir"
 
 for subdir in $(ls -C1); do
     cd $subdir
-    echo "/mnt/usb/$repodir/${c2}$subdir$ce"
+    echo "/mnt/u0/$repodir/${c2}$subdir$ce"
     git pull 2>&1 | sed -e "s/^/  $c1>$ce /" -e "s/error/${c6}error$ce/"
     echo
     cd ..

@@ -83,7 +83,7 @@ prog Opts{..} user
         devicePath :: String -> String
         devicePath dev = "/dev/sd" ++ dev ++ "1"
         cmd arg devP = CreateProcess
-            { cmdspec = ShellCommand ("sudo mount -t " ++ arg ++ " " ++ devP ++ " /mnt/usb &>/dev/null")
+            { cmdspec = ShellCommand ("sudo mount -t " ++ arg ++ " " ++ devP ++ " /mnt/u0 &>/dev/null")
             , cwd = Nothing
             , env = Nothing
             , std_in = CreatePipe

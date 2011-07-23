@@ -339,7 +339,6 @@ alias rgflac='/home/listdata/syscfg/script/audio/replaygain/flac/tfwrg.sh'
 # mount/unmount USB drives
 alias usbon='~/syscfg/script/sys/usbmnt -f ext2'
 alias usbwon='~/syscfg/script/sys/usbmnt -f vfat'
-alias usbof='sudo umount /mnt/usb'
 
 #--------------------------------------------------------------------------------------------------#
 # Host-specific settings (different aliases, etc. for different computers                          #
@@ -356,7 +355,7 @@ case $HOST in
         alias m5='d /mnt/b4'
         alias m6='d /mnt/p0'
         alias m7='d /mnt/p1'
-        alias m8='d /mnt/usb'
+        alias m8='d /mnt/u0'
         alias discon='sudo mount /dev/sr1'
         alias discof='sudo umount /dev/sr1'
         alias disc2on='sudo mount /dev/sr0'
@@ -369,7 +368,7 @@ case $HOST in
         alias iftopw='sudo iftop -B -i wlan0'
         alias m1='d /mnt/windows'
         alias m2='d /mnt/p0'
-        alias m3='d /mnt/usb'
+        alias m3='d /mnt/u0'
         alias discon='sudo mount /dev/sr0'
         alias discof='sudo umount /dev/sr0'
         alias neu='sudo netcfg -c luxion-wired'
@@ -385,7 +384,7 @@ case $HOST in
         alias m1='d /mnt/windows-xp'
         alias m2='d /mnt/data'
         alias m3='d /mnt/p0'
-        alias m4='d /mnt/usb'
+        alias m4='d /mnt/u0'
         alias discon='sudo mount /dev/sr0'
         alias discof='sudo umount /dev/sr0'
         alias neu='sudo netcfg -c aether-wired'

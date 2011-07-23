@@ -14,11 +14,11 @@
 
 univ_open() {
     if [[ -z $@ ]]; then
-        if [[ -d /mnt/usb/h ]]; then
-            if [[ $PWD == "/mnt/usb/h" ]]; then
+        if [[ -d /mnt/u0/h ]]; then
+            if [[ $PWD == "/mnt/u0/h" ]]; then
                 cd && dir_info # ("cd" w/o any arguments goes to the home directory)
             else
-                cd /mnt/usb/h && dir_info
+                cd /mnt/u0/h && dir_info
             fi
         else
             cd && dir_info
