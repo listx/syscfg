@@ -1,3 +1,4 @@
+set nocp " take the Vi straitjacket off
 set ffs=unix,dos " prefer unix newlines whenever possible, but let dos be dos
 set nobackup
 " default tabstop and shiftwidths
