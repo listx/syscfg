@@ -190,11 +190,11 @@ tryMount mount user (BlockDevice{..}, mp) = do
     when (null $ mountArgs fsys user) $ do
         errMsg $ "unsupported file system " ++ squote fsys ++ "\nsupported file systems: " ++ (unwords $ map fst (_FILE_SYSTEM_ARGS user))
         exitWith (ExitFailure 1)
-    putStr $ (if mount == False then "un" else "")
+    putStr $ (if mount then "" else "un")
         ++ "mounting "
         ++ shortname
         ++ " (" ++ fsys ++ ") "
-        ++ (if mount == False then "from " ++ show mountPoint else "to " ++ mp)
+        ++ (if mount then "to " ++ mp else "from " ++ show mountPoint)
         ++ ".."
     (_, _, _, p) <- createProcess $ cmd (mountArgs fsys user) shortname
     exitStatus <- waitForProcess p
@@ -202,13 +202,15 @@ tryMount mount user (BlockDevice{..}, mp) = do
         then do putStrLn "OK"
                 return ExitSuccess
         else do putStr "FAILED\n"
-                errMsg $ "mount error (perhaps " ++ squote mp ++ " does not exist)"
+                errMsg $ (if mount
+                    then "mount error (perhaps " ++ squote mp ++ " does not exist)"
+                    else "unmount error")
                 return (ExitFailure 1)
     where
         cmd arguments devPath = CreateProcess
-            { cmdspec = ShellCommand (if mount == False
-                then "sudo umount " ++ show mountPoint
-                else "sudo mount -t " ++ arguments ++ " " ++ devPath ++ " " ++ mp ++ " &>/dev/null")
+            { cmdspec = ShellCommand (if mount
+                then "sudo mount -t " ++ arguments ++ " " ++ devPath ++ " " ++ mp ++ " &>/dev/null"
+                else "sudo umount " ++ show mountPoint)
             , cwd = Nothing
             , env = Nothing
             , std_in = CreatePipe
