@@ -179,7 +179,7 @@ myKeys hostname conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((mod4Mask              , xK_i     ), spawn "gimp")
     , ((mod4Mask              , xK_m     ), spawn "blender")
     , ((mod4Mask              , xK_n     ), spawn "firefox")
-    , ((mod4Mask .|. shiftMask, xK_n     ), io sitesRand >>= (\ss -> spawn ("firefox " ++ ss)))
+    , ((mod4Mask .|. shiftMask, xK_n     ), io sitesRand >>= spawn . ("firefox " ++))
     , ((mod4Mask              , xK_w     ), spawn "soffice")
     , ((mod4Mask              , xK_x     ), spawn term1)
     , ((mod4Mask .|. shiftMask, xK_x     ), spawn term3)
