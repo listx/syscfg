@@ -21,6 +21,10 @@ import XMonad.Util.WorkspaceCompare (getSortByIndex)
 import System.Posix.Unistd -- for getting hostname
 import XMonad.Hooks.EwmhDesktops -- for _NET_WINDOW_WINDOW (emacs + SCIM bridge)
 
+import System.Random
+import Data.Array.IO
+import Control.Monad
+
 -- The preferred terminal program, which is used in a binding below and by
 -- certain contrib modules.
 --
@@ -175,7 +179,7 @@ myKeys hostname conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((mod4Mask              , xK_i     ), spawn "gimp")
     , ((mod4Mask              , xK_m     ), spawn "blender")
     , ((mod4Mask              , xK_n     ), spawn "firefox")
-    , ((mod4Mask .|. shiftMask, xK_n     ), spawn "/home/listdata/.xmonad/ff_news.sh")
+    , ((mod4Mask .|. shiftMask, xK_n     ), io sitesRand >>= (\ss -> spawn ("firefox " ++ ss)))
     , ((mod4Mask              , xK_w     ), spawn "soffice")
     , ((mod4Mask              , xK_x     ), spawn term1)
     , ((mod4Mask .|. shiftMask, xK_x     ), spawn term3)
@@ -536,6 +540,40 @@ spawnIfGrpTopWSNotFull g command =
             then spawn command
             else return ()
         }
+
+-- | Randomly shuffle a list
+--   /O(N)/
+shuffle :: [a] -> IO [a]
+shuffle xs = do
+    ar <- newArray n xs
+    forM [1..n] $ \i -> do
+        j <- randomRIO (i,n)
+        vi <- readArray ar i
+        vj <- readArray ar j
+        writeArray ar j vi
+        return vj
+    where
+        n = length xs
+        newArray :: Int -> [a] -> IO (IOArray Int a)
+        newArray n xs =  newListArray (1,n) xs
+
+sites :: [String]
+sites =
+    -- news
+    [ "www.lemonde.fr"
+    , "www.zeit.de"
+    , "www.nikkei.com"
+    , "www.hani.co.kr"
+    , "www.sfgate.com"
+    -- hobbies
+    , "www.chessbase.com"
+    , "http://www.reddit.com/r/programming/top?t=week"
+    , "http://news.ycombinator.com/best"
+    , "www.linuxfr.org"
+    ]
+
+sitesRand :: IO String
+sitesRand = shuffle sites >>= return . unwords
 
 main = do
     hostname <- fmap nodeName getSystemID
