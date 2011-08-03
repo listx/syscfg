@@ -33,7 +33,7 @@ case $(hostname) in
         icecast -b -c /home/listdata/syscfg/icecast/cfg.xml
 
         # turn on numlock for keypad by default
-        numlockx &
+        # numlockx &
 
         # start xscreensaver
         #xscreensaver -no-splash &
