@@ -231,8 +231,8 @@ alias ms='smplayer'
 alias make_plist="~/syscfg/script/audio/make_plist.sh"
 
 alias g='git'
-alias gdf="[[ \$(git diff | wc -l) -gt 0 ]] && git diff || ([[ \$(git diff 2>&1 | wc -l) -eq 0 ]] && echo \"No changes\")"
-alias gdfc="[[ \$(git diff --cached | wc -l) -gt 0 ]] && git diff --cached || ([[ \$(git diff --cached 2>&1 | wc -l) -eq 0 ]] && echo \"Index empty\")"
+alias gdf="[[ \$(git diff | wc -l) -gt 0 ]] && git diff || echo No changes"
+alias gdfc="[[ \$(git diff --cached | wc -l) -gt 0 ]] && git diff --cached || echo Index empty"
 alias gst='git status'
 alias gbr='git branch'
 alias gcm='git commit'
