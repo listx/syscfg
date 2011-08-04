@@ -346,6 +346,8 @@ imap kj <Esc>
 
 nnoremap <space> 10<c-e>10j
 nnoremap <backspace> 10<c-y>10k
+vnoremap <space> 10<c-e>10j
+vnoremap <backspace> 10<c-y>10k
 
 " find lines longer than 120 characters
 nmap <localleader>fl /^.\{-}\zs.\%>79v<cr>
