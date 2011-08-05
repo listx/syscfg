@@ -19,6 +19,9 @@ unclutter -grab -noevents -idle 10 -not Blender Gimp &
 # set default repeat rate (miliseconds delay, keystroke speed)
 xset r rate 250 80
 
+# IBus input method
+ibus-daemon --xim -d
+
 case $(hostname) in
     exelion)
         # start Music Player Demon (mpd) with customized config file (instead of making an ugly symlink at the default-looked-at /etc/mpd.conf
