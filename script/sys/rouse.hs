@@ -4,6 +4,7 @@ import Data.List (zip4, unzip4)
 import System.Exit
 import System.IO
 import System.Process
+import System
 
 _LAN_IP :: String
 _LAN_IP = "192.168.0.255"
@@ -23,28 +24,38 @@ main = do
     hSetBuffering stdout NoBuffering
     hSetBuffering stderr NoBuffering
     hSetEcho stdin False
+    args <- getArgs
     putStrLn "Checking WOL-compliant LAN nodes...\n"
     onlines <- forkIOs (map getNodeStatus _NODES)
     let statuses = zip4 (map show [(1::Integer)..]) (map fst _NODES) (map snd _NODES) onlines
     mapM_ (putStrLn . showStatus) statuses
     putStrLn ""
     putStrLn "Choose system to wake (q to exit)"
-    chooseNode statuses
+    -- only get the arguments that could be valid choices for systems
+    let args' = filter (\a -> elem a (map show [1..(length _NODES)])) args
+    chooseNode statuses args'
 
-chooseNode :: [(String, String, String, Bool)] -> IO ()
-chooseNode statuses = do
-    key <- getChar
-    if elem [key] nums
-        then do
-            let nodeInfo@(_, _, _, online) = head . filter (\(n, _, _, _) -> n == [key]) $ statuses
-            if not online
-                then wakeUp nodeInfo >> chooseNode statuses
-                else chooseNode statuses
-        else case key of
-            'q' -> return ()
-            _ -> chooseNode statuses
+chooseNode :: [(String, String, String, Bool)] -> [String] -> IO ()
+chooseNode statuses systems
+    | not $ null systems = mapM_ (wakeUp . nodeInfo) $ filter (isOffline statuses) systems
+    | otherwise = tryKey =<< getChar
     where
+        tryKey :: Char -> IO ()
+        tryKey key = do
+            if elem [key] nums
+                then do
+                    if isOffline statuses [key]
+                        then wakeUp (nodeInfo [key]) >> chooseNode statuses systems
+                        else chooseNode statuses systems
+                else case key of
+                    'q' -> return ()
+                    _ -> chooseNode statuses systems
+        nodeInfo k = head . filter (\(n, _, _, _) -> n == k) $ statuses
         (nums, _, _, _) = unzip4 statuses
+
+-- parse the data structure and see if a node was detected as being offline
+isOffline :: [(String, String, String, Bool)] -> String -> Bool
+isOffline statuses sys = (\(_, _, _, b) -> not b) . head . filter (\(n, _, _, _) -> n == sys) $ statuses
 
 -- return True if node is online
 getNodeStatus :: (String, String) -> IO Bool
