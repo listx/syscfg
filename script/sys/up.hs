@@ -33,10 +33,10 @@ main = do
     putStrLn "Choose system to wake (q to exit)"
     -- only get the arguments that could be valid choices for systems
     let args' = filter (\a -> elem a (map show [1..(length _NODES)])) args
-    chooseNode statuses args'
+    wakeNodes statuses args'
 
-chooseNode :: [(String, String, String, Bool)] -> [String] -> IO ()
-chooseNode statuses systems
+wakeNodes :: [(String, String, String, Bool)] -> [String] -> IO ()
+wakeNodes statuses systems
     | not $ null systems = mapM_ (wakeUp . nodeInfo) $ filter (isOffline statuses) systems
     | otherwise = tryKey =<< getChar
     where
@@ -45,11 +45,11 @@ chooseNode statuses systems
             if elem [key] nums
                 then do
                     if isOffline statuses [key]
-                        then wakeUp (nodeInfo [key]) >> chooseNode statuses systems
-                        else chooseNode statuses systems
+                        then wakeUp (nodeInfo [key]) >> wakeNodes statuses systems
+                        else wakeNodes statuses systems
                 else case key of
                     'q' -> return ()
-                    _ -> chooseNode statuses systems
+                    _ -> wakeNodes statuses systems
         nodeInfo k = head . filter (\(n, _, _, _) -> n == k) $ statuses
         (nums, _, _, _) = unzip4 statuses
 

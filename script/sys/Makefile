@@ -1,8 +1,8 @@
 FLAGS=-O2 -Wall -Werror
-all: poke rouse usbmnt
+all: poke up usbmnt
 poke: poke.hs
 	ghc --make ${FLAGS} poke
-rouse: rouse.hs
-	ghc --make -threaded ${FLAGS} rouse
+up: up.hs
+	ghc --make -threaded ${FLAGS} up
 usbmnt: usbmnt.hs
 	ghc --make ${FLAGS} usbmnt
