@@ -486,12 +486,6 @@ myStartupHook hostname =
     do  {
         ; spawnIfGrpTopWSNotFull Net "firefox"
         ; spawnIfGrpNotFull Work $ term1 ++ " -name atWorkspace1"
-        ; spawnIfGrpNotFull Work $ term1 ++ " -name atWorkspace2"
-        ; spawnIfGrpNotFull Work $ term1 ++ " -name atWorkspace3"
-        ; spawnIfGrpNotFull Work $ term1 ++ " -name atWorkspace4"
-        ; spawnIfGrpNotFull Work $ term1 ++ " -name atWorkspace5"
-        ; spawnIfGrpNotFull Work $ term1 ++ " -name atWorkspace6"
-        ; spawnIfGrpNotFull Work $ term1 ++ " -name atWorkspace7"
         ; spawnIfGrpNotFull Sys $ term1 ++ " -e alsamixer"
         ; spawnIfGrpNotFull Sys $ term2 ++ " -n iftop -e sudo iftop -B -i eth" ++ (if hostname == "exelion" then "1" else "0")
         ; spawnIfGrpNotFull Sys $ term1 ++ " -e htop"
