@@ -102,6 +102,11 @@ term1 = "~/syscfg/script/sys/terms/wb.sh"
 term2 = "~/syscfg/script/sys/terms/bw.sh"
 term3 = "~/syscfg/script/sys/terms/wB.sh"
 
+orgIntraday = " -name floatme -e ~/prog/timeflux/src/term.sh intraday ~/org/life.org @@@"
+orgPlans5w = " -name floatme -e ~/prog/timeflux/src/term.sh plans5w ~/org/life.org @@@"
+orgGoals10w = " -name floatme -e ~/prog/timeflux/src/term.sh goals10w ~/org/life.org @@@"
+orgLeftToday = " -name floatme -e ~/prog/timeflux/src/term.sh lefttoday ~/org/life.org @@@"
+
 myKeys :: String -> XConfig Layout -> M.Map (KeyMask, KeySym) (X ())
 myKeys hostname conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
 
@@ -163,11 +168,10 @@ myKeys hostname conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((modm .|. altMask,   xK_Escape     ), spawn "xmonad --recompile; xmonad --restart")
 
     -- CUSTOM KEYBINDINGS HERE --
-
-    , ((mod4Mask              , xK_1     ), spawn (term1 ++ " -name floatme -e ~/prog/timeflux/src/term.sh intraday ~/org/life.org @@@"))
-    , ((mod4Mask              , xK_2     ), spawn (term1 ++ " -name floatme -e ~/prog/timeflux/src/term.sh plans5w ~/org/life.org @@@"))
-    , ((mod4Mask              , xK_3     ), spawn (term1 ++ " -name floatme -e ~/prog/timeflux/src/term.sh goals10w ~/org/life.org @@@"))
-    , ((mod4Mask              , xK_9     ), spawn (term1 ++ " -name floatme -e ~/prog/timeflux/src/term.sh lefttoday ~/org/life.org @@@"))
+    , ((mod4Mask              , xK_1     ), spawn (term1 ++ orgIntraday))
+    , ((mod4Mask              , xK_2     ), spawn (term1 ++ orgPlans5w))
+    , ((mod4Mask              , xK_3     ), spawn (term1 ++ orgGoals10w))
+    , ((mod4Mask              , xK_9     ), spawn (term1 ++ orgLeftToday))
     , ((mod4Mask              , xK_0     ), spawn "emacs /home/listdata/org/life.org")
     , ((mod4Mask              , xK_c     ), spawn "galculator")
     , ((mod4Mask .|. shiftMask, xK_c     ), spawn "gcalctool")
@@ -486,6 +490,7 @@ myStartupHook hostname =
     do  {
         ; spawnIfGrpTopWSNotFull Net "firefox"
         ; spawnIfGrpNotFull Work $ term1 ++ " -name atWorkspace1"
+        ; spawn $ term1 ++ orgIntraday
         ; spawnIfGrpNotFull Sys $ term1 ++ " -e alsamixer"
         ; spawnIfGrpNotFull Sys $ term2 ++ " -n iftop -e sudo iftop -B -i eth" ++ (if hostname == "exelion" then "1" else "0")
         ; spawnIfGrpNotFull Sys $ term1 ++ " -e htop"
