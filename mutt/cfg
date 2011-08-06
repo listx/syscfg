@@ -10,31 +10,16 @@ set my_del=`rm -f ~/.sec/.tmp`
 # Account Hooks #
 #---------------#
 account-hook . "unset imap_user; unset imap_pass; unset tunnel" # unset first!
-account-hook        "imaps://linusarver@imap.gmail.com/" "\
-    set imap_user   = linusarver@gmail.com \
-        imap_pass   = $my_gpass1"
 account-hook        "imaps://firepotion@imap.gmail.com/" "\
     set imap_user   = firepotion@gmail.com \
         imap_pass   = $my_gpass2"
+account-hook        "imaps://linusarver@imap.gmail.com/" "\
+    set imap_user   = linusarver@gmail.com \
+        imap_pass   = $my_gpass1"
 
 #-------------------------------------#
 # Folders, mailboxes and folder hooks #
 #-------------------------------------#
-# Setup for linusarver:
-set folder          = imaps://linusarver@imap.gmail.com/
-mailboxes           = +INBOX =[Gmail]/Drafts =[Gmail]/'Sent Mail' =[Gmail]/Spam =[Gmail]/Trash
-set spoolfile       = +INBOX
-folder-hook         imaps://linusarver@imap.gmail.com/ "\
-    set folder      = imaps://linusarver@imap.gmail.com/ \
-        spoolfile   = +INBOX \
-        postponed   = +[Gmail]/Drafts \
-        record      = +[Gmail]/'Sent Mail' \
-        from        = 'Linus Arver <linusarver@gmail.com> ' \
-        realname    = 'Linus Arver' \
-        smtp_url    = smtps://linusarver@smtp.gmail.com \
-        smtp_pass   = $my_gpass1 \
-        status_format   = \"-%r-linusarver@gmail.com: %f [Msgs:%?M?%M/?%m%?n? New:%n?%?o? Old:%o?%?d? Del:%d?%?F? Flag:%F?%?t? Tag:%t?%?p? Post:%p?%?b? Inc:%b?%?l? %l?]---(%s/%S)-%>-(%P)---\"" # See http://www.mutt.org/doc/manual/manual-6.html#status_format for the default format; this version should only differ in replacing "Mutt" with the email address
-
 # Setup for firepotion:
 set folder          = imaps://firepotion@imap.gmail.com/
 mailboxes           = +INBOX =[Gmail]/Drafts =[Gmail]/'Sent Mail' =[Gmail]/Spam =[Gmail]/Trash
@@ -50,11 +35,26 @@ folder-hook         imaps://firepotion@imap.gmail.com/ "\
         smtp_pass   = $my_gpass2 \
         status_format   = \"-%r-firepotion@gmail.com: %f [Msgs:%?M?%M/?%m%?n? New:%n?%?o? Old:%o?%?d? Del:%d?%?F? Flag:%F?%?t? Tag:%t?%?p? Post:%p?%?b? Inc:%b?%?l? %l?]---(%s/%S)-%>-(%P)---\""
 
+# Setup for linusarver:
+set folder          = imaps://linusarver@imap.gmail.com/
+mailboxes           = +INBOX =[Gmail]/Drafts =[Gmail]/'Sent Mail' =[Gmail]/Spam =[Gmail]/Trash
+set spoolfile       = +INBOX
+folder-hook         imaps://linusarver@imap.gmail.com/ "\
+    set folder      = imaps://linusarver@imap.gmail.com/ \
+        spoolfile   = +INBOX \
+        postponed   = +[Gmail]/Drafts \
+        record      = +[Gmail]/'Sent Mail' \
+        from        = 'Linus Arver <linusarver@gmail.com> ' \
+        realname    = 'Linus Arver' \
+        smtp_url    = smtps://linusarver@smtp.gmail.com \
+        smtp_pass   = $my_gpass1 \
+        status_format   = \"-%r-linusarver@gmail.com: %f [Msgs:%?M?%M/?%m%?n? New:%n?%?o? Old:%o?%?d? Del:%d?%?F? Flag:%F?%?t? Tag:%t?%?p? Post:%p?%?b? Inc:%b?%?l? %l?]---(%s/%S)-%>-(%P)---\"" # See http://www.mutt.org/doc/manual/manual-6.html#status_format for the default format; this version should only differ in replacing "Mutt" with the email address
+
 #--------#
 # Macros #
 #--------#
-macro index <F1> "y12<return><return>" "Switch to linusarver@gmail.com"
-macro index <F2> "y6<return><return>"  "Switch to firepotion@gmail.com"
+macro index <F1> "y6<return><return>" "Switch to linusarver@gmail.com"
+macro index <F2> "y12<return><return>"  "Switch to firepotion@gmail.com"
 
 #-----------------------#
 # Gmail-specific macros #
