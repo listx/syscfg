@@ -45,7 +45,7 @@
 (define-key evil-normal-state-map ",w" 'save-buffer) ; save
 (define-key evil-normal-state-map ",q" 'kill-buffer) ; quit (current buffer; have to press RETURN)
 (define-key evil-normal-state-map ",x" 'save-buffers-kill-emacs) ; save and quit
-; make "kj" behave as ESC key
+; make "kj" behave as ESC key, adapted from http://permalink.gmane.org/gmane.emacs.vim-emulation/684
 (defun escape-if-next-char (c)
     "Watches the next letter.  If c, then switch to Evil's normal mode; otherwise insert a k and forward unpressed key to unread-command events"
       (self-insert-command 1)
