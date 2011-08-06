@@ -172,7 +172,7 @@ myKeys hostname conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((mod4Mask              , xK_2     ), spawn (term1 ++ orgPlans5w))
     , ((mod4Mask              , xK_3     ), spawn (term1 ++ orgGoals10w))
     , ((mod4Mask              , xK_9     ), spawn (term1 ++ orgLeftToday))
-    , ((mod4Mask              , xK_0     ), spawn "emacs /home/listdata/org/life.org")
+    , ((mod4Mask              , xK_0     ), spawn "emacsclient -c /home/listdata/org/life.org")
     , ((mod4Mask              , xK_c     ), spawn "galculator")
     , ((mod4Mask .|. shiftMask, xK_c     ), spawn "gcalctool")
     , ((mod4Mask              , xK_d     ), spawn "amule")

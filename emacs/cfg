@@ -150,6 +150,19 @@
 (setq auto-save-file-name-transforms
                 `((".*" ,temporary-file-directory t)))
 
+; settings used by "emacsclient -c" command
+(setq default-frame-alist '((font-backend . "xft")
+                            (font . "Terminus")
+                            ;(background-color . "black")
+                            ;(foreground-color . "white")
+                            ;(vertical-scroll-bars)
+                            (left-fringe . -1)
+                            (right-fringe . -1)
+                            (fullscreen . fullboth)
+                            ;(menu-bar-lines . 0)
+                            (tool-bar-lines . 0)
+                            ))
+
 ; auto-generated stuff by emacs itself...
 (custom-set-variables
   ;; custom-set-variables was added by Custom.
@@ -164,6 +177,6 @@
   ;; If you edit it by hand, you could mess it up, so be careful.
   ;; Your init file should contain only one such instance.
   ;; If there is more than one, they won't work right.
- '(default ((t (:inherit nil :stipple nil :background "white" :foreground "black" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 105 :width normal :foundry "xos4" :family "Terminus")))))
+ '(default ((t (:inherit nil :stipple nil :background "#22222a" :foreground "#cccccf" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 105 :width normal :foundry "xos4" :family "Terminus")))))
 
 ; vim: syntax=lisp
