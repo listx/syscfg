@@ -1,5 +1,6 @@
 set nocp " take the Vi straitjacket off
 set ffs=unix,dos " prefer unix newlines whenever possible, but let dos be dos
+set cm=blowfish " if encrypting a new file, use blowfish cipher
 set nobackup
 " default tabstop and shiftwidths
 set tabstop=4
