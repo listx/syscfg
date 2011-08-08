@@ -21,10 +21,10 @@
 #      16M | 0x312=786  0x315=789  0x318=792   0x31B=795
 #     +-------------------------------------------------+
 #  for more details and different resolutions see
-#  http://wiki.archlinux.org/index.php/GRUB#Framebuffer_Resolution 
+#  https://wiki.archlinux.org/index.php/GRUB#Framebuffer_resolution
 
 # general configuration:
-timeout   3
+timeout   60
 default   0
 color light-blue/black light-cyan/blue
 
@@ -38,14 +38,14 @@ color light-blue/black light-cyan/blue
 # (0) Arch Linux
 title  Arch Linux
 root   (hd0,1)
-kernel /boot/vmlinuz26 root=/dev/disk/by-uuid/84849628-b3c8-435e-9508-3b80931e488e ro vga=773 i915.powersave=0
-initrd /boot/kernel26.img
+kernel /boot/vmlinuz-linux root=/dev/disk/by-uuid/84849628-b3c8-435e-9508-3b80931e488e ro vga=773 i915.powersave=0 quiet
+initrd /boot/initramfs-linux.img
 
 # (1) Arch Linux
 title  Arch Linux Fallback
 root   (hd0,1)
-kernel /boot/vmlinuz26 root=/dev/disk/by-uuid/84849628-b3c8-435e-9508-3b80931e488e ro
-initrd /boot/kernel26-fallback.img
+kernel /boot/vmlinuz-linux root=/dev/disk/by-uuid/84849628-b3c8-435e-9508-3b80931e488e ro quiet
+initrd /boot/initramfs-linux-fallback.img
 
 # (2) Windows
 title Microsoft Windows XP

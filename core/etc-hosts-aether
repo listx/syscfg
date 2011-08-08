@@ -14,4 +14,12 @@
 192.168.0.114	aether.w
 192.168.0.120	ocean
 
+#127.0.0.1   news.ycombinator.com
+#127.0.0.1   www.reddit.com reddit.com
+127.0.0.1   www.anandtech.com anandtech.com
+127.0.0.1   www.dailytech.com dailytech.com
+#127.0.0.1   www.youtube.com youtube.com
+127.0.0.1   www.slashdot.org slashdot.org
+
+
 # End of file
