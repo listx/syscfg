@@ -13,4 +13,12 @@
 192.168.0.113   aether.e
 192.168.0.114   aether.w
 192.168.0.120   ocean
+
+# blocked domains
+# 127.0.0.1               reddit.com www.reddit.com
+# 127.0.0.1               news.ycombinator.com
+127.0.0.1		anandtech.com www.anandtech.com
+127.0.0.1		dailytech.com www.dailytech.com
+#127.0.0.1		youtube.com www.youtube.com
+127.0.0.1		gamespot.com www.gamespot.com
 # End of file

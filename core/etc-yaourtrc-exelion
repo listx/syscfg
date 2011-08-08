@@ -5,7 +5,7 @@
 #
 
 # ABS_REPO list repositories available on archlinux rsync server
-ABS_REPO=(!testing core extra !community-testing community !gnome-unstable !kde-unstable)
+ABS_REPO=(testing core extra community-testing community gnome-unstable kde-unstable)
 
 # General
 #AUTOSAVEBACKUPFILE=0

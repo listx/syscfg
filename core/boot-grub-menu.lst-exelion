@@ -21,7 +21,7 @@
 #      16M | 0x312=786  0x315=789  0x318=792   0x31B=795
 #     +-------------------------------------------------+
 #  for more details and different resolutions see
-#  http://wiki.archlinux.org/index.php/GRUB#Framebuffer_Resolution
+#  https://wiki.archlinux.org/index.php/GRUB#Framebuffer_resolution
 
 # general configuration:
 timeout   3
@@ -38,14 +38,14 @@ color light-blue/black light-cyan/blue
 # (0) Arch Linux
 title  Arch Linux
 root   (hd0,4)
-kernel /boot/vmlinuz26 root=/dev/disk/by-uuid/eda3dd3d-bc4b-41ac-946b-90a36a790b72 ro vga=0x0369
-initrd /boot/kernel26.img
+kernel /boot/vmlinuz-linux root=/dev/disk/by-uuid/eda3dd3d-bc4b-41ac-946b-90a36a790b72 ro vga=0x0369 quiet
+initrd /boot/initramfs-linux.img
 
 # (1) Arch Linux
 title  Arch Linux Fallback
 root   (hd0,4)
-kernel /boot/vmlinuz26 root=/dev/disk/by-uuid/eda3dd3d-bc4b-41ac-946b-90a36a790b72 ro
-initrd /boot/kernel26-fallback.img
+kernel /boot/vmlinuz-linux root=/dev/disk/by-uuid/eda3dd3d-bc4b-41ac-946b-90a36a790b72 ro quiet
+initrd /boot/initramfs-linux-fallback.img
 
 # (2) Windows -- works if it's the very first partition of hd1
 title Windows XP Professional

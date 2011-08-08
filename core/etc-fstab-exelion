@@ -1,23 +1,26 @@
 #
 # /etc/fstab: static file system information
 #
-# <file system>        <dir>         <type>    <options>          <dump> <pass>
-devpts                 /dev/pts      devpts    defaults            0      0
-shm                    /dev/shm      tmpfs     nodev,nosuid        0      0
+# <file system>                           <dir>      <type>  <options>                                 <dump> <pass>
+devpts                                    /dev/pts   devpts  defaults                                          0 0
+shm                                       /dev/shm   tmpfs   nodev,nosuid                                      0 0
 
-/dev/sr0       /mnt/media-sr0    auto    ro,user,noauto,unhide   0      0
-/dev/sr1       /mnt/media-sr1    auto    ro,user,noauto,unhide   0      0
+#                                         ramdisk
+none                                      /mnt/r0    tmpfs   rw,nosuid,nodev,noexec,noatime,nodiratime,size=1M 0 0
 
-# 100 GB
-UUID=427730E811C03537 /mnt/a1 ntfs-3g defaults,locale=en_US.UTF-8 0 2 # /dev/sda1
-UUID=96a26b06-5fca-44e3-bb45-87a5d31755d3 /home ext3 defaults 0 2               # /dev/sda2
-UUID=eda3dd3d-bc4b-41ac-946b-90a36a790b72 / ext3 defaults 0 1                   # /dev/sda5
-UUID=4d2bce35-1f99-4d08-b329-142e2edb1f25 swap swap defaults 0 0                # /dev/sda6
+#                                         cd/dvd/etc
+/dev/sr0                                  /mnt/p0    auto    ro,user,noauto,unhide                             0 0
+/dev/sr1                                  /mnt/p1    auto    ro,user,noauto,unhide                             0 0
 
-# 320 GB
-UUID=61cccf5f-6b7c-4e96-84fa-d97bba941a25 /mnt/b1 ext3 defaults 0 2    # /dev/sdb2
-UUID=22fc79bb-2d0e-4478-99cc-1ad2a4829ba2 /mnt/b2 ext3 defaults 0 2    # /dev/sdb3
-UUID=f58e4329-8882-4b91-b9da-3a368c158e4f /mnt/b3 ext3 defaults 0 2    # /dev/sdb5
-UUID=0820261a-7db3-45c1-a5df-cdba215fcfe8 /mnt/b4 ext3 defaults 0 2    # /dev/sdb6
-UUID=ACBC53C0BC53842C /mnt/winxp ntfs-3g defaults,locale=en_US.UTF-8 0 2 # /dev/sdb1
+#                                         100GB
+UUID=427730E811C03537                     /mnt/a1    ntfs-3g defaults,locale=en_US.UTF-8                       0 2 # /dev/sda1
+UUID=96a26b06-5fca-44e3-bb45-87a5d31755d3 /home      ext3    defaults                                          0 2 # /dev/sda2
+UUID=eda3dd3d-bc4b-41ac-946b-90a36a790b72 /          ext3    defaults                                          0 1 # /dev/sda5
+UUID=4d2bce35-1f99-4d08-b329-142e2edb1f25 swap       swap    defaults                                          0 0 # /dev/sda6
 
+#                                         320GB
+UUID=61cccf5f-6b7c-4e96-84fa-d97bba941a25 /mnt/b1    ext3    defaults                                          0 2 # /dev/sdb2
+UUID=22fc79bb-2d0e-4478-99cc-1ad2a4829ba2 /mnt/b2    ext3    defaults                                          0 2 # /dev/sdb3
+UUID=f58e4329-8882-4b91-b9da-3a368c158e4f /mnt/b3    ext3    defaults                                          0 2 # /dev/sdb5
+UUID=0820261a-7db3-45c1-a5df-cdba215fcfe8 /mnt/b4    ext3    defaults                                          0 2 # /dev/sdb6
+UUID=ACBC53C0BC53842C                     /mnt/winxp ntfs-3g defaults,locale=en_US.UTF-8                       0 2 # /dev/sdb1

@@ -88,13 +88,17 @@ listdata	ALL=(ALL) ALL
 
 listdata exelion=NOPASSWD: /sbin/shutdown
 listdata exelion=NOPASSWD: /usr/sbin/iftop
+listdata exelion=NOPASSWD: /usr/bin/cpufreq-set
 listdata exelion=NOPASSWD: /bin/mount
 listdata exelion=NOPASSWD: /bin/umount
+listdata exelion=NOPASSWD: /sbin/blkid
+listdata exelion=NOPASSWD: /sbin/ifconfig
 
 listdata exelion=NOPASSWD: /usr/bin/pacman
-listdata exelion=NOPASSWD: /usr/bin/powerpill
-listdata exelion=NOPASSWD: /usr/bin/bauerbill
 listdata exelion=NOPASSWD: /usr/bin/yaourt
+
+listdata exelion=NOPASSWD: /usr/bin/cancel
+listdata exelion=NOPASSWD: /usr/bin/lprm
 
 ## Read drop-in files from /etc/sudoers.d
 ## (the '#' here does not indicate a comment)
