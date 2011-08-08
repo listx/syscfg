@@ -1,10 +1,10 @@
 #-----------#
 # Passwords #
 #-----------#
-set my_tmpsecret=`gpg2 -o /tmp/.tmp -d ~/.sec/pass.gpg`
-set my_gpass1=`awk '/Gmail1/ {print $2}' /tmp/.tmp`
-set my_gpass2=`awk '/Gmail2/ {print $2}' /tmp/.tmp`
-set my_del=`shred -zun25 /tmp/.tmp`
+set my_tmpsecret=`gpg2 -o /mnt/r0/.tmp -d ~/.sec/pass.gpg`
+set my_gpass1=`awk '/Gmail1/ {print $2}' /mnt/r0/.tmp`
+set my_gpass2=`awk '/Gmail2/ {print $2}' /mnt/r0/.tmp`
+set my_del=`shred -zun25 /mnt/r0/.tmp`
 
 #---------------#
 # Account Hooks #
