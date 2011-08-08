@@ -1,14 +1,17 @@
 # 
 # /etc/fstab: static file system information
 #
-# <file system>        <dir>         <type>    <options>          <dump> <pass>
-devpts                 /dev/pts      devpts    defaults            0      0
-shm                    /dev/shm      tmpfs     nodev,nosuid        0      0
+# <file system>                           <dir>        <type>  <options>                                         <dump> <pass>
+devpts                                    /dev/pts     devpts  defaults                                          0 0
+shm                                       /dev/shm     tmpfs   nodev,nosuid                                      0 0
 
-/dev/sr0      /mnt/media-sr0    auto    ro,user,noauto,unhide   0      0
+#                                         ramdisk
+none                                      /mnt/r0      tmpfs   rw,nosuid,nodev,noexec,noatime,nodiratime,size=1M 0 0
 
-UUID=13b10fe8-d2df-41af-8580-cfd183466603 / ext3 defaults 0 1
-UUID=6eacd415-f030-4719-9ae7-4129562dbace swap swap defaults 0 0
-UUID=ca2b6e06-0205-4433-a40e-0a12daabf635 /home ext3 defaults 0 2
+#                                         cd/dvd/etc
+/dev/sr0                                  /mnt/p0      auto    ro,user,noauto,unhide                             0 0
 
-UUID=D210675310673D9B /mnt/windows ntfs-3g defaults,locale=en_US.UTF-8 0 0
+UUID=13b10fe8-d2df-41af-8580-cfd183466603 /            ext3    defaults                                          0 1
+UUID=6eacd415-f030-4719-9ae7-4129562dbace swap         swap    defaults                                          0 0
+UUID=ca2b6e06-0205-4433-a40e-0a12daabf635 /home        ext3    defaults                                          0 2
+UUID=D210675310673D9B                     /mnt/windows ntfs-3g defaults,locale=en_US.UTF-8                       0 2

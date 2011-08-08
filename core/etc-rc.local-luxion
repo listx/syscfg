@@ -8,6 +8,7 @@
 
 stat_busy "Enabling WOL"
 ethtool -s eth0 wol g
+echo enabled > /sys/class/net/eth0/device/power/wakeup
 stat_done
 
 #su -l -c "/home/listdata/clauto.sh" listdata
