@@ -189,12 +189,16 @@ myKeys hostname conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((mod4Mask .|. shiftMask, xK_x     ), spawn term3)
     , ((mod4Mask              , xK_z     ), spawn term2)
     -- ncmpcpp (mpd) controls
-    , ((mod4Mask .|. controlMask, xK_o     ), spawn "ncmpcpp toggle")
-    , ((mod4Mask .|. controlMask, xK_h     ), spawn "ncmpcpp stop; ncmpcpp play") -- "reset" current song to beginning
-    , ((mod4Mask .|. controlMask, xK_j     ), spawn "ncmpcpp next")
-    , ((mod4Mask .|. controlMask, xK_k     ), spawn "ncmpcpp prev")
-    , ((mod4Mask .|. controlMask, xK_l     ), spawn "ncmpcpp stop")
-    , ((mod4Mask .|. controlMask, xK_semicolon ), spawn "ncmpcpp play")
+    , ((mod4Mask .|. controlMask, xK_i                   ), spawn "ncmpcpp stop")
+    , ((mod4Mask .|. controlMask .|. shiftMask, xK_i     ), spawn "ncmpcpp stop; ncmpcpp play") -- "reset" current song to beginning
+    , ((mod4Mask .|. controlMask, xK_o                   ), spawn "ncmpcpp toggle")
+    , ((mod4Mask .|. controlMask, xK_h                   ), spawn $ mpcSeek hostname (-4))
+    , ((mod4Mask .|. controlMask .|. shiftMask, xK_h     ), spawn $ mpcSeek hostname (-16))
+    , ((mod4Mask .|. controlMask, xK_j                   ), spawn "ncmpcpp next")
+    , ((mod4Mask .|. controlMask, xK_k                   ), spawn "ncmpcpp prev")
+    , ((mod4Mask .|. controlMask, xK_l                   ), spawn $ mpcSeek hostname 4)
+    , ((mod4Mask .|. controlMask .|. shiftMask, xK_l     ), spawn $ mpcSeek hostname 16)
+    , ((mod4Mask .|. controlMask, xK_semicolon           ), spawn "ncmpcpp play")
     -- change keyboard layouts
     , ((modm              , xK_Escape), spawn "/home/listdata/syscfg/script/sys/layout_switch.sh")
     -- toggle borders
@@ -246,6 +250,16 @@ myKeys hostname conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     [((m .|. modm, key), (screenWorkspace =<< sc) >>= flip whenJust (windows . f))
         | (key, sc) <- [(xK_h, screenBy (-1)),(xK_l, screenBy 1)]
         , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]]
+
+mpcSeek :: String -> Int -> String
+mpcSeek hostname sec = "mpc -h 192.168.0.110 -p " ++ port ++ " seek " ++ show' sec
+    where
+        port = case hostname of
+            "exelion" -> "6600" -- alsa
+            _ -> "6601" -- icecast
+        show' n
+            | n < 0 = show n
+            | otherwise = '+':show n
 
 cpufreqSet :: String -> String -> X ()
 cpufreqSet governor hostname = case hostname of
