@@ -1,5 +1,5 @@
 import Control.Concurrent
-import Control.Monad (forM)
+import Control.Monad (forM, when)
 import Data.List (zip4, unzip4)
 import System.Exit
 import System.IO
@@ -25,14 +25,16 @@ main = do
     hSetBuffering stderr NoBuffering
     hSetEcho stdin False
     args <- getArgs
+    -- only get the arguments that could be valid choices for systems
+    let args' = filter (\a -> elem a (map show [1..(length _NODES)])) args
+        statusesForced = zip4 (map show [(1::Integer)..]) (map fst _NODES) (map snd _NODES) (repeat True)
+    when (not $ null args') $ mapM_ wakeUp (filter (\(n, _, _, _) -> elem n args') statusesForced) >> exitWith ExitSuccess
     putStrLn "Checking WOL-compliant LAN nodes...\n"
     onlines <- forkIOs (map getNodeStatus _NODES)
     let statuses = zip4 (map show [(1::Integer)..]) (map fst _NODES) (map snd _NODES) onlines
     mapM_ (putStrLn . showStatus) statuses
     putStrLn ""
     putStrLn "Choose system to wake (q to exit)"
-    -- only get the arguments that could be valid choices for systems
-    let args' = filter (\a -> elem a (map show [1..(length _NODES)])) args
     wakeNodes statuses args'
 
 wakeNodes :: [(String, String, String, Bool)] -> [String] -> IO ()
