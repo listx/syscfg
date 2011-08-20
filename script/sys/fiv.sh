@@ -1,5 +1,5 @@
 #!/bin/zsh
-# Program: fiv (File Integrity Verifier --- uses sha512 checksum to verify file integrity
+# Program: fiv (File Integrity Verifier --- uses sha1sum checksum to verify file integrity
 # Author: Linus Arver
 # Date: 2010
 # Usage: fiv [OPTIONS]
