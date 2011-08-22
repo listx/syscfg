@@ -8,9 +8,10 @@ xsetroot -cursor_name left_ptr &
 # '-noevents' flag is for xmonad compatibility
 unclutter -grab -noevents -idle 10 -not Blender Gimp &
 
-# explicitly choose "us" (English) keyboard layout (and set Caps Lock key to
-# xmonad's modmap key)
-/home/listdata/syscfg/script/sys/layout_switch.sh us &
+# explicitly choose "us" (altgr-intl) keyboard layout (and set Caps Lock key to
+# xmonad's modmap key); also, don't background it just to make sure that it
+# gets run as a single thread (to minimize conflicts with other X API programs)
+/home/listdata/syscfg/script/sys/layout_toggle.sh
 
 # set default repeat rate (miliseconds delay, keystroke speed)
 xset r rate 250 80 &

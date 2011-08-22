@@ -200,7 +200,7 @@ myKeys hostname conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((mod4Mask .|. controlMask .|. shiftMask, xK_l     ), spawn $ mpcSeek hostname 16)
     , ((mod4Mask .|. controlMask, xK_semicolon           ), spawn "ncmpcpp play")
     -- change keyboard layouts
-    , ((modm              , xK_Escape), spawn "/home/listdata/syscfg/script/sys/layout_switch.sh")
+    , ((mod4Mask              , xK_Escape), spawn "/home/listdata/syscfg/script/sys/layout_toggle.sh")
     -- toggle borders
     , ((modm              , xK_b ),   withFocused toggleBorder)
     -- gridselect
