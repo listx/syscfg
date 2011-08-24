@@ -20,8 +20,6 @@ set hlsearch "turn on search highlighting
 filetype indent on "turn on automatic indenting based on filetype recognition
 filetype plugin on "automatically load the corresponding filetype plugin if we've detected a filetype
 
-" Tip: to search case-insensitive, type \c at the beginning
-
 set incsearch " search any match IMMEDIATELY
 
 set mousehide " hide the mouse cursor when typing (only for GVIM)
@@ -62,10 +60,6 @@ endif
 " let &guicursor = &guicursor . ",a:blinkon0"
 set guicursor+=a:block-blinkon0 "make cursor look square, and prevent cursor blinking
 
-" Yuri Klubakov's sessionman.vim script: disable automatic session saves
-" on exit
-let sessionman_save_on_exit = 0
-
 " Set maximum number of tabs on startup to 50, instead of the default 10
 "
 " If you exceed the number of tabs allowed by tabpagemax Vim will simply open the maximum number of tabs, and the other files will be open but not displayed. You can edit the remaining files by using the :next or :last command to move to the files that are not displayed in a tab. Note that this setting only applies to the maximum number of tabs Vim will open on startup -- you can still open more tabs during your Vim session.
@@ -83,21 +77,6 @@ let maplocalleader = ","
 " vimrc
 if !exists("autocommands_loaded")
     let autocommands_loaded = 1
-    " custom configobj (python module) syntax highlighting
-    au BufRead,BufNewFile *.configobj setlocal filetype=configobj
-    au! Syntax configobj source $HOME/.vim/syntax/configobj.vim
-    au BufRead,BufNewFile *.lhp setlocal filetype=lhp
-    au! Syntax lhp source $HOME/.vim/syntax/lhp.vim
-
-    au BufRead,BufNewFile *.toucan setlocal filetype=toucan
-    au! Syntax toucan source $HOME/.vim/syntax/toucan.vim
-
-    au BufRead,BufNewFile *.cog setlocal filetype=cog
-    au BufRead,BufNewFile *.cog setlocal cursorline! " disable cursorline for .cog files
-    au! Syntax cog source $HOME/.vim/syntax/cog.vim
-
-    au BufRead,BufNewFile *.afs setlocal filetype=afs
-    au! Syntax afs source $HOME/.vim/syntax/afs.vim
 
     " tabstop is how wide the <TAB> character is, whether it's an actual <TAB>
     " character or converted into space characters with expandtab
@@ -106,8 +85,8 @@ if !exists("autocommands_loaded")
     " when typing '>>' and '<<' in normal mode
     au BufRead,BufNewFile *.rb,*.py setlocal shiftwidth=4
 " Note that vim's 'textwidth' only really works for COMMENT lines, as doing so otherwise would break whitespace-sensitive code (like Python)
-    au BufRead,BufNewFile *.rb,*.py setlocal textwidth=100
-    au BufRead,BufNewFile *.sh setlocal textwidth=100
+    au BufRead,BufNewFile *.rb,*.py setlocal textwidth=80
+    au BufRead,BufNewFile *.sh setlocal textwidth=80
     au BufRead,BufNewFile *.c,*.cpp,*.h,*.hpp setlocal textwidth=80
 	" use Linux Kernel tab style for C/C++
     au BufRead,BufNewFile *.c,*.cpp,*.h,*.hpp setlocal tabstop=8
@@ -117,113 +96,112 @@ if !exists("autocommands_loaded")
     " try to mimic Linux Kernel Coding Style's indentation style
     au BufRead,BufNewFile *.c,*.cpp,*.h,*.hpp setlocal cinoptions=:0,l1,t0,g0,(0
 
-    au BufRead,BufNewFile *.hs setlocal textwidth=100
+    au BufRead,BufNewFile *.hs setlocal textwidth=80
 
-    au BufRead .vimperatorrc setlocal syn=vim " use vim script syntax highlighting
     " load lilypond-specific stuff
     au BufRead,BufNewFile *.ly setlocal filetype=lilypond
     au! Syntax lilypond source $HOME/.vim/syntax/lilypond.vim
 
     " Integration with the "boxes" program by Thomas Jensen.
     " Default width is set at 100 characters
-    au BufEnter * nmap <localleader>c1 !!boxes -d pound-alt2<CR>
-    au BufEnter * vmap <localleader>c1 !boxes -d pound-alt2<CR>
-    au BufEnter * nmap <localleader>cw1 !!boxes -d pound-alt2 -s 100<CR>
-    au BufEnter * vmap <localleader>cw1 !boxes -d pound-alt2 -s 100<CR>
-    au BufEnter * nmap <localleader>C1 !!boxes -d pound-alt2 -r<CR>
-    au BufEnter * vmap <localleader>C1 !boxes -d pound-alt2 -r<CR>
-    au BufEnter * nmap <localleader>c2 !!boxes -d pound-cmt<CR>
-    au BufEnter * vmap <localleader>c2 !boxes -d pound-cmt<CR>
-    au BufEnter * nmap <localleader>C2 !!boxes -d pound-cmt -r<CR>
-    au BufEnter * vmap <localleader>C2 !boxes -d pound-cmt -r<CR>
-    au BufEnter *.c,*.cpp,*.h,*.hpp nmap <localleader>c1 !!boxes -d c-top -t 8u<CR>
-    au BufEnter *.c,*.cpp,*.h,*.hpp vmap <localleader>c1 !boxes -d c-top -t 8u<CR>
-    au BufEnter *.c,*.cpp,*.h,*.hpp nmap <localleader>cw1 !!boxes -d c-top -s 80 -t 8u<CR>
-    au BufEnter *.c,*.cpp,*.h,*.hpp vmap <localleader>cw1 !boxes -d c-top -s 80 -t 8u<CR>
-    au BufEnter *.c,*.cpp,*.h,*.hpp nmap <localleader>C1 !!boxes -d c-top -r -t 8u<CR>
-    au BufEnter *.c,*.cpp,*.h,*.hpp vmap <localleader>C1 !boxes -d c-top -r -t 8u<CR>
-    au BufEnter *.c,*.cpp,*.h,*.hpp nmap <localleader>c2 !!boxes -d c-mid -t 8u<CR>
-    au BufEnter *.c,*.cpp,*.h,*.hpp vmap <localleader>c2 !boxes -d c-mid -t 8u<CR>
-    au BufEnter *.c,*.cpp,*.h,*.hpp nmap <localleader>cw2 !!boxes -d c-mid -s 80 -t 8u<CR>
-    au BufEnter *.c,*.cpp,*.h,*.hpp vmap <localleader>cw2 !boxes -d c-mid -s 80 -t 8u<CR>
-    au BufEnter *.c,*.cpp,*.h,*.hpp nmap <localleader>C2 !!boxes -d c-mid -r -t 8u<CR>
-    au BufEnter *.c,*.cpp,*.h,*.hpp vmap <localleader>C2 !boxes -d c-mid -r -t 8u<CR>
-    au BufEnter *.c,*.cpp,*.h,*.hpp nmap <localleader>c3 !!boxes -d c-bot -t 8u<CR>
-    au BufEnter *.c,*.cpp,*.h,*.hpp vmap <localleader>c3 !boxes -d c-bot -t 8u<CR>
-    au BufEnter *.c,*.cpp,*.h,*.hpp nmap <localleader>cw3 !!boxes -d c-bot -s 80 -t 8u<CR>
-    au BufEnter *.c,*.cpp,*.h,*.hpp vmap <localleader>cw3 !boxes -d c-bot -s 80 -t 8u<CR>
-    au BufEnter *.c,*.cpp,*.h,*.hpp nmap <localleader>C3 !!boxes -d c-bot -r -t 8u<CR>
-    au BufEnter *.c,*.cpp,*.h,*.hpp vmap <localleader>C3 !boxes -d c-bot -r -t 8u<CR>
-    au BufEnter *.c,*.cpp,*.h,*.hpp nmap <localleader>c4 !!boxes -d java-cmt -t 8u<CR>
-    au BufEnter *.c,*.cpp,*.h,*.hpp vmap <localleader>c4 !boxes -d java-cmt -t 8u<CR>
-    au BufEnter *.c,*.cpp,*.h,*.hpp nmap <localleader>C4 !!boxes -d java-cmt -r -t 8u<CR>
-    au BufEnter *.c,*.cpp,*.h,*.hpp vmap <localleader>C4 !boxes -d java-cmt -r -t 8u<CR>
-    au BufEnter *.c,*.cpp,*.h,*.hpp nmap <localleader>c5 !!boxes -d c-cmt -t 8u<CR>
-    au BufEnter *.c,*.cpp,*.h,*.hpp vmap <localleader>c5 !boxes -d c-cmt -t 8u<CR>
-    au BufEnter *.c,*.cpp,*.h,*.hpp nmap <localleader>C5 !!boxes -d c-cmt -r -t 8u<CR>
-    au BufEnter *.c,*.cpp,*.h,*.hpp vmap <localleader>C5 !boxes -d c-cmt -r -t 8u<CR>
-    au BufEnter .vimrc,.gvimrc,.vimperatorrc nmap <localleader>c1 !!boxes -d vim-cmt<CR>
-    au BufEnter .vimrc,.gvimrc,.vimperatorrc vmap <localleader>c1 !boxes -d vim-cmt<CR>
-    au BufEnter .vimrc,.gvimrc,.vimperatorrc nmap <localleader>cw1 !!boxes -d vim-cmt -s 120<CR>
-    au BufEnter .vimrc,.gvimrc,.vimperatorrc vmap <localleader>cw1 !boxes -d vim-cmt -s 120<CR>
-    au BufEnter .vimrc,.gvimrc,.vimperatorrc nmap <localleader>C1 !!boxes -d vim-cmt -r<CR>
-    au BufEnter .vimrc,.gvimrc,.vimperatorrc vmap <localleader>C1 !boxes -d vim-cmt -r<CR>
-    au BufEnter *.ly,*.tex nmap <localleader>c1 !!boxes -d percent<CR>
-    au BufEnter *.ly,*.tex vmap <localleader>c1 !boxes -d percent<CR>
-    au BufEnter *.ly,*.tex nmap <localleader>cw1 !!boxes -d percent -s 120<CR>
-    au BufEnter *.ly,*.tex vmap <localleader>cw1 !boxes -d percent -s 120<CR>
-    au BufEnter *.ly,*.tex nmap <localleader>C1 !!boxes -d percent -r<CR>
-    au BufEnter *.ly,*.tex vmap <localleader>C1 !boxes -d percent -r<CR>
-    au BufEnter *.ly,*.tex nmap <localleader>c2 !!boxes -d percent-line<CR>
-    au BufEnter *.ly,*.tex vmap <localleader>c2 !boxes -d percent-line<CR>
-    au BufEnter *.ly,*.tex nmap <localleader>C2 !!boxes -d percent-line -r<CR>
-    au BufEnter *.ly,*.tex vmap <localleader>C2 !boxes -d percent-line -r<CR>
-    au BufEnter *.hs nmap <localleader>c1 !!boxes -d ada-box<CR>
-    au BufEnter *.hs vmap <localleader>c1 !boxes -d ada-box<CR>
-    au BufEnter *.hs nmap <localleader>cw1 !!boxes -d ada-box -s 80<CR>
-    au BufEnter *.hs vmap <localleader>cw1 !boxes -d ada-box -s 80<CR>
-    au BufEnter *.hs nmap <localleader>C1 !!boxes -d ada-box -r<CR>
-    au BufEnter *.hs vmap <localleader>C1 !boxes -d ada-box -r<CR>
-    au BufEnter *.hs nmap <localleader>c2 !!boxes -d ada-cmt<CR>
-    au BufEnter *.hs vmap <localleader>c2 !boxes -d ada-cmt<CR>
-    au BufEnter *.hs nmap <localleader>C2 !!boxes -d ada-cmt -r<CR>
-    au BufEnter *.hs vmap <localleader>C2 !boxes -d ada-cmt -r<CR>
-    au BufEnter *.html vmap <localleader>bb iwoiw"zs<strong><C-R>z</strong><Esc>
-    au BufEnter *.html vmap <localleader>ii iwoiw"zs<em><C-R>z</em><Esc>
-    au BufEnter *.html vmap <localleader>bi iwoiw"zs<em><strong><C-R>z</strong></em><Esc>
-    au BufEnter *.html vmap <localleader>tt iwoiw"zs<pre><C-R>z</pre><Esc>
-    au BufEnter *.html vmap <localleader>mbb "zs<strong><C-R>z</strong><Esc>
-    au BufEnter *.html vmap <localleader>mii "zs<em><C-R>z</em><Esc>
-    au BufEnter *.html vmap <localleader>mbi "zs<em><strong><C-R>z</strong></em><Esc>
-    au BufEnter *.html vmap <localleader>mtt "zs<pre><C-R>z</pre><Esc>
-    au BufEnter *.html nmap <localleader>bb viw"zs<strong><C-R>z</strong><Esc>
-    au BufEnter *.html nmap <localleader>ii viw"zs<em><C-R>z</em><Esc>
-    au BufEnter *.html nmap <localleader>bi viw"zs<em><strong><C-R>z</strong></em><Esc>
-    au BufEnter *.html nmap <localleader>tt viw"zs<pre><C-R>z</pre><Esc>
-    au BufEnter *.tex vmap <localleader>bb iwoiw"zs\textbf{<C-R>z}<Esc>
-    au BufEnter *.tex vmap <localleader>ii iwoiw"zs\textit{<C-R>z}<Esc>
-    au BufEnter *.tex vmap <localleader>bi iwoiw"zs\textbf{\textit{<C-R>z}}<Esc>
-    au BufEnter *.tex vmap <localleader>bu iwoiw"zs\textbf{\uline{<C-R>z}}<Esc>
-    au BufEnter *.tex vmap <localleader>u  iwoiw"zs\uline{<C-R>z}<Esc>
-    au BufEnter *.tex vmap <localleader>sc iwoiw"zs\textsc{<C-R>z}<Esc>
-    au BufEnter *.tex vmap <localleader>sf iwoiw"zs\textsf{<C-R>z}<Esc>
-    au BufEnter *.tex vmap <localleader>tt iwoiw"zs\texttt{<C-R>z}<Esc>
-    au BufEnter *.tex vmap <localleader>mbb "zs\textbf{<C-R>z}<Esc>
-    au BufEnter *.tex vmap <localleader>mii "zs\textit{<C-R>z}<Esc>
-    au BufEnter *.tex vmap <localleader>mbi "zs\textbf{\textit{<C-R>z}}<Esc>
-    au BufEnter *.tex vmap <localleader>mbu "zs\textbf{\uline{<C-R>z}}<Esc>
-    au BufEnter *.tex vmap <localleader>mu  "zs\uline{<C-R>z}<Esc>
-    au BufEnter *.tex vmap <localleader>msc "zs\textsc{<C-R>z}<Esc>
-    au BufEnter *.tex vmap <localleader>msf "zs\textsf{<C-R>z}<Esc>
-    au BufEnter *.tex vmap <localleader>mtt "zs\texttt{<C-R>z}<Esc>
-    au BufEnter *.tex nmap <localleader>bb viw"zs\textbf{<C-R>z}<Esc>
-    au BufEnter *.tex nmap <localleader>ii viw"zs\textit{<C-R>z}<Esc>
-    au BufEnter *.tex nmap <localleader>bi viw"zs\textbf{\textit{<C-R>z}}<Esc>
-    au BufEnter *.tex nmap <localleader>bu viw"zs\textbf{\uline{<C-R>z}}<Esc>
-    au BufEnter *.tex nmap <localleader>u  viw"zs\uline{<C-R>z}<Esc>
-    au BufEnter *.tex nmap <localleader>sc viw"zs\textsc{<C-R>z}<Esc>
-    au BufEnter *.tex nmap <localleader>sf viw"zs\textsf{<C-R>z}<Esc>
-    au BufEnter *.tex nmap <localleader>tt viw"zs\texttt{<C-R>z}<Esc>
+    au BufEnter * nmap <localleader>c1 !!boxes -d pound-alt2<cr>
+    au BufEnter * vmap <localleader>c1 !boxes -d pound-alt2<cr>
+    au BufEnter * nmap <localleader>cw1 !!boxes -d pound-alt2 -s 100<cr>
+    au BufEnter * vmap <localleader>cw1 !boxes -d pound-alt2 -s 100<cr>
+    au BufEnter * nmap <localleader>C1 !!boxes -d pound-alt2 -r<cr>
+    au BufEnter * vmap <localleader>C1 !boxes -d pound-alt2 -r<cr>
+    au BufEnter * nmap <localleader>c2 !!boxes -d pound-cmt<cr>
+    au BufEnter * vmap <localleader>c2 !boxes -d pound-cmt<cr>
+    au BufEnter * nmap <localleader>C2 !!boxes -d pound-cmt -r<cr>
+    au BufEnter * vmap <localleader>C2 !boxes -d pound-cmt -r<cr>
+    au BufEnter *.c,*.cpp,*.h,*.hpp nmap <localleader>c1 !!boxes -d c-top -t 8u<cr>
+    au BufEnter *.c,*.cpp,*.h,*.hpp vmap <localleader>c1 !boxes -d c-top -t 8u<cr>
+    au BufEnter *.c,*.cpp,*.h,*.hpp nmap <localleader>cw1 !!boxes -d c-top -s 80 -t 8u<cr>
+    au BufEnter *.c,*.cpp,*.h,*.hpp vmap <localleader>cw1 !boxes -d c-top -s 80 -t 8u<cr>
+    au BufEnter *.c,*.cpp,*.h,*.hpp nmap <localleader>C1 !!boxes -d c-top -r -t 8u<cr>
+    au BufEnter *.c,*.cpp,*.h,*.hpp vmap <localleader>C1 !boxes -d c-top -r -t 8u<cr>
+    au BufEnter *.c,*.cpp,*.h,*.hpp nmap <localleader>c2 !!boxes -d c-mid -t 8u<cr>
+    au BufEnter *.c,*.cpp,*.h,*.hpp vmap <localleader>c2 !boxes -d c-mid -t 8u<cr>
+    au BufEnter *.c,*.cpp,*.h,*.hpp nmap <localleader>cw2 !!boxes -d c-mid -s 80 -t 8u<cr>
+    au BufEnter *.c,*.cpp,*.h,*.hpp vmap <localleader>cw2 !boxes -d c-mid -s 80 -t 8u<cr>
+    au BufEnter *.c,*.cpp,*.h,*.hpp nmap <localleader>C2 !!boxes -d c-mid -r -t 8u<cr>
+    au BufEnter *.c,*.cpp,*.h,*.hpp vmap <localleader>C2 !boxes -d c-mid -r -t 8u<cr>
+    au BufEnter *.c,*.cpp,*.h,*.hpp nmap <localleader>c3 !!boxes -d c-bot -t 8u<cr>
+    au BufEnter *.c,*.cpp,*.h,*.hpp vmap <localleader>c3 !boxes -d c-bot -t 8u<cr>
+    au BufEnter *.c,*.cpp,*.h,*.hpp nmap <localleader>cw3 !!boxes -d c-bot -s 80 -t 8u<cr>
+    au BufEnter *.c,*.cpp,*.h,*.hpp vmap <localleader>cw3 !boxes -d c-bot -s 80 -t 8u<cr>
+    au BufEnter *.c,*.cpp,*.h,*.hpp nmap <localleader>C3 !!boxes -d c-bot -r -t 8u<cr>
+    au BufEnter *.c,*.cpp,*.h,*.hpp vmap <localleader>C3 !boxes -d c-bot -r -t 8u<cr>
+    au BufEnter *.c,*.cpp,*.h,*.hpp nmap <localleader>c4 !!boxes -d java-cmt -t 8u<cr>
+    au BufEnter *.c,*.cpp,*.h,*.hpp vmap <localleader>c4 !boxes -d java-cmt -t 8u<cr>
+    au BufEnter *.c,*.cpp,*.h,*.hpp nmap <localleader>C4 !!boxes -d java-cmt -r -t 8u<cr>
+    au BufEnter *.c,*.cpp,*.h,*.hpp vmap <localleader>C4 !boxes -d java-cmt -r -t 8u<cr>
+    au BufEnter *.c,*.cpp,*.h,*.hpp nmap <localleader>c5 !!boxes -d c-cmt -t 8u<cr>
+    au BufEnter *.c,*.cpp,*.h,*.hpp vmap <localleader>c5 !boxes -d c-cmt -t 8u<cr>
+    au BufEnter *.c,*.cpp,*.h,*.hpp nmap <localleader>C5 !!boxes -d c-cmt -r -t 8u<cr>
+    au BufEnter *.c,*.cpp,*.h,*.hpp vmap <localleader>C5 !boxes -d c-cmt -r -t 8u<cr>
+    au BufEnter .vimrc,.gvimrc,.vimperatorrc nmap <localleader>c1 !!boxes -d vim-cmt<cr>
+    au BufEnter .vimrc,.gvimrc,.vimperatorrc vmap <localleader>c1 !boxes -d vim-cmt<cr>
+    au BufEnter .vimrc,.gvimrc,.vimperatorrc nmap <localleader>cw1 !!boxes -d vim-cmt -s 120<cr>
+    au BufEnter .vimrc,.gvimrc,.vimperatorrc vmap <localleader>cw1 !boxes -d vim-cmt -s 120<cr>
+    au BufEnter .vimrc,.gvimrc,.vimperatorrc nmap <localleader>C1 !!boxes -d vim-cmt -r<cr>
+    au BufEnter .vimrc,.gvimrc,.vimperatorrc vmap <localleader>C1 !boxes -d vim-cmt -r<cr>
+    au BufEnter *.ly,*.tex nmap <localleader>c1 !!boxes -d percent<cr>
+    au BufEnter *.ly,*.tex vmap <localleader>c1 !boxes -d percent<cr>
+    au BufEnter *.ly,*.tex nmap <localleader>cw1 !!boxes -d percent -s 120<cr>
+    au BufEnter *.ly,*.tex vmap <localleader>cw1 !boxes -d percent -s 120<cr>
+    au BufEnter *.ly,*.tex nmap <localleader>C1 !!boxes -d percent -r<cr>
+    au BufEnter *.ly,*.tex vmap <localleader>C1 !boxes -d percent -r<cr>
+    au BufEnter *.ly,*.tex nmap <localleader>c2 !!boxes -d percent-line<cr>
+    au BufEnter *.ly,*.tex vmap <localleader>c2 !boxes -d percent-line<cr>
+    au BufEnter *.ly,*.tex nmap <localleader>C2 !!boxes -d percent-line -r<cr>
+    au BufEnter *.ly,*.tex vmap <localleader>C2 !boxes -d percent-line -r<cr>
+    au BufEnter *.hs nmap <localleader>c1 !!boxes -d ada-box<cr>
+    au BufEnter *.hs vmap <localleader>c1 !boxes -d ada-box<cr>
+    au BufEnter *.hs nmap <localleader>cw1 !!boxes -d ada-box -s 80<cr>
+    au BufEnter *.hs vmap <localleader>cw1 !boxes -d ada-box -s 80<cr>
+    au BufEnter *.hs nmap <localleader>C1 !!boxes -d ada-box -r<cr>
+    au BufEnter *.hs vmap <localleader>C1 !boxes -d ada-box -r<cr>
+    au BufEnter *.hs nmap <localleader>c2 !!boxes -d ada-cmt<cr>
+    au BufEnter *.hs vmap <localleader>c2 !boxes -d ada-cmt<cr>
+    au BufEnter *.hs nmap <localleader>C2 !!boxes -d ada-cmt -r<cr>
+    au BufEnter *.hs vmap <localleader>C2 !boxes -d ada-cmt -r<cr>
+    au BufEnter *.html vmap <localleader>bb iwoiw"zs<strong><C-R>z</strong><esc>
+    au BufEnter *.html vmap <localleader>ii iwoiw"zs<em><C-R>z</em><esc>
+    au BufEnter *.html vmap <localleader>bi iwoiw"zs<em><strong><C-R>z</strong></em><esc>
+    au BufEnter *.html vmap <localleader>tt iwoiw"zs<pre><C-R>z</pre><esc>
+    au BufEnter *.html vmap <localleader>mbb "zs<strong><C-R>z</strong><esc>
+    au BufEnter *.html vmap <localleader>mii "zs<em><C-R>z</em><esc>
+    au BufEnter *.html vmap <localleader>mbi "zs<em><strong><C-R>z</strong></em><esc>
+    au BufEnter *.html vmap <localleader>mtt "zs<pre><C-R>z</pre><esc>
+    au BufEnter *.html nmap <localleader>bb viw"zs<strong><C-R>z</strong><esc>
+    au BufEnter *.html nmap <localleader>ii viw"zs<em><C-R>z</em><esc>
+    au BufEnter *.html nmap <localleader>bi viw"zs<em><strong><C-R>z</strong></em><esc>
+    au BufEnter *.html nmap <localleader>tt viw"zs<pre><C-R>z</pre><esc>
+    au BufEnter *.tex vmap <localleader>bb iwoiw"zs\textbf{<C-R>z}<esc>
+    au BufEnter *.tex vmap <localleader>ii iwoiw"zs\textit{<C-R>z}<esc>
+    au BufEnter *.tex vmap <localleader>bi iwoiw"zs\textbf{\textit{<C-R>z}}<esc>
+    au BufEnter *.tex vmap <localleader>bu iwoiw"zs\textbf{\uline{<C-R>z}}<esc>
+    au BufEnter *.tex vmap <localleader>u  iwoiw"zs\uline{<C-R>z}<esc>
+    au BufEnter *.tex vmap <localleader>sc iwoiw"zs\textsc{<C-R>z}<esc>
+    au BufEnter *.tex vmap <localleader>sf iwoiw"zs\textsf{<C-R>z}<esc>
+    au BufEnter *.tex vmap <localleader>tt iwoiw"zs\texttt{<C-R>z}<esc>
+    au BufEnter *.tex vmap <localleader>mbb "zs\textbf{<C-R>z}<esc>
+    au BufEnter *.tex vmap <localleader>mii "zs\textit{<C-R>z}<esc>
+    au BufEnter *.tex vmap <localleader>mbi "zs\textbf{\textit{<C-R>z}}<esc>
+    au BufEnter *.tex vmap <localleader>mbu "zs\textbf{\uline{<C-R>z}}<esc>
+    au BufEnter *.tex vmap <localleader>mu  "zs\uline{<C-R>z}<esc>
+    au BufEnter *.tex vmap <localleader>msc "zs\textsc{<C-R>z}<esc>
+    au BufEnter *.tex vmap <localleader>msf "zs\textsf{<C-R>z}<esc>
+    au BufEnter *.tex vmap <localleader>mtt "zs\texttt{<C-R>z}<esc>
+    au BufEnter *.tex nmap <localleader>bb viw"zs\textbf{<C-R>z}<esc>
+    au BufEnter *.tex nmap <localleader>ii viw"zs\textit{<C-R>z}<esc>
+    au BufEnter *.tex nmap <localleader>bi viw"zs\textbf{\textit{<C-R>z}}<esc>
+    au BufEnter *.tex nmap <localleader>bu viw"zs\textbf{\uline{<C-R>z}}<esc>
+    au BufEnter *.tex nmap <localleader>u  viw"zs\uline{<C-R>z}<esc>
+    au BufEnter *.tex nmap <localleader>sc viw"zs\textsc{<C-R>z}<esc>
+    au BufEnter *.tex nmap <localleader>sf viw"zs\textsf{<C-R>z}<esc>
+    au BufEnter *.tex nmap <localleader>tt viw"zs\texttt{<C-R>z}<esc>
 
     " highlight red any trailing whitespace
     highlight ExtraWhitespace ctermbg=red guibg=red
@@ -268,31 +246,32 @@ nmap <localleader>p "+p
 nmap <localleader>P "+P
 
 " Remove K from being mapped to interactive man pages
-nmap K <Esc>
-vmap K <Esc>
+nmap K <nop>
+vmap K <nop>
 
 " NOTE: the <F1> key in normal mode is mapped to ":help" by default
 " quicksave files
-nmap <F1> :up<CR>
-imap <F1> <Esc>:up<CR>a
-nmap <localleader>w :up<CR>
+nmap <F1> :up<cr>
+imap <F1> <esc>:up<cr>a
+nmap <localleader>w :up<cr>
+" force save
+nmap <localleader>W :w<cr>
 
 " exit
-nmap <F2> :q<CR>
-imap <F2> <Esc>:q<CR>
-nmap <localleader>q :q<CR>
-nmap <localleader>Q :q!<CR>
+nmap <localleader>q :q<cr>
+nmap <localleader>Q :q!<cr>
 
 " save and exit (equivalent to "ZZ")
 nmap <localleader>x :x<cr>
 
 " toggle search highlighting
-map <F3> <esc>:noh<cr>
+map <F2> <esc>:noh<cr>
 
-" programming commands
-imap <F5> <Esc>:!g++ -Wall -mtune=native -m32 % -o ~/prog/temp32<CR>
-imap <F6> <Esc>:!xterm -hold -e ~/prog/temp32<CR>
-nmap <F6> <Esc>:!xterm -hold -e ~/prog/temp32<CR>
+" highlight lines longer than 80 characters
+map <F3> <esc>:match ErrorMsg '\%>80v.\+'<cr>
+
+" find lines longer than 80 characters
+nmap <localleader>fl /\%>80v.\+<cr>
 
 " remove all trailing whitespace
 nmap <silent> <localleader>e :call KillWhiteSpace()<cr>
@@ -300,58 +279,46 @@ nmap <silent> <localleader>e :call KillWhiteSpace()<cr>
 " replace all /r/n () with /n
 nmap <silent> <localleader>E :call KillWinNL()<cr>
 
-" Use <F9> to toggle between 'paste' and 'nopaste'
-set pastetoggle=<F9>
-
-" make windows equal in height/width
-nmap <F10> <C-w>=
-imap <F10> <C-w>=
+" Use <F10> to toggle between 'paste' and 'nopaste'
+set pastetoggle=<F10>
 
 " toggle status bar
-nmap <silent> <F11> :call Toggle_status_bar()<CR>
-imap <silent> <F11> <Esc>:call Toggle_status_bar()<CR>
+nmap <silent> <F11> :call Toggle_status_bar()<cr>
+imap <silent> <F11> <esc>:call Toggle_status_bar()<cr>
 
 " toggle line numbers
 nmap <F12> :if exists("g:syntax_on") <Bar>
     \   syntax off <Bar>
     \ else <Bar>
     \   syntax enable <Bar>
-    \ endif <CR>
-imap <F12> <Esc>:if exists("g:syntax_on") <Bar>
+    \ endif <cr>
+imap <F12> <esc>:if exists("g:syntax_on") <Bar>
     \   syntax off <Bar>
     \ else <Bar>
     \   syntax enable <Bar>
-    \ endif <CR>
-
-" integration with the sessionman.vim plugin by Yuri Klubakov
-nmap <localleader>so :SessionOpen<space>
-nmap <localleader>ss :SessionSave<CR>
-nmap <localleader>sa :SessionSaveAs<space>
+    \ endif <cr>
 
 " move across tabs
-nnoremap <C-l> :tabnext<CR>
-nnoremap <C-h> :tabprevious<CR>
-inoremap <C-l> <Esc>:tabnext<CR>
-inoremap <C-h> <Esc>:tabprevious<CR>
+nnoremap <C-l> :tabnext<cr>
+nnoremap <C-h> :tabprevious<cr>
+inoremap <C-l> <esc>:tabnext<cr>
+inoremap <C-h> <esc>:tabprevious<cr>
 
 " window movement (i.e., moving around INSIDE a tab)
 nmap <Tab> <C-w><C-w>
-"inoremap <S-Tab> <Esc><C-w><C-w>
+"inoremap <S-Tab> <esc><C-w><C-w>
 
 " buffer movement (i.e., moving around INSIDE a window)
-nmap <S-h> :bn<CR>
-nmap <S-l> :bp<CR>
+nmap <S-h> :bn<cr>
+nmap <S-l> :bp<cr>
 
 " faster access to normal mode
-imap kj <Esc>
+imap kj <esc>
 
 nnoremap <space> 10<c-e>10j
 nnoremap <backspace> 10<c-y>10k
 vnoremap <space> 10<c-e>10j
 vnoremap <backspace> 10<c-y>10k
-
-" find lines longer than 120 characters
-nmap <localleader>fl /^.\{-}\zs.\%>79v<cr>
 
 " open buffer to current directory's contents
 nmap <localleader>D :e<space>.<cr>
@@ -366,22 +333,5 @@ nmap <localleader>h :sp<cr>
 nmap <localleader>H :sp<space>.<cr>
 nmap <localleader>v :vsp<cr>
 nmap <localleader>V :vsp<space>.<cr>
-
-" Date and time -- various formats
-" show current full date, with day name, followed by arrow
-nmap <silent> <localleader>df :r<space>!<space>~/syscfg/script/sys/time.rb<space>0<cr>A<Space>-><Space>
-" show current full date, with week number (with Sunday as the first day of a "week"), inside a comment box
-nmap <silent> <localleader>ds i###############<Esc>o#<space><C-R>=strftime("%Y%m%d %U")<esc><space>#<Esc>o###############<esc>
-
-" special shortcuts for editing human-made notes quickly
-" append a line with a timestamp to denote when that note was created
-" task CREATED
-nmap <silent> <localleader>tc A<space>[@<space><esc>:r<space>!~/syscfg/script/sys/time.rb<space>1<cr>I<backspace><esc>A]<esc>
-" task DONE
-nmap <silent> <localleader>td 0^a><space>[X]<esc>A<space>[<esc>:r<space>!~/syscfg/script/sys/time.rb<space>0<cr>I<backspace><esc>A]<esc>0<cr>
-" task MODIFIED and COMPLETED
-nmap <silent> <localleader>tmd 0^a><space>[X~]<esc>A<space>[<esc>:r<space>!~/syscfg/script/sys/time.rb<space>0<cr>I<backspace><esc>A]<space>=><space>
-" task CANCELLED
-nmap <silent> <localleader>tC 0^a><space>[/]<esc>A<space>[<esc>:r<space>!~/syscfg/script/sys/time.rb<space>0<cr>I<backspace><esc>A]<space>=><space>
 
 " vim: syntax=vim
