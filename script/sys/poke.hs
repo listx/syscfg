@@ -1,9 +1,8 @@
--- compile with `ghc --make poke' (yes, you can just say `poke' instead of `poke.hs')
 module Main where
 
 import IO
-import System.Random    -- for random numbers
-import System.IO        -- for hSetEcho
+import System.Random -- for random numbers
+import System.IO -- for hSetEcho
 import System
 import Data.List (nub)
 
@@ -27,7 +26,7 @@ giveKey keysCustom c n = case c of
         extractChar xs = xs!!mod n (length xs)
 
 showRandomKey :: String -> IO ()
-showRandomKey keysCustom = getChar >>= handleKey
+showRandomKey keysCustom = handleKey =<< getChar
     where
         handleKey key = if key /= 'q'
             then getStdRandom (randomR (0, length (keysAll ++ keysCustom) - 1)) >>=
