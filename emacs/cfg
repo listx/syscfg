@@ -12,10 +12,9 @@
 (setq-default indicate-empty-lines t)
 (setq-default show-trailing-whitespace t)
 
-; color themes...
-(require 'color-theme)
-(color-theme-initialize)
-(color-theme-charcoal-black) ; load default color theme
+; zenburn color theme
+(require 'zenburn)
+(zenburn)
 
 ; ditaa program (and integration with org-mode)
 (setq org-ditaa-jar-path "/usr/share/java/ditaa/ditaa-0_9.jar") ; load path for ditaa
