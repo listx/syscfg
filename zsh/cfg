@@ -334,6 +334,10 @@ alias yc='sudo yaourt -C'
 # update all packages ending in "-git" (all git-based packages)
 alias pg='for pkg in $(pq | grep -- "-git" | cut -d " " -f1); do bs $pkg; done'
 
+# start and stop the default network interface (ethernet port)
+alias neu='sudo /etc/rc.d/network start'
+alias ned='sudo /etc/rc.d/network stop'
+
 # CUSTOM SCRIPTS
 #
 # encoding/decoding
@@ -367,8 +371,6 @@ case $HOST in
         alias discof='sudo umount /dev/sr1'
         alias disc2on='sudo mount /dev/sr0'
         alias disc2of='sudo umount /dev/sr0'
-        alias neu='sudo /etc/rc.d/network start'
-        alias ned='sudo /etc/rc.d/network stop'
         alias net_seal='sudo ifconfig eth1 down'
         alias net_unseal='sudo ifconfig eth1 up'
     ;;
@@ -380,8 +382,6 @@ case $HOST in
         alias m3='d /mnt/u0'
         alias discon='sudo mount /dev/sr0'
         alias discof='sudo umount /dev/sr0'
-        alias neu='sudo netcfg -c luxion-wired'
-        alias ned='sudo netcfg -d luxion-wired'
         alias nwu='sudo netcfg -c luxion-wireless-home'
         alias nwd='sudo netcfg -d luxion-wireless-home'
         alias net_seal='sudo ifconfig eth0 down'
@@ -396,8 +396,6 @@ case $HOST in
         alias m4='d /mnt/u0'
         alias discon='sudo mount /dev/sr0'
         alias discof='sudo umount /dev/sr0'
-        alias neu='sudo netcfg -c aether-wired'
-        alias ned='sudo netcfg -d aether-wired'
         alias nwu='sudo netcfg -c aether-wireless-home'
         alias nwd='sudo netcfg -d aether-wireless-home'
         alias net_seal='sudo ifconfig eth0 down'
