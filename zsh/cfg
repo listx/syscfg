@@ -367,6 +367,8 @@ case $HOST in
         alias discof='sudo umount /dev/sr1'
         alias disc2on='sudo mount /dev/sr0'
         alias disc2of='sudo umount /dev/sr0'
+        alias neu='sudo /etc/rc.d/network start'
+        alias ned='sudo /etc/rc.d/network stop'
         alias net_seal='sudo ifconfig eth1 down'
         alias net_unseal='sudo ifconfig eth1 up'
     ;;
