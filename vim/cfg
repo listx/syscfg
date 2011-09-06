@@ -264,6 +264,10 @@ nmap <localleader>Q :q!<cr>
 " save and exit (equivalent to "ZZ")
 nmap <localleader>x :x<cr>
 
+" >> and << in visual mode
+vmap <tab> >gv
+vmap <s-tab> <gv
+
 " toggle search highlighting
 map <F2> <esc>:noh<cr>
 
