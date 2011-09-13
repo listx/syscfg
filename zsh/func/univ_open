@@ -34,7 +34,7 @@ univ_open() {
         # we use && and || for simple ternary operation (like ? and : in C)
         [[ -f $1 ]] && file=$1 || file=${=@[-1]}
         case $file:e:l in
-            (doc|odf|odt|rtf)
+            (doc|docx|odf|odt|rtf)
                 soffice -writer $@ &>/dev/null & disown
             ;;
             (pps|ppt)
