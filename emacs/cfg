@@ -35,7 +35,6 @@
 (yas/load-directory "/usr/share/emacs/site-lisp/yas/snippets")
 
 ; evil, the Extensible VI Layer! seee http://gitorious.org/evil/pages/Home
-(add-to-list 'load-path "~/.emacs.d/script/evil")
 (require 'evil)
 (evil-mode 1)
 ; some keymaps from ~/.vimrc
