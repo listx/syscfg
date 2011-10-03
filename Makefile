@@ -54,7 +54,7 @@ endif
 vim:
 	ln -fns $(CFGROOT)/vim              ${HOME}/.vim
 	ln -fs $(CFGROOT)/vim/cfg           ${HOME}/.vimrc
-	ln -fs $(CFGROOT)/vim/cfg-gui       ${HOME}/.gvimrc
+	ln -fs $(CFGROOT)/vim/cfg           ${HOME}/.gvimrc
 xdefaults:
 	ln -fs $(CFGROOT)/xdefaults/cfg     ${HOME}/.Xdefaults
 xinitrc:

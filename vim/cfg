@@ -341,4 +341,9 @@ nmap <localleader>H :sp<space>.<cr>
 nmap <localleader>v :vsp<cr>
 nmap <localleader>V :vsp<space>.<cr>
 
+" make <s-insert> input the X selection in gvim, just like in regular vim (under urxvt)
+if has ("gui_running")
+    imap <s-insert> <middlemouse>
+endif
+
 " vim: syntax=vim
