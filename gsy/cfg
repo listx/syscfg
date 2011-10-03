@@ -64,11 +64,11 @@ listdata@exelion:~/secure
 listdata@aether.e:~/secure
 listdata@luxion.e:~/secure
 
-listdata@exelion:~/ghost/solidchess.git
-/mnt/u0/h/prog/chess/solidchess
-listdata@exelion:~/prog/chess/solidchess
-listdata@aether.e:~/prog/chess/solidchess
-listdata@luxion.e:~/prog/chess/solidchess
+listdata@exelion:~/ghost/spektra.git
+/mnt/u0/h/prog/chess/spektra
+listdata@exelion:~/prog/chess/spektra
+listdata@aether.e:~/prog/chess/spektra
+listdata@luxion.e:~/prog/chess/spektra
 
 listdata@exelion:~/ghost/meteor.git
 /mnt/u0/h/prog/chess/meteor
@@ -196,12 +196,12 @@ listdata@aether.e:~/prog/simtic
 listdata@luxion.e:~/prog/simtic
 otter@ocean:~/prog/simtic
 
-listdata@exelion:~/ghost/spektra.git
-/mnt/u0/h/prog/chess/spektra
-listdata@exelion:~/prog/chess/spektra
-listdata@aether.e:~/prog/chess/spektra
-listdata@luxion.e:~/prog/chess/spektra
-otter@ocean:~/prog/chess/spektra
+listdata@exelion:~/ghost/spektra_old.git
+/mnt/u0/h/prog/chess/spektra_old
+listdata@exelion:~/prog/chess/spektra_old
+listdata@aether.e:~/prog/chess/spektra_old
+listdata@luxion.e:~/prog/chess/spektra_old
+otter@ocean:~/prog/chess/spektra_old
 
 listdata@exelion:~/ghost/toucan.git
 /mnt/u0/repos/toucan
