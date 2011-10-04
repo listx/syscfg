@@ -165,7 +165,7 @@ myKeys hostname conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((modm .|. controlMask, xK_Escape     ), io (exitWith ExitSuccess))
 
     -- Restart xmonad
-    , ((modm .|. altMask,   xK_Escape     ), spawn "xmonad --recompile; xmonad --restart")
+    , ((modm,               xK_Escape     ), spawn "xmonad --recompile; xmonad --restart")
 
     -- CUSTOM KEYBINDINGS HERE --
     , ((mod4Mask              , xK_1     ), spawn (term1 ++ orgIntraday))
