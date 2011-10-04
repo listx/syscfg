@@ -456,44 +456,44 @@ myLayout = Mirror tiled
 --
 myManageHook :: ManageHook
 myManageHook = composeAll $
-    [ className =? "MPlayer"                            --> doFloat
-    , className =? "Gimp"                               --> doFloat
-    , className =? "Agave"                              --> doCenterFloat
-    , resource  =? "desktop_window"                     --> doIgnore
-    , resource  =? "kdesktop"                           --> doIgnore
-    , resource  =? "vlc"                                --> doCenterFloat
-    , resource  =? "WeeChat"                            --> doShift "F9"
-    , stringProperty "WM_NAME"  =? "rtorrent"           --> doShift "F10"
-    , stringProperty "WM_NAME"  =? "htop"               --> doShift "F11"
-    , stringProperty "WM_ICON_NAME"  =? "iftop"         --> doShift "F12"
-    , stringProperty "WM_NAME"  =? "alsamixer"          --> doShift "F12"
-    , resource  =? "floatme"                            --> doCenterFloat
-    , stringProperty "WM_NAME"  =? "ncmpcpp"            --> doShift =<< liftX (tryGetEmptyWSIDofGroup Music)
-    , stringProperty "WM_NAME"  =? "mplayer"            --> doShift =<< liftX (tryGetEmptyWSIDofGroup Music)
-    , resource  =? "Navigator"                          --> doShift =<< liftX (tryGetEmptyWSIDofGroup Net)
-    , className  =? "Evince"                            --> doShift =<< liftX (tryGetEmptyWSIDofGroup Misc)
-    , className  =? "Blender:Render"                    --> doFloat
-    , resource  =? "Browser"                            --> doFloat
-    , className  =? "Galculator"                        --> doCenterFloat
-    , className  =? "Gcalctool"                         --> doCenterFloat
-    , className  =? "XClock"                            --> doCenterFloat
-    , className  =? "Audacity"                          --> doFloat
-    , className  =? "Gitk"                              --> doCenterFloat
-    , className  =? "XDvi"                              --> doCenterFloat
-    , className  =? "Scid"                              --> doFloat
-    , stringProperty "WM_NAME"  =? "Scid"               --> doFloat
-    , className  =? "Toplevel"                          --> doFloat -- Scid's many popup windows
-    , className  =? "Pychess"                           --> doFloat
-    , className  =? "Glchess"                           --> doFloat
-    , className  =? "Raptor"                            --> doFloat
-    , className  =? "Smplayer"                          --> doFloat
-    , className  =? "linux_client"                      --> doFloat
-    , className  =? "Bsnes"                             --> doCenterFloat
-    , className  =? "Phoenix"                           --> doCenterFloat
-    , className  =? "VirtualBox"                        --> doFloat
-    , className  =? "libreoffice-writer"                --> doFloat
-    , className  =? "Xsane"                             --> doFloat
-    , title      =? "Spektra"                           --> doFloat
+    [ className =? "MPlayer"                    --> doFloat
+    , className =? "Gimp"                       --> doFloat
+    , className =? "Agave"                      --> doCenterFloat
+    , resource  =? "desktop_window"             --> doIgnore
+    , resource  =? "kdesktop"                   --> doIgnore
+    , resource  =? "vlc"                        --> doCenterFloat
+    , resource  =? "WeeChat"                    --> doShift "F9"
+    , title     =? "rtorrent"                   --> doShift "F10"
+    , title     =? "htop"                       --> doShift "F11"
+    , stringProperty "WM_ICON_NAME" =? "iftop"  --> doShift "F12"
+    , title     =? "alsamixer"                  --> doShift "F12"
+    , resource  =? "floatme"                    --> doCenterFloat
+    , title     =? "ncmpcpp"                    --> doShift =<< liftX (tryGetEmptyWSIDofGroup Music)
+    , title     =? "mplayer"                    --> doShift =<< liftX (tryGetEmptyWSIDofGroup Music)
+    , resource  =? "Navigator"                  --> doShift =<< liftX (tryGetEmptyWSIDofGroup Net)
+    , className =? "Evince"                     --> doShift =<< liftX (tryGetEmptyWSIDofGroup Misc)
+    , className =? "Blender:Render"             --> doFloat
+    , resource  =? "Browser"                    --> doFloat
+    , className =? "Galculator"                 --> doCenterFloat
+    , className =? "Gcalctool"                  --> doCenterFloat
+    , className =? "XClock"                     --> doCenterFloat
+    , className =? "Audacity"                   --> doFloat
+    , className =? "Gitk"                       --> doCenterFloat
+    , className =? "XDvi"                       --> doCenterFloat
+    , className =? "Scid"                       --> doFloat
+    , title     =? "Scid"                       --> doFloat
+    , className =? "Toplevel"                   --> doFloat -- Scid's many popup windows
+    , className =? "Pychess"                    --> doFloat
+    , className =? "Glchess"                    --> doFloat
+    , className =? "Raptor"                     --> doFloat
+    , className =? "Smplayer"                   --> doFloat
+    , className =? "linux_client"               --> doFloat
+    , className =? "Bsnes"                      --> doCenterFloat
+    , className =? "Phoenix"                    --> doCenterFloat
+    , className =? "VirtualBox"                 --> doFloat
+    , className =? "libreoffice-writer"         --> doFloat
+    , className =? "Xsane"                      --> doFloat
+    , title     =? "Spektra"                    --> doFloat
     ]
     ++  [ resource =? ("atWorkspace" ++ s) --> doShift s
         | s <- map show [0..9] ++ map (('F':) . show) [1..12]
