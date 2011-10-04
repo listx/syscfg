@@ -493,6 +493,7 @@ myManageHook = composeAll $
     , className  =? "VirtualBox"                        --> doFloat
     , className  =? "libreoffice-writer"                --> doFloat
     , className  =? "Xsane"                             --> doFloat
+    , title      =? "Spektra"                           --> doFloat
     ]
     ++  [ resource =? ("atWorkspace" ++ s) --> doShift s
         | s <- map show [0..9] ++ map (('F':) . show) [1..12]
