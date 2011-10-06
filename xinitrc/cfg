@@ -11,7 +11,8 @@ unclutter -grab -noevents -idle 10 -not Blender Gimp &
 # explicitly choose "us" (altgr-intl) keyboard layout (and set Caps Lock key to
 # xmonad's modmap key); also, don't background it just to make sure that it
 # gets run as a single thread (to minimize conflicts with other X API programs)
-/home/listdata/syscfg/script/sys/layout_toggle.sh
+setxkbmap -rules evdev -model evdev -layout us -variant altgr-intl -option "terminate:ctrl_alt_bksp"
+/home/listdata/syscfg/script/sys/xmodmap.sh
 
 # set default repeat rate (miliseconds delay, keystroke speed)
 xset r rate 250 80 &
