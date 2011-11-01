@@ -1,18 +1,16 @@
 {-# LANGUAGE DeriveDataTypeable, RecordWildCards #-}
 module Main where
 
+import Control.Monad (when)
 import System.Console.CmdArgs.Implicit
 import System.IO
 import System.Environment
 import System.Exit
 import System.Process
-
 import Text.Parsec.Char hiding (upper)
 import Text.Parsec.Combinator
 import Text.Parsec.Prim
 import Text.Parsec.String
-import Control.Monad.Identity
---import qualified Text.Show.Pretty as Pr
 
 data Opts = Opts
     { all_devices :: Bool
@@ -33,7 +31,11 @@ progOpts = Opts
     &= details
         [ "Notes:"
         , ""
-        , "The default behavior without any options is to try to mount a USB device. Here, `device' means a device under the /dev directory, and in our context, is actually a file system partition. Many USB drives have only a single partition, in which case the term `device' means both the USB drive and the single partition it has."
+        , "The default behavior without any options is to try to mount a USB device."
+            ++ " Here, `device' means a device under the /dev directory, and in our context, is actually a file system partition."
+            ++ " Many USB drives have only a single partition, in which case the term `device' means both the USB drive and the single partition it has."
+        , ""
+        , "Also, allowing the $USER to execute the mount and umount commands with sudo privileges (sudo visudo) will make things less clunky."
         ]
 
 getOpts :: IO Opts
@@ -58,18 +60,20 @@ data BlockDevice = BlockDevice
     , mountPoint :: MountPoint
     } deriving (Eq)
 
-data MountPoint = MPath { path :: FilePath }
-                | Swap
-                | Unmounted
-                | UnknownBlkidVal
+data MountPoint
+    = MPath { path :: FilePath }
+    | Swap
+    | Unmounted
+    | UnknownBlkidVal
     deriving (Eq)
 
 instance Show BlockDevice where
-    show BlockDevice{..} = unwords  [ shortname
-                                    , fsys
-                                    , uuid
-                                    , show mountPoint
-                                    ]
+    show BlockDevice{..} = unwords
+        [ shortname
+        , fsys
+        , uuid
+        , show mountPoint
+        ]
 
 instance Show MountPoint where
     show (MPath path) = path
@@ -77,8 +81,8 @@ instance Show MountPoint where
     show Unmounted = "Unmounted"
     show UnknownBlkidVal = "UnknownBlkidVal"
 
-_BLOCKDEVICE_DEFAULT :: BlockDevice
-_BLOCKDEVICE_DEFAULT = BlockDevice
+blockdeviceDefault :: BlockDevice
+blockdeviceDefault = BlockDevice
     { shortname = ""
     , uuid = ""
     , fsys = ""
@@ -88,11 +92,12 @@ _BLOCKDEVICE_DEFAULT = BlockDevice
 _ALPHANUM :: String
 _ALPHANUM = ['a'..'z'] ++ ['A'..'Z'] ++ ['0'..'9']
 
-data Color  = Red
-            | Green
-            | Yellow
-            | Blue
-            | CNone
+data Color
+    = Red
+    | Green
+    | Yellow
+    | Blue
+    | CNone
     deriving (Show, Eq)
 
 colorize :: Color -> String -> String
@@ -154,8 +159,9 @@ prog opts@Opts{..} user devsKV
 mountMenu :: Opts -> String -> [(String, (BlockDevice, FilePath))] -> IO ()
 mountMenu Opts{..} user devsKV
     | unmount = if length devsKV == 1
-        then do putStrLn "only 1 USB device to unmount"
-                tryMount False user (snd . head $ devsKV) >>= exitWith
+        then do
+            putStrLn "only 1 USB device to unmount"
+            tryMount False user (snd . head $ devsKV) >>= exitWith
         else chooseDev prompt user devsKV (tryMount False)
     | unmount_all = do
         putStrLn "unmounting all USB devices..."
@@ -188,7 +194,7 @@ chooseDev prompt user devsKV func = do
 tryMount :: Bool -> String -> (BlockDevice, FilePath) -> IO ExitCode
 tryMount mount user (BlockDevice{..}, mp) = do
     when (null $ mountArgs fsys user) $ do
-        errMsg $ "unsupported file system " ++ squote fsys ++ "\nsupported file systems: " ++ (unwords $ map fst (_FILE_SYSTEM_ARGS user))
+        errMsg $ "unsupported file system " ++ squote fsys ++ "\nsupported file systems: " ++ (unwords $ map fst (fileSystemArgs user))
         exitWith (ExitFailure 1)
     putStr $ (if mount then "" else "un")
         ++ "mounting "
@@ -199,13 +205,15 @@ tryMount mount user (BlockDevice{..}, mp) = do
     (_, _, _, p) <- createProcess $ cmd (mountArgs fsys user) shortname
     exitStatus <- waitForProcess p
     if (exitStatus == ExitSuccess)
-        then do putStrLn "OK"
-                return ExitSuccess
-        else do putStr "FAILED\n"
-                errMsg $ (if mount
-                    then "mount error (perhaps " ++ squote mp ++ " does not exist)"
-                    else "unmount error")
-                return (ExitFailure 1)
+        then do
+            putStrLn "OK"
+            return ExitSuccess
+        else do
+            putStr "FAILED\n"
+            errMsg $ (if mount
+                then "mount error (perhaps " ++ squote mp ++ " does not exist)"
+                else "unmount error")
+            return (ExitFailure 1)
     where
         cmd arguments devPath = CreateProcess
             { cmdspec = ShellCommand (if mount
@@ -219,14 +227,14 @@ tryMount mount user (BlockDevice{..}, mp) = do
             , close_fds = False
             }
 
-_FILE_SYSTEM_ARGS :: String -> [(String, String)]
-_FILE_SYSTEM_ARGS user =
+fileSystemArgs :: String -> [(String, String)]
+fileSystemArgs user =
     [ ("ext2", "ext2 -o rw,relatime")
     , ("vfat", "vfat -o rw,uid=" ++ user ++ ",gid=" ++ user)
     ]
 
 mountArgs :: String -> String -> String
-mountArgs fsys user = case lookup fsys (_FILE_SYSTEM_ARGS user) of
+mountArgs fsys user = case lookup fsys (fileSystemArgs user) of
     Just a -> a
     _ -> []
 
@@ -287,37 +295,40 @@ parserWhitespace = many1 $ oneOf " \t\n\r"
 
 parserMP :: Parser MountPoint
 parserMP =
-    try (   do  a <- oneOf "<("
-                b <- manyTill anyChar (lookAhead $ (oneOf ">)"))
-                _ <- oneOf ">)"
-                let mp = case a of
-                        '<' -> Swap
-                        '(' -> case b of
-                            "not mounted" -> Unmounted
-                            _ -> UnknownBlkidVal
-                        _ -> UnknownBlkidVal
-                return mp
+    try ( do
+        a <- oneOf "<("
+        b <- manyTill anyChar (lookAhead $ (oneOf ">)"))
+        _ <- oneOf ">)"
+        let mp = case a of
+                '<' -> Swap
+                '(' -> case b of
+                    "not mounted" -> Unmounted
+                    _ -> UnknownBlkidVal
+                _ -> UnknownBlkidVal
+        return mp
         )
     <|> (parserIdentifier >>= (\s -> return MPath {path = s}))
     <?> "blkid's mount point description"
 
 blkidParser :: Parser BlockDevice
 blkidParser =
-    try (   do  sname <- parserIdentifier
-                _ <- parserWhitespace
-                fs <- parserIdentifier
-                _ <- parserWhitespace
-                _ <- parserIdentifier -- leave out the "label" column, even if it exists
-                _ <- parserWhitespace
-                mp <- parserMP
-                _ <- parserWhitespace
-                uid <- parserIdentifier
-                eof
-                return BlockDevice  { shortname = sname
-                                    , uuid = uid
-                                    , fsys = fs
-                                    , mountPoint = mp
-                                    }
+    try ( do
+        sname <- parserIdentifier
+        _ <- parserWhitespace
+        fs <- parserIdentifier
+        _ <- parserWhitespace
+        _ <- parserIdentifier -- leave out the "label" column, even if it exists
+        _ <- parserWhitespace
+        mp <- parserMP
+        _ <- parserWhitespace
+        uid <- parserIdentifier
+        eof
+        return BlockDevice
+           { shortname = sname
+           , uuid = uid
+           , fsys = fs
+           , mountPoint = mp
+           }
         )
     <|>
     do  sname <- parserIdentifier
@@ -328,15 +339,16 @@ blkidParser =
         _ <- parserWhitespace
         uid <- parserIdentifier
         eof
-        return BlockDevice  { shortname = sname
-                            , uuid = uid
-                            , fsys = fs
-                            , mountPoint = mp
-                            }
+        return BlockDevice
+            { shortname = sname
+            , uuid = uid
+            , fsys = fs
+            , mountPoint = mp
+            }
     <?> "5 or 4 fields to parse"
 
 parseBlkid :: String -> IO BlockDevice
 parseBlkid src =
     case parse blkidParser "output of `sudo blkid -o list'" src of
-        Left parseError -> errMsg (show parseError) >> return _BLOCKDEVICE_DEFAULT
+        Left parseError -> errMsg (show parseError) >> return blockdeviceDefault
         Right result -> return result
