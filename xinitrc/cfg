@@ -17,8 +17,11 @@ setxkbmap -rules evdev -model evdev -layout us -variant altgr-intl -option "term
 # set default repeat rate (miliseconds delay, keystroke speed)
 xset r rate 250 80 &
 
-# IBus input method
-ibus-daemon --xim -d &
+# set input method to uim
+export GTK_IM_MODULE=uim
+export QT_IM_MODULE=uim
+export XMODIFIERS=@im=uim
+uim-xim &
 
 # start the emacs daemon
 emacs --daemon &
@@ -47,11 +50,6 @@ case $(hostname) in
     *)
     ;;
 esac
-
-# set input method to ibus
-export GTK_IM_MODULE=ibus
-export XMODIFIERS=@im=ibus
-export QT_IM_MODULE=ibus
 
 # start a random screensaver
 # dependencies: shantz-xwinwrap-bzr from AUR; xscreensaver
