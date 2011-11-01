@@ -71,7 +71,7 @@ univ_open() {
                 fontforge $@ &>/dev/null & disown
             ;;
             (org)
-                emacs $@ &>/dev/null & disown
+                emacsclient -c $@ &>/dev/null & disown
             ;;
             *)
                 vim -p $@
