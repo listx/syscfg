@@ -161,6 +161,7 @@ color quoted9    color108 color237
 
 auto_view text/html
 
+set sendmail="/usr/bin/msmtp"
 set use_from=yes
 set use_envelope_from=yes
 # vim: syntax=muttrc
