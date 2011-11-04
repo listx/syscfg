@@ -73,6 +73,9 @@ univ_open() {
             (org)
                 emacsclient -c $@ &>/dev/null & disown
             ;;
+            (chm)
+                xchm $@ &>/dev/null & disown
+            ;;
             *)
                 vim -p $@
             ;;
