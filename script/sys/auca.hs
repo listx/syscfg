@@ -13,6 +13,7 @@ import System.Process
 
 data Opts = Opts
     { command :: [String]
+    , command_simple :: String
     , file :: [FilePath]
     , list :: FilePath
     } deriving (Data, Typeable, Show, Eq)
@@ -20,6 +21,7 @@ data Opts = Opts
 progOpts :: Opts
 progOpts = Opts
     { command = def &= help "command(s) to execute; up to 10 (hotkeyed to 1-0)"
+    , command_simple = def &= name "C" &= help "command to execute; it takes the first file, and calls command after it; e.g., `-C lilypond -f foo.ly' will translate to `lilypond foo.ly' as the default command"
     , file = def &= help "file(s) to watch; can be repeated multiple times to define multiple files"
     , list = def &= help "list of files to watch"
     }
@@ -47,19 +49,19 @@ data Color
     = Red
     | Green
     | Yellow
-    | Cyan
     | Blue
-    | CNone
+    | Magenta
+    | Cyan
     deriving (Show, Eq)
 
 colorize :: Color -> String -> String
 colorize c s = case c of
-    Blue -> "\x1b[1;34m" ++ s ++ "\x1b[0m"
-    Green -> "\x1b[1;32m" ++ s ++ "\x1b[0m"
     Red -> "\x1b[1;31m" ++ s ++ "\x1b[0m"
+    Green -> "\x1b[1;32m" ++ s ++ "\x1b[0m"
     Yellow -> "\x1b[1;33m" ++ s ++ "\x1b[0m"
+    Blue -> "\x1b[1;34m" ++ s ++ "\x1b[0m"
+    Magenta -> "\x1b[1;35m" ++ s ++ "\x1b[0m"
     Cyan -> "\x1b[1;36m" ++ s ++ "\x1b[0m"
-    _ -> s
 
 main :: IO ()
 main = do
@@ -79,12 +81,13 @@ main = do
     flist <- mapM doesFileExist files -- e.g., --list x (and files defined in file x)
     errNo' <- filesCheck fs flist
     when (errNo' > 0) $ exitWith $ ExitFailure errNo
-    helpMsg opts
-    prog opts (nub $ file ++ files) -- combine files and remove duplicates for simplicity
+    let filesMaster = nub $ file ++ files
+    helpMsg opts (head filesMaster)
+    prog opts filesMaster
 
 argsCheck :: Opts -> IO Int
 argsCheck Opts{..}
-    | null command = errMsgNum "--command must be defined" 1
+    | null command && null command_simple = errMsgNum "--command or --command-simple must be defined" 1
     | null file && null list = errMsgNum "either --file or --list must be defined" 1
     | otherwise = return 0
 
@@ -99,11 +102,13 @@ filesCheck fs flist
     | otherwise = return 0
 
 prog :: Opts -> [FilePath] -> IO ()
-prog opts filesToWatch = do
-    let comDef = head $ command opts
+prog opts@Opts{..} filesToWatch = do
+    let comDef = if null command_simple
+        then head $ command
+        else command_simple ++ " " ++ (head filesToWatch)
     filesTS <- mapM getTimestamp filesToWatch
     _ <- forkIO $ loop opts comDef filesToWatch filesTS -- loop to handle file changes
-    keyHandler opts comDef -- loop to handle key presses
+    keyHandler opts comDef (head filesToWatch) -- loop to handle key presses
 
 getTimestamp :: FilePath -> IO String
 getTimestamp f = do
@@ -114,9 +119,11 @@ getTimestamp f = do
         Nothing -> return []
     return sout'
 
-helpMsg :: Opts -> IO ()
-helpMsg Opts{..} = do
-    mapM_ showCom $ zip (map show [(1::Int)..10]) command
+helpMsg :: Opts -> FilePath -> IO ()
+helpMsg Opts{..} f = do
+    mapM_ showCom $ if null command
+        then [("1", command_simple ++ " " ++ f)]
+        else zip (map show [(1::Int)..10]) command
     putStrLn "press any key to execute the default command"
     putStrLn "press `h' for help"
     putStrLn "press `q' to quit"
@@ -128,29 +135,41 @@ loop :: Opts -> String -> [FilePath] -> [String] -> IO ()
 loop o@Opts{..} comDef files filesTS = do
     _ <- sleep 1
     filesTS' <- mapM getTimestamp files
-    when (filesTS /= filesTS') $ runCom $ cmd comDef
+    when (filesTS /= filesTS') $ do
+        putStrLn []
+        putStr $ colorize Magenta "change detected"
+        putStrLn $ "; executing command " ++ squote (colorize Blue comDef)
+        runCom $ cmd comDef
     loop o comDef files filesTS'
 
-keyHandler :: Opts -> String -> IO ()
-keyHandler o@Opts{..} comDef = do
+keyHandler :: Opts -> String -> FilePath -> IO ()
+keyHandler o@Opts{..} comDef f = do
     keyChar <- getChar
     case keyChar of
-        'h' -> helpMsg o >> keyHandler o comDef
+        'h' -> helpMsg o f >> keyHandler o comDef f
         'q' -> putStrLn [] >> return ()
         key -> do
             if elem key comKeys
                 then case lookup [key] comHash of
                     Just com -> do
-                        putStrLn $ "executing command " ++ squote (colorize Blue com)
+                        putStrLn []
+                        putStr $ colorize Cyan "manual override" ++ " (slot " ++ colorize Yellow [key] ++ ")"
+                        putStrLn $ "; executing command " ++ squote (colorize Blue com)
                         runCom $ cmd com
                     _ -> do
+                        putStrLn []
                         putStrLn $ "command slot for key " ++ squote (colorize Yellow [key]) ++ " is empty"
                 else do
+                    putStrLn []
+                    putStr $ colorize Cyan "manual override"
+                    putStrLn $ "; executing command " ++ squote (colorize Blue comDef)
                     runCom $ cmd comDef
-            keyHandler o comDef
+            keyHandler o comDef f
     where
         comHash :: [(String, String)]
-        comHash = zip (map show [(1::Int)..10]) command
+        comHash = if null command
+            then [("1", command_simple ++ " " ++ f)]
+            else zip (map show [(1::Int)..10]) command
         comKeys :: String
         comKeys = concatMap show [(0::Int)..9]
 
