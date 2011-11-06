@@ -127,12 +127,16 @@ helpMsg Opts{..} f = do
     mapM_ showCom $ if null command
         then [("1", command_simple ++ " " ++ f)]
         else zip (map show [(1::Int)..10]) command
-    putStrLn "press any key to execute the default command"
     putStrLn "press `h' for help"
     putStrLn "press `q' to quit"
+    putStrLn $ "press any other key to execute the default command " ++
+        squote (colorize Blue comDef)
     where
         showCom :: (String, String) -> IO ()
         showCom (a, b) = putStrLn $ "key " ++ squote (colorize Yellow a) ++ " set to " ++ squote (colorize Blue b)
+        comDef = if null command
+            then command_simple ++ " " ++ f
+            else head command
 
 loop :: Opts -> String -> [FilePath] -> [String] -> IO ()
 loop o@Opts{..} comDef files filesTS = do
