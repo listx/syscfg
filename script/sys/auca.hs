@@ -7,6 +7,7 @@ import Data.List (nub)
 import System.Console.CmdArgs.Implicit
 import System.IO
 import System.Directory
+import System.Environment
 import System.Exit
 import System.Posix.Unistd (sleep)
 import System.Process
@@ -20,14 +21,15 @@ data Opts = Opts
 
 progOpts :: Opts
 progOpts = Opts
-    { command = def &= help "command(s) to execute; up to 10 (hotkeyed to 1-0)"
-    , command_simple = def &= name "C" &= help "command to execute; it takes the first file, and calls command after it; e.g., `-C lilypond -f foo.ly' will translate to `lilypond foo.ly' as the default command"
+    { command = def &= typ "COMMAND" &= help "command(s) to execute; up to 10 (hotkeyed to 1-0)"
+    , command_simple = def &= typ "COMMAND" &= name "C" &= help "command to execute; it takes the first file, and calls command after it; e.g., `-C lilypond -f foo.ly' will translate to `lilypond foo.ly' as the default command"
     , file = def &= help "file(s) to watch; can be repeated multiple times to define multiple files"
     , list = def &= help "list of files to watch"
     }
     &= details
         [ "Notes:"
         , ""
+        , "  All commands are passed to the default shell."
         ]
 
 getOpts :: IO Opts
@@ -40,7 +42,7 @@ getOpts = cmdArgs $ progOpts
 
 _PROGRAM_NAME, _PROGRAM_VERSION, _PROGRAM_INFO, _PROGRAM_DESC, _COPYRIGHT :: String
 _PROGRAM_NAME = "auca"
-_PROGRAM_VERSION = "0.0.1"
+_PROGRAM_VERSION = "0.0.2"
 _PROGRAM_INFO = _PROGRAM_NAME ++ " version " ++ _PROGRAM_VERSION
 _PROGRAM_DESC = "execute arbitrary command(s) based on file changes"
 _COPYRIGHT = "(C) Linus Arver 2011"
@@ -69,7 +71,8 @@ main = do
     hSetBuffering stderr NoBuffering
     hSetBuffering stdin NoBuffering
     hSetEcho stdin False -- disable terminal echo
-    opts@Opts{..} <- getOpts
+    args' <- getArgs
+    opts@Opts{..} <- (if null args' then withArgs ["--help"] else id) $ getOpts
     errNo <- argsCheck opts
     when (errNo > 0) $ exitWith $ ExitFailure errNo
     files <- if null list
