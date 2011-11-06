@@ -7,10 +7,6 @@ mplayer/mplayerplug-in.conf
 ncmpcpp/config
 ncmpcpp/keys
 mutt/hcache
-script/sys/poke
-script/sys/time
-script/sys/up
-script/sys/usbmnt
 vim/.VimballRecord
 vim/.netrwhist
 vim/colors

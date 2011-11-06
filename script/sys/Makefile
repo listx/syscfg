@@ -1,5 +1,7 @@
 FLAGS=-O2 -Wall -Werror
-all: poke up usbmnt
+all: auca poke up usbmnt
+auca: auca.hs
+	ghc --make ${FLAGS} -threaded auca
 poke: poke.hs
 	ghc --make ${FLAGS} poke
 up: up.hs
