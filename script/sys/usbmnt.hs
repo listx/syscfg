@@ -50,7 +50,7 @@ getOpts = cmdArgs $ progOpts
 
 _PROGRAM_NAME, _PROGRAM_VERSION, _PROGRAM_INFO, _PROGRAM_DESC, _COPYRIGHT :: String
 _PROGRAM_NAME = "usbmnt"
-_PROGRAM_VERSION = "0.0.1"
+_PROGRAM_VERSION = "0.1.0"
 _PROGRAM_INFO = _PROGRAM_NAME ++ " version " ++ _PROGRAM_VERSION
 _PROGRAM_DESC = "mount/unmount USB device(s)"
 _COPYRIGHT = "(C) Linus Arver 2011"
