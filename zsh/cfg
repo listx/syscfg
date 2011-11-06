@@ -174,8 +174,10 @@ alias kkkkkkkkkkkkkk="cd ../../../../../../../../../../../../../../;ll"
 # Custom aliases                                                                                   #
 #--------------------------------------------------------------------------------------------------#
 
-alias auca="~/syscfg/script/sys/auca.sh"
-alias amf="~/syscfg/script/sys/auca.sh -c \"make -B\" -f"
+alias auca="~/syscfg/script/sys/auca"
+alias acmake="~/syscfg/script/sys/auca -c \"make -B\" -f"
+alias aclily="~/syscfg/script/sys/auca -C \"lilypond\" -f"
+alias actex="~/syscfg/script/sys/auca -C \"xelatex -halt-on-error\" -f"
 alias c="~/syscfg/script/sys/utp.sh"
 alias cls="echo -ne '\x1bc'" # clear the screen buffer (don't just hide it like CTRL-L)
 alias fiv='~/syscfg/script/sys/fiv.sh'
