@@ -189,7 +189,7 @@ runCom com = do
 cmd :: String -> CreateProcess
 cmd com = CreateProcess
     { cmdspec = ShellCommand $
-        (com ++ " | sed \"s/^/  " ++ colorize Cyan ">" ++ " /\"")
+        (com ++ " 2>&1 | sed \"s/^/  " ++ colorize Cyan ">" ++ " /\"")
     , cwd = Nothing
     , env = Nothing
     , std_in = CreatePipe
