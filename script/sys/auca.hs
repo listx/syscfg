@@ -115,7 +115,7 @@ prog opts@Opts{..} filesToWatch = do
 
 getTimestamp :: FilePath -> IO String
 getTimestamp f = do
-    (_, sout, _, p) <- createProcess . cmd $ "ls --full-time " ++ f
+    (_, sout, _, p) <- createProcess . cmdQuiet $ "ls --full-time " ++ f
     _ <- waitForProcess p
     sout' <- case sout of
         Just h -> hGetContents h
@@ -178,12 +178,8 @@ keyHandler o@Opts{..} comDef f = do
 
 runCom :: CreateProcess -> IO ()
 runCom com = do
-    (_, sout, _, p) <- createProcess com
+    (_, _, _, p) <- createProcess com
     exitStatus <- waitForProcess p
-    sout' <- case sout of
-        Just h -> hGetContents h
-        Nothing -> return []
-    putStrLn sout'
     if (exitStatus == ExitSuccess)
         then do
             putStrLn $ colorize Green "command executed successfully"
@@ -193,7 +189,18 @@ runCom com = do
 cmd :: String -> CreateProcess
 cmd com = CreateProcess
     { cmdspec = ShellCommand $
-        com ++ "| sed \"s/^/  " ++ colorize Cyan ">" ++ " /\""
+        (com ++ " | sed \"s/^/  " ++ colorize Cyan ">" ++ " /\"")
+    , cwd = Nothing
+    , env = Nothing
+    , std_in = CreatePipe
+    , std_out = Inherit
+    , std_err = Inherit
+    , close_fds = True
+    }
+
+cmdQuiet :: String -> CreateProcess
+cmdQuiet com = CreateProcess
+    { cmdspec = ShellCommand com
     , cwd = Nothing
     , env = Nothing
     , std_in = CreatePipe
