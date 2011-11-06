@@ -1,7 +1,6 @@
 {-# LANGUAGE DeriveDataTypeable, RecordWildCards #-}
 module Main where
 
-import Control.Monad (when)
 import System.Console.CmdArgs.Implicit
 import System.IO
 import System.Environment
@@ -11,6 +10,9 @@ import Text.Parsec.Char hiding (upper)
 import Text.Parsec.Combinator
 import Text.Parsec.Prim
 import Text.Parsec.String
+import qualified Text.Parsec.Token as PT
+import Text.Parsec.Language (emptyDef)
+import Control.Monad.Identity
 
 data Opts = Opts
     { all_devices :: Bool
@@ -55,7 +57,7 @@ _COPYRIGHT = "(C) Linus Arver 2011"
 
 data BlockDevice = BlockDevice
     { shortname :: String
-    , uuid :: String
+    , uuid :: UUID
     , fsys :: String
     , mountPoint :: MountPoint
     } deriving (Eq)
@@ -89,6 +91,11 @@ blockdeviceDefault = BlockDevice
     , mountPoint = MPath {path = ""}
     }
 
+data Config = Config
+    { fsyss :: [(String, String)]
+    , uuids :: [(UUID, String)]
+    } deriving (Eq, Show)
+
 _ALPHANUM :: String
 _ALPHANUM = ['a'..'z'] ++ ['A'..'Z'] ++ ['0'..'9']
 
@@ -113,24 +120,28 @@ main = do
     hSetBuffering stdout NoBuffering
     hSetBuffering stderr NoBuffering
     opts <- getOpts
-    user <- getEnv "USER"
-    errNo <- argsCheck opts user
+    homeDir <- getEnv "HOME"
+    errNo <- argsCheck opts homeDir
     when (errNo > 0) $ exitWith $ ExitFailure errNo
     (devs, takenPaths) <- getDevices opts
+    let configLoc = homeDir ++ "/.usbmnt"
+    configSrc <- readFile configLoc
+    (confErrNo, config) <- parseConfig configSrc configLoc
+    when (confErrNo > 0) $ exitWith $ ExitFailure confErrNo
     let mountablePaths = filter (\p -> not $ elem p takenPaths) $ map (\p -> "/mnt/u" ++ show p) [(0::Int)..]
         devsKV = zip (map show [(1::Int)..]) . zip devs $ mountablePaths
-    prog opts user devsKV
+    prog opts config devsKV
 
 argsCheck :: Opts -> String -> IO Int
-argsCheck Opts{..} user
-    | null user = e "could not get environment variable $USER" 1
+argsCheck Opts{..} homeDir
+    | null homeDir = e "could not get environment variable $HOME" 1
     | otherwise = return 0
     where
         e :: String -> Int -> IO Int
         e str num = errMsg str >> return num
 
-prog :: Opts -> String -> [(String, (BlockDevice, FilePath))] -> IO ()
-prog opts@Opts{..} user devsKV
+prog :: Opts -> Config -> [(String, (BlockDevice, FilePath))] -> IO ()
+prog opts@Opts{..} config devsKV
     | discover = do
         putStrLn "all devices:"
         mapM_ (\(_, (d, _)) -> putStrLn $ cshow d) devsKV
@@ -140,7 +151,7 @@ prog opts@Opts{..} user devsKV
             else "USB device(s) to mount:")
         mapM_ (\(n, (d, _)) -> putStrLn $ "    " ++ n ++ ") " ++ show' d) devsKV
         putStrLn ""
-        mountMenu opts user devsKV
+        mountMenu opts config devsKV
     where
         cshow :: BlockDevice -> String
         cshow b@BlockDevice{..}
@@ -156,53 +167,61 @@ prog opts@Opts{..} user devsKV
             then show
             else unwords . init . words . show
 
-mountMenu :: Opts -> String -> [(String, (BlockDevice, FilePath))] -> IO ()
-mountMenu Opts{..} user devsKV
+mountMenu :: Opts -> Config -> [(String, (BlockDevice, FilePath))] -> IO ()
+mountMenu Opts{..} config devsKV
     | unmount = if length devsKV == 1
         then do
             putStrLn "only 1 USB device to unmount"
-            tryMount False user (snd . head $ devsKV) >>= exitWith
-        else chooseDev prompt user devsKV (tryMount False)
+            tryMount False config (snd . head $ devsKV) >>= exitWith
+        else chooseDev prompt devsKV (tryMount False config)
     | unmount_all = do
         putStrLn "unmounting all USB devices..."
-        mapM_ (tryMount False user) (map snd devsKV)
+        mapM_ (tryMount False config) (map snd devsKV)
         return ()
     | all_devices = do
         putStrLn "mounting all USB devices..."
-        mapM_ (tryMount True user) (map snd devsKV)
+        mapM_ (tryMount True config) (map snd devsKV)
         return ()
     | length devsKV == 1 = do
         putStrLn "only 1 USB device to mount"
-        tryMount True user (snd . head $ devsKV) >>= exitWith
-    | otherwise = chooseDev prompt  user devsKV (tryMount True)
+        tryMount True config (snd . head $ devsKV) >>= exitWith
+    | otherwise = chooseDev prompt devsKV (tryMount True config)
     where
         prompt :: String
         prompt = if (unmount || unmount_all)
             then "choose USB device to unmount (q to exit)"
             else "choose USB device to mount (q to exit)"
 
-chooseDev :: String -> String -> [(String, (BlockDevice, FilePath))] -> (String -> (BlockDevice, FilePath) -> IO ExitCode) -> IO ()
-chooseDev prompt user devsKV func = do
+chooseDev :: String -> [(String, (BlockDevice, FilePath))] -> ((BlockDevice, FilePath) -> IO ExitCode) -> IO ()
+chooseDev prompt devsKV func = do
     putStrLn prompt
     key <- getLine
     case lookup key devsKV of
-        Just dev -> func user dev >>= exitWith
+        Just dev -> func dev >>= exitWith
         _ -> case key of
             "q" -> return ()
-            _ -> chooseDev prompt user devsKV func
+            _ -> chooseDev prompt devsKV func
 
-tryMount :: Bool -> String -> (BlockDevice, FilePath) -> IO ExitCode
-tryMount mount user (BlockDevice{..}, mp) = do
-    when (null $ mountArgs fsys user) $ do
-        errMsg $ "unsupported file system " ++ squote fsys ++ "\nsupported file systems: " ++ (unwords $ map fst (fileSystemArgs user))
+tryMount :: Bool -> Config -> (BlockDevice, FilePath) -> IO ExitCode
+tryMount mount config@Config{..} (bd@BlockDevice{..}, mp)
+    | (null margs) = do
+        errMsg $ "UUID " ++ squote uuid ++ " was not found in config file"
+        errMsg $ "filesystem " ++ squote fsys ++ " was also not found in config file"
+        errMsg $ "supported file systems: " ++ (unwords $ map fst fsyss)
         exitWith (ExitFailure 1)
+    | otherwise = do
+    when mount $ do
+        if (null $ mountArgsUUID config uuid)
+            then putStrLn $ "filesystem " ++ squote fsys ++ " found in config file"
+            else putStrLn $ "UUID " ++ squote uuid ++ " found in config file"
+        putStrLn $ "using these arguments: " ++ squote margs
     putStr $ (if mount then "" else "un")
         ++ "mounting "
         ++ shortname
         ++ " (" ++ fsys ++ ") "
         ++ (if mount then "to " ++ mp else "from " ++ show mountPoint)
         ++ ".."
-    (_, _, _, p) <- createProcess $ cmd (mountArgs fsys user) shortname
+    (_, _, _, p) <- createProcess $ cmd margs shortname
     exitStatus <- waitForProcess p
     if (exitStatus == ExitSuccess)
         then do
@@ -215,6 +234,7 @@ tryMount mount user (BlockDevice{..}, mp) = do
                 else "unmount error")
             return (ExitFailure 1)
     where
+        margs = mountArgs config bd
         cmd arguments devPath = CreateProcess
             { cmdspec = ShellCommand (if mount
                 then "sudo mount -t " ++ arguments ++ " " ++ devPath ++ " " ++ mp ++ " &>/dev/null"
@@ -227,14 +247,15 @@ tryMount mount user (BlockDevice{..}, mp) = do
             , close_fds = False
             }
 
-fileSystemArgs :: String -> [(String, String)]
-fileSystemArgs user =
-    [ ("ext2", "ext2 -o rw,relatime")
-    , ("vfat", "vfat -o rw,uid=" ++ user ++ ",gid=" ++ user)
-    ]
+mountArgs :: Config -> BlockDevice -> String
+mountArgs Config{..} BlockDevice{..} = case lookup uuid uuids of
+    Just a -> a
+    _ -> case lookup fsys fsyss of
+        Just a -> a
+        _ -> []
 
-mountArgs :: String -> String -> String
-mountArgs fsys user = case lookup fsys (fileSystemArgs user) of
+mountArgsUUID :: Config -> UUID -> String
+mountArgsUUID Config{..} uuid' = case lookup uuid' uuids of
     Just a -> a
     _ -> []
 
@@ -287,6 +308,8 @@ squote :: String -> String
 squote s = "`" ++ s ++ "'"
 
 -- Parsing
+
+-- for parsing the computer-generated output of `sudo blkid -o list'
 parserIdentifier :: Parser String
 parserIdentifier = many1 $ oneOf $ _ALPHANUM ++ "/-_"
 
@@ -352,3 +375,77 @@ parseBlkid src =
     case parse blkidParser "output of `sudo blkid -o list'" src of
         Left parseError -> errMsg (show parseError) >> return blockdeviceDefault
         Right result -> return result
+
+-- we use a LanguageDef so that we can get whitespace/newline parsing for FREE
+-- in our .usbmnt file
+configDef :: PT.LanguageDef st
+configDef = emptyDef
+    { PT.commentStart   = ""
+    , PT.commentEnd     = ""
+    , PT.commentLine    = "#"
+    , PT.nestedComments = False
+    -- the identStart/identLetter define what a UUID will look like (a
+    -- dash-separated hex number)
+    , PT.identStart     = oneOf $ ['0'..'9'] ++ ['a'..'f'] ++ ['A'..'F']
+    , PT.identLetter    = oneOf $ ['0'..'9'] ++ ['a'..'f'] ++ ['A'..'F'] ++ "-"
+    , PT.opStart        = char '.'
+    , PT.opLetter       = char '.'
+    , PT.reservedOpNames= []
+    , PT.reservedNames  = []
+    , PT.caseSensitive  = True
+    }
+
+-- we call makeTokenParser def and pick out just those we need
+lexer :: PT.TokenParser ()
+lexer = PT.makeTokenParser configDef
+
+p_identifier :: ParsecT String () Identity String
+p_identifier = PT.identifier lexer
+p_stringLiteral :: ParsecT String () Identity String
+p_stringLiteral = PT.stringLiteral lexer
+p_whiteSpace :: ParsecT String () Identity ()
+p_whiteSpace = PT.whiteSpace lexer
+p_braces :: ParsecT String () Identity a -> ParsecT String () Identity a
+p_braces = PT.braces lexer
+p_commaSep :: ParsecT String () Identity a -> ParsecT String () Identity [a]
+p_commaSep = PT.commaSep lexer
+p_symbol :: String -> ParsecT String () Identity String
+p_symbol = PT.symbol lexer
+
+type UUID = String
+
+assocParser :: Parser String -> Parser (UUID, String)
+assocParser keyParser = do
+    key <- keyParser
+    _ <- many $ oneOf " \t"
+    _ <- string "="
+    _ <- many $ oneOf " \t"
+    mountOpts <- p_stringLiteral
+    return (key, mountOpts)
+    <?> "a key-value association"
+
+hashParser :: String -> Parser String -> Parser [(String, String)]
+hashParser hashName keyParser = do
+    _ <- p_symbol hashName
+    _ <- p_symbol "="
+    a <- p_braces (p_commaSep $ assocParser keyParser)
+    return a
+    <?> "a " ++ hashName ++ " curly brace block"
+
+configParser :: Parser Config
+configParser = do
+    p_whiteSpace -- take care of leading whitespace/comments as defined by configDef
+    -- parse FSYS_HASH first
+    fsyss' <- hashParser "FSYS_HASH" (many1 alphaNum)
+    p_whiteSpace
+    -- now parse UUID_HASH
+    uuids' <- hashParser "UUID_HASH" (p_identifier)
+    eof
+    return $ Config {fsyss = fsyss', uuids = uuids'}
+    <?> "config with FSYS_HASH and UUID_HASH blocks"
+
+parseConfig :: String -> String -> IO (Int, Config)
+parseConfig src loc =
+    case parse configParser ("config file at " ++ squote loc) src of
+        Left parseError -> errMsg (show parseError) >> return (1, Config [] [])
+        Right result -> return (0, result)
