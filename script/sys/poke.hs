@@ -6,8 +6,9 @@ import System.IO -- for hSetEcho
 import System
 import Data.List (nub)
 
-keysChar, keysNum, keysPunc, keysCharNum, keysAll :: String
+keysChar, keysNum, keysPunc, keysCharNum, keysAll, keysHex :: String
 keysChar = ['a'..'z'] ++ ['A'..'Z']
+keysHex = ['a'..'f']
 keysNum = ['0'..'9']
 keysPunc = "`~!@#$%^&*()-_=+[{]}\\|;:'\",<.>/? "
 keysCharNum = keysChar ++ keysNum
@@ -15,6 +16,7 @@ keysAll = keysChar ++ keysNum ++ keysPunc
 
 giveKey ::  String -> Char -> Int -> Char
 giveKey keysCustom c n = case c of
+    'i'  -> extractChar (keysNum ++ keysHex)
     'j'  -> extractChar keysNum
     'k'  -> extractChar keysChar
     'l'  -> extractChar keysCharNum
@@ -49,6 +51,7 @@ main = do
         , "      'l'     alphanumeric"
         , "      ';'     punctuation"
         , "      'h'     alphanumeric" ++ (if not (null as') then " + " ++ as' else "")
+        , "      'i'     hexadecimal"
         , "      'ENTER' newline"
         , "      else    any"
         ]
