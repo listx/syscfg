@@ -106,16 +106,10 @@ data Color
     | Green
     | Yellow
     | Blue
-    | CNone
-    deriving (Show, Eq)
+    deriving (Show, Eq, Enum)
 
 colorize :: Color -> String -> String
-colorize c s = case c of
-    Blue -> "\x1b[1;34m" ++ s ++ "\x1b[0m"
-    Green -> "\x1b[1;32m" ++ s ++ "\x1b[0m"
-    Red -> "\x1b[1;31m" ++ s ++ "\x1b[0m"
-    Yellow -> "\x1b[1;33m" ++ s ++ "\x1b[0m"
-    _ -> s
+colorize c s = "\x1b[1;3" ++ show (fromEnum c + 1) ++ "m" ++ s ++ "\x1b[0m"
 
 main :: IO ()
 main = do
