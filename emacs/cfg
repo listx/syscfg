@@ -45,39 +45,38 @@
 (define-key evil-normal-state-map ",w" 'save-buffer) ; save
 (define-key evil-normal-state-map ",q" 'kill-buffer) ; quit (current buffer; have to press RETURN)
 (define-key evil-normal-state-map ",x" 'save-buffers-kill-emacs) ; save and quit
-; make "kj" behave as ESC key, adapted from http://permalink.gmane.org/gmane.emacs.vim-emulation/684
-(defun escape-if-next-char (c)
-    "Watches the next letter.  If c, then switch to Evil's normal mode; otherwise insert a k and forward unpressed key to unread-command events"
-      (self-insert-command 1)
-        (let ((next-key (read-event)))
-              (if (= c next-key)
-                        (progn
-                                    (delete-backward-char 1)
-                                              (evil-esc))
-                              (setq unread-command-events (list next-key)))))
-
-(defun escape-if-next-char-is-j (arg)
-    (interactive "p")
-      (if (= arg 1)
-              (escape-if-next-char ?j)
-                  (self-insert-command arg)))
-
-(define-key evil-insert-state-map (kbd "k") 'escape-if-next-char-is-j)
+; make "kj" behave as ESC key, adapted from http://article.gmane.org/gmane.emacs.vim-emulation/980
+(define-key evil-insert-state-map "k" #'cofi/maybe-exit)
+(evil-define-command cofi/maybe-exit ()
+  :repeat change
+  (interactive)
+  (let ((modified (buffer-modified-p)))
+    (insert "k")
+    (let ((evt (read-event (format "Insert %c to exit insert state" ?j)
+               nil 0.5)))
+      (cond
+       ((null evt) (message ""))
+       ((and (integerp evt) (char-equal evt ?j))
+    (delete-char -1)
+    (set-buffer-modified-p modified)
+    (push 'escape unread-command-events))
+       (t (setq unread-command-events (append unread-command-events
+                          (list evt))))))))
 ; simulate vim's "nnoremap <space> 10<c-e>10j"
-(define-key evil-normal-state-map " " (lambda ()
+(evil-declare-key 'normal org-mode-map " " (lambda ()
                      (interactive)
                      (next-line 10)
                      (evil-scroll-line-down 10)
                      ))
 ; simulate vim's "nnoremap <backspace> 10<c-y>10k"
-(define-key evil-normal-state-map (kbd "DEL") (lambda ()
+(evil-declare-key 'normal org-mode-map (kbd "DEL") (lambda ()
                      (interactive)
                      (previous-line 10)
                      (evil-scroll-line-up 10)
                      ))
 
 ; make evil work for org-mode!
-(define-key evil-normal-state-map "O" (lambda ()
+(evil-declare-key 'normal org-mode-map "O" (lambda ()
                      (interactive)
                      (end-of-line)
                      (org-insert-heading)
@@ -90,59 +89,59 @@
        (insert "\n- ")
        (org-insert-item)))
 
-(define-key evil-normal-state-map "O" (lambda ()
+(evil-declare-key 'normal org-mode-map "O" (lambda ()
                      (interactive)
                      (end-of-line)
                      (org-insert-heading)
                      (evil-append nil)
                      ))
 
-(define-key evil-normal-state-map "o" (lambda ()
+(evil-declare-key 'normal org-mode-map "o" (lambda ()
                      (interactive)
                      (end-of-line)
                      (always-insert-item)
                      (evil-append nil)
                      ))
 
-(define-key evil-normal-state-map "t" (lambda ()
+(evil-declare-key 'normal org-mode-map "t" (lambda ()
                      (interactive)
                      (end-of-line)
                      (org-insert-todo-heading nil)
                      (evil-append nil)
                      ))
-(define-key evil-normal-state-map (kbd "M-o") (lambda ()
+(evil-declare-key 'normal org-mode-map (kbd "M-o") (lambda ()
                      (interactive)
                      (end-of-line)
                      (org-insert-heading)
                      (org-metaright)
                      (evil-append nil)
                      ))
-(define-key evil-normal-state-map (kbd "M-t") (lambda ()
+(evil-declare-key 'normal org-mode-map (kbd "M-t") (lambda ()
                      (interactive)
                      (end-of-line)
                      (org-insert-todo-heading nil)
                      (org-metaright)
                      (evil-append nil)
                      ))
-(define-key evil-normal-state-map "T" 'org-todo) ; mark a TODO item as DONE
-(define-key evil-normal-state-map ";a" 'org-agenda) ; access agenda buffer
-(define-key evil-normal-state-map "-" 'org-cycle-list-bullet) ; change bullet style
+(evil-declare-key 'normal org-mode-map "T" 'org-todo) ; mark a TODO item as DONE
+(evil-declare-key 'normal org-mode-map ";a" 'org-agenda) ; access agenda buffer
+(evil-declare-key 'normal org-mode-map "-" 'org-cycle-list-bullet) ; change bullet style
 
 ; allow us to access org-mode keys directly from Evil's Normal mode
-(define-key evil-normal-state-map "L" 'org-shiftright)
-(define-key evil-normal-state-map "H" 'org-shiftleft)
-(define-key evil-normal-state-map "K" 'org-shiftup)
-(define-key evil-normal-state-map "J" 'org-shiftdown)
-(define-key evil-normal-state-map (kbd "M-l") 'org-metaright)
-(define-key evil-normal-state-map (kbd "M-h") 'org-metaleft)
-(define-key evil-normal-state-map (kbd "M-k") 'org-metaup)
-(define-key evil-normal-state-map (kbd "M-j") 'org-metadown)
-(define-key evil-normal-state-map (kbd "M-L") 'org-shiftmetaright)
-(define-key evil-normal-state-map (kbd "M-H") 'org-shiftmetaleft)
-(define-key evil-normal-state-map (kbd "M-K") 'org-shiftmetaup)
-(define-key evil-normal-state-map (kbd "M-J") 'org-shiftmetadown)
+(evil-declare-key 'normal org-mode-map "L" 'org-shiftright)
+(evil-declare-key 'normal org-mode-map "H" 'org-shiftleft)
+(evil-declare-key 'normal org-mode-map "K" 'org-shiftup)
+(evil-declare-key 'normal org-mode-map "J" 'org-shiftdown)
+(evil-declare-key 'normal org-mode-map (kbd "M-l") 'org-metaright)
+(evil-declare-key 'normal org-mode-map (kbd "M-h") 'org-metaleft)
+(evil-declare-key 'normal org-mode-map (kbd "M-k") 'org-metaup)
+(evil-declare-key 'normal org-mode-map (kbd "M-j") 'org-metadown)
+(evil-declare-key 'normal org-mode-map (kbd "M-L") 'org-shiftmetaright)
+(evil-declare-key 'normal org-mode-map (kbd "M-H") 'org-shiftmetaleft)
+(evil-declare-key 'normal org-mode-map (kbd "M-K") 'org-shiftmetaup)
+(evil-declare-key 'normal org-mode-map (kbd "M-J") 'org-shiftmetadown)
 
-(define-key evil-normal-state-map (kbd "<f12>") 'org-export-as-html)
+(evil-declare-key 'normal org-mode-map (kbd "<f12>") 'org-export-as-html)
 
 ; put all auto-saves/backups to the temp directory
 (setq backup-directory-alist
