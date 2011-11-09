@@ -1,6 +1,7 @@
 {-# LANGUAGE DeriveDataTypeable, RecordWildCards #-}
 module Main where
 
+import qualified Data.ByteString.Lazy as BL
 import System.Console.CmdArgs.Implicit
 import System.IO
 import System.Environment
@@ -10,6 +11,7 @@ import Text.Parsec.Char hiding (upper)
 import Text.Parsec.Combinator
 import Text.Parsec.Prim
 import Text.Parsec.String
+import qualified Text.Parsec.ByteString.Lazy as PB
 import qualified Text.Parsec.Token as PT
 import Text.Parsec.Language (emptyDef)
 import Control.Monad.Identity
@@ -125,7 +127,7 @@ main = do
     when (errNo > 0) $ exitWith $ ExitFailure errNo
     (devs, takenPaths) <- getDevices opts
     let configLoc = homeDir ++ "/.usbmnt"
-    configSrc <- readFile configLoc
+    configSrc <- BL.readFile configLoc
     (confErrNo, config) <- parseConfig configSrc configLoc
     when (confErrNo > 0) $ exitWith $ ExitFailure confErrNo
     let mountablePaths = filter (\p -> not $ elem p takenPaths) $ map (\p -> "/mnt/u" ++ show p) [(0::Int)..]
@@ -378,7 +380,7 @@ parseBlkid src =
 
 -- we use a LanguageDef so that we can get whitespace/newline parsing for FREE
 -- in our .usbmnt file
-configDef :: PT.LanguageDef st
+configDef :: PT.GenLanguageDef BL.ByteString () Identity
 configDef = emptyDef
     { PT.commentStart   = ""
     , PT.commentEnd     = ""
@@ -396,25 +398,25 @@ configDef = emptyDef
     }
 
 -- we call makeTokenParser def and pick out just those we need
-lexer :: PT.TokenParser ()
+lexer :: PT.GenTokenParser BL.ByteString () Identity
 lexer = PT.makeTokenParser configDef
 
-p_identifier :: ParsecT String () Identity String
+p_identifier :: ParsecT BL.ByteString () Identity String
 p_identifier = PT.identifier lexer
-p_stringLiteral :: ParsecT String () Identity String
+p_stringLiteral :: ParsecT BL.ByteString () Identity String
 p_stringLiteral = PT.stringLiteral lexer
-p_whiteSpace :: ParsecT String () Identity ()
+p_whiteSpace :: ParsecT BL.ByteString () Identity ()
 p_whiteSpace = PT.whiteSpace lexer
-p_braces :: ParsecT String () Identity a -> ParsecT String () Identity a
+p_braces :: ParsecT BL.ByteString () Identity a -> ParsecT BL.ByteString () Identity a
 p_braces = PT.braces lexer
-p_commaSep :: ParsecT String () Identity a -> ParsecT String () Identity [a]
+p_commaSep :: ParsecT BL.ByteString () Identity a -> ParsecT BL.ByteString () Identity [a]
 p_commaSep = PT.commaSep lexer
-p_symbol :: String -> ParsecT String () Identity String
+p_symbol :: String -> ParsecT BL.ByteString () Identity String
 p_symbol = PT.symbol lexer
 
 type UUID = String
 
-assocParser :: Parser String -> Parser (UUID, String)
+assocParser :: PB.Parser String -> PB.Parser (UUID, String)
 assocParser keyParser = do
     key <- keyParser
     _ <- many $ oneOf " \t"
@@ -424,7 +426,7 @@ assocParser keyParser = do
     return (key, mountOpts)
     <?> "a key-value association"
 
-hashParser :: String -> Parser String -> Parser [(String, String)]
+hashParser :: String -> PB.Parser String -> PB.Parser [(String, String)]
 hashParser hashName keyParser = do
     _ <- p_symbol hashName
     _ <- p_symbol "="
@@ -432,7 +434,7 @@ hashParser hashName keyParser = do
     return a
     <?> "a " ++ hashName ++ " curly brace block"
 
-configParser :: Parser Config
+configParser :: PB.Parser Config
 configParser = do
     p_whiteSpace -- take care of leading whitespace/comments as defined by configDef
     -- parse FSYS_HASH first
@@ -444,7 +446,7 @@ configParser = do
     return $ Config {fsyss = fsyss', uuids = uuids'}
     <?> "config with FSYS_HASH and UUID_HASH blocks"
 
-parseConfig :: String -> String -> IO (Int, Config)
+parseConfig :: BL.ByteString -> String -> IO (Int, Config)
 parseConfig src loc =
     case parse configParser ("config file at " ++ squote loc) src of
         Left parseError -> errMsg (show parseError) >> return (1, Config [] [])
