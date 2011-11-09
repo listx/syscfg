@@ -1,14 +1,25 @@
 [user]
-    name = Linus Arver
-    email = linusarver@gmail.com
+	name = Linus Arver
+	email = linusarver@gmail.com
 [color]
-    branch = always
-    diff = always
-    status = always
+	branch = always
+	diff = always
+	status = always
 [color "diff"]
-    meta = yellow bold
-    commit = blue bold reverse
+	meta = yellow bold
+	commit = blue bold reverse
 [push]
-    default = matching
+	default = matching
 [gui]
-    spellingdictionary = none
+	spellingdictionary = none
+[sendemail]
+	smtpencryption = tls
+	smtpserver = smtp.gmail.com
+	smtpserverport = 587
+	smtpuser = linusarver@gmail.com
+	chainreplyto = false
+	aliasesfile = /home/listdata/.git-sendemail-aliases
+	aliasfiletype = mailrc
+	cc = linusarver@gmail.com
+
+# vim: tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab

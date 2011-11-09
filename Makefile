@@ -11,6 +11,7 @@ emacs:
 	ln -fs $(CFGROOT)/emacs/cfg         ${HOME}/.emacs
 git:
 	ln -fs $(CFGROOT)/git/cfg           ${HOME}/.gitconfig
+	ln -fs $(CFGROOT)/git/sendemail-aliases ${HOME}/.git-sendemail-aliases
 gsy:
 	ln -fs $(CFGROOT)/gsy/cfg           ${HOME}/.gsy
 galculator:
