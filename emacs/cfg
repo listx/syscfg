@@ -76,13 +76,6 @@
                      ))
 
 ; make evil work for org-mode!
-(evil-declare-key 'normal org-mode-map "O" (lambda ()
-                     (interactive)
-                     (end-of-line)
-                     (org-insert-heading)
-                     (evil-append nil)
-                     ))
-
 (defun always-insert-item ()
      (interactive)
      (if (not (org-in-item-p))
