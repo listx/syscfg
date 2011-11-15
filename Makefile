@@ -1,7 +1,9 @@
 CFGROOT := $(shell pwd)
 HOSTNAME := $(shell hostname)
 # add the -n flag for directories, as otherwise, stray symlinks will be created inside the CFGROOT directory itself
-all: boxes cron emacs galculator git gsy lesskey modprobe mpd mplayer mutt ncmpcpp pal pentadactyl rtorrent usbmnt vim xdefaults xinitrc xmodmap xmonad xorg zsh
+all: acpi boxes cron emacs galculator git gsy lesskey modprobe mpd mplayer mutt ncmpcpp pal pentadactyl rtorrent usbmnt vim xdefaults xinitrc xmodmap xmonad xorg zsh
+acpi:
+	ln -fs $(CFGROOT)/acpi/${HOSTNAME}.sh /etc/acpi/handler.sh
 boxes:
 	ln -fs $(CFGROOT)/boxes/cfg         ${HOME}/.boxes
 cron:
