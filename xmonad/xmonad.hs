@@ -101,6 +101,7 @@ myFocusedBorderColor = "#ffffff"
 term1 = "~/syscfg/script/sys/terms/wb.sh"
 term2 = "~/syscfg/script/sys/terms/bw.sh"
 term3 = "~/syscfg/script/sys/terms/wB.sh"
+suspend = "sudo ~/syscfg/script/sys/suspend.sh"
 
 orgIntraday = " -name floatme -e ~/prog/timeflux/src/term.sh intraday ~/org/life.org @@@"
 orgPlans5w = " -name floatme -e ~/prog/timeflux/src/term.sh plans5w ~/org/life.org @@@"
@@ -167,7 +168,9 @@ myKeys hostname conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     -- Restart xmonad
     , ((modm,               xK_Escape     ), spawn "xmonad --recompile; xmonad --restart")
 
-    -- CUSTOM KEYBINDINGS HERE --
+    -- Suspend to RAM
+    , ((modm .|. controlMask,   xK_s     ), spawn suspend)
+
     , ((mod4Mask              , xK_1     ), spawn (term1 ++ orgIntraday))
     , ((mod4Mask              , xK_2     ), spawn (term1 ++ orgPlans5w))
     , ((mod4Mask              , xK_3     ), spawn (term1 ++ orgGoals10w))
