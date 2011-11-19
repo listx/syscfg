@@ -1,1 +1,0 @@
-/home/listdata/prog/toucan/toucan-ftplugin.vim

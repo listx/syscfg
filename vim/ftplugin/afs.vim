@@ -1,1 +1,0 @@
-/home/listdata/prog/afs/vim/afs-ftplugin.vim

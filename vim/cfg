@@ -112,7 +112,6 @@ if !exists("autocommands_loaded")
 
     " load lilypond-specific stuff
     au BufRead,BufNewFile *.ly setlocal filetype=lilypond
-    au! Syntax lilypond source $HOME/.vim/syntax/lilypond.vim
 
     " Integration with the "boxes" program by Thomas Jensen.
     " Default width is set at 100 characters
