@@ -142,9 +142,18 @@
 (setq auto-save-file-name-transforms
                 `((".*" ,temporary-file-directory t)))
 
+(setq my-current-font 0)
+(defun my-toggle-font ()
+    "Toggle font between Terminus and DejaVu Sans Mono"
+    (interactive)
+    (setq my-current-font (if (= my-current-font 0) 1 0))
+    (set-face-attribute 'default nil :font (if (= my-current-font 1) "DejaVu Sans Mono" "Terminus"))
+    (redraw-display))
+(define-key evil-normal-state-map ",f" 'my-toggle-font)
+
 ; settings used by "emacsclient -c" command
 (setq default-frame-alist '((font-backend . "xft")
-                            (font . "Terminus")
+                            ;(font . "Terminus")
                             ;(background-color . "black")
                             ;(foreground-color . "white")
                             ;(vertical-scroll-bars)
