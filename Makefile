@@ -81,6 +81,7 @@ ifeq ('$(HOSTNAME)','aether')
 	ln -fns $(CFGROOT)/xorg/10-synaptics.conf	/etc/X11/xorg.conf.d/
 endif
 zsh:
+	mkdir ${HOME}/.zsh-untracked
 	ln -fns $(CFGROOT)/zsh              ${HOME}/.zsh
 	ln -fs $(CFGROOT)/zsh/cfg           ${HOME}/.zshrc
 
