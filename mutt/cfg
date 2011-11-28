@@ -162,6 +162,7 @@ color quoted9    color108 color237
 auto_view text/html
 
 alias nix nix-dev@lists.science.uu.nl
+alias archproj arch-projects@archlinux.org
 set sendmail="/usr/bin/msmtp"
 set use_from=yes
 set use_envelope_from=yes
