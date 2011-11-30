@@ -1,6 +1,10 @@
 ! disable XIM input for emacs (use SCIM-bridge instead)
 Emacs*useXIM: false
 
+! xterm
+XTerm*background: #000000
+XTerm*foreground: #ffffff
+
 ! default urxvt settings for all urxvt windows, unless overridden
 ! with commandline arguments
 ! NOTE: "URxvt" is a class name and applies to all urxvt windows, unless the
