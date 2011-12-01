@@ -4,146 +4,146 @@ luxion:luxion.e
 ocean:ocean
 forest:forest
 
-listdata@exelion:~/ghost/syscfg.git
+l@exelion:~/ghost/syscfg.git
 /mnt/u0/h/syscfg
-listdata@exelion:~/syscfg
-listdata@aether.e:~/syscfg
+l@exelion:~/syscfg
+l@aether.e:~/syscfg
 l@luxion.e:~/syscfg
 otter@ocean:~/syscfg
 tiger@forest:~/syscfg
 
-listdata@exelion:~/ghost/study.git
+l@exelion:~/ghost/study.git
 /mnt/u0/h/study
-listdata@exelion:~/study
-listdata@aether.e:~/study
+l@exelion:~/study
+l@aether.e:~/study
 l@luxion.e:~/study
 otter@ocean:~/study
 
-listdata@exelion:~/ghost/org.git
+l@exelion:~/ghost/org.git
 /mnt/u0/h/org
-listdata@exelion:~/org
-listdata@aether.e:~/org
+l@exelion:~/org
+l@aether.e:~/org
 l@luxion.e:~/org
 
-listdata@exelion:~/ghost/tinybar.git
+l@exelion:~/ghost/tinybar.git
 /mnt/u0/h/tinybar
-listdata@exelion:~/tinybar
-listdata@aether.e:~/tinybar
+l@exelion:~/tinybar
+l@aether.e:~/tinybar
 l@luxion.e:~/tinybar
 
-listdata@exelion:~/ghost/timeflux.git
+l@exelion:~/ghost/timeflux.git
 /mnt/u0/h/prog/timeflux
-listdata@exelion:~/prog/timeflux
-listdata@aether.e:~/prog/timeflux
+l@exelion:~/prog/timeflux
+l@aether.e:~/prog/timeflux
 l@luxion.e:~/prog/timeflux
 otter@ocean:~/prog/timeflux
 
-listdata@exelion:~/ghost/omtex.git
+l@exelion:~/ghost/omtex.git
 /mnt/u0/h/prog/omtex
-listdata@exelion:~/prog/omtex
-listdata@aether.e:~/prog/omtex
+l@exelion:~/prog/omtex
+l@aether.e:~/prog/omtex
 l@luxion.e:~/prog/omtex
 otter@ocean:~/prog/omtex
 
-listdata@exelion:~/ghost/gsy.git
+l@exelion:~/ghost/gsy.git
 /mnt/u0/h/prog/gsy
-listdata@exelion:~/prog/gsy
-listdata@aether.e:~/prog/gsy
+l@exelion:~/prog/gsy
+l@aether.e:~/prog/gsy
 l@luxion.e:~/prog/gsy
 otter@ocean:~/prog/gsy
 
-listdata@exelion:~/ghost/resume.git
+l@exelion:~/ghost/resume.git
 /mnt/u0/h/resume
-listdata@exelion:~/resume
-listdata@aether.e:~/resume
+l@exelion:~/resume
+l@aether.e:~/resume
 l@luxion.e:~/resume
 
-listdata@exelion:~/ghost/secure.git
+l@exelion:~/ghost/secure.git
 /mnt/u0/h/secure
-listdata@exelion:~/secure
-listdata@aether.e:~/secure
+l@exelion:~/secure
+l@aether.e:~/secure
 l@luxion.e:~/secure
 
-listdata@exelion:~/ghost/hazelnut.git
+l@exelion:~/ghost/hazelnut.git
 /mnt/u0/h/prog/hazelnut
-listdata@exelion:~/prog/hazelnut
-listdata@aether.e:~/prog/hazelnut
+l@exelion:~/prog/hazelnut
+l@aether.e:~/prog/hazelnut
 l@luxion.e:~/prog/hazelnut
 
-listdata@exelion:~/ghost/spektra.git
+l@exelion:~/ghost/spektra.git
 /mnt/u0/h/prog/chess/spektra
-listdata@exelion:~/prog/chess/spektra
-listdata@aether.e:~/prog/chess/spektra
+l@exelion:~/prog/chess/spektra
+l@aether.e:~/prog/chess/spektra
 l@luxion.e:~/prog/chess/spektra
 
-listdata@exelion:~/ghost/meteor.git
+l@exelion:~/ghost/meteor.git
 /mnt/u0/h/prog/chess/meteor
-listdata@exelion:~/prog/chess/meteor
-listdata@aether.e:~/prog/chess/meteor
+l@exelion:~/prog/chess/meteor
+l@aether.e:~/prog/chess/meteor
 l@luxion.e:~/prog/chess/meteor
 otter@ocean:~/prog/chess/meteor
 
-listdata@exelion:~/ghost/quicksilver.git
+l@exelion:~/ghost/quicksilver.git
 /mnt/u0/h/prog/game/quicksilver
-listdata@exelion:~/prog/game/quicksilver
-listdata@aether.e:~/prog/game/quicksilver
+l@exelion:~/prog/game/quicksilver
+l@aether.e:~/prog/game/quicksilver
 l@luxion.e:~/prog/game/quicksilver
 otter@ocean:~/prog/game/quicksilver
 
-listdata@exelion:~/ghost/aur.git
+l@exelion:~/ghost/aur.git
 /mnt/u0/h/prog/aur
-listdata@exelion:~/prog/aur
-listdata@aether.e:~/prog/aur
+l@exelion:~/prog/aur
+l@aether.e:~/prog/aur
 l@luxion.e:~/prog/aur
 
-listdata@exelion:~/ghost/leaf.git
+l@exelion:~/ghost/leaf.git
 /mnt/u0/h/prog/leaf
-listdata@exelion:~/prog/leaf
-listdata@aether.e:~/prog/leaf
+l@exelion:~/prog/leaf
+l@aether.e:~/prog/leaf
 l@luxion.e:~/prog/leaf
 otter@ocean:~/prog/leaf
 
-listdata@exelion:~/ghost/barprep.git
+l@exelion:~/ghost/barprep.git
 /mnt/u0/repos/barprep
-listdata@exelion:~/barprep
-listdata@aether.e:~/barprep
+l@exelion:~/barprep
+l@aether.e:~/barprep
 l@luxion.e:~/barprep
 
-listdata@exelion:~/ghost/bprep.git
+l@exelion:~/ghost/bprep.git
 /mnt/u0/repos/bprep
-listdata@exelion:~/prog/bprep
-listdata@aether.e:~/prog/bprep
+l@exelion:~/prog/bprep
+l@aether.e:~/prog/bprep
 l@luxion.e:~/prog/bprep
 
-listdata@exelion:~/ghost/calaw.git
+l@exelion:~/ghost/calaw.git
 /mnt/u0/repos/calaw
-listdata@exelion:~/calaw
-listdata@aether.e:~/calaw
+l@exelion:~/calaw
+l@aether.e:~/calaw
 l@luxion.e:~/calaw
 
-listdata@exelion:~/ghost/klipp.git
+l@exelion:~/ghost/klipp.git
 /mnt/u0/h/prog/chess/klipp
-listdata@exelion:~/prog/chess/klipp
-listdata@aether.e:~/prog/chess/klipp
+l@exelion:~/prog/chess/klipp
+l@aether.e:~/prog/chess/klipp
 l@luxion.e:~/prog/chess/klipp
 otter@ocean:~/prog/chess/klipp
 
-listdata@exelion:~/ghost/lawschool-notes.git
+l@exelion:~/ghost/lawschool-notes.git
 /mnt/u0/repos/lawschool-notes
-listdata@exelion:~/lawschool-notes
-listdata@aether.e:~/lawschool-notes
+l@exelion:~/lawschool-notes
+l@aether.e:~/lawschool-notes
 l@luxion.e:~/lawschool-notes
 
-listdata@exelion:~/ghost/meteor_old.git
+l@exelion:~/ghost/meteor_old.git
 /mnt/u0/h/prog/chess/meteor_old
-listdata@exelion:~/prog/chess/meteor_old
-listdata@aether.e:~/prog/chess/meteor_old
+l@exelion:~/prog/chess/meteor_old
+l@aether.e:~/prog/chess/meteor_old
 l@luxion.e:~/prog/chess/meteor_old
 otter@ocean:~/prog/chess/meteor_old
 
-listdata@exelion:~/ghost/spektra_old.git
+l@exelion:~/ghost/spektra_old.git
 /mnt/u0/h/prog/chess/spektra_old
-listdata@exelion:~/prog/chess/spektra_old
-listdata@aether.e:~/prog/chess/spektra_old
+l@exelion:~/prog/chess/spektra_old
+l@aether.e:~/prog/chess/spektra_old
 l@luxion.e:~/prog/chess/spektra_old
 otter@ocean:~/prog/chess/spektra_old

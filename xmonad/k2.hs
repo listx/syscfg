@@ -176,7 +176,7 @@ myKeys hostname conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((mod4Mask              , xK_2     ), spawn (term1 ++ orgPlans5w))
     , ((mod4Mask              , xK_3     ), spawn (term1 ++ orgGoals10w))
     , ((mod4Mask              , xK_9     ), spawn (term1 ++ orgLeftToday))
-    , ((mod4Mask              , xK_0     ), spawn "emacsclient -c /home/listdata/org/life.org")
+    , ((mod4Mask              , xK_0     ), spawn "emacsclient -c ~/org/life.org")
     , ((mod4Mask              , xK_c     ), spawn "galculator")
     , ((mod4Mask .|. shiftMask, xK_c     ), spawn "gcalctool")
     , ((mod4Mask              , xK_d     ), spawn "amule")
@@ -257,7 +257,7 @@ mpcSeek :: String -> Int -> String
 mpcSeek hostname sec = "mpc -h 192.168.0.110 -p " ++ port ++ " seek " ++ show' sec
     where
         port = case hostname of
-            "exelion" -> "6600" -- alsa
+            "k0" -> "6600" -- alsa
             _ -> "6601" -- icecast
         show' n
             | n < 0 = show n
@@ -265,9 +265,9 @@ mpcSeek hostname sec = "mpc -h 192.168.0.110 -p " ++ port ++ " seek " ++ show' s
 
 cpufreqSet :: String -> String -> X ()
 cpufreqSet governor hostname = case hostname of
-    "exelion"   -> mapM_ (spawn . cpu) [0..3]
-    "aether"    -> mapM_ (spawn . cpu) [0..1]
-    "luxion"    -> mapM_ (spawn . cpu) [0]
+    "k0"   -> mapM_ (spawn . cpu) [0..3]
+    "k1"    -> mapM_ (spawn . cpu) [0..1]
+    "k2"    -> mapM_ (spawn . cpu) [0]
     _ -> return ()
     where
         cpu n = "sudo cpufreq-set -c " ++ show n ++ " -g " ++ governor
@@ -515,17 +515,17 @@ myStartupHook hostname =
         ; spawnIfGrpNotFull Work $ term1 ++ " -name atWorkspace1"
         ; spawn $ term1 ++ orgIntraday
         ; spawnIfGrpNotFull Sys $ term1 ++ " -e alsamixer"
-        ; spawnIfGrpNotFull Sys $ term2 ++ " -n iftop -e sudo iftop -B -i eth" ++ (if hostname == "exelion" then "1" else "0")
+        ; spawnIfGrpNotFull Sys $ term2 ++ " -n iftop -e sudo iftop -B -i eth" ++ (if hostname == "k0" then "1" else "0")
         ; spawnIfGrpNotFull Sys $ term1 ++ " -e htop"
         ; case hostname of
-            "exelion" -> do { spawnIfGrpTopWSNotFull Music $ term2 ++ " -e ncmpcpp"
+            "k0" -> do { spawnIfGrpTopWSNotFull Music $ term2 ++ " -e ncmpcpp"
                             ; spawnIfGrpNotFull Net2 $ term3 ++ " -e rtorrent"
                             }
-            "aether" -> do  { spawnIfGrpNotFull Net2 $ term3 ++ " -e rtorrent"
+            "k1" -> do  { spawnIfGrpNotFull Net2 $ term3 ++ " -e rtorrent"
                             }
             _ -> return ()
         -- ; case hostname of
-        --     "exelion" -> resetScreensToWSTops
+        --     "k0" -> resetScreensToWSTops
         --     _ -> return ()
         }
 
