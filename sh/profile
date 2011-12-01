@@ -1,0 +1,1 @@
+exec /var/run/current-system/sw/bin/zsh -l

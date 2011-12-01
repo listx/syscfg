@@ -1,7 +1,7 @@
 CFGROOT := $(shell pwd)
 HOSTNAME := $(shell hostname)
 # add the -n flag for directories, as otherwise, stray symlinks will be created inside the CFGROOT directory itself
-all: acpi boxes cron emacs galculator git gsy lesskey modprobe mpd mplayer mutt ncmpcpp pal pentadactyl rtorrent usbmnt vim xdefaults xinitrc xmodmap xmonad xorg zsh
+all: acpi boxes cron emacs galculator git gsy lesskey modprobe mpd mplayer mutt ncmpcpp nixos pal pentadactyl rtorrent sh usbmnt vim xdefaults xinitrc xmodmap xmonad xorg zsh
 acpi:
 	ln -fs $(CFGROOT)/acpi/${HOSTNAME}.sh /etc/acpi/handler.sh
 boxes:
@@ -41,6 +41,9 @@ endif
 ifeq ('$(HOSTNAME)','aether')
 	ln -fs $(CFGROOT)/ncmpcpp/cfg-luxion ${HOME}/.ncmpcpp/config
 endif
+nixos:
+	ln -fs $(CFGROOT)/nixos/base.nix			/etc/nixos
+	ln -fs $(CFGROOT)/nixos/$(HOSTNAME).nix		/etc/nixos/configuration.nix
 
 pal:
 	ln -fns $(CFGROOT)/pal              ${HOME}/.pal
@@ -54,6 +57,8 @@ endif
 ifeq ('$(HOSTNAME)','aether')
 	ln -fs $(CFGROOT)/rtorrent/cfg-aether ${HOME}/.rtorrent.rc
 endif
+sh:
+	ln -fns $(CFGROOT)/sh/profile		${HOME}/.profile
 usbmnt:
 	ln -fs $(CFGROOT)/usbmnt/cfg  ${HOME}/.usbmnt
 vim:
