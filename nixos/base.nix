@@ -2,41 +2,52 @@
 
 {
   environment.systemPackages = with pkgs; [
+    ack
+    colordiff
+    cpufrequtils
+    emacs
+    flac
     gcc
     gitAndTools.gitFull
     gnumake
+    gnupg
     haskellPackages.ghc
-    haskellPackages.xmonad
     htop
+    iftop
     libertine
     manpages
+    mutt
+    msmtp
+    p7zip
+    rtorrent
     rxvt_unicode
     terminus_font
+    timidity
     tmux
     vim
-    xorg.xmodmap
     weechat
     wget
+    unrar
+    unzip
+    xz
+    zip
     zsh
   ];
-
-  # this is unused for now
-  environment.shellInit = ''
-    export GEM_PATH=/var/run/current-system/sw/${pkgs.ruby.gemPath}
-    export RUBYLIB=/var/run/current-system/sw/lib
-    export RUBYOPT=rubygems
-  '';
 
     #firefoxWrapper
     #chromeWrapper
     #openoffice # shouldn't it be libreoffice???
-    #adobeReader
   environment.x11Packages = with pkgs; [
-    MPlayer
-    scrot
+    evince
+    geeqie
     haskellPackages.xmonad
     haskellPackages.xmonadContrib
     haskellPackages.xmonadExtras
+    MPlayer
+    scrot
+    xchm
+    xorg.xmodmap
+    xsel
   ];
 
   nix.useChroot = true;
