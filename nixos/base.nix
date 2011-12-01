@@ -62,6 +62,9 @@
     "ext4"
   ];
 
+  # use linux 3.1.2
+  boot.kernelPackages = pkgs.linuxPackages_3_1;
+
   boot.loader.grub = {
     # Use grub 2 as boot loader.
     enable = true;
