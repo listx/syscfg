@@ -123,6 +123,10 @@ setopt GLOB_DOTS
 # with CTRL+X, CTRL+V for some more advanced operations.                                           #
 #==================================================================================================#
 
+if [[ $HOST == "luxion" ]]; then
+    export TERM=xterm # temporary fix to get working backspace key for old rxvt 9.10 in NixOS
+fi
+
 bindkey -v # use vim bindings!
 # use CTRL-R for history search (^R is bound to the 'redisplay' command by default, which is never used anyway)
 bindkey     '' history-incremental-search-backward
