@@ -29,8 +29,6 @@ if [[ $HOST == "exelion" ]]; then
     str+="\n0 0,12 * * * ~/syscfg/script/alarm/westminster-nohour.sh f"
     str+="\n0 1,2,3,4,5,6,7,8,9,10,11 * * * ~/syscfg/script/alarm/westminster-nohour.sh a"
     str+="\n0 13,14,15,16,17,18,19,20,21,22,23 * * * ~/syscfg/script/alarm/westminster-nohour.sh b"
-    # set alarm clock to go off
-    str+="\n28 4 * * * urxvt -hold -e ~/syscfg/script/alarm/alarmclock.sh"
 fi
 
 if [[ $HOST == "luxion" || $HOST == "aether" ]]; then
