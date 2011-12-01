@@ -331,6 +331,7 @@ alias nl='nix-env --list-generations'
 alias np='ls -l --color=always ~/.nix-profile'
 alias nq='nix-env -q \*'
 alias nls='sudo nix-env -p /nix/var/nix/profiles/system --list-generations'
+alias nu='nix-channel --update && sudo nixos-checkout'
 
 alias p='sudo pacman'
 alias pu='sudo pacman -Syu'
