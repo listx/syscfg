@@ -74,13 +74,13 @@ xmodmap:
 xmonad:
 	ln -fns $(CFGROOT)/xmonad           ${HOME}/.xmonad
 ifeq ('$(HOSTNAME)','exelion')
-	ln -fs $(CFGROOT)/xmonad/other.hs           ${HOME}/.xmonad/xmonad.hs
+	ln -fs $(CFGROOT)/xmonad/others.hs           ${HOME}/.xmonad/xmonad.hs
 endif
 ifeq ('$(HOSTNAME)','luxion')
 	ln -fs $(CFGROOT)/xmonad/luxion.hs           ${HOME}/.xmonad/xmonad.hs
 endif
 ifeq ('$(HOSTNAME)','aether')
-	ln -fs $(CFGROOT)/xmonad/other.hs           ${HOME}/.xmonad/xmonad.hs
+	ln -fs $(CFGROOT)/xmonad/others.hs           ${HOME}/.xmonad/xmonad.hs
 endif
 xorg:
 	ln -fns $(CFGROOT)/xorg/10-keyboard.conf	/etc/X11/xorg.conf.d/
