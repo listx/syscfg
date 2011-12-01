@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/usr/bin/env zsh
 
 # WHITE ON BLUE theme (late 80's-ish, almost videogame-like look)
 

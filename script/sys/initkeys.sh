@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/usr/bin/env zsh
 # Set up keyboard in a sane manner.
 
 # We don't background any of these X API calls to ensure a deterministic manner

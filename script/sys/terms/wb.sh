@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/usr/bin/env zsh
 
 # WHITE ON BLACK (more or less) theme; very zenburn-ish
 
