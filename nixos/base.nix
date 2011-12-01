@@ -12,6 +12,7 @@
     gnumake
     gnupg
     haskellPackages.ghc
+    haskellPackages.cmdargs
     htop
     iftop
     libertine
