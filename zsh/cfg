@@ -266,8 +266,8 @@ alias tma='tmux attach-session'
 
 # these sane hostnames depend on the /etc/hosts file!
 alias se='ssh listdata@exelion'
-alias sle='ssh listdata@luxion.e'
-alias slw='ssh listdata@luxion.w'
+alias sle='ssh l@luxion.e'
+alias slw='ssh l@luxion.w'
 alias sae='ssh listdata@aether.e'
 alias saw='ssh listdata@aether.w'
 alias so='ssh otter@ocean'
@@ -276,8 +276,8 @@ alias sf='ssh tiger@forest'
 # GLOBAL aliases for quick scp operations
 # E.g. scp FILE L ------> scp FILE listdata2@192.168.0.111:
 alias -g E='listdata@exelion:'
-alias -g LE='listdata@luxion.e:'
-alias -g LW='listdata@luxion.w:'
+alias -g LE='l@luxion.e:'
+alias -g LW='l@luxion.w:'
 alias -g AE='listdata@aether.e:'
 alias -g AW='listdata@aether.w:'
 alias -g O='otter@ocean:'
