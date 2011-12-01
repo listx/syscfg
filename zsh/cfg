@@ -61,8 +61,8 @@ export LESS_TERMCAP_se=$'\E[0m'         # end standout-mode
 export LESS_TERMCAP_ue=$'\E[0m'         # end underline
 
 # default text editor--set it to vim, not vi
-export VISUAL=/usr/bin/vim
-export EDITOR=/usr/bin/vim
+export VISUAL=vim
+export EDITOR=vim
 
 # wine directory (prevent wine/msiexec from creating a default .wine folder)
 export WINEARCH=win32
