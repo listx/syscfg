@@ -326,6 +326,12 @@ alias of='sudo shutdown -t 1 -hP now & disown; exit' # power off
 alias ofo='sudo shutdown -t 1 -r now & disown; exit' # reboot
 alias offo='sudo shutdown -t 1 -Fr now & disown; exit' # reboot, but force fsck on bootup
 
+alias n='nix-env'
+alias nl='nix-env --list-generations'
+alias np='ls -l --color=always ~/.nix-profile'
+alias nq='nix-env -q \*'
+alias nls='sudo nix-env -p /nix/var/nix/profiles/system --list-generations'
+
 alias p='sudo pacman'
 alias pu='sudo pacman -Syu'
 alias py='sudo pacman -Syy'
