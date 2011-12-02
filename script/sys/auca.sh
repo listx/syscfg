@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/usr/bin/env zsh
 # PROGRAM: auca
 # AUTHOR: Linus Arver <linus@ucla.edu>
 # LICENSE: PUBLIC DOMAIN

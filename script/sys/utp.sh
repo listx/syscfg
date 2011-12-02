@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/usr/bin/env zsh
 # utp.sh: urxvt theme picker
 zmodload zsh/pcre
 

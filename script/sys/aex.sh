@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/usr/bin/env zsh
 # Program: aex
 # Version: 1.0
 # Author: Linus Arver

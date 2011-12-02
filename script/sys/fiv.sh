@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/usr/bin/env zsh
 # Program: fiv (File Integrity Verifier --- uses sha1sum checksum to verify file integrity
 # Author: Linus Arver
 # Date: 2010

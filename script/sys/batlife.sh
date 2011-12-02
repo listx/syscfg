@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/usr/bin/env zsh
 # check battery life
 
 batlife=$(acpi | sed 's/\%.\+//' | awk '{print $NF}')

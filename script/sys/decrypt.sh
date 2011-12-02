@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/usr/bin/env zsh
 # decrypt files painlessly
 
 if [[ $1 == "outfile" ]]; then

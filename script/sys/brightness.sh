@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/usr/bin/env zsh
 # change backlight settings based on system
 # symlink to /usr/bin/brightness, and call with "sudo brightness"
 # make sure to disable password prompt for it with "sudo visudo"
