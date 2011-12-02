@@ -1,0 +1,5 @@
+emulate bash
+alias shopt=false
+. /etc/profile
+unalias shopt
+emulate zsh

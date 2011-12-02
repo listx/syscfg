@@ -58,7 +58,7 @@ ifeq ('${HOST}','k1')
 	ln -fs ${CFG}/rtorrent/cfg-k1		${HOME}/.rtorrent.rc
 endif
 sh:
-	ln -fns ${CFG}/sh/profile		${HOME}/.profile
+	ln -fns ${CFG}/sh/zshenv		/etc
 usbmnt:
 	ln -fs ${CFG}/usbmnt/cfg		${HOME}/.usbmnt
 vim:

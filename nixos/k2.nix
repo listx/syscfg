@@ -61,8 +61,8 @@
             description = "Linus";
             home = "/home/l";
             # environmen.shellInit unfortunately only exists for bash, so this is broken if we don't start up bash first (which happens when X starts, but not when we login from virtual console, or ssh)
-            #shell = pkgs.zsh + "/bin/zsh";
-            shell = "/bin/sh"; # it's actually symlinked by NixOS to bash
+            shell = pkgs.zsh + "/bin/zsh";
+            #shell = "/bin/sh"; # it's actually symlinked by NixOS to bash
         }
     ];
     users.extraGroups = [
