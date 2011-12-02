@@ -278,7 +278,7 @@ alias so='ssh otter@ocean'
 alias sf='ssh tiger@forest'
 
 # GLOBAL, position-independent aliases for quick scp operations
-alias -g K='l@k0:'
+alias -g K0='l@k0:'
 alias -g K2E='l@k2.e:'
 alias -g K2W='l@k2.w:'
 alias -g K1E='l@k1.e:'
