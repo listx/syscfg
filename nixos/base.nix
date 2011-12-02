@@ -127,6 +127,36 @@
     192.168.0.120 ocean
   ";
 
+  # allow use of "sudo" command
+  security.sudo.enable = true;
+  # set the sudoers file
+  security.sudo.configFile = ''
+        # Don't edit this file. Set nixos option security.sudo.configFile instead
+
+        # "root" is allowed to do anything.
+        root        ALL=(ALL) SETENV: ALL
+
+        # Users in the "wheel" group can do anything.
+        %wheel      ALL=(ALL) SETENV: ALL
+
+        # shutdown
+        l ALL=NOPASSWD: /var/run/current-system/sw/sbin/shutdown
+        l ALL=NOPASSWD: /var/run/current-system/sw/bin/cpufreq-set
+
+        # mounting
+        l ALL=NOPASSWD: /var/run/current-system/sw/bin/mount
+        l ALL=NOPASSWD: /var/run/current-system/sw/bin/umount
+        l ALL=NOPASSWD: /var/run/current-system/sw/sbin/blkid
+
+        # networking
+        l ALL=NOPASSWD: /var/run/current-system/sw/sbin/iftop
+        l ALL=NOPASSWD: /var/run/current-system/sw/sbin/ifconfig
+
+        # printing
+        l ALL=NOPASSWD: /var/run/current-system/sw/bin/cancel
+        l ALL=NOPASSWD: /var/run/current-system/sw/bin/lprm
+  '';
+
   # Add CUPS to print documents.
   services.printing.enable = true;
 
