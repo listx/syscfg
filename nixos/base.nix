@@ -116,6 +116,7 @@
 
   # OpenSSH daemon
   services.openssh.enable = true;
+  services.openssh.forwardX11 = false;
 
   networking.extraHosts = "
     192.168.0.100 forest
