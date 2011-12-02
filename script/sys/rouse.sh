@@ -17,8 +17,8 @@ c5="\x1b[1;35m" # bright purple
 c6="\x1b[1;31m" # bright red
 ce="\x1b[0m"
 
-machines=(luxion aether exelion forest ocean)
-laptops=(luxion aether)
+machines=(k2 k1 k0 forest ocean)
+laptops=(k2 k1)
 remotes=()
 online=()
 offline=()
@@ -71,13 +71,13 @@ if [[ $#offline -gt 0 ]]; then
             else
                 echo "Chose system ${c3}$system$ce"
                 case $system in
-                exelion)
+                k0)
                     wol -i $lanip 00:04:4B:02:51:47
                     ;;
-                aether.e)
+                k1.e)
                     wol -i $lanip 00:23:26:5C:07:37
                     ;;
-                luxion.e)
+                k2.e)
                     wol -i $lanip 00:12:3F:05:85:FE
                     ;;
                 forest)

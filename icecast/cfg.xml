@@ -135,9 +135,9 @@
         <!-- Note that if <chroot> is turned on below, these paths must both
              be relative to the new root, not the original root -->
              <!-- also, icecast only likes absolute paths, not paths beginning with ~/ -->
-             <logdir>/home/listdata/.icecast-untracked/log</logdir>
-             <webroot>/home/listdata/.icecast-untracked/icecast/web</webroot>
-             <adminroot>/home/listdata/.icecast-untracked/icecast/admin</adminroot>
+             <logdir>/home/l/.icecast-untracked/log</logdir>
+             <webroot>/home/l/.icecast-untracked/icecast/web</webroot>
+             <adminroot>/home/l/.icecast-untracked/icecast/admin</adminroot>
         <!-- <pidfile>/usr/share/icecast/icecast.pid</pidfile> -->
 
         <!-- Aliases: treat requests for 'source' path as being for 'dest' path
@@ -172,8 +172,8 @@
         <chroot>0</chroot>
         <!--
         <changeowner>
-            <user>listdata</user>
-            <group>listdata</group>
+            <user>l</user>
+            <group>l</group>
         </changeowner>
         -->
     </security>

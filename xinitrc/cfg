@@ -21,7 +21,7 @@ uim-xim &
 emacs --daemon &
 
 case $(hostname) in
-    exelion)
+    k0)
         # start Music Player Demon (mpd) with customized config file (instead of making an ugly symlink at the default-looked-at /etc/mpd.conf
         mpd ~/syscfg/mpd/cfg-alsa
         # start second MPD for remote listening via icecast
@@ -38,8 +38,6 @@ case $(hostname) in
 
         # start xscreensaver
         #xscreensaver -no-splash &
-    ;;
-    luxion)
     ;;
     *)
     ;;

@@ -18,7 +18,7 @@
 	smtpserverport = 587
 	smtpuser = linusarver@gmail.com
 	chainreplyto = false
-	aliasesfile = /home/listdata/.git-sendemail-aliases
+	aliasesfile = /home/l/.git-sendemail-aliases
 	aliasfiletype = mailrc
 	cc = linusarver@gmail.com
 

@@ -123,7 +123,7 @@ setopt GLOB_DOTS
 # with CTRL+X, CTRL+V for some more advanced operations.                                           #
 #==================================================================================================#
 
-if [[ $HOST == "luxion" ]]; then
+if [[ $HOST == "k2" ]]; then
     export TERM=xterm # temporary fix to get working backspace key for old rxvt 9.10 in NixOS
 fi
 
@@ -269,21 +269,20 @@ alias ees='ee galias_find_src'
 alias tma='tmux attach-session'
 
 # these sane hostnames depend on the /etc/hosts file!
-alias se='ssh listdata@exelion'
-alias sle='ssh l@luxion.e'
-alias slw='ssh l@luxion.w'
-alias sae='ssh listdata@aether.e'
-alias saw='ssh listdata@aether.w'
+alias se='ssh l@k0'
+alias sle='ssh l@k2.e'
+alias slw='ssh l@k2.w'
+alias sae='ssh l@k1.e'
+alias saw='ssh l@k1.w'
 alias so='ssh otter@ocean'
 alias sf='ssh tiger@forest'
 
-# GLOBAL aliases for quick scp operations
-# E.g. scp FILE L ------> scp FILE listdata2@192.168.0.111:
-alias -g E='listdata@exelion:'
-alias -g LE='l@luxion.e:'
-alias -g LW='l@luxion.w:'
-alias -g AE='listdata@aether.e:'
-alias -g AW='listdata@aether.w:'
+# GLOBAL, position-independent aliases for quick scp operations
+alias -g E='l@k0:'
+alias -g LE='l@k2.e:'
+alias -g LW='l@k2.w:'
+alias -g AE='l@k1.e:'
+alias -g AW='l@k1.w:'
 alias -g O='otter@ocean:'
 alias -g F='tiger@forest:'
 
@@ -319,7 +318,7 @@ alias clean_files='find -type f -exec chmod 644 {} \;'
 #
 # E.g.:
 #
-# listdata2 luxion=NOPASSWD: /usr/sbin/iftop
+# l k2=NOPASSWD: /usr/sbin/iftop
 
 # turn off power or reboot gracefully
 alias of='sudo shutdown -t 1 -hP now & disown; exit' # power off
@@ -357,8 +356,8 @@ alias ned='sudo /etc/rc.d/network stop'
 # CUSTOM SCRIPTS
 #
 # encoding/decoding
-alias rgmp3='/home/listdata/syscfg/script/audio/replaygain/mp3/tmwrg.sh'
-alias rgflac='/home/listdata/syscfg/script/audio/replaygain/flac/tfwrg.sh'
+alias rgmp3='~/syscfg/script/audio/replaygain/mp3/tmwrg.sh'
+alias rgflac='~/syscfg/script/audio/replaygain/flac/tfwrg.sh'
 
 # mount/unmount USB drives
 alias usb='~/syscfg/script/sys/usbmnt -d'
@@ -373,7 +372,7 @@ alias usboff='~/syscfg/script/sys/usbmnt -U'
 #--------------------------------------------------------------------------------------------------#
 
 case $HOST in
-    exelion)
+    k0)
         alias iftop='sudo iftop -B -i eth1'
         alias m1='d /mnt/a1'
         alias m2='d /mnt/b1'
@@ -390,7 +389,7 @@ case $HOST in
         alias net_seal='sudo ifconfig eth1 down'
         alias net_unseal='sudo ifconfig eth1 up'
     ;;
-    luxion)
+    k2)
         alias iftope='sudo iftop -B -i eth0'
         alias iftopw='sudo iftop -B -i wlan0'
         alias m1='d /mnt/windows'
@@ -398,12 +397,12 @@ case $HOST in
         alias m3='d /mnt/u0'
         alias discon='sudo mount /dev/sr0'
         alias discof='sudo umount /dev/sr0'
-        alias nwu='sudo netcfg -c luxion-wireless-home'
-        alias nwd='sudo netcfg -d luxion-wireless-home'
+        alias nwu='sudo netcfg -c k2-wireless-home'
+        alias nwd='sudo netcfg -d k2-wireless-home'
         alias net_seal='sudo ifconfig eth0 down'
         alias net_unseal='sudo ifconfig eth0 up'
     ;;
-    aether)
+    k1)
         alias iftope='sudo iftop -B -i eth0'
         alias iftopw='sudo iftop -B -i wlan0'
         alias m1='d /mnt/windows-xp'
