@@ -34,6 +34,18 @@
     xz
     zip
     zsh
+    (let myTexLive =
+        texLiveAggregationFun {
+            paths = [
+                texLive
+                texLiveExtra
+                texLiveBeamer
+                texLiveLatexXColor
+                texLivePGF
+                texLive
+            ];
+        };
+        in myTexLive)
   ];
 
     #firefoxWrapper
