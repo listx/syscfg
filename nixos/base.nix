@@ -19,6 +19,7 @@
     manpages
     mutt
     msmtp
+    pinentry
     p7zip
     rtorrent
     rxvt_unicode
