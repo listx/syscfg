@@ -270,19 +270,19 @@ alias tma='tmux attach-session'
 
 # these sane hostnames depend on the /etc/hosts file!
 alias sk0='ssh l@k0'
-alias sk2='ssh l@k2.e'
-alias sk2w='ssh l@k2.w'
-alias sk1='ssh l@k1.e'
-alias sk1w='ssh l@k1.w'
+alias sk2='ssh l@k2'
+alias sk2w='ssh l@k2w'
+alias sk1='ssh l@k1'
+alias sk1w='ssh l@k1w'
 alias so='ssh otter@ocean'
 alias sf='ssh tiger@forest'
 
 # GLOBAL, position-independent aliases for quick scp operations
 alias -g K0='l@k0:'
-alias -g K2E='l@k2.e:'
-alias -g K2W='l@k2.w:'
-alias -g K1E='l@k1.e:'
-alias -g K1W='l@k1.w:'
+alias -g K2='l@k2:'
+alias -g K2W='l@k2w:'
+alias -g K1='l@k1:'
+alias -g K1W='l@k1w:'
 alias -g O='otter@ocean:'
 alias -g F='tiger@forest:'
 
