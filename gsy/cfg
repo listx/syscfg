@@ -1,149 +1,149 @@
 k0:k0
-k1:k1.e
-k2:k2.e
+k1:k1
+k2:k2
 ocean:ocean
 forest:forest
 
 l@k0:~/ghost/syscfg.git
 /mnt/u0/h/syscfg
 l@k0:~/syscfg
-l@k1.e:~/syscfg
-l@k2.e:~/syscfg
+l@k1:~/syscfg
+l@k2:~/syscfg
 otter@ocean:~/syscfg
 tiger@forest:~/syscfg
 
 l@k0:~/ghost/study.git
 /mnt/u0/h/study
 l@k0:~/study
-l@k1.e:~/study
-l@k2.e:~/study
+l@k1:~/study
+l@k2:~/study
 otter@ocean:~/study
 
 l@k0:~/ghost/org.git
 /mnt/u0/h/org
 l@k0:~/org
-l@k1.e:~/org
-l@k2.e:~/org
+l@k1:~/org
+l@k2:~/org
 
 l@k0:~/ghost/tinybar.git
 /mnt/u0/h/tinybar
 l@k0:~/tinybar
-l@k1.e:~/tinybar
-l@k2.e:~/tinybar
+l@k1:~/tinybar
+l@k2:~/tinybar
 
 l@k0:~/ghost/timeflux.git
 /mnt/u0/h/prog/timeflux
 l@k0:~/prog/timeflux
-l@k1.e:~/prog/timeflux
-l@k2.e:~/prog/timeflux
+l@k1:~/prog/timeflux
+l@k2:~/prog/timeflux
 otter@ocean:~/prog/timeflux
 
 l@k0:~/ghost/omtex.git
 /mnt/u0/h/prog/omtex
 l@k0:~/prog/omtex
-l@k1.e:~/prog/omtex
-l@k2.e:~/prog/omtex
+l@k1:~/prog/omtex
+l@k2:~/prog/omtex
 otter@ocean:~/prog/omtex
 
 l@k0:~/ghost/gsy.git
 /mnt/u0/h/prog/gsy
 l@k0:~/prog/gsy
-l@k1.e:~/prog/gsy
-l@k2.e:~/prog/gsy
+l@k1:~/prog/gsy
+l@k2:~/prog/gsy
 otter@ocean:~/prog/gsy
 
 l@k0:~/ghost/resume.git
 /mnt/u0/h/resume
 l@k0:~/resume
-l@k1.e:~/resume
-l@k2.e:~/resume
+l@k1:~/resume
+l@k2:~/resume
 
 l@k0:~/ghost/secure.git
 /mnt/u0/h/secure
 l@k0:~/secure
-l@k1.e:~/secure
-l@k2.e:~/secure
+l@k1:~/secure
+l@k2:~/secure
 
 l@k0:~/ghost/hazelnut.git
 /mnt/u0/h/prog/hazelnut
 l@k0:~/prog/hazelnut
-l@k1.e:~/prog/hazelnut
-l@k2.e:~/prog/hazelnut
+l@k1:~/prog/hazelnut
+l@k2:~/prog/hazelnut
 
 l@k0:~/ghost/spektra.git
 /mnt/u0/h/prog/chess/spektra
 l@k0:~/prog/chess/spektra
-l@k1.e:~/prog/chess/spektra
-l@k2.e:~/prog/chess/spektra
+l@k1:~/prog/chess/spektra
+l@k2:~/prog/chess/spektra
 
 l@k0:~/ghost/meteor.git
 /mnt/u0/h/prog/chess/meteor
 l@k0:~/prog/chess/meteor
-l@k1.e:~/prog/chess/meteor
-l@k2.e:~/prog/chess/meteor
+l@k1:~/prog/chess/meteor
+l@k2:~/prog/chess/meteor
 otter@ocean:~/prog/chess/meteor
 
 l@k0:~/ghost/quicksilver.git
 /mnt/u0/h/prog/game/quicksilver
 l@k0:~/prog/game/quicksilver
-l@k1.e:~/prog/game/quicksilver
-l@k2.e:~/prog/game/quicksilver
+l@k1:~/prog/game/quicksilver
+l@k2:~/prog/game/quicksilver
 otter@ocean:~/prog/game/quicksilver
 
 l@k0:~/ghost/aur.git
 /mnt/u0/h/prog/aur
 l@k0:~/prog/aur
-l@k1.e:~/prog/aur
-l@k2.e:~/prog/aur
+l@k1:~/prog/aur
+l@k2:~/prog/aur
 
 l@k0:~/ghost/leaf.git
 /mnt/u0/h/prog/leaf
 l@k0:~/prog/leaf
-l@k1.e:~/prog/leaf
-l@k2.e:~/prog/leaf
+l@k1:~/prog/leaf
+l@k2:~/prog/leaf
 otter@ocean:~/prog/leaf
 
 l@k0:~/ghost/barprep.git
 /mnt/u0/repos/barprep
 l@k0:~/barprep
-l@k1.e:~/barprep
-l@k2.e:~/barprep
+l@k1:~/barprep
+l@k2:~/barprep
 
 l@k0:~/ghost/bprep.git
 /mnt/u0/repos/bprep
 l@k0:~/prog/bprep
-l@k1.e:~/prog/bprep
-l@k2.e:~/prog/bprep
+l@k1:~/prog/bprep
+l@k2:~/prog/bprep
 
 l@k0:~/ghost/calaw.git
 /mnt/u0/repos/calaw
 l@k0:~/calaw
-l@k1.e:~/calaw
-l@k2.e:~/calaw
+l@k1:~/calaw
+l@k2:~/calaw
 
 l@k0:~/ghost/klipp.git
 /mnt/u0/h/prog/chess/klipp
 l@k0:~/prog/chess/klipp
-l@k1.e:~/prog/chess/klipp
-l@k2.e:~/prog/chess/klipp
+l@k1:~/prog/chess/klipp
+l@k2:~/prog/chess/klipp
 otter@ocean:~/prog/chess/klipp
 
 l@k0:~/ghost/lawschool-notes.git
 /mnt/u0/repos/lawschool-notes
 l@k0:~/lawschool-notes
-l@k1.e:~/lawschool-notes
-l@k2.e:~/lawschool-notes
+l@k1:~/lawschool-notes
+l@k2:~/lawschool-notes
 
 l@k0:~/ghost/meteor_old.git
 /mnt/u0/h/prog/chess/meteor_old
 l@k0:~/prog/chess/meteor_old
-l@k1.e:~/prog/chess/meteor_old
-l@k2.e:~/prog/chess/meteor_old
+l@k1:~/prog/chess/meteor_old
+l@k2:~/prog/chess/meteor_old
 otter@ocean:~/prog/chess/meteor_old
 
 l@k0:~/ghost/spektra_old.git
 /mnt/u0/h/prog/chess/spektra_old
 l@k0:~/prog/chess/spektra_old
-l@k1.e:~/prog/chess/spektra_old
-l@k2.e:~/prog/chess/spektra_old
+l@k1:~/prog/chess/spektra_old
+l@k2:~/prog/chess/spektra_old
 otter@ocean:~/prog/chess/spektra_old
