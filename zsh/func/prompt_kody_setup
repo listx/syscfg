@@ -96,12 +96,12 @@ prompt_kody_precmd() {
     prompt_hostcolor=""
     prompt_charcolor=""
     case $HOST in
-        exelion)    prompt_hostcolor=$prompt_color3 ;;
-        luxion)     prompt_hostcolor=$prompt_color6 ;;
-        aether)     prompt_hostcolor=$prompt_color1 ;;
-        ocean)      prompt_hostcolor=$prompt_color8 ;;
-        forest)     prompt_hostcolor=$prompt_color2 ;;
-        *)          prompt_hostcolor=$prompt_color5 ;;
+        k0)     prompt_hostcolor=$prompt_color3 ;;
+        k2)     prompt_hostcolor=$prompt_color6 ;;
+        k1)     prompt_hostcolor=$prompt_color1 ;;
+        ocean)  prompt_hostcolor=$prompt_color8 ;;
+        forest) prompt_hostcolor=$prompt_color2 ;;
+        *)      prompt_hostcolor=$prompt_color5 ;;
     esac
     case $USERNAME in
         root)       prompt_charcolor=$prompt_color5 ;;

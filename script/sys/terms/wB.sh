@@ -5,7 +5,7 @@
 export TERM_COLOR_SCHEME_CURRENT='wB'
 
 case $HOST in
-    aether)
+    k1)
         geom="100x50"
         fonts="xft:Terminus:pixelsize=14,xft:Kochi Gothic,xft:Baekmuk Gulim"
     ;;

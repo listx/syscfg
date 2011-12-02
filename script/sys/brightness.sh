@@ -4,7 +4,7 @@
 # make sure to disable password prompt for it with "sudo visudo"
 
 case $HOST in
-    aether)
+    k1)
         # since xbacklight always returns a single floating point number, we need to
         # convert it to an integer
         float=`xbacklight`
@@ -15,7 +15,7 @@ case $HOST in
             xbacklight -set 0
         fi
     ;;
-    luxion)
+    k2)
         b=$(cat /sys/class/backlight/dell_backlight/actual_brightness)
         let "bi=$b"
         if [[ $b -lt 7 ]]; then

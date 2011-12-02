@@ -12,9 +12,9 @@ _LAN_IP = "192.168.0.255"
 -- list of nodes on the LAN that support wake-on-lan
 _NODES :: [(String, String)]
 _NODES =
-    [ ("exelion", "00:04:4B:02:51:47")
-    , ("aether.e", "00:23:26:5C:07:37")
-    , ("luxion.e", "00:12:3F:05:85:FE")
+    [ ("k0", "00:04:4B:02:51:47")
+    , ("k1.e", "00:23:26:5C:07:37")
+    , ("k2.e", "00:12:3F:05:85:FE")
     , ("ocean", "00:50:8D:BC:9B:72")
     ]
 

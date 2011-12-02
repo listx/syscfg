@@ -18,16 +18,16 @@ ce="\x1b[0m"
 
 # name of the central bare repo (we only pull/push to this machine if it's
 # online; if it's offline, we sync only among the remotes themselves)
-ghost=(exelion)
+ghost=(k0)
 
 # list of machines that have the same git repo (that are ssh-able w/o a
 # password)
-connections=(listdata@exelion listdata@luxion listdata@aether)
+connections=(l@k0 l@k2 l@k1)
 
-# these must be connected with a ".e" appended to it, like "luxion.e" (of
-# course, this is because luxion.e is a predefined address in the /etc/hosts
+# these must be connected with a ".e" appended to it, like "k2.e" (of
+# course, this is because k2.e is a predefined address in the /etc/hosts
 # file)
-laptops=(luxion aether)
+laptops=(k2 k1)
 
 # identify remote connections
 remotes=()

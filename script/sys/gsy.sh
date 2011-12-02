@@ -12,16 +12,16 @@ ce="\x1b[0m"
 
 # name of the central bare repo (we only pull/push to this machine if it's
 # online; if it's offline, we sync only among the remotes themselves)
-ghost=(exelion)
+ghost=(k0)
 
 # list of machines that have the same git repo (that are ssh-able w/o a
 # password)
-connections=(listdata@exelion listdata@luxion listdata@aether tiger@forest otter@ocean)
+connections=(l@k0 l@k2 l@k1 tiger@forest otter@ocean)
 
-# these must be connected with a ".e" appended to it, like "luxion.e" (of
-# course, this is because luxion.e is a predefined address in the /etc/hosts
+# these must be connected with a ".e" appended to it, like "k2.e" (of
+# course, this is because k2.e is a predefined address in the /etc/hosts
 # file)
-laptops=(luxion aether)
+laptops=(k2 k1)
 
 # online clean remote connections
 remotes_clean=()
@@ -55,7 +55,7 @@ while true; do
     if [[ $? -eq 0 ]]; then
         # since we have different usenames in the remotes, we have to unify the
         # location of "repo" by using the common tilde "~" shell expansion
-        # parameter; e.g., a repo named "/home/listdata/syscfg" can't be used
+        # parameter; e.g., a repo named "/home/l/syscfg" can't be used
         # on "/home/tiger/syscfg", but using ~/syscfg ensures that it works
         # across all systems
         repo=${PWD/#${HOME}/\~}

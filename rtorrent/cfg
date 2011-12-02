@@ -23,11 +23,11 @@ directory = /mnt/b3/down
 # Default session directory. Make sure you don't run multiple instance
 # of rtorrent using the same session directory. Perhaps using a
 # relative path?
-session = /home/listdata/bittor/session
+session = ~/bittor/session
 
 # Watch a directory for new torrents, and stop those that have been
 # deleted.
-schedule = watch_directory,5,5,load_start=/home/listdata/bittor/*.torrent
+schedule = watch_directory,5,5,load_start=~/bittor/*.torrent
 schedule = untied_directory,5,5,stop_untied=
 
 # Close torrents when diskspace is low.

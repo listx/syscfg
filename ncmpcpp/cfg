@@ -1,7 +1,7 @@
 # see /usr/share/doc/ncmpcpp for a complete list of available settings
 mpd_host = "192.168.0.110"
 mpd_port = "6600"
-mpd_music_dir = "/home/listdata/.mpd-untracked/music"
+mpd_music_dir = "~/.mpd-untracked/music"
 seek_time = "4"
 autocenter_mode = "yes"
 default_space_mode = "select"
