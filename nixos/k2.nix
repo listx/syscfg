@@ -27,9 +27,18 @@
     };
 
     networking = {
-        hostName = "luxion"; # Define your hostname.
+        hostName = "k2"; # Define your hostname.
         interfaceMonitor.enable = true; # Watch for plugged cable.
-        enableWLAN = true;  # Enables Wireless (hopefully... it doesn't work on luxion right now)
+        enableWLAN = true;  # Enables Wireless (hopefully... it doesn't work on k2 (luxion) right now)
+        extraHosts = ''
+            192.168.0.100   forest
+            192.168.0.110   k0
+            192.168.0.111   k2.e
+            192.168.0.112   k2.w
+            192.168.0.113   k1.e
+            192.168.0.114   k1.w
+            192.168.0.120   ocean
+        '';
     };
 
     # Add file system entries for each partition that you want to see mounted
