@@ -107,7 +107,7 @@ filesCheck fs flist
 prog :: Opts -> [FilePath] -> IO ()
 prog opts@Opts{..} filesToWatch = do
     let comDef = if null command_simple
-        then head $ command
+        then (head command)
         else command_simple ++ " " ++ (head filesToWatch)
     filesTS <- mapM getTimestamp filesToWatch
     _ <- forkIO $ loop opts comDef filesToWatch filesTS -- loop to handle file changes
