@@ -496,6 +496,7 @@ myManageHook = composeAll $
     , className =? "Xsane"                      --> doFloat
     , className =? "Spektra"                    --> doFloat
     , className =? "Glade"                      --> doFloat
+    , className =? "Anki"                       --> doFloat
     ]
     ++  [ resource =? ("atWorkspace" ++ s) --> doShift s
         | s <- map show [0..9] ++ map (('F':) . show) [1..12]
