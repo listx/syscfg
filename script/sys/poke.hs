@@ -1,10 +1,13 @@
 module Main where
 
-import IO
-import System.Random -- for random numbers
-import System.IO -- for hSetEcho
-import System
+import Control.Monad.State
+import Crypto.Random.AESCtr
+import Data.Binary (decode)
+import qualified Data.ByteString.Lazy as B
 import Data.List (nub)
+import IO
+import System
+import System.IO -- for hSetEcho
 
 keysChar, keysNum, keysPunc, keysCharNum, keysAll, keysHex :: String
 keysChar = ['a'..'z'] ++ ['A'..'Z']
@@ -27,16 +30,26 @@ giveKey keysCustom c n = case c of
     where
         extractChar xs = xs!!mod n (length xs)
 
-showRandomKey :: String -> IO ()
-showRandomKey keysCustom = handleKey =<< getChar
+showRandomKey :: String -> StateT AESRNG IO ()
+showRandomKey keysCustom = handleKey =<< liftIO getChar
     where
         handleKey key = case key of
-            '\n' -> putChar '\n' >> showRandomKey keysCustom
-            'q' -> putStrLn "\nBye!" >> return ()
-            _ -> (mapM_ f ([0..49]::[Int])) >> putStrLn "" >> showRandomKey keysCustom
+            '\n' -> liftIO (putChar '\n') >> showRandomKey keysCustom
+            'q' -> (liftIO $ putStrLn "\nBye!") >> return ()
+            _ -> mapM_ f [0..(49)::Int] >> (liftIO $ putStrLn []) >> showRandomKey keysCustom
             where
-                f _ = getStdRandom (randomR (0, length (keysAll ++ keysCustom) - 1)) >>=
-                      putChar . giveKey keysCustom key
+                f _ = liftIO
+                    . putChar
+                    . giveKey keysCustom key
+                    . (\n -> mod n (length (keysAll ++ keysCustom) - 1))
+                    =<< aesRandomInt
+
+aesRandomInt :: StateT AESRNG IO Int
+aesRandomInt = do
+    aesState <- get
+    let (bs, aesState') = genRandomBytes aesState 16
+    put aesState'
+    return (decode $ B.fromChunks [bs])
 
 main :: IO ()
 main = do
@@ -58,4 +71,6 @@ main = do
         , "      else    any"
         ]
     putStrLn ""
-    showRandomKey as' -- enter loop
+    aesState <- makeSystem -- gather entropy from the system to use as the initial seed
+    _ <- runStateT (showRandomKey as') aesState -- enter loop
+    return ()
