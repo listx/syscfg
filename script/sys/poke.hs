@@ -30,11 +30,13 @@ giveKey keysCustom c n = case c of
 showRandomKey :: String -> IO ()
 showRandomKey keysCustom = handleKey =<< getChar
     where
-        handleKey key = if key /= 'q'
-            then getStdRandom (randomR (0, length (keysAll ++ keysCustom) - 1)) >>=
-                 putChar . giveKey keysCustom key >>
-                 showRandomKey keysCustom
-            else putStrLn "\nBye!" >> return ()
+        handleKey key = case key of
+            '\n' -> putChar '\n' >> showRandomKey keysCustom
+            'q' -> putStrLn "\nBye!" >> return ()
+            _ -> (mapM_ f ([0..49]::[Int])) >> putStrLn "" >> showRandomKey keysCustom
+            where
+                f _ = getStdRandom (randomR (0, length (keysAll ++ keysCustom) - 1)) >>=
+                      putChar . giveKey keysCustom key
 
 main :: IO ()
 main = do
