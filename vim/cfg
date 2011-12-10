@@ -114,70 +114,33 @@ if !exists("autocommands_loaded")
     " load lilypond-specific stuff
     au BufRead,BufNewFile *.ly setlocal filetype=lilypond
 
-    " Integration with the "boxes" program by Thomas Jensen.
-    " Default width is set at 100 characters
-    au BufEnter * nmap <localleader>c1 !!boxes -d pound-alt2<cr>
-    au BufEnter * vmap <localleader>c1 !boxes -d pound-alt2<cr>
-    au BufEnter * nmap <localleader>cw1 !!boxes -d pound-alt2 -s 100<cr>
-    au BufEnter * vmap <localleader>cw1 !boxes -d pound-alt2 -s 100<cr>
-    au BufEnter * nmap <localleader>C1 !!boxes -d pound-alt2 -r<cr>
-    au BufEnter * vmap <localleader>C1 !boxes -d pound-alt2 -r<cr>
-    au BufEnter * nmap <localleader>c2 !!boxes -d pound-cmt<cr>
-    au BufEnter * vmap <localleader>c2 !boxes -d pound-cmt<cr>
-    au BufEnter * nmap <localleader>C2 !!boxes -d pound-cmt -r<cr>
-    au BufEnter * vmap <localleader>C2 !boxes -d pound-cmt -r<cr>
-    au BufEnter *.c,*.cpp,*.h,*.hpp nmap <localleader>c1 !!boxes -d c-top -t 8u<cr>
-    au BufEnter *.c,*.cpp,*.h,*.hpp vmap <localleader>c1 !boxes -d c-top -t 8u<cr>
-    au BufEnter *.c,*.cpp,*.h,*.hpp nmap <localleader>cw1 !!boxes -d c-top -s 80 -t 8u<cr>
-    au BufEnter *.c,*.cpp,*.h,*.hpp vmap <localleader>cw1 !boxes -d c-top -s 80 -t 8u<cr>
-    au BufEnter *.c,*.cpp,*.h,*.hpp nmap <localleader>C1 !!boxes -d c-top -r -t 8u<cr>
-    au BufEnter *.c,*.cpp,*.h,*.hpp vmap <localleader>C1 !boxes -d c-top -r -t 8u<cr>
-    au BufEnter *.c,*.cpp,*.h,*.hpp nmap <localleader>c2 !!boxes -d c-mid -t 8u<cr>
-    au BufEnter *.c,*.cpp,*.h,*.hpp vmap <localleader>c2 !boxes -d c-mid -t 8u<cr>
-    au BufEnter *.c,*.cpp,*.h,*.hpp nmap <localleader>cw2 !!boxes -d c-mid -s 80 -t 8u<cr>
-    au BufEnter *.c,*.cpp,*.h,*.hpp vmap <localleader>cw2 !boxes -d c-mid -s 80 -t 8u<cr>
-    au BufEnter *.c,*.cpp,*.h,*.hpp nmap <localleader>C2 !!boxes -d c-mid -r -t 8u<cr>
-    au BufEnter *.c,*.cpp,*.h,*.hpp vmap <localleader>C2 !boxes -d c-mid -r -t 8u<cr>
-    au BufEnter *.c,*.cpp,*.h,*.hpp nmap <localleader>c3 !!boxes -d c-bot -t 8u<cr>
-    au BufEnter *.c,*.cpp,*.h,*.hpp vmap <localleader>c3 !boxes -d c-bot -t 8u<cr>
-    au BufEnter *.c,*.cpp,*.h,*.hpp nmap <localleader>cw3 !!boxes -d c-bot -s 80 -t 8u<cr>
-    au BufEnter *.c,*.cpp,*.h,*.hpp vmap <localleader>cw3 !boxes -d c-bot -s 80 -t 8u<cr>
-    au BufEnter *.c,*.cpp,*.h,*.hpp nmap <localleader>C3 !!boxes -d c-bot -r -t 8u<cr>
-    au BufEnter *.c,*.cpp,*.h,*.hpp vmap <localleader>C3 !boxes -d c-bot -r -t 8u<cr>
-    au BufEnter *.c,*.cpp,*.h,*.hpp nmap <localleader>c4 !!boxes -d java-cmt -t 8u<cr>
-    au BufEnter *.c,*.cpp,*.h,*.hpp vmap <localleader>c4 !boxes -d java-cmt -t 8u<cr>
-    au BufEnter *.c,*.cpp,*.h,*.hpp nmap <localleader>C4 !!boxes -d java-cmt -r -t 8u<cr>
-    au BufEnter *.c,*.cpp,*.h,*.hpp vmap <localleader>C4 !boxes -d java-cmt -r -t 8u<cr>
-    au BufEnter *.c,*.cpp,*.h,*.hpp nmap <localleader>c5 !!boxes -d c-cmt -t 8u<cr>
-    au BufEnter *.c,*.cpp,*.h,*.hpp vmap <localleader>c5 !boxes -d c-cmt -t 8u<cr>
-    au BufEnter *.c,*.cpp,*.h,*.hpp nmap <localleader>C5 !!boxes -d c-cmt -r -t 8u<cr>
-    au BufEnter *.c,*.cpp,*.h,*.hpp vmap <localleader>C5 !boxes -d c-cmt -r -t 8u<cr>
-    au BufEnter .vimrc,.gvimrc,.vimperatorrc nmap <localleader>c1 !!boxes -d vim-cmt<cr>
-    au BufEnter .vimrc,.gvimrc,.vimperatorrc vmap <localleader>c1 !boxes -d vim-cmt<cr>
-    au BufEnter .vimrc,.gvimrc,.vimperatorrc nmap <localleader>cw1 !!boxes -d vim-cmt -s 120<cr>
-    au BufEnter .vimrc,.gvimrc,.vimperatorrc vmap <localleader>cw1 !boxes -d vim-cmt -s 120<cr>
-    au BufEnter .vimrc,.gvimrc,.vimperatorrc nmap <localleader>C1 !!boxes -d vim-cmt -r<cr>
-    au BufEnter .vimrc,.gvimrc,.vimperatorrc vmap <localleader>C1 !boxes -d vim-cmt -r<cr>
-    au BufEnter *.ly,*.tex nmap <localleader>c1 !!boxes -d percent<cr>
-    au BufEnter *.ly,*.tex vmap <localleader>c1 !boxes -d percent<cr>
-    au BufEnter *.ly,*.tex nmap <localleader>cw1 !!boxes -d percent -s 120<cr>
-    au BufEnter *.ly,*.tex vmap <localleader>cw1 !boxes -d percent -s 120<cr>
-    au BufEnter *.ly,*.tex nmap <localleader>C1 !!boxes -d percent -r<cr>
-    au BufEnter *.ly,*.tex vmap <localleader>C1 !boxes -d percent -r<cr>
-    au BufEnter *.ly,*.tex nmap <localleader>c2 !!boxes -d percent-line<cr>
-    au BufEnter *.ly,*.tex vmap <localleader>c2 !boxes -d percent-line<cr>
-    au BufEnter *.ly,*.tex nmap <localleader>C2 !!boxes -d percent-line -r<cr>
-    au BufEnter *.ly,*.tex vmap <localleader>C2 !boxes -d percent-line -r<cr>
-    au BufEnter *.hs nmap <localleader>c1 !!boxes -d ada-box<cr>
-    au BufEnter *.hs vmap <localleader>c1 !boxes -d ada-box<cr>
-    au BufEnter *.hs nmap <localleader>cw1 !!boxes -d ada-box -s 80<cr>
-    au BufEnter *.hs vmap <localleader>cw1 !boxes -d ada-box -s 80<cr>
-    au BufEnter *.hs nmap <localleader>C1 !!boxes -d ada-box -r<cr>
-    au BufEnter *.hs vmap <localleader>C1 !boxes -d ada-box -r<cr>
-    au BufEnter *.hs nmap <localleader>c2 !!boxes -d ada-cmt<cr>
-    au BufEnter *.hs vmap <localleader>c2 !boxes -d ada-cmt<cr>
-    au BufEnter *.hs nmap <localleader>C2 !!boxes -d ada-cmt -r<cr>
-    au BufEnter *.hs vmap <localleader>C2 !boxes -d ada-cmt -r<cr>
+    " Integration with my "foxes" program.
+    au BufEnter * nmap <localleader>c1 !!foxes -l sh -b -f "-"<cr>
+    au BufEnter * nmap <localleader>c2 !!foxes -l sh<cr>
+    au BufEnter * vmap <localleader>c1 !foxes -l sh -b -f "-"<cr>
+    au BufEnter * vmap <localleader>c2 !foxes -l sh<cr>
+    au BufEnter * nmap <localleader>CC !!foxes -l sh -u<cr>
+    au BufEnter * vmap <localleader>CC !foxes -l sh -u<cr>
+    au BufEnter *.c,*.cpp,*.h,*.hpp nmap <localleader>c1 !!foxes -l c -mI<cr>
+    au BufEnter *.c,*.cpp,*.h,*.hpp nmap <localleader>c2 !!foxes -l c -mE<cr>
+    au BufEnter *.c,*.cpp,*.h,*.hpp nmap <localleader>c3 !!foxes -l c<cr>
+    au BufEnter *.c,*.cpp,*.h,*.hpp vmap <localleader>c1 !foxes -l c -mI<cr>
+    au BufEnter *.c,*.cpp,*.h,*.hpp vmap <localleader>c2 !foxes -l c -mE<cr>
+    au BufEnter *.c,*.cpp,*.h,*.hpp vmap <localleader>c3 !foxes -l c<cr>
+    au BufEnter *.c,*.cpp,*.h,*.hpp nmap <localleader>CC !!foxes -l c -u<cr>
+    au BufEnter *.c,*.cpp,*.h,*.hpp vmap <localleader>CC !foxes -l c -u<cr>
+    au BufEnter *.ly,*.tex nmap <localleader>c1 !!foxes -l tex -b -f "-"<cr>
+    au BufEnter *.ly,*.tex nmap <localleader>c2 !!foxes -l tex -b<cr>
+    au BufEnter *.ly,*.tex vmap <localleader>c1 !foxes -l tex -b -f "-"<cr>
+    au BufEnter *.ly,*.tex vmap <localleader>c2 !foxes -l tex -b<cr>
+    au BufEnter *.ly,*.tex nmap <localleader>CC !!foxes -l tex -u<cr>
+    au BufEnter *.ly,*.tex vmap <localleader>CC !foxes -l tex -u<cr>
+    au BufEnter *.hs nmap <localleader>c1 !!foxes -l hs -mI<cr>
+    au BufEnter *.hs nmap <localleader>c2 !!foxes -l hs<cr>
+    au BufEnter *.hs vmap <localleader>c1 !foxes -l hs -mI<cr>
+    au BufEnter *.hs vmap <localleader>c2 !foxes -l hs<cr>
+    au BufEnter *.hs nmap <localleader>CC !!foxes -l hs -u<cr>
+    au BufEnter *.hs vmap <localleader>CC !foxes -l hs -u<cr>
     au BufEnter *.html vmap <localleader>bb iwoiw"zs<strong><C-R>z</strong><esc>
     au BufEnter *.html vmap <localleader>ii iwoiw"zs<em><C-R>z</em><esc>
     au BufEnter *.html vmap <localleader>bi iwoiw"zs<em><strong><C-R>z</strong></em><esc>
