@@ -1,5 +1,8 @@
+module Main where
+
 -- required imports
 import XMonad
+import qualified XMonad.Layout.LayoutModifier as XLL
 import Data.Monoid
 import System.Exit
 import qualified XMonad.StackSet as W
@@ -25,25 +28,13 @@ import System.Random
 import Data.Array.IO
 import Control.Monad
 
--- The preferred terminal program, which is used in a binding below and by
--- certain contrib modules.
---
-myTerminal      = "urxvt"
-
-myFocusFollowsMouse = True
-myBorderWidth   = 1
-
--- modMask lets you specify which modkey you want to use. The default
--- is mod1Mask ("left alt").  You may also consider using mod3Mask
--- ("right alt"), which does not conflict with emacs keybindings. The
--- "windows key" is usually mod4Mask.
--- You can double-check which key is which modmask by running 'xmodmap'
-myModMask       = mod3Mask -- use the CAPSLOCK key
-altMask         = mod1Mask -- alias "altMask" for left alt key
+altMask :: KeyMask
+altMask = mod1Mask -- alias "altMask" for left alt key
 
 data MyWSGroup = Work | Net | Misc | Music | Net2 | Sys
     deriving (Eq, Ord, Enum, Show)
 
+_MYWSGROUPS :: [MyWSGroup]
 _MYWSGROUPS = [Net ..] -- list of all MyWSGroup
 
 -- Use an association list for more flexible custom workspace manipulation.
@@ -53,42 +44,43 @@ _MYWSGROUPS = [Net ..] -- list of all MyWSGroup
 -- we did in the past), but at the same time we can also choose to navigate via the ordering in
 -- MyWSGroup via the custom diffGrpWS function.
 myWorkspaceGroups :: [(WorkspaceId, MyWSGroup)]
-myWorkspaceGroups = [ ("1",   Work)
-                    , ("2",   Work)
-                    , ("3",   Work)
-                    , ("4",   Work)
-                    , ("5",   Work)
-                    , ("6",   Work)
-                    , ("7",   Work)
-                    , ("8",   Net)
-                    , ("9",   Net)
-                    , ("0",   Music) -- ncmpcpp, terminal named "mplayer" (used when streaming music on LAN)
-                    , ("F1",  Misc)
-                    , ("F2",  Misc)
-                    , ("F3",  Misc)
-                    , ("F4",  Misc)
-                    , ("F5",  Misc)
-                    , ("F6",  Misc)
-                    , ("F7",  Misc)
-                    , ("F8",  Misc)
-                    , ("F9",  Net2) -- IRC
-                    , ("F10", Net2)
-                    , ("F11", Sys)
-                    , ("F12", Sys)
-                    ]
+myWorkspaceGroups =
+    [ ("1",   Work)
+    , ("2",   Work)
+    , ("3",   Work)
+    , ("4",   Work)
+    , ("5",   Work)
+    , ("6",   Work)
+    , ("7",   Work)
+    , ("8",   Net)
+    , ("9",   Net)
+    , ("0",   Music) -- ncmpcpp, terminal named "mplayer" (used when streaming music on LAN)
+    , ("F1",  Misc)
+    , ("F2",  Misc)
+    , ("F3",  Misc)
+    , ("F4",  Misc)
+    , ("F5",  Misc)
+    , ("F6",  Misc)
+    , ("F7",  Misc)
+    , ("F8",  Misc)
+    , ("F9",  Net2) -- IRC
+    , ("F10", Net2)
+    , ("F11", Sys)
+    , ("F12", Sys)
+    ]
 
+myWorkspaces :: [WorkspaceId]
 myWorkspaces = map fst myWorkspaceGroups -- 1..9, 0, F1-F12
 
-myNormalBorderColor  = "#000000"
-myFocusedBorderColor = "#ffffff"
-
 -- terminals (various different color themes)
+term1, term2, term3, suspend, xinitrc :: String
 term1 = "~/syscfg/script/sys/terms/wb.sh"
 term2 = "~/syscfg/script/sys/terms/bw.sh"
 term3 = "~/syscfg/script/sys/terms/wB.sh"
 suspend = "sudo ~/syscfg/script/sys/suspend.sh"
 xinitrc = "sh ~/syscfg/xinitrc/cfg"
 
+orgIntraday, orgPlans5w, orgGoals10w, orgLeftToday :: String
 orgIntraday = " -name floatme -e ~/prog/timeflux/src/term.sh intraday ~/org/life.org @@@"
 orgPlans5w = " -name floatme -e ~/prog/timeflux/src/term.sh plans5w ~/org/life.org @@@"
 orgGoals10w = " -name floatme -e ~/prog/timeflux/src/term.sh goals10w ~/org/life.org @@@"
@@ -239,20 +231,19 @@ myKeys hostname conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
         , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]]
 
 mpcSeek :: String -> Int -> String
-mpcSeek hostname sec = "mpc -h 192.168.0.110 -p " ++ port ++ " seek " ++ show' sec
-    where
-        port = case hostname of
-            "k0" -> "6600" -- alsa
-            _ -> "6601" -- icecast
-        show' n
-            | n < 0 = show n
-            | otherwise = '+':show n
+mpcSeek hostname sec = "mpc -h 192.168.0.110 -p " ++ port ++ " seek " ++ show' sec where
+    port = case hostname of
+        "k0" -> "6600" -- alsa
+        _ -> "6601" -- icecast
+    show' n
+        | n < 0 = show n
+        | otherwise = '+':show n
 
 cpufreqSet :: String -> String -> X ()
 cpufreqSet governor hostname = case hostname of
-    "k0"   -> mapM_ (spawn . cpu) [0..3]
-    "k1"    -> mapM_ (spawn . cpu) [0..1]
-    "k2"    -> mapM_ (spawn . cpu) [0]
+    "k0"   -> mapM_ (spawn . cpu) ([0..3]::[Int])
+    "k1"    -> mapM_ (spawn . cpu) ([0..1]::[Int])
+    "k2"    -> mapM_ (spawn . cpu) ([0]::[Int])
     _ -> return ()
     where
         cpu n = "sudo cpufreq-set -c " ++ show n ++ " -g " ++ governor
@@ -260,96 +251,81 @@ cpufreqSet governor hostname = case hostname of
 -- Depending on the current MyWSGroup, open up different new "windows" that make sense for that
 -- workspace group.
 action_o :: X ()
-action_o =
-    do  {
-        ; currentWS <- gets (W.currentTag . windowset)
-        ; let currentWSGrp = getWSGroup currentWS
-        -- first try to move to the next empty WS in the group
-        ; moveTo Next emptyGrpWS
-        -- now do a specific action that suits this WS group
-        ; case currentWSGrp of
-            Net         -> spawn "firefox"
-            otherwise   -> spawn term1
-        }
+action_o = do
+    currentWS <- gets (W.currentTag . windowset)
+    let currentWSGrp = getWSGroup currentWS
+    -- first try to move to the next empty WS in the group
+    moveTo Next emptyGrpWS
+    -- now do a specific action that suits this WS group
+    case currentWSGrp of
+      Net   -> spawn "firefox"
+      _     -> spawn term1
 
 -- An empty WS belonging to the same group as the current one.
 emptyGrpWS :: WSType
-emptyGrpWS =
-    WSIs $ do
-    { currentWS <- gets (W.currentTag . windowset)
-    ; let currentWSGrp = getWSGroup currentWS
-    ; let isEmpty = isNothing . W.stack
-    ; let isCurrentWSGrp = isWSGroup currentWSGrp . W.tag
-    ; return (\w -> isEmpty w && isCurrentWSGrp w)
-    }
+emptyGrpWS = WSIs $ do
+    currentWS <- gets (W.currentTag . windowset)
+    let currentWSGrp = getWSGroup currentWS
+        isEmpty = isNothing . W.stack
+        isCurrentWSGrp = isWSGroup currentWSGrp . W.tag
+    return (\w -> isEmpty w && isCurrentWSGrp w)
 
 -- A non-empty WS belonging to the same group as the current one.
 nonEmptyGrpWS :: WSType
-nonEmptyGrpWS =
-    WSIs $ do {
-      currentWS <- gets (W.currentTag . windowset)
-    ; let currentWSGrp = getWSGroup currentWS
-    ; let isNonEmpty = isJust . W.stack
-    ; let isCurrentWSGrp = isWSGroup currentWSGrp . W.tag
-    ; return (\w -> isNonEmpty w && isCurrentWSGrp w)
-    }
+nonEmptyGrpWS = WSIs $ do
+    currentWS <- gets (W.currentTag . windowset)
+    let currentWSGrp = getWSGroup currentWS
+        isNonEmpty = isJust . W.stack
+        isCurrentWSGrp = isWSGroup currentWSGrp . W.tag
+    return (\w -> isNonEmpty w && isCurrentWSGrp w)
 
 -- An empty WS belonging to the given group.
 emptyWSGrp :: MyWSGroup -> WSType
-emptyWSGrp grp =
-    WSIs $ do {
-      let isEmpty = isNothing . W.stack
-    ; let isMemberOfGivenGrp = isWSGroup grp . W.tag
-    ; return (\w -> isEmpty w && isMemberOfGivenGrp w)
-    }
+emptyWSGrp grp = WSIs $ do
+    let isEmpty = isNothing . W.stack
+        isMemberOfGivenGrp = isWSGroup grp . W.tag
+    return (\w -> isEmpty w && isMemberOfGivenGrp w)
 
 -- A non-empty WS belonging to any group except those in the given group list.
 nonEmptyWSExceptGrps :: [MyWSGroup] -> WSType
-nonEmptyWSExceptGrps grps =
-    WSIs $ do {
-      let isNonEmpty = isJust . W.stack
-    ; let isMemberOfGivenGrps = isWSGroups grps . W.tag
-    ; return (\w -> isNonEmpty w && not (isMemberOfGivenGrps w))
-    }
+nonEmptyWSExceptGrps grps = WSIs $ do
+    let isNonEmpty = isJust . W.stack
+        isMemberOfGivenGrps = isWSGroups grps . W.tag
+    return (\w -> isNonEmpty w && not (isMemberOfGivenGrps w))
 
 -- A WS belonging to a different group (next/prev group) than the current one.
 diffGrpWS :: Int -> WSType
-diffGrpWS dir =
-    WSIs $ do {
-      currentWS <- gets (W.currentTag . windowset)
-    ; let currentWSGrp = getWSGroup currentWS
-    ; do    { let diffGrp = if dir > 0
-                                then nextGrp currentWSGrp
-                                else prevGrp currentWSGrp
-            ; return (\w -> isWSGroup diffGrp . W.tag $ w)
-            }
-    }
+diffGrpWS dir = WSIs $ do
+    currentWS <- gets (W.currentTag . windowset)
+    let currentWSGrp = getWSGroup currentWS
+        diffGrp = if dir > 0
+            then nextGrp currentWSGrp
+            else prevGrp currentWSGrp
+    return (\w -> isWSGroup diffGrp . W.tag $ w)
 
 -- Any WS in the current group.
 grpWS :: WSType
-grpWS =
-    WSIs $ do {
-      currentWS <- gets (W.currentTag . windowset)
-    ; let currentWSGrp = getWSGroup currentWS
-    ; return (\w -> isWSGroup currentWSGrp . W.tag $ w)
-    }
+grpWS = WSIs $ do
+    currentWS <- gets (W.currentTag . windowset)
+    let currentWSGrp = getWSGroup currentWS
+    return (\w -> isWSGroup currentWSGrp . W.tag $ w)
 
 -- The next or previous group of given group. Will cycle back to the first group if the given one is
 -- the last group.
 nextGrp, prevGrp :: MyWSGroup -> MyWSGroup
 nextGrp g = if g == last _MYWSGROUPS
-                then head _MYWSGROUPS
-                else head [x | x <- _MYWSGROUPS, x > g]
+    then head _MYWSGROUPS
+    else head [x | x <- _MYWSGROUPS, x > g]
 
 prevGrp g = if g == head _MYWSGROUPS
-                then last _MYWSGROUPS
-                else last [x | x <- _MYWSGROUPS, x < g]
+    then last _MYWSGROUPS
+    else last [x | x <- _MYWSGROUPS, x < g]
 
 getWSids :: MyWSGroup -> [WorkspaceId]
-getWSids g = map fst $ filter (\(x,y) -> y == g) myWorkspaceGroups
+getWSids g = map fst $ filter (\(_, y) -> y == g) myWorkspaceGroups
 
 getWSGroup :: WorkspaceId -> MyWSGroup
-getWSGroup wsid = head . map snd $ filter (\(x,y) -> x == wsid) myWorkspaceGroups
+getWSGroup wsid = head . map snd $ filter (\(x, _) -> x == wsid) myWorkspaceGroups
 
 -- Confirms if a given WorkspaceId str is part of a given MyWSGroup g.
 --
@@ -365,7 +341,8 @@ isWSGroups :: [MyWSGroup] -> WorkspaceId -> Bool
 isWSGroups grps str
     | lookup str myWorkspaceGroups' /= Nothing = True
     | otherwise = False
-    where myWorkspaceGroups' = filter (\(x,y) -> any (==y) grps) myWorkspaceGroups
+    where
+        myWorkspaceGroups' = filter (\(_, y) -> any (==y) grps) myWorkspaceGroups
 
 -- same as CycleWS's moveTo, but w/ view instead of greedyView
 moveToNogreed :: Direction1D -> WSType -> X ()
@@ -374,45 +351,46 @@ moveToNogreed dir t = findWorkspace getSortByIndex dir t 1 >>= windows . W.view
 -- Try to find an empty WSID belonging to the given group, and return its
 -- name.  If group is full, then return the current WSID.
 tryGetEmptyWSIDofGroup :: MyWSGroup -> X WorkspaceId
-tryGetEmptyWSIDofGroup g =
-    do  {
-        ; ws0 <- findWorkspace getSortByIndex Next (emptyWSGrp g) 0 -- an empty WS of group g 0 WSs away from current WS
-        ; ws1 <- findWorkspace getSortByIndex Next (emptyWSGrp g) 1 -- an empty WS of group g 1 WSs away from current WS
-        ; if isWSGroup g ws0
-            then return ws0 -- if current WS also happens to be an empty WS of the group g, then return this WSID
-            else return ws1 -- the empty WS of group g, NOT counting the current WS; if such a WS does not exist, then ws1 is just the current WS
-        }
+tryGetEmptyWSIDofGroup g = do
+    ws0 <- findWorkspace getSortByIndex Next (emptyWSGrp g) 0 -- an empty WS of group g 0 WSs away from current WS
+    ws1 <- findWorkspace getSortByIndex Next (emptyWSGrp g) 1 -- an empty WS of group g 1 WSs away from current WS
+    if isWSGroup g ws0
+        then return ws0 -- if current WS also happens to be an empty WS of the group g, then return this WSID
+        else return ws1 -- the empty WS of group g, NOT counting the current WS; if such a WS does not exist, then ws1 is just the current WS
 
+myMouseBindings :: XConfig t -> M.Map (KeyMask, Button) (Window -> X ())
 myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
-
     -- mod-button1, Set the window to floating mode and move by dragging
     [ ((modm, button1), (\w -> focus w >> mouseMoveWindow w
                                        >> windows W.shiftMaster))
-
     -- mod-button2, Raise the window to the top of the stack
     , ((modm, button2), (\w -> focus w >> windows W.shiftMaster))
-
     -- mod-button3, Set the window to floating mode and resize by dragging
     , ((modm, button3), (\w -> focus w >> mouseResizeWindow w
                                        >> windows W.shiftMaster))
-
     -- you may also bind events to the mouse scroll wheel (button4 and button5)
     ]
 
+myLayout
+  :: Choose
+       (Mirror Tall)
+       (Choose
+          Tall
+          (Choose
+             (XLL.ModifiedLayout WithBorder Full)
+             (XLL.ModifiedLayout LayoutHints Circle)))
+       Window
 myLayout = Mirror tiled
-        ||| tiled
-        ||| noBorders Full
-        ||| layoutHints Circle
+    ||| tiled
+    ||| noBorders Full
+    ||| layoutHints Circle
     where
         -- default tiling algorithm partitions the screen into two panes
         tiled   = Tall nmaster delta ratio
-
         -- The default number of windows in the master pane
         nmaster = 1
-
         -- Default proportion of screen occupied by master pane
         ratio   = 1/2
-
         -- Percent of screen to increment by when resizing panes
         delta   = 3/100
 
@@ -479,11 +457,8 @@ myManageHook = composeAll $
     , className =? "Anki"                       --> doFloat
     ]
     ++  [ resource =? ("atWorkspace" ++ s) --> doShift s
-        | s <- map show [0..9] ++ map (('F':) . show) [1..12]
+        | s <- map show ([0..9]::[Int]) ++ map (('F':) . show) ([1..12]::[Int])
         ]
-
-myEventHook = mempty
-myLogHook = return ()
 
 myStartupHook :: String -> X ()
 myStartupHook hostname = do
@@ -504,52 +479,47 @@ myStartupHook hostname = do
 
 -- reset all xinerama screens to point to top WS of each group
 resetScreensToWSTops :: X ()
-resetScreensToWSTops = gets (W.screens . windowset) >>= myloop . length
-    where myloop :: Int -> X ()
-          myloop ss = recurse (S 0) (S (ss - 1))
-            where   recurse :: ScreenId -> ScreenId -> X ()
-                    recurse acc until = if acc <= until
-                                            then do {
-                                                    ; screenWorkspace acc >>= flip whenJust (windows . W.view)
-                                                    ; windows $ W.greedyView (head (getWSids (_MYWSGROUPS!!(toint acc))))
-                                                    ; recurse (acc + 1) until
-                                                    }
-                                            else return ()
-                        where toint (S a) = a
+resetScreensToWSTops = gets (W.screens . windowset) >>= myloop . length where
+    myloop :: Int -> X ()
+    myloop ss = recurse (S 0) (S (ss - 1)) where
+        recurse :: ScreenId -> ScreenId -> X ()
+        recurse acc until' = if acc <= until'
+            then do
+                screenWorkspace acc >>= flip whenJust (windows . W.view)
+                windows $ W.greedyView (head (getWSids (_MYWSGROUPS!!(toint acc))))
+                recurse (acc + 1) until'
+            else return ()
+            where toint (S a) = a
 
 spawnIfGrpNotFull :: MyWSGroup -> String -> X ()
-spawnIfGrpNotFull g command =
-    do  {
-        ; wsid <- tryGetEmptyWSIDofGroup g
-        ; if isWSGroup g wsid
-            then spawn command
-            else return ()
-        }
+spawnIfGrpNotFull g command = do
+    wsid <- tryGetEmptyWSIDofGroup g
+    if isWSGroup g wsid
+        then spawn command
+        else return ()
 
 spawnIfGrpTopWSNotFull :: MyWSGroup -> String -> X ()
-spawnIfGrpTopWSNotFull g command =
-    do  {
-        ; wsid <- tryGetEmptyWSIDofGroup g
-        ; if (isWSGroup g wsid && (wsid == head (getWSids . getWSGroup $ wsid)))
-            then spawn command
-            else return ()
-        }
+spawnIfGrpTopWSNotFull g command = do
+    wsid <- tryGetEmptyWSIDofGroup g
+    if (isWSGroup g wsid && (wsid == head (getWSids . getWSGroup $ wsid)))
+        then spawn command
+        else return ()
 
 -- | Randomly shuffle a list
 --   /O(N)/
 shuffle :: [a] -> IO [a]
 shuffle xs = do
-    ar <- newArray n xs
+    ar <- newArray' n xs
     forM [1..n] $ \i -> do
-        j <- randomRIO (i,n)
+        j <- randomRIO (i, n)
         vi <- readArray ar i
         vj <- readArray ar j
         writeArray ar j vi
         return vj
     where
         n = length xs
-        newArray :: Int -> [a] -> IO (IOArray Int a)
-        newArray n xs =  newListArray (1,n) xs
+        newArray' :: Int -> [a] -> IO (IOArray Int a)
+        newArray' n' xs' =  newListArray (1, n') xs'
 
 sites :: [String]
 sites =
@@ -569,22 +539,23 @@ sites =
 sitesRand :: IO String
 sitesRand = shuffle sites >>= return . unwords
 
+main :: IO ()
 main = do
     hostname <- fmap nodeName getSystemID
     xmonad $ ewmh defaultConfig
-        { terminal           = myTerminal
-        , focusFollowsMouse  = myFocusFollowsMouse
-        , borderWidth        = myBorderWidth
-        , modMask            = myModMask
+        { terminal           = "urxvt"
+        , focusFollowsMouse  = True
+        , borderWidth        = 1
+        , modMask            = mod3Mask -- use the CAPSLOCK key
         , workspaces         = myWorkspaces
-        , normalBorderColor  = myNormalBorderColor
-        , focusedBorderColor = myFocusedBorderColor
+        , normalBorderColor  = "#000000"
+        , focusedBorderColor = "#ffffff"
         , keys               = myKeys hostname
         , mouseBindings      = myMouseBindings
         , layoutHook         = myLayout
         , manageHook         = myManageHook
-        , handleEventHook    = myEventHook
-        , logHook            = myLogHook
+        , handleEventHook    = mempty
+        , logHook            = return ()
         , startupHook        = myStartupHook hostname
         }
 
