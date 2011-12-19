@@ -41,21 +41,6 @@ myBorderWidth   = 1
 myModMask       = mod3Mask -- use the CAPSLOCK key
 altMask         = mod1Mask -- alias "altMask" for left alt key
 
--- The mask for the numlock key. Numlock status is "masked" from the
--- current modifier status, so the keybindings will work with numlock on or
--- off. You may need to change this on some systems.
---
--- You can find the numlock modifier by running "xmodmap" and looking for a
--- modifier with Num_Lock bound to it:
---
--- > $ xmodmap | grep Num
--- > mod2        Num_Lock (0x4d)
---
--- Set numlockMask = 0 if you don't have a numlock key, or want to treat
--- numlock status separately.
---
-myNumlockMask   = mod2Mask
-
 data MyWSGroup = Work | Net | Misc | Music | Net2 | Sys
     deriving (Eq, Ord, Enum, Show)
 
@@ -102,6 +87,7 @@ term1 = "~/syscfg/script/sys/terms/wb.sh"
 term2 = "~/syscfg/script/sys/terms/bw.sh"
 term3 = "~/syscfg/script/sys/terms/wB.sh"
 suspend = "sudo ~/syscfg/script/sys/suspend.sh"
+xinitrc = "sh ~/syscfg/xinitrc/cfg"
 
 orgIntraday = " -name floatme -e ~/prog/timeflux/src/term.sh intraday ~/org/life.org @@@"
 orgPlans5w = " -name floatme -e ~/prog/timeflux/src/term.sh plans5w ~/org/life.org @@@"
@@ -270,12 +256,6 @@ cpufreqSet governor hostname = case hostname of
     _ -> return ()
     where
         cpu n = "sudo cpufreq-set -c " ++ show n ++ " -g " ++ governor
-
--- since CycleWS does not export this useful function, we have to copy/paste it in here...
-screenBy :: Int -> X (ScreenId)
-screenBy d = do ws <- gets windowset
-                let now = W.screen (W.current ws)
-                return $ (now + fromIntegral d) `mod` fromIntegral (length (W.screens ws))
 
 -- Depending on the current MyWSGroup, open up different new "windows" that make sense for that
 -- workspace group.
@@ -506,25 +486,21 @@ myEventHook = mempty
 myLogHook = return ()
 
 myStartupHook :: String -> X ()
-myStartupHook hostname =
-    do  {
-        ; spawnIfGrpTopWSNotFull Net "firefox"
-        ; spawnIfGrpNotFull Work $ term1 ++ " -name atWorkspace1"
-        ; spawn $ term1 ++ orgIntraday
-        ; spawnIfGrpNotFull Sys $ term1 ++ " -e alsamixer"
-        ; spawnIfGrpNotFull Sys $ term2 ++ " -n iftop -e sudo iftop -B -i eth" ++ (if hostname == "k0" then "1" else "0")
-        ; spawnIfGrpNotFull Sys $ term1 ++ " -e htop"
-        ; case hostname of
-            "k0" -> do { spawnIfGrpTopWSNotFull Music $ term2 ++ " -e ncmpcpp"
-                            ; spawnIfGrpNotFull Net2 $ term3 ++ " -e rtorrent"
-                            }
-            "k1" -> do  { spawnIfGrpNotFull Net2 $ term3 ++ " -e rtorrent"
-                            }
-            _ -> return ()
-        -- ; case hostname of
-        --     "k0" -> resetScreensToWSTops
-        --     _ -> return ()
-        }
+myStartupHook hostname = do
+    -- k2 runs NixOS, and needs to execute xinitrc manually
+    when (hostname == "k2") $ spawn xinitrc
+    spawnIfGrpTopWSNotFull Net "firefox"
+    spawnIfGrpNotFull Work $ term1 ++ " -name atWorkspace1"
+    spawn $ term1 ++ orgIntraday
+    spawnIfGrpNotFull Sys $ term1 ++ " -e alsamixer"
+    spawnIfGrpNotFull Sys $ term2 ++ " -n iftop -e sudo iftop -B -i eth" ++ (if hostname == "k0" then "1" else "0")
+    spawnIfGrpNotFull Sys $ term1 ++ " -e htop"
+    case hostname of
+        "k0" -> do
+            spawnIfGrpTopWSNotFull Music $ term2 ++ " -e ncmpcpp"
+            spawnIfGrpNotFull Net2 $ term3 ++ " -e rtorrent"
+        "k1" -> spawnIfGrpNotFull Net2 $ term3 ++ " -e rtorrent"
+        _ -> return ()
 
 -- reset all xinerama screens to point to top WS of each group
 resetScreensToWSTops :: X ()
@@ -600,7 +576,6 @@ main = do
         , focusFollowsMouse  = myFocusFollowsMouse
         , borderWidth        = myBorderWidth
         , modMask            = myModMask
-        , numlockMask        = myNumlockMask
         , workspaces         = myWorkspaces
         , normalBorderColor  = myNormalBorderColor
         , focusedBorderColor = myFocusedBorderColor

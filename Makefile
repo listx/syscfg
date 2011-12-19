@@ -75,15 +75,6 @@ xmodmap:
 	ln -fs ${CFG}/xmodmap/cfg		${HOME}/.xmodmap
 xmonad:
 	ln -fns ${CFG}/xmonad			${HOME}/.xmonad
-ifeq ('${HOST}','k0')
-	ln -fs ${CFG}/xmonad/others.hs		${HOME}/.xmonad/xmonad.hs
-endif
-ifeq ('${HOST}','k2')
-	ln -fs ${CFG}/xmonad/k2.hs		${HOME}/.xmonad/xmonad.hs
-endif
-ifeq ('${HOST}','k1')
-	ln -fs ${CFG}/xmonad/others.hs		${HOME}/.xmonad/xmonad.hs
-endif
 xorg:
 	ln -fns ${CFG}/xorg/10-keyboard.conf		/etc/X11/xorg.conf.d/
 	ln -fns ${CFG}/xorg/10-server-flags.conf	/etc/X11/xorg.conf.d/
