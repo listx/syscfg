@@ -67,6 +67,8 @@ export EDITOR=vim
 # wine directory (prevent wine/msiexec from creating a default .wine folder)
 export WINEARCH=win32
 export WINEPREFIX=~/.win32
+# disable wine from creating retarded file associations (e.g., opening .txt files with notepad.exe from Firefox)
+export WINEDLLOVERRIDES='winemenubuilder.exe=d'
 
 # haskell AUR packages: enable profiling (-p) option
 export PKGBUILD_HASKELL_ENABLE_PROFILING=1
