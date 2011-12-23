@@ -63,13 +63,13 @@
        (t (setq unread-command-events (append unread-command-events
                           (list evt))))))))
 ; simulate vim's "nnoremap <space> 10<c-e>10j"
-(evil-declare-key 'normal org-mode-map " " (lambda ()
+(define-key evil-normal-state-map " " (lambda ()
                      (interactive)
                      (next-line 10)
                      (evil-scroll-line-down 10)
                      ))
 ; simulate vim's "nnoremap <backspace> 10<c-y>10k"
-(evil-declare-key 'normal org-mode-map (kbd "DEL") (lambda ()
+(define-key evil-normal-state-map (kbd "DEL") (lambda ()
                      (interactive)
                      (previous-line 10)
                      (evil-scroll-line-up 10)
