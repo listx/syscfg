@@ -1,10 +1,7 @@
 #-----------#
 # Passwords #
 #-----------#
-set my_tmpsecret=`gpg2 -o /mnt/r0/.tmp -d ~/secure/pass.gpg`
-set my_gpass1=`awk '/Gmail1/ {print $2}' /mnt/r0/.tmp`
-set my_gpass2=`awk '/Gmail2/ {print $2}' /mnt/r0/.tmp`
-set my_del=`shred -zun25 /mnt/r0/.tmp`
+source "gpg --textmode -d ~/secure/pass.gpg |"
 
 #---------------#
 # Account Hooks #
