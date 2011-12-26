@@ -352,6 +352,10 @@ alias pg='for pkg in $(pq | grep -- "-git" | cut -d " " -f1); do bs $pkg; done'
 alias neu='sudo /etc/rc.d/network start'
 alias ned='sudo /etc/rc.d/network stop'
 
+# memory management
+alias reset_cache='free && sync && echo 3 >/proc/sys/vm/drop_caches && free'
+alias reset_swap='free && swapoff -a && swapon -a && free'
+
 # CUSTOM SCRIPTS
 #
 # encoding/decoding
