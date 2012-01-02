@@ -80,11 +80,8 @@ term3 = "~/syscfg/script/sys/terms/wB.sh"
 suspend = "sudo ~/syscfg/script/sys/suspend.sh"
 xinitrc = "sh ~/syscfg/xinitrc/cfg"
 
-orgIntraday, orgPlans5w, orgGoals10w, orgLeftToday :: String
-orgIntraday = " -name floatme -e ~/prog/timeflux/src/term.sh intraday ~/org/life.org @@@"
-orgPlans5w = " -name floatme -e ~/prog/timeflux/src/term.sh plans5w ~/org/life.org @@@"
-orgGoals10w = " -name floatme -e ~/prog/timeflux/src/term.sh goals10w ~/org/life.org @@@"
-orgLeftToday = " -name floatme -e ~/prog/timeflux/src/term.sh lefttoday ~/org/life.org @@@"
+schedToday :: String
+schedToday = " -name floatme -e ~/org/life.sh ~/org/life render -F TXT -S --today"
 
 myKeys :: String -> XConfig Layout -> M.Map (KeyMask, KeySym) (X ())
 myKeys hostname conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
@@ -149,10 +146,8 @@ myKeys hostname conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     -- Suspend to RAM
     , ((modm .|. controlMask,   xK_s     ), spawn suspend)
 
-    , ((mod4Mask              , xK_1     ), spawn (term1 ++ orgIntraday))
-    , ((mod4Mask              , xK_2     ), spawn (term1 ++ orgPlans5w))
-    , ((mod4Mask              , xK_3     ), spawn (term1 ++ orgGoals10w))
-    , ((mod4Mask              , xK_9     ), spawn (term1 ++ orgLeftToday))
+    , ((mod4Mask              , xK_1     ), spawn (term1 ++ schedToday))
+    , ((mod4Mask              , xK_9     ), spawn "gvim ~/org/life.hs")
     , ((mod4Mask              , xK_0     ), spawn "emacsclient -c ~/org/life.org")
     , ((mod4Mask              , xK_c     ), spawn "galculator")
     , ((mod4Mask .|. shiftMask, xK_c     ), spawn "gcalctool")
@@ -466,7 +461,7 @@ myStartupHook hostname = do
     when (hostname == "k2") $ spawn xinitrc
     spawnIfGrpTopWSNotFull Net "firefox"
     spawnIfGrpNotFull Work $ term1 ++ " -name atWorkspace1"
-    spawn $ term1 ++ orgIntraday
+    spawn $ term1 ++ schedToday
     spawnIfGrpNotFull Sys $ term1 ++ " -e alsamixer"
     spawnIfGrpNotFull Sys $ term2 ++ " -n iftop -e sudo iftop -B -i eth" ++ (if hostname == "k0" then "1" else "0")
     spawnIfGrpNotFull Sys $ term1 ++ " -e htop"
