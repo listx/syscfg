@@ -4,6 +4,7 @@ module Main where
 import Control.Concurrent
 import Control.Monad (when)
 import Data.List (nub)
+import Data.Time.LocalTime
 import System.Console.CmdArgs.Implicit
 import System.IO
 import System.Directory
@@ -57,13 +58,16 @@ data Color
     deriving (Show, Eq)
 
 colorize :: Color -> String -> String
-colorize c s = case c of
-    Red -> "\x1b[1;31m" ++ s ++ "\x1b[0m"
-    Green -> "\x1b[1;32m" ++ s ++ "\x1b[0m"
-    Yellow -> "\x1b[1;33m" ++ s ++ "\x1b[0m"
-    Blue -> "\x1b[1;34m" ++ s ++ "\x1b[0m"
-    Magenta -> "\x1b[1;35m" ++ s ++ "\x1b[0m"
-    Cyan -> "\x1b[1;36m" ++ s ++ "\x1b[0m"
+colorize c s = c' ++ s ++ e
+    where
+    c' = "\x1b[" ++ case c of
+        Red -> "1;31m"
+        Green -> "1;32m"
+        Yellow -> "1;33m"
+        Blue -> "1;34m"
+        Magenta -> "1;35m"
+        Cyan -> "1;36m"
+    e = "\x1b[0m"
 
 main :: IO ()
 main = do
@@ -144,7 +148,8 @@ loop o@Opts{..} comDef files filesTS = do
     filesTS' <- mapM getTimestamp files
     when (filesTS /= filesTS') $ do
         putStrLn []
-        putStr $ colorize Magenta "change detected"
+        showTime
+        putStr $ colorize Magenta ": change detected"
         putStrLn $ "; executing command " ++ squote (colorize Blue comDef)
         runCom $ cmd comDef
     loop o comDef files filesTS'
@@ -160,7 +165,8 @@ keyHandler o@Opts{..} comDef f = do
                 then case lookup [key] comHash of
                     Just com -> do
                         putStrLn []
-                        putStr $ colorize Cyan "manual override" ++ " (slot " ++ colorize Yellow [key] ++ ")"
+                        showTime
+                        putStr $ ": " ++ colorize Cyan "manual override" ++ " (slot " ++ colorize Yellow [key] ++ ")"
                         putStrLn $ "; executing command " ++ squote (colorize Blue com)
                         runCom $ cmd com
                     _ -> do
@@ -168,7 +174,8 @@ keyHandler o@Opts{..} comDef f = do
                         putStrLn $ "command slot for key " ++ squote (colorize Yellow [key]) ++ " is empty"
                 else do
                     putStrLn []
-                    putStr $ colorize Cyan "manual override"
+                    showTime
+                    putStr $ ": " ++ colorize Cyan "manual override"
                     putStrLn $ "; executing command " ++ squote (colorize Blue comDef)
                     runCom $ cmd comDef
             keyHandler o comDef f
@@ -184,11 +191,10 @@ runCom :: CreateProcess -> IO ()
 runCom com = do
     (_, _, _, p) <- createProcess com
     exitStatus <- waitForProcess p
-    if (exitStatus == ExitSuccess)
-        then do
-            putStrLn $ colorize Green "command executed successfully"
-        else do
-            putStrLn $ colorize Red "command failed"
+    showTime
+    putStrLn $ ": " ++ if (exitStatus == ExitSuccess)
+        then colorize Green "command executed successfully"
+        else colorize Red "command failed"
 
 cmd :: String -> CreateProcess
 cmd com = CreateProcess
@@ -212,6 +218,9 @@ cmdQuiet com = CreateProcess
     , std_err = Inherit
     , close_fds = True
     }
+
+showTime :: IO ()
+showTime = getZonedTime >>= putStr . show
 
 errMsg :: String -> IO ()
 errMsg msg = hPutStrLn stderr $ "error: " ++ msg
