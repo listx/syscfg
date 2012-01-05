@@ -18,6 +18,7 @@ data Opts = Opts
     , command_simple :: String
     , file :: [FilePath]
     , list :: FilePath
+    , interval :: Int
     } deriving (Data, Typeable, Show, Eq)
 
 progOpts :: Opts
@@ -26,6 +27,7 @@ progOpts = Opts
     , command_simple = def &= typ "COMMAND" &= name "C" &= help "command to execute; it takes the first file, and calls command after it; e.g., `-C lilypond -f foo.ly' will translate to `lilypond foo.ly' as the default command"
     , file = def &= help "file(s) to watch; can be repeated multiple times to define multiple files"
     , list = def &= help "list of files to watch"
+    , interval = 0 &= typ "SECONDS" &= help "sleep SECONDS amount of time and detect changes only on these intervals"
     }
     &= details
         [ "Notes:"
@@ -144,7 +146,7 @@ helpMsg Opts{..} f = do
 
 loop :: Opts -> String -> [FilePath] -> [String] -> IO ()
 loop o@Opts{..} comDef files filesTS = do
-    _ <- sleep 1
+    _ <- sleep (if interval > 0 then interval else 1)
     filesTS' <- mapM getTimestamp files
     when (filesTS /= filesTS') $ do
         putStrLn []
