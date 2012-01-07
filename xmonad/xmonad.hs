@@ -369,16 +369,11 @@ myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
 myLayout
   :: Choose
        (Mirror Tall)
-       (Choose
-          Tall
-          (Choose
-             (XLL.ModifiedLayout WithBorder Full)
-             (XLL.ModifiedLayout LayoutHints Circle)))
+       (Choose Tall (XLL.ModifiedLayout WithBorder Full))
        Window
 myLayout = Mirror tiled
     ||| tiled
     ||| noBorders Full
-    ||| layoutHints Circle
     where
         -- default tiling algorithm partitions the screen into two panes
         tiled   = Tall nmaster delta ratio
