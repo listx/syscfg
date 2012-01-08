@@ -151,7 +151,7 @@ loop o@Opts{..} comDef files filesTS = do
     when (filesTS /= filesTS') $ do
         putStrLn []
         showTime
-        putStr $ colorize Magenta ": change detected"
+        putStr $ ": " ++ colorize Magenta "change detected"
         putStrLn $ "; executing command " ++ squote (colorize Blue comDef)
         runCom $ cmd comDef
     loop o comDef files filesTS'
