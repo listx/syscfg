@@ -16,9 +16,6 @@ set scrolloff=3
 " changing branches in git)
 set autoread
 
-" use ~/.vim/bundle as the directory for vim plugins/scripts
-call pathogen#infect()
-
 " place help page on its own tab
 cabbrev help tab h
 
