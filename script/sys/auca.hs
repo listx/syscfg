@@ -11,6 +11,8 @@ import System.Directory
 import System.Environment
 import System.Exit
 import System.Posix.Unistd (sleep)
+import System.Posix.Files
+import System.Posix.Types (EpochTime)
 import System.Process
 
 data Opts = Opts
@@ -119,14 +121,8 @@ prog opts@Opts{..} filesToWatch = do
     _ <- forkIO $ loop opts comDef filesToWatch filesTS -- loop to handle file changes
     keyHandler opts comDef (head filesToWatch) -- loop to handle key presses
 
-getTimestamp :: FilePath -> IO String
-getTimestamp f = do
-    (_, sout, _, p) <- createProcess . cmdQuiet $ "ls --full-time " ++ f
-    _ <- waitForProcess p
-    sout' <- case sout of
-        Just h -> hGetContents h
-        Nothing -> return []
-    return sout'
+getTimestamp :: FilePath -> IO EpochTime
+getTimestamp f = getSymbolicLinkStatus f >>= return . modificationTime
 
 helpMsg :: Opts -> FilePath -> IO ()
 helpMsg Opts{..} f = do
@@ -144,7 +140,7 @@ helpMsg Opts{..} f = do
             then command_simple ++ " " ++ f
             else head command
 
-loop :: Opts -> String -> [FilePath] -> [String] -> IO ()
+loop :: Opts -> String -> [FilePath] -> [EpochTime] -> IO ()
 loop o@Opts{..} comDef files filesTS = do
     _ <- sleep (if interval > 0 then interval else 1)
     filesTS' <- mapM getTimestamp files
