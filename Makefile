@@ -24,7 +24,8 @@ lesskey:
 	ln -fs ${CFG}/lesskey/cfg		${HOME}/.lesskey
 	lesskey
 modprobe:
-	sudo cp ${CFG}/modprobe/blacklist.conf	/etc/modprobe.d
+	ln -fs ${CFG}/modprobe/blacklist.conf	/etc/modprobe.d
+	ln -fs ${CFG}/modprobe/modprobe.conf	/etc/modprobe.d
 mplayer:
 	ln -fns ${CFG}/mplayer			${HOME}/.mplayer
 mutt:
