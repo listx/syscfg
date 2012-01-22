@@ -25,7 +25,12 @@ lesskey:
 	lesskey
 modprobe:
 	ln -fs ${CFG}/modprobe/blacklist.conf	/etc/modprobe.d
-	ln -fs ${CFG}/modprobe/modprobe.conf	/etc/modprobe.d
+ifeq ('${HOST}','k0')
+	ln -fs ${CFG}/modprobe/modprobe.k0.conf	/etc/modprobe.d
+endif
+ifeq ('${HOST}','k1')
+	ln -fs ${CFG}/modprobe/modprobe.k1.conf	/etc/modprobe.d
+endif
 mplayer:
 	ln -fns ${CFG}/mplayer			${HOME}/.mplayer
 mutt:
