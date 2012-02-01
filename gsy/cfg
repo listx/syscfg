@@ -31,13 +31,6 @@ l@k0:~/tinybar
 l@k1:~/tinybar
 l@k2:~/tinybar
 
-l@k0:~/ghost/timeflux.git
-/mnt/u0/h/prog/timeflux
-l@k0:~/prog/timeflux
-l@k1:~/prog/timeflux
-l@k2:~/prog/timeflux
-otter@ocean:~/prog/timeflux
-
 l@k0:~/ghost/timetracker.git
 /mnt/u0/h/prog/timetracker
 l@k0:~/prog/timetracker
@@ -115,23 +108,11 @@ l@k1:~/prog/leaf
 l@k2:~/prog/leaf
 otter@ocean:~/prog/leaf
 
-l@k0:~/ghost/barprep.git
-/mnt/u0/repos/barprep
-l@k0:~/barprep
-l@k1:~/barprep
-l@k2:~/barprep
-
 l@k0:~/ghost/bprep.git
 /mnt/u0/repos/bprep
 l@k0:~/prog/bprep
 l@k1:~/prog/bprep
 l@k2:~/prog/bprep
-
-l@k0:~/ghost/calaw.git
-/mnt/u0/repos/calaw
-l@k0:~/calaw
-l@k1:~/calaw
-l@k2:~/calaw
 
 l@k0:~/ghost/klipp.git
 /mnt/u0/h/prog/chess/klipp
@@ -139,12 +120,6 @@ l@k0:~/prog/chess/klipp
 l@k1:~/prog/chess/klipp
 l@k2:~/prog/chess/klipp
 otter@ocean:~/prog/chess/klipp
-
-l@k0:~/ghost/lawschool-notes.git
-/mnt/u0/repos/lawschool-notes
-l@k0:~/lawschool-notes
-l@k1:~/lawschool-notes
-l@k2:~/lawschool-notes
 
 l@k0:~/ghost/meteor_old.git
 /mnt/u0/h/prog/chess/meteor_old
@@ -159,3 +134,28 @@ l@k0:~/prog/chess/spektra_old
 l@k1:~/prog/chess/spektra_old
 l@k2:~/prog/chess/spektra_old
 otter@ocean:~/prog/chess/spektra_old
+
+l@k0:~/ghost/barprep.git
+/mnt/u0/repos/barprep
+l@k0:~/barprep
+l@k1:~/barprep
+l@k2:~/barprep
+
+l@k0:~/ghost/calaw.git
+/mnt/u0/repos/calaw
+l@k0:~/calaw
+l@k1:~/calaw
+l@k2:~/calaw
+
+l@k0:~/ghost/lawschool-notes.git
+/mnt/u0/repos/lawschool-notes
+l@k0:~/lawschool-notes
+l@k1:~/lawschool-notes
+l@k2:~/lawschool-notes
+
+l@k0:~/ghost/timeflux.git
+/mnt/u0/h/prog/timeflux
+l@k0:~/prog/timeflux
+l@k1:~/prog/timeflux
+l@k2:~/prog/timeflux
+otter@ocean:~/prog/timeflux
