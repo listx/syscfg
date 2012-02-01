@@ -1,7 +1,7 @@
 CFG := $(shell pwd)
 HOST := $(shell hostname)
 # add the -n flag for directories, as otherwise, stray symlinks will be created inside the CFG directory itself
-all: acpi boxes cron emacs galculator git gsy gtk lesskey modprobe mpd mplayer mutt ncmpcpp nixos pal pentadactyl rtorrent sh usbmnt vim xdefaults xinitrc xmodmap xmonad xorg zsh
+all: acpi boxes cron emacs git gsy gtk lesskey modprobe mpd mplayer mutt ncmpcpp pal pentadactyl rtorrent usbmnt vim xdefaults xinitrc xmodmap xmonad xorg zsh
 acpi:
 	ln -fs ${CFG}/acpi/${HOST}.sh		/etc/acpi/handler.sh
 boxes:
@@ -16,8 +16,6 @@ git:
 	ln -fs ${CFG}/git/sendemail-aliases	${HOME}/.git-sendemail-aliases
 gsy:
 	ln -fs ${CFG}/gsy/cfg			${HOME}/.gsy
-galculator:
-	ln -fs ${CFG}/galculator/cfg		${HOME}/.galculator
 gtk:
 	ln -fs ${CFG}/gtk/cfg			${HOME}/.gtkrc-2.0
 lesskey:
@@ -49,10 +47,6 @@ endif
 ifeq ('${HOST}','k1')
 	ln -fs ${CFG}/ncmpcpp/cfg-k2		${HOME}/.ncmpcpp/config
 endif
-nixos:
-	ln -fs ${CFG}/nixos/base.nix		/etc/nixos
-	ln -fs ${CFG}/nixos/${HOST}.nix		/etc/nixos/configuration.nix
-
 pal:
 	ln -fns ${CFG}/pal			${HOME}/.pal
 	ln -fs ${CFG}/pal/cfg			${HOME}/.pal/pal.conf
@@ -65,8 +59,6 @@ endif
 ifeq ('${HOST}','k1')
 	ln -fs ${CFG}/rtorrent/cfg-k1		${HOME}/.rtorrent.rc
 endif
-sh:
-	ln -fns ${CFG}/sh/zshenv		/etc
 usbmnt:
 	ln -fs ${CFG}/usbmnt/cfg		${HOME}/.usbmnt
 vim:
