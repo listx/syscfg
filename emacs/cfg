@@ -17,6 +17,7 @@
 ; zenburn color theme
 (require 'zenburn)
 (zenburn)
+(set-cursor-color "#00ff00")
 
 ; ditaa program (and integration with org-mode)
 (setq org-ditaa-jar-path "/usr/share/java/ditaa/ditaa-0_9.jar") ; load path for ditaa
