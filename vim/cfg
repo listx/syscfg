@@ -107,6 +107,10 @@ if !exists("autocommands_loaded")
     au BufRead,BufNewFile *.c,*.cpp,*.h,*.hpp setlocal cinoptions=:0,l1,t0,g0,(0
 
     au BufRead,BufNewFile *.hs setlocal textwidth=80
+    au BufRead,BufNewFile *.hs setlocal tabstop=4
+    au BufRead,BufNewFile *.hs setlocal softtabstop=4
+    au BufRead,BufNewFile *.hs setlocal shiftwidth=4
+    au BufRead,BufNewFile *.hs setlocal noexpandtab
 
     " load lilypond-specific stuff
     au BufRead,BufNewFile *.ly setlocal filetype=lilypond
