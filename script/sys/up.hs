@@ -28,8 +28,10 @@ main = do
 	args <- getArgs
 	-- only get the arguments that could be valid choices for systems
 	let
-		args' = filter (\a -> elem a (map show [1..(length _NODES)])) args
-		statusesForced = zip4 (map show [(1::Integer)..])
+		-- sanitize input (so that we only count valid arguments in the "when"
+		-- function below)
+		args' = filter (\a -> elem a (map show $ take (length _NODES) [(0::Integer)..])) args
+		statusesForced = zip4 (map show [(0::Integer)..])
 			(map fst _NODES)
 			(map snd _NODES)
 			(repeat True)
@@ -38,7 +40,7 @@ main = do
 		>> exitWith ExitSuccess
 	putStrLn "Checking WOL-compliant LAN nodes...\n"
 	onlines <- forkIOs (map getNodeStatus _NODES)
-	let statuses = zip4 (map show [(1::Integer)..]) (map fst _NODES) (map snd _NODES) onlines
+	let statuses = zip4 (map show [(0::Integer)..]) (map fst _NODES) (map snd _NODES) onlines
 	mapM_ (putStrLn . showStatus) statuses
 	putStrLn ""
 	putStrLn "Choose system to wake (q to exit)"
