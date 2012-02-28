@@ -8,8 +8,6 @@
 
 (require 'org-install) ; force use of installed org-mode (not the one that comes by default with emacs)
 
-(load "/usr/share/emacs/site-lisp/haskell-mode/haskell-site-file")
-
 ; show empty whitespace
 (setq-default indicate-empty-lines t)
 (setq-default show-trailing-whitespace t)
