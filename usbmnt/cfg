@@ -14,4 +14,5 @@ FSYS_HASH =
 UUID_HASH =
     { A401-C9ED =                             "vfat -o rw,uid=$USER,gid=$USER"    # (256 MiB) Panasonic SD card
     , 711012a2-3f42-46bd-9b2b-087a215b036e =  "ext4 -o rw,relatime"               # (2 GiB) UnisCom USB 2.0 thumbdrive
+    , 58255eb0-392e-4a5c-b5ef-2dc080a3596c =  "ext4 -o rw,relatime"               # (2 GiB) Skyline College TRiO
     }
