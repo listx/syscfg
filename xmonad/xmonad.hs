@@ -445,6 +445,7 @@ myManageHook = composeAll $
     , className =? "Spektra"                    --> doFloat
     , className =? "Glade"                      --> doFloat
     , className =? "Anki"                       --> doFloat
+    , className =? "Qcp"                        --> doFloat
     ]
     ++  [ resource =? ("atWorkspace" ++ s) --> doShift s
         | s <- map show ([0..9]::[Int]) ++ map (('F':) . show) ([1..12]::[Int])
