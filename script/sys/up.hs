@@ -1,10 +1,10 @@
 import Control.Concurrent
 import Control.Monad (forM, when)
 import Data.List (zip4, unzip4)
+import System.Environment
 import System.Exit
 import System.IO
 import System.Process
-import System
 
 _LAN_IP :: String
 _LAN_IP = "192.168.0.255"
@@ -103,6 +103,7 @@ spawnCmd str quiet = createProcess CreateProcess
 	, std_out = if quiet then Inherit else CreatePipe
 	, std_err = if quiet then Inherit else CreatePipe
 	, close_fds = True
+	, create_group = False
 	}
 
 -- concurrent mapM; originally from http://hpaste.org/44348/concurrent_mapm

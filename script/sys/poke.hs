@@ -5,9 +5,8 @@ import Crypto.Random.AESCtr
 import Data.Binary (decode)
 import qualified Data.ByteString.Lazy as B
 import Data.List (nub)
-import IO
-import System (getArgs)
-import System.IO (hSetEcho)
+import System.Environment (getArgs)
+import System.IO
 
 keysChar, keysNum, keysPunc, keysCharNum, keysAll, keysHex :: String
 keysChar = ['a'..'z'] ++ ['A'..'Z']

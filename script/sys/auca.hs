@@ -218,6 +218,7 @@ cmd com = CreateProcess
 	, std_out = Inherit
 	, std_err = Inherit
 	, close_fds = True
+	, create_group = False
 	}
 
 cmdQuiet :: String -> CreateProcess
@@ -229,6 +230,7 @@ cmdQuiet com = CreateProcess
 	, std_out = CreatePipe
 	, std_err = Inherit
 	, close_fds = True
+	, create_group = False
 	}
 
 showTime :: IO ()

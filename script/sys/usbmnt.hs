@@ -262,6 +262,7 @@ tryMount mount config@Config{..} (bd@BlockDevice{..}, mp)
 		, std_out = CreatePipe
 		, std_err = Inherit
 		, close_fds = False
+		, create_group = False
 		}
 
 mountArgs :: Config -> BlockDevice -> String
@@ -315,6 +316,7 @@ getDevices Opts{..} = do
 		, std_out = CreatePipe
 		, std_err = Inherit
 		, close_fds = False
+		, create_group = False
 		}
 
 getUSBMountPath :: BlockDevice -> String
