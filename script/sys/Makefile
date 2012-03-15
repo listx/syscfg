@@ -10,3 +10,6 @@ up: up.hs
 	ghc --make -threaded ${FLAGS} up
 usbmnt: usbmnt.hs
 	ghc --make ${FLAGS} usbmnt
+clean:
+	$(RM) auca poke time up usbmnt
+	find -type f -iregex ".+\.\(aux\|o\|hi\|hp\|mix\|ps\|tix\|html\)" -exec rm -v {} \;
