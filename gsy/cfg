@@ -25,6 +25,12 @@ l@k0:~/org
 l@k1:~/org
 l@k2:~/org
 
+l@k0:~/ghost/devn.git
+/mnt/u0/h/prog/devn
+l@k0:~/prog/devn
+l@k1:~/prog/devn
+l@k2:~/prog/devn
+
 l@k0:~/ghost/tinybar.git
 /mnt/u0/h/tinybar
 l@k0:~/tinybar
@@ -81,6 +87,12 @@ l@k0:~/prog/chess/meteor
 l@k1:~/prog/chess/meteor
 l@k2:~/prog/chess/meteor
 otter@ocean:~/prog/chess/meteor
+
+l@k0:~/ghost/qcp.git
+/mnt/u0/h/prog/qcp
+l@k0:~/prog/qcp
+l@k1:~/prog/qcp
+l@k2:~/prog/qcp
 
 l@k0:~/ghost/quicksilver.git
 /mnt/u0/h/prog/game/quicksilver
