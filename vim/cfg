@@ -221,9 +221,11 @@ vmap <localleader>y "+y
 nmap <localleader>p "+p
 nmap <localleader>P "+P
 
-" Remove K from being mapped to interactive man pages
-nmap K <nop>
-vmap K <nop>
+" Change K from being mapped to interactive man pages to being used as the
+" vanilla comma ',' key's functionality (intra-line backwards search repeat for
+" any t, T, f, F searches).
+nnoremap K ,
+vnoremap K ,
 
 " NOTE: the <F1> key in normal mode is mapped to ":help" by default
 " quicksave files
