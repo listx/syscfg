@@ -7,27 +7,27 @@ set autocomplete=
 set guioptions+=c
 
 " set default mod-key to ","
-set mapleader=","
+map , <leader>
 
 " unmap the make C-p and C-n behave like default h and l (scroll horizontally)
-no <C-p> h
-no <C-n> l
+map -builtin <C-p> h
+map -builtin <C-n> l
 
 " make h and l browse tabs left and right instead of scrolling horizontally (which happens very rarely)
-no h gT
-no l gt
+map -builtin h gT
+map -builtin l gt
 
 " physically move the tabs around
 map <C-h> :tabm! -1<cr>
 map <C-l> :tabm! +1<cr>
 
 " swap S-f and f, since I almost always open links on a new background tab
-no F f
-no f F
+map -builtin F f
+map -builtin f F
 
 " swap S-p and p as well
-no P p
-no p P
+map -builtin P p
+map -builtin p P
 
 " save current session (equiv. to Firefox's "Save and Quit" before closing multiple tabs)
 map <leader>x :xa<cr>
@@ -47,7 +47,7 @@ map <leader>q :q<cr>
 map <leader>Q :q!<cr>
 
 " for some reason, vimperator cannot map <backspace>, but must instead use <BS>
-nnoremap <BS> <PageUp>
+nmap -builtin <BS> <PageUp>
 " no need to map <Space>, since it's already (hard-coded) to <PageDown>
 
 map <leader>b :emenu View.Sidebar.Bookmarks<cr>
