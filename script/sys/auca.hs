@@ -89,9 +89,7 @@ main = do
 	when (errNo > 0) $ exitWith $ ExitFailure errNo
 	files <- if null list
 		then return []
-		else do
-			listContents <- readFile list
-			return . filter (not . null) . lines $ listContents
+		else return . nub . filter (not . null) . lines =<< readFile list
 	fs <- mapM doesFileExist file -- e.g., --file x --file y --file z
 	-- e.g., --list x (and files defined in file x)
 	flist <- mapM doesFileExist files
@@ -128,7 +126,7 @@ prog opts@Opts{..} filesToWatch = do
 	keyHandler opts comDef (head filesToWatch) -- loop to handle key presses
 
 getTimestamp :: FilePath -> IO EpochTime
-getTimestamp f = getSymbolicLinkStatus f >>= return . modificationTime
+getTimestamp f = return . modificationTime =<< getFileStatus f
 
 helpMsg :: Opts -> FilePath -> IO ()
 helpMsg Opts{..} f = do
