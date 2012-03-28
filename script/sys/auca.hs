@@ -126,7 +126,13 @@ prog opts@Opts{..} filesToWatch = do
 	keyHandler opts comDef (head filesToWatch) -- loop to handle key presses
 
 getTimestamp :: FilePath -> IO EpochTime
-getTimestamp f = return . modificationTime =<< getFileStatus f
+getTimestamp f = do
+	b <- fileExist f
+	if b
+		then return . modificationTime =<< getFileStatus f
+		else do
+			_ <- sleep 1
+			getTimestamp f
 
 helpMsg :: Opts -> FilePath -> IO ()
 helpMsg Opts{..} f = do
@@ -151,13 +157,15 @@ loop :: Opts -> String -> [FilePath] -> [EpochTime] -> IO ()
 loop o@Opts{..} comDef files filesTS = do
 	_ <- sleep (if interval > 0 then interval else 1)
 	filesTS' <- mapM getTimestamp files
-	when (filesTS /= filesTS') $ do
-		putStrLn []
-		showTime
-		putStr $ ": " ++ colorize Magenta "change detected"
-		putStrLn $ "; executing command " ++ squote (colorize Blue comDef)
-		runCom $ cmd comDef
-	loop o comDef files filesTS'
+	if (filesTS /= filesTS')
+		then do
+			putStrLn []
+			showTime
+			putStr $ ": " ++ colorize Magenta "change detected"
+			putStrLn $ "; executing command " ++ squote (colorize Blue comDef)
+			runCom $ cmd comDef
+			loop o comDef files filesTS'
+		else loop o comDef files filesTS'
 
 keyHandler :: Opts -> String -> FilePath -> IO ()
 keyHandler o@Opts{..} comDef f = keyHandler' =<< getChar
