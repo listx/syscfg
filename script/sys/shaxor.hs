@@ -18,7 +18,7 @@ data Opts = Opts
 progOpts :: Opts
 progOpts = Opts
 	{ sha_hash = def &= typ "SHA1 HASH" &= help "Additional SHA1 hashes in hexadecimal to XOR into (use this flag once for each additional hash; also, do not prefix the hex with `0x'; e.g., use \"f3\" instead of \"0xf3\"). Leading zeroes are ignored; trailing non-hex characters (as well as non-leading-hex strings) are also ignored."
-	, file = [] &= typFile &= help "Read hashes from a file; the expected format of the file is the output of the sha1sum(1) program. You can use this flag multiple times for multiple files. If --file is not used at all, then sha1sum expects input from STDIN; thus, you can use it like this: sha1sum FILES | shaxor."
+	, file = [] &= typFile &= help "Read hashes from a file; the expected format of the file is the output of the sha1sum(1) program. You can use this flag multiple times for multiple files. If --file is not used at all, then shaxor expects input from STDIN; thus, you can use it like this: sha1sum FILES | shaxor."
 	}
 	&= details
 		[ "Notes:"
