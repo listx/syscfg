@@ -32,6 +32,7 @@ getOpts = cmdArgs $ progOpts
 	&= program _PROGRAM_NAME
 	&= help _PROGRAM_DESC
 	&= helpArg [explicit, name "help", name "h"]
+	&= versionArg [explicit, name "version", name "v", summary _PROGRAM_INFO]
 
 _PROGRAM_NAME
 	, _PROGRAM_VERSION
