@@ -69,6 +69,12 @@ l@k0:~/secure
 l@k1:~/secure
 l@k2:~/secure
 
+l@k0:~/ghost/work.git
+/mnt/u0/h/work
+l@k0:~/work
+l@k1:~/work
+l@k2:~/work
+
 l@k0:~/ghost/hazelnut.git
 /mnt/u0/h/prog/hazelnut
 l@k0:~/prog/hazelnut
