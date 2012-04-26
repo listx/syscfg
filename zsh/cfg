@@ -255,7 +255,6 @@ alias gp='gsy -p '
 alias gtag='~/syscfg/script/sys/gtag.sh'
 
 alias ocm="cd ~/org; gpl; gcm -am \"$HOST\"; gpl && gps"
-alias clisp='clisp -q' # suppress banner
 
 alias e='gvim -p'
 alias ee='vim -p'
