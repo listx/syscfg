@@ -1,11 +1,11 @@
 FLAGS=-O2 -Wall -Werror
-all: auca poke shaxor time up usbmnt
+all: auca poke panxor time up usbmnt
 auca: auca.hs
 	ghc --make ${FLAGS} -threaded auca
 poke: poke.hs
 	ghc --make ${FLAGS} poke
-shaxor: shaxor.hs
-	ghc --make ${FLAGS} shaxor
+panxor: panxor.hs
+	ghc --make ${FLAGS} panxor
 time: time.hs
 	ghc --make ${FLAGS} time
 up: up.hs
