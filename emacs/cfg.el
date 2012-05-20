@@ -1,32 +1,35 @@
-(add-to-list 'load-path "~/.emacs.d/script") ; load path for scripts
-;; Remove splash screen
-(setq inhibit-splash-screen t)
-; remove toolbar
-(tool-bar-mode -1)
-; visual line mode (word wrap on whole words) by default
-(global-visual-line-mode 1)
+; Custom functions {{{
+(setq my-current-font 0)
+(defun my-toggle-font ()
+    "Toggle font between Terminus and DejaVu Sans Mono"
+    (interactive)
+    (setq my-current-font (if (= my-current-font 0) 1 0))
+    (set-face-attribute 'default nil :font (if (= my-current-font 1) "DejaVu Sans Mono" "Terminus"))
+    (redraw-display))
+;}}}
 
-(require 'org-install) ; force use of installed org-mode (not the one that comes by default with emacs)
+; Load paths and modes {{{
+; Evil, the Extensible VI Layer! This makes Emacs worth using.
+; see http://gitorious.org/evil/pages/Home
+(require 'evil)
+(evil-mode 1)
 
-; show empty whitespace
-(setq-default indicate-empty-lines t)
-(setq-default show-trailing-whitespace t)
+; add load path for custom scripts
+(add-to-list 'load-path "~/.emacs.d/script")
 
-; zenburn color theme
-(require 'zenburn)
-(zenburn)
-(set-cursor-color "#00ff00")
-
+; YAML major mode
+(require 'yaml-mode)
+(add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode))
+; org-mode
+; force use of installed org-mode (not the one that comes by default with emacs)
+(require 'org-install)
 ; ditaa program (and integration with org-mode)
 (setq org-ditaa-jar-path "/usr/share/java/ditaa/ditaa-0_9.jar") ; load path for ditaa
 (require 'org-exp-blocks)
-
-(add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode)) ; start up org-mode for .org files
-; some default hotkeys for org-mode
-(global-set-key "\C-cl" 'org-store-link)
-(global-set-key "\C-cc" 'org-capture)
-(global-set-key "\C-cb" 'org-iswitchb)
-(setq org-log-done t) ; write timestamp when a TODO changes to DONE
+; start up org-mode for .org files
+(add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
+; write timestamp when a TODO changes to DONE
+(setq org-log-done t)
 (setq org-agenda-files (list "~/org"))
 
 ; yasnippet
@@ -34,16 +37,72 @@
 (require 'yasnippet) ;; not yasnippet-bundle
 (yas/initialize)
 (yas/load-directory "/usr/share/emacs/site-lisp/yas/snippets")
+;}}}
 
-; evil, the Extensible VI Layer! seee http://gitorious.org/evil/pages/Home
-(require 'evil)
-(evil-mode 1)
+; Appearance {{{
+; zenburn color theme
+(require 'color-theme-zenburn)
+(color-theme-zenburn)
+; highlight the current cursor line
+(global-hl-line-mode 1)
+(set-face-background 'hl-line "#434443")
+; remove splash screen
+(setq inhibit-splash-screen t)
+; remove toolbar
+(tool-bar-mode -1)
+; visual line mode (word wrap on whole words) by default
+(global-visual-line-mode 1)
+; green cursor
+(set-cursor-color "#00ff00")
+; stretch the cursor (e.g., make it bigger if hovering over a tab)
+(setq x-stretch-cursor 1)
+; show empty whitespace
+(setq-default indicate-empty-lines t)
+(setq-default show-trailing-whitespace t)
+; toggle between fonts
+(define-key evil-normal-state-map ",f" 'my-toggle-font)
+
+; settings used by "emacsclient -c" command
+(setq default-frame-alist '((font-backend . "xft")
+                            ;(font . "Terminus")
+                            ;(background-color . "black")
+                            ;(foreground-color . "white")
+                            ;(vertical-scroll-bars)
+                            (left-fringe . -1)
+                            (right-fringe . -1)
+                            (fullscreen . fullboth)
+                            ;(menu-bar-lines . 0)
+                            (tool-bar-lines . 0)
+                            ))
+
+; auto-generated stuff by emacs itself...
+(custom-set-variables
+  ;; custom-set-variables was added by Custom.
+  ;; If you edit it by hand, you could mess it up, so be careful.
+  ;; Your init file should contain only one such instance.
+  ;; If there is more than one, they won't work right.
+ '(blink-cursor-mode nil)
+ '(column-number-mode t)
+ '(scroll-bar-mode nil))
+(custom-set-faces
+  ;; custom-set-faces was added by Custom.
+  ;; If you edit it by hand, you could mess it up, so be careful.
+  ;; Your init file should contain only one such instance.
+  ;; If there is more than one, they won't work right.
+ '(default ((t (:inherit nil :stipple nil :background "#22222a" :foreground "#cccccf" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 105 :width normal :foundry "xos4" :family "Terminus")))))
+;}}}
+
+; Keymaps {{{
 ; some keymaps from ~/.vimrc
 (define-key evil-insert-state-map [f1] 'save-buffer) ; save
 (define-key evil-normal-state-map [f1] 'save-buffer) ; save
 (define-key evil-normal-state-map ",w" 'save-buffer) ; save
-(define-key evil-normal-state-map ",q" 'kill-buffer) ; quit (current buffer; have to press RETURN)
+(define-key evil-normal-state-map ",q" ":q") ; close current window
 (define-key evil-normal-state-map ",x" 'save-buffers-kill-emacs) ; save and quit
+; window management and navigation
+(define-key evil-normal-state-map ",h" 'split-window-vertically)
+(define-key evil-normal-state-map ",v" 'split-window-horizontally)
+(define-key evil-normal-state-map [tab] 'other-window) ; move to other window
 ; make "kj" behave as ESC key, adapted from http://article.gmane.org/gmane.emacs.vim-emulation/980
 (define-key evil-insert-state-map "k" #'cofi/maybe-exit)
 (evil-define-command cofi/maybe-exit ()
@@ -134,49 +193,12 @@
 (evil-declare-key 'normal org-mode-map (kbd "M-J") 'org-shiftmetadown)
 
 (evil-declare-key 'normal org-mode-map (kbd "<f12>") 'org-export-as-html)
+;}}}
 
+; Backups {{{
 ; put all auto-saves/backups to the temp directory
 (setq backup-directory-alist
                 `((".*" . ,temporary-file-directory)))
 (setq auto-save-file-name-transforms
                 `((".*" ,temporary-file-directory t)))
-
-(setq my-current-font 0)
-(defun my-toggle-font ()
-    "Toggle font between Terminus and DejaVu Sans Mono"
-    (interactive)
-    (setq my-current-font (if (= my-current-font 0) 1 0))
-    (set-face-attribute 'default nil :font (if (= my-current-font 1) "DejaVu Sans Mono" "Terminus"))
-    (redraw-display))
-(define-key evil-normal-state-map ",f" 'my-toggle-font)
-
-; settings used by "emacsclient -c" command
-(setq default-frame-alist '((font-backend . "xft")
-                            ;(font . "Terminus")
-                            ;(background-color . "black")
-                            ;(foreground-color . "white")
-                            ;(vertical-scroll-bars)
-                            (left-fringe . -1)
-                            (right-fringe . -1)
-                            (fullscreen . fullboth)
-                            ;(menu-bar-lines . 0)
-                            (tool-bar-lines . 0)
-                            ))
-
-; auto-generated stuff by emacs itself...
-(custom-set-variables
-  ;; custom-set-variables was added by Custom.
-  ;; If you edit it by hand, you could mess it up, so be careful.
-  ;; Your init file should contain only one such instance.
-  ;; If there is more than one, they won't work right.
- '(blink-cursor-mode nil)
- '(column-number-mode t)
- '(scroll-bar-mode nil))
-(custom-set-faces
-  ;; custom-set-faces was added by Custom.
-  ;; If you edit it by hand, you could mess it up, so be careful.
-  ;; Your init file should contain only one such instance.
-  ;; If there is more than one, they won't work right.
- '(default ((t (:inherit nil :stipple nil :background "#22222a" :foreground "#cccccf" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 105 :width normal :foundry "xos4" :family "Terminus")))))
-
-; vim: syntax=lisp
+;}}}
