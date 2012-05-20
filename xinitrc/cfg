@@ -39,6 +39,12 @@ case $(hostname) in
         # start xscreensaver
         #xscreensaver -no-splash &
     ;;
+    k1)
+        amixer -q set Speaker mute
+    ;;
+    k2)
+        amixer -q set "External Amplifier" mute
+    ;;
     *)
     ;;
 esac
