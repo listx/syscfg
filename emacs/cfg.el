@@ -54,6 +54,9 @@
 (global-visual-line-mode 1)
 ; green cursor
 (set-cursor-color "#00ff00")
+; make the color in set-cursor-color be the default color recognized by Evil
+; (this is required because we change the color *after* enabling evil)
+(setq evil-default-cursor t)
 ; stretch the cursor (e.g., make it bigger if hovering over a tab)
 (setq x-stretch-cursor 1)
 ; show empty whitespace
