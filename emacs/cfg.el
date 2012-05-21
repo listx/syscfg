@@ -1,11 +1,26 @@
+; -*- tab-width:4; intent-tabs-mode:nil; -*-
 ; Custom functions {{{
 (setq my-current-font 0)
 (defun my-toggle-font ()
-    "Toggle font between Terminus and DejaVu Sans Mono"
-    (interactive)
-    (setq my-current-font (if (= my-current-font 0) 1 0))
-    (set-face-attribute 'default nil :font (if (= my-current-font 1) "DejaVu Sans Mono" "Terminus"))
-    (redraw-display))
+	"Toggle font between Terminus and DejaVu Sans Mono"
+	(interactive)
+
+	(setq my-current-font (if (= my-current-font 0) 1 0))
+	(set-face-attribute 'default nil :font (if (= my-current-font 1) "DejaVu Sans Mono" "Terminus"))
+	(redraw-display))
+(defun my-indent-tabs-only (number)
+	""
+	(set-variable 'c-basic-offset number)
+	(set-variable 'tab-width number)
+	(set-variable 'standard-indent number)
+	(set-variable 'c-tab-always-indent t)
+	(set-variable 'c-indent-tabs-mode t)
+)
+(add-hook 'c-mode-hook
+	(lambda ()
+		(c-set-style "linux")
+    )
+)
 ;}}}
 
 ; Load paths and modes {{{
@@ -16,6 +31,16 @@
 
 ; add load path for custom scripts
 (add-to-list 'load-path "~/.emacs.d/script")
+
+; rainbow-colored matching parentheses, braces, etc.
+(require 'rainbow-delimiters)
+(global-rainbow-delimiters-mode)
+
+; highlight matching parenthese
+(show-paren-mode 1)
+
+; change background of hex color strings to the actual color (activate with rainbow-mode)
+(require 'rainbow-mode)
 
 ; YAML major mode
 (require 'yaml-mode)
@@ -33,12 +58,6 @@
 ; write timestamp when a TODO changes to DONE
 (setq org-log-done t)
 (setq org-agenda-files (list "~/org"))
-
-; yasnippet
-(add-to-list 'load-path "/usr/share/emacs/site-lisp/yas")
-(require 'yasnippet) ;; not yasnippet-bundle
-(yas/initialize)
-(yas/load-directory "/usr/share/emacs/site-lisp/yas/snippets")
 ;}}}
 
 ; Appearance {{{
@@ -50,40 +69,42 @@
 (set-face-background 'hl-line "#323332")
 ; disable cursor line highlight during insert mode
 (add-hook 'evil-insert-state-entry-hook
-    (lambda ()
-        (interactive)
-        (global-hl-line-mode 0)
-    )
+	(lambda ()
+		(interactive)
+		(global-hl-line-mode 0)
+	)
 )
 (add-hook 'evil-insert-state-exit-hook
-    (lambda ()
-        (interactive)
-        (global-hl-line-mode 1)
-    )
+	(lambda ()
+		(interactive)
+		(global-hl-line-mode 1)
+		; like Vim, remove whitespace if nothing was inserted
+		(delete-trailing-whitespace)
+	)
 )
 (add-hook 'evil-visual-state-entry-hook
-    (lambda ()
-        (interactive)
-        (global-hl-line-mode)
-    )
+	(lambda ()
+		(interactive)
+		(global-hl-line-mode)
+	)
 )
 (add-hook 'evil-visual-state-exit-hook
-    (lambda ()
-        (interactive)
-        (global-hl-line-mode)
-    )
+	(lambda ()
+		(interactive)
+		(global-hl-line-mode)
+	)
 )
 (add-hook 'evil-emacs-state-entry-hook
-    (lambda ()
-        (interactive)
-        (global-hl-line-mode 0)
-    )
+	(lambda ()
+		(interactive)
+		(global-hl-line-mode 0)
+	)
 )
 (add-hook 'evil-emacs-state-exit-hook
-    (lambda ()
-        (interactive)
-        (global-hl-line-mode 1)
-    )
+	(lambda ()
+		(interactive)
+		(global-hl-line-mode 1)
+	)
 )
 
 ; cursor colors for the various states
@@ -112,16 +133,17 @@
 
 ; settings used by "emacsclient -c" command
 (setq default-frame-alist '((font-backend . "xft")
-                            ;(font . "Terminus")
-                            ;(background-color . "black")
-                            ;(foreground-color . "white")
-                            ;(vertical-scroll-bars)
-                            (left-fringe . -1)
-                            (right-fringe . -1)
-                            (fullscreen . fullboth)
-                            ;(menu-bar-lines . 0)
-                            (tool-bar-lines . 0)
-                            ))
+	;(font . "Terminus")
+	;(background-color . "black")
+	;(foreground-color . "white")
+	;(vertical-scroll-bars)
+	(left-fringe . -1)
+	(right-fringe . -1)
+	(fullscreen . fullboth)
+	;(menu-bar-lines . 0)
+	(tool-bar-lines . 0)
+	)
+)
 
 ; auto-generated stuff by emacs itself...
 (custom-set-variables
@@ -142,6 +164,11 @@
 
 ; Keymaps {{{
 ; some keymaps from ~/.vimrc
+
+; pressing TAB inserts a TAB
+(define-key text-mode-map (kbd "TAB") 'self-insert-command)
+(global-set-key (kbd "TAB") 'self-insert-command)
+
 (define-key evil-insert-state-map [f1] 'save-buffer) ; save
 (define-key evil-normal-state-map [f1] 'save-buffer) ; save
 (define-key evil-normal-state-map ",w" 'save-buffer) ; save
@@ -154,17 +181,21 @@
 (define-key evil-normal-state-map ",P" "\"+P") ; paste (before cursor) X primary clipboard
 ; navigation
 ; simulate vim's "nnoremap <space> 10jzz"
-(define-key evil-normal-state-map " " (lambda ()
-                     (interactive)
-                     (next-line 10)
-                     (evil-scroll-line-down 10)
-                     ))
+(define-key evil-normal-state-map " "
+	(lambda ()
+		(interactive)
+		(next-line 10)
+		(evil-scroll-line-down 10)
+	)
+)
 ; simulate vim's "nnoremap <backspace> 10kzz"
-(define-key evil-normal-state-map [backspace] (lambda ()
-                     (interactive)
-                     (previous-line 10)
-                     (evil-scroll-line-up 10)
-                     ))
+(define-key evil-normal-state-map (kbd "DEL")
+	(lambda ()
+		(interactive)
+		(previous-line 10)
+		(evil-scroll-line-up 10)
+	)
+)
 (define-key evil-normal-state-map ",h" 'split-window-vertically)
 (define-key evil-normal-state-map ",v" 'split-window-horizontally)
 (define-key evil-normal-state-map [tab] 'other-window) ; move to other window
@@ -202,44 +233,55 @@
 
 ; make evil work for org-mode!
 (defun always-insert-item ()
-     (interactive)
-     (if (not (org-in-item-p))
-       (insert "\n- ")
-       (org-insert-item)))
+	(interactive)
+	(if (not (org-in-item-p))
+	(insert "\n- ")
+	(org-insert-item))
+)
 
-(evil-declare-key 'normal org-mode-map (kbd "M-o") (lambda ()
-                     (interactive)
-                     (end-of-line)
-                     (org-insert-heading)
-                     (evil-append nil)
-                     ))
-(evil-declare-key 'normal org-mode-map "O" (lambda ()
-                     (interactive)
-                     (end-of-line)
-                     (org-insert-heading)
-                     (org-metaright)
-                     (evil-append nil)
-                     ))
-(evil-declare-key 'normal org-mode-map "o" (lambda ()
-                     (interactive)
-                     (end-of-line)
-                     (always-insert-item)
-                     (evil-append nil)
-                     ))
+(evil-declare-key 'normal org-mode-map (kbd "M-o")
+	(lambda ()
+		(interactive)
+		(end-of-line)
+		(org-insert-heading)
+		(evil-append nil)
+	)
+)
+(evil-declare-key 'normal org-mode-map "O"
+	(lambda ()
+		(interactive)
+		(end-of-line)
+		(org-insert-heading)
+		(org-metaright)
+		(evil-append nil)
+	)
+)
+(evil-declare-key 'normal org-mode-map "o"
+	(lambda ()
+		(interactive)
+		(end-of-line)
+		(always-insert-item)
+		(evil-append nil)
+	)
+)
 
-(evil-declare-key 'normal org-mode-map "t" (lambda ()
-                     (interactive)
-                     (end-of-line)
-                     (org-insert-todo-heading nil)
-                     (evil-append nil)
-                     ))
-(evil-declare-key 'normal org-mode-map (kbd "M-t") (lambda ()
-                     (interactive)
-                     (end-of-line)
-                     (org-insert-todo-heading nil)
-                     (org-metaright)
-                     (evil-append nil)
-                     ))
+(evil-declare-key 'normal org-mode-map "t"
+	(lambda ()
+		(interactive)
+		(end-of-line)
+		(org-insert-todo-heading nil)
+		(evil-append nil)
+	)
+)
+(evil-declare-key 'normal org-mode-map (kbd "M-t")
+	(lambda ()
+		(interactive)
+		(end-of-line)
+		(org-insert-todo-heading nil)
+		(org-metaright)
+		(evil-append nil)
+	)
+)
 (evil-declare-key 'normal org-mode-map (kbd "C-o") 'org-toggle-heading) ; convert a plain list into a heading
 (evil-declare-key 'normal org-mode-map "T" 'org-todo) ; mark a TODO item as DONE
 (evil-declare-key 'normal org-mode-map ";a" 'org-agenda) ; access agenda buffer
@@ -265,7 +307,7 @@
 ; Backups {{{
 ; put all auto-saves/backups to the temp directory
 (setq backup-directory-alist
-                `((".*" . ,temporary-file-directory)))
+	`((".*" . ,temporary-file-directory)))
 (setq auto-save-file-name-transforms
-                `((".*" ,temporary-file-directory t)))
+	`((".*" ,temporary-file-directory t)))
 ;}}}
