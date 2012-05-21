@@ -20,6 +20,8 @@
 ; YAML major mode
 (require 'yaml-mode)
 (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode))
+; disable YAML keymaps, as they interfere with Evil (especially the [backspace] keymap)
+(setq yaml-mode-map (make-sparse-keymap))
 ; org-mode
 ; force use of installed org-mode (not the one that comes by default with emacs)
 (require 'org-install)
@@ -41,11 +43,53 @@
 
 ; Appearance {{{
 ; zenburn color theme
-(require 'color-theme-zenburn)
-(color-theme-zenburn)
+(require 'color-theme-zenburn-mod)
+(color-theme-zenburn-mod)
 ; highlight the current cursor line
 (global-hl-line-mode 1)
-(set-face-background 'hl-line "#434443")
+(set-face-background 'hl-line "#323332")
+; disable cursor line highlight during insert mode
+(add-hook 'evil-insert-state-entry-hook
+    (lambda ()
+        (interactive)
+        (global-hl-line-mode 0)
+    )
+)
+(add-hook 'evil-insert-state-exit-hook
+    (lambda ()
+        (interactive)
+        (global-hl-line-mode 1)
+    )
+)
+(add-hook 'evil-visual-state-entry-hook
+    (lambda ()
+        (interactive)
+        (global-hl-line-mode)
+    )
+)
+(add-hook 'evil-visual-state-exit-hook
+    (lambda ()
+        (interactive)
+        (global-hl-line-mode)
+    )
+)
+(add-hook 'evil-emacs-state-entry-hook
+    (lambda ()
+        (interactive)
+        (global-hl-line-mode 0)
+    )
+)
+(add-hook 'evil-emacs-state-exit-hook
+    (lambda ()
+        (interactive)
+        (global-hl-line-mode 1)
+    )
+)
+
+; cursor colors for the various states
+(setq evil-insert-state-cursor '("#ffffff" box))
+(setq evil-emacs-state-cursor '("#ff0000" box))
+(setq evil-normal-state-cursor '("#00ff00" box))
 ; remove splash screen
 (setq inhibit-splash-screen t)
 ; remove toolbar
@@ -55,6 +99,7 @@
 ; green cursor
 (set-cursor-color "#00ff00")
 ; make the color in set-cursor-color be the default color recognized by Evil
+; (for the non-customized states, such as visual mode)
 ; (this is required because we change the color *after* enabling evil)
 (setq evil-default-cursor t)
 ; stretch the cursor (e.g., make it bigger if hovering over a tab)
@@ -100,12 +145,43 @@
 (define-key evil-insert-state-map [f1] 'save-buffer) ; save
 (define-key evil-normal-state-map [f1] 'save-buffer) ; save
 (define-key evil-normal-state-map ",w" 'save-buffer) ; save
+(define-key evil-normal-state-map ",W" ":w!") ; force save
 (define-key evil-normal-state-map ",q" ":q") ; close current window
+(define-key evil-normal-state-map ",Q" ":q!") ; close current window, even if modified
 (define-key evil-normal-state-map ",x" 'save-buffers-kill-emacs) ; save and quit
-; window management and navigation
+(define-key evil-normal-state-map ",y" "\"+y") ; copy to X primary clipboard
+(define-key evil-normal-state-map ",p" "\"+p") ; paste (after cursor) X primary clipboard
+(define-key evil-normal-state-map ",P" "\"+P") ; paste (before cursor) X primary clipboard
+; navigation
+; simulate vim's "nnoremap <space> 10jzz"
+(define-key evil-normal-state-map " " (lambda ()
+                     (interactive)
+                     (next-line 10)
+                     (evil-scroll-line-down 10)
+                     ))
+; simulate vim's "nnoremap <backspace> 10kzz"
+(define-key evil-normal-state-map [backspace] (lambda ()
+                     (interactive)
+                     (previous-line 10)
+                     (evil-scroll-line-up 10)
+                     ))
 (define-key evil-normal-state-map ",h" 'split-window-vertically)
 (define-key evil-normal-state-map ",v" 'split-window-horizontally)
 (define-key evil-normal-state-map [tab] 'other-window) ; move to other window
+; Change K from being mapped to interactive man pages to being used as the
+; vanilla comma ',' key's functionality (intra-line backwards search repeat for
+; any t, T, f, F searches).
+(define-key evil-normal-state-map "K" 'evil-repeat-find-char-reverse)
+; buffer movement
+(define-key evil-normal-state-map "H" 'evil-next-buffer)
+(define-key evil-normal-state-map "L" 'evil-prev-buffer)
+; new buffer
+(define-key evil-normal-state-map ",n" 'evil-window-new)
+; remove trailing whitespace
+(define-key evil-normal-state-map ",e" 'delete-trailing-whitespace)
+; set line ending to UNIX
+(define-key evil-normal-state-map ",E" (lambda () (interactive) (set-buffer-file-coding-system 'utf-8-unix t)))
+; replace all /r/n with just /n
 ; make "kj" behave as ESC key, adapted from http://article.gmane.org/gmane.emacs.vim-emulation/980
 (define-key evil-insert-state-map "k" #'cofi/maybe-exit)
 (evil-define-command cofi/maybe-exit ()
@@ -123,18 +199,6 @@
     (push 'escape unread-command-events))
        (t (setq unread-command-events (append unread-command-events
                           (list evt))))))))
-; simulate vim's "nnoremap <space> 10jzz"
-(define-key evil-normal-state-map " " (lambda ()
-                     (interactive)
-                     (next-line 10)
-                     (evil-scroll-line-down 10)
-                     ))
-; simulate vim's "nnoremap <backspace> 10kzz"
-(define-key evil-normal-state-map (kbd "DEL") (lambda ()
-                     (interactive)
-                     (previous-line 10)
-                     (evil-scroll-line-up 10)
-                     ))
 
 ; make evil work for org-mode!
 (defun always-insert-item ()
