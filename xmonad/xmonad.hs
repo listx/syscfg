@@ -85,14 +85,10 @@ schedToday = " -name floatme -e ~/org/life.sh ~/org/life render -F TXT -S --toda
 
 myKeys :: String -> XConfig Layout -> M.Map (KeyMask, KeySym) (X ())
 myKeys hostname conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
-
-    -- launch a terminal
-    [ ((modm .|. shiftMask, xK_Return), spawn $ XMonad.terminal conf)
-
     -- close focused window
-    , ((modm,               xK_d     ), kill)
+    [ ((modm,               xK_d     ), kill)
 
-     -- Rotate through the available layout algorithms
+    -- Rotate through the available layout algorithms
     , ((modm,               xK_space ), sendMessage NextLayout)
 
     --  Reset the layouts on the current workspace to default
@@ -190,6 +186,12 @@ myKeys hostname conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((modm .|. shiftMask, xK_BackSpace ), cpufreqSet "performance" hostname)
     -- move mouse away to bottom-right of currently focused window
     , ((modm              , xK_BackSpace), warpToWindow 1 1)
+	-- external monitor enabling/positioning
+    , ((modm .|. shiftMask, xK_Up),		spawn "~/syscfg/script/sys/monitor_external_enable.sh top")
+    , ((modm .|. shiftMask, xK_Down),	spawn "~/syscfg/script/sys/monitor_external_enable.sh bottom")
+    , ((modm .|. shiftMask, xK_Left),	spawn "~/syscfg/script/sys/monitor_external_enable.sh left")
+    , ((modm .|. shiftMask, xK_Right),	spawn "~/syscfg/script/sys/monitor_external_enable.sh right")
+    , ((modm .|. shiftMask, xK_Return),	spawn "~/syscfg/script/sys/monitor_toggle.sh")
     ]
     ++
 
