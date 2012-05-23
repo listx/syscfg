@@ -257,14 +257,14 @@ alias gtag='~/syscfg/script/sys/gtag.sh'
 alias ocm="cd ~/org; gpl; gcm -am \"$HOST\"; gpl && gps"
 
 alias e='gvim -p'
-alias ee='vim -p'
+alias ee='emacsclient -c'
 # for editing files that are encrypted (enable encrypted backups (foo.txt~),
 # but disable unencrypted swapfiles and ~/.viminfo entries)
 alias eeb='vim -x --cmd "set backup" --cmd "set noswapfile" --cmd "set nowritebackup" --cmd "set viminfo=\"\""'
 
 alias -g galias_find_src='$(find -maxdepth 5 -type f -iregex ".*\.\(c\|cpp\|h\|hpp\|factor\|hs\|pl\|py\|rb\|sh\)$" | sort)'
 alias es='e galias_find_src D'
-alias ees='ee galias_find_src'
+alias ees='ee galias_find_src D'
 
 alias tma='tmux attach-session'
 
