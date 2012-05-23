@@ -24,6 +24,11 @@
 		(back-to-indentation)
 		(current-column)))
 )
+(defun kill-this-buffer-volatile ()
+	"Kill current buffer unconditionally."
+	(interactive)
+	(set-buffer-modified-p nil)
+	(kill-this-buffer))
 ;}}}
 
 ; General indentation behavior {{{
@@ -44,7 +49,9 @@
 (define-key evil-normal-state-map ",w" 'save-buffer) ; save
 (define-key evil-normal-state-map ",W" ":w!") ; force save
 (define-key evil-normal-state-map ",q" ":q") ; close current window
-(define-key evil-normal-state-map ",Q" ":q!") ; close current window, even if modified
+(define-key evil-normal-state-map ",Q" ":q!") ; close current window, *even if modified*
+(define-key evil-normal-state-map ",d" 'kill-this-buffer) ; kill current buffer without confirmation
+(define-key evil-normal-state-map ",D" 'kill-this-buffer-volatile) ; kill current buffer without confirmation, *even if modified*
 (define-key evil-normal-state-map ",x" 'save-buffers-kill-emacs) ; save and quit
 (define-key evil-normal-state-map ",y" "\"+y") ; copy to X primary clipboard
 (define-key evil-normal-state-map ",p" "\"+p") ; paste (after cursor) X primary clipboard
@@ -102,6 +109,16 @@
                           (list evt))))))))
 
 ;}}}
+
+; Elscreen {{{
+(load "elscreen" "ElScreen" t)
+;(require 'elscreen)
+;(elscreen-start)
+; new vimlike "tab", aka "screen"
+(define-key evil-normal-state-map ",N" 'elscreen-create)
+(define-key evil-normal-state-map (kbd "C-h") 'elscreen-previous)
+(define-key evil-normal-state-map (kbd "C-l") 'elscreen-next)
+; }}}
 
 ; Org-mode {{{
 (require 'org-exp-blocks)
