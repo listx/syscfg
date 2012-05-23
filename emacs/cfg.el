@@ -1,4 +1,11 @@
-; -*- tab-width:4; intent-tabs-mode:nil; -*-
+; TODO
+; - fixup zenburn-emacs colors more to resemble Brockman's originals
+
+; Load paths, scripts, packages, etc. {{{
+; add load path for custom scripts
+(add-to-list 'load-path "~/.emacs.d/script")
+;}}}
+
 ; Custom functions {{{
 (setq my-current-font 0)
 (defun my-toggle-font ()
@@ -8,167 +15,31 @@
 	(setq my-current-font (if (= my-current-font 0) 1 0))
 	(set-face-attribute 'default nil :font (if (= my-current-font 1) "DejaVu Sans Mono" "Terminus"))
 	(redraw-display))
-(defun my-indent-tabs-only (number)
-	""
-	(set-variable 'c-basic-offset number)
-	(set-variable 'tab-width number)
-	(set-variable 'standard-indent number)
-	(set-variable 'c-tab-always-indent t)
-	(set-variable 'c-indent-tabs-mode t)
-)
-(add-hook 'c-mode-hook
-	(lambda ()
-		(c-set-style "linux")
-    )
+; custom indentation function: copy the indentation of the previous line
+; adopted from http://sequence.complete.org/node/365
+(defun newline-and-indent-relative ()
+	(interactive)
+	(newline)
+	(indent-to-column (save-excursion
+	(forward-line -1)
+	(back-to-indentation)
+	(current-column)))
 )
 ;}}}
 
-; Load paths and modes {{{
+; General indentation behavior {{{
+; pressing TAB inserts a TAB
+(define-key text-mode-map (kbd "TAB") 'self-insert-command)
+(global-set-key (kbd "TAB") 'self-insert-command)
+;}}}
+
+; Modes {{{
+
+; Evil {{{
 ; Evil, the Extensible VI Layer! This makes Emacs worth using.
 ; see http://gitorious.org/evil/pages/Home
 (require 'evil)
 (evil-mode 1)
-
-; add load path for custom scripts
-(add-to-list 'load-path "~/.emacs.d/script")
-
-; rainbow-colored matching parentheses, braces, etc.
-(require 'rainbow-delimiters)
-(global-rainbow-delimiters-mode)
-
-; highlight matching parenthese
-(show-paren-mode 1)
-
-; change background of hex color strings to the actual color (activate with rainbow-mode)
-(require 'rainbow-mode)
-
-; YAML major mode
-(require 'yaml-mode)
-(add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode))
-; disable YAML keymaps, as they interfere with Evil (especially the [backspace] keymap)
-(setq yaml-mode-map (make-sparse-keymap))
-; org-mode
-; force use of installed org-mode (not the one that comes by default with emacs)
-(require 'org-install)
-; ditaa program (and integration with org-mode)
-(setq org-ditaa-jar-path "/usr/share/java/ditaa/ditaa-0_9.jar") ; load path for ditaa
-(require 'org-exp-blocks)
-; start up org-mode for .org files
-(add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
-; write timestamp when a TODO changes to DONE
-(setq org-log-done t)
-(setq org-agenda-files (list "~/org"))
-;}}}
-
-; Appearance {{{
-; zenburn color theme
-(require 'color-theme-zenburn-mod)
-(color-theme-zenburn-mod)
-; highlight the current cursor line
-(global-hl-line-mode 1)
-(set-face-background 'hl-line "#323332")
-; disable cursor line highlight during insert mode
-(add-hook 'evil-insert-state-entry-hook
-	(lambda ()
-		(interactive)
-		(global-hl-line-mode 0)
-	)
-)
-(add-hook 'evil-insert-state-exit-hook
-	(lambda ()
-		(interactive)
-		(global-hl-line-mode 1)
-		; like Vim, remove whitespace if nothing was inserted
-		(delete-trailing-whitespace)
-	)
-)
-(add-hook 'evil-visual-state-entry-hook
-	(lambda ()
-		(interactive)
-		(global-hl-line-mode)
-	)
-)
-(add-hook 'evil-visual-state-exit-hook
-	(lambda ()
-		(interactive)
-		(global-hl-line-mode)
-	)
-)
-(add-hook 'evil-emacs-state-entry-hook
-	(lambda ()
-		(interactive)
-		(global-hl-line-mode 0)
-	)
-)
-(add-hook 'evil-emacs-state-exit-hook
-	(lambda ()
-		(interactive)
-		(global-hl-line-mode 1)
-	)
-)
-
-; cursor colors for the various states
-(setq evil-insert-state-cursor '("#ffffff" box))
-(setq evil-emacs-state-cursor '("#ff0000" box))
-(setq evil-normal-state-cursor '("#00ff00" box))
-; remove splash screen
-(setq inhibit-splash-screen t)
-; remove toolbar
-(tool-bar-mode -1)
-; visual line mode (word wrap on whole words) by default
-(global-visual-line-mode 1)
-; green cursor
-(set-cursor-color "#00ff00")
-; make the color in set-cursor-color be the default color recognized by Evil
-; (for the non-customized states, such as visual mode)
-; (this is required because we change the color *after* enabling evil)
-(setq evil-default-cursor t)
-; stretch the cursor (e.g., make it bigger if hovering over a tab)
-(setq x-stretch-cursor 1)
-; show empty whitespace
-(setq-default indicate-empty-lines t)
-(setq-default show-trailing-whitespace t)
-; toggle between fonts
-(define-key evil-normal-state-map ",f" 'my-toggle-font)
-
-; settings used by "emacsclient -c" command
-(setq default-frame-alist '((font-backend . "xft")
-	;(font . "Terminus")
-	;(background-color . "black")
-	;(foreground-color . "white")
-	;(vertical-scroll-bars)
-	(left-fringe . -1)
-	(right-fringe . -1)
-	(fullscreen . fullboth)
-	;(menu-bar-lines . 0)
-	(tool-bar-lines . 0)
-	)
-)
-
-; auto-generated stuff by emacs itself...
-(custom-set-variables
-  ;; custom-set-variables was added by Custom.
-  ;; If you edit it by hand, you could mess it up, so be careful.
-  ;; Your init file should contain only one such instance.
-  ;; If there is more than one, they won't work right.
- '(blink-cursor-mode nil)
- '(column-number-mode t)
- '(scroll-bar-mode nil))
-(custom-set-faces
-  ;; custom-set-faces was added by Custom.
-  ;; If you edit it by hand, you could mess it up, so be careful.
-  ;; Your init file should contain only one such instance.
-  ;; If there is more than one, they won't work right.
- '(default ((t (:inherit nil :stipple nil :background "#22222a" :foreground "#cccccf" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 105 :width normal :foundry "xos4" :family "Terminus")))))
-;}}}
-
-; Keymaps {{{
-; some keymaps from ~/.vimrc
-
-; pressing TAB inserts a TAB
-(define-key text-mode-map (kbd "TAB") 'self-insert-command)
-(global-set-key (kbd "TAB") 'self-insert-command)
-
 (define-key evil-insert-state-map [f1] 'save-buffer) ; save
 (define-key evil-normal-state-map [f1] 'save-buffer) ; save
 (define-key evil-normal-state-map ",w" 'save-buffer) ; save
@@ -231,14 +102,26 @@
        (t (setq unread-command-events (append unread-command-events
                           (list evt))))))))
 
-; make evil work for org-mode!
+;}}}
+
+; Org-mode {{{
+(require 'org-exp-blocks)
+; force use of installed org-mode (not the one that comes by default with emacs)
+(require 'org-install)
+; ditaa program (and integration with org-mode)
+(setq org-ditaa-jar-path "/usr/share/java/ditaa/ditaa-0_9.jar") ; load path for ditaa
+; start up org-mode for .org files
+(add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
+; write timestamp when a TODO changes to DONE
+(setq org-log-done t)
+(setq org-agenda-files (list "~/org"))
+
 (defun always-insert-item ()
 	(interactive)
 	(if (not (org-in-item-p))
 	(insert "\n- ")
 	(org-insert-item))
 )
-
 (evil-declare-key 'normal org-mode-map (kbd "M-o")
 	(lambda ()
 		(interactive)
@@ -304,10 +187,175 @@
 (evil-declare-key 'normal org-mode-map (kbd "<f12>") 'org-export-as-html)
 ;}}}
 
+; C {{{
+(add-hook 'c-mode-hook
+	(lambda ()
+		(c-set-style "linux")
+	)
+)
+;}}}
+
+; Haskell {{{
+; adopted from http://sequence.complete.org/node/365
+(load-library "haskell-site-file")
+(add-to-list 'auto-mode-alist '("\\.hs\\'" . haskell-mode))
+(remove-hook 'haskell-mode-hook 'turn-on-haskell-indent)
+; 4-space tabs
+(add-hook 'haskell-mode-hook
+	(lambda ()
+		(turn-on-haskell-doc-mode)
+		;(turn-on-haskell-simple-indent)
+		(setq indent-line-function 'tab-to-tab-stop)
+		;(setq tab-stop-list
+		;(loop for i from 2 upto 120 by 2 collect i))
+		;(local-set-key (kbd "RET") 'newline-and-indent-relative)
+	)
+)
+; make indentation saner when inserting new lines, whether from insert mode or normal mode
+(evil-declare-key 'insert haskell-mode-map (kbd "RET") 'newline-and-indent-relative)
+(evil-declare-key 'normal haskell-mode-map "o"
+	(lambda ()
+		(interactive)
+		(evil-append-line 1)
+		(newline-and-indent-relative)
+	)
+)
+(evil-declare-key 'normal haskell-mode-map "O"
+	(lambda ()
+		(interactive)
+		(evil-window-up)
+		(evil-append-line 1)
+		(newline-and-indent-relative)
+	)
+)
+;}}}
+
+; YAML {{{
+(require 'yaml-mode)
+(add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode))
+; disable YAML keymaps, as they interfere with Evil (especially the [backspace] keymap)
+(setq yaml-mode-map (make-sparse-keymap))
+;}}}
+
+;}}}
+
+; Appearance {{{
+; zenburn color theme
+(require 'color-theme-zenburn-mod)
+(color-theme-zenburn-mod)
+; rainbow-colored matching parentheses, braces, etc.
+(require 'rainbow-delimiters)
+(global-rainbow-delimiters-mode)
+; change background of hex color strings to the actual color (activate with rainbow-mode)
+(require 'rainbow-mode)
+; highlight matching parenthese
+(show-paren-mode 1)
+; highlight the current cursor line
+(global-hl-line-mode 1)
+(set-face-background 'hl-line "#323332")
+; disable cursor line highlight during insert mode
+(add-hook 'evil-insert-state-entry-hook
+	(lambda ()
+		(interactive)
+		(global-hl-line-mode 0)
+	)
+)
+(add-hook 'evil-insert-state-exit-hook
+	(lambda ()
+		(interactive)
+		(global-hl-line-mode 1)
+		; like Vim, remove whitespace if nothing was inserted
+		(delete-trailing-whitespace)
+	)
+)
+(add-hook 'evil-visual-state-entry-hook
+	(lambda ()
+		(interactive)
+		(global-hl-line-mode)
+	)
+)
+(add-hook 'evil-visual-state-exit-hook
+	(lambda ()
+		(interactive)
+		(global-hl-line-mode)
+	)
+)
+(add-hook 'evil-emacs-state-entry-hook
+	(lambda ()
+		(interactive)
+		(global-hl-line-mode 0)
+	)
+)
+(add-hook 'evil-emacs-state-exit-hook
+	(lambda ()
+		(interactive)
+		(global-hl-line-mode 1)
+	)
+)
+; cursor colors for the various states
+(setq evil-insert-state-cursor '("#ffffff" box))
+(setq evil-emacs-state-cursor '("#ff0000" box))
+(setq evil-normal-state-cursor '("#00ff00" box))
+; remove splash screen
+(setq inhibit-splash-screen t)
+; remove toolbar
+(tool-bar-mode -1)
+; visual line mode (word wrap on whole words) by default
+(global-visual-line-mode 1)
+; green cursor
+(set-cursor-color "#00ff00")
+; make the color in set-cursor-color be the default color recognized by Evil
+; (for the non-customized states, such as visual mode)
+; (this is required because we change the color *after* enabling evil)
+(setq evil-default-cursor t)
+; stretch the cursor (e.g., make it bigger if hovering over a tab)
+(setq x-stretch-cursor 1)
+; show empty whitespace
+(setq-default indicate-empty-lines t)
+(setq-default show-trailing-whitespace t)
+; toggle between fonts
+(define-key evil-normal-state-map ",f" 'my-toggle-font)
+; default tab width is 4
+(setq default-tab-width 4)
+; settings used by "emacsclient -c" command
+(setq default-frame-alist '((font-backend . "xft")
+	;(font . "Terminus")
+	;(background-color . "black")
+	;(foreground-color . "white")
+	;(vertical-scroll-bars)
+	(left-fringe . -1)
+	(right-fringe . -1)
+	(fullscreen . fullboth)
+	;(menu-bar-lines . 0)
+	(tool-bar-lines . 0)
+	)
+)
+; auto-generated stuff by emacs itself...
+(custom-set-variables
+  ;; custom-set-variables was added by Custom.
+  ;; If you edit it by hand, you could mess it up, so be careful.
+  ;; Your init file should contain only one such instance.
+  ;; If there is more than one, they won't work right.
+ '(blink-cursor-mode nil)
+ '(column-number-mode t)
+ '(scroll-bar-mode nil))
+(custom-set-faces
+  ;; custom-set-faces was added by Custom.
+  ;; If you edit it by hand, you could mess it up, so be careful.
+  ;; Your init file should contain only one such instance.
+  ;; If there is more than one, they won't work right.
+ '(default ((t (:inherit nil :stipple nil :background "#22222a" :foreground "#cccccf" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 105 :width normal :foundry "xos4" :family "Terminus")))))
+;}}}
+
 ; Backups {{{
 ; put all auto-saves/backups to the temp directory
 (setq backup-directory-alist
 	`((".*" . ,temporary-file-directory)))
 (setq auto-save-file-name-transforms
 	`((".*" ,temporary-file-directory t)))
+;}}}
+
+; Misc {{{
+; always follow symlink that points to a version-controlled file
+(setq vc-follow-symlinks t)
 ;}}}
