@@ -11,7 +11,6 @@
 (defun my-toggle-font ()
 	"Toggle font between Terminus and DejaVu Sans Mono"
 	(interactive)
-
 	(setq my-current-font (if (= my-current-font 0) 1 0))
 	(set-face-attribute 'default nil :font (if (= my-current-font 1) "DejaVu Sans Mono" "Terminus"))
 	(redraw-display))
@@ -21,9 +20,9 @@
 	(interactive)
 	(newline)
 	(indent-to-column (save-excursion
-	(forward-line -1)
-	(back-to-indentation)
-	(current-column)))
+		(forward-line -1)
+		(back-to-indentation)
+		(current-column)))
 )
 ;}}}
 
