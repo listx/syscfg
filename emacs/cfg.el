@@ -116,6 +116,7 @@
 ;(elscreen-start)
 ; new vimlike "tab", aka "screen"
 (define-key evil-normal-state-map ",N" 'elscreen-create)
+(define-key evil-normal-state-map ",c" 'elscreen-kill) ; close current elscreen screen (elscreen's screen is inside a window, and is thus more granular than 'close-window)
 (define-key evil-normal-state-map (kbd "C-h") 'elscreen-previous)
 (define-key evil-normal-state-map (kbd "C-l") 'elscreen-next)
 ; }}}
