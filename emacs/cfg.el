@@ -242,7 +242,7 @@
 (evil-declare-key 'normal haskell-mode-map "O"
 	(lambda ()
 		(interactive)
-		(evil-window-up)
+		(previous-line)
 		(evil-append-line 1)
 		(newline-and-indent-relative)
 	)
