@@ -222,10 +222,12 @@
 	(lambda ()
 		(turn-on-haskell-doc-mode)
 		;(turn-on-haskell-simple-indent)
-		(setq indent-line-function 'tab-to-tab-stop)
+		;(setq indent-line-function 'tab-to-tab-stop)
 		;(setq tab-stop-list
 		;(loop for i from 2 upto 120 by 2 collect i))
 		;(local-set-key (kbd "RET") 'newline-and-indent-relative)
+		(setq tab-width 4)
+		(setq indent-tabs-mode t)
 	)
 )
 ; make indentation saner when inserting new lines, whether from insert mode or normal mode
