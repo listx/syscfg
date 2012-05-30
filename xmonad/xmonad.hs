@@ -82,6 +82,8 @@ xinitrc = "sh ~/syscfg/xinitrc/cfg"
 
 schedToday :: String
 schedToday = " -name floatme -e ~/org/life.sh ~/org/life render -F TXT -S --today"
+schedYTT :: String -- yesterday, today, and tomorrow
+schedYTT = " -name floatme -e ~/org/life.sh ~/org/life render -F TXT -S --ytt"
 
 myKeys :: String -> XConfig Layout -> M.Map (KeyMask, KeySym) (X ())
 myKeys hostname conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
@@ -143,6 +145,7 @@ myKeys hostname conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((modm .|. controlMask,   xK_s     ), spawn suspend)
 
     , ((mod4Mask              , xK_1     ), spawn (term1 ++ schedToday))
+    , ((mod4Mask              , xK_2     ), spawn (term1 ++ schedYTT))
     , ((mod4Mask              , xK_9     ), spawn "gvim ~/org/life.hs")
     , ((mod4Mask              , xK_0     ), spawn "emacsclient -c ~/org/life.org")
     , ((mod4Mask              , xK_c     ), spawn "galculator")
