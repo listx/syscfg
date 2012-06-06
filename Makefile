@@ -40,11 +40,7 @@ ncmpcpp:
 	ln -fs ${CFG}/ncmpcpp/hotkeys		${HOME}/.ncmpcpp/keys
 ifeq ('${HOST}','k0')
 	ln -fs ${CFG}/ncmpcpp/cfg		${HOME}/.ncmpcpp/config
-endif
-ifeq ('${HOST}','k2')
-	ln -fs ${CFG}/ncmpcpp/cfg-k2		${HOME}/.ncmpcpp/config
-endif
-ifeq ('${HOST}','k1')
+else
 	ln -fs ${CFG}/ncmpcpp/cfg-k2		${HOME}/.ncmpcpp/config
 endif
 pal:
