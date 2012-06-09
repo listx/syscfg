@@ -56,6 +56,7 @@
 (define-key evil-normal-state-map ",y" "\"+y") ; copy to X primary clipboard
 (define-key evil-normal-state-map ",p" "\"+p") ; paste (after cursor) X primary clipboard
 (define-key evil-normal-state-map ",P" "\"+P") ; paste (before cursor) X primary clipboard
+(define-key evil-normal-state-map "gw" 'fill-paragraph) ; insert hard line breaks
 ; navigation
 ; simulate vim's "nnoremap <space> 10jzz"
 (define-key evil-normal-state-map " "
