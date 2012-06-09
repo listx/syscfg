@@ -389,6 +389,8 @@
 	(tool-bar-lines . 0)
 	)
 )
+; set default line length (as used by 'fill-paragraph) to be 80 characters
+(setq-default fill-column 80)
 ; auto-generated stuff by emacs itself...
 (custom-set-variables
   ;; custom-set-variables was added by Custom.
