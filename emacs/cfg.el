@@ -1,6 +1,3 @@
-; TODO
-; - fixup zenburn-emacs colors more to resemble Brockman's originals
-
 ; Load paths, scripts, packages, etc. {{{
 ; add load path for custom scripts
 (add-to-list 'load-path "~/.emacs.d/script")
