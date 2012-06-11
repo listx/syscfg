@@ -298,8 +298,8 @@
 )
 
 ; zenburn color theme
-(require 'color-theme-zenburn-mod)
-(color-theme-zenburn-mod)
+(add-to-list 'custom-theme-load-path "/usr/share/emacs/site-lisp/zenburn-emacs-mod")
+(load-theme 'zenburn-mod t)
 ; rainbow-colored matching parentheses, braces, etc.
 (require 'rainbow-delimiters)
 (global-rainbow-delimiters-mode)
