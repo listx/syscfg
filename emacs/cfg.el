@@ -26,6 +26,32 @@
 	(interactive)
 	(set-buffer-modified-p nil)
 	(kill-this-buffer))
+; Either close the current elscreen, or if only one screen, use the ":q" Evil
+; command; this simulates the ":q" behavior of Vim when used with tabs.
+(defun vimlike-quit ()
+  "Vimlike ':q' behavior: close current window if there are split windows;
+otherwise, close current tab (elscreen)."
+  (interactive)
+  (let ((one-elscreen (elscreen-one-screen-p))
+        (one-window (one-window-p))
+        )
+    (cond
+     ; if current tab has split windows in it, close the current live window
+     ((not one-window)
+      (delete-window) ; delete the current window
+      (balance-windows) ; balance remaining windows
+      nil)
+     ; if there are multiple elscreens (tabs), close the current elscreen
+     ((not one-elscreen)
+      (elscreen-kill)
+      nil)
+     ; if there is only one elscreen, just try to quit (calling elscreen-kill
+     ; will not work, because elscreen-kill fails if there is only one
+     ; elscreen)
+     (one-elscreen
+      (evil-quit)
+      nil)
+     )))
 ;}}}
 
 ; General indentation behavior {{{
@@ -45,7 +71,7 @@
 (define-key evil-normal-state-map [f1] 'save-buffer) ; save
 (define-key evil-normal-state-map ",w" 'save-buffer) ; save
 (define-key evil-normal-state-map ",W" ":w!") ; force save
-(define-key evil-normal-state-map ",q" ":q") ; close current window
+(define-key evil-normal-state-map ",q" 'vimlike-quit) ; close current elscreen, or current window if only one elscreen
 (define-key evil-normal-state-map ",Q" ":q!") ; close current window, *even if modified*
 (define-key evil-normal-state-map ",d" 'kill-this-buffer) ; kill current buffer without confirmation
 (define-key evil-normal-state-map ",D" 'kill-this-buffer-volatile) ; kill current buffer without confirmation, *even if modified*
@@ -114,7 +140,6 @@
 ;(elscreen-start)
 ; new vimlike "tab", aka "screen"
 (define-key evil-normal-state-map ",N" 'elscreen-create)
-(define-key evil-normal-state-map ",c" 'elscreen-kill) ; close current elscreen screen (elscreen's screen is inside a window, and is thus more granular than 'close-window)
 (define-key evil-normal-state-map (kbd "C-h") 'elscreen-previous)
 (define-key evil-normal-state-map (kbd "C-l") 'elscreen-next)
 ; }}}
