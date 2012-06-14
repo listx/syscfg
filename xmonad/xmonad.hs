@@ -464,7 +464,7 @@ myStartupHook hostname = do
     spawnIfGrpNotFull Work $ term1 ++ " -name atWorkspace1"
     spawn $ term1 ++ schedToday
     spawnIfGrpNotFull Sys $ term1 ++ " -e alsamixer"
-    spawnIfGrpNotFull Sys $ term2 ++ " -n iftop -e sudo iftop -B -i eth" ++ (if hostname == "k0" then "1" else "0")
+    when (hostname == "k0") $ spawnIfGrpNotFull Sys $ term2 ++ " -n iftop -e sudo iftop -B -i eth1"
     spawnIfGrpNotFull Sys $ term1 ++ " -e htop"
     case hostname of
         "k0" -> do
