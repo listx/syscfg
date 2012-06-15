@@ -52,6 +52,21 @@ otherwise, close current tab (elscreen)."
       (evil-quit)
       nil)
      )))
+; A function that behaves like Vim's ':tabe' commnad for creating a new tab and
+; buffer (the name "[No Name]" is also taken from Vim).
+(defun vimlike-:tabe ()
+  "Vimlike ':tabe' behavior for creating a new tab and buffer."
+  (interactive)
+  (let ((buffer (generate-new-buffer "[No Name]")))
+      ; create new tab
+      (elscreen-create)
+      ; set window's buffer to the newly-created buffer
+      (set-window-buffer (selected-window) buffer)
+      ; set state to normal state
+      (with-current-buffer buffer
+        (evil-normal-state))
+    )
+  )
 ;}}}
 
 ; General indentation behavior {{{
@@ -108,7 +123,7 @@ otherwise, close current tab (elscreen)."
 (define-key evil-normal-state-map "H" 'evil-next-buffer)
 (define-key evil-normal-state-map "L" 'evil-prev-buffer)
 ; new buffer
-(define-key evil-normal-state-map ",n" 'evil-window-new)
+(define-key evil-normal-state-map ",n" 'vimlike-:tabe)
 ; remove trailing whitespace
 (define-key evil-normal-state-map ",e" 'delete-trailing-whitespace)
 ; set line ending to UNIX
