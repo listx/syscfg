@@ -97,8 +97,8 @@ otherwise, close current tab (elscreen)."
 		(evil-scroll-line-up 10)
 	)
 )
-(define-key evil-normal-state-map ",h" 'split-window-vertically)
-(define-key evil-normal-state-map ",v" 'split-window-horizontally)
+(define-key evil-normal-state-map ",h" (lambda () (interactive) (split-window-vertically) (balance-windows)))
+(define-key evil-normal-state-map ",v" (lambda () (interactive) (split-window-horizontally) (balance-windows)))
 (define-key evil-normal-state-map [tab] 'other-window) ; move to other window
 ; Change K from being mapped to interactive man pages to being used as the
 ; vanilla comma ',' key's functionality (intra-line backwards search repeat for
@@ -108,7 +108,7 @@ otherwise, close current tab (elscreen)."
 (define-key evil-normal-state-map "H" 'evil-next-buffer)
 (define-key evil-normal-state-map "L" 'evil-prev-buffer)
 ; new buffer
-(define-key evil-normal-state-map ",n" 'evil-window-new)
+(define-key evil-normal-state-map ",n" (lambda () (interactive) (evil-window-new) (balance-windows)))
 ; remove trailing whitespace
 (define-key evil-normal-state-map ",e" 'delete-trailing-whitespace)
 ; set line ending to UNIX
