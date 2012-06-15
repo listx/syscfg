@@ -108,7 +108,7 @@ otherwise, close current tab (elscreen)."
 (define-key evil-normal-state-map "H" 'evil-next-buffer)
 (define-key evil-normal-state-map "L" 'evil-prev-buffer)
 ; new buffer
-(define-key evil-normal-state-map ",n" (lambda () (interactive) (evil-window-new) (balance-windows)))
+(define-key evil-normal-state-map ",n" 'evil-window-new)
 ; remove trailing whitespace
 (define-key evil-normal-state-map ",e" 'delete-trailing-whitespace)
 ; set line ending to UNIX
@@ -136,12 +136,13 @@ otherwise, close current tab (elscreen)."
 
 ; Elscreen {{{
 (load "elscreen" "ElScreen" t)
-;(require 'elscreen)
-;(elscreen-start)
 ; new vimlike "tab", aka "screen"
 (define-key evil-normal-state-map ",N" 'elscreen-create)
-(define-key evil-normal-state-map (kbd "C-h") 'elscreen-previous)
+; tab navigation
 (define-key evil-normal-state-map (kbd "C-l") 'elscreen-next)
+(define-key evil-normal-state-map (kbd "C-h") 'elscreen-previous)
+(define-key evil-insert-state-map (kbd "C-l") 'elscreen-next)
+(define-key evil-insert-state-map (kbd "C-h") 'elscreen-previous)
 ; }}}
 
 ; Org-mode {{{
