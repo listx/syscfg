@@ -268,7 +268,7 @@ alias ees='ee galias_find_src D'
 
 alias tma='tmux attach-session'
 
-alias skype='\rm -f ~/.Skype/Logs/*.{txt,log} && skype'
+alias skype='find ~/.Skype/Logs/ -type f -exec rm {} \; && skype'
 
 # these sane hostnames depend on the /etc/hosts file!
 alias sk0='ssh l@k0'
