@@ -84,6 +84,7 @@ otherwise, close current tab (elscreen)."
 (evil-mode 1)
 (define-key evil-insert-state-map [f1] 'save-buffer) ; save
 (define-key evil-normal-state-map [f1] 'save-buffer) ; save
+(define-key evil-normal-state-map [f11] 'menu-bar-mode) ; toggle the menu bar
 (define-key evil-normal-state-map ",w" 'save-buffer) ; save
 (define-key evil-normal-state-map ",W" ":w!") ; force save
 (define-key evil-normal-state-map ",q" 'vimlike-quit) ; close current elscreen, or current window if only one elscreen
@@ -398,6 +399,8 @@ otherwise, close current tab (elscreen)."
 (setq inhibit-splash-screen t)
 ; remove toolbar
 (tool-bar-mode -1)
+; remove menu
+(menu-bar-mode -1)
 ; visual line mode (word wrap on whole words) by default
 (global-visual-line-mode 1)
 ; green cursor
