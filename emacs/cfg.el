@@ -415,19 +415,8 @@ otherwise, close current tab (elscreen)."
 (define-key evil-normal-state-map ",f" 'my-toggle-font)
 ; default tab width is 4
 (setq default-tab-width 4)
-; settings used by "emacsclient -c" command
-(setq default-frame-alist '((font-backend . "xft")
-	;(font . "Terminus")
-	;(background-color . "black")
-	;(foreground-color . "white")
-	;(vertical-scroll-bars)
-	(left-fringe . -1)
-	(right-fringe . -1)
-	(fullscreen . fullboth)
-	;(menu-bar-lines . 0)
-	(tool-bar-lines . 0)
-	)
-)
+; disable fringes
+(fringe-mode 0)
 ; set default line length (as used by 'fill-paragraph) to be 80 characters
 (setq-default fill-column 80)
 ; auto-generated stuff by emacs itself...
