@@ -248,6 +248,7 @@ otherwise, close current tab (elscreen)."
 (add-hook 'c-mode-hook
 	(lambda ()
 		(c-set-style "linux")
+		(setq default-tab-width 8)
 	)
 )
 ;}}}
