@@ -67,6 +67,30 @@ otherwise, close current tab (elscreen)."
         (evil-normal-state))
     )
   )
+;; Adopted from mortenee's answer at http://stackoverflow.com/questions/2662655/automatically-closing-the-scratch-buffer
+(defun my-close-scratch ()
+  ; kill the annoying *scratch* lisp evaluation buffer
+  (kill-buffer "*scratch*")
+  ; create [No Name] buffer if we open emacs without specifying any files to edit
+  (if (not (delq nil (mapcar 'buffer-file-name (buffer-list))))
+      (new-untitled-buffer)
+    ))
+; custom startup hook
+(defun my-emacs-startup-hook ()
+  (my-close-scratch))
+; add custom startup hook to emacs' startup hook
+(add-hook 'emacs-startup-hook 'my-emacs-startup-hook)
+; create a new empty buffer
+(defun new-untitled-buffer ()
+  "Opens a new empty buffer."
+  (interactive)
+  (let ((buf (generate-new-buffer "[No Name]")))
+    (switch-to-buffer buf)
+    (normal-mode)
+    (setq buffer-offer-save t))
+  (add-hook 'kill-buffer-query-functions
+            'ask-to-save-modified nil t)
+  )
 ;}}}
 
 ; General indentation behavior {{{
