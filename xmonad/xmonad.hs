@@ -27,6 +27,7 @@ import XMonad.Hooks.EwmhDesktops -- for _NET_WINDOW_WINDOW (emacs + SCIM bridge)
 import System.Random
 import Data.Array.IO
 import Control.Monad
+import Control.Concurrent
 
 altMask :: KeyMask
 altMask = mod1Mask -- alias "altMask" for left alt key
@@ -464,7 +465,6 @@ myStartupHook hostname = do
     spawnIfGrpNotFull Work $ term1 ++ " -name atWorkspace1"
     spawn $ term1 ++ schedToday
     spawnIfGrpNotFull Sys $ term1 ++ " -e alsamixer"
-    when (hostname == "k0") $ spawnIfGrpNotFull Sys $ term2 ++ " -n iftop -e sudo iftop -B -i eth1"
     spawnIfGrpNotFull Sys $ term1 ++ " -e htop"
     case hostname of
         "k0" -> do
@@ -472,6 +472,9 @@ myStartupHook hostname = do
             spawnIfGrpNotFull Net2 $ term3 ++ " -e rtorrent"
         "k1" -> spawnIfGrpNotFull Net2 $ term3 ++ " -e rtorrent"
         _ -> return ()
+    when (hostname == "k0") $ do
+		liftIO $ threadDelay 30000000
+		spawnIfGrpNotFull Sys $ term2 ++ " -n iftop -e sudo iftop -B -i eth1"
 
 -- reset all xinerama screens to point to top WS of each group
 resetScreensToWSTops :: X ()
