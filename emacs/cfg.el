@@ -135,7 +135,7 @@ otherwise, close current tab (elscreen)."
 )
 (define-key evil-normal-state-map ",h" (lambda () (interactive) (split-window-vertically) (balance-windows)))
 (define-key evil-normal-state-map ",v" (lambda () (interactive) (split-window-horizontally) (balance-windows)))
-(define-key evil-normal-state-map [tab] 'other-window) ; move to other window
+(define-key evil-normal-state-map (kbd "TAB") 'other-window) ; move to other window
 ; Change K from being mapped to interactive man pages to being used as the
 ; vanilla comma ',' key's functionality (intra-line backwards search repeat for
 ; any t, T, f, F searches).
