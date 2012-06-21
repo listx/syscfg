@@ -1,0 +1,9 @@
+#!/bin/zsh
+
+emacsclient_open() {
+	emacsclient -c -a "" $@ & disown
+}
+
+emacsclient_tty_open() {
+	emacsclient -ct -a "" $@ & disown
+}
