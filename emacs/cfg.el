@@ -104,9 +104,7 @@ otherwise, close current tab (elscreen)."
 ; see http://gitorious.org/evil/pages/Home
 (require 'evil)
 (evil-mode 1)
-(define-key evil-insert-state-map [f1] 'save-buffer) ; save
-(define-key evil-normal-state-map [f1] 'save-buffer) ; save
-(define-key evil-normal-state-map [f11] 'menu-bar-mode) ; toggle the menu bar
+(define-key evil-normal-state-map [f1] 'menu-bar-mode) ; toggle the menu bar
 (define-key evil-normal-state-map ",w" 'save-buffer) ; save
 (define-key evil-normal-state-map ",W" ":w!") ; force save
 (define-key evil-normal-state-map ",q" 'vimlike-quit) ; close current elscreen, or current window if only one elscreen
