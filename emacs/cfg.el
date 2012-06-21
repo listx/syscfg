@@ -122,7 +122,7 @@ otherwise, close current tab (elscreen)."
 	(lambda ()
 		(interactive)
 		(next-line 10)
-		(evil-scroll-line-down 10)
+		(evil-scroll-line-to-center nil)
 	)
 )
 ; simulate vim's "nnoremap <backspace> 10kzz"
@@ -130,7 +130,7 @@ otherwise, close current tab (elscreen)."
 	(lambda ()
 		(interactive)
 		(previous-line 10)
-		(evil-scroll-line-up 10)
+		(evil-scroll-line-to-center nil)
 	)
 )
 (define-key evil-normal-state-map ",h" (lambda () (interactive) (split-window-vertically) (balance-windows)))
