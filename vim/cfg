@@ -227,10 +227,7 @@ nmap <localleader>P "+P
 nnoremap K ,
 vnoremap K ,
 
-" NOTE: the <F1> key in normal mode is mapped to ":help" by default
 " quicksave files
-nmap <F1> :up<cr>
-imap <F1> <esc>:up<cr>a
 nmap <localleader>w :up<cr>
 " force save
 nmap <localleader>W :w<cr>
