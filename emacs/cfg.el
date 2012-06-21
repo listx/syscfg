@@ -445,6 +445,11 @@ otherwise, close current tab (elscreen)."
 (fringe-mode 0)
 ; set default line length (as used by 'fill-paragraph) to be 80 characters
 (setq-default fill-column 80)
+; scroll more like Vim (no jumping around)
+(setq
+	scroll-margin 3
+	scroll-conservatively 100000
+	scroll-preserve-screen-position 1)
 ; auto-generated stuff by emacs itself...
 (custom-set-variables
   ;; custom-set-variables was added by Custom.
