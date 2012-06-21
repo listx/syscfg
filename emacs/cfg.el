@@ -88,8 +88,6 @@ otherwise, close current tab (elscreen)."
     (switch-to-buffer buf)
     (normal-mode)
     (setq buffer-offer-save t))
-  (add-hook 'kill-buffer-query-functions
-            'ask-to-save-modified nil t)
   )
 ;}}}
 
