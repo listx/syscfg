@@ -248,14 +248,18 @@ otherwise, close current tab (elscreen)."
 (evil-declare-key 'normal org-mode-map "-" 'org-cycle-list-bullet) ; change bullet style
 
 ; allow us to access org-mode keys directly from Evil's Normal mode
-(evil-declare-key 'normal org-mode-map "L" 'org-shiftright)
-(evil-declare-key 'normal org-mode-map "H" 'org-shiftleft)
-(evil-declare-key 'normal org-mode-map "K" 'org-shiftup)
-(evil-declare-key 'normal org-mode-map "J" 'org-shiftdown)
+; change item type
+(evil-declare-key 'normal org-mode-map (kbd "M-i") 'org-shiftright)
+(evil-declare-key 'normal org-mode-map (kbd "M-I") 'org-shiftleft)
+; navigate on a per-item basis
+(evil-declare-key 'normal org-mode-map (kbd "M-p") 'org-shiftup)
+(evil-declare-key 'normal org-mode-map (kbd "M-n") 'org-shiftdown)
+; move items around
 (evil-declare-key 'normal org-mode-map (kbd "M-l") 'org-metaright)
 (evil-declare-key 'normal org-mode-map (kbd "M-h") 'org-metaleft)
 (evil-declare-key 'normal org-mode-map (kbd "M-k") 'org-metaup)
 (evil-declare-key 'normal org-mode-map (kbd "M-j") 'org-metadown)
+; move items around, including child nodes
 (evil-declare-key 'normal org-mode-map (kbd "M-L") 'org-shiftmetaright)
 (evil-declare-key 'normal org-mode-map (kbd "M-H") 'org-shiftmetaleft)
 (evil-declare-key 'normal org-mode-map (kbd "M-K") 'org-shiftmetaup)
