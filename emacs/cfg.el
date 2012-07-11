@@ -447,6 +447,8 @@ otherwise, close current tab (elscreen)."
 (fringe-mode 0)
 ; set default line length (as used by 'fill-paragraph) to be 80 characters
 (setq-default fill-column 80)
+; add newline (silently) at the end of a file, just like Vim
+(setq require-final-newline t)
 ; scroll more like Vim (no jumping around)
 (setq
 	scroll-margin 3
