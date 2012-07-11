@@ -264,6 +264,14 @@ otherwise, close current tab (elscreen)."
 (evil-declare-key 'normal org-mode-map (kbd "M-H") 'org-shiftmetaleft)
 (evil-declare-key 'normal org-mode-map (kbd "M-K") 'org-shiftmetaup)
 (evil-declare-key 'normal org-mode-map (kbd "M-J") 'org-shiftmetadown)
+; make TAB go to the other window, and map existing TAB functionality to CTRL-TAB
+(add-hook 'org-mode-hook
+		  '(lambda ()
+			 (define-key org-mode-map [(tab)] nil)
+			 (define-key org-mode-map [(control tab)] nil)
+			 ))
+(evil-declare-key 'normal org-mode-map (kbd "TAB") 'other-window)
+(evil-declare-key 'normal org-mode-map [(control tab)] 'org-cycle)
 
 (evil-declare-key 'normal org-mode-map (kbd "<f12>") 'org-export-as-html)
 ;}}}
