@@ -112,6 +112,7 @@ otherwise, close current tab (elscreen)."
 (define-key evil-normal-state-map ",d" 'kill-this-buffer) ; kill current buffer without confirmation
 (define-key evil-normal-state-map ",D" 'kill-this-buffer-volatile) ; kill current buffer without confirmation, *even if modified*
 (define-key evil-normal-state-map ",x" 'save-buffers-kill-emacs) ; save and quit
+(define-key evil-normal-state-map ",u" 'undo-tree-visualize) ; see undo history in tree format (this will be opened in a new split window)
 (define-key evil-normal-state-map ",y" "\"+y") ; copy to X primary clipboard
 (define-key evil-normal-state-map ",p" "\"+p") ; paste (after cursor) X primary clipboard
 (define-key evil-normal-state-map ",P" "\"+P") ; paste (before cursor) X primary clipboard
