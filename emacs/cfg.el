@@ -255,11 +255,11 @@ otherwise, close current tab (elscreen)."
 ; navigate on a per-item basis
 (evil-declare-key 'normal org-mode-map (kbd "M-p") 'org-shiftup)
 (evil-declare-key 'normal org-mode-map (kbd "M-n") 'org-shiftdown)
-; move items around
-(evil-declare-key 'normal org-mode-map (kbd "M-l") 'org-metaright)
-(evil-declare-key 'normal org-mode-map (kbd "M-h") 'org-metaleft)
-(evil-declare-key 'normal org-mode-map (kbd "M-k") 'org-metaup)
-(evil-declare-key 'normal org-mode-map (kbd "M-j") 'org-metadown)
+; heading-based navigation
+(evil-declare-key 'normal org-mode-map (kbd "M-l") 'org-forward-same-level)
+(evil-declare-key 'normal org-mode-map (kbd "M-h") 'org-backward-same-level)
+(evil-declare-key 'normal org-mode-map (kbd "M-k") 'outline-previous-visible-heading)
+(evil-declare-key 'normal org-mode-map (kbd "M-j") 'outline-next-visible-heading)
 ; move items around, including child nodes
 (evil-declare-key 'normal org-mode-map (kbd "M-L") 'org-shiftmetaright)
 (evil-declare-key 'normal org-mode-map (kbd "M-H") 'org-shiftmetaleft)
