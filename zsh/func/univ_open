@@ -71,7 +71,7 @@ univ_open() {
                 fontforge $@ &>/dev/null & disown
             ;;
             (org)
-                emacsclient -c $@ &>/dev/null & disown
+                emacsclient -c -a "" -n $@
             ;;
             (chm)
                 xchm $@ &>/dev/null & disown

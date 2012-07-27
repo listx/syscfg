@@ -1,5 +1,5 @@
 #!/bin/zsh
 
 emacsclient_open() {
-	emacsclient -c -a "" $@ & disown
+	emacsclient -c -a "" -n $@
 }
