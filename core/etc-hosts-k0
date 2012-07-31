@@ -3,15 +3,15 @@
 #
 
 #<ip-address>	<hostname.domain.org>	<hostname>
-127.0.0.1		exelion.localdomain      exelion
-::1		exelion.localdomain	exelion
+127.0.0.1		k0.localdomain      k0
+::1		k0.localdomain	k0
 
 192.168.0.100   forest
-192.168.0.110   exelion
-192.168.0.111   luxion.e
-192.168.0.112   luxion.w
-192.168.0.113   aether.e
-192.168.0.114   aether.w
+192.168.0.110   k0
+192.168.0.111   k2
+192.168.0.112   k2w
+192.168.0.113   k1
+192.168.0.114   k1w
 192.168.0.120   ocean
 
 # blocked domains
@@ -20,5 +20,5 @@
 127.0.0.1		anandtech.com www.anandtech.com
 127.0.0.1		dailytech.com www.dailytech.com
 #127.0.0.1		youtube.com www.youtube.com
-127.0.0.1		gamespot.com www.gamespot.com
+#127.0.0.1		gamespot.com www.gamespot.com
 # End of file

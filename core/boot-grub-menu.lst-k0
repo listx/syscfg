@@ -44,12 +44,17 @@ initrd /boot/initramfs-linux.img
 # (1) Arch Linux
 title  Arch Linux Fallback
 root   (hd0,4)
-kernel /boot/vmlinuz-linux root=/dev/disk/by-uuid/eda3dd3d-bc4b-41ac-946b-90a36a790b72 ro quiet
+kernel /boot/vmlinuz-linux root=/dev/disk/by-uuid/eda3dd3d-bc4b-41ac-946b-90a36a790b72 ro
 initrd /boot/initramfs-linux-fallback.img
 
-# (2) Windows -- works if it's the very first partition of hd1
+# (2) Memtest86+
+title  Memtest86+  [/boot/memtest86+/memtest.bin]
+kernel (hd0,4)/boot/memtest86+/memtest.bin
+
+# (3) Windows
 title Windows XP Professional
 rootnoverify (hd1,0)
+# perform a virtual swap of the first and second (Windows) hard drive, since Windows cannot boot unless its C drive is on the first hard drive
 map (hd0) (hd1)
 map (hd1) (hd0)
 makeactive

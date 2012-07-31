@@ -13,9 +13,15 @@
 # mount -o loop /mnt/b4/GAMES/Age\ of\ Empires\ 2\ and\ Expansion/Age\ of\ Empires\ 2\ -\ The\ Age\ of\ Kings.iso         /mnt/i05
 # mount -o loop /mnt/b4/GAMES/Age\ of\ Empires\ 2\ and\ Expansion/Age\ of\ Empires\ 2\ -\ The\ Conquerors\ Expansion2.iso /mnt/i06
 
-rm -f /home/listdata/bittor/session/rtorrent.lock
+rm -f /home/l/bittor/session/rtorrent.lock
 
-stat_busy "Enabling WOL"
-ethtool -s eth1 wol g
-echo enabled > /sys/class/net/eth1/device/power/wakeup
-stat_done
+stat_bkgd "Enabling WOL"
+ethtool -s eth1 wol g &
+echo enabled > /sys/class/net/eth1/device/power/wakeup &
+
+stat_bkgd "Starting network"
+stat_bkgd "Starting sshd"
+echo $(/etc/rc.d/network start && /etc/rc.d/sshd start) >/dev/null & disown
+
+rm -rf /home/l/.Skype/Logs/*
+#nullfs /home/l/.Skype/Logs

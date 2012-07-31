@@ -24,7 +24,8 @@ rh:06:wait:/etc/rc.shutdown
 su:S:wait:/sbin/sulogin -p
 
 # -8 options fixes umlauts problem on login
-c1:2345:respawn:/sbin/agetty -8 -s -n -l /usr/local/sbin/autologinlistdata 38400 tty1 linux
+#c1:2345:respawn:/sbin/agetty -8 -s 38400 tty2 linux
+c1:2345:respawn:/sbin/agetty -8 -s -n -l /usr/local/sbin/autologin 38400 tty1 linux
 c2:2345:respawn:/sbin/agetty -8 -s 38400 tty2 linux
 c3:2345:respawn:/sbin/agetty -8 -s 38400 tty3 linux
 c4:2345:respawn:/sbin/agetty -8 -s 38400 tty4 linux
@@ -44,6 +45,6 @@ ca::ctrlaltdel:/sbin/shutdown -t3 -r now
 #x:5:respawn:/usr/sbin/gdm -nodaemon
 #x:5:respawn:/usr/bin/kdm -nodaemon
 #x:5:respawn:/usr/bin/slim >/dev/null 2>&1
-x:5:once:/bin/su listdata -l -c "/bin/bash --login -c startx >/dev/null 2>&1"
+x:5:once:/bin/su l -l -c "/bin/bash --login -c startx >/dev/null 2>&1"
 
 # End of file
