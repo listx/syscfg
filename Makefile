@@ -1,7 +1,7 @@
 CFG := $(shell pwd)
 HOST := $(shell hostname)
 # add the -n flag for directories, as otherwise, stray symlinks will be created inside the CFG directory itself
-all: acpi boxes cron emacs git gsy gtk lesskey modprobe mpd mplayer mutt ncmpcpp pal pentadactyl rtorrent usbmnt vim xdefaults xinitrc xmodmap xmonad xorg zsh
+all: acpi boxes cron emacs git gsy lesskey modprobe mpd mplayer mutt ncmpcpp pal pentadactyl rtorrent usbmnt vim xdefaults xinitrc xmodmap xmonad xorg zsh
 acpi:
 	ln -fs ${CFG}/acpi/${HOST}.sh						/etc/acpi/handler.sh
 boxes:
@@ -16,8 +16,6 @@ git:
 	ln -fs ${CFG}/git/sendemail-aliases					${HOME}/.git-sendemail-aliases
 gsy:
 	ln -fs ${CFG}/gsy/cfg								${HOME}/.gsy
-gtk:
-	ln -fs ${CFG}/gtk/cfg								${HOME}/.gtkrc-2.0
 lesskey:
 	ln -fs ${CFG}/lesskey/cfg							${HOME}/.lesskey
 	lesskey
