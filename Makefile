@@ -126,6 +126,7 @@ ifeq ('${HOST}','k0')
 	cat /etc/rc.local.shutdown >      ${HOME}/syscfg/core/etc-rc.local.shutdown-k0
 	cat /etc/yaourtrc >               ${HOME}/syscfg/core/etc-yaourtrc-k0
 	cat /etc/sudoers >                ${HOME}/syscfg/core/etc-sudoers-k0 # requires superuser privileges to read!
+	ln -fns ${CFG}/core/etc-hostname-k0	/etc/hostname
 endif
 ifeq ('${HOST}','k2')
 	cat /boot/grub/menu.lst >         ${HOME}/syscfg/core/boot-grub-menu.lst-k2
@@ -139,15 +140,26 @@ ifeq ('${HOST}','k2')
 	cat /etc/rc.local.shutdown >      ${HOME}/syscfg/core/etc-rc.local.shutdown-k2
 	cat /etc/yaourtrc >               ${HOME}/syscfg/core/etc-yaourtrc-k2
 	cat /etc/sudoers >                ${HOME}/syscfg/core/etc-sudoers-k2
+	ln -fns ${CFG}/core/etc-hostname-k2	/etc/hostname
 endif
 ifeq ('${HOST}','k1')
-	cat /boot/grub/menu.lst >         ${HOME}/syscfg/core/boot-grub-menu.lst-k1
-	cat /etc/fstab >                  ${HOME}/syscfg/core/etc-fstab-k1
-	cat /etc/hosts >                  ${HOME}/syscfg/core/etc-hosts-k1
-	cat /etc/makepkg.conf >           ${HOME}/syscfg/core/etc-makepkg.conf-k1
-	cat /etc/rc.conf >                ${HOME}/syscfg/core/etc-rc.conf-k1
-	cat /etc/rc.local >               ${HOME}/syscfg/core/etc-rc.local-k1
-	cat /etc/rc.local.shutdown >      ${HOME}/syscfg/core/etc-rc.local.shutdown-k1
+	# NOTE: /boot/grub/menu.lst, /etc/inittab, and /etc/fstab are read in that
+	# order BEFORE any other disks are mounted; this means that these files
+	# cannot be symlinked from our repo as our repo will not be available at
+	# these early stages of booting.
+	cat /boot/grub/menu.lst >         ${CFG}/core/boot-grub-menu.lst-k1
+	cat /etc/fstab >                  ${CFG}/core/etc-fstab-k1
+	cat /etc/inittab >                ${CFG}/core/etc-inittab-k1
+	ln -fns ${CFG}/core/etc-hosts-k1	/etc/hosts
+	ln -fns ${CFG}/core/etc-hostname-k1	/etc/hostname
+	ln -fns ${CFG}/core/etc-makepkg.conf-k1	/etc/makepkg.conf
+	ln -fns ${CFG}/core/etc-rc.conf-k1	/etc/rc.conf
+	ln -fns ${CFG}/core/etc-locale.conf	/etc/locale.conf
+	ln -fns ${CFG}/core/etc-modules-load.d-load.conf-k1	/etc/modules-load.d/load.conf
+	ln -fns ${CFG}/core/etc-timezone	/etc/timezone
+	ln -fns ${CFG}/core/etc-vconsole.conf	/etc/vconsole.conf
+	ln -fns ${CFG}/core/etc-rc.local-k1	/etc/rc.local
+	ln -fns ${CFG}/core/etc-rc.local.shutdown-k1	/etc/rc.local.shutdown
 endif
 
 # vim: tabstop=8

@@ -1,0 +1,8 @@
+# cpu frequency stuff
+acpi-cpufreq
+cpufreq_powersave
+cpufreq_ondemand
+cpufreq_performance
+# virtualbox
+vboxdrv
+vboxnetflt
