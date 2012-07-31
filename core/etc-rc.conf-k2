@@ -1,0 +1,22 @@
+#
+# /etc/rc.conf - configuration file for initscripts
+#
+# Most of rc.conf has been replaced by various other configuration
+# files. See archlinux(7) for details.
+#
+# For more details on rc.conf see rc.conf(5).
+#
+
+DAEMONS=(!hwclock syslog-ng @crond @alsa @ntpd @cupsd @timidity++ @cpufreq @acpid)
+
+# Storage
+#
+# USEDMRAID="no"
+# USELVM="no"
+
+# Network
+#
+interface=eth0
+address=
+netmask=
+gateway=

@@ -1,0 +1,5 @@
+# cpu stuff
+acpi-cpufreq
+cpufreq_powersave
+cpufreq_ondemand
+cpufreq_performance

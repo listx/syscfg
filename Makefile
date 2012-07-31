@@ -135,18 +135,19 @@ ifeq ('${HOST}','k0')
 	ln -fns ${CFG}/core/etc-rc.local.shutdown-k0	/etc/rc.local.shutdown
 endif
 ifeq ('${HOST}','k2')
-	cat /boot/grub/menu.lst >         ${HOME}/syscfg/core/boot-grub-menu.lst-k2
-	cat /etc/fstab >                  ${HOME}/syscfg/core/etc-fstab-k2
-	cat /etc/hosts >                  ${HOME}/syscfg/core/etc-hosts-k2
-	cat /etc/inittab >                ${HOME}/syscfg/core/etc-inittab-k2
-	cat /etc/makepkg.conf >           ${HOME}/syscfg/core/etc-makepkg.conf-k2
-	cat /etc/network.d/k2-wired >     ${HOME}/syscfg/core/etc-network.d-k2-wired
-	cat /etc/rc.conf >                ${HOME}/syscfg/core/etc-rc.conf-k2
-	cat /etc/rc.local >               ${HOME}/syscfg/core/etc-rc.local-k2
-	cat /etc/rc.local.shutdown >      ${HOME}/syscfg/core/etc-rc.local.shutdown-k2
-	cat /etc/yaourtrc >               ${HOME}/syscfg/core/etc-yaourtrc-k2
-	cat /etc/sudoers >                ${HOME}/syscfg/core/etc-sudoers-k2
+	cat /boot/grub/menu.lst >         ${CFG}/core/boot-grub-menu.lst-k2
+	cat /etc/fstab >                  ${CFG}/core/etc-fstab-k2
+	cat /etc/inittab >                ${CFG}/core/etc-inittab-k2
+	ln -fns ${CFG}/core/etc-hosts-k2	/etc/hosts
 	ln -fns ${CFG}/core/etc-hostname-k2	/etc/hostname
+	ln -fns ${CFG}/core/etc-makepkg.conf-k2	/etc/makepkg.conf
+	ln -fns ${CFG}/core/etc-rc.conf-k2	/etc/rc.conf
+	ln -fns ${CFG}/core/etc-locale.conf	/etc/locale.conf
+	ln -fns ${CFG}/core/etc-modules-load.d-load.conf-k2	/etc/modules-load.d/load.conf
+	ln -fns ${CFG}/core/etc-timezone	/etc/timezone
+	ln -fns ${CFG}/core/etc-vconsole.conf	/etc/vconsole.conf
+	ln -fns ${CFG}/core/etc-rc.local-k2	/etc/rc.local
+	ln -fns ${CFG}/core/etc-rc.local.shutdown-k2	/etc/rc.local.shutdown
 endif
 ifeq ('${HOST}','k1')
 	cat /boot/grub/menu.lst >         ${CFG}/core/boot-grub-menu.lst-k1

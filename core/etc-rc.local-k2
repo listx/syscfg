@@ -1,0 +1,18 @@
+#!/bin/bash
+#
+# /etc/rc.local: Local multi-user startup script.
+#
+
+. /etc/rc.conf
+. /etc/rc.d/functions
+
+stat_bkgd "Enabling WOL"
+ethtool -s eth0 wol g &
+echo enabled > /sys/class/net/eth0/device/power/wakeup &
+
+stat_bkgd "Starting network"
+stat_bkgd "Starting sshd"
+echo $(/etc/rc.d/network start && /etc/rc.d/sshd start) >/dev/null & disown
+
+# mount cali.iso
+#mount -t iso9660 -o ro,loop=/dev/loop0 /mnt/data/cali.iso /mnt/i00
