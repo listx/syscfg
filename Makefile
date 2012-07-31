@@ -135,7 +135,7 @@ ifeq ('${HOST}','k0')
 	ln -fns ${CFG}/core/etc-rc.local.shutdown-k0	/etc/rc.local.shutdown
 endif
 ifeq ('${HOST}','k2')
-	cat /boot/grub/menu.lst >         ${CFG}/core/boot-grub-menu.lst-k2
+	cat /boot/syslinux/syslinux.cfg >         ${CFG}/core/boot-syslinux-syslinux.cfg-k2
 	cat /etc/fstab >                  ${CFG}/core/etc-fstab-k2
 	cat /etc/inittab >                ${CFG}/core/etc-inittab-k2
 	ln -fns ${CFG}/core/etc-hosts-k2	/etc/hosts
