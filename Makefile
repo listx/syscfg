@@ -3,91 +3,91 @@ HOST := $(shell hostname)
 # add the -n flag for directories, as otherwise, stray symlinks will be created inside the CFG directory itself
 all: acpi boxes cron emacs git gsy gtk lesskey modprobe mpd mplayer mutt ncmpcpp pal pentadactyl rtorrent usbmnt vim xdefaults xinitrc xmodmap xmonad xorg zsh
 acpi:
-	ln -fs ${CFG}/acpi/${HOST}.sh		/etc/acpi/handler.sh
+	ln -fs ${CFG}/acpi/${HOST}.sh						/etc/acpi/handler.sh
 boxes:
-	ln -fs ${CFG}/boxes/cfg			${HOME}/.boxes
+	ln -fs ${CFG}/boxes/cfg								${HOME}/.boxes
 cron:
 	${CFG}/cron/setcron.sh
 emacs:
-	ln -fs ${CFG}/emacs			${HOME}/.emacs.d
-	ln -fs ${CFG}/emacs/cfg.el		${HOME}/.emacs
+	ln -fs ${CFG}/emacs									${HOME}/.emacs.d
+	ln -fs ${CFG}/emacs/cfg.el							${HOME}/.emacs
 git:
-	ln -fs ${CFG}/git/cfg			${HOME}/.gitconfig
-	ln -fs ${CFG}/git/sendemail-aliases	${HOME}/.git-sendemail-aliases
+	ln -fs ${CFG}/git/cfg								${HOME}/.gitconfig
+	ln -fs ${CFG}/git/sendemail-aliases					${HOME}/.git-sendemail-aliases
 gsy:
-	ln -fs ${CFG}/gsy/cfg			${HOME}/.gsy
+	ln -fs ${CFG}/gsy/cfg								${HOME}/.gsy
 gtk:
-	ln -fs ${CFG}/gtk/cfg			${HOME}/.gtkrc-2.0
+	ln -fs ${CFG}/gtk/cfg								${HOME}/.gtkrc-2.0
 lesskey:
-	ln -fs ${CFG}/lesskey/cfg		${HOME}/.lesskey
+	ln -fs ${CFG}/lesskey/cfg							${HOME}/.lesskey
 	lesskey
 modprobe:
-	sudo cp ${CFG}/modprobe/blacklist.conf	/etc/modprobe.d
+	sudo cp ${CFG}/modprobe/blacklist.conf				/etc/modprobe.d
 ifeq ('${HOST}','k0')
-	sudo cp ${CFG}/modprobe/modprobe.k0.conf	/etc/modprobe.d/modprobe.conf
+	sudo cp ${CFG}/modprobe/modprobe.k0.conf			/etc/modprobe.d/modprobe.conf
 endif
 ifeq ('${HOST}','k1')
-	sudo cp ${CFG}/modprobe/modprobe.k1.conf	/etc/modprobe.d/modprobe.conf
+	sudo cp ${CFG}/modprobe/modprobe.k1.conf			/etc/modprobe.d/modprobe.conf
 endif
 mplayer:
-	ln -fns ${CFG}/mplayer			${HOME}/.mplayer
+	ln -fns ${CFG}/mplayer								${HOME}/.mplayer
 mutt:
-	ln -fns ${CFG}/mutt			${HOME}/.mutt
-	ln -fs ${CFG}/mutt/cfg			${HOME}/.muttrc
-	ln -fs ${CFG}/mutt/mailcap		${HOME}/.mailcap
+	ln -fns ${CFG}/mutt									${HOME}/.mutt
+	ln -fs ${CFG}/mutt/cfg								${HOME}/.muttrc
+	ln -fs ${CFG}/mutt/mailcap							${HOME}/.mailcap
 ncmpcpp:
-	ln -fns ${CFG}/ncmpcpp			${HOME}/.ncmpcpp
-	ln -fs ${CFG}/ncmpcpp/hotkeys		${HOME}/.ncmpcpp/keys
+	ln -fns ${CFG}/ncmpcpp								${HOME}/.ncmpcpp
+	ln -fs ${CFG}/ncmpcpp/hotkeys						${HOME}/.ncmpcpp/keys
 ifeq ('${HOST}','k0')
-	ln -fs ${CFG}/ncmpcpp/cfg		${HOME}/.ncmpcpp/config
+	ln -fs ${CFG}/ncmpcpp/cfg							${HOME}/.ncmpcpp/config
 else
-	ln -fs ${CFG}/ncmpcpp/cfg-k2		${HOME}/.ncmpcpp/config
+	ln -fs ${CFG}/ncmpcpp/cfg-k2						${HOME}/.ncmpcpp/config
 endif
 pal:
-	ln -fns ${CFG}/pal			${HOME}/.pal
-	ln -fs ${CFG}/pal/cfg			${HOME}/.pal/pal.conf
+	ln -fns ${CFG}/pal									${HOME}/.pal
+	ln -fs ${CFG}/pal/cfg								${HOME}/.pal/pal.conf
 pentadactyl:
-	ln -fs ${CFG}/pentadactyl/cfg		${HOME}/.pentadactylrc
+	ln -fs ${CFG}/pentadactyl/cfg						${HOME}/.pentadactylrc
 rtorrent:
 ifeq ('${HOST}','k0')
-	ln -fs ${CFG}/rtorrent/cfg		${HOME}/.rtorrent.rc
+	ln -fs ${CFG}/rtorrent/cfg							${HOME}/.rtorrent.rc
 endif
 ifeq ('${HOST}','k1')
-	ln -fs ${CFG}/rtorrent/cfg-k1		${HOME}/.rtorrent.rc
+	ln -fs ${CFG}/rtorrent/cfg-k1						${HOME}/.rtorrent.rc
 endif
 usbmnt:
-	ln -fs ${CFG}/usbmnt/cfg		${HOME}/.usbmnt
+	ln -fs ${CFG}/usbmnt/cfg							${HOME}/.usbmnt
 vim:
-	ln -fns ${CFG}/vim			${HOME}/.vim
-	ln -fs ${CFG}/vim/cfg			${HOME}/.vimrc
-	ln -fs ${CFG}/vim/cfg			${HOME}/.gvimrc
+	ln -fns ${CFG}/vim									${HOME}/.vim
+	ln -fs ${CFG}/vim/cfg								${HOME}/.vimrc
+	ln -fs ${CFG}/vim/cfg								${HOME}/.gvimrc
 xdefaults:
-	ln -fs ${CFG}/xdefaults/cfg		${HOME}/.Xdefaults
+	ln -fs ${CFG}/xdefaults/cfg							${HOME}/.Xdefaults
 xinitrc:
-	ln -fs ${CFG}/xinitrc/cfg		${HOME}/.xinitrc
+	ln -fs ${CFG}/xinitrc/cfg							${HOME}/.xinitrc
 xmodmap:
-	ln -fs ${CFG}/xmodmap/cfg		${HOME}/.xmodmap
+	ln -fs ${CFG}/xmodmap/cfg							${HOME}/.xmodmap
 xmonad:
-	ln -fns ${CFG}/xmonad			${HOME}/.xmonad
+	ln -fns ${CFG}/xmonad								${HOME}/.xmonad
 xorg:
-	ln -fns ${CFG}/xorg/10-keyboard.conf		/etc/X11/xorg.conf.d/
-	ln -fns ${CFG}/xorg/10-server-flags.conf	/etc/X11/xorg.conf.d/
+	ln -fns ${CFG}/xorg/10-keyboard.conf				/etc/X11/xorg.conf.d/
+	ln -fns ${CFG}/xorg/10-server-flags.conf			/etc/X11/xorg.conf.d/
 ifeq ('${HOST}','k0')
-	ln -fns ${CFG}/xorg/10-dual-monitor-hybrid.conf	/etc/X11/xorg.conf.d/
+	ln -fns ${CFG}/xorg/10-dual-monitor-hybrid.conf		/etc/X11/xorg.conf.d/
 endif
 ifeq ('${HOST}','k2')
-	ln -fns ${CFG}/xorg/10-synaptics.conf		/etc/X11/xorg.conf.d/
-	ln -fns ${CFG}/xorg/10-monitor-k2.conf		/etc/X11/xorg.conf.d/
-	ln -fns ${CFG}/xorg/20-intel-video.conf		/etc/X11/xorg.conf.d/
+	ln -fns ${CFG}/xorg/10-synaptics.conf				/etc/X11/xorg.conf.d/
+	ln -fns ${CFG}/xorg/10-monitor-k2.conf				/etc/X11/xorg.conf.d/
+	ln -fns ${CFG}/xorg/20-intel-video.conf				/etc/X11/xorg.conf.d/
 endif
 ifeq ('${HOST}','k1')
-	ln -fns ${CFG}/xorg/10-synaptics.conf		/etc/X11/xorg.conf.d/
-	ln -fns ${CFG}/xorg/20-intel-video.conf		/etc/X11/xorg.conf.d/
+	ln -fns ${CFG}/xorg/10-synaptics.conf				/etc/X11/xorg.conf.d/
+	ln -fns ${CFG}/xorg/20-intel-video.conf				/etc/X11/xorg.conf.d/
 endif
 zsh:
 	mkdir ${HOME}/.zsh-untracked
-	ln -fns ${CFG}/zsh			${HOME}/.zsh
-	ln -fs ${CFG}/zsh/cfg			${HOME}/.zshrc
+	ln -fns ${CFG}/zsh									${HOME}/.zsh
+	ln -fs ${CFG}/zsh/cfg								${HOME}/.zshrc
 
 uninstall:
 	rm ${HOME}/.boxes
@@ -104,7 +104,6 @@ endif
 	rm ${HOME}/.vim
 	rm ${HOME}/.vimrc
 	rm ${HOME}/.gvimrc
-	rm ${HOME}/.vimperatorrc
 	rm ${HOME}/.Xdefaults
 	rm ${HOME}/.xinitrc
 	rm ${HOME}/.xmonad/init.sh
@@ -164,4 +163,4 @@ ifeq ('${HOST}','k1')
 	ln -fns ${CFG}/core/etc-vconsole.conf				/etc/vconsole.conf
 endif
 
-# vim: tabstop=8
+# vim: tabstop=4
