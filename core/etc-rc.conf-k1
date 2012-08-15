@@ -7,16 +7,16 @@
 # For more details on rc.conf see rc.conf(5).
 #
 
-DAEMONS=(syslog-ng @crond @alsa @ntpd @cupsd @timidity++ @cpufreq @acpid)
+DAEMONS=(syslog-ng @crond @sshd @alsa @ntpd @cupsd @timidity++ @cpufreq @acpid)
 
 # Storage
 #
-USEDMRAID="no"
-USELVM="no"
+# USEDMRAID="no"
+# USELVM="no"
 
 # Network
+#
 interface=eth0
 address=
 netmask=
-broadcast=
 gateway=
