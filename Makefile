@@ -82,6 +82,9 @@ ifeq ('${HOST}','k1')
 	ln -fns ${CFG}/xorg/10-synaptics.conf				/etc/X11/xorg.conf.d/
 	ln -fns ${CFG}/xorg/20-intel-video.conf				/etc/X11/xorg.conf.d/
 endif
+ifeq ('${HOST}','forest')
+	ln -fns ${CFG}/xorg/10-dual-monitor-hybrid-forest.conf	/etc/X11/xorg.conf.d/
+endif
 zsh:
 	mkdir ${HOME}/.zsh-untracked
 	ln -fns ${CFG}/zsh									${HOME}/.zsh
