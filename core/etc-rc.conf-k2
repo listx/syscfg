@@ -7,7 +7,7 @@
 # For more details on rc.conf see rc.conf(5).
 #
 
-DAEMONS=(!hwclock syslog-ng @crond @sshd @alsa @ntpd @cupsd @timidity++ @cpufreq @acpid)
+DAEMONS=(!hwclock syslog-ng network @crond @sshd @alsa @ntpd @cupsd @timidity++ @cpufreq @acpid)
 
 # Storage
 #
