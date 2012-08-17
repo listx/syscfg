@@ -6,7 +6,7 @@
 | DEVICE              |     STATIC IP | MAC ADDRESS       | DESCRIPTION                                                    |
 |---------------------+---------------+-------------------+----------------------------------------------------------------|
 | tiger               | 192.168.0.100 | 00:1a:4d:93:28:b1 | wired; dad's PC                                                |
-| MFC-9840CDW printer | 192.168.0.102 | 00:80:77:ee:65:78 | wired                                                          |
+| MFC-9840CDW printer | 192.168.0.102 | 00:80:77:ee:65:78 | wired; web interface user/pass: admin / access                 |
 | k0                  | 192.168.0.110 | 00:04:4b:02:51:47 | wired; my PC                                                   |
 | k2                  | 192.168.0.111 | 00:12:3f:05:85:fe | wired; dell laptop                                             |
 | k2.w                | 192.168.0.112 | 00:0b:7d:24:02:d6 | wireless; dell laptop                                          |
