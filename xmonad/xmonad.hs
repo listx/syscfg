@@ -530,8 +530,8 @@ sites =
     , "www.sfgate.com"
     -- hobbies
     , "www.chessbase.com"
-    , "http://www.reddit.com/r/programming/top?t=week"
-    , "http://news.ycombinator.com/best"
+    , "www.reddit.com/r/programming/top?t=week"
+    , "www.techpowerup.com"
     , "www.linuxfr.org"
     ]
 
