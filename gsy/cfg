@@ -69,6 +69,12 @@ l@k0:~/secure
 l@k1:~/secure
 l@k2:~/secure
 
+l@k0:~/ghost/bkup.git
+/mnt/u0/h/prog/bkup
+l@k0:~/prog/bkup
+l@k1:~/prog/bkup
+l@k2:~/prog/bkup
+
 l@k0:~/ghost/work.git
 /mnt/u0/h/work
 l@k0:~/work
