@@ -96,7 +96,7 @@ argsCheck Opts{..}
 -- Verify that the --file and --list arguments actually make sense.
 filesCheck :: [Bool] -> IO Int
 filesCheck fs
-	| any (==False) fs = errMsgNum "an argument to --file does not exist" 1
+	| elem False fs = errMsgNum "an argument to --file does not exist" 1
 	| otherwise = return 0
 
 main :: IO ()
@@ -105,21 +105,21 @@ main = do
 	hSetBuffering stderr NoBuffering
 	hSetEcho stdin False -- disable terminal echo
 	opts <- getOpts
-	errNo <- argsCheck opts -- sanity check
-	when (errNo > 0) $ exitWith $ ExitFailure errNo
+	(\e -> when (e > 0) . exitWith $ ExitFailure e) =<< argsCheck opts
 	let
 		opts'@Opts{..} = autoOpts opts -- automatically use sane defaults
-	stdinHashHex <- return . (xorNum NumHex) =<< (if stdin_hex
-		then hGetContents stdin
+	stdinHashHex <- return . xorNum NumHex =<< (if stdin_hex
+		then getContents
 		else return [])
 	fs <- mapM doesFileExist (file_hex ++ file_dec ++ file_oct ++ file_bin)
+	(\e -> when (e > 0) . exitWith $ ExitFailure e) =<< filesCheck fs
 	errNo' <- filesCheck fs
-	when (errNo' > 0) $ exitWith $ ExitFailure errNo
+	when (errNo' > 0) $ exitWith $ ExitFailure errNo'
 	prog opts' stdinHashHex file_hex file_dec file_oct file_bin
 
 autoOpts :: Opts -> Opts
 autoOpts opts@Opts{..} = opts
-	{ stdin_hex = if null
+	{ stdin_hex = null
 		(hex
 		++ dec
 		++ oct
@@ -128,8 +128,6 @@ autoOpts opts@Opts{..} = opts
 		++ file_dec
 		++ file_oct
 		++ file_bin)
-		then True
-		else False
 	}
 
 prog
