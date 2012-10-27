@@ -78,10 +78,7 @@ getNodeStatus (link, _) = do
 	(_, _, _, p) <- spawnCmd
 		("ping -c 1 -W 1 " ++ link ++ " >/dev/null 2>&1") True
 	-- compile with -threaded in order to make waitForProcess non-blocking
-	exitCode <- waitForProcess p
-	if exitCode == ExitSuccess
-		then return True
-		else return False
+	(return . (== ExitSuccess)) =<< waitForProcess p
 
 wakeUp :: (String, String, String, Bool) -> IO ()
 wakeUp node@(_, _, mac, _) = do
