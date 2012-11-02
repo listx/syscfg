@@ -27,6 +27,9 @@ endif
 ifeq ('${HOST}','k1')
 	sudo cp ${CFG}/modprobe/modprobe.k1.conf			/etc/modprobe.d/modprobe.conf
 endif
+ifeq ('${HOST}','k2')
+	sudo cp ${CFG}/modprobe/modprobe.k2.conf			/etc/modprobe.d/modprobe.conf
+endif
 mplayer:
 	ln -fns ${CFG}/mplayer								${HOME}/.mplayer
 mutt:
