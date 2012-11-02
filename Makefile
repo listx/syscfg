@@ -120,47 +120,35 @@ endif
 core:
 ifeq ('${HOST}','k0')
 	cat /boot/grub/menu.lst >	${CFG}/core/boot-grub-menu.lst-k0
-	cat /etc/inittab >			${CFG}/core/etc-inittab-k0
 	cat /etc/hostname.conf >	${CFG}/core/etc-hostname-k0
 	cat /etc/fstab >			${CFG}/core/etc-fstab-k0
-	cat /etc/rc.conf > 			${CFG}/core/etc-rc.conf-k0
 	cat /etc/vconsole.conf >	${CFG}/core/etc-vconsole.conf-k0
 	ln -fns ${CFG}/core/etc-hosts-k0					/etc/hosts
 	ln -fns ${CFG}/core/etc-locale.conf					/etc/locale.conf
 	ln -fns ${CFG}/core/etc-makepkg.conf-k0				/etc/makepkg.conf
 	ln -fns ${CFG}/core/etc-modules-load.d-load.conf-k0	/etc/modules-load.d/load.conf
-	ln -fns ${CFG}/core/etc-rc.local-k0					/etc/rc.local
-	ln -fns ${CFG}/core/etc-rc.local.shutdown-k0		/etc/rc.local.shutdown
 	ln -fns ${CFG}/core/etc-timezone					/etc/timezone
 endif
 ifeq ('${HOST}','k2')
 	cat /boot/syslinux/syslinux.cfg >	${CFG}/core/boot-syslinux-syslinux.cfg-k2
-	cat /etc/inittab >					${CFG}/core/etc-inittab-k2
 	cat /etc/hostname.conf >	${CFG}/core/etc-hostname-k2
 	cat /etc/fstab >					${CFG}/core/etc-fstab-k2
-	cat /etc/rc.conf > 					${CFG}/core/etc-rc.conf-k2
 	cat /etc/vconsole.conf >			${CFG}/core/etc-vconsole.conf-k2
 	ln -fns ${CFG}/core/etc-hosts-k2					/etc/hosts
 	ln -fns ${CFG}/core/etc-locale.conf					/etc/locale.conf
 	ln -fns ${CFG}/core/etc-makepkg.conf-k2				/etc/makepkg.conf
 	ln -fns ${CFG}/core/etc-modules-load.d-load.conf-k2	/etc/modules-load.d/load.conf
-	ln -fns ${CFG}/core/etc-rc.local-k2					/etc/rc.local
-	ln -fns ${CFG}/core/etc-rc.local.shutdown-k2		/etc/rc.local.shutdown
 	ln -fns ${CFG}/core/etc-timezone					/etc/timezone
 endif
 ifeq ('${HOST}','k1')
 	cat /boot/grub/menu.lst >	${CFG}/core/boot-grub-menu.lst-k1
-	cat /etc/inittab >			${CFG}/core/etc-inittab-k1
 	cat /etc/hostname.conf >	${CFG}/core/etc-hostname-k1
 	cat /etc/fstab >			${CFG}/core/etc-fstab-k1
-	cat /etc/rc.conf > 			${CFG}/core/etc-rc.conf-k1
 	cat /etc/vconsole.conf >	${CFG}/core/etc-vconsole.conf-k1
 	ln -fns ${CFG}/core/etc-hosts-k1					/etc/hosts
 	ln -fns ${CFG}/core/etc-locale.conf					/etc/locale.conf
 	ln -fns ${CFG}/core/etc-makepkg.conf-k1				/etc/makepkg.conf
 	ln -fns ${CFG}/core/etc-modules-load.d-load.conf-k1	/etc/modules-load.d/load.conf
-	ln -fns ${CFG}/core/etc-rc.local-k1					/etc/rc.local
-	ln -fns ${CFG}/core/etc-rc.local.shutdown-k1		/etc/rc.local.shutdown
 	ln -fns ${CFG}/core/etc-timezone					/etc/timezone
 endif
 
