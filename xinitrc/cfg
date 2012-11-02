@@ -6,7 +6,13 @@ xsetroot -cursor_name left_ptr &
 # use the 'unclutter' program to disable showing the mouse pointer after X seconds
 # however, disable 'unclutter' for mouse-intensive programs like Blender and Gimp
 # '-noevents' flag is for xmonad compatibility
-unclutter -grab -noevents -idle 10 -not Blender Gimp &
+case $(hostname) in
+    k0|k1)
+        unclutter -grab -noevents -idle 10 -not Blender Gimp &
+    ;;
+    *) # don't run unclutter on k2 (Dell Latitude D505, a 32-bit system)
+    ;;
+esac
 
 # initialize keyboard in a sane manner
 ~/syscfg/script/sys/initkeys.sh
