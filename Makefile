@@ -130,7 +130,6 @@ ifeq ('${HOST}','k0')
 	ln -fns ${CFG}/core/etc-locale.conf					/etc/locale.conf
 	ln -fns ${CFG}/core/etc-makepkg.conf-k0				/etc/makepkg.conf
 	ln -fns ${CFG}/core/etc-modules-load.d-load.conf-k0	/etc/modules-load.d/load.conf
-	ln -fns ${CFG}/core/etc-timezone					/etc/timezone
 endif
 ifeq ('${HOST}','k2')
 	cat /boot/syslinux/syslinux.cfg >	${CFG}/core/boot-syslinux-syslinux.cfg-k2
@@ -141,7 +140,6 @@ ifeq ('${HOST}','k2')
 	ln -fns ${CFG}/core/etc-locale.conf					/etc/locale.conf
 	ln -fns ${CFG}/core/etc-makepkg.conf-k2				/etc/makepkg.conf
 	ln -fns ${CFG}/core/etc-modules-load.d-load.conf-k2	/etc/modules-load.d/load.conf
-	ln -fns ${CFG}/core/etc-timezone					/etc/timezone
 endif
 ifeq ('${HOST}','k1')
 	cat /boot/grub/menu.lst >	${CFG}/core/boot-grub-menu.lst-k1
@@ -152,7 +150,6 @@ ifeq ('${HOST}','k1')
 	ln -fns ${CFG}/core/etc-locale.conf					/etc/locale.conf
 	ln -fns ${CFG}/core/etc-makepkg.conf-k1				/etc/makepkg.conf
 	ln -fns ${CFG}/core/etc-modules-load.d-load.conf-k1	/etc/modules-load.d/load.conf
-	ln -fns ${CFG}/core/etc-timezone					/etc/timezone
 endif
 
 # vim: tabstop=4
