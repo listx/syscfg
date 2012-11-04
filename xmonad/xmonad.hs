@@ -181,8 +181,8 @@ myKeys hostname conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((modm              , xK_f), goToSelected defaultGSConfig)
     -- volume controls
     , ((modm              , xK_backslash ), spawn "amixer -q set Master toggle")
-    , ((modm              , xK_minus     ), spawn "amixer -q set Master 1dB- unmute")
-    , ((modm              , xK_equal     ), spawn "amixer -q set Master 1.5dB+ unmute")
+    , ((modm              , xK_minus     ), spawn "amixer -q set Master 1- unmute")
+    , ((modm              , xK_equal     ), spawn "amixer -q set Master 1.5+ unmute")
     -- screen brightness toggle
     , ((modm .|. shiftMask, xK_backslash ), spawn "sudo brightness") -- toggle brightness (100% or 0%)
     , ((modm .|. shiftMask, xK_minus ), cpufreqSet "powersave" hostname)
