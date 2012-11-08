@@ -69,7 +69,7 @@ prompt_kody_precmd() {
         Wed) day="%B%F{$prompt_color2}W%b%f" ;;
         Thu) day="%B%F{$prompt_color2}R%b%f" ;;
         Fri) day="%B%F{$prompt_color8}F%b%f" ;;
-        Sat) day="%B%F{$prompt_color6}A%b%f" ;;
+        Sat) day="%B%F{$prompt_color6}S%b%f" ;;
         Sun) day="%B%F{$prompt_color6}U%b%f" ;;
     esac
 
