@@ -289,6 +289,9 @@ alias -g F='tiger@forest:'
 alias -g D='& disown'
 alias -g Q='& disown; exit'
 
+# for quiet processes
+alias -g Z='> /dev/null 2>&1'
+
 # scp alternative, with a progress bar
 alias rsy='rsync -ahP --no-whole-file --inplace'
 #'rscp' means 'cp' with 'rsync'. The '-a' (archive) option ensures that all
