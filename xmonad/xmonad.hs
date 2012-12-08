@@ -472,9 +472,6 @@ myStartupHook hostname = do
             spawnIfGrpNotFull Net2 $ term3 ++ " -e rtorrent"
         "k1" -> spawnIfGrpNotFull Net2 $ term3 ++ " -e rtorrent"
         _ -> return ()
-    when (hostname == "k0") $ do
-		liftIO $ threadDelay 30000000
-		spawnIfGrpNotFull Sys $ term2 ++ " -n iftop -e sudo iftop -B -i eth1"
 
 -- reset all xinerama screens to point to top WS of each group
 resetScreensToWSTops :: X ()
