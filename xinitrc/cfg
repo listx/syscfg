@@ -23,9 +23,6 @@ export QT_IM_MODULE=uim
 export XMODIFIERS=@im=uim
 uim-xim &
 
-# start the emacs daemon
-emacs --daemon &
-
 case $(hostname) in
     k0)
         icecast -b -c ~/syscfg/icecast/cfg.xml
