@@ -71,13 +71,13 @@ univ_open() {
                 fontforge $@ &>/dev/null & disown
             ;;
             (org)
-                emacs $@
+                emacs $@ &>/dev/null & disown
             ;;
             (chm)
                 xchm $@ &>/dev/null & disown
             ;;
             *)
-                emacs $@
+                emacs -nw $@
             ;;
         esac
     elif [[ -d $1 ]]; then
