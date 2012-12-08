@@ -70,7 +70,7 @@ prompt_kody_precmd() {
         Thu) day="%B%F{$prompt_color2}R%b%f" ;;
         Fri) day="%B%F{$prompt_color8}F%b%f" ;;
         Sat) day="%B%F{$prompt_color6}S%b%f" ;;
-        Sun) day="%B%F{$prompt_color6}U%b%f" ;;
+        Sun) day="%B%F{$prompt_color6}N%b%f" ;;
     esac
 
     # determine the percentage of the year that is complete
