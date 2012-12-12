@@ -1,7 +1,7 @@
 #-----------#
 # Passwords #
 #-----------#
-source "gpg --textmode -d ~/secure/pass.gpg |"
+source "gpg --textmode -d ~/secure/mutt-logins.gpg |"
 
 #---------------#
 # Account Hooks #
