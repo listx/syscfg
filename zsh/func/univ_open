@@ -77,7 +77,7 @@ univ_open() {
                 xchm $@ &>/dev/null & disown
             ;;
             *)
-                emacs -nw $@
+                vim -p $@
             ;;
         esac
     elif [[ -d $1 ]]; then
