@@ -10,7 +10,6 @@ import System.IO
 import System.Directory
 import System.Environment
 import System.Exit
-import System.Posix.Unistd (sleep)
 import System.Posix.Files
 import System.Posix.Types (EpochTime)
 import System.Process
@@ -131,7 +130,7 @@ getTimestamp f = do
 	if b
 		then return . modificationTime =<< getFileStatus f
 		else do
-			_ <- sleep 1
+			_ <- threadDelay 1000000
 			getTimestamp f
 
 helpMsg :: Opts -> FilePath -> IO ()
@@ -155,7 +154,7 @@ helpMsg Opts{..} f = do
 
 loop :: Opts -> String -> [FilePath] -> [EpochTime] -> IO ()
 loop o@Opts{..} comDef files filesTS = do
-	_ <- sleep (if interval > 0 then interval else 1)
+	_ <- threadDelay (if interval > 0 then (interval * 1000000) else 1000000)
 	filesTS' <- mapM getTimestamp files
 	if (filesTS /= filesTS')
 		then do
