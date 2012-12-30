@@ -1,12 +1,10 @@
 module Main where
 
 import Control.Monad.State
-import Crypto.Random.AESCtr
-import Data.Binary (decode)
-import qualified Data.ByteString.Lazy as B
 import Data.List (nub)
 import System.Environment (getArgs)
 import System.IO
+import System.Random
 
 keysChar, keysNum, keysPunc, keysCharNum, keysAll, keysHex :: String
 keysChar = ['a'..'z'] ++ ['A'..'Z']
@@ -29,28 +27,20 @@ giveKey keysCustom c n = extractChar $ case c of
 	where
 	extractChar xs = xs!!mod n (length xs)
 
-showRandomKey :: String -> StateT AESRNG IO ()
+showRandomKey :: String -> IO ()
 showRandomKey keysCustom = handleKey =<< liftIO getChar
 	where
 	handleKey key = case key of
-		'\n' -> liftIO (putChar '\n') >> showRandomKey keysCustom
-		'q' -> (liftIO $ putStrLn "\nBye!") >> return ()
+		'\n' -> putChar '\n' >> showRandomKey keysCustom
+		'q' -> putStrLn "\nBye!" >> return ()
 		_ -> mapM_ f [0..(49)::Int]
 			>> (liftIO $ putStrLn [])
 			>> showRandomKey keysCustom
 		where
-		f _ = liftIO
-			. putChar
+		f _ = putChar
 			. giveKey keysCustom key
 			. (\n -> mod n (length (keysAll ++ keysCustom) - 1))
-			=<< aesRandomInt
-
-aesRandomInt :: StateT AESRNG IO Int
-aesRandomInt = do
-	aesState <- get
-	let (bs, aesState') = genRandomBytes aesState 16
-	put aesState'
-	return (decode $ B.fromChunks [bs])
+			=<< randomIO
 
 main :: IO ()
 main = do
@@ -74,6 +64,4 @@ main = do
 		, []
 		]
 	-- gather entropy from the system to use as the initial seed
-	aesState <- makeSystem
-	_ <- runStateT (showRandomKey as') aesState -- enter loop
-	return ()
+	showRandomKey as' -- enter loop
