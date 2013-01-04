@@ -6,6 +6,8 @@ set autocomplete=
 " always show command line below status line
 set guioptions+=c
 
+set defsearch=g
+
 " set default mod-key to ","
 map , <leader>
 
