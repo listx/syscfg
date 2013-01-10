@@ -82,9 +82,9 @@ suspend = "sudo ~/syscfg/script/sys/suspend.sh"
 xinitrc = "sh ~/syscfg/xinitrc/cfg"
 
 schedToday :: String
-schedToday = " -name floatme -e ~/org/life.sh ~/org/life render -F TXT -S --today"
+schedToday = " -name floatme -e ~/org/life.sh today"
 schedYTT :: String -- yesterday, today, and tomorrow
-schedYTT = " -name floatme -e ~/org/life.sh ~/org/life render -F TXT -S --ytt"
+schedYTT = " -name floatme -e ~/org/life.sh ytt"
 
 myKeys :: String -> XConfig Layout -> M.Map (KeyMask, KeySym) (X ())
 myKeys hostname conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
