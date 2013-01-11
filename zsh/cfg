@@ -191,6 +191,7 @@ alias poke='~/syscfg/script/sys/poke'
 alias cascade='~/syscfg/script/sys/cascade.sh'
 alias initkeys="~/syscfg/script/sys/initkeys.sh"
 alias INITKEYS="~/syscfg/script/sys/initkeys.sh"
+alias switch_audio="~/syscfg/alsa/switch_audio.sh"
 
 alias d='univ_open'
 alias df='df -h'

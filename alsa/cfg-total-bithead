@@ -1,0 +1,4 @@
+defaults.pcm.!card CODEC
+defaults.ctl.!card CODEC
+defaults.pcm.!device 0
+defaults.ctl.!device 0
