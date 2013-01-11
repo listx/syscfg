@@ -148,7 +148,7 @@ myKeys hostname conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((mod4Mask              , xK_1     ), spawn (term1 ++ schedToday))
     , ((mod4Mask              , xK_2     ), spawn (term1 ++ schedYTT))
     , ((mod4Mask              , xK_9     ), spawn "gvim ~/org/life.hs")
-    , ((mod4Mask              , xK_0     ), spawn "emacsclient -c ~/org/life.org")
+    , ((mod4Mask              , xK_0     ), spawn "emacs ~/org/life.org ~/org/grid.org ~/org/sleep ~/org/prog.org")
     , ((mod4Mask              , xK_c     ), spawn "galculator")
     , ((mod4Mask .|. shiftMask, xK_c     ), spawn "gcalctool")
     , ((mod4Mask              , xK_d     ), spawn "amule")
