@@ -361,7 +361,7 @@ otherwise, close current tab (elscreen)."
 (show-paren-mode 1)
 ; highlight the current cursor line
 (global-hl-line-mode 1)
-(set-face-background 'hl-line "#323332")
+(set-face-background 'hl-line "#434443")
 ; disable cursor line highlight during insert mode
 (add-hook 'evil-insert-state-entry-hook
 	(lambda ()
