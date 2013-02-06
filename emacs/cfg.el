@@ -65,6 +65,8 @@ otherwise, close current tab (elscreen)."
 (setq initial-scratch-message "")
 ; set *scratch* mode to fundamental mode (the least specialized mode)
 (setq initial-major-mode 'text-mode)
+; disable all version control minor modes
+(setq vc-handled-backends ())
 
 ; General indentation behavior {{{
 ; pressing TAB inserts a TAB
