@@ -3,6 +3,7 @@
 # the FSYS_HASH is used as a fallback, if the detected device does not match one of the UUIDs listed above
 FSYS_HASH =
     { ext2 = "ext2 -o rw,relatime"
+    , ext4 = "ext4 -o rw,relatime"
     , vfat = "vfat -o rw,uid=$USER,gid=$USER"
     }
 
