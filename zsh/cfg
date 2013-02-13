@@ -262,7 +262,7 @@ alias eeb='vim -x --cmd "set backup" --cmd "set noswapfile" --cmd "set nowriteba
 
 alias -g galias_find_src='$(find -maxdepth 5 -type f -iregex ".*\.\(c\|cpp\|h\|hpp\|factor\|hs\|pl\|py\|rb\|sh\)$" | sort)'
 alias es='e galias_find_src'
-alias ees='ee galias_find_src D'
+alias ees='ee galias_find_src'
 
 alias tma='tmux attach-session'
 
