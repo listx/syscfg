@@ -1,0 +1,5 @@
+#!/bin/zsh
+
+emacs_open() {
+    emacs $@ &>/dev/null & disown
+}
