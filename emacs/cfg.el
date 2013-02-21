@@ -301,6 +301,10 @@ otherwise, close current tab (elscreen)."
 )
 ;}}}
 
+; LUA
+(setq auto-mode-alist (cons '("\.lua$" . lua-mode) auto-mode-alist))
+(autoload 'lua-mode "lua-mode" "Lua editing mode." t)
+
 ; YAML {{{
 (require 'yaml-mode)
 (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode))
