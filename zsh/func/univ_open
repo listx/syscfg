@@ -53,7 +53,7 @@ univ_open() {
                 gimp $@ &>/dev/null & disown
             ;;
             (aac|flac|mp3|ogg|wav|wma)
-                mplayer -loop 0 $@
+                mplayer -loop 0 $( [[ $file:e:l == flac ]] && echo "-demuxer lavf" ) $@
             ;;
             (mid|midi)
                 timidity $@
