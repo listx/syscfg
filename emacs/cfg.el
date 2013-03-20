@@ -278,6 +278,7 @@ otherwise, close current tab (elscreen)."
 		;(setq tab-stop-list
 		;(loop for i from 2 upto 120 by 2 collect i))
 		;(local-set-key (kbd "RET") 'newline-and-indent-relative)
+		(setq evil-auto-indent nil)
 		(setq tab-width 4)
 		(setq indent-tabs-mode t)
 	)
