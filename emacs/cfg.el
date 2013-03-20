@@ -306,6 +306,15 @@ otherwise, close current tab (elscreen)."
 (setq auto-mode-alist (cons '("\.lua$" . lua-mode) auto-mode-alist))
 (autoload 'lua-mode "lua-mode" "Lua editing mode." t)
 
+; Python
+(add-hook 'python-mode-hook
+	(lambda ()
+		(setq indent-tabs-mode t)
+		(setq python-indent 4)
+		(setq tab-width 4)
+	)
+)
+
 ; YAML {{{
 (require 'yaml-mode)
 (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode))
