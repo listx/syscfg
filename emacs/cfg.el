@@ -11,16 +11,6 @@
 	(setq my-current-font (if (= my-current-font 0) 1 0))
 	(set-face-attribute 'default nil :font (if (= my-current-font 1) "DejaVu Sans Mono" "Terminus"))
 	(redraw-display))
-; custom indentation function: copy the indentation of the previous line
-; adopted from http://sequence.complete.org/node/365
-(defun newline-and-indent-relative ()
-	(interactive)
-	(newline)
-	(indent-to-column (save-excursion
-		(forward-line -1)
-		(back-to-indentation)
-		(current-column)))
-)
 (defun kill-this-buffer-volatile ()
 	"Kill current buffer unconditionally."
 	(interactive)
@@ -277,27 +267,9 @@ otherwise, close current tab (elscreen)."
 		;(setq indent-line-function 'tab-to-tab-stop)
 		;(setq tab-stop-list
 		;(loop for i from 2 upto 120 by 2 collect i))
-		;(local-set-key (kbd "RET") 'newline-and-indent-relative)
-		(setq evil-auto-indent nil)
+		(setq indent-line-function #'indent-relative)
 		(setq tab-width 4)
 		(setq indent-tabs-mode t)
-	)
-)
-; make indentation saner when inserting new lines, whether from insert mode or normal mode
-(evil-declare-key 'insert haskell-mode-map (kbd "RET") 'newline-and-indent-relative)
-(evil-declare-key 'normal haskell-mode-map "o"
-	(lambda ()
-		(interactive)
-		(evil-append-line 1)
-		(newline-and-indent-relative)
-	)
-)
-(evil-declare-key 'normal haskell-mode-map "O"
-	(lambda ()
-		(interactive)
-		(previous-line)
-		(evil-append-line 1)
-		(newline-and-indent-relative)
 	)
 )
 ;}}}
