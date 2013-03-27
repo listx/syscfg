@@ -78,7 +78,6 @@ ifeq ('${HOST}','k0')
 endif
 ifeq ('${HOST}','k2')
 	ln -fns ${CFG}/xorg/10-synaptics.conf				/etc/X11/xorg.conf.d/
-	ln -fns ${CFG}/xorg/10-monitor-k2.conf				/etc/X11/xorg.conf.d/
 	ln -fns ${CFG}/xorg/20-intel-video.conf				/etc/X11/xorg.conf.d/
 endif
 ifeq ('${HOST}','k1')
