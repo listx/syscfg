@@ -98,6 +98,7 @@ DIRSTACKSIZE=20
 setopt INC_APPEND_HISTORY
 setopt EXTENDED_HISTORY # puts timestamps in the history
 setopt HIST_IGNORE_ALL_DUPS
+setopt HIST_IGNORE_SPACE # if a command or alias begins with a space, do not store into history
 
 # bring up the completion menu with <tab><tab>, but with just <tab>, behave like the default
 setopt auto_menu
@@ -138,29 +139,29 @@ bindkey -M menuselect '' .accept-line # just execute the command when selecting
 # with a plain 'dirs -v'
 # NOTE: 'cd +$n' makes it go to the number listed, whereas 'cd -$n' reverses it... don't know why
 # you'd ever want to use 'cd -$n'
-alias ds='dirs -v ; echo -n "\nSelect directory: " ; read n ; cd +$n && ll'
+alias ds=' dirs -v ; echo -n "\nSelect directory: " ; read n ; cd +$n && ll'
 # just show a list of dir stack without choose prompt
-alias dl='dirs -v'
+alias dl=' dirs -v'
 
 #--------------------------------------------------------------------------------------------------#
 # Useful change dirs (first change to the directory, and then list the contents within; notice how #
 # you can use aliases within aliases! (the "l" is an alias here defined below)                     #
 #--------------------------------------------------------------------------------------------------#
 
-alias k="cd ..;ll"
-alias kk="cd ../../;ll"
-alias kkk="cd ../../../;ll"
-alias kkkk="cd ../../../../;ll"
-alias kkkkk="cd ../../../../../;ll"
-alias kkkkkk="cd ../../../../../../;ll"
-alias kkkkkkk="cd ../../../../../../../;ll"
-alias kkkkkkkk="cd ../../../../../../../../;ll"
-alias kkkkkkkkk="cd ../../../../../../../../../;ll"
-alias kkkkkkkkkk="cd ../../../../../../../../../../;ll"
-alias kkkkkkkkkkk="cd ../../../../../../../../../../../;ll"
-alias kkkkkkkkkkkk="cd ../../../../../../../../../../../../;ll"
-alias kkkkkkkkkkkkk="cd ../../../../../../../../../../../../../;ll"
-alias kkkkkkkkkkkkkk="cd ../../../../../../../../../../../../../../;ll"
+alias k=" cd ..;ll"
+alias kk=" cd ../../;ll"
+alias kkk=" cd ../../../;ll"
+alias kkkk=" cd ../../../../;ll"
+alias kkkkk=" cd ../../../../../;ll"
+alias kkkkkk=" cd ../../../../../../;ll"
+alias kkkkkkk=" cd ../../../../../../../;ll"
+alias kkkkkkkk=" cd ../../../../../../../../;ll"
+alias kkkkkkkkk=" cd ../../../../../../../../../;ll"
+alias kkkkkkkkkk=" cd ../../../../../../../../../../;ll"
+alias kkkkkkkkkkk=" cd ../../../../../../../../../../../;ll"
+alias kkkkkkkkkkkk=" cd ../../../../../../../../../../../../;ll"
+alias kkkkkkkkkkkkk=" cd ../../../../../../../../../../../../../;ll"
+alias kkkkkkkkkkkkkk=" cd ../../../../../../../../../../../../../../;ll"
 #--------------------------------------------------------------------------------------------------#
 # alias 1-="cd +1"                                                                                 #
 # alias 2-="cd +2"                                                                                 #
@@ -192,9 +193,11 @@ alias cascade='~/syscfg/script/sys/cascade.sh'
 alias initkeys="~/syscfg/script/sys/initkeys.sh"
 alias INITKEYS="~/syscfg/script/sys/initkeys.sh" # for cases when capslock can't be turned off
 alias switch_audio="~/syscfg/alsa/switch_audio.sh"
+alias private=' HISTFILE=/tmp/zsh-history'
+alias unprivate=' HISTFILE=~/.zsh-untracked/history'
 
 alias d='univ_open'
-alias df='df -h'
+alias df=' df -h'
 alias du='du -h'
 
 alias enc='gpg2 -e -r linusarver'
@@ -218,16 +221,16 @@ alias fD='find_quick dd '
 alias ft='find_quick t '
 alias fT='find_quick tt '
 
-alias  ll='dir_info 0'
-alias   l='dir_info 1'
-alias llj='dir_info 2'
-alias  lj='dir_info 3' # sort by size, and reverse it (bigger files @ bottom)
-alias llk='dir_info 4' # sort by time, and reverse it (latest files @ bottom)
-alias  lk='dir_info 5'
-alias lli='dir_info 6' # sort by extension
-alias  li='dir_info 7'
+alias  ll=' dir_info 0'
+alias   l=' dir_info 1'
+alias llj=' dir_info 2'
+alias  lj=' dir_info 3' # sort by size, and reverse it (bigger files @ bottom)
+alias llk=' dir_info 4' # sort by time, and reverse it (latest files @ bottom)
+alias  lk=' dir_info 5'
+alias lli=' dir_info 6' # sort by extension
+alias  li=' dir_info 7'
 
-alias q='exit'
+alias q=' exit'
 
 alias m='mplayer -loop 0 -demuxer lavf'
 alias mp='mplayer -loop 0 -demuxer lavf -playlist'
@@ -237,8 +240,8 @@ alias ms='smplayer'
 alias make_plist="~/syscfg/script/audio/make_plist.sh"
 
 alias g='git'
-alias gdf="[[ \$(git diff | wc -l) -gt 0 ]] && git diff || ([[ \$(git diff 2>&1 | wc -l) -eq 0 ]] && echo \"No changes\")"
-alias gdfc="[[ \$(git diff --cached | wc -l) -gt 0 ]] && git diff --cached || ([[ \$(git diff --cached 2>&1 | wc -l) -eq 0 ]] && echo \"Index empty\")"
+alias gdf=" [[ \$(git diff | wc -l) -gt 0 ]] && git diff || ([[ \$(git diff 2>&1 | wc -l) -eq 0 ]] && echo \"No changes\")"
+alias gdfc= "[[ \$(git diff --cached | wc -l) -gt 0 ]] && git diff --cached || ([[ \$(git diff --cached 2>&1 | wc -l) -eq 0 ]] && echo \"Index empty\")"
 alias gst='git status'
 alias gbr='git branch'
 alias gcm='git commit'
@@ -261,8 +264,8 @@ alias ee='gvim -p'
 alias eeb='vim -x --cmd "set backup" --cmd "set noswapfile" --cmd "set nowritebackup" --cmd "set viminfo=\"\""'
 
 alias -g galias_find_src='$(find -maxdepth 5 -type f -iregex ".*\.\(c\|cpp\|h\|hpp\|factor\|hs\|pl\|py\|rb\|sh\)$" | sort)'
-alias es='e galias_find_src'
-alias ees='ee galias_find_src'
+alias es=' e galias_find_src'
+alias ees=' ee galias_find_src'
 
 alias tma='tmux attach-session'
 
@@ -324,8 +327,8 @@ alias clean_files='find -type f -exec chmod 644 {} \;'
 # l k2=NOPASSWD: /usr/sbin/iftop
 
 # turn off power or reboot gracefully
-alias of='sudo shutdown --poweroff now & disown; exit' # power off
-alias ofo='sudo shutdown --reboot now & disown; exit' # reboot
+alias of=' sudo shutdown --poweroff now & disown; exit' # power off
+alias ofo=' sudo shutdown --reboot now & disown; exit' # reboot
 
 alias n='nix-env'
 alias nl='nix-env --list-generations'
@@ -346,7 +349,7 @@ alias yu='yaourt -Sybu --aur'
 alias yy='yaourt -Syy'
 alias ys='yaourt -S'
 alias yurc='pkgs=${(s:\n:)$(pacman -Qq | grep -E -- "-(bzr|darcs|git|hg|svn)")}; echo "Syncing: $pkgs\n"; ys ${(s: :)pkgs}'
-alias yc='sudo yaourt -C'
+alias yc=' sudo yaourt -C'
 
 # update all packages ending in "-git" (all git-based packages)
 alias pg='for pkg in $(pq | grep -- "-git" | cut -d " " -f1); do bs $pkg; done'
