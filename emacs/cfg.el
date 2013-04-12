@@ -13,6 +13,15 @@
 ;; the modeline
 (setq uim-candidate-display-inline t)
 
+;한글입니다.
+(set-fontset-font "fontset-default"
+  'korean-ksc5601
+  '("Baekmuk Gulim" . "unicode-bmp"))
+;日本です。
+(set-fontset-font "fontset-default"
+  'japanese-jisx0208
+  '("IPAGothic" . "unicode-bmp"))
+
 ; Custom functions {{{
 (setq my-current-font 0)
 (defun my-toggle-font ()
