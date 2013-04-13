@@ -23,6 +23,56 @@
   '("IPAGothic" . "unicode-bmp"))
 
 ; Custom functions {{{
+(defun my-add-comment (&optional b e)
+  "Use the `dc' command to comment the current region."
+  (interactive "r") ; "r" tells Emacs to pass the region (point and mark) in as the first two arguments to the command
+  (shell-command-on-region
+   ; beginning and end of buffer
+   b e
+   ; command and parameters
+   "~/prog/dc/src/dc -l shell"
+   ; output buffer
+   (current-buffer)
+   ; replace?
+   t
+   ; name of the error buffer
+   "*dc Error Buffer*"
+   ; show error buffer?
+   t
+   )
+  )
+(defun my-rem-comment (&optional b e)
+  "Use the `dc' command to uncomment the current region."
+  (interactive "r") ; "r" tells Emacs to pass the region (point and mark) in as the first two arguments to the command
+  (shell-command-on-region
+   b e
+   "~/prog/dc/src/dc -u -l shell"
+   (current-buffer)
+   t
+   "*dc Error Buffer*"
+   t
+   )
+  )
+(defun my-comment-and-escape (&optional b e)
+  (interactive "r")
+  (my-add-comment b e)
+  (evil-visual-char)
+  (evil-exit-visual-state)
+  )
+(defun my-uncomment-and-escape (&optional b e)
+  (interactive "r")
+  (my-rem-comment b e)
+  (evil-visual-char)
+  (evil-exit-visual-state)
+  )
+(defun my-comment-this-line ()
+  (interactive)
+  (my-comment-and-escape (line-beginning-position) (line-beginning-position 2))
+  )
+(defun my-uncomment-this-line ()
+  (interactive)
+  (my-uncomment-and-escape (line-beginning-position) (line-beginning-position 2))
+  )
 (setq my-current-font 0)
 (defun my-toggle-font ()
 	"Toggle font between Terminus and DejaVu Sans Mono"
@@ -164,6 +214,11 @@ otherwise, close current tab (elscreen)."
     (define-key evil-insert-state-map "k" nil)
     (define-key evil-insert-state-map "k" #'cofi/maybe-exit))
   )
+
+(define-key evil-visual-state-map ",c" 'my-comment-and-escape) ; add comment
+(define-key evil-visual-state-map ",C" 'my-uncomment-and-escape) ; add comment
+(define-key evil-normal-state-map ",c" 'my-comment-this-line) ; add comment
+(define-key evil-normal-state-map ",C" 'my-uncomment-this-line) ; add comment
 ;}}}
 
 ; Elscreen {{{
