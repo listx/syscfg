@@ -6,7 +6,7 @@
 ;; read uim.el
 (autoload 'uim-mode "uim" nil t)
 ;; key-binding for activate uim (ex. C-\)
-(global-set-key "\C-\\" 'uim-mode)
+(global-set-key "\C-\\" 'my-uim-mode)
 ;; Set Hiragana input mode at activating uim.
 (setq uim-default-im-prop '("action_anthy_utf8_hiragana"))
 ;; display candidates inline (near where the actual text is) instead of below
@@ -155,6 +155,15 @@ otherwise, close current tab (elscreen)."
        (t (setq unread-command-events (append unread-command-events
                           (list evt))))))))
 
+(defun my-uim-mode ()
+  "Toggle UIM minor mode, and also toggle #'cofi/maybe-exit keybinding as it
+  conflicts with Anthy input."
+  (interactive)
+  (uim-mode)
+  (if uim-mode
+    (define-key evil-insert-state-map "k" nil)
+    (define-key evil-insert-state-map "k" #'cofi/maybe-exit))
+  )
 ;}}}
 
 ; Elscreen {{{
