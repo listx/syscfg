@@ -145,7 +145,7 @@ otherwise, close current tab (elscreen)."
   (let ((modified (buffer-modified-p)))
     (insert "k")
     (let ((evt (read-event (format "Insert %c to exit insert state" ?j)
-               nil 0.5)))
+               nil 0.2))) ; wait 200 milliseconds
       (cond
        ((null evt) (message ""))
        ((and (integerp evt) (char-equal evt ?j))
