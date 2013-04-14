@@ -34,12 +34,12 @@
      (if f
          "~/prog/dc/src/dc -l "
          "~/prog/dc/src/dc -u -l ")
-     (cond
-       ((equal (with-current-buffer (current-buffer) major-mode) 'c-mode) "c")
-       ((equal (with-current-buffer (current-buffer) major-mode) 'emacs-lisp-mode) "emacslisp")
-       ((equal (with-current-buffer (current-buffer) major-mode) 'haskell-mode) "haskell")
-       ((equal (with-current-buffer (current-buffer) major-mode) 'plain-tex-mode) "haskell")
-       (t "shell")) ; default to shell
+         (case (with-current-buffer (current-buffer) major-mode)
+           ('c-mode "c")
+           ('emacs-lisp-mode "emacslisp")
+           ('haskell-mode "haskell")
+           ('plain-tex-mode "tex")
+           (t "shell")); default to shell
      )
    ; output buffer
    (current-buffer)
