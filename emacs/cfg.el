@@ -35,8 +35,10 @@
          "~/prog/dc/src/dc -l "
          "~/prog/dc/src/dc -u -l ")
      (cond
-       ((boundp 'c-mode) "c")
-       ((boundp 'haskell-mode) "haskell")
+       ((equal (with-current-buffer (current-buffer) major-mode) 'c-mode) "c")
+       ((equal (with-current-buffer (current-buffer) major-mode) 'emacs-lisp-mode) "emacslisp")
+       ((equal (with-current-buffer (current-buffer) major-mode) 'haskell-mode) "haskell")
+       ((equal (with-current-buffer (current-buffer) major-mode) 'plain-tex-mode) "haskell")
        (t "shell")) ; default to shell
      )
    ; output buffer
