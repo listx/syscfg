@@ -1,16 +1,29 @@
-; Load paths, scripts, packages, etc. {{{
 ; add load path for custom scripts
 (add-to-list 'load-path "~/.emacs.d/script")
-;}}}
 
-;; read uim.el
+; load Packages
+; -------------
+(require 'evil)
+(evil-mode 1)
+(require 'org-exp-blocks)
+; force use of installed org-mode (not the one that comes by default with emacs)
+(require 'org-install)
+(require 'yaml-mode)
+; rainbow-colored matching parentheses, braces, etc.
+(require 'rainbow-delimiters)
+(global-rainbow-delimiters-mode)
+; change background of hex color strings to the actual color (activate with
+; rainbow-mode)
+(require 'rainbow-mode)
+
+; read uim.el
 (autoload 'uim-mode "uim" nil t)
-;; key-binding for activate uim (ex. C-\)
+; key-binding for activate uim (ex. C-\)
 (global-set-key "\C-\\" 'my-uim-mode)
-;; Set Hiragana input mode at activating uim.
+; Set Hiragana input mode at activating uim.
 (setq uim-default-im-prop '("action_anthy_utf8_hiragana"))
-;; display candidates inline (near where the actual text is) instead of below
-;; the modeline
+; display candidates inline (near where the actual text is) instead of below the
+; modeline
 (setq uim-candidate-display-inline t)
 
 ;한글입니다.
@@ -22,7 +35,7 @@
   'japanese-jisx0208
   '("IPAGothic" . "unicode-bmp"))
 
-; Custom functions {{{
+; Custom functions
 (defun my-addrem-comment-region (b e f)
   "Use the `dc' command to comment the current region."
   (interactive)
@@ -106,7 +119,6 @@ otherwise, close current tab (elscreen)."
   ; create new tab
   (elscreen-create)
   )
-;}}}
 ; start *scratch* buffer without the annoying ad
 (setq initial-scratch-message "")
 ; set *scratch* mode to fundamental mode (the least specialized mode)
@@ -114,19 +126,15 @@ otherwise, close current tab (elscreen)."
 ; disable all version control minor modes
 (setq vc-handled-backends ())
 
-; General indentation behavior {{{
+; General indentation behavior
 ; pressing TAB inserts a TAB
 (define-key text-mode-map (kbd "TAB") 'self-insert-command)
 (global-set-key (kbd "TAB") 'self-insert-command)
-;}}}
 
-; Modes {{{
+; Modes
 
-; Evil {{{
 ; Evil, the Extensible VI Layer! This makes Emacs worth using.
 ; see http://gitorious.org/evil/pages/Home
-(require 'evil)
-(evil-mode 1)
 (define-key evil-normal-state-map [f1] 'menu-bar-mode) ; toggle the menu bar
 (define-key evil-normal-state-map ",w" 'save-buffer) ; save
 (define-key evil-normal-state-map ",W" ":w!") ; force save
@@ -206,9 +214,8 @@ otherwise, close current tab (elscreen)."
 (define-key evil-visual-state-map ",C" (lambda () (interactive) (my-addrem-comment nil))) ; add comment
 (define-key evil-normal-state-map ",c" (lambda () (interactive) (my-addrem-comment t))) ; add comment
 (define-key evil-normal-state-map ",C" (lambda () (interactive) (my-addrem-comment nil))) ; add comment
-;}}}
 
-; Elscreen {{{
+; Elscreen
 (load "elscreen" "ElScreen" t)
 ; new vimlike "tab", aka "screen"
 (define-key evil-normal-state-map ",N" 'elscreen-create)
@@ -217,12 +224,8 @@ otherwise, close current tab (elscreen)."
 (define-key evil-normal-state-map (kbd "C-h") 'elscreen-previous)
 (define-key evil-insert-state-map (kbd "C-l") 'elscreen-next)
 (define-key evil-insert-state-map (kbd "C-h") 'elscreen-previous)
-; }}}
 
-; Org-mode {{{
-(require 'org-exp-blocks)
-; force use of installed org-mode (not the one that comes by default with emacs)
-(require 'org-install)
+; Org-mode
 ; ditaa program (and integration with org-mode)
 (setq org-ditaa-jar-path "/usr/share/java/ditaa/ditaa-0_9.jar") ; load path for ditaa
 ; start up org-mode for .org files
@@ -313,18 +316,16 @@ otherwise, close current tab (elscreen)."
 (evil-declare-key 'normal org-mode-map [(control tab)] 'org-cycle)
 
 (evil-declare-key 'normal org-mode-map (kbd "<f12>") 'org-export-as-html)
-;}}}
 
-; C {{{
+; C
 (add-hook 'c-mode-hook
 	(lambda ()
 		(c-set-style "linux")
 		(setq default-tab-width 8)
 	)
 )
-;}}}
 
-; Haskell {{{
+; Haskell
 ; adopted from http://sequence.complete.org/node/365
 (load-library "haskell-site-file")
 (add-to-list 'auto-mode-alist '("\\.hs\\'" . haskell-mode))
@@ -342,7 +343,6 @@ otherwise, close current tab (elscreen)."
 		(setq indent-tabs-mode t)
 	)
 )
-;}}}
 
 ; LUA
 (setq auto-mode-alist (cons '("\.lua$" . lua-mode) auto-mode-alist))
@@ -357,16 +357,13 @@ otherwise, close current tab (elscreen)."
 	)
 )
 
-; YAML {{{
-(require 'yaml-mode)
+; YAML
 (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode))
 ; disable YAML keymaps, as they interfere with Evil (especially the [backspace] keymap)
 (setq yaml-mode-map (make-sparse-keymap))
-;}}}
 
-;}}}
 
-; Appearance {{{
+; Appearance
 ; a custom syntax highlighting setup for just numbers (hex, decimal, etc.);
 ; adopted from http://stackoverflow.com/questions/8860050/emacs-c-mode-how-do-you-syntax-highlight-hex-numbers
 (make-face 'font-lock-hex-face)
@@ -410,11 +407,6 @@ otherwise, close current tab (elscreen)."
 ; zenburn color theme
 (add-to-list 'custom-theme-load-path "/usr/share/emacs/site-lisp/zenburn-emacs-mod")
 (load-theme 'zenburn-mod t)
-; rainbow-colored matching parentheses, braces, etc.
-(require 'rainbow-delimiters)
-(global-rainbow-delimiters-mode)
-; change background of hex color strings to the actual color (activate with rainbow-mode)
-(require 'rainbow-mode)
 ; highlight matching parenthese
 (show-paren-mode 1)
 ; highlight the current cursor line
@@ -513,17 +505,14 @@ otherwise, close current tab (elscreen)."
   ;; Your init file should contain only one such instance.
   ;; If there is more than one, they won't work right.
  '(default ((t (:inherit nil :stipple nil :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 105 :width normal :foundry "xos4" :family "Terminus")))))
-;}}}
 
-; Backups {{{
+; Backups
 ; put all auto-saves/backups to the temp directory
 (setq backup-directory-alist
 	`((".*" . ,temporary-file-directory)))
 (setq auto-save-file-name-transforms
 	`((".*" ,temporary-file-directory t)))
-;}}}
 
-; Misc {{{
+; Misc
 ; always follow symlink that points to a version-controlled file
 (setq vc-follow-symlinks t)
-;}}}
