@@ -345,6 +345,12 @@ otherwise, close current tab (elscreen)."
 	)
 )
 
+; Lilypond
+(autoload 'LilyPond-mode "lilypond-mode" "LilyPond Editing Mode" t)
+(add-to-list 'auto-mode-alist '("\\.ly$" . LilyPond-mode))
+(add-to-list 'auto-mode-alist '("\\.ily$" . LilyPond-mode))
+(add-hook 'LilyPond-mode-hook (lambda () (turn-on-font-lock)))
+
 ; LUA
 (setq auto-mode-alist (cons '("\.lua$" . lua-mode) auto-mode-alist))
 (autoload 'lua-mode "lua-mode" "Lua editing mode." t)
