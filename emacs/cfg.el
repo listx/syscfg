@@ -51,6 +51,7 @@
            ('c-mode "c")
            ('emacs-lisp-mode "emacslisp")
            ('haskell-mode "haskell")
+           ('LilyPond-mode "tex")
            ('plain-tex-mode "tex")
            (t "shell")); default to shell
      )
