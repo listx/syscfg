@@ -115,33 +115,23 @@ if !exists("autocommands_loaded")
     " load lilypond-specific stuff
     au BufRead,BufNewFile *.ly setlocal filetype=lilypond
 
-    " Integration with my "foxes" program.
-    au BufEnter * nmap <localleader>c1 !!foxes -l sh -b -f "-"<cr>
-    au BufEnter * nmap <localleader>c2 !!foxes -l sh<cr>
-    au BufEnter * vmap <localleader>c1 !foxes -l sh -b -f "-"<cr>
-    au BufEnter * vmap <localleader>c2 !foxes -l sh<cr>
-    au BufEnter * nmap <localleader>CC !!foxes -l sh -u<cr>
-    au BufEnter * vmap <localleader>CC !foxes -l sh -u<cr>
-    au BufEnter *.c,*.cpp,*.h,*.hpp nmap <localleader>c1 !!foxes -l c -mI<cr>
-    au BufEnter *.c,*.cpp,*.h,*.hpp nmap <localleader>c2 !!foxes -l c -mE<cr>
-    au BufEnter *.c,*.cpp,*.h,*.hpp nmap <localleader>c3 !!foxes -l c<cr>
-    au BufEnter *.c,*.cpp,*.h,*.hpp vmap <localleader>c1 !foxes -l c -mI<cr>
-    au BufEnter *.c,*.cpp,*.h,*.hpp vmap <localleader>c2 !foxes -l c -mE<cr>
-    au BufEnter *.c,*.cpp,*.h,*.hpp vmap <localleader>c3 !foxes -l c<cr>
-    au BufEnter *.c,*.cpp,*.h,*.hpp nmap <localleader>CC !!foxes -l c -u<cr>
-    au BufEnter *.c,*.cpp,*.h,*.hpp vmap <localleader>CC !foxes -l c -u<cr>
-    au BufEnter *.ly,*.tex nmap <localleader>c1 !!foxes -l tex -b -f "-"<cr>
-    au BufEnter *.ly,*.tex nmap <localleader>c2 !!foxes -l tex -b<cr>
-    au BufEnter *.ly,*.tex vmap <localleader>c1 !foxes -l tex -b -f "-"<cr>
-    au BufEnter *.ly,*.tex vmap <localleader>c2 !foxes -l tex -b<cr>
-    au BufEnter *.ly,*.tex nmap <localleader>CC !!foxes -l tex -u<cr>
-    au BufEnter *.ly,*.tex vmap <localleader>CC !foxes -l tex -u<cr>
-    au BufEnter *.hs nmap <localleader>c1 !!foxes -l hs -mI<cr>
-    au BufEnter *.hs nmap <localleader>c2 !!foxes -l hs<cr>
-    au BufEnter *.hs vmap <localleader>c1 !foxes -l hs -mI<cr>
-    au BufEnter *.hs vmap <localleader>c2 !foxes -l hs<cr>
-    au BufEnter *.hs nmap <localleader>CC !!foxes -l hs -u<cr>
-    au BufEnter *.hs vmap <localleader>CC !foxes -l hs -u<cr>
+    " Integration with my "dc" program.
+    au BufEnter * nmap <localleader>c !!~/prog/dc/src/dc<cr>
+    au BufEnter * vmap <localleader>c !~/prog/dc/src/dc<cr>
+    au BufEnter * nmap <localleader>C !!~/prog/dc/src/dc -u<cr>
+    au BufEnter * vmap <localleader>C !~/prog/dc/src/dc -u<cr>
+    au BufEnter *.c,*.cpp,*.h,*.hpp nmap <localleader>c1 !!/prog/dc/src/dc -l c<cr>
+    au BufEnter *.c,*.cpp,*.h,*.hpp vmap <localleader>c1 !/prog/dc/src/dc -l c<cr>
+    au BufEnter *.c,*.cpp,*.h,*.hpp nmap <localleader>CC !!/prog/dc/src/dc -l c -u<cr>
+    au BufEnter *.c,*.cpp,*.h,*.hpp vmap <localleader>CC !/prog/dc/src/dc -l c -u<cr>
+    au BufEnter *.ly,*.tex nmap <localleader>c1 !!/prog/dc/src/dc -l tex<cr>
+    au BufEnter *.ly,*.tex vmap <localleader>c1 !/prog/dc/src/dc -l tex<cr>
+    au BufEnter *.ly,*.tex nmap <localleader>CC !!/prog/dc/src/dc -l tex -u<cr>
+    au BufEnter *.ly,*.tex vmap <localleader>CC !/prog/dc/src/dc -l tex -u<cr>
+    au BufEnter *.hs nmap <localleader>c1 !!/prog/dc/src/dc -l hs<cr>
+    au BufEnter *.hs vmap <localleader>c1 !/prog/dc/src/dc -l hs<cr>
+    au BufEnter *.hs nmap <localleader>CC !!/prog/dc/src/dc -l hs -u<cr>
+    au BufEnter *.hs vmap <localleader>CC !/prog/dc/src/dc -l hs -u<cr>
     au BufEnter *.html vmap <localleader>bb iwoiw"zs<strong><C-R>z</strong><esc>
     au BufEnter *.html vmap <localleader>ii iwoiw"zs<em><C-R>z</em><esc>
     au BufEnter *.html vmap <localleader>bi iwoiw"zs<em><strong><C-R>z</strong></em><esc>
