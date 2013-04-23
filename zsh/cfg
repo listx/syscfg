@@ -199,6 +199,7 @@ alias unprivate=' HISTFILE=~/.zsh-untracked/history'
 alias d='univ_open'
 alias df=' df -h'
 alias du='du -h'
+alias dus='du -ah --max-depth 1 | sort -h'
 
 alias enc='gpg2 -e -r linusarver'
 alias dec='~/syscfg/script/sys/decrypt.sh outfile'
