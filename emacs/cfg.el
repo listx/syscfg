@@ -462,6 +462,7 @@ otherwise, close current tab (elscreen)."
 (setq evil-insert-state-cursor '("#ffffff" box))
 (setq evil-emacs-state-cursor '("#ff0000" box))
 (setq evil-normal-state-cursor '("#00ff00" box))
+(setq evil-visual-state-cursor '("#0000ff" box))
 ; remove splash screen
 (setq inhibit-splash-screen t)
 ; remove toolbar
