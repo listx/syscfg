@@ -349,6 +349,11 @@ otherwise, close current tab (elscreen)."
 (setq auto-mode-alist (cons '("\.lua$" . lua-mode) auto-mode-alist))
 (autoload 'lua-mode "lua-mode" "Lua editing mode." t)
 
+; Markdown
+(autoload 'markdown-mode "markdown-mode" "Major mode for editing Markdown files" t)
+(setq auto-mode-alist (cons '("\.md$" . markdown-mode) auto-mode-alist))
+
+
 ; Python
 (add-hook 'python-mode-hook
 	(lambda ()
