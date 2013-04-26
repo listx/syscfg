@@ -9,12 +9,6 @@
 ; force use of installed org-mode (not the one that comes by default with emacs)
 (require 'org-install)
 (require 'yaml-mode)
-; rainbow-colored matching parentheses, braces, etc.
-(require 'rainbow-delimiters)
-(global-rainbow-delimiters-mode)
-; change background of hex color strings to the actual color (activate with
-; rainbow-mode)
-(require 'rainbow-mode)
 
 ; read uim.el
 (autoload 'uim-mode "uim" nil t)
