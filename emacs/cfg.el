@@ -71,10 +71,10 @@
   ))
 (setq my-current-font 0)
 (defun my-toggle-font ()
-	"Toggle font between Terminus and DejaVu Sans Mono"
+	"Toggle font between Terminus and Liberation Mono"
 	(interactive)
 	(setq my-current-font (if (= my-current-font 0) 1 0))
-	(set-face-attribute 'default nil :font (if (= my-current-font 1) "DejaVu Sans Mono" "Terminus"))
+	(set-face-attribute 'default nil :font (if (= my-current-font 1) "Liberation Mono" "Terminus"))
 	(redraw-display))
 (defun kill-this-buffer-volatile ()
 	"Kill current buffer unconditionally."
