@@ -3,6 +3,7 @@
 
 ; load Packages
 ; -------------
+(require 'cl)
 (require 'evil)
 (evil-mode 1)
 (require 'org-exp-blocks)
