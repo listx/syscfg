@@ -69,6 +69,19 @@
       )
     (my-addrem-comment-region (line-beginning-position) (line-beginning-position 2) f)
   ))
+
+; http://www.emacswiki.org/emacs/GlobalTextScaleMode
+(defvar text-scale-mode-amount)
+(define-globalized-minor-mode
+  global-text-scale-mode
+  text-scale-mode
+  (lambda () (text-scale-mode 1)))
+(defun global-text-scale-adjust (inc) (interactive)
+  (text-scale-set 1)
+  (kill-local-variable 'text-scale-mode-amount)
+  (setq-default text-scale-mode-amount (+ text-scale-mode-amount inc))
+  (global-text-scale-mode 1))
+
 (setq my-current-font 0)
 (defun my-toggle-font ()
 	"Toggle font between Terminus and Liberation Mono"
@@ -484,6 +497,18 @@ otherwise, close current tab (elscreen)."
 (setq-default show-trailing-whitespace t)
 ; toggle between fonts
 (define-key evil-normal-state-map ",f" 'my-toggle-font)
+(define-key evil-normal-state-map ",-"
+	(lambda ()
+		(interactive)
+        (global-text-scale-adjust -1)
+	)
+)
+(define-key evil-normal-state-map ",_"
+	(lambda ()
+		(interactive)
+        (global-text-scale-adjust 1)
+	)
+)
 ; default tab width is 4
 (setq default-tab-width 4)
 ; disable fringes
