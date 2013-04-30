@@ -32,7 +32,7 @@
 
 ; Custom functions
 (defun my-addrem-comment-region (b e f)
-  "Use the `dc' command to comment the current region."
+  "Use the `nox' command to comment the current region."
   (interactive)
   (shell-command-on-region
    ; beginning and end of buffer
@@ -40,8 +40,8 @@
    ; command and parameters
    (concat
      (if f
-         "~/prog/dc/src/dc -l "
-         "~/prog/dc/src/dc -u -l ")
+         "~/prog/nox/src/nox -l "
+         "~/prog/nox/src/nox -u -l ")
          (case (with-current-buffer (current-buffer) major-mode)
            ('c-mode "c")
            ('emacs-lisp-mode "emacslisp")
@@ -55,7 +55,7 @@
    ; replace?
    t
    ; name of the error buffer
-   "*dc Error Buffer*"
+   "*nox Error Buffer*"
    ; show error buffer?
    t
    )
@@ -220,9 +220,9 @@ otherwise, close current tab (elscreen)."
   )
 
 (define-key evil-visual-state-map ",c" (lambda () (interactive) (my-addrem-comment t))) ; add comment
-(define-key evil-visual-state-map ",C" (lambda () (interactive) (my-addrem-comment nil))) ; add comment
-(define-key evil-normal-state-map ",c" (lambda () (interactive) (my-addrem-comment t))) ; add comment
-(define-key evil-normal-state-map ",C" (lambda () (interactive) (my-addrem-comment nil))) ; add comment
+(define-key evil-visual-state-map ",C" (lambda () (interactive) (my-addrem-comment nil))) ; remove comment
+(define-key evil-normal-state-map ",c" (lambda () (interactive) (my-addrem-comment t)))
+(define-key evil-normal-state-map ",C" (lambda () (interactive) (my-addrem-comment nil)))
 
 ; Elscreen
 (load "elscreen" "ElScreen" t)
