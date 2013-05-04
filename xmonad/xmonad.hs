@@ -78,7 +78,7 @@ term1, term2, term3, suspend, xinitrc :: String
 term1 = "~/syscfg/script/sys/terms/wb.sh"
 term2 = "~/syscfg/script/sys/terms/bw.sh"
 term3 = "~/syscfg/script/sys/terms/wB.sh"
-suspend = "sudo ~/syscfg/script/sys/suspend.sh"
+suspend = "sudo systemctl suspend"
 xinitrc = "sh ~/syscfg/xinitrc/cfg"
 
 schedToday :: String
