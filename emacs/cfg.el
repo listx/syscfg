@@ -23,64 +23,71 @@
 
 ;한글입니다.
 (set-fontset-font "fontset-default"
-  'korean-ksc5601
-  '("Baekmuk Gulim" . "unicode-bmp"))
+	'korean-ksc5601
+	'("Baekmuk Gulim" . "unicode-bmp")
+)
 ;日本です。
 (set-fontset-font "fontset-default"
-  'japanese-jisx0208
-  '("IPAGothic" . "unicode-bmp"))
+	'japanese-jisx0208
+	'("IPAGothic" . "unicode-bmp")
+)
 
 ; Custom functions
 (defun my-addrem-comment-region (b e f)
-  "Use the `nox' command to comment the current region."
-  (interactive)
-  (shell-command-on-region
-   ; beginning and end of buffer
-   b e
-   ; command and parameters
-   (concat
-     (if f
-         "~/prog/nox/src/nox -l "
-         "~/prog/nox/src/nox -u -l ")
-         (case (with-current-buffer (current-buffer) major-mode)
-           ('c-mode "c")
-           ('emacs-lisp-mode "emacslisp")
-           ('haskell-mode "haskell")
-           ('LilyPond-mode "tex")
-           ('plain-tex-mode "tex")
-           (t "shell")); default to shell
-     )
-   ; output buffer
-   (current-buffer)
-   ; replace?
-   t
-   ; name of the error buffer
-   "*nox Error Buffer*"
-   ; show error buffer?
-   t
-   )
-  )
+	"Use the `nox' command to comment the current region."
+	(interactive)
+	(shell-command-on-region
+		; beginning and end of buffer
+		b e
+		; command and parameters
+		(concat
+			(if f
+				"~/prog/nox/src/nox -l "
+				"~/prog/nox/src/nox -u -l ")
+			(case (with-current-buffer (current-buffer) major-mode)
+				('c-mode "c")
+				('emacs-lisp-mode "emacslisp")
+				('haskell-mode "haskell")
+				('LilyPond-mode "tex")
+				('plain-tex-mode "tex")
+				(t "shell") ; default to shell syntax
+			)
+		)
+		; output buffer
+		(current-buffer)
+		; replace?
+		t
+		; name of the error buffer
+		"*nox Error Buffer*"
+		; show error buffer?
+		t
+	)
+)
+
 (defun my-addrem-comment (f)
-  (if (use-region-p)
-    (progn
-      (my-addrem-comment-region (region-beginning) (region-end) f)
-      (evil-visual-char)
-      (evil-exit-visual-state)
-      )
-    (my-addrem-comment-region (line-beginning-position) (line-beginning-position 2) f)
-  ))
+	(if (use-region-p)
+		(progn
+			(my-addrem-comment-region (region-beginning) (region-end) f)
+			(evil-visual-char)
+			(evil-exit-visual-state)
+		)
+		(my-addrem-comment-region (line-beginning-position) (line-beginning-position 2) f)
+	)
+)
 
 ; http://www.emacswiki.org/emacs/GlobalTextScaleMode
 (defvar text-scale-mode-amount)
 (define-globalized-minor-mode
-  global-text-scale-mode
-  text-scale-mode
-  (lambda () (text-scale-mode 1)))
+	global-text-scale-mode
+	text-scale-mode
+	(lambda () (text-scale-mode 1))
+)
 (defun global-text-scale-adjust (inc) (interactive)
-  (text-scale-set 1)
-  (kill-local-variable 'text-scale-mode-amount)
-  (setq-default text-scale-mode-amount (+ text-scale-mode-amount inc))
-  (global-text-scale-mode 1))
+	(text-scale-set 1)
+	(kill-local-variable 'text-scale-mode-amount)
+	(setq-default text-scale-mode-amount (+ text-scale-mode-amount inc))
+	(global-text-scale-mode 1)
+)
 
 (setq my-current-font 0)
 (defun my-toggle-font ()
@@ -88,46 +95,42 @@
 	(interactive)
 	(setq my-current-font (if (= my-current-font 0) 1 0))
 	(set-face-attribute 'default nil :font (if (= my-current-font 1) "Liberation Mono" "Terminus"))
-	(redraw-display))
+	(redraw-display)
+)
 (defun kill-this-buffer-volatile ()
 	"Kill current buffer unconditionally."
 	(interactive)
 	(set-buffer-modified-p nil)
-	(kill-this-buffer))
+	(kill-this-buffer)
+)
 ; Either close the current elscreen, or if only one screen, use the ":q" Evil
 ; command; this simulates the ":q" behavior of Vim when used with tabs.
 (defun vimlike-quit ()
-  "Vimlike ':q' behavior: close current window if there are split windows;
+	"Vimlike ':q' behavior: close current window if there are split windows;
 otherwise, close current tab (elscreen)."
-  (interactive)
-  (let ((one-elscreen (elscreen-one-screen-p))
-        (one-window (one-window-p))
-        )
-    (cond
-     ; if current tab has split windows in it, close the current live window
-     ((not one-window)
-      (delete-window) ; delete the current window
-      (balance-windows) ; balance remaining windows
-      nil)
-     ; if there are multiple elscreens (tabs), close the current elscreen
-     ((not one-elscreen)
-      (elscreen-kill)
-      nil)
-     ; if there is only one elscreen, just try to quit (calling elscreen-kill
-     ; will not work, because elscreen-kill fails if there is only one
-     ; elscreen)
-     (one-elscreen
-      (evil-quit)
-      nil)
-     )))
+	(interactive)
+	(let
+		((one-elscreen (elscreen-one-screen-p)) (one-window (one-window-p)))
+		(cond
+			; if current tab has split windows in it, close the current live window
+			((not one-window) (delete-window) (balance-windows) nil)
+			; if there are multiple elscreens (tabs), close the current elscreen
+			((not one-elscreen) (elscreen-kill) nil)
+			; if there is only one elscreen, just try to quit (calling elscreen-kill
+			; will not work, because elscreen-kill fails if there is only one
+			; elscreen)
+			(one-elscreen (evil-quit) nil)
+		)
+	)
+)
 ; A function that behaves like Vim's ':tabe' commnad for creating a new tab and
 ; buffer (the name "[No Name]" is also taken from Vim).
 (defun vimlike-:tabe ()
-  "Vimlike ':tabe' behavior for creating a new tab and buffer."
-  (interactive)
-  ; create new tab
-  (elscreen-create)
-  )
+	"Vimlike ':tabe' behavior for creating a new tab and buffer."
+	(interactive)
+	; create new tab
+	(elscreen-create)
+)
 ; start *scratch* buffer without the annoying ad
 (setq initial-scratch-message "")
 ; set *scratch* mode to fundamental mode (the least specialized mode)
@@ -194,30 +197,34 @@ otherwise, close current tab (elscreen)."
 ; make "kj" behave as ESC key, adapted from http://article.gmane.org/gmane.emacs.vim-emulation/980
 (define-key evil-insert-state-map "k" #'cofi/maybe-exit)
 (evil-define-command cofi/maybe-exit ()
-  :repeat change
-  (interactive)
-  (let ((modified (buffer-modified-p)))
-    (insert "k")
-    (let ((evt (read-event (format "Insert %c to exit insert state" ?j)
-               nil 0.2))) ; wait 200 milliseconds
-      (cond
-       ((null evt) (message ""))
-       ((and (integerp evt) (char-equal evt ?j))
-    (delete-char -1)
-    (set-buffer-modified-p modified)
-    (push 'escape unread-command-events))
-       (t (setq unread-command-events (append unread-command-events
-                          (list evt))))))))
+	:repeat change
+	(interactive)
+	(let ((modified (buffer-modified-p)))
+		(insert "k")
+		(let ((evt (read-event (format "Insert %c to exit insert state" ?j) nil 0.2))) ; wait 200 milliseconds
+			(cond
+				((null evt) (message ""))
+				((and (integerp evt) (char-equal evt ?j))
+					(delete-char -1)
+					(set-buffer-modified-p modified)
+					(push 'escape unread-command-events)
+		 		)
+				(t (setq unread-command-events (append unread-command-events (list evt)))
+				)
+			)
+		)
+	)
+)
 
 (defun my-uim-mode ()
-  "Toggle UIM minor mode, and also toggle #'cofi/maybe-exit keybinding as it
-  conflicts with Anthy input."
-  (interactive)
-  (uim-mode)
-  (if uim-mode
-    (define-key evil-insert-state-map "k" nil)
-    (define-key evil-insert-state-map "k" #'cofi/maybe-exit))
-  )
+	"Toggle UIM minor mode, and also toggle #'cofi/maybe-exit keybinding as it conflicts with Anthy input."
+	(interactive)
+	(uim-mode)
+	(if uim-mode
+		(define-key evil-insert-state-map "k" nil)
+		(define-key evil-insert-state-map "k" #'cofi/maybe-exit)
+	)
+)
 
 (define-key evil-visual-state-map ",c" (lambda () (interactive) (my-addrem-comment t))) ; add comment
 (define-key evil-visual-state-map ",C" (lambda () (interactive) (my-addrem-comment nil))) ; remove comment
@@ -315,12 +322,13 @@ otherwise, close current tab (elscreen)."
 (evil-declare-key 'normal org-mode-map (kbd "M-K") 'org-shiftmetaup)
 (evil-declare-key 'normal org-mode-map (kbd "M-J") 'org-shiftmetadown)
 (add-hook 'org-mode-hook
-		  '(lambda ()
-			; make TAB go to the other window, and map existing TAB
-			; functionality to CTRL-TAB
-			(define-key org-mode-map [(tab)] nil)
-			(define-key org-mode-map [(control tab)] nil)
-			))
+	'(lambda ()
+		; make TAB go to the other window, and map existing TAB
+		; functionality to CTRL-TAB
+		(define-key org-mode-map [(tab)] nil)
+		(define-key org-mode-map [(control tab)] nil)
+	)
+)
 (evil-declare-key 'normal org-mode-map (kbd "TAB") 'other-window)
 (evil-declare-key 'normal org-mode-map [(control tab)] 'org-cycle)
 
