@@ -49,6 +49,8 @@ pal:
 	ln -fs ${CFG}/pal/cfg								${HOME}/.pal/pal.conf
 pentadactyl:
 	ln -fs ${CFG}/pentadactyl/cfg						${HOME}/.pentadactylrc
+rf:
+	ln -fs ${CFG}/rf/cfg								${HOME}/.rf
 rtorrent:
 ifeq ('${HOST}','k0')
 	ln -fs ${CFG}/rtorrent/cfg							${HOME}/.rtorrent.rc

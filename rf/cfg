@@ -1,0 +1,123 @@
+[doc-wrapper
+\documentclass[letterpaper,twoside,10pt]{report}
+\usepackage[margin=0.75in]{geometry}
+\usepackage[space,fallback]{xeCJK}
+\usepackage{ulem}
+\usepackage[table,x11names]{xcolor}
+
+% english/latin-script
+\usepackage{libertineotf}
+
+% japanese/korean
+\setCJKfamilyfont{jarm}{IPAPMincho}
+\setCJKfamilyfont{jasf}{IPAPGothic}
+\setCJKfamilyfont{korm}{Baekmuk Batang}
+\setCJKfamilyfont{kosf}{Baekmuk Gulim}
+\setCJKfallbackfamilyfont{\CJKrmdefault}[Mapping=tex-text]{Bitstream Cyberbit}
+
+\newcommand\JapaneseRM{\renewcommand\CJKrmdefault{jarm}\CJKnospace\normalfont}
+\newcommand\JapaneseSF{\renewcommand\CJKrmdefault{jasf}\CJKnospace\normalfont}
+\newcommand\KoreanRM{\renewcommand\CJKrmdefault{korm}\CJKspace\normalfont}
+\newcommand\KoreanSF{\renewcommand\CJKrmdefault{kosf}\CJKspace\normalfont}
+
+\usepackage[marginal,perpage,para]{footmisc} % "norule" option disables the horizontal line, and "marginal" allows the footnote to stick out into the margin
+\renewcommand{\footnotemargin}{0.6em} % the size of the footnote's margin (shift the entire footnote by this amount)
+\renewcommand{\footnotelayout}{\hspace{0.2em}} % spacing between footnote marker and footnote
+\renewcommand{\hangfootparindent}{1em} % Indentation for successive paragraphs in footnote, if they exist
+\renewcommand{\hangfootparskip}{0.2em} % Vertical space between paragraphs in multiparagraph footnotes
+
+\AtBeginDocument{
+    \input{/home/l/study/ct/tex/s_osfpagenum}
+}
+
+% custom footnotes --- instead of on the bottom, these footnotes are printed in the margins
+\usepackage{perpage} % allow easy resetting of a counter for every new page
+\newcounter{mcounter}
+\newcommand*\advancemc{
+    \stepcounter{mcounter}
+    \themcounter}
+\newcommand{\n}[1]{\textsuperscript{\advancemc}\marginpar{\textsuperscript{\themcounter} \footnotesize#1}}
+\MakePerPage[1]{mcounter} % reset mcounter to 1 at every new page
+
+% set CJK punctuation style -- this overrides actual punctuation characters that are typed from the keyboard into this text file
+\punctstyle{mixedwidth}
+
+% allow "ruby" (Japanese furigana) -- e.g., \ruby{一}{ひと}つ
+\usepackage[overlap]{ruby}
+% make default ruby size slightly bigger than the default
+\renewcommand{\rubysize}{0.5} % default is 0.4
+% customize separation b/n furigana and kanji
+\renewcommand{\rubysep}{-0.1ex} % default is -0.5ex
+
+% Custom aliases
+\newcommand{\bx}{\framebox[1.1\width]}
+\newcommand{\rb}{\ruby}
+
+\raggedbottom % do NOT automatically fill in extra whitespace everywhere on the last page of a chapter/section; instead, put it at the very bottom of that page
+
+\begin{document}
+\normalem % prevent 'ulem' package from overriding the \emph command
+\pagestyle{plain}
+
+\newcommand*\voc[1]{{\color{DeepPink1}#1}}
+\newcommand*\ex[1]{\textsf{#1}}
+
+<<<>>>
+\end{document}
+]
+
+[meta-author-wrapper
+{<<<>>>.}
+]
+
+[meta-title-wrapper
+{\scshape <<<>>>.}
+]
+
+[meta-date-wrapper
+{\oldstylenums{(<<<>>>)}}
+]
+
+[meta-edition-wrapper
+{<<<>>>.}
+]
+
+[meta-excerpt-wrapper
+{\itshape \oldstylenums{<<<>>>}}
+]
+
+[meta-isbn-wrapper
+{\scshape <<<>>>}
+]
+
+[eng-wrapper
+{%
+\setromanfont[Mapping=tex-text,Ligatures=Common]{Linux Libertine O}%
+\setsansfont[Mapping=tex-text,Ligatures=Common,Scale=0.8]{Liberation Sans}%
+\setmonofont[Scale=0.8]{Liberation Mono}%
+<<<>>>
+}%
+]
+
+[fra-wrapper
+{%
+\setromanfont[Mapping=tex-text,Ligatures=Common]{Linux Libertine O}%
+\setsansfont[Mapping=tex-text,Ligatures=Common,Scale=0.8]{Liberation Sans}%
+\setmonofont[Scale=0.8]{Liberation Mono}%
+<<<>>>
+}%
+]
+
+[jpn-wrapper
+{%
+\JapaneseRM
+<<<>>>
+}%
+]
+
+[kor-wrapper
+{%
+\KoreanRM
+<<<>>>
+}%
+]
