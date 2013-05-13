@@ -3,6 +3,8 @@
 
 ; load Packages
 ; -------------
+; fix "<dead-grave> is undefined" error
+(require 'iso-transl)
 (require 'cl)
 (require 'evil)
 (evil-mode 1)
