@@ -398,6 +398,7 @@ otherwise, close current tab (elscreen)."
 ; Markdown
 (autoload 'markdown-mode "markdown-mode" "Major mode for editing Markdown files" t)
 (setq auto-mode-alist (cons '("\.md$" . markdown-mode) auto-mode-alist))
+(evil-declare-key 'normal markdown-mode-map (kbd "<tab>") 'other-window)
 
 
 ; Python
