@@ -6,7 +6,7 @@
 \usepackage[table,x11names]{xcolor}
 
 % english/latin-script
-\usepackage{libertineotf}
+\usepackage{libertine}
 
 % japanese/korean
 \setCJKfamilyfont{jarm}{IPAPMincho}
