@@ -15,10 +15,10 @@
 \setCJKfamilyfont{kosf}{Baekmuk Gulim}
 \setCJKfallbackfamilyfont{\CJKrmdefault}[Mapping=tex-text]{Bitstream Cyberbit}
 
-\newcommand\JapaneseRM{\renewcommand\CJKrmdefault{jarm}\CJKnospace\normalfont}
-\newcommand\JapaneseSF{\renewcommand\CJKrmdefault{jasf}\CJKnospace\normalfont}
-\newcommand\KoreanRM{\renewcommand\CJKrmdefault{korm}\CJKspace\normalfont}
-\newcommand\KoreanSF{\renewcommand\CJKrmdefault{kosf}\CJKspace\normalfont}
+\newcommand\JapaneseRM{\CJKfamily{jarm}\CJKnospace}
+\newcommand\JapaneseSF{\CJKfamily{jasf}\CJKnospace}
+\newcommand\KoreanRM{\CJKfamily{korm}\CJKspace}
+\newcommand\KoreanSF{\CJKfamily{kosf}\CJKspace}
 
 \usepackage[marginal,perpage,para]{footmisc} % "norule" option disables the horizontal line, and "marginal" allows the footnote to stick out into the margin
 \renewcommand{\footnotemargin}{0.6em} % the size of the footnote's margin (shift the entire footnote by this amount)
