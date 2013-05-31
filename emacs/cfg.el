@@ -9,8 +9,6 @@
 (require 'evil)
 (evil-mode 1)
 (require 'org-exp-blocks)
-; force use of installed org-mode (not the one that comes by default with emacs)
-(require 'org-install)
 (require 'yaml-mode)
 
 ; read uim.el
