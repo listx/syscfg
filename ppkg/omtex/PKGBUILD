@@ -14,7 +14,7 @@ replaces=(omtex)
 backup=()
 install=''
 source=("$pkgname")
-sha1sums=('2dd89ebec09df6f72de6dacf5f0cb9f44f46aacd')
+sha1sums=('d5653a6cd0f4ea187585429f7e2a341bc32f5251')
 
 #build() {
 #}
