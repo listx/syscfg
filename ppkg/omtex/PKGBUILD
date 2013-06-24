@@ -1,0 +1,24 @@
+# Maintainer: Linus Arver <linusarver <at> gmail <dot> com>
+pkgname=omtex
+pkgver=0.4.6
+pkgrel=1
+pkgdesc="omtex"
+url=""
+arch=('x86_64')
+license=('CUSTOM')
+depends=()
+optdepends=()
+makedepends=()
+conflicts=()
+replaces=(omtex)
+backup=()
+install=''
+source=("$pkgname")
+sha1sums=('2dd89ebec09df6f72de6dacf5f0cb9f44f46aacd')
+
+#build() {
+#}
+
+package() {
+  install -Dm755 $pkgname "$pkgdir/usr/bin/$pkgname"
+}
