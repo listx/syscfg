@@ -142,6 +142,8 @@ otherwise, close current tab (elscreen)."
 ; pressing TAB inserts a TAB
 (define-key text-mode-map (kbd "TAB") 'self-insert-command)
 (global-set-key (kbd "TAB") 'self-insert-command)
+; for all minor modes, make backspace behave like backspace in insert mode
+(define-key evil-insert-state-map (kbd "DEL") 'backward-delete-char)
 
 ; Modes
 
@@ -343,7 +345,6 @@ otherwise, close current tab (elscreen)."
 )
 
 ; Emacs lisp
-(evil-declare-key 'insert emacs-lisp-mode-map (kbd "DEL") 'backward-delete-char)
 (evil-declare-key 'normal emacs-lisp-mode-map "o" 'raw-open-below)
 (evil-declare-key 'normal emacs-lisp-mode-map "O" 'raw-open-above)
 (defun raw-open-below ()
