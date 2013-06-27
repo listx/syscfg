@@ -341,6 +341,7 @@ otherwise, close current tab (elscreen)."
 	(lambda ()
 		(c-set-style "linux")
 		(setq default-tab-width 8)
+		(setq evil-shift-width 8)
 	)
 )
 
