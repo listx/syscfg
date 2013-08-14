@@ -84,7 +84,6 @@ let maplocalleader = ","
 
 " we only want to load autocommands ONCE (esp. for gvim, which sources the
 " vimrc
-set runtimepath+=/usr/share/lilypond/2.15.21/vim
 if !exists("autocommands_loaded")
     let autocommands_loaded = 1
 
