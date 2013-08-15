@@ -29,6 +29,8 @@ case $(hostname) in
 
         # turn on numlock for keypad by default
         # numlockx &
+
+        rm -f ~/bittor/session/rtorrent.lock
     ;;
     k1)
         amixer -q set Speaker mute
