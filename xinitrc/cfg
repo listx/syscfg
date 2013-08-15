@@ -25,7 +25,7 @@ uim-xim &
 
 case $(hostname) in
     k0)
-        icecast -b -c ~/syscfg/icecast/cfg.xml
+        # icecast -b -c ~/syscfg/icecast/cfg.xml
 
         # turn on numlock for keypad by default
         # numlockx &
