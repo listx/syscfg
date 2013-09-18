@@ -387,6 +387,15 @@ otherwise, close current tab (elscreen)."
 	)
 )
 
+;Latex
+(add-hook 'latex-mode-hook
+    (lambda ()
+        (setq indent-line-function #'indent-relative)
+		(setq tab-width 4)
+		(setq indent-tabs-mode t)
+    )
+)
+
 ; Lilypond
 (autoload 'LilyPond-mode "lilypond-mode" "LilyPond Editing Mode" t)
 (add-to-list 'auto-mode-alist '("\\.ly$" . LilyPond-mode))
