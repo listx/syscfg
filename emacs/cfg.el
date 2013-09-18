@@ -368,8 +368,9 @@ otherwise, close current tab (elscreen)."
 
 ; Haskell
 ; adopted from http://sequence.complete.org/node/365
-(load-library "haskell-site-file")
-(add-to-list 'auto-mode-alist '("\\.hs\\'" . haskell-mode))
+(add-to-list 'load-path "/usr/share/emacs/site-lisp/haskell-mode/")
+(require 'haskell-mode-autoloads)
+(add-to-list 'Info-default-directory-list "/usr/share/emacs/site-lisp/haskell-mode/")
 (remove-hook 'haskell-mode-hook 'turn-on-haskell-indent)
 ; 4-space tabs
 (add-hook 'haskell-mode-hook
