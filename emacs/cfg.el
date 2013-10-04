@@ -553,8 +553,8 @@ otherwise, close current tab (elscreen)."
         (global-text-scale-adjust 1)
 	)
 )
-; default tab width is 4
-(setq default-tab-width 4)
+; default tab width is 8
+(setq default-tab-width 8)
 ; disable fringes
 (fringe-mode 0)
 ; set default line length (as used by 'fill-paragraph) to be 80 characters
