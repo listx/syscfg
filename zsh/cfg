@@ -73,6 +73,9 @@ export WINEDLLOVERRIDES='winemenubuilder.exe=d'
 # haskell AUR packages: enable profiling (-p) option
 export PKGBUILD_HASKELL_ENABLE_PROFILING=1
 
+# default ledger file (to avoid using -f option every time)
+export LEDGER_FILE=~/money/master.dat
+
 autoload -U compinit
 compinit
 
