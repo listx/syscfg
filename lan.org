@@ -5,14 +5,16 @@
 * Devices
 | DEVICE                         | STATIC IP     | MAC ADDRESS       | DESCRIPTION                                                    |
 |--------------------------------+---------------+-------------------+----------------------------------------------------------------|
-| tiger                          | 192.168.?     | 00:1a:4d:93:28:b1 | wired; dad's PC                                                |
+| tiger                          | 192.168.1.100 | 00:1a:4d:93:28:b1 | wired; dad's PC                                                |
 | MFC-9840CDW printer (wired)    | 192.168.?     | 00:80:77:ee:65:78 | wired; web interface user/pass: admin / access                 |
-| MFC-9840CDW printer (wireless) | 192.168.1.100 | 00:23:4d:d9:f6:13 | wireless                                                       |
-| k0                             | 192.168.?     | 00:04:4b:02:51:47 | wired; my PC                                                   |
-| k2                             | 192.168.?     | 00:12:3f:05:85:fe | wired; dell laptop                                             |
-| k2.w                           | 192.168.?     | 00:0b:7d:24:02:d6 | wireless; dell laptop                                          |
-| k1                             | 192.168.?     | 00:23:26:5c:07:37 | wired; fujitsu laptop                                          |
-| k1.w                           | 192.168.?     | 00:24:d2:8d:a7:54 | wireless; fujitsu laptop                                       |
-| ocean                          | 192.168.?     | 00:50:8d:bc:9b:72 | wired; mom's PC                                                |
+| MFC-9840CDW printer (wireless) | 192.168.1.101 | 00:23:4d:d9:f6:13 | wireless                                                       |
+| k0                             | 192.168.1.110 | 00:04:4b:02:51:47 | wired; my PC                                                   |
+| k2                             | 192.168.1.111 | 00:12:3f:05:85:fe | wired; dell laptop                                             |
+| k2.w                           | 192.168.1.112 | 00:0b:7d:24:02:d6 | wireless; dell laptop                                          |
+| k1                             | 192.168.1.113 | 00:23:26:5c:07:37 | wired; fujitsu laptop                                          |
+| k1.w                           | 192.168.1.114 | 00:24:d2:8d:a7:54 | wireless; fujitsu laptop                                       |
+| ocean                          | 192.168.1.120 | 00:50:8d:bc:9b:72 | wired; mom's PC                                                |
+| cisco switch WRT160N           | 192.168.1.1   | 00:23:69:53:92:11 | cisco switch under my desk; username is blank, pass is "admin" |
 | Linksys router                 | 192.168.?     | 00:0c:41:4c:3c:01 | acting as a switch; user/pass: admin (password field is blank) |
 | Linksys router                 | 192.168.?     | 00:0c:41:4c:3c:00 | (same device as above; this is just a secondary MAC address)   |
+| AT&T 2WIRE Uverse 3802HGV      | 192.168.1.254 | ?                 | password: 7742353637                                           |
