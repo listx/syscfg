@@ -48,6 +48,7 @@
 				('c-mode "c")
 				('emacs-lisp-mode "emacslisp")
 				('haskell-mode "haskell")
+				('literate-haskell-mode "haskell")
 				('LilyPond-mode "tex")
 				('latex-mode "tex")
 				('plain-tex-mode "tex")
