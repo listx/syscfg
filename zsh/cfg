@@ -74,7 +74,7 @@ export WINEDLLOVERRIDES='winemenubuilder.exe=d'
 export PKGBUILD_HASKELL_ENABLE_PROFILING=1
 
 # default ledger file (to avoid using -f option every time)
-export LEDGER_FILE=~/money/master.dat
+export LEDGER_FILE=~/money/master.ledger
 
 autoload -U compinit
 compinit

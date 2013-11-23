@@ -397,6 +397,10 @@ otherwise, close current tab (elscreen)."
     )
 )
 
+; Ledger
+(require 'ledger)
+(add-to-list 'auto-mode-alist '("\\.ledger\\'" . ledger-mode))
+
 ; Lilypond
 (autoload 'LilyPond-mode "lilypond-mode" "LilyPond Editing Mode" t)
 (add-to-list 'auto-mode-alist '("\\.ly$" . LilyPond-mode))
