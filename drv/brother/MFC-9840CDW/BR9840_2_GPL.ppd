@@ -102,7 +102,7 @@ restore
 
 *OpenUI *PageSize: PickOne
 *OrderDependency: 30 AnySetup *PageSize
-*DefaultPageSize: A4
+*DefaultPageSize: Letter
 *PageSize Letter/Letter: "<< /PageSize [612 792] /ImagingBBox null >> setpagedevice"
 *PageSize Legal/Legal: "<< /PageSize [612 1008] /ImagingBBox null >> setpagedevice"
 *PageSize Executive/Executive: "<< /PageSize [522 756] /ImagingBBox null >> setpagedevice"
@@ -129,7 +129,7 @@ restore
 
 *OpenUI *PageRegion: PickOne
 *OrderDependency: 40 AnySetup *PageRegion
-*DefaultPageRegion: A4
+*DefaultPageRegion: Letter
 *PageRegion Letter/Letter: "<< /PageSize [612 792] /ImagingBBox null >> setpagedevice"
 *PageRegion Legal/Legal: "<< /PageSize [612 1008] /ImagingBBox null >> setpagedevice"
 *PageRegion Executive/Executive: "<< /PageSize [522 756] /ImagingBBox null >> setpagedevice"
@@ -154,7 +154,7 @@ restore
 *PageRegion Postcard/Postcard: "<< /PageSize [284 419] /ImagingBBox null >> setpagedevice"
 *CloseUI: *PageRegion
 
-*DefaultImageableArea: A4
+*DefaultImageableArea: Letter
 *ImageableArea Letter/Letter: "12.0 12.12 599.88 780.0"
 *ImageableArea Legal/Legal: "12.0 12.12 599.88 996.0"
 *ImageableArea Executive/Executive: "11.99 12.12 510.0 744.0"
@@ -180,7 +180,7 @@ restore
 
 *%==== Information About Media Sizes ========
 
-*DefaultPaperDimension: A4
+*DefaultPaperDimension: Letter
 *PaperDimension Letter/Letter: "612 792"
 *PaperDimension Legal/Legal: "612 1008"
 *PaperDimension Executive/Executive: "522 756"
