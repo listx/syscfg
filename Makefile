@@ -77,6 +77,7 @@ xorg:
 	ln -fns ${CFG}/xorg/10-server-flags.conf			/etc/X11/xorg.conf.d/
 ifeq ('${HOST}','k0')
 	ln -fns ${CFG}/xorg/10-dual-monitor-hybrid.conf		/etc/X11/xorg.conf.d/
+	ln -fns ${CFG}/xorg/50-mouse.conf					/etc/X11/xorg.conf.d/
 endif
 ifeq ('${HOST}','k2')
 	ln -fns ${CFG}/xorg/50-synaptics.conf				/etc/X11/xorg.conf.d/
