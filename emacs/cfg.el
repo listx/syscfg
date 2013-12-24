@@ -77,6 +77,21 @@
 	)
 )
 
+; from Hans-Peter Deifel's email on Nov 1 2012, to the implementations-list@lists.ourproject.org mailing list, which makes visual selections from Evil update the X11 primary selection
+(defun evil-visual-update-x-selection (&optional buffer)
+	"Update the X selection with the current visual region."
+	(with-current-buffer (or buffer (current-buffer))
+		(when	(and (evil-visual-state-p)
+			(fboundp 'x-select-text)
+			(or (not (boundp 'ns-initialized))
+				(with-no-warnings ns-initialized))
+			(not (eq evil-visual-selection 'block)))
+			(x-set-selection 'PRIMARY
+				(buffer-substring-no-properties
+					evil-visual-beginning
+					evil-visual-end))
+			(setq x-last-selected-text-primary))))
+
 ; http://www.emacswiki.org/emacs/GlobalTextScaleMode
 (defvar text-scale-mode-amount)
 (define-globalized-minor-mode
