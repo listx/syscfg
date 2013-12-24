@@ -163,6 +163,7 @@ otherwise, close current tab (elscreen)."
 (define-key evil-normal-state-map ",y" "\"+y") ; copy to X primary clipboard
 (define-key evil-normal-state-map ",p" "\"+p") ; paste (after cursor) X primary clipboard
 (define-key evil-normal-state-map ",P" "\"+P") ; paste (before cursor) X primary clipboard
+(define-key evil-insert-state-map [S-insert] (lambda () (interactive) (insert (x-selection 'PRIMARY)))) ; paste X primary clipboard
 (define-key evil-normal-state-map "gw" 'fill-paragraph) ; insert hard line breaks
 ; navigation
 ; simulate vim's "nnoremap <space> 10jzz"
