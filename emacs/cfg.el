@@ -416,6 +416,7 @@ otherwise, close current tab (elscreen)."
 ; Ledger
 (require 'ledger)
 (add-to-list 'auto-mode-alist '("\\.ledger\\'" . ledger-mode))
+(add-hook 'ledger-mode-hook 'evil-goto-line) ; go to the lastest entries at the end
 
 ; Lilypond
 (autoload 'LilyPond-mode "lilypond-mode" "LilyPond Editing Mode" t)
@@ -431,7 +432,6 @@ otherwise, close current tab (elscreen)."
 (autoload 'markdown-mode "markdown-mode" "Major mode for editing Markdown files" t)
 (setq auto-mode-alist (cons '("\.md$" . markdown-mode) auto-mode-alist))
 (evil-declare-key 'normal markdown-mode-map (kbd "<tab>") 'other-window)
-
 
 ; Python
 (add-hook 'python-mode-hook
