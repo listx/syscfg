@@ -76,6 +76,9 @@ univ_open() {
             (chm)
                 xchm $@ &>/dev/null & disown
             ;;
+            (ledger)
+                emacs $@ &>/dev/null & disown
+            ;;
             *)
                 vim -p $@
             ;;
