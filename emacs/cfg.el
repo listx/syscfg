@@ -150,7 +150,7 @@ otherwise, close current tab (elscreen)."
 )
 ; start *scratch* buffer without the annoying ad
 (setq initial-scratch-message "")
-; set *scratch* mode to fundamental mode (the least specialized mode)
+; set *scratch* mode to text mode
 (setq initial-major-mode 'text-mode)
 ; disable all version control minor modes
 (setq vc-handled-backends ())
