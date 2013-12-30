@@ -204,6 +204,7 @@ otherwise, close current tab (elscreen)."
 ; vanilla comma ',' key's functionality (intra-line backwards search repeat for
 ; any t, T, f, F searches).
 (define-key evil-normal-state-map "K" 'evil-repeat-find-char-reverse)
+(define-key evil-visual-state-map "K" 'evil-repeat-find-char-reverse)
 ; buffer movement
 (define-key evil-normal-state-map "H" 'evil-next-buffer)
 (define-key evil-normal-state-map "L" 'evil-prev-buffer)
