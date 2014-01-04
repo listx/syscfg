@@ -210,8 +210,8 @@ otherwise, close current tab (elscreen)."
 (define-key evil-normal-state-map "L" 'evil-prev-buffer)
 ; new buffer
 (define-key evil-normal-state-map ",n" 'vimlike-:tabe)
-; remove trailing whitespace
-(define-key evil-normal-state-map ",e" 'delete-trailing-whitespace)
+; find file
+(define-key evil-normal-state-map ",e" 'ido-find-file)
 ; set line ending to UNIX
 (define-key evil-normal-state-map ",E" (lambda () (interactive) (set-buffer-file-coding-system 'utf-8-unix t)))
 ; replace all /r/n with just /n
@@ -261,6 +261,12 @@ otherwise, close current tab (elscreen)."
 (define-key evil-normal-state-map (kbd "C-h") 'elscreen-previous)
 (define-key evil-insert-state-map (kbd "C-l") 'elscreen-next)
 (define-key evil-insert-state-map (kbd "C-h") 'elscreen-previous)
+
+; Ido mode
+(setq ido-enable-flex-matching t)
+(setq ido-everywhere t)
+(ido-mode 1)
+(setq ido-ignore-files (append ido-ignore-files '("\\.hi$")))
 
 ; Org-mode
 ; ditaa program (and integration with org-mode)
