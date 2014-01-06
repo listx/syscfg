@@ -361,14 +361,6 @@ otherwise, close current tab (elscreen)."
 
 (evil-declare-key 'normal org-mode-map (kbd "<f12>") 'org-export-as-html)
 
-; Undo tree
-; enable undo-tree-mode for fundamental mode too when opening files with an unknown extension; see
-; https://lists.ourproject.org/pipermail/implementations-list/2014-January/001951.html
-; The explanation is that, enabling of undo-tree-mode is achieved by some
-; special change-major-mode-hook and after-change-major-mode-hook; however,
-; when a new buffer is started in fundamental-mode, these hooks are not run.
-(add-hook 'evil-local-mode-hook 'turn-on-undo-tree-mode)
-
 ; C
 (add-hook 'c-mode-hook
 	(lambda ()
