@@ -449,6 +449,13 @@ otherwise, close current tab (elscreen)."
 	)
 )
 
+; Shell script
+(add-hook 'sh-mode-hook
+    (lambda ()
+		(setq tab-width 4)
+    )
+)
+
 ; YAML
 (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode))
 ; disable YAML keymaps, as they interfere with Evil (especially the [backspace] keymap)
