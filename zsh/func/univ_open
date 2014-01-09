@@ -80,7 +80,7 @@ univ_open() {
                 emacs $@ &>/dev/null & disown
             ;;
             *)
-                vim -p $@
+                emacs --no-window-system $@
             ;;
         esac
     elif [[ -d $1 ]]; then
