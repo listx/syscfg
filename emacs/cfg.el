@@ -390,6 +390,11 @@ otherwise, close current tab (elscreen)."
 	(indent-relative)
 	(evil-append nil)
 )
+(add-hook 'emacs-lisp-mode-hook
+	(lambda ()
+		(setq tab-width 4)
+	)
+)
 
 ; Haskell
 ; adopted from http://sequence.complete.org/node/365
