@@ -510,7 +510,10 @@ otherwise, close current tab (elscreen)."
 
 ; zenburn color theme
 (add-to-list 'custom-theme-load-path "/usr/share/emacs/site-lisp/zenburn-emacs-mod")
-(load-theme 'zenburn-mod t)
+(if window-system
+	(load-theme 'zenburn-mod t)
+	()
+)
 ; highlight matching parenthese
 (show-paren-mode 1)
 ; highlight the current cursor line
