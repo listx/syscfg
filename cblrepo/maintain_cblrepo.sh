@@ -51,8 +51,16 @@ case $mode in
 
 	# Add packages installed by the user from [haskell-core] or some other Arch Linux repository
 	installed=($(pacman -Qq | grep "^haskell-" | sed 's/^haskell-//'))
+	# Filter out those packages that were installed from Hackage using this very
+	# same script (in Arch Linux, the hackage packages, once installed, are in
+	# the format `haskell-<lowercased_package_name>'). This way, we avoid
+	# duplicate definitions and the packages added with --distro-pkg will really
+	# be those packages available from the distribution's official haskell
+	# repository.
+	hackage_lowercased=($hackage_packages_file:l)
+	installed_filtered=(${installed:|hackage_lowercased})
 
-	for p in $installed; do
+	for p in $installed_filtered; do
 		version=$(pacman -Q haskell-$p | cut -d " " -f2 | sed 's/-/,/')
 		command="cblrepo add --distro-pkg $p,$version"
 		echo $command
