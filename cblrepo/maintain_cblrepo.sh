@@ -67,7 +67,7 @@ case $mode in
 	fi
 
 	# Add packages from Hackage
-	for hp in ${hackage_packages_file}; do
+	for hp in $hackage_packages_file; do
 		# Grab latest version of package
 		cabal_file=$(curl -s $hackage_url/package/$hp | grep -ioE "Cabal source package[)<>/lia href=\"]+\/package\/.+\.cabal" | grep -ioE "\/package.+")
 		command="cblrepo add --cbl-url $hackage_url$cabal_file"
