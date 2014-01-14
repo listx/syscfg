@@ -23,6 +23,7 @@ fi
 
 hackage_url="http://hackage.haskell.org"
 hackage_packages_file=($(<$1))
+hackage_lowercased=($hackage_packages_file:l)
 
 mode=$2
 
@@ -57,7 +58,6 @@ case $mode in
 	# duplicate definitions and the packages added with --distro-pkg will really
 	# be those packages available from the distribution's official haskell
 	# repository.
-	hackage_lowercased=($hackage_packages_file:l)
 	installed_filtered=(${installed:|hackage_lowercased})
 
 	for p in $installed_filtered; do
@@ -103,15 +103,31 @@ case $mode in
 	;;
 	### Create Arch Linux packages for the Hackage packages ###
 	(makepkg)
-	for pdir in haskell-*; do
-		cd $pdir
-		echo $(basename $PWD)
-		makepkg -sf
-		sudo pacman -U $(basename $PWD)-*.pkg.tar.xz
-		cd ..
-		echo
-		echo "  Finished making/installing package for $pdir"
-		echo
+	for pkg in ${hackage_lowercased}; do
+		hpkg=haskell-$pkg
+		install_pkg=0
+		while true; do
+            read "reply?Make and install package \`$pkg'? (y/n): "
+            case $reply in
+                [Yy])
+					install_pkg=1
+					break
+					;;
+                [Nn]) break ;;
+                *) printf '%s\n' 'Please answer y or n.' ;;
+            esac
+        done
+
+		if (( $install_pkg )); then
+			cd $hpkg
+			echo $hpkg
+			makepkg -sf
+			sudo pacman -U $hpkg-*.pkg.tar.xz
+			cd ..
+			echo
+			echo "  Finished making/installing package \`$hpkg'"
+			echo
+		fi
 	done
 	;;
 	*)
