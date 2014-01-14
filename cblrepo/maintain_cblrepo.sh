@@ -29,7 +29,7 @@ mode=$2
 case $mode in
 	### Remove any old cblrepo.db file. ###
 	(initdb|initdb-sync)
-	rm -f cblrepo.db
+	rm -fv cblrepo.db
 
 	# Add packages provided by GHC
 
