@@ -11,6 +11,7 @@ generic-deriving
 profunctors
 reflection
 distributive
+MonadCatchIO-transformers
 lens
 reflection
 linear
