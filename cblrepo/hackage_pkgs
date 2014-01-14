@@ -1,4 +1,17 @@
 bindings-DSL
 bindings-GLFW
 GLFW-b
+transformers-compat
+contravariant
+distributive
+comonad
+semigroupoids
+bifunctors
+generic-deriving
+profunctors
+reflection
+distributive
+lens
+reflection
+linear
 rosezipper
