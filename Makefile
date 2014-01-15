@@ -153,5 +153,3 @@ ifeq ('${HOST}','k1')
 	ln -fns ${CFG}/core/etc-makepkg.conf-k1				/etc/makepkg.conf
 	ln -fns ${CFG}/core/etc-modules-load.d-load.conf-k1	/etc/modules-load.d/load.conf
 endif
-
-# vim: tabstop=4
