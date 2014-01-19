@@ -121,16 +121,6 @@ myKeys hostname conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     -- Swap the focused window with the previous window
     , ((modm .|. shiftMask, xK_k     ), windows W.swapUp    )
 
-    -- Shrink the master area
-    , ((modm,               xK_w     ), sendMessage Shrink)
-
-    -- Expand the master area
-    , ((modm,               xK_e     ), sendMessage Expand)
-
-	-- Expand/shrink slave window
-    , ((modm .|. shiftMask, xK_w     ), sendMessage MirrorShrink)
-    , ((modm .|. shiftMask, xK_e     ), sendMessage MirrorExpand)
-
     -- Push window back into tiling
     , ((modm,               xK_t     ), withFocused $ windows . W.sink)
 
@@ -231,6 +221,21 @@ myKeys hostname conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     [((m .|. modm, key), (screenWorkspace =<< sc) >>= flip whenJust (windows . f))
         | (key, sc) <- [(xK_h, screenBy (-1)),(xK_l, screenBy 1)]
         , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]]
+
+	++
+
+	-- Shrink/Expand work on the Master window; the Mirror* counterparts do the
+	-- same (although, from the looks of it, the definitions are somehow
+	-- *reversed*), but for a slave window.
+	[ ((modm,               xK_w     ), fstIfK0 MirrorExpand Shrink)
+	, ((modm,               xK_e     ), fstIfK0 MirrorShrink Expand)
+	, ((modm .|. shiftMask, xK_w     ), fstIfK0 Shrink MirrorExpand)
+	, ((modm .|. shiftMask, xK_e     ), fstIfK0 Expand MirrorShrink)
+	]
+	where
+	fstIfK0 slave master = if hostname == "k0"
+		then sendMessage slave
+		else sendMessage master
 
 mpcSeek :: String -> Int -> String
 mpcSeek hostname sec = "mpc -h 192.168.0.110 -p " ++ port ++ " seek " ++ show' sec where
