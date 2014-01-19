@@ -2,6 +2,7 @@
 *.hi
 *.o
 *.swp
+cblrepo/haskell-*
 emacs/auto-save-list
 mplayer/mplayerplug-in.conf
 ncmpcpp/config
