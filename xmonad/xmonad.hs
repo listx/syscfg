@@ -22,7 +22,6 @@ import XMonad.Layout.LayoutHints -- for (among other things) removing GVim's dea
 
 import XMonad.Util.WorkspaceCompare (getSortByIndex)
 import System.Posix.Unistd -- for getting hostname
-import XMonad.Hooks.EwmhDesktops -- for _NET_WINDOW_WINDOW (emacs + SCIM bridge)
 
 import System.Random
 import Data.Array.IO
@@ -369,23 +368,18 @@ myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
     -- you may also bind events to the mouse scroll wheel (button4 and button5)
     ]
 
-myLayout
-  :: Choose
-       (Mirror Tall)
-       (Choose Tall (XLL.ModifiedLayout WithBorder Full))
-       Window
-myLayout = Mirror tiled
-    ||| tiled
-    ||| noBorders Full
-    where
-        -- default tiling algorithm partitions the screen into two panes
-        tiled   = Tall nmaster delta ratio
-        -- The default number of windows in the master pane
-        nmaster = 1
-        -- Default proportion of screen occupied by master pane
-        ratio   = 1/2
-        -- Percent of screen to increment by when resizing panes
-        delta   = 3/100
+-- Tall is the default tiling algorithm, which partitions the screen into two
+-- panes. It takes three arguments x y z, where x is the default number of
+-- windows in the master pane, y is the percent of the screen to increment by
+-- when resizing panes, and z is the default proportion of the screen occupied
+-- by the master pane.
+defaultLayout = (Mirror $ tiled 1) ||| tiled 1 ||| noBorders Full
+	where
+	tiled nmaster = Tall nmaster delta ratio
+	delta = 3/100
+	ratio = 1/2
+
+layoutNoMirror = Tall 0 (3/100) (1/2) ||| noBorders Full
 
 ------------------------------------------------------------------------
 -- Window rules:
@@ -534,22 +528,25 @@ sitesRand = shuffle sites >>= return . unwords
 
 main :: IO ()
 main = do
-    hostname <- fmap nodeName getSystemID
-    xmonad $ ewmh defaultConfig
-        { terminal           = "urxvt"
-        , focusFollowsMouse  = True
-        , borderWidth        = 1
-        , modMask            = mod3Mask -- use the CAPSLOCK key
-        , workspaces         = myWorkspaces
-        , normalBorderColor  = "#000000"
-        , focusedBorderColor = "#ffffff"
-        , keys               = myKeys hostname
-        , mouseBindings      = myMouseBindings
-        , layoutHook         = myLayout
-        , manageHook         = myManageHook
-        , handleEventHook    = mempty
-        , logHook            = return ()
-        , startupHook        = myStartupHook hostname
-        }
-
--- vim:syntax=haskell
+	hostname <- fmap nodeName getSystemID
+	if hostname == "k0"
+		then xmonad $ myconf hostname
+		else xmonad (myconf hostname) {layoutHook = defaultLayout}
+	where
+	myconf hostname = XConfig
+		{ terminal           = "urxvt"
+		, focusFollowsMouse  = True
+		, clickJustFocuses   = True
+		, borderWidth        = 1
+		, modMask            = mod3Mask -- use the CAPSLOCK key
+		, workspaces         = myWorkspaces
+		, normalBorderColor  = "#000000"
+		, focusedBorderColor = "#ffffff"
+		, keys               = myKeys hostname
+		, mouseBindings      = myMouseBindings
+		, layoutHook         = layoutNoMirror
+		, manageHook         = myManageHook
+		, handleEventHook    = mempty
+		, logHook            = return ()
+		, startupHook        = myStartupHook hostname
+		}
