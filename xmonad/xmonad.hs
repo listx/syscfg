@@ -19,6 +19,7 @@ import XMonad.Hooks.ManageHelpers -- for doCenterFloat
 import XMonad.Layout.NoBorders -- enable borderless layouts
 import XMonad.Layout.Circle -- circle layout
 import XMonad.Layout.LayoutHints -- for (among other things) removing GVim's dead borders automatically
+import XMonad.Layout.ResizableTile -- allow changing width/height of any window
 
 import XMonad.Util.WorkspaceCompare (getSortByIndex)
 import System.Posix.Unistd -- for getting hostname
@@ -125,6 +126,10 @@ myKeys hostname conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
 
     -- Expand the master area
     , ((modm,               xK_e     ), sendMessage Expand)
+
+	-- Expand/shrink slave window
+    , ((modm .|. shiftMask, xK_w     ), sendMessage MirrorShrink)
+    , ((modm .|. shiftMask, xK_e     ), sendMessage MirrorExpand)
 
     -- Push window back into tiling
     , ((modm,               xK_t     ), withFocused $ windows . W.sink)
@@ -373,13 +378,15 @@ myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
 -- windows in the master pane, y is the percent of the screen to increment by
 -- when resizing panes, and z is the default proportion of the screen occupied
 -- by the master pane.
+defaultLayout :: Choose (Mirror Tall) (Choose Tall (XLL.ModifiedLayout WithBorder Full)) Window
 defaultLayout = (Mirror $ tiled 1) ||| tiled 1 ||| noBorders Full
 	where
 	tiled nmaster = Tall nmaster delta ratio
 	delta = 3/100
 	ratio = 1/2
 
-layoutNoMirror = Tall 0 (3/100) (1/2) ||| noBorders Full
+layoutNoMirror :: Choose ResizableTall (XLL.ModifiedLayout WithBorder Full) Window
+layoutNoMirror = ResizableTall 0 (3/100) (1/2) [] ||| noBorders Full
 
 ------------------------------------------------------------------------
 -- Window rules:
@@ -530,8 +537,8 @@ main :: IO ()
 main = do
 	hostname <- fmap nodeName getSystemID
 	if hostname == "k0"
-		then xmonad $ myconf hostname
-		else xmonad (myconf hostname) {layoutHook = defaultLayout}
+		then xmonad (myconf hostname) {layoutHook = layoutNoMirror}
+		else xmonad $ myconf hostname
 	where
 	myconf hostname = XConfig
 		{ terminal           = "urxvt"
@@ -544,7 +551,7 @@ main = do
 		, focusedBorderColor = "#ffffff"
 		, keys               = myKeys hostname
 		, mouseBindings      = myMouseBindings
-		, layoutHook         = layoutNoMirror
+		, layoutHook         = defaultLayout
 		, manageHook         = myManageHook
 		, handleEventHook    = mempty
 		, logHook            = return ()
