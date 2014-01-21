@@ -339,8 +339,8 @@ otherwise, close current tab (elscreen)."
 (evil-declare-key 'normal org-mode-map (kbd "M-p") 'org-shiftup)
 (evil-declare-key 'normal org-mode-map (kbd "M-n") 'org-shiftdown)
 ; heading-based navigation
-(evil-declare-key 'normal org-mode-map (kbd "M-l") 'org-forward-same-level)
-(evil-declare-key 'normal org-mode-map (kbd "M-h") 'org-backward-same-level)
+(evil-declare-key 'normal org-mode-map (kbd "M-l") 'org-forward-heading-same-level)
+(evil-declare-key 'normal org-mode-map (kbd "M-h") 'org-backward-heading-same-level)
 (evil-declare-key 'normal org-mode-map (kbd "M-k") 'outline-previous-visible-heading)
 (evil-declare-key 'normal org-mode-map (kbd "M-j") 'outline-next-visible-heading)
 ; move items around, including child nodes
