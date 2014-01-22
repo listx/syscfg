@@ -13,7 +13,6 @@ reflection
 distributive
 MonadCatchIO-transformers
 lens
-reflection
 linear
 rosezipper
 elerea
