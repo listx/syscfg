@@ -12,7 +12,12 @@ profunctors
 reflection
 distributive
 MonadCatchIO-transformers
+newtype
+constraints
+free
+adjunctions
 lens
+layers
 linear
 rosezipper
 elerea
