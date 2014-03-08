@@ -278,7 +278,7 @@ alias tma='tmux attach-session'
 
 alias skype='find ~/.Skype/Logs/ -type f -exec rm {} \; && skype'
 
-alias acki='ack -i'
+alias agi='ag -i'
 
 # these sane hostnames depend on the /etc/hosts file!
 alias sk0='ssh l@k0'
