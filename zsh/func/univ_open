@@ -76,9 +76,6 @@ univ_open() {
             (chm)
                 xchm $@ &>/dev/null & disown
             ;;
-            (ledger)
-                emacs $@ &>/dev/null & disown
-            ;;
             *)
                 emacs --no-window-system $@
             ;;
