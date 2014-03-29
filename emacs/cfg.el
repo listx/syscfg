@@ -426,8 +426,9 @@ otherwise, close current tab (elscreen)."
 )
 
 ; Ledger
-(require 'ledger)
-(add-to-list 'auto-mode-alist '("\\.ledger\\'" . ledger-mode))
+(add-to-list 'load-path (expand-file-name "/usr/share/emacs/site-lisp/ledger-mode"))
+(load "ledger-mode")
+(add-to-list 'auto-mode-alist '("\\.ledger$" . ledger-mode))
 (add-hook 'ledger-mode-hook 'evil-goto-line) ; go to the lastest entries at the end
 
 ; Lilypond
