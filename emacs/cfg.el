@@ -254,6 +254,7 @@ otherwise, close current tab (elscreen)."
 
 ; Elscreen
 (load "elscreen" "ElScreen" t)
+(elscreen-start)
 ; new vimlike "tab", aka "screen"
 (define-key evil-normal-state-map ",N" 'elscreen-create)
 ; tab navigation
