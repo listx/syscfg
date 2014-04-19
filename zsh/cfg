@@ -336,8 +336,8 @@ alias clean_files='find -type f -exec chmod 644 {} \;'
 # l k2=NOPASSWD: /usr/sbin/iftop
 
 # turn off power or reboot gracefully
-alias of=' sudo shutdown --poweroff now & disown; exit' # power off
-alias ofo=' sudo shutdown --reboot now & disown; exit' # reboot
+alias of=' poweroff & disown; exit' # power off
+alias ofo=' reboot & disown; exit' # reboot
 
 alias n='nix-env'
 alias nl='nix-env --list-generations'
