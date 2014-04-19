@@ -226,13 +226,13 @@ myKeys hostname conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
 	-- Shrink/Expand work on the Master window; the Mirror* counterparts do the
 	-- same (although, from the looks of it, the definitions are somehow
 	-- *reversed*), but for a slave window.
-	[ ((modm,               xK_w     ), fstIfK0 MirrorExpand Shrink)
-	, ((modm,               xK_e     ), fstIfK0 MirrorShrink Expand)
-	, ((modm .|. shiftMask, xK_w     ), fstIfK0 Shrink MirrorExpand)
-	, ((modm .|. shiftMask, xK_e     ), fstIfK0 Expand MirrorShrink)
+	[ ((modm,               xK_w     ), fstIfDualPortrait MirrorExpand Shrink)
+	, ((modm,               xK_e     ), fstIfDualPortrait MirrorShrink Expand)
+	, ((modm .|. shiftMask, xK_w     ), fstIfDualPortrait Shrink MirrorExpand)
+	, ((modm .|. shiftMask, xK_e     ), fstIfDualPortrait Expand MirrorShrink)
 	]
 	where
-	fstIfK0 slave master = if hostname == "k0"
+	fstIfDualPortrait slave master = if elem hostname ["k0", "k3"]
 		then sendMessage slave
 		else sendMessage master
 
@@ -469,11 +469,14 @@ myStartupHook hostname = do
     spawnIfGrpNotFull Sys $ term1 ++ " -e alsamixer"
     spawnIfGrpNotFull Sys $ term1 ++ " -e htop"
     case hostname of
-        "k0" -> do
-            spawnIfGrpTopWSNotFull Music $ term2 ++ " -e ncmpcpp"
-            spawnIfGrpNotFull Net2 $ term3 ++ " -e rtorrent"
+        "k0" -> dualPortrait
+        "k3" -> dualPortrait
         "k1" -> spawnIfGrpNotFull Net2 $ term3 ++ " -e rtorrent"
         _ -> return ()
+	where
+	dualPortrait = do
+		spawnIfGrpTopWSNotFull Music $ term2 ++ " -e ncmpcpp"
+		spawnIfGrpNotFull Net2 $ term3 ++ " -e rtorrent"
 
 -- reset all xinerama screens to point to top WS of each group
 resetScreensToWSTops :: X ()
@@ -540,7 +543,7 @@ sitesRand = shuffle sites >>= return . unwords
 main :: IO ()
 main = do
 	hostname <- fmap nodeName getSystemID
-	if hostname == "k0"
+	if elem hostname ["k0", "k3"]
 		then xmonad (myconf hostname) {layoutHook = layoutNoMirror}
 		else xmonad $ myconf hostname
 	where
