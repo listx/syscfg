@@ -14,7 +14,7 @@
 find_quick() {
     find_type=""
     find_search=""
-    ack_search=""
+    search_flags=""
     mode=$1
     rest=""
     case $mode in
@@ -42,9 +42,9 @@ find_quick() {
             find_type="-type f"
             find_search="-name"
             ;;
-        t) ack_search="-i "
+        t) search_flags="-i "
             ;;
-        tt) ack_search=""
+        tt) search_flags=""
             ;;
         *)
             echo "find_quick: mode \`$mode' not supported"
@@ -67,6 +67,6 @@ find_quick() {
             rest+="${(Q)${(z)term}}"
             c+=1
         done
-        ack --color ${=ack_search} $rest *
+        ag --color ${=search_flags} $rest *
     fi
 }
