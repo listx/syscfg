@@ -233,7 +233,7 @@ myKeys hostname conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
 	, ((modm .|. shiftMask, xK_e     ), fstIfDualPortrait Expand MirrorShrink)
 	]
 	where
-	fstIfDualPortrait slave master = if elem hostname ["k0", "k3"]
+	fstIfDualPortrait slave master = if elem hostname ["k0"]
 		then sendMessage slave
 		else sendMessage master
 
@@ -471,7 +471,6 @@ myStartupHook hostname = do
     spawnIfGrpNotFull Sys $ term1 ++ " -e htop"
     case hostname of
         "k0" -> dualPortrait
-        "k3" -> dualPortrait
         "k1" -> spawnIfGrpNotFull Net2 $ term3 ++ " -e rtorrent"
         _ -> return ()
 	where
@@ -544,7 +543,7 @@ sitesRand = shuffle sites >>= return . unwords
 main :: IO ()
 main = do
 	hostname <- fmap nodeName getSystemID
-	if elem hostname ["k0", "k3"]
+	if elem hostname ["k0"]
 		then xmonad (myconf hostname) {layoutHook = layoutNoMirror}
 		else xmonad $ myconf hostname
 	where

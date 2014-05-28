@@ -58,9 +58,6 @@ endif
 ifeq ('${HOST}','k1')
 	ln -fs ${CFG}/rtorrent/cfg-k1						${HOME}/.rtorrent.rc
 endif
-ifeq ('${HOST}','k3')
-	ln -fs ${CFG}/rtorrent/cfg						${HOME}/.rtorrent.rc
-endif
 usbmnt:
 	ln -fs ${CFG}/usbmnt/cfg							${HOME}/.usbmnt
 vim:
@@ -79,7 +76,7 @@ xorg:
 	ln -fns ${CFG}/xorg/10-keyboard.conf				/etc/X11/xorg.conf.d/
 	ln -fns ${CFG}/xorg/10-server-flags.conf			/etc/X11/xorg.conf.d/
 ifeq ('${HOST}','k0')
-	ln -fns ${CFG}/xorg/10-dual-monitor-portrait.conf		/etc/X11/xorg.conf.d/
+	ln -fns ${CFG}/xorg/10-quad-monitor-portrait.conf		/etc/X11/xorg.conf.d/
 	ln -fns ${CFG}/xorg/50-mouse.conf					/etc/X11/xorg.conf.d/
 endif
 ifeq ('${HOST}','k2')
@@ -89,10 +86,6 @@ endif
 ifeq ('${HOST}','k1')
 	ln -fns ${CFG}/xorg/50-synaptics.conf				/etc/X11/xorg.conf.d/
 	ln -fns ${CFG}/xorg/20-intel-video.conf				/etc/X11/xorg.conf.d/
-endif
-ifeq ('${HOST}','k3')
-	ln -fns ${CFG}/xorg/10-quad-monitor-portrait.conf		/etc/X11/xorg.conf.d/
-	ln -fns ${CFG}/xorg/50-mouse.conf					/etc/X11/xorg.conf.d/
 endif
 ifeq ('${HOST}','forest')
 	ln -fns ${CFG}/xorg/10-dual-monitor-hybrid-forest.conf	/etc/X11/xorg.conf.d/
