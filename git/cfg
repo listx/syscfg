@@ -21,3 +21,5 @@
 	aliasesfile = /home/l/.git-sendemail-aliases
 	aliasfiletype = mailrc
 	cc = linusarver@gmail.com
+[tig]
+	vertical-split = false
