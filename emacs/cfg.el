@@ -156,6 +156,9 @@ otherwise, close current tab (elscreen)."
 (setq vc-handled-backends ())
 
 ; General indentation behavior
+; make ENTER key insert indentation after inserting a newline (noticeable when
+; editing C files)
+(define-key evil-insert-state-map (kbd "RET") 'evil-ret-and-indent)
 ; pressing TAB inserts a TAB
 (define-key text-mode-map (kbd "TAB") 'self-insert-command)
 (global-set-key (kbd "TAB") 'self-insert-command)
@@ -366,6 +369,7 @@ otherwise, close current tab (elscreen)."
 (add-hook 'c-mode-hook
 	(lambda ()
 		(c-set-style "linux")
+		(setq indent-tabs-mode t)
 		(setq default-tab-width 8)
 		(setq evil-shift-width 8)
 	)
