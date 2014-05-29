@@ -21,5 +21,3 @@
 	aliasesfile = /home/l/.git-sendemail-aliases
 	aliasfiletype = mailrc
 	cc = linusarver@gmail.com
-
-# vim: tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab
