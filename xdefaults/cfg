@@ -78,3 +78,5 @@ URxvt*scrollBar: off
 URxvt*urlLauncher: firefox
 ! prevent Print Screen key from printing out the entire contents of the terminal via the lpr(1) command
 URxvt.print-pipe: cat > $(echo /tmp/urxvt-dump.$(date +%Y-%m-%d_%H:%M:%S_%N))
+
+Xcursor.size: 16
