@@ -421,6 +421,14 @@ otherwise, close current tab (elscreen)."
 	)
 )
 
+; HTML
+(add-hook 'html-mode-hook
+	(lambda ()
+		(setq indent-tabs-mode t)
+		(setq tab-width 4)
+	)
+)
+
 ;Latex
 (add-hook 'latex-mode-hook
     (lambda ()
