@@ -372,6 +372,7 @@ otherwise, close current tab (elscreen)."
 		(setq indent-tabs-mode t)
 		(setq default-tab-width 8)
 		(setq evil-shift-width 8)
+		(modify-syntax-entry ?_ "w") ; add underscore as a word character, like in Vim
 	)
 )
 
