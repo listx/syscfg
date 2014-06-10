@@ -1,5 +1,5 @@
 # use `aplay -l | awk '/^card/{print$3}' | sort | uniq' for card names
-defaults.pcm.!card NVidia
-defaults.ctl.!card NVidia
+defaults.pcm.!card PCH
+defaults.ctl.!card PCH
 defaults.pcm.!device 0
 defaults.ctl.!device 0
