@@ -79,6 +79,9 @@ export LEDGER_FILE=~/money/master.ledger
 # make GCC print errors in color
 export GCC_COLORS=1
 
+# stop zsh from eating space before pipe symbol
+export ZLE_REMOVE_SUFFIX_CHARS=""
+
 autoload -U compinit
 compinit
 
