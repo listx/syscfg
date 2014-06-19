@@ -388,7 +388,7 @@ alias usboff='~/syscfg/script/sys/usbmnt -U'
 
 case $HOST in
     k0)
-        alias iftop='sudo iftop -B -i eth1'
+        alias iftop='sudo iftop -B -i eno1'
         alias discon='sudo mount /dev/disk/by-id/ata-PIONEER_DVD-RW_DVR-215D'
         alias discof='sudo umount /dev/disk/by-id/ata-PIONEER_DVD-RW_DVR-215D'
         alias disc2on='sudo mount /dev/disk/by-id/ata-LITE-ON_DVDRW_SHW-160P6S'
