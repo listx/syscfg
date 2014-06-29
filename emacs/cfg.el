@@ -469,6 +469,15 @@ otherwise, close current tab (elscreen)."
 	)
 )
 
+; Ruby
+(add-hook 'ruby-mode-hook
+	(lambda ()
+		(setq indent-tabs-mode t)
+		(setq ruby-indent-level 4)
+		(setq tab-width 4)
+	)
+)
+
 ; Shell script
 (add-hook 'sh-mode-hook
     (lambda ()
