@@ -486,6 +486,7 @@ otherwise, close current tab (elscreen)."
 		(setq indent-tabs-mode t)
 		(setq ruby-indent-level 4)
 		(setq tab-width 4)
+		(modify-syntax-entry ?_ "w") ; add underscore as a word character
 	)
 )
 
