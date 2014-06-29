@@ -376,6 +376,17 @@ otherwise, close current tab (elscreen)."
 	)
 )
 
+; C++
+(add-hook 'c++-mode-hook
+	(lambda ()
+		(c-set-style "linux")
+		(setq indent-tabs-mode t)
+		(setq default-tab-width 8)
+		(setq evil-shift-width 8)
+		(modify-syntax-entry ?_ "w") ; add underscore as a word character, like in Vim
+	)
+)
+
 ; Emacs lisp
 (evil-declare-key 'normal emacs-lisp-mode-map "o" 'raw-open-below)
 (evil-declare-key 'normal emacs-lisp-mode-map "O" 'raw-open-above)
