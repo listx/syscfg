@@ -1,0 +1,20 @@
+#!/bin/zsh
+
+# rand_open() randomly opens a file from the current directory, based on a
+# given array ($*) of extensions.
+
+rand_open()
+{
+	setopt nullglob
+	files=()
+	for ext in $*; do
+		files+=(*.$ext)
+	done
+	if [[ -n $files ]]; then
+		chosen=$(echo ${(F)files} | shuf --random-source /dev/urandom -n 1)
+		echo "Chose file \`$chosen'"
+		univ_open $chosen
+	else
+		echo "No files to choose."
+	fi
+}
