@@ -12,8 +12,8 @@ rand_open()
 	done
 	if [[ -n $files ]]; then
 		chosen=$(echo ${(F)files} | shuf --random-source /dev/urandom -n 1)
-		echo "Chose file \`$chosen'"
 		univ_open $chosen
+		echo "Chose file \`$chosen'"
 	else
 		echo "No files to choose."
 	fi
