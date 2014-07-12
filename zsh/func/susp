@@ -1,0 +1,15 @@
+#!/bin/zsh
+
+# susp() optionally sleeps for the given time amount, then suspends the system
+# using systemctl.
+
+susp()
+{
+	amt=$1
+	if [[ -n $amt ]]; then
+		echo "Sleeping for $amt before suspending..."
+		sleep $amt && sudo systemctl suspend
+	else
+		sudo systemctl suspend
+	fi
+}
