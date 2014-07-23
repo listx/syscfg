@@ -10,7 +10,6 @@ cron:
 	${CFG}/cron/setcron.sh
 emacs:
 	ln -fs ${CFG}/emacs									${HOME}/.emacs.d
-	ln -fs ${CFG}/emacs/cfg.el							${HOME}/.emacs
 git:
 	ln -fs ${CFG}/git/cfg								${HOME}/.gitconfig
 	ln -fs ${CFG}/git/sendemail-aliases					${HOME}/.git-sendemail-aliases
