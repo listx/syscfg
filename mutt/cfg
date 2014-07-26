@@ -166,4 +166,7 @@ set sendmail="/usr/bin/msmtp"
 set use_from=yes
 set use_envelope_from=yes
 my_hdr Bcc: Linus Arver <linusarver@gmail.com>
+
+# Use vim
+set editor="vim"
 # vim: syntax=muttrc
