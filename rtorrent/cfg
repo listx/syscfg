@@ -31,18 +31,7 @@ schedule = watch_directory,5,5,load_start=~/bittor/*.torrent
 schedule = untied_directory,5,5,stop_untied=
 
 # Close torrents when diskspace is low.
-schedule = low_diskspace,5,60,close_low_diskspace=100M
-
-# Enable the default ratio group.
-ratio.enable=
-
-# Change the limits, the defaults should be sufficient.
-ratio.min.set=100
-ratio.max.set=150
-ratio.upload.set=1M
-
-# Changing the command triggered when the ratio is reached.
-system.method.set = group.seeding.ratio.command, d.close=, d.erase=
+#schedule = low_diskspace,5,60,close_low_diskspace=100M
 
 # The ip address reported to the tracker.
 #ip = 127.0.0.1
@@ -54,17 +43,17 @@ system.method.set = group.seeding.ratio.command, d.close=, d.erase=
 #bind = rakshasa.no
 
 # Port range to use for listening.
-port_range = 6890-6999
+#port_range = 6890-6999
 
 # Start opening ports at a random position within the port range.
-port_random = yes
+#port_random = no
 
 # Check hash for finished torrents. Might be usefull until the bug is
 # fixed that causes lack of diskspace not to be properly reported.
 #check_hash = no
 
-# Set whetever the client should try to connect to UDP trackers.
-use_udp_trackers = yes
+# Set whether the client should try to connect to UDP trackers.
+#use_udp_trackers = yes
 
 # Alternative calls to bind and ip that should handle dynamic ip's.
 #schedule = ip_tick,0,1800,ip=rakshasa
@@ -84,30 +73,12 @@ use_udp_trackers = yes
 # "auto" (start and stop DHT as needed), or "on" (start DHT immediately).
 # The default is "off". For DHT to work, a session directory must be defined.
 #
-dht = auto
+# dht = auto
 
 # UDP port to use for DHT.
 #
-dht_port = 6881
+# dht_port = 6881
 
 # Enable peer exchange (for torrents not marked private)
 #
-peer_exchange = yes
-
-#
-# Do not modify the following parameters unless you know what you're doing.
-#
-
-# Hash read-ahead controls how many MB to request the kernel to read
-# ahead. If the value is too low the disk may not be fully utilized,
-# while if too high the kernel might not be able to keep the read
-# pages in memory thus end up trashing.
-#hash_read_ahead = 10
-
-# Interval between attempts to check the hash, in milliseconds.
-#hash_interval = 100
-
-# Number of attempts to check the hash while using the mincore status,
-# before forcing. Overworked systems might need lower values to get a
-# decent hash checking rate.
-#hash_max_tries = 10
+# peer_exchange = yes
