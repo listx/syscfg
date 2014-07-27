@@ -23,3 +23,5 @@
 	cc = linusarver@gmail.com
 [tig]
 	vertical-split = false
+[core]
+	editor = vim
