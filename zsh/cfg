@@ -260,6 +260,8 @@ alias gps='git push'
 alias gp='gsy -p '
 alias gtag='~/syscfg/script/sys/gtag.sh'
 
+alias tig='tig -n1000'
+
 alias ocm="cd ~/org; gcm -am \"$HOST\"; gpl && gps"
 
 alias e='emacs_open'
