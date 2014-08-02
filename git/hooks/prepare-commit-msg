@@ -1,0 +1,8 @@
+#!/bin/sh
+
+# Remove 1-space+newline lines, which are generated (probably as part of some
+# published standard by some committee) in diffs to denote empty lines. The only
+# reason is because some editors can be configured to highlight (in an annoying
+# color) trailing whitespace to encourage the user to expunge it. When we are
+# seeing diffs, we don't want to see such annoying colors.
+perl -i.bak -pe 's/^ \n/\n/' "$1"
