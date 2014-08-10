@@ -548,11 +548,11 @@ otherwise, close current tab (elscreen)."
 	)
 )
 
-; zenburn color theme
-(add-to-list 'custom-theme-load-path "/usr/share/emacs/site-lisp/zenburn-emacs-mod")
+; zenmonk color theme
+(add-to-list 'custom-theme-load-path "/usr/share/emacs/site-lisp/zenmonk")
 (if window-system
-	(load-theme 'zenburn-mod t)
-	()
+	(load-theme 'zenmonk t)
+	(load-theme 'zenburn t)
 )
 ; highlight matching parenthese
 (show-paren-mode 1)
