@@ -275,6 +275,9 @@ alias -g galias_find_src='$(find -maxdepth 5 -type f -iregex ".*\.\(c\|cpp\|h\|h
 alias es=' e galias_find_src'
 alias ees=' ee galias_find_src'
 
+alias fl='find_long_lines '
+
+
 alias tma='tmux attach-session'
 
 alias skype='find ~/.Skype/Logs/ -type f -exec rm {} \; && skype'

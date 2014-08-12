@@ -1,0 +1,19 @@
+#!/bin/zsh
+
+# Find files with lines that have 80+ columns.
+# Usage: find_long_lines DIRECTORY TABWIDTH
+
+find_long_lines() {
+	dir="$1"
+    tabwidth=$2
+    if [[ ! -d "$dir" ]]; then
+		echo "directory \`$dir' does not exist"
+		exit 1
+	elif [[ -z $tabwidth ]]; then
+		echo "second argument must contain a number"
+		exit 1
+    fi
+
+	find "$dir" -type f -not -path "$dir/.git"\
+		-exec sh -c "expand -t $tabwidth {} | grep -n \".\{81\}\"" \; -print
+}
