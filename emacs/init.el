@@ -513,7 +513,10 @@ otherwise, close current tab (elscreen)."
 (add-to-list 'custom-theme-load-path "/usr/share/emacs/site-lisp/zenmonk")
 (if window-system
 	(load-theme 'zenmonk t)
-	(load-theme 'zenburn t)
+	(lambda ()
+		(require 'zenburn)
+		(zenburn)
+	)
 )
 ; highlight matching parenthese
 (show-paren-mode 1)
