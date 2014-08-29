@@ -593,13 +593,13 @@ otherwise, close current tab (elscreen)."
 (setq-default show-trailing-whitespace t)
 ; toggle between fonts
 (define-key evil-normal-state-map ",f" 'my-toggle-font)
-(define-key evil-normal-state-map ",-"
+(define-key evil-normal-state-map ",_"
 	(lambda ()
 		(interactive)
         (global-text-scale-adjust -1)
 	)
 )
-(define-key evil-normal-state-map ",_"
+(define-key evil-normal-state-map ",-"
 	(lambda ()
 		(interactive)
         (global-text-scale-adjust 1)
