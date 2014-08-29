@@ -618,6 +618,15 @@ otherwise, close current tab (elscreen)."
 	scroll-margin 3
 	scroll-conservatively 100000
 	scroll-preserve-screen-position 1)
+
+; If we're on our laptop, make the text slightly bigger to match my desktop's
+; behavior.
+(defun my-text-height ()
+	(if (string= system-name "k1.localdomain")
+		95
+		90
+	)
+)
 ; auto-generated stuff by emacs itself...
 (custom-set-variables
   ;; custom-set-variables was added by Custom.
@@ -633,7 +642,7 @@ otherwise, close current tab (elscreen)."
   ;; If you edit it by hand, you could mess it up, so be careful.
   ;; Your init file should contain only one such instance.
   ;; If there is more than one, they won't work right.
- '(default ((t (:inherit nil :stipple nil :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 90 :width normal :foundry "xos4" :family "Terminus")))))
+ `(default ((t (:inherit nil :stipple nil :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height ,(my-text-height) :width normal :foundry "xos4" :family "Terminus")))))
 
 ; Backups
 ; put all auto-saves/backups to the temp directory
