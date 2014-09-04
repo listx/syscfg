@@ -447,7 +447,7 @@ otherwise, close current tab (elscreen)."
 	(end-of-line)
 	(insert "\n")
 	(delete-blank-lines)
-	(insert "\\begin{code}\n\n\n\n\\end{code}")
+	(insert "\n\\begin{code}\n\n\\end{code}\n")
 	(forward-line -2)
 	(evil-append nil)
 )
