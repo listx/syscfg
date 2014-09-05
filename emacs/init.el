@@ -471,6 +471,15 @@ otherwise, close current tab (elscreen)."
 (evil-declare-key 'normal haskell-mode-map ",B" 'hs-literate-begend)
 (evil-declare-key 'normal haskell-mode-map ",b" 'hs-literate-endbeg)
 
+; Hazelnut
+(add-to-list 'auto-mode-alist '("\\.hzl$" . text-mode))
+(add-hook 'text-mode-hook
+	(lambda ()
+		(setq indent-tabs-mode t)
+		(setq tab-width 4)
+	)
+)
+
 ; HTML
 (add-hook 'html-mode-hook
 	(lambda ()
