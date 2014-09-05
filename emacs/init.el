@@ -169,7 +169,12 @@ otherwise, close current tab (elscreen)."
 
 ; show 80-character limit on long lines for all source code files
 (require 'column-enforce-mode)
-(add-hook 'prog-mode-hook 'column-enforce-mode)
+; disable highlighting long lines if they are comment lines
+(add-hook 'prog-mode-hook (lambda ()
+	(setq column-enforce-comments nil)
+	(column-enforce-mode)
+	)
+)
 
 ; Evil, the Extensible VI Layer! This makes Emacs worth using.
 ; see http://gitorious.org/evil/pages/Home
