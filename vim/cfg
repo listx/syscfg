@@ -51,13 +51,13 @@ set t_Co=256
 " TERM_COLOR_SCHEME_CURRENT environment variable
 if $TERM != 'linux'
     if $TERM_COLOR_SCHEME_CURRENT == 'wb' " white on black
-        colorscheme zenburn_mod2
+        colorscheme zenburn
     elseif $TERM_COLOR_SCHEME_CURRENT == 'wB' " white on blue
         colorscheme darkblue2-ex
     elseif $TERM_COLOR_SCHEME_CURRENT == 'bw' " black on white
         colorscheme mayansmoke
     else
-        colorscheme zenburn_mod2 " always default to the white on black theme
+        colorscheme zenburn " always default to the white on black theme
     endif
 else " if we are in a virtual console, use a simple colorscheme
     colorscheme delek
