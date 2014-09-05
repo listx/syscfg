@@ -14,8 +14,8 @@
 192.168.1.114 k1w
 192.168.1.120 ocean
 
-127.0.0.1 www.anandtech.com anandtech.com
-127.0.0.1 www.dailytech.com dailytech.com
-127.0.0.1 www.slashdot.org slashdot.org
+#127.0.0.1 www.anandtech.com anandtech.com
+#127.0.0.1 www.dailytech.com dailytech.com
+#127.0.0.1 www.slashdot.org slashdot.org
 
 # End of file
