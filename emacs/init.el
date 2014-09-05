@@ -646,7 +646,7 @@ otherwise, close current tab (elscreen)."
 ; If we're on our laptop, make the text slightly bigger to match my desktop's
 ; behavior.
 (defun my-text-height ()
-	(if (string= system-name "k1.localdomain")
+	(if (member system-name '("k1.localdomain" "k2"))
 		95
 		90
 	)
