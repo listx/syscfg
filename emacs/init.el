@@ -541,6 +541,7 @@ otherwise, close current tab (elscreen)."
 (add-hook 'sh-mode-hook
     (lambda ()
 		(setq tab-width 4)
+		(modify-syntax-entry ?_ "w") ; add underscore as a word character
     )
 )
 
