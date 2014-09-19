@@ -2,7 +2,6 @@
 # Environment variables                                                                            #
 #--------------------------------------------------------------------------------------------------#
 
-export PATH="$PATH:~/.nix-profile/bin"
 # Set 'ls' command's color theme
 # See "dircolors -p" for more info
 #
