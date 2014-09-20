@@ -57,5 +57,3 @@ map <leader>h :emenu View.Sidebar.History<cr>
 
 " close the sidebar
 map <leader>c :sbclose<cr>
-
-" vim: syntax=vim
