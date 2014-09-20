@@ -15,5 +15,3 @@ xmodmap ~/.xmodmap
 
 # set keystroke repeat speed (delay, speed)
 xset r rate 250 80
-
-# vim: syntax=zsh
