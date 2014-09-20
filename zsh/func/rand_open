@@ -1,28 +1,36 @@
 #!/bin/zsh
 
-# rand_open() randomly opens a file from the current directory, based on a
-# given array ($*) of extensions.
+# rand_open() [recurse/norecurse] ['command string'] [extensions...]
+
+# Find all files matching the extension (recursively or not), and store the
+# filenames as a list in `/tmp/rand_open_files`. Then, use the given command
+# string to open this list of files.
 
 rand_open()
 {
-	setopt nullglob
-	files=()
+	:>/tmp/rand_open_files
 	recurse_flag=$1
-	shift
+	command=$2
+	regex_str=".*\\.\\("
+	find_recurse=""
+	shift 1
 
 	for ext in $*; do
-		if [[ $recurse_flag == "recurse" ]]; then
-			files+=(**/*.$ext)
-		else
-			files+=(*.$ext)
-		fi
+		regex_str+="$ext\\|"
 	done
 
-	if [[ -n $files ]]; then
-		echo ${(F)files} \
-			| shuf --random-source /dev/urandom \
-			> /tmp/rand_open_files
-		univ_open $chosen
+	regex_str+="\\)$"
+
+	if [[ $recurse_flag == "norecurse" ]]; then
+		find_recurse="-maxdepth 1"
+	fi
+
+	find $PWD ${(z)find_recurse} -type f -iregex $regex_str \
+		| shuf --random-source /dev/urandom \
+		> /tmp/rand_open_files
+
+	if [[ $(wc -l /tmp/rand_open_files | cut -d ' ' -f 1) -gt 0 ]]; then
+		${(z)command} /tmp/rand_open_files
 		echo "Chose file \`$chosen'"
 	else
 		echo "No files to choose."
