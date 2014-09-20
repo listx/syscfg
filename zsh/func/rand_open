@@ -7,11 +7,21 @@ rand_open()
 {
 	setopt nullglob
 	files=()
+	recurse_flag=$1
+	shift
+
 	for ext in $*; do
-		files+=(*.$ext)
+		if [[ $recurse_flag == "recurse" ]]; then
+			files+=(**/*.$ext)
+		else
+			files+=(*.$ext)
+		fi
 	done
+
 	if [[ -n $files ]]; then
-		chosen=$(echo ${(F)files} | shuf --random-source /dev/urandom -n 1)
+		echo ${(F)files} \
+			| shuf --random-source /dev/urandom \
+			> /tmp/rand_open_files
 		univ_open $chosen
 		echo "Chose file \`$chosen'"
 	else
