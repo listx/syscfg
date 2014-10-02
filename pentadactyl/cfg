@@ -57,3 +57,7 @@ map <leader>h :emenu View.Sidebar.History<cr>
 
 " close the sidebar
 map <leader>c :sbclose<cr>
+
+" show/hide menubar
+map <F1> :set guioptions+=mT<cr>
+map <F2> :set guioptions-=mT<cr>
