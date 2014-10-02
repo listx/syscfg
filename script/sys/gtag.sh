@@ -12,5 +12,3 @@ ver=$(echo $msg | cut -d ' ' -f2)
 
 git commit -am "$msg"
 git tag -a "v$ver" -m "$msg"
-
-# vim: syntax=zsh
