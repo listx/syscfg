@@ -11,6 +11,11 @@
 (require 'org-exp-blocks)
 (require 'yaml-mode)
 
+; darken inactive windows
+(require 'hiwin)
+(hiwin-activate)
+(set-face-background 'hiwin-face "gray20")
+
 ; read uim.el
 (autoload 'uim-mode "uim" nil t)
 ; key-binding for activate uim (ex. C-\)
