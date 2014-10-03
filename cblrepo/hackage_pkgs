@@ -1,7 +1,7 @@
 bindings-DSL
 bindings-GLFW
 GLFW-b
-transformers-compat
+transformers
 contravariant
 distributive
 comonad
@@ -10,10 +10,11 @@ bifunctors
 generic-deriving
 profunctors
 reflection
-distributive
 MonadCatchIO-transformers
+prelude-extras
+free
+parallel
 lens
-reflection
+adjunctions
 linear
 rosezipper
-JuicyPixels
