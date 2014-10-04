@@ -196,9 +196,11 @@ otherwise, close current tab (elscreen)."
 ; make ENTER key insert indentation after inserting a newline (noticeable when
 ; editing C files)
 (define-key evil-insert-state-map (kbd "RET") 'evil-ret-and-indent)
-; pressing TAB inserts a TAB
-(define-key text-mode-map (kbd "TAB") 'self-insert-command)
-(global-set-key (kbd "TAB") 'self-insert-command)
+; pressing TAB inserts a TAB, unless we are in the middle of some text or at the end of a line
+(require 'kakapo-mode)
+(setq kakapo-debug t)
+;(define-key text-mode-map (kbd "TAB") 'insert-stupid-tab)
+;(global-set-key (kbd "TAB") 'insert-stupid-tab)
 ; for all minor modes, make backspace behave like backspace in insert mode
 (define-key evil-insert-state-map (kbd "DEL") 'backward-delete-char)
 
@@ -438,25 +440,8 @@ otherwise, close current tab (elscreen)."
 )
 
 ; Emacs lisp
-(evil-declare-key 'normal emacs-lisp-mode-map "o" 'raw-open-below)
-(evil-declare-key 'normal emacs-lisp-mode-map "O" 'raw-open-above)
-(defun raw-open-below ()
-	"Insert a newline below, and indent relative to the current line."
-	(interactive)
-	(end-of-line)
-	(insert "\n")
-	(indent-relative)
-	(evil-append nil)
-)
-(defun raw-open-above ()
-	"Insert a newline above, and indent relative to the current line."
-	(interactive)
-	(forward-line -1)
-	(end-of-line)
-	(insert "\n")
-	(indent-relative)
-	(evil-append nil)
-)
+(evil-declare-key 'normal emacs-lisp-mode-map "o" 'kakapo-open-below)
+(evil-declare-key 'normal emacs-lisp-mode-map "O" 'kakapo-open-above)
 (add-hook 'emacs-lisp-mode-hook
 	(lambda ()
 		(setq tab-width 4)
