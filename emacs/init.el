@@ -193,14 +193,18 @@ otherwise, close current tab (elscreen)."
 (setq vc-handled-backends ())
 
 ; General indentation behavior
+(require 'kakapo-mode)
+(add-hook 'text-mode-hook 'kakapo-mode)
+(add-hook 'prog-mode-hook 'kakapo-mode)
+;(setq kakapo-debug nil)
+; first, set default mode to text-mode
+(setq-default major-mode 'text-mode)
+; Use kakapo's "o" and "O" for opening new lines.
+(define-key evil-normal-state-map "o" (lambda () (interactive) (kakapo-open nil)))
+(define-key evil-normal-state-map "O" (lambda () (interactive) (kakapo-open t)))
 ; make ENTER key insert indentation after inserting a newline (noticeable when
 ; editing C files)
-(define-key evil-insert-state-map (kbd "RET") 'evil-ret-and-indent)
-; pressing TAB inserts a TAB, unless we are in the middle of some text or at the end of a line
-(require 'kakapo-mode)
-(setq kakapo-debug t)
-;(define-key text-mode-map (kbd "TAB") 'insert-stupid-tab)
-;(global-set-key (kbd "TAB") 'insert-stupid-tab)
+(define-key evil-insert-state-map (kbd "RET") 'kakapo-ret-and-indent)
 ; for all minor modes, make backspace behave like backspace in insert mode
 (define-key evil-insert-state-map (kbd "DEL") 'backward-delete-char)
 
@@ -440,8 +444,6 @@ otherwise, close current tab (elscreen)."
 )
 
 ; Emacs lisp
-(evil-declare-key 'normal emacs-lisp-mode-map "o" 'kakapo-open-below)
-(evil-declare-key 'normal emacs-lisp-mode-map "O" 'kakapo-open-above)
 (add-hook 'emacs-lisp-mode-hook
 	(lambda ()
 		(setq tab-width 4)
