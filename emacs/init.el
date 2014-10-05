@@ -343,7 +343,7 @@ otherwise, close current tab (elscreen)."
 	(insert "\n- ")
 	(org-insert-item))
 )
-(evil-declare-key 'normal org-mode-map (kbd "M-o")
+(evil-define-key 'normal org-mode-map (kbd "M-o")
 	(lambda ()
 		(interactive)
 		(end-of-line)
@@ -351,7 +351,7 @@ otherwise, close current tab (elscreen)."
 		(evil-append nil)
 	)
 )
-(evil-declare-key 'normal org-mode-map "O"
+(evil-define-key 'normal org-mode-map "O"
 	(lambda ()
 		(interactive)
 		(end-of-line)
@@ -360,7 +360,7 @@ otherwise, close current tab (elscreen)."
 		(evil-append nil)
 	)
 )
-(evil-declare-key 'normal org-mode-map "o"
+(evil-define-key 'normal org-mode-map "o"
 	(lambda ()
 		(interactive)
 		(end-of-line)
@@ -369,7 +369,7 @@ otherwise, close current tab (elscreen)."
 	)
 )
 
-(evil-declare-key 'normal org-mode-map "t"
+(evil-define-key 'normal org-mode-map "t"
 	(lambda ()
 		(interactive)
 		(end-of-line)
@@ -377,7 +377,7 @@ otherwise, close current tab (elscreen)."
 		(evil-append nil)
 	)
 )
-(evil-declare-key 'normal org-mode-map (kbd "M-t")
+(evil-define-key 'normal org-mode-map (kbd "M-t")
 	(lambda ()
 		(interactive)
 		(end-of-line)
@@ -386,28 +386,28 @@ otherwise, close current tab (elscreen)."
 		(evil-append nil)
 	)
 )
-(evil-declare-key 'normal org-mode-map (kbd "C-o") 'org-toggle-heading) ; convert a plain list into a heading
-(evil-declare-key 'normal org-mode-map "T" 'org-todo) ; mark a TODO item as DONE
-(evil-declare-key 'normal org-mode-map ";a" 'org-agenda) ; access agenda buffer
-(evil-declare-key 'normal org-mode-map "-" 'org-cycle-list-bullet) ; change bullet style
+(evil-define-key 'normal org-mode-map (kbd "C-o") 'org-toggle-heading) ; convert a plain list into a heading
+(evil-define-key 'normal org-mode-map "T" 'org-todo) ; mark a TODO item as DONE
+(evil-define-key 'normal org-mode-map ";a" 'org-agenda) ; access agenda buffer
+(evil-define-key 'normal org-mode-map "-" 'org-cycle-list-bullet) ; change bullet style
 
 ; allow us to access org-mode keys directly from Evil's Normal mode
 ; change item type
-(evil-declare-key 'normal org-mode-map (kbd "M-i") 'org-shiftright)
-(evil-declare-key 'normal org-mode-map (kbd "M-I") 'org-shiftleft)
+(evil-define-key 'normal org-mode-map (kbd "M-i") 'org-shiftright)
+(evil-define-key 'normal org-mode-map (kbd "M-I") 'org-shiftleft)
 ; navigate on a per-item basis
-(evil-declare-key 'normal org-mode-map (kbd "M-p") 'org-shiftup)
-(evil-declare-key 'normal org-mode-map (kbd "M-n") 'org-shiftdown)
+(evil-define-key 'normal org-mode-map (kbd "M-p") 'org-shiftup)
+(evil-define-key 'normal org-mode-map (kbd "M-n") 'org-shiftdown)
 ; heading-based navigation
-(evil-declare-key 'normal org-mode-map (kbd "M-l") 'org-forward-heading-same-level)
-(evil-declare-key 'normal org-mode-map (kbd "M-h") 'org-backward-heading-same-level)
-(evil-declare-key 'normal org-mode-map (kbd "M-k") 'outline-previous-visible-heading)
-(evil-declare-key 'normal org-mode-map (kbd "M-j") 'outline-next-visible-heading)
+(evil-define-key 'normal org-mode-map (kbd "M-l") 'org-forward-heading-same-level)
+(evil-define-key 'normal org-mode-map (kbd "M-h") 'org-backward-heading-same-level)
+(evil-define-key 'normal org-mode-map (kbd "M-k") 'outline-previous-visible-heading)
+(evil-define-key 'normal org-mode-map (kbd "M-j") 'outline-next-visible-heading)
 ; move items around, including child nodes
-(evil-declare-key 'normal org-mode-map (kbd "M-L") 'org-shiftmetaright)
-(evil-declare-key 'normal org-mode-map (kbd "M-H") 'org-shiftmetaleft)
-(evil-declare-key 'normal org-mode-map (kbd "M-K") 'org-shiftmetaup)
-(evil-declare-key 'normal org-mode-map (kbd "M-J") 'org-shiftmetadown)
+(evil-define-key 'normal org-mode-map (kbd "M-L") 'org-shiftmetaright)
+(evil-define-key 'normal org-mode-map (kbd "M-H") 'org-shiftmetaleft)
+(evil-define-key 'normal org-mode-map (kbd "M-K") 'org-shiftmetaup)
+(evil-define-key 'normal org-mode-map (kbd "M-J") 'org-shiftmetadown)
 (add-hook 'org-mode-hook
 	'(lambda ()
 		; make TAB go to the other window, and map existing TAB
@@ -416,10 +416,10 @@ otherwise, close current tab (elscreen)."
 		(define-key org-mode-map [(control tab)] nil)
 	)
 )
-(evil-declare-key 'normal org-mode-map (kbd "TAB") 'other-window)
-(evil-declare-key 'normal org-mode-map [(control tab)] 'org-cycle)
+(evil-define-key 'normal org-mode-map (kbd "TAB") 'other-window)
+(evil-define-key 'normal org-mode-map [(control tab)] 'org-cycle)
 
-(evil-declare-key 'normal org-mode-map (kbd "<f12>") 'org-export-as-html)
+(evil-define-key 'normal org-mode-map (kbd "<f12>") 'org-export-as-html)
 
 ; C
 (add-hook 'c-mode-hook
@@ -491,8 +491,8 @@ otherwise, close current tab (elscreen)."
 )
 
 ; literate haskell: write end/begin code blocks, and enter insert mode
-(evil-declare-key 'normal haskell-mode-map ",B" 'hs-literate-begend)
-(evil-declare-key 'normal haskell-mode-map ",b" 'hs-literate-endbeg)
+(evil-define-key 'normal haskell-mode-map ",B" 'hs-literate-begend)
+(evil-define-key 'normal haskell-mode-map ",b" 'hs-literate-endbeg)
 
 ; Hazelnut
 (add-to-list 'auto-mode-alist '("\\.hzl$" . text-mode))
@@ -539,7 +539,7 @@ otherwise, close current tab (elscreen)."
 ; Markdown
 (autoload 'markdown-mode "markdown-mode" "Major mode for editing Markdown files" t)
 (setq auto-mode-alist (cons '("\.md$" . markdown-mode) auto-mode-alist))
-(evil-declare-key 'normal markdown-mode-map (kbd "<tab>") 'other-window)
+(evil-define-key 'normal markdown-mode-map (kbd "<tab>") 'other-window)
 
 ; Python
 (add-hook 'python-mode-hook
