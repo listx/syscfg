@@ -447,6 +447,7 @@ otherwise, close current tab (elscreen)."
 (add-hook 'emacs-lisp-mode-hook
 	(lambda ()
 		(setq tab-width 4)
+		(modify-syntax-entry ?- "w") ; add hyphen as a word character
 	)
 )
 
