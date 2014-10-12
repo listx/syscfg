@@ -205,6 +205,7 @@ otherwise, close current tab (elscreen)."
 ; make ENTER key insert indentation after inserting a newline (noticeable when
 ; editing C files)
 (define-key evil-insert-state-map (kbd "RET") 'kakapo-ret-and-indent)
+(define-key evil-insert-state-map (kbd "<S-backspace>") 'kakapo-upline)
 ; for all minor modes, make backspace behave like backspace in insert mode
 (define-key evil-insert-state-map (kbd "DEL") 'backward-delete-char)
 
