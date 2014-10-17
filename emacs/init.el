@@ -207,7 +207,7 @@ otherwise, close current tab (elscreen)."
 (define-key evil-insert-state-map (kbd "RET") 'kakapo-ret-and-indent)
 (define-key evil-insert-state-map (kbd "<S-backspace>") 'kakapo-upline)
 ; for all minor modes, make backspace behave like backspace in insert mode
-(define-key evil-insert-state-map (kbd "DEL") 'backward-delete-char)
+(define-key evil-insert-state-map (kbd "DEL") 'kakapo-backspace)
 
 ; Modes
 
