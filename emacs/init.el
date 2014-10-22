@@ -8,7 +8,6 @@
 (require 'cl)
 (require 'evil)
 (evil-mode 1)
-(require 'org-exp-blocks)
 (require 'yaml-mode)
 
 ; darken inactive windows
