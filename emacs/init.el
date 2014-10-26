@@ -419,7 +419,7 @@ otherwise, close current tab (elscreen)."
 (evil-define-key 'normal org-mode-map (kbd "TAB") 'other-window)
 (evil-define-key 'normal org-mode-map [(control tab)] 'org-cycle)
 
-(evil-define-key 'normal org-mode-map (kbd "<f12>") 'org-export-as-html)
+(evil-define-key 'normal org-mode-map (kbd "<f12>") 'org-html-export-to-html)
 
 ; C
 (add-hook 'c-mode-hook
