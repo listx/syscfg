@@ -26,6 +26,7 @@
 		(defun h (hook tmode twidth &optional func)
 			(my-add-hook hook tmode twidth func)
 		)
+		(if b
 		(cond
 			((string-match "webdev/depot/.+\\.rb$" b)
 				(h 'ruby-mode-hook nil 2
@@ -110,6 +111,7 @@
 			((string-match "\\.sh$" b)
 				(h 'sh-mode-hook t 4)
 			)
+		)
 		)
 	)
 )
