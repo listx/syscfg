@@ -1,6 +1,9 @@
 ; add load path for custom scripts
 (add-to-list 'load-path "~/.emacs.d/script")
 
+; load per-project indentation style settings
+(load "~/.emacs.d/kakapo-project-settings")
+
 ; load Packages
 ; -------------
 ; fix "<dead-grave> is undefined" error
@@ -193,8 +196,11 @@ otherwise, close current tab (elscreen)."
 
 ; General indentation behavior
 (require 'kakapo-mode)
-(add-hook 'text-mode-hook 'kakapo-mode)
-(add-hook 'prog-mode-hook 'kakapo-mode)
+
+; Per-project indentation rules, from ~/.emacs.d/kakapo-project-settings.el
+(add-hook 'prog-mode-hook 'my-kakapo-indents)
+(add-hook 'text-mode-hook 'my-kakapo-indents)
+
 ;(setq kakapo-debug nil)
 ; first, set default mode to text-mode
 (setq-default major-mode 'text-mode)
@@ -425,9 +431,6 @@ otherwise, close current tab (elscreen)."
 (add-hook 'c-mode-hook
 	(lambda ()
 		(c-set-style "linux")
-		(setq indent-tabs-mode t)
-		(setq default-tab-width 8)
-		(setq evil-shift-width 8)
 		(modify-syntax-entry ?_ "w") ; add underscore as a word character, like in Vim
 	)
 )
@@ -436,9 +439,6 @@ otherwise, close current tab (elscreen)."
 (add-hook 'c++-mode-hook
 	(lambda ()
 		(c-set-style "linux")
-		(setq indent-tabs-mode t)
-		(setq default-tab-width 8)
-		(setq evil-shift-width 8)
 		(modify-syntax-entry ?_ "w") ; add underscore as a word character, like in Vim
 	)
 )
@@ -446,7 +446,6 @@ otherwise, close current tab (elscreen)."
 ; Emacs lisp
 (add-hook 'emacs-lisp-mode-hook
 	(lambda ()
-		(setq tab-width 4)
 		(modify-syntax-entry ?- "w") ; add hyphen as a word character
 	)
 )
@@ -457,19 +456,6 @@ otherwise, close current tab (elscreen)."
 (require 'haskell-mode-autoloads)
 (add-to-list 'Info-default-directory-list "/usr/share/emacs/site-lisp/haskell-mode/")
 (remove-hook 'haskell-mode-hook 'turn-on-haskell-indent)
-; 4-space tabs
-(add-hook 'haskell-mode-hook
-	(lambda ()
-		(turn-on-haskell-doc-mode)
-		;(turn-on-haskell-simple-indent)
-		;(setq indent-line-function 'tab-to-tab-stop)
-		;(setq tab-stop-list
-		;(loop for i from 2 upto 120 by 2 collect i))
-		(setq indent-line-function #'indent-relative)
-		(setq tab-width 4)
-		(setq indent-tabs-mode t)
-	)
-)
 
 (defun hs-literate-begend ()
 	(interactive)
@@ -497,29 +483,6 @@ otherwise, close current tab (elscreen)."
 
 ; Hazelnut
 (add-to-list 'auto-mode-alist '("\\.hzl$" . text-mode))
-(add-hook 'text-mode-hook
-	(lambda ()
-		(setq indent-tabs-mode t)
-		(setq tab-width 4)
-	)
-)
-
-; HTML
-(add-hook 'html-mode-hook
-	(lambda ()
-		(setq indent-tabs-mode t)
-		(setq tab-width 4)
-	)
-)
-
-;Latex
-(add-hook 'latex-mode-hook
-    (lambda ()
-        (setq indent-line-function #'indent-relative)
-		(setq tab-width 4)
-		(setq indent-tabs-mode t)
-    )
-)
 
 ; Ledger
 (add-to-list 'load-path (expand-file-name "/usr/share/emacs/site-lisp/ledger-mode"))
@@ -542,21 +505,9 @@ otherwise, close current tab (elscreen)."
 (setq auto-mode-alist (cons '("\.md$" . markdown-mode) auto-mode-alist))
 (evil-define-key 'normal markdown-mode-map (kbd "<tab>") 'other-window)
 
-; Python
-(add-hook 'python-mode-hook
-	(lambda ()
-		(setq indent-tabs-mode t)
-		(setq python-indent 4)
-		(setq tab-width 4)
-	)
-)
-
 ; Ruby
 (add-hook 'ruby-mode-hook
 	(lambda ()
-		(setq indent-tabs-mode t)
-		(setq ruby-indent-level 4)
-		(setq tab-width 4)
 		(modify-syntax-entry ?_ "w") ; add underscore as a word character
 	)
 )
@@ -564,7 +515,6 @@ otherwise, close current tab (elscreen)."
 ; Shell script
 (add-hook 'sh-mode-hook
     (lambda ()
-		(setq tab-width 4)
 		(modify-syntax-entry ?_ "w") ; add underscore as a word character
     )
 )
@@ -668,8 +618,6 @@ otherwise, close current tab (elscreen)."
         (global-text-scale-adjust 1)
 	)
 )
-; default tab width is 8
-(setq default-tab-width 8)
 ; disable fringes
 (fringe-mode 0)
 ; set default line length (as used by 'fill-paragraph) to be 80 characters
