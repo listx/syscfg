@@ -39,6 +39,17 @@
 					)
 				)
 			)
+			((string-match "webdev/fido/.+\\.rb$" b)
+				(h 'ruby-mode-hook nil 2
+					(progn
+						(setq ruby-indent-level 2)
+						(message
+							"ruby-indent-level set to %d"
+							ruby-indent-level
+						)
+					)
+				)
+			)
 
 			; Default options by language
 
