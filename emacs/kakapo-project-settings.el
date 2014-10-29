@@ -82,6 +82,10 @@
 			((string-match "\\.htm[l]?$" b)
 				(h 'html-mode-hook t 4)
 			)
+			; HTML + ERB
+			((string-match "\\.html\\.erb?$" b)
+				(h 'html-mode-hook nil 2)
+			)
 			; Latex
 			((string-match "\\.tex$" b)
 				(h 'latex-mode-hook t 4)
