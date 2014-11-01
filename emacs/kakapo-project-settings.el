@@ -101,6 +101,10 @@
 			((string-match "\\.tex$" b)
 				(h 'latex-mode-hook t 4)
 			)
+			; Markdown
+			((string-match "\\.md$" b)
+				(h 'markdown-mode-hook t 4)
+			)
 			; Python
 			((string-match "\\.py$" b)
 				(h 'python-mode-hook t 4
