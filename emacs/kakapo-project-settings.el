@@ -77,6 +77,20 @@
 					)
 				)
 			)
+			; CSS
+			((string-match "\\.css$" b)
+				(progn
+					(kakapo-mode)
+					(setq indent-tabs-mode nil)
+					(setq tab-width 2)
+					(setq evil-shift-width 2)
+					(setq css-indent-offset 2)
+					(message
+						"css-indent-offset set to %d"
+						2
+					)
+				)
+			)
 			; Emacs lisp
 			((string-match "\\.el$" b)
 				(h 'emacs-lisp-mode-hook t 4)

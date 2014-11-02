@@ -200,6 +200,7 @@ otherwise, close current tab (elscreen)."
 ; Per-project indentation rules, from ~/.emacs.d/kakapo-project-settings.el
 (add-hook 'prog-mode-hook 'my-kakapo-indents)
 (add-hook 'text-mode-hook 'my-kakapo-indents)
+(add-hook 'css-mode-hook 'my-kakapo-indents)
 
 ;(setq kakapo-debug nil)
 ; first, set default mode to text-mode
