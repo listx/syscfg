@@ -130,6 +130,16 @@
 			((string-match "\\.sh$" b)
 				(h 'sh-mode-hook t 4)
 			)
+
+			; Default
+			(t
+				(progn
+					(kakapo-mode)
+					(setq indent-tabs-mode t)
+					(setq tab-width 4)
+					(setq evil-shift-width 4)
+				)
+			)
 		)
 		)
 	)
