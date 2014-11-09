@@ -1,3 +1,12 @@
+; remove splash screen
+(setq inhibit-splash-screen t)
+; remove scroll bars
+(scroll-bar-mode -1)
+; remove toolbar
+(tool-bar-mode -1)
+; remove menu
+(menu-bar-mode -1)
+
 ; add load path for custom scripts
 (add-to-list 'load-path "~/.emacs.d/script")
 
@@ -595,12 +604,6 @@ otherwise, close current tab (elscreen)."
 (setq evil-emacs-state-cursor '("#ff0000" box))
 (setq evil-normal-state-cursor '("#00ff00" box))
 (setq evil-visual-state-cursor '("#0000ff" box))
-; remove splash screen
-(setq inhibit-splash-screen t)
-; remove toolbar
-(tool-bar-mode -1)
-; remove menu
-(menu-bar-mode -1)
 ; visual line mode (word wrap on whole words) by default
 (global-visual-line-mode 1)
 ; green cursor
@@ -656,8 +659,7 @@ otherwise, close current tab (elscreen)."
   ;; If there is more than one, they won't work right.
  '(inhibit-startup-buffer-menu t)
  '(blink-cursor-mode nil)
- '(column-number-mode t)
- '(scroll-bar-mode nil))
+ '(column-number-mode t))
 (custom-set-faces
   ;; custom-set-faces was added by Custom.
   ;; If you edit it by hand, you could mess it up, so be careful.
