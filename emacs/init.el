@@ -94,7 +94,11 @@
 			(evil-visual-char)
 			(evil-exit-visual-state)
 		)
-		(my-addrem-comment-region (line-beginning-position) (line-beginning-position 2) f)
+		(my-addrem-comment-region
+			(line-beginning-position)
+			(line-beginning-position 2)
+			f
+		)
 	)
 )
 
@@ -118,32 +122,48 @@
 ;; http://www.vergenet.net/~conrad/software/xsel/ -- "a command-line
 ;; program for getting and setting the contents of the X selection"
 (unless window-system
- (when (getenv "DISPLAY")
-  ;; Callback for when user cuts
-  (defun xsel-cut-function (text &optional push)
-    ;; Insert text to temp-buffer, and "send" content to xsel stdin
-    (with-temp-buffer
-      (insert text)
-      ;; I prefer using the "clipboard" selection (the one the
-      ;; typically is used by c-c/c-v) before the primary selection
-      ;; (that uses mouse-select/middle-button-click)
-      (call-process-region (point-min) (point-max) "xsel" nil 0 nil "--clipboard" "--input")))
-  ;; Call back for when user pastes
-  (defun xsel-paste-function()
-    ;; Find out what is current selection by xsel. If it is different
-    ;; from the top of the kill-ring (car kill-ring), then return
-    ;; it. Else, nil is returned, so whatever is in the top of the
-    ;; kill-ring will be used.
-    (let ((xsel-output (shell-command-to-string "xsel --clipboard --output")))
-      (unless (string= (car kill-ring) xsel-output)
-	xsel-output )))
-  ;; Attach callbacks to hooks
-  (setq interprogram-cut-function 'xsel-cut-function)
-  (setq interprogram-paste-function 'xsel-paste-function)
-  ;; Idea from
-  ;; http://shreevatsa.wordpress.com/2006/10/22/emacs-copypaste-and-x/
-  ;; http://www.mail-archive.com/help-gnu-emacs@gnu.org/msg03577.html
- ))
+	(when (getenv "DISPLAY")
+		; Callback for when user cuts
+		(defun xsel-cut-function (text &optional push)
+			; Insert text to temp-buffer, and "send" content to xsel stdin
+			(with-temp-buffer
+				(insert text)
+				; I prefer using the "clipboard" selection (the one the
+				; typically is used by c-c/c-v) before the primary selection
+				; (that uses mouse-select/middle-button-click)
+				(call-process-region
+					(point-min)
+					(point-max)
+					"xsel"
+					nil
+					0
+					nil
+					"--clipboard" "--input"
+				)
+			)
+		)
+		; Call back for when user pastes
+		(defun xsel-paste-function()
+			; Find out what is current selection by xsel. If it is different
+			; from the top of the kill-ring (car kill-ring), then return
+			; it. Else, nil is returned, so whatever is in the top of the
+			; kill-ring will be used.
+			(let
+				(
+					(xsel-output
+						(shell-command-to-string "xsel --clipboard --output")
+					)
+				)
+			(unless (string= (car kill-ring) xsel-output) xsel-output))
+		)
+		; Attach callbacks to hooks
+		(setq interprogram-cut-function 'xsel-cut-function)
+		(setq interprogram-paste-function 'xsel-paste-function)
+		; Idea from
+		; http://shreevatsa.wordpress.com/2006/10/22/emacs-copypaste-and-x/
+		; http://www.mail-archive.com/help-gnu-emacs@gnu.org/msg03577.html
+	)
+)
 
 ; http://www.emacswiki.org/emacs/GlobalTextScaleMode
 (defvar text-scale-mode-amount)
@@ -164,7 +184,12 @@
 	"Toggle font between Terminus and Liberation Mono"
 	(interactive)
 	(setq my-current-font (if (= my-current-font 0) 1 0))
-	(set-face-attribute 'default nil :font (if (= my-current-font 1) "Liberation Mono" "Terminus"))
+	(set-face-attribute
+		'default
+		nil
+		:font
+		(if (= my-current-font 1) "Liberation Mono" "Terminus")
+	)
 	(redraw-display)
 )
 (defun kill-this-buffer-volatile ()
@@ -220,8 +245,10 @@ otherwise, close current tab (elscreen)."
 ; first, set default mode to text-mode
 (setq-default major-mode 'text-mode)
 ; Use kakapo's "o" and "O" for opening new lines.
-(define-key evil-normal-state-map "o" (lambda () (interactive) (kakapo-open nil)))
-(define-key evil-normal-state-map "O" (lambda () (interactive) (kakapo-open t)))
+(define-key evil-normal-state-map "o"
+	(lambda () (interactive) (kakapo-open nil)))
+(define-key evil-normal-state-map "O"
+	(lambda () (interactive) (kakapo-open t)))
 ; make ENTER key insert indentation after inserting a newline (noticeable when
 ; editing C files)
 (define-key evil-insert-state-map (kbd "RET") 'kakapo-ret-and-indent)
@@ -251,7 +278,8 @@ otherwise, close current tab (elscreen)."
 (define-key evil-normal-state-map ",D" 'kill-this-buffer-volatile) ; kill current buffer without confirmation, *even if modified*
 (define-key evil-normal-state-map ",x" 'save-buffers-kill-emacs) ; save and quit
 (define-key evil-normal-state-map ",u" 'undo-tree-visualize) ; see undo history in tree format (this will be opened in a new split window)
-(define-key evil-insert-state-map [S-insert] (lambda () (interactive) (insert (x-selection 'PRIMARY)))) ; paste X primary
+(define-key evil-insert-state-map [S-insert]
+	(lambda () (interactive) (insert (x-selection 'PRIMARY)))) ; paste X primary
 (define-key evil-normal-state-map "gw" 'fill-paragraph) ; insert hard line breaks
 
 
@@ -272,8 +300,10 @@ otherwise, close current tab (elscreen)."
 		(evil-scroll-line-to-center nil)
 	)
 )
-(define-key evil-normal-state-map ",h" (lambda () (interactive) (split-window-vertically) (balance-windows)))
-(define-key evil-normal-state-map ",v" (lambda () (interactive) (split-window-horizontally) (balance-windows)))
+(define-key evil-normal-state-map ",h"
+	(lambda () (interactive) (split-window-vertically) (balance-windows)))
+(define-key evil-normal-state-map ",v"
+	(lambda () (interactive) (split-window-horizontally) (balance-windows)))
 ; move to next window
 (define-key evil-normal-state-map (kbd "TAB") 'other-window)
 ; move to previous window
@@ -293,7 +323,8 @@ otherwise, close current tab (elscreen)."
 ; find file
 (define-key evil-normal-state-map ",e" 'ido-find-file)
 ; set line ending to UNIX
-(define-key evil-normal-state-map ",E" (lambda () (interactive) (set-buffer-file-coding-system 'utf-8-unix t)))
+(define-key evil-normal-state-map ",E"
+	(lambda () (interactive) (set-buffer-file-coding-system 'utf-8-unix t)))
 ; replace all /r/n with just /n
 ; make "kj" behave as ESC key, adapted from http://article.gmane.org/gmane.emacs.vim-emulation/980
 (define-key evil-insert-state-map "k" #'cofi/maybe-exit)
@@ -302,7 +333,16 @@ otherwise, close current tab (elscreen)."
 	(interactive)
 	(let ((modified (buffer-modified-p)))
 		(insert "k")
-		(let ((evt (read-event (format "Insert %c to exit insert state" ?j) nil 0.2))) ; wait 200 milliseconds
+		(let (
+			; wait 200 milliseconds
+			(evt
+				(read-event
+					(format "Insert %c to exit insert state" ?j)
+					nil
+					0.2
+				)
+			)
+		)
 			(cond
 				((null evt) (message ""))
 				((and (integerp evt) (char-equal evt ?j))
@@ -310,7 +350,10 @@ otherwise, close current tab (elscreen)."
 					(set-buffer-modified-p modified)
 					(push 'escape unread-command-events)
 		 		)
-				(t (setq unread-command-events (append unread-command-events (list evt)))
+				(t
+					(setq unread-command-events
+						(append unread-command-events (list evt))
+					)
 				)
 			)
 		)
@@ -318,7 +361,8 @@ otherwise, close current tab (elscreen)."
 )
 
 (defun my-uim-mode ()
-	"Toggle UIM minor mode, and also toggle #'cofi/maybe-exit keybinding as it conflicts with Anthy input."
+	"Toggle UIM minor mode, and also toggle #'cofi/maybe-exit
+keybinding as it conflicts with Anthy input."
 	(interactive)
 	(uim-mode)
 	(if uim-mode
@@ -327,10 +371,14 @@ otherwise, close current tab (elscreen)."
 	)
 )
 
-(define-key evil-visual-state-map ",c" (lambda () (interactive) (my-addrem-comment t))) ; add comment
-(define-key evil-visual-state-map ",C" (lambda () (interactive) (my-addrem-comment nil))) ; remove comment
-(define-key evil-normal-state-map ",c" (lambda () (interactive) (my-addrem-comment t)))
-(define-key evil-normal-state-map ",C" (lambda () (interactive) (my-addrem-comment nil)))
+(define-key evil-visual-state-map ",c"
+	(lambda () (interactive) (my-addrem-comment t))) ; add comment
+(define-key evil-visual-state-map ",C"
+	(lambda () (interactive) (my-addrem-comment nil))) ; remove comment
+(define-key evil-normal-state-map ",c"
+  (lambda () (interactive) (my-addrem-comment t)))
+(define-key evil-normal-state-map ",C"
+  (lambda () (interactive) (my-addrem-comment nil)))
 
 ; Elscreen
 (load "elscreen" "ElScreen" t)
@@ -420,9 +468,12 @@ otherwise, close current tab (elscreen)."
 (evil-define-key 'normal org-mode-map (kbd "M-p") 'org-shiftup)
 (evil-define-key 'normal org-mode-map (kbd "M-n") 'org-shiftdown)
 ; heading-based navigation
-(evil-define-key 'normal org-mode-map (kbd "M-l") 'org-forward-heading-same-level)
-(evil-define-key 'normal org-mode-map (kbd "M-h") 'org-backward-heading-same-level)
-(evil-define-key 'normal org-mode-map (kbd "M-k") 'outline-previous-visible-heading)
+(evil-define-key 'normal org-mode-map (kbd "M-l")
+	'org-forward-heading-same-level)
+(evil-define-key 'normal org-mode-map (kbd "M-h")
+	'org-backward-heading-same-level)
+(evil-define-key 'normal org-mode-map (kbd "M-k")
+	'outline-previous-visible-heading)
 (evil-define-key 'normal org-mode-map (kbd "M-j") 'outline-next-visible-heading)
 ; move items around, including child nodes
 (evil-define-key 'normal org-mode-map (kbd "M-L") 'org-shiftmetaright)
@@ -469,7 +520,9 @@ otherwise, close current tab (elscreen)."
 ; adopted from http://sequence.complete.org/node/365
 (add-to-list 'load-path "/usr/share/emacs/site-lisp/haskell-mode/")
 (require 'haskell-mode-autoloads)
-(add-to-list 'Info-default-directory-list "/usr/share/emacs/site-lisp/haskell-mode/")
+(add-to-list
+	'Info-default-directory-list
+	"/usr/share/emacs/site-lisp/haskell-mode/")
 (remove-hook 'haskell-mode-hook 'turn-on-haskell-indent)
 
 (defun hs-literate-begend ()
@@ -500,7 +553,9 @@ otherwise, close current tab (elscreen)."
 (add-to-list 'auto-mode-alist '("\\.hzl$" . text-mode))
 
 ; Ledger
-(add-to-list 'load-path (expand-file-name "/usr/share/emacs/site-lisp/ledger-mode"))
+(add-to-list
+	'load-path
+	(expand-file-name "/usr/share/emacs/site-lisp/ledger-mode"))
 (load "ledger-mode")
 (add-to-list 'auto-mode-alist '("\\.ledger$" . ledger-mode))
 (add-hook 'ledger-mode-hook 'evil-goto-line) ; go to the lastest entries at the end
@@ -516,7 +571,11 @@ otherwise, close current tab (elscreen)."
 (autoload 'lua-mode "lua-mode" "Lua editing mode." t)
 
 ; Markdown
-(autoload 'markdown-mode "markdown-mode" "Major mode for editing Markdown files" t)
+(autoload
+	'markdown-mode
+	"markdown-mode"
+	"Major mode for editing Markdown files"
+	t)
 (setq auto-mode-alist (cons '("\.md$" . markdown-mode) auto-mode-alist))
 (evil-define-key 'normal markdown-mode-map (kbd "<tab>") 'other-window)
 
