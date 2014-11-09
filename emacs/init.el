@@ -4,6 +4,11 @@
 ; load per-project indentation style settings
 (load "~/.emacs.d/kakapo-project-settings")
 
+; MELPA
+(require 'package)
+(package-initialize)
+(add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t)
+
 ; load Packages
 ; -------------
 ; fix "<dead-grave> is undefined" error
@@ -512,6 +517,10 @@ otherwise, close current tab (elscreen)."
 		(modify-syntax-entry ?_ "w") ; add underscore as a word character
 	)
 )
+
+; Sass
+(autoload 'sass-mode "sass-mode" "Major mode for editing Sass files" t)
+(add-to-list 'auto-mode-alist '("\\.sass$" . sass-mode))
 
 ; Shell script
 (add-hook 'sh-mode-hook

@@ -95,6 +95,10 @@
 			((string-match "\\.el$" b)
 				(h 'emacs-lisp-mode-hook t 4)
 			)
+			; Haml
+			((string-match "\\.haml$" b)
+				(h 'haml-mode-hook nil 2)
+			)
 			; Haskell
 			((string-match "\\.[l]?hs$" b)
 				(h 'haskell-mode-hook t 4)
@@ -139,6 +143,10 @@
 						)
 					)
 				)
+			)
+			; Sass
+			((string-match "\\.sass$" b)
+				(h 'sass-mode-hook nil 2)
 			)
 			; Shell
 			((string-match "\\.sh$" b)
