@@ -63,8 +63,8 @@
 		; command and parameters
 		(concat
 			(if f
-				"~/prog/nox/src/nox -s "
-				"~/prog/nox/src/nox -u -s ")
+				"~/prog/nox/src/nox --sline "
+				"~/prog/nox/src/nox --uncomment --sline ")
 			(case (with-current-buffer (current-buffer) major-mode)
 				('c-mode "//")
 				('emacs-lisp-mode ";")
