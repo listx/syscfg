@@ -68,7 +68,7 @@
 			(case (with-current-buffer (current-buffer) major-mode)
 				('c-mode "//")
 				('emacs-lisp-mode ";")
-				('haml-mode "-#")
+				('haml-mode "-# --after-lw")
 				('haskell-mode "--")
 				('literate-haskell-mode "--")
 				('LilyPond-mode "%")
