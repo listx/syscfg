@@ -63,17 +63,19 @@
 		; command and parameters
 		(concat
 			(if f
-				"~/prog/nox/src/nox -l "
-				"~/prog/nox/src/nox -u -l ")
+				"~/prog/nox/src/nox -s "
+				"~/prog/nox/src/nox -u -s ")
 			(case (with-current-buffer (current-buffer) major-mode)
-				('c-mode "c")
-				('emacs-lisp-mode "emacslisp")
-				('haskell-mode "haskell")
-				('literate-haskell-mode "haskell")
-				('LilyPond-mode "tex")
-				('latex-mode "tex")
-				('plain-tex-mode "tex")
-				(t "shell") ; default to shell syntax
+				('c-mode "//")
+				('emacs-lisp-mode ";")
+				('haml-mode "-#")
+				('haskell-mode "--")
+				('literate-haskell-mode "--")
+				('LilyPond-mode "%")
+				('latex-mode "%")
+				('plain-tex-mode "%")
+				('sass-mde "//")
+				(t "#") ; default to shell syntax
 			)
 		)
 		; output buffer
