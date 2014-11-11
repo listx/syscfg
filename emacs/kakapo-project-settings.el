@@ -97,7 +97,12 @@
 			)
 			; Haml
 			((string-match "\\.haml$" b)
-				(h 'haml-mode-hook nil 2)
+				(progn
+					(h 'haml-mode-hook nil 2)
+					; Haml mode intrusively redefines the backspace key; let's
+					; get rid of that!
+					(define-key haml-mode-map [backspace] nil)
+				)
 			)
 			; Haskell
 			((string-match "\\.[l]?hs$" b)
