@@ -67,7 +67,7 @@
 				"~/prog/nox/src/nox --uncomment --sline ")
 			(case (with-current-buffer (current-buffer) major-mode)
 				('c-mode "//")
-				('emacs-lisp-mode ";")
+				('emacs-lisp-mode "\\;")
 				('haml-mode "-# --after-lw")
 				('haskell-mode "--")
 				('literate-haskell-mode "--")
@@ -75,7 +75,7 @@
 				('latex-mode "%")
 				('plain-tex-mode "%")
 				('sass-mde "//")
-				(t "#") ; default to shell syntax
+				(t "\\#") ; default to shell syntax
 			)
 		)
 		; output buffer
