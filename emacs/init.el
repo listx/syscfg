@@ -29,7 +29,8 @@
 ; darken inactive windows
 (require 'hiwin)
 (hiwin-activate)
-(set-face-background 'hiwin-face "gray20")
+(set-face-background 'hiwin-face
+	(if window-system "gray22" "gray32"))
 
 ; read uim.el
 (autoload 'uim-mode "uim" nil t)
