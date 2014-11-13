@@ -57,6 +57,9 @@ endif
 ifeq ('${HOST}','k1')
 	ln -fs ${CFG}/rtorrent/cfg-k1						${HOME}/.rtorrent.rc
 endif
+ifeq ('${HOST}','k3')
+	ln -fs ${CFG}/rtorrent/cfg							${HOME}/.rtorrent.rc
+endif
 usbmnt:
 	ln -fs ${CFG}/usbmnt/cfg							${HOME}/.usbmnt
 vim:
