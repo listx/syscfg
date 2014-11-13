@@ -25,7 +25,6 @@
 (require 'cl)
 (require 'evil)
 (evil-mode 1)
-(require 'yaml-mode)
 
 ; darken inactive windows
 (require 'hiwin)
@@ -555,10 +554,10 @@ keybinding as it conflicts with Anthy input."
 (add-to-list 'auto-mode-alist '("\\.hzl$" . text-mode))
 
 ; Ledger
+(autoload 'ledger-mode "ledger-mode" "A major mode for Ledger" t)
 (add-to-list
 	'load-path
 	(expand-file-name "/usr/share/emacs/site-lisp/ledger-mode"))
-(load "ledger-mode")
 (add-to-list 'auto-mode-alist '("\\.ledger$" . ledger-mode))
 (add-hook 'ledger-mode-hook 'evil-goto-line) ; go to the lastest entries at the end
 
@@ -600,6 +599,7 @@ keybinding as it conflicts with Anthy input."
 )
 
 ; YAML
+(autoload 'yaml-mode "yaml-mode" "A major mode for YAML" t)
 (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode))
 ; disable YAML keymaps, as they interfere with Evil (especially the [backspace] keymap)
 (setq yaml-mode-map (make-sparse-keymap))
