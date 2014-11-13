@@ -297,6 +297,8 @@ alias agi='ag -i'
 alias sk0='ssh l@k0'
 alias sk1='ssh l@k1'
 alias sk2='ssh l@k2'
+alias sk3='ssh l@k3'
+alias sl0='ssh l@l0'
 alias so='ssh otter@ocean'
 alias sf='ssh tiger@forest'
 
