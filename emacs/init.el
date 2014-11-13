@@ -103,25 +103,57 @@
 	)
 )
 
-; from Hans-Peter Deifel's email on Nov 1 2012, to the implementations-list@lists.ourproject.org mailing list, which makes visual selections from Evil update the X11 primary selection
+; Vim-like visual selection. Make the visual selection update the X primary
+; buffer.
 (defun evil-visual-update-x-selection (&optional buffer)
-	"Update the X selection with the current visual region."
-	(with-current-buffer (or buffer (current-buffer))
-		(when	(and (evil-visual-state-p)
-			(fboundp 'x-select-text)
-			(or (not (boundp 'ns-initialized))
-				(with-no-warnings ns-initialized))
-			(not (eq evil-visual-selection 'block)))
-			(x-set-selection 'PRIMARY
-				(buffer-substring-no-properties
-					evil-visual-beginning
-					evil-visual-end))
-			(setq x-last-selected-text-primary))))
+  "Update the X selection with the current visual region."
+  (let ((buf (or buffer (current-buffer))))
+    (when (buffer-live-p buf)
+      (with-current-buffer buf
+        (when (and (evil-visual-state-p)
+                   (fboundp 'x-select-text)
+                   (or (not (boundp 'ns-initialized))
+                       (with-no-warnings ns-initialized))
+                   (not (eq evil-visual-selection 'block)))
+;			; Vanilla evil, as of commit
+;			; 1def26dc9c4d084e766364eff2d9f3aa51613cf7.
 
-;; If emacs is run in a terminal, the clipboard- functions have no
-;; effect. Instead, we use of xsel, see
-;; http://www.vergenet.net/~conrad/software/xsel/ -- "a command-line
-;; program for getting and setting the contents of the X selection"
+;          (x-select-text (buffer-substring-no-properties
+;                          evil-visual-beginning
+;                          evil-visual-end))
+
+;           ; from Hans-Peter Deifel's email on Nov 1 2012, to the
+;           ; implementations-list@lists.ourproject.org mailing list
+;           ; (http://permalink.gmane.org/gmane.emacs.vim-emulation/1715), which
+;           ; makes visual selections from Evil update the X11 primary
+;           ; selection; this version does not work with the latest Evil
+;           ; 1def26dc9c4d084e766364eff2d9f3aa51613cf7 because of a "X selection
+;           ; unavailable for this frame" error.
+
+;			(x-set-selection 'PRIMARY
+;				(buffer-substring-no-properties
+;					evil-visual-beginning
+;					evil-visual-end))
+;			(setq x-last-selected-text-primary)
+
+;			; We explicitly use 'xsel' to update the primary selection; this
+;			; way, we can emulate Vim's behavior in both terminal and GUI emacs.
+			(call-process-region
+				evil-visual-beginning
+				evil-visual-end
+				"xsel"
+				nil
+					0
+				nil
+				"--primary" "--input"
+			)
+)))))
+
+; When yanking ('y' key) in terminal Emacs, copy into the X clipboard. As
+; suggested from http://permalink.gmane.org/gmane.emacs.vim-emulation/2023, the
+; blog post at
+; http://hugoheden.wordpress.com/2009/03/08/copypaste-with-emacs-in-terminal/
+; touches on this topic; here is a modified version of that blog post:
 (unless window-system
 	(when (getenv "DISPLAY")
 		; Callback for when user cuts
