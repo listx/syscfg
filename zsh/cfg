@@ -295,10 +295,8 @@ alias agi='ag -i'
 
 # these sane hostnames depend on the /etc/hosts file!
 alias sk0='ssh l@k0'
-alias sk2='ssh l@k2'
-alias sk2w='ssh l@k2w'
 alias sk1='ssh l@k1'
-alias sk1w='ssh l@k1w'
+alias sk2='ssh l@k2'
 alias so='ssh otter@ocean'
 alias sf='ssh tiger@forest'
 
