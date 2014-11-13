@@ -99,6 +99,7 @@ prompt_kody_precmd() {
         k0)     prompt_hostcolor=$prompt_color3 ;;
         k2)     prompt_hostcolor=$prompt_color6 ;;
         k1)     prompt_hostcolor=$prompt_color1 ;;
+        k3)     prompt_hostcolor=$prompt_color4 ;;
         ocean)  prompt_hostcolor=$prompt_color8 ;;
         forest) prompt_hostcolor=$prompt_color2 ;;
         *)      prompt_hostcolor=$prompt_color5 ;;
