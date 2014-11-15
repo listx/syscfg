@@ -70,9 +70,6 @@ univ_open() {
             (otf|ttf)
                 fontforge $@ &>/dev/null & disown
             ;;
-            (org)
-                emacs $@ &>/dev/null & disown
-            ;;
             (chm)
                 xchm $@ &>/dev/null & disown
             ;;
