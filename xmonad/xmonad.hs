@@ -151,6 +151,7 @@ myKeys hostname conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((mod4Mask              , xK_n     ), spawn "firefox")
     , ((mod4Mask .|. shiftMask, xK_n     ), io sitesRand >>= spawn . ("firefox " ++))
     , ((mod4Mask .|. controlMask, xK_n     ), spawn "chromium")
+    , ((mod4Mask              , xK_p     ), spawn "pidgin")
     , ((mod4Mask              , xK_w     ), spawn "soffice")
     , ((mod4Mask              , xK_x     ), spawn term1)
     , ((mod4Mask .|. shiftMask, xK_x     ), spawn term3)
