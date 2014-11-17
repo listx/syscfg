@@ -72,3 +72,5 @@
 (evil-define-key 'normal org-mode-map [(control tab)] 'org-cycle)
 
 (evil-define-key 'normal org-mode-map (kbd "<f12>") 'org-html-export-to-html)
+
+(evil-define-key 'insert org-mode-map (kbd "M-TAB") 'org-shifttab)
