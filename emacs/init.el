@@ -1,3 +1,4 @@
+(load "~/.emacs.d/vars")
 ; remove splash screen
 (setq inhibit-splash-screen t)
 ; remove scroll bars
