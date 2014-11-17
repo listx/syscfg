@@ -15,6 +15,8 @@ git:
 	ln -fs ${CFG}/git/sendemail-aliases					${HOME}/.git-sendemail-aliases
 gsy:
 	ln -fs ${CFG}/gsy/cfg								${HOME}/.gsy
+gtk:
+	ln -fs ${CFG}/gtk/cfg								${HOME}/.gtkrc-2.0.mine
 lesskey:
 	ln -fs ${CFG}/lesskey/cfg							${HOME}/.lesskey
 	lesskey
