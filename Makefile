@@ -6,6 +6,9 @@ acpi:
 	ln -fs ${CFG}/acpi/${HOST}.sh						/etc/acpi/handler.sh
 boxes:
 	ln -fs ${CFG}/boxes/cfg								${HOME}/.boxes
+bundle:
+	mkdir ${HOME}/.bundle
+	ln -fs ${CFG}/bundle/cfg							${HOME}/.bundle/config
 cron:
 	${CFG}/cron/setcron.sh
 emacs:
