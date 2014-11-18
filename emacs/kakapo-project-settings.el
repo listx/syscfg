@@ -157,6 +157,10 @@
 			((string-match "\\.sh$" b)
 				(h 'sh-mode-hook t 4)
 			)
+			; Slim
+			((string-match "\\.slim$" b)
+				(h 'slim-mode-hook nil 2)
+			)
 
 			; Default
 			(t
