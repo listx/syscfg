@@ -79,7 +79,7 @@
 				('LilyPond-mode "%")
 				('latex-mode "%")
 				('plain-tex-mode "%")
-				('sass-mde "//")
+				('sass-mode "//")
 				(t "\\#") ; default to shell syntax
 			)
 		)
