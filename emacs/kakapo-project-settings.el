@@ -162,7 +162,12 @@
 			)
 			; Sass
 			((string-match "\\.sass$" b)
-				(h 'sass-mode-hook nil 2)
+				(progn
+					(h 'sass-mode-hook nil 2)
+					; Sass mode intrusively redefines the backspace key; let's
+					; get rid of that!
+					(define-key sass-mode-map [backspace] nil)
+				)
 			)
 			; Shell
 			((string-match "\\.sh$" b)
