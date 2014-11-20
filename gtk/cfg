@@ -21,7 +21,7 @@
 # including the "{" and "}" lines.
 style "imhtml-fix"
 {
-	font_name = "Merriweather 14"
+	font_name = "Merriweather 12"
 }
 
 # This will apply the font style just shown to various components.
