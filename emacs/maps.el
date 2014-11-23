@@ -3,7 +3,7 @@
 	(lambda ()
 		(interactive)
 		(end-of-line)
-		(org-insert-heading)
+		(insert "\n")
 		(evil-append nil)
 	)
 )
