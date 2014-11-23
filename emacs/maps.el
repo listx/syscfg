@@ -8,6 +8,7 @@
 (define-key evil-normal-state-map ",D" 'kill-this-buffer-volatile) ; kill current buffer without confirmation, *even if modified*
 (define-key evil-normal-state-map ",x" 'save-buffers-kill-emacs) ; save and quit
 (define-key evil-normal-state-map ",u" 'undo-tree-visualize) ; see undo history in tree format (this will be opened in a new split window)
+(define-key evil-normal-state-map ",z" 'suspend-emacs)
 (define-key evil-insert-state-map [S-insert]
 	(lambda () (interactive) (insert (x-selection 'PRIMARY)))) ; paste X primary
 (define-key evil-normal-state-map "gw" 'fill-paragraph) ; insert hard line breaks
