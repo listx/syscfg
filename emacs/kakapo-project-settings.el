@@ -50,7 +50,7 @@
 					)
 				)
 			)
-			((string-match "webdev/looseleaf/.+\\.rb$" b)
+			((string-match "webdev/pf/.+\\.rb$" b)
 				(h 'ruby-mode-hook nil 2
 					(progn
 						(setq ruby-indent-level 2)
