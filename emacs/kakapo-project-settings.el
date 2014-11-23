@@ -28,6 +28,8 @@
 		)
 		(if b
 		(cond
+			; TODO: import these project-specific conditions somehow from an
+			; external .el file.
 			((string-match "webdev/depot/.+\\.rb$" b)
 				(h 'ruby-mode-hook nil 2
 					(progn
