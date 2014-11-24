@@ -11,9 +11,15 @@ rand_open()
 	:>/tmp/rand_open_files
 	recurse_flag=$1
 	command=$2
+	if [[ -n $3 ]]; then
+		output_ext=".$3"
+	else
+		output_ext=""
+	fi
+	output_file=/tmp/rand_open_files${output_ext}
 	regex_str=".*\\.\\("
 	find_recurse=""
-	shift 1
+	shift 3
 
 	for ext in $*; do
 		regex_str+="$ext\\|"
@@ -27,10 +33,10 @@ rand_open()
 
 	find $PWD ${(z)find_recurse} -type f -iregex $regex_str \
 		| shuf --random-source /dev/urandom \
-		> /tmp/rand_open_files
+		> $output_file
 
-	if [[ $(wc -l /tmp/rand_open_files | cut -d ' ' -f 1) -gt 0 ]]; then
-		${(z)command} /tmp/rand_open_files
+	if [[ $(wc -l $output_file | cut -d ' ' -f 1) -gt 0 ]]; then
+		${(z)command} $output_file
 		echo "Chose file \`$chosen'"
 	else
 		echo "No files to choose."

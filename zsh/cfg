@@ -246,12 +246,12 @@ alias mpfs='mplayer -loop 0 -fs -shuffle -demuxer lavf -playlist'
 alias ms='smplayer'
 alias make_plist="~/syscfg/script/audio/make_plist.sh"
 
-alias rsa="rand_open norecurse 'mplayer -loop 0 -demuxer lavf -vo null -playlist' $ft_snd"
-alias rsaa="rand_open recurse 'mplayer -loop 0 -demuxer lavf -vo null -playlist' $ft_snd"
-alias rsp="rand_open norecurse 'feh --auto-zoom --fullscreen --draw-filename --filelist' $ft_pic"
-alias rspp="rand_open recurse 'feh --auto-zoom --fullscreen --draw-filename --filelist' $ft_pic"
-alias rsm="rand_open norecurse 'mplayer -fs -loop 0 -demuxer lavf -playlist' $ft_mov"
-alias rsmm="rand_open recurse 'mplayer -fs -loop 0 -demuxer lavf -playlist' $ft_mov"
+alias rsa="rand_open norecurse 'mplayer -loop 0 -demuxer lavf -vo null -playlist' '' $ft_snd"
+alias rsaa="rand_open recurse 'mplayer -loop 0 -demuxer lavf -vo null -playlist' '' $ft_snd"
+alias rsp="rand_open norecurse 'feh --auto-zoom --fullscreen --draw-filename --filelist' '' $ft_pic"
+alias rspp="rand_open recurse 'feh --auto-zoom --fullscreen --draw-filename --filelist' '' $ft_pic"
+alias rsm="rand_open norecurse smplayer m3u $ft_mov"
+alias rsmm="rand_open recurse smplayer m3u $ft_mov"
 
 alias g='git'
 alias gdf=" [[ \$(git diff | wc -l) -gt 0 ]] && git diff || ([[ \$(git diff 2>&1 | wc -l) -eq 0 ]] && echo \"No changes\")"
