@@ -31,6 +31,9 @@
 (require 'iso-transl)
 (require 'cl)
 
+; Emulate TextMate's "auto-paired characters"
+(electric-pair-mode 1)
+
 ; darken inactive windows
 (require 'hiwin)
 (hiwin-activate)
