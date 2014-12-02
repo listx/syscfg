@@ -78,6 +78,7 @@
 				('emacs-lisp-mode "\\;")
 				('haml-mode "-# --after-lw")
 				('haskell-mode "--")
+				('js-mode "//")
 				('literate-haskell-mode "--")
 				('LilyPond-mode "%")
 				('latex-mode "%")
