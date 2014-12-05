@@ -36,6 +36,8 @@ ifeq ('${HOST}','k2')
 endif
 mplayer:
 	ln -fns ${CFG}/mplayer								${HOME}/.mplayer
+mupen:
+	ln -fs ${CFG}/mupen/InputAutoCfg.ini				/usr/share/mupen64plus
 mutt:
 	ln -fns ${CFG}/mutt									${HOME}/.mutt
 	ln -fs ${CFG}/mutt/cfg								${HOME}/.muttrc
