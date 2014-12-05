@@ -8,6 +8,11 @@
 ; remove menu
 (menu-bar-mode -1)
 
+; MELPA
+(require 'package)
+(package-initialize)
+(add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t)
+
 (require 'evil)
 (evil-mode 1)
 
@@ -19,11 +24,6 @@
 
 ; load keymaps
 (load "~/.emacs.d/maps")
-
-; MELPA
-(require 'package)
-(package-initialize)
-(add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t)
 
 ; load Packages
 ; -------------
