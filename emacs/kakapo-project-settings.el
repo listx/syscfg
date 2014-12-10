@@ -139,7 +139,10 @@
 			)
 			; Markdown
 			((string-match "\\.md$" b)
-				(h 'markdown-mode-hook t 4)
+				(progn
+					(h 'markdown-mode-hook t 4)
+					(define-key markdown-mode-map [backspace] nil)
+				)
 			)
 			; Python
 			((string-match "\\.py$" b)
