@@ -63,6 +63,17 @@
 					)
 				)
 			)
+			((string-match "webdev/asc/.+\\.rb$" b)
+				(h 'ruby-mode-hook nil 2
+					(progn
+						(setq ruby-indent-level 2)
+						(message
+							"ruby-indent-level set to %d"
+							ruby-indent-level
+						)
+					)
+				)
+			)
 			((string-match "prog/foreign/rails/.+\\.rb$" b)
 				(h 'ruby-mode-hook nil 2
 					(progn
