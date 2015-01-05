@@ -55,7 +55,7 @@
 	'korean-ksc5601
 	'("Baekmuk Gulim" . "unicode-bmp")
 )
-;日本です。
+;日本語です。
 (set-fontset-font "fontset-default"
 	'japanese-jisx0208
 	'("IPAGothic" . "unicode-bmp")
