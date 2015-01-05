@@ -600,7 +600,7 @@ keybinding as it conflicts with Anthy input."
 ; If we're on our laptop, make the text slightly bigger to match my desktop's
 ; behavior.
 (defun my-text-height ()
-	(if (member system-name '("k1.localdomain" "k2"))
+	(if (member system-name '("k1.localdomain" "k2.localdomain" "k3.localdomain"))
 		95
 		90
 	)
