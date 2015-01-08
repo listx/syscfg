@@ -471,7 +471,6 @@ keybinding as it conflicts with Anthy input."
 	"Major mode for editing Markdown files"
 	t)
 (setq auto-mode-alist (cons '("\.md$" . markdown-mode) auto-mode-alist))
-(evil-define-key 'normal markdown-mode-map (kbd "<tab>") 'other-window)
 
 ; Ruby
 (add-hook 'ruby-mode-hook

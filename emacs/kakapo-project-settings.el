@@ -175,6 +175,7 @@
 				(progn
 					(h 'markdown-mode-hook t 4)
 					(define-key markdown-mode-map [backspace] nil)
+					(define-key markdown-mode-map [tab] nil)
 				)
 			)
 			; Python
