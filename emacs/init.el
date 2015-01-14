@@ -420,6 +420,19 @@ keybinding as it conflicts with Anthy input."
 	"/usr/share/emacs/site-lisp/haskell-mode/")
 (remove-hook 'haskell-mode-hook 'turn-on-haskell-indent)
 
+; The "Haskell-Cabal" mode that comes built-in with haskell-mode needs some
+; manual tooth-removal to get it to submit and behave.
+(evil-define-key 'insert haskell-cabal-mode-map (kbd "<tab>") 'kakapo-tab)
+(evil-define-key 'insert haskell-cabal-mode-map (kbd "DEL") 'kakapo-backspace)
+(add-hook 'haskell-cabal-mode-hook
+	(lambda ()
+		(kakapo-mode)
+		(setq indent-tabs-mode nil)
+		(setq tab-width 2)
+		(setq evil-shift-width 2)
+	)
+)
+
 (defun hs-literate-begend ()
 	(interactive)
 	(end-of-line)
