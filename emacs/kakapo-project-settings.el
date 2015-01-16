@@ -77,6 +77,10 @@
 					)
 				)
 			)
+			; CoffeeScript
+			((string-match "\\.coffee$" b)
+				(h 'coffee-mode-hook nil 2)
+			)
 			; CSS
 			((string-match "\\.css$" b)
 				(progn
