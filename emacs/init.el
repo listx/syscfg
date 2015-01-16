@@ -507,8 +507,15 @@ keybinding as it conflicts with Anthy input."
 ; YAML
 (autoload 'yaml-mode "yaml-mode" "A major mode for YAML" t)
 (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode))
-; disable YAML keymaps, as they interfere with Evil (especially the [backspace] keymap)
-(setq yaml-mode-map (make-sparse-keymap))
+(evil-define-key 'insert haskell-cabal-mode-map (kbd "<tab>") 'kakapo-tab)
+(add-hook 'yaml-mode-hook
+	(lambda ()
+		(kakapo-mode)
+		(setq indent-tabs-mode nil)
+		(setq tab-width 2)
+		(setq evil-shift-width 2)
+	)
+)
 
 
 ; Appearance
