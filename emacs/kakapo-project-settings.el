@@ -30,62 +30,16 @@
 		(cond
 			; TODO: import these project-specific conditions somehow from an
 			; external .el file.
-			((string-match "webdev/depot/.+\\.rb$" b)
-				(h 'ruby-mode-hook nil 2
-					(progn
-						(setq ruby-indent-level 2)
-						(message
-							"ruby-indent-level set to %d"
-							ruby-indent-level
-						)
-					)
+			(
+				(or
+					(string-match "webdev/depot/.+\\.rb$" b)
+					(string-match "webdev/fido/.+\\.rb$" b)
+					(string-match "webdev/pf/.+\\.rb$" b)
+					(string-match "webdev/asc/.+\\.rb$" b)
+					(string-match "webdev/ember-crm/.+\\.rb$" b)
+					(string-match "prog/foreign/rails/.+\\.rb$" b)
+					(string-match "prog/dyla/.+\\.rb$" b)
 				)
-			)
-			((string-match "webdev/fido/.+\\.rb$" b)
-				(h 'ruby-mode-hook nil 2
-					(progn
-						(setq ruby-indent-level 2)
-						(message
-							"ruby-indent-level set to %d"
-							ruby-indent-level
-						)
-					)
-				)
-			)
-			((string-match "webdev/pf/.+\\.rb$" b)
-				(h 'ruby-mode-hook nil 2
-					(progn
-						(setq ruby-indent-level 2)
-						(message
-							"ruby-indent-level set to %d"
-							ruby-indent-level
-						)
-					)
-				)
-			)
-			((string-match "webdev/asc/.+\\.rb$" b)
-				(h 'ruby-mode-hook nil 2
-					(progn
-						(setq ruby-indent-level 2)
-						(message
-							"ruby-indent-level set to %d"
-							ruby-indent-level
-						)
-					)
-				)
-			)
-			((string-match "prog/foreign/rails/.+\\.rb$" b)
-				(h 'ruby-mode-hook nil 2
-					(progn
-						(setq ruby-indent-level 2)
-						(message
-							"ruby-indent-level set to %d"
-							ruby-indent-level
-						)
-					)
-				)
-			)
-			((string-match "prog/dyla/.+\\.rb$" b)
 				(h 'ruby-mode-hook nil 2
 					(progn
 						(setq ruby-indent-level 2)
