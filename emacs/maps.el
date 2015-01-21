@@ -125,7 +125,7 @@
 )
 (evil-define-key 'normal org-mode-map (kbd "C-o") 'org-toggle-heading) ; convert a plain list into a heading
 (evil-define-key 'normal org-mode-map "T" 'org-todo) ; mark a TODO item as DONE
-(evil-define-key 'normal org-mode-map ";a" 'org-agenda) ; access agenda buffer
+(evil-define-key 'normal org-mode-map ",a" 'org-agenda) ; access agenda buffer
 (evil-define-key 'normal org-mode-map "-" 'org-cycle-list-bullet) ; change bullet style
 
 ; allow us to access org-mode keys directly from Evil's Normal mode
@@ -155,3 +155,7 @@
 (evil-define-key 'normal org-mode-map (kbd "<f12>") 'org-html-export-to-html)
 
 (evil-define-key 'insert org-mode-map (kbd "M-TAB") 'org-shifttab)
+
+; insert hyperlink, or edit an existing one
+(evil-define-key 'normal org-mode-map ",l" 'org-insert-link)
+(evil-define-key 'normal org-mode-map ",W" 'org-publish-current-project)
