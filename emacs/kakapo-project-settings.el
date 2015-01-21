@@ -32,11 +32,7 @@
 			; external .el file.
 			(
 				(or
-					(string-match "webdev/depot/.+\\.rb$" b)
-					(string-match "webdev/fido/.+\\.rb$" b)
-					(string-match "webdev/pf/.+\\.rb$" b)
-					(string-match "webdev/asc/.+\\.rb$" b)
-					(string-match "webdev/ember-crm/.+\\.rb$" b)
+					(string-match "webdev/.+\\.rb$" b)
 					(string-match "prog/foreign/rails/.+\\.rb$" b)
 					(string-match "prog/dyla/.+\\.rb$" b)
 				)
