@@ -7,6 +7,6 @@
 		:with-toc t
 		:html-preamble t
 		:html-head "<link rel=\"stylesheet\"
-			href=\"../css/style.css\"
+			href=\"css/style.css\"
 			type=\"text/css\"/>"
 	)))
