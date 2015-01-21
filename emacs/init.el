@@ -25,6 +25,9 @@
 ; load keymaps
 (load "~/.emacs.d/maps")
 
+; load publishing settings for org-mode
+(load "~/.emacs.d/publish")
+
 ; load Packages
 ; -------------
 ; fix "<dead-grave> is undefined" error
