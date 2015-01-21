@@ -1,3 +1,6 @@
+; do not convert TAB characters in source code blocks into spaces
+(setq org-src-preserve-indentation t)
+
 (setq org-publish-project-alist
 	'(("eh"
 		:base-directory "~/prog/elementary-haskell/"
