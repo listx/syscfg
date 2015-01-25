@@ -132,6 +132,23 @@
 					(define-key markdown-mode-map [tab] nil)
 				)
 			)
+			; PKGBUILD and .install files (Arch Linux)
+			(
+				(or
+					(string-match "/PKGBUILD$" b)
+					(string-match "/.+\\.install$" b)
+				)
+				(progn
+					(kakapo-mode)
+					(setq indent-tabs-mode nil)
+					(setq tab-width 2)
+					(setq evil-shift-width 2)
+					(message
+						"default-tab-width set to %d"
+						2
+					)
+				)
+			)
 			; Python
 			((string-match "\\.py$" b)
 				(h 'python-mode-hook t 4
