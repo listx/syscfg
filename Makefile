@@ -50,6 +50,9 @@ ifeq ('${HOST}','k0')
 else
 	ln -fs ${CFG}/ncmpcpp/cfg-k2						${HOME}/.ncmpcpp/config
 endif
+nixos:
+	ln -fs ${CFG}/nixos/${HOST}/configuration.nix	    /etc/nixos
+	ln -fs ${CFG}/nixos/${HOST}/hardware-configuration.nix	    /etc/nixos
 pal:
 	ln -fns ${CFG}/pal									${HOME}/.pal
 	ln -fs ${CFG}/pal/cfg								${HOME}/.pal/pal.conf
