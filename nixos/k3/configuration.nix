@@ -94,6 +94,12 @@
     higan
   ];
 
+  # Create a /etc/zshenv and other things to make Zsh work properly. Among
+  # other things, this allows us to perform a "git pull <this machine's IP>"
+  # from a remote machine; without this, the login shell cannot find the
+  # git-upload-pack command, and the git pull operation will fail.
+  programs.zsh.enable = true;
+
   # Fonts
   fonts = {
     enableFontDir = true;
