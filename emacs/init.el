@@ -49,8 +49,9 @@
 (require 'evil)
 (evil-mode 1)
 
-; load non-MELPA scripts
+; load non-MELPA scripts or themes
 (add-to-list 'load-path "~/.emacs.d/script")
+(add-to-list 'custom-theme-load-path "~/.emacs.d/script")
 
 ; load per-project indentation style settings
 (load "~/.emacs.d/kakapo-project-settings")
