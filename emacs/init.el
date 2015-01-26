@@ -18,6 +18,7 @@
 ; Define packages that we'll be using.
 (defvar my/packages
 	'(
+	color-theme ; needed for dbrock's old zenburn
 	column-enforce-mode
 	coffee-mode
 	elscreen
@@ -48,7 +49,7 @@
 (require 'evil)
 (evil-mode 1)
 
-; add load path for custom scripts
+; load non-MELPA scripts
 (add-to-list 'load-path "~/.emacs.d/script")
 
 ; load per-project indentation style settings
