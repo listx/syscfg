@@ -71,11 +71,14 @@
     tmux
     emacs
     vim
-    git
-    tig
     silver-searcher
     gnupg
     htop
+
+    # source control
+    git
+    tig
+    mercurial
 
     # c/c++
     gcc
@@ -105,9 +108,11 @@
     enableFontDir = true;
     enableGhostscriptFonts = true;
     fonts = with pkgs; [
+      baekmuk-ttf
       corefonts
       dejavu_fonts
       ipafont
+      libertine
       terminus_font
       ubuntu_font_family
     ];
