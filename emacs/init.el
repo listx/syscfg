@@ -1,3 +1,5 @@
+(require 'cl)
+
 (load "~/.emacs.d/vars")
 ; remove splash screen
 (setq inhibit-splash-screen t)
@@ -12,6 +14,35 @@
 (require 'package)
 (package-initialize)
 (add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t)
+
+; Define packages that we'll be using.
+(defvar my/packages
+	'(
+	column-enforce-mode
+	coffee-mode
+	elscreen
+	evil
+	haml-mode
+	haskell-mode
+	hiwin
+	kakapo-mode
+	markdown-mode
+	org
+	yaml-mode
+	) "Default packages")
+
+; Install packages if they are missing.
+(defun my/packages-installed-p ()
+  (loop for pkg in my/packages
+        when (not (package-installed-p pkg)) do (return nil)
+        finally (return t)))
+
+(unless (my/packages-installed-p)
+  (message "%s" "Refreshing package database...")
+  (package-refresh-contents)
+  (dolist (pkg my/packages)
+    (when (not (package-installed-p pkg))
+      (package-install pkg))))
 
 (require 'evil)
 (evil-mode 1)
@@ -32,7 +63,6 @@
 ; -------------
 ; fix "<dead-grave> is undefined" error
 (require 'iso-transl)
-(require 'cl)
 
 ; Emulate TextMate's "auto-paired characters"
 (electric-pair-mode 1)
@@ -368,8 +398,6 @@ keybinding as it conflicts with Anthy input."
 (setq ido-ignore-files (append ido-ignore-files '("\\.hi$")))
 
 ; Org-mode
-; ditaa program (and integration with org-mode)
-(setq org-ditaa-jar-path "/usr/share/java/ditaa/ditaa-0_9.jar") ; load path for ditaa
 ; start up org-mode for .org files
 (add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
 ; write timestamp when a TODO changes to DONE
@@ -416,11 +444,6 @@ keybinding as it conflicts with Anthy input."
 
 ; Haskell
 ; adopted from http://sequence.complete.org/node/365
-(add-to-list 'load-path "/usr/share/emacs/site-lisp/haskell-mode/")
-(require 'haskell-mode-autoloads)
-(add-to-list
-	'Info-default-directory-list
-	"/usr/share/emacs/site-lisp/haskell-mode/")
 (remove-hook 'haskell-mode-hook 'turn-on-haskell-indent)
 
 ; The "Haskell-Cabal" mode that comes built-in with haskell-mode needs some
@@ -465,9 +488,6 @@ keybinding as it conflicts with Anthy input."
 
 ; Ledger
 (autoload 'ledger-mode "ledger-mode" "A major mode for Ledger" t)
-(add-to-list
-	'load-path
-	(expand-file-name "/usr/share/emacs/site-lisp/ledger-mode"))
 (add-to-list 'auto-mode-alist '("\\.ledger$" . ledger-mode))
 (add-hook 'ledger-mode-hook 'evil-goto-line) ; go to the lastest entries at the end
 
@@ -524,7 +544,6 @@ keybinding as it conflicts with Anthy input."
 ; Appearance
 
 ; zenmonk color theme
-(add-to-list 'custom-theme-load-path "/usr/share/emacs/site-lisp/zenmonk")
 (if window-system
 	(load-theme 'zenmonk t)
 	(progn
@@ -623,9 +642,14 @@ keybinding as it conflicts with Anthy input."
 ; If we're on our laptop, make the text slightly bigger to match my desktop's
 ; behavior.
 (defun my-text-height ()
-	(if (member system-name '("k1.localdomain" "k2.localdomain" "k3.localdomain"))
-		95
-		90
+	(cond
+		((string-match "^k[12].+$" system-name)
+			95
+		)
+		((string-match "^k3.+$" system-name)
+			102
+		)
+		(t 90)
 	)
 )
 ; auto-generated stuff by emacs itself...
