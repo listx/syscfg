@@ -27,6 +27,7 @@
 	hiwin
 	kakapo-mode
 	markdown-mode
+	nix-mode
 	org
 	yaml-mode
 	) "Default packages")

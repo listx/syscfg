@@ -145,6 +145,10 @@
 					(define-key markdown-mode-map [tab] nil)
 				)
 			)
+			; Nix expression language
+			((string-match "\\.nix$" b)
+				(h 'nix-mode-hook nil 2)
+			)
 			; PKGBUILD and .install files (Arch Linux)
 			(
 				(or
