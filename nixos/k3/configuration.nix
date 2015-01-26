@@ -70,6 +70,7 @@
     rxvt_unicode
     tmux
     emacs
+    xsel
     vim
     silver-searcher
     gnupg
