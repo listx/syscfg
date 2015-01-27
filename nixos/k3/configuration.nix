@@ -154,6 +154,11 @@
     windowManager.default = "xmonad";
     desktopManager.default = "none";
     displayManager.sessionCommands = ''
+      # remap Caps_Lock key to xmonad's own, exclusive 'mod' key (no "sharing"
+      # with ALT or any other combination)
+      ${pkgs.xlibs.xmodmap}/bin/xmodmap -e "remove Lock = Caps_Lock"
+      ${pkgs.xlibs.xmodmap}/bin/xmodmap -e "add mod3 = Caps_Lock"
+      ${pkgs.xlibs.xmodmap}/bin/xmodmap ~/.xmodmap
       ${pkgs.xlibs.xset}/bin/xset r rate 250 80
     '';
     displayManager.slim.defaultUser = "l";
