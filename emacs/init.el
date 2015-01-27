@@ -325,10 +325,34 @@ otherwise, close current tab (elscreen)."
 ; first, set default mode to text-mode
 (setq-default major-mode 'text-mode)
 ; Use kakapo's "o" and "O" for opening new lines.
+(setq my/before-open-line nil)
 (define-key evil-normal-state-map "o"
-	(lambda () (interactive) (kakapo-open nil)))
+	(lambda ()
+		(interactive)
+		(setq my/before-open-line (kakapo-lc))
+		(kakapo-open nil)
+	)
+)
 (define-key evil-normal-state-map "O"
-	(lambda () (interactive) (kakapo-open t)))
+	(lambda ()
+		(interactive)
+		(setq my/before-open-line (kakapo-lc))
+		(kakapo-open t)
+	)
+)
+(setq my/something-inserted nil)
+(defun my/check-for-some-insertion ()
+	(if (and
+			(eq my/something-inserted nil)
+			(save-excursion
+				(forward-char -1)
+				(looking-at "[^[:space:]]")
+			)
+		)
+		(setq my/something-inserted t)
+	)
+)
+(add-hook 'post-self-insert-hook 'my/check-for-some-insertion)
 ; make ENTER key insert indentation after inserting a newline (noticeable when
 ; editing C files)
 (define-key evil-insert-state-map (kbd "RET") 'kakapo-ret-and-indent)
@@ -572,6 +596,38 @@ keybinding as it conflicts with Anthy input."
 		(global-hl-line-mode 1)
 		; like Vim, remove whitespace if nothing was inserted
 		(delete-trailing-whitespace)
+		; Every time we enter insert mode with `kakapo-open', we mark the
+		; current line with `my/before-open-line'. If all we did was just enter
+		; a bunch of whitespace, we try to keep unoing until we reach a point
+		; where `point' is on a line that matches `my/before-open-line'. The
+		; edge case we have to look out for is if we enter insert mode without
+		; `kakapo-open' --- in this case, it is important to check if
+		; `my/before-open-line' is set; if it is set, it means that we did use
+		; `kakapo-open', so it's safe to undergo the undo chain. Lastly, if all
+		; we want to do is enter a blank newline, simply use `kakapo-open' and
+		; then manually redo (because there will be nothing to 'undo' because of
+		; the while-loop of undos below) after exiting insert state, OR just
+		; don't use `kakapo-open' (e.g., ESC -> A -> enter -> ESC).
+		(if (and
+				(not my/something-inserted)
+				my/before-open-line
+			)
+			(progn
+				(while (not (string= (kakapo-lc) my/before-open-line))
+					(undo-tree-undo)
+				)
+				; We match Vim's behavior. In Vim, if you press "o" or "O" and
+				; then immediately do ESC, and undo, point is exactly where it
+				; was. For Evil, point is actually "consistent" because it is
+				; placed one character *before* where point was, much like how
+				; repeatedly pressing "i" (for insert mode) and ESC results in
+				; the cursor slowly moving backward one character at a time. To
+				; counter this, we manually move our point over one character.
+				(forward-char)
+			)
+		)
+		(setq my/before-open-line nil)
+		(setq my/something-inserted nil)
 	)
 )
 (add-hook 'evil-visual-state-entry-hook
