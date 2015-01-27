@@ -162,7 +162,7 @@
 #device                          fs_type         label            mount point         UUID
 #-------------------------------------------------------------------------------------------------------------------------
 #/dev/root                       iso9660         NIXOS_ISO        /iso                2015-01-13-11-30-46-00
-#/dev/loop0                      squashfs                         /nix/.ro-store      
+#/dev/loop0                      squashfs                         /nix/.ro-store
 #/dev/sda1                       vfat            RECOVERY         (not mounted)       3C98-AC5D
 #/dev/sda2                       ntfs            OS               (not mounted)       5EF0D2BAF0D2981B
 #/dev/sda3                       ext2            boot             /mnt/boot           184c55ec-db57-4a37-b997-72ec57f89a0f
