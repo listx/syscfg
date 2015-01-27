@@ -156,6 +156,7 @@
     displayManager.sessionCommands = ''
       ${pkgs.xlibs.xset}/bin/xset r rate 250 80
     '';
+    displayManager.slim.defaultUser = "l";
   };
 
 }
