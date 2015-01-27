@@ -17,7 +17,6 @@
   boot.loader.grub.device = "/dev/disk/by-id/ata-ST9500420AS_5VJ59T8M";
   boot.loader.grub.extraEntries = ''
     menuentry "Windows7" {
-      title Windows7
       insmod ntfs
       set root='(hd1,2)'
       chainloader +1
