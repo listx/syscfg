@@ -84,6 +84,7 @@
     zsh
     xlibs.xmodmap
     rxvt_unicode
+    rxvt_unicode.terminfo
     tmux
     emacs
     xsel
