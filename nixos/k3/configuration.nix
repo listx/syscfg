@@ -32,11 +32,26 @@
 
   networking = {
     extraHosts = ''
+      192.168.1.100 forest
       192.168.1.110 k0
+      192.168.1.112 k2
+      192.168.1.114 k1
+      192.168.1.116 k3
+      192.168.1.120 ocean
+      74.207.246.114 l0
     '';
     hostName = "k3"; # Define your hostname.
     hostId = "518ab295";
     wireless.enable = true;  # Enables wireless.
+    interfaces = {
+      wlp3s0 = {
+        ipAddress = "192.168.1.116";
+        prefixLength = 24;
+      };
+    };
+    useDHCP = false;
+    defaultGateway = "192.168.1.254";
+    nameservers = [ "192.168.1.254" ];
   };
 
   time.timeZone = "America/Los_Angeles";
