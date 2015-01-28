@@ -39,6 +39,8 @@
     wireless.enable = true;  # Enables wireless.
   };
 
+  time.timeZone = "America/Los_Angeles";
+
   # Select internationalisation properties.
   i18n = {
     consoleFont = "lat9w-16";
