@@ -93,8 +93,7 @@
     chromium
     aria2
     rtorrent
-    mplayer2
-    smplayer
+    mpv
     vlc
     higan
   ];
