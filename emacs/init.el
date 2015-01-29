@@ -510,6 +510,17 @@ keybinding as it conflicts with Anthy input."
 (evil-define-key 'normal haskell-mode-map ",B" 'hs-literate-begend)
 (evil-define-key 'normal haskell-mode-map ",b" 'hs-literate-endbeg)
 
+; Haml
+(evil-define-key 'insert haml-mode-map (kbd "<tab>") 'kakapo-tab)
+(add-hook 'haml-mode-hook
+	(lambda ()
+		(kakapo-mode)
+		(setq indent-tabs-mode nil)
+		(setq tab-width 2)
+		(setq evil-shift-width 2)
+	)
+)
+
 ; Hazelnut
 (add-to-list 'auto-mode-alist '("\\.hzl$" . text-mode))
 
