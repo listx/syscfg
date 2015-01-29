@@ -4,6 +4,7 @@
 *.swp
 cblrepo/haskell-*
 emacs/auto-save-list
+emacs/elpa
 mplayer/mplayerplug-in.conf
 ncmpcpp/config
 ncmpcpp/keys
