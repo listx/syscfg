@@ -112,6 +112,7 @@
     mpv
     vlc
     higan
+    cmus
   ];
 
   # Create a /etc/zshenv and other things to make Zsh work properly. Among
