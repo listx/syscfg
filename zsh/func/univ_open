@@ -53,13 +53,13 @@ univ_open() {
                 gimp $@ &>/dev/null & disown
             ;;
             (aac|flac|mp3|ogg|wav|wma)
-                mplayer -loop 0 $( [[ $file:e:l == flac ]] && echo "-demuxer lavf" ) $@
+                mpv --loop inf $( [[ $file:e:l == flac ]] && echo "--vo null" ) $@
             ;;
             (mid|midi)
                 timidity $@
             ;;
             (asf|avi|divx|flv|ogm|ogv|m4v|mkv|mov|mp4|mpg|mpeg|rm|rmvb|webm|wmv)
-                smplayer $@ &>/dev/null & disown
+                mpv $@ &>/dev/null & disown
             ;;
             (mts)
                 vlc $@ &>/dev/null & disown
