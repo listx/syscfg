@@ -568,7 +568,7 @@ keybinding as it conflicts with Anthy input."
 ; YAML
 (autoload 'yaml-mode "yaml-mode" "A major mode for YAML" t)
 (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode))
-(evil-define-key 'insert haskell-cabal-mode-map (kbd "<tab>") 'kakapo-tab)
+(evil-define-key 'insert yaml-mode-map (kbd "<tab>") 'kakapo-tab)
 (add-hook 'yaml-mode-hook
 	(lambda ()
 		(kakapo-mode)
