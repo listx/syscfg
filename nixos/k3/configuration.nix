@@ -120,6 +120,9 @@
   # git-upload-pack command, and the git pull operation will fail.
   programs.zsh.enable = true;
 
+  # Enable pulseaudio.
+  hardware.pulseaudio.enable = true;
+
   # Fonts
   fonts = {
     enableFontDir = true;
