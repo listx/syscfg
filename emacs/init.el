@@ -512,6 +512,7 @@ keybinding as it conflicts with Anthy input."
 
 ; Haml
 (evil-define-key 'insert haml-mode-map (kbd "<tab>") 'kakapo-tab)
+(evil-define-key 'insert haml-mode-map (kbd "<backspace>") 'kakapo-backspace)
 (add-hook 'haml-mode-hook
 	(lambda ()
 		(kakapo-mode)
