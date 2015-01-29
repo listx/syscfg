@@ -36,6 +36,8 @@ ifeq ('${HOST}','k2')
 endif
 mplayer:
 	ln -fns ${CFG}/mplayer								${HOME}/.mplayer
+mpv:
+	ln -fns ${CFG}/mpv/input.conf ${HOME}/.config/mpv
 mupen:
 	ln -fs ${CFG}/mupen/InputAutoCfg.ini				/usr/share/mupen64plus
 mutt:
