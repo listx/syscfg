@@ -98,11 +98,12 @@
     tig
     mercurial
 
-    # c/c++
+    # programming
     gcc
     gdb
     gnumake
     ruby
+    haskellPackages.cabal2nix
 
     # browsers and multimedia
     firefox
