@@ -431,6 +431,11 @@ keybinding as it conflicts with Anthy input."
 (setq org-log-done t)
 (setq org-agenda-files (list "~/org"))
 
+; Allow single/double quote marks in inline '='-delimited verbatim formatting.
+; see https://lists.gnu.org/archive/html/emacs-orgmode/2014-04/msg00199.html
+(setq org-emphasis-regexp-components
+  '(" \t('\"{" "- \t.,:!?;'\")}\\" " \t\r\n" "." 1))
+
 (defun always-insert-item ()
 	(interactive)
 	(if (not (org-in-item-p))
