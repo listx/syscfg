@@ -55,7 +55,11 @@
 						(h 'html-mode-hook nil 2)
 					)
 					((string-match ".+\\.js?$" b)
-						(h 'js-mode-hook nil 2)
+						(h 'js-mode-hook nil 2
+							(progn
+								(setq js-indent-level 2)
+							)
+						)
 					)
 				)
 			)
