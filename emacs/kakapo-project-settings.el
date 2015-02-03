@@ -40,7 +40,11 @@
 					(string-match "^/home/l/prog/dyla/" b)
 				)
 				(cond
-					((string-match ".+\\.rb$" b)
+					(
+						(or
+							(string-match ".+\\.gemspec$" b)
+							(string-match ".+\\.rb$" b)
+						)
 						(h 'ruby-mode-hook nil 2
 							(progn
 								(setq ruby-indent-level 2)
@@ -191,10 +195,14 @@
 				)
 			)
 			; Ruby
-			((string-match "\\.rb$" b)
-				(h 'ruby-mode-hook t 4
+			(
+				(or
+					(string-match "\\.gemspec$" b)
+					(string-match "\\.rb$" b)
+				)
+				(h 'ruby-mode-hook nil 2
 					(progn
-						(setq ruby-indent-level 4)
+						(setq ruby-indent-level 2)
 						(message
 							"ruby-indent-level set to %d"
 							ruby-indent-level
