@@ -61,6 +61,13 @@
 							)
 						)
 					)
+					((string-match "\\.coffee$" b)
+						(h 'coffee-mode-hook nil 2
+							(progn
+								(define-key coffee-mode-map [tab] nil)
+							)
+						)
+					)
 				)
 			)
 
@@ -92,7 +99,11 @@
 			)
 			; CoffeeScript
 			((string-match "\\.coffee$" b)
-				(h 'coffee-mode-hook nil 2)
+				(h 'coffee-mode-hook nil 2
+					(progn
+						(define-key coffee-mode-map [tab] nil)
+					)
+				)
 			)
 			; CSS
 			((string-match "\\.css$" b)
