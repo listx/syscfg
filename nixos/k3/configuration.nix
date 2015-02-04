@@ -114,6 +114,7 @@
     vlc
     higan
     cmus
+    evince
   ];
 
   # Create a /etc/zshenv and other things to make Zsh work properly. Among
