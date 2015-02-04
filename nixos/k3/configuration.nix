@@ -18,7 +18,7 @@
   boot.loader.grub.extraEntries = ''
     menuentry "Windows7" {
       insmod ntfs
-      set root='(hd1,2)'
+      set root='(hd0,2)'
       chainloader +1
     }
   '';
