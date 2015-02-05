@@ -115,6 +115,7 @@
     higan
     cmus
     evince
+    pidgin
   ];
 
   # Create a /etc/zshenv and other things to make Zsh work properly. Among
