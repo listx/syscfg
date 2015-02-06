@@ -116,6 +116,7 @@
     cmus
     evince
     pidgin
+    texLiveFull
   ];
 
   # Create a /etc/zshenv and other things to make Zsh work properly. Among
