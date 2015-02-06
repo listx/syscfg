@@ -103,7 +103,11 @@
     gdb
     gnumake
     ruby
+    # for haskell development via `nix-shell`
     haskellPackages.cabal2nix
+    # for invoking, e.g., `cabal2nix cabal://some-package`, because cabal2nix
+    # depends on `cabal update`.
+    haskellPackages.cabalInstall
 
     # browsers and multimedia
     firefox
