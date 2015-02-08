@@ -157,6 +157,7 @@ color quoted8    color247 color237
 color quoted9    color108 color237
 
 auto_view text/html
+alternative_order text/plain text/html
 
 set alias_file=~/.mutt-alias
 source ~/.mutt-alias
