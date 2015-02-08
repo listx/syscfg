@@ -55,6 +55,8 @@ endif
 nixos:
 	ln -fs ${CFG}/nixos/${HOST}/configuration.nix	    /etc/nixos
 	ln -fs ${CFG}/nixos/${HOST}/hardware-configuration.nix	    /etc/nixos
+nixpkgs:
+	ln -fns ${CFG}/nixpkgs									${HOME}/.nixpkgs
 pal:
 	ln -fns ${CFG}/pal									${HOME}/.pal
 	ln -fs ${CFG}/pal/cfg								${HOME}/.pal/pal.conf

@@ -78,7 +78,7 @@
   # List packages installed in system profile. To search by name, run:
   # $ nix-env -qaP | grep wget
   environment.systemPackages = with pkgs; [
-    # basic console/coding tools
+    # Basic console tools
     wget
     curl
     zsh
@@ -93,27 +93,30 @@
     gnupg
     htop
 
-    # source control
+    # Programming tools
     git
     tig
     mercurial
-
-    # programming
     gcc
     gdb
     gnumake
     ruby
-    # for haskell development via `nix-shell`
-    haskellPackages.cabal2nix
-    # for invoking, e.g., `cabal2nix cabal://some-package`, because cabal2nix
+    # For haskell development via `nix-shell`; run `sudo nix-channel --add
+    # <nixpkgs-unstable>`, then do `sudo nix-channel --update`.
+    # <nixpkgs-unstable> is located at
+    # https://nixos.org/channels/nixpkgs-unstable. The `haskellngPackages` set
+    # is only in nixpkgs-unstable as of 2014-02-06.
+    haskellngPackages.cabal2nix
+    # For invoking, e.g., `cabal2nix cabal://some-package`, because cabal2nix
     # depends on `cabal update`.
-    haskellPackages.cabalInstall
+    #haskellPackages.cabalInstall
 
-    # browsers and multimedia
+    # Browsers and multimedia
     firefox
     chromium
     aria2
     rtorrent
+    geeqie
     mpv
     vlc
     higan
