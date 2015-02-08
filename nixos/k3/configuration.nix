@@ -91,6 +91,7 @@
     vim
     silver-searcher
     gnupg
+    mutt
     htop
 
     # Programming tools
