@@ -26,6 +26,7 @@
 	haml-mode
 	haskell-mode
 	hiwin
+	htmlize
 	kakapo-mode
 	markdown-mode
 	nix-mode
