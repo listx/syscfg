@@ -5,6 +5,7 @@
 (define-key evil-normal-state-map ",q" 'vimlike-quit) ; close current elscreen, or current window if only one elscreen
 (define-key evil-normal-state-map ",Q" ":q!") ; close current window, *even if modified*
 (define-key evil-normal-state-map ",d" 'kill-this-buffer) ; kill current buffer without confirmation
+(define-key evil-motion-state-map "z" 'kill-this-buffer)
 (define-key evil-normal-state-map ",D" 'kill-this-buffer-volatile) ; kill current buffer without confirmation, *even if modified*
 (define-key evil-normal-state-map ",x" 'save-buffers-kill-emacs) ; save and quit
 (define-key evil-normal-state-map ",u" 'undo-tree-visualize) ; see undo history in tree format (this will be opened in a new split window)
