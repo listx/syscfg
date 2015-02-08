@@ -106,10 +106,16 @@
     # <nixpkgs-unstable> is located at
     # https://nixos.org/channels/nixpkgs-unstable. The `haskellngPackages` set
     # is only in nixpkgs-unstable as of 2014-02-06.
+    #
+    # It's OK to have multple NixOS channels at the same time. Nix takes care of
+    # dependencies without issue.
     haskellngPackages.cabal2nix
     # For invoking, e.g., `cabal2nix cabal://some-package`, because cabal2nix
-    # depends on `cabal update`.
-    #haskellPackages.cabalInstall
+    # depends on `cabal update`. We also get `cabal repl` and other commands
+    # from the `cabal` binary with this package. The package
+    # 'haskellPackages.cabalInstall' has been renamed to
+    # 'haskellngPackages.cabal-install'.
+    haskellngPackages.cabal-install
 
     # Browsers and multimedia
     firefox
