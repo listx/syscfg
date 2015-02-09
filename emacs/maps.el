@@ -132,21 +132,15 @@
 (evil-define-key 'normal org-mode-map (kbd "M-i") 'org-insert-link)
 (evil-define-key 'normal org-mode-map (kbd "M-n") 'org-shiftright)
 ; heading-based navigation
-(evil-define-key 'normal org-mode-map (kbd "M-l")
-	'org-forward-heading-same-level)
-(evil-define-key 'normal org-mode-map (kbd "M-h")
-	'org-backward-heading-same-level)
 (evil-define-key 'normal org-mode-map (kbd "M-k")
 	'outline-previous-visible-heading)
-(evil-define-key 'normal org-mode-map (kbd "M-j") 'outline-next-visible-heading)
+(evil-define-key 'normal org-mode-map (kbd "M-j")
+	'outline-next-visible-heading)
 ; move items around, including child nodes
 (evil-define-key 'normal org-mode-map (kbd "M-L") 'org-shiftmetaright)
 (evil-define-key 'normal org-mode-map (kbd "M-H") 'org-shiftmetaleft)
 (evil-define-key 'normal org-mode-map (kbd "M-K") 'org-shiftmetaup)
 (evil-define-key 'normal org-mode-map (kbd "M-J") 'org-shiftmetadown)
-
-(evil-define-key 'normal org-mode-map (kbd "TAB") 'other-window)
-(evil-define-key 'normal org-mode-map [(control tab)] 'org-cycle)
 
 (evil-define-key 'normal org-mode-map (kbd "<f12>") 'org-html-export-to-html)
 
