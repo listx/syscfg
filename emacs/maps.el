@@ -150,8 +150,21 @@
 
 (evil-define-key 'normal org-mode-map (kbd "<f12>") 'org-html-export-to-html)
 
-(evil-define-key 'insert org-mode-map (kbd "M-TAB") 'org-shifttab)
+; Fold/expand all headings globally one level (use C-TAB) for expanding/folding
+; a particular level.
+; The 'iso-lefttab' just means 'tab'. It probably has something to do with the
+; keyboard layout also.
+(evil-define-key 'normal org-mode-map (kbd "<C-S-iso-lefttab>") 'org-shifttab)
 
 ; insert hyperlink, or edit an existing one
 (evil-define-key 'normal org-mode-map ",l" 'org-insert-link)
 (evil-define-key 'normal org-mode-map ",W" 'org-publish-current-project)
+
+; Disable default orgmode hotkeys that interfere with our global hotkeys defined
+; elsewhere.
+(add-hook 'org-mode-hook
+	'(lambda ()
+	(define-key org-mode-map [(tab)] nil)
+	(define-key org-mode-map (kbd "<S-iso-lefttab>") nil)
+	)
+)

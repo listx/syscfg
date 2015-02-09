@@ -443,14 +443,6 @@ keybinding as it conflicts with Anthy input."
 	(insert "\n- ")
 	(org-insert-item))
 )
-(add-hook 'org-mode-hook
-	'(lambda ()
-		; make TAB go to the other window, and map existing TAB
-		; functionality to CTRL-TAB
-		(define-key org-mode-map [(tab)] nil)
-		(define-key org-mode-map [(control tab)] nil)
-	)
-)
 
 ; C
 (add-hook 'c-mode-hook
