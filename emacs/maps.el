@@ -130,6 +130,7 @@
 (evil-define-key 'normal org-mode-map "-" 'org-cycle-list-bullet) ; change bullet style
 
 (evil-define-key 'normal org-mode-map (kbd "M-i") 'org-insert-link)
+(evil-define-key 'insert org-mode-map (kbd "M-i") 'org-insert-link)
 (evil-define-key 'normal org-mode-map (kbd "M-n") 'org-shiftright)
 ; heading-based navigation
 (evil-define-key 'normal org-mode-map (kbd "M-k")
