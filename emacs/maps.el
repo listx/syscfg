@@ -129,13 +129,8 @@
 (evil-define-key 'normal org-mode-map ",a" 'org-agenda) ; access agenda buffer
 (evil-define-key 'normal org-mode-map "-" 'org-cycle-list-bullet) ; change bullet style
 
-; allow us to access org-mode keys directly from Evil's Normal mode
-; change item type
-(evil-define-key 'normal org-mode-map (kbd "M-i") 'org-shiftright)
-(evil-define-key 'normal org-mode-map (kbd "M-I") 'org-shiftleft)
-; navigate on a per-item basis
-(evil-define-key 'normal org-mode-map (kbd "M-p") 'org-shiftup)
-(evil-define-key 'normal org-mode-map (kbd "M-n") 'org-shiftdown)
+(evil-define-key 'normal org-mode-map (kbd "M-i") 'org-insert-link)
+(evil-define-key 'normal org-mode-map (kbd "M-n") 'org-shiftright)
 ; heading-based navigation
 (evil-define-key 'normal org-mode-map (kbd "M-l")
 	'org-forward-heading-same-level)
