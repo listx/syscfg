@@ -6,6 +6,12 @@ set nobackup
 set tabstop=4
 set shiftwidth=4
 set expandtab
+" Backspace works in Insert mode (e.g. not inserting a ^?), but won't delete
+" over line breaks, or automatically-inserted indentation, or the place where
+" insert mode started. Use backspace=2 to solve this from
+" http://vim.wikia.com/wiki/Backspace_and_delete_problems.
+" This is only necessary because of the funny backspace behavior in Nixos.
+set backspace=2
 
 " When the page starts to scroll, keep the cursor 3 lines from the top and 3
 " lines from the bottom (i.e., keep the cursor with at least 3 lines of
