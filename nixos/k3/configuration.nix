@@ -139,6 +139,11 @@
   # git-upload-pack command, and the git pull operation will fail.
   programs.zsh.enable = true;
 
+  # Delete things that come built-in by nix that customizes Zsh. For one thing,
+  # disable the prompt settings because they interfere with our own
+  # customizations.
+  programs.zsh.promptInit = "";
+
   # Enable pulseaudio.
   hardware.pulseaudio.enable = true;
 
