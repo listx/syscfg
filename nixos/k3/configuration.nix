@@ -30,6 +30,11 @@
     }
   ];
 
+  # KNOWN ISSUES
+  #
+  # - If we suspend with `systemctl suspend`, and then resume, the wireless
+  # connection won't work. The command `ping www.google.com` won't work. To fix
+  # this, manually invoke `systemctl restart network-addresses-wlp3s0.service`.
   networking = {
     extraHosts = ''
       192.168.1.100 forest
