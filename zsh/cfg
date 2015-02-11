@@ -199,6 +199,7 @@ alias unprivate=' HISTFILE=~/.zsh-untracked/history'
 
 alias d='univ_open'
 alias df=' df -h'
+alias dmesg='dmesg --color=always | less'
 alias du='du -h'
 alias dus='du -ah --max-depth 1 | sort -h'
 
