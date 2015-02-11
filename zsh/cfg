@@ -313,6 +313,7 @@ alias -g Q='& disown; exit'
 
 # for quiet processes
 alias -g Z='> /dev/null 2>&1'
+alias -g L='| less'
 
 # scp alternative, with a progress bar
 alias rsy='rsync -ahP --no-whole-file --inplace'
