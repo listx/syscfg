@@ -64,10 +64,10 @@ URxvt.keysym.M-C-minus: command:\033]710;xft:Terminus:pixelsize=14,xft:IPAGothic
 URxvt.keysym.M-C-equal: command:\033]710;xft:Terminus:pixelsize=20,xft:IPAGothic,xft:Baekmuk Gulim\007
 
 ! some navigation commands
-URxvt.keysym.Control-Down: command:\033]721;1\007
-URxvt.keysym.Control-Up: command:\033]720;1\007
-URxvt.keysym.Control-Right: command:\033]721;10\007
-URxvt.keysym.Control-Left: command:\033]720;10\007
+URxvt.keysym.Control-j: command:\033]721;1\007
+URxvt.keysym.Control-k: command:\033]720;1\007
+URxvt.keysym.Control-h: command:\033]720;10\007
+URxvt.keysym.Control-l: command:\033]721;10\007
 
 ! make urxvt the login shell
 URxvt*loginShell:   true
