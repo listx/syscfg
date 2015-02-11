@@ -350,6 +350,7 @@ alias clean_files='find -type f -exec chmod 644 {} \;'
 alias of=' poweroff & disown; exit' # power off
 alias ofo=' reboot & disown; exit' # reboot
 
+alias nix='. ~/.nix-profile/etc/profile.d/nix.sh'
 alias n='nix-env'
 alias nl='nix-env --list-generations'
 alias np='ls -l --color=always ~/.nix-profile'
