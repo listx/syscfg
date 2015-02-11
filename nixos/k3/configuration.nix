@@ -123,6 +123,10 @@
     # 'haskellngPackages.cabal-install'.
     haskellngPackages.cabal-install
 
+    # Programming libraries
+    glfw
+    glxinfo
+
     # Browsers and multimedia
     firefox
     chromium
