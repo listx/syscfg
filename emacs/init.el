@@ -460,6 +460,9 @@ keybinding as it conflicts with Anthy input."
 	)
 )
 
+; Emblem --- use SLIM for now
+(add-to-list 'auto-mode-alist '("\\.emblem$" . slim-mode))
+
 ; Emacs lisp
 (add-hook 'emacs-lisp-mode-hook
 	(lambda ()

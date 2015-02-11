@@ -72,6 +72,9 @@
 							)
 						)
 					)
+					((string-match "\\.emblem$" b)
+						(h 'slim-mode-hook nil 2)
+					)
 				)
 			)
 
@@ -126,6 +129,10 @@
 			; Emacs lisp
 			((string-match "\\.el$" b)
 				(h 'emacs-lisp-mode-hook t 4)
+			)
+			; Emblem
+			((string-match "\\.emblem$" b)
+				(h 'slim-mode-hook nil 2)
 			)
 			; Haml
 			((string-match "\\.haml$" b)
