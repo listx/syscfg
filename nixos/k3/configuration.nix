@@ -10,6 +10,9 @@
       ./hardware-configuration.nix
     ];
 
+  # allow installation of 'ati_unfree' video driver
+#  nixpkgs.config.allowUnfree = true;
+
   # Use the GRUB 2 boot loader.
   boot.loader.grub.enable = true;
   boot.loader.grub.version = 2;
@@ -183,6 +186,7 @@
   services.xserver = {
     enable = true;
     videoDrivers = [ "ati" ];
+#    videoDrivers = [ "ati_unfree" ];
     layout = "us";
     xkbVariant = "altgr-intl";
     xkbOptions = "terminate:ctrl_alt_bksp";
