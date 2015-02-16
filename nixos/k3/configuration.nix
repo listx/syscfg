@@ -10,8 +10,8 @@
       ./hardware-configuration.nix
     ];
 
-  # allow installation of 'ati_unfree' video driver
-#  nixpkgs.config.allowUnfree = true;
+  # allow installation of 'ati_unfree' video driver and also Firefox with Flash
+  nixpkgs.config.allowUnfree = true;
 
   # Use the GRUB 2 boot loader.
   boot.loader.grub.enable = true;
@@ -83,6 +83,10 @@
     uid = 1000;
   };
 
+  nixpkgs.config.firefox = {
+    enableAdobeFlash = true;
+  };
+
   # List packages installed in system profile. To search by name, run:
   # $ nix-env -qaP | grep wget
   environment.systemPackages = with pkgs; [
@@ -131,7 +135,7 @@
     glxinfo
 
     # Browsers and multimedia
-    firefox
+    firefoxWrapper
     chromium
     aria2
     rtorrent
