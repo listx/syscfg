@@ -8,6 +8,7 @@
 		:publishing-function org-html-publish-to-html
 		:section-numbers t
 		:with-toc t
+		:headline-levels 4
 		:html-preamble t
 		:html-head "<link rel=\"stylesheet\"
 			href=\"css/style.css\"
