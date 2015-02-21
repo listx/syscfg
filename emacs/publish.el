@@ -15,4 +15,16 @@
 				href=\"css/style.css\"
 				type=\"text/css\"/>"
 		)
+		("babbage"
+			:base-directory "~/prog/babbage/"
+			:publishing-directory "~/prog/babbage/public_html"
+			:publishing-function org-html-publish-to-html
+			:section-numbers t
+			:with-toc t
+			:headline-levels 4
+			:html-preamble t
+			:html-head "<link rel=\"stylesheet\"
+				href=\"css/style.css\"
+				type=\"text/css\"/>"
+		)
 ))
