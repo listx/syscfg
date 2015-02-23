@@ -1,7 +1,7 @@
-#!/bin/zsh
+#!/usr/bin/env zsh
 
-internal="LVDS1"
-external="VGA1"
+internal="LVDS"
+external="VGA-0"
 
 if [[ -n $(xrandr | grep "$external" | grep "+") ]]; then
     xrandr --output $external --off --output $internal --auto
@@ -9,5 +9,3 @@ if [[ -n $(xrandr | grep "$external" | grep "+") ]]; then
         xrandr --output $internal --off --output $external --auto
     fi
 fi
-
-# vim:syntax=zsh

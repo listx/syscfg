@@ -1,7 +1,7 @@
-#!/bin/zsh
+#!/usr/bin/env zsh
 # enable external VGA monitor
 
-monitor_external=$(xrandr | grep VGA1)
+monitor_external=$(xrandr | grep VGA-0)
 external_location="right-of"
 
 if [[ -n $monitor_external ]]; then
@@ -23,6 +23,4 @@ if [[ -n $monitor_external ]]; then
     esac
 fi
 
-xrandr --output LVDS1 --auto --output VGA1 --auto --$external_location LVDS1
-
-# vim:syntax=zsh
+xrandr --output LVDS --auto --output VGA-0 --auto --$external_location LVDS
