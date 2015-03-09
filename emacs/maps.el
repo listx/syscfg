@@ -14,6 +14,33 @@
 	(lambda () (interactive) (insert (x-selection 'PRIMARY)))) ; paste X primary
 (define-key evil-normal-state-map "gw" 'fill-paragraph) ; insert hard line breaks
 
+; Add newlines above/below, without going through kakapo-open. We have a hook
+; that runs on exit of insert mode, which discards purely whitespace insertions,
+; so this way we can insert whitespace (newlines) without worrying about the
+; hook.
+(defun my-insert-newline-below ()
+	(progn
+		(forward-line 1)
+		(beginning-of-line)
+		(insert "\n")
+		(forward-line -1)
+	)
+)
+(defun my-insert-newline-above ()
+	(progn
+		(beginning-of-line)
+		(insert "\n")
+		(forward-line -1)
+	)
+)
+(define-key evil-insert-state-map (kbd "C-o")
+	(lambda () (interactive) (my-insert-newline-below)))
+(define-key evil-normal-state-map (kbd "C-o")
+	(lambda () (interactive) (my-insert-newline-below)))
+(define-key evil-insert-state-map (kbd "C-S-o")
+	(lambda () (interactive) (my-insert-newline-above)))
+(define-key evil-normal-state-map (kbd "C-S-o")
+	(lambda () (interactive) (my-insert-newline-above)))
 
 ; navigation
 ; simulate vim's "nnoremap <space> 10jzz"
