@@ -526,6 +526,9 @@ keybinding as it conflicts with Anthy input."
 ; Hazelnut
 (add-to-list 'auto-mode-alist '("\\.hzl$" . text-mode))
 
+; Haml Coffee mode
+(add-to-list 'auto-mode-alist '("\\.hamlc$" . haml-mode))
+
 ; Ledger
 (autoload 'ledger-mode "ledger-mode" "A major mode for Ledger" t)
 (add-to-list 'auto-mode-alist '("\\.ledger$" . ledger-mode))

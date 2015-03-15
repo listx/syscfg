@@ -75,6 +75,9 @@
 					((string-match "\\.emblem$" b)
 						(h 'slim-mode-hook nil 2)
 					)
+					((string-match "\\.hamlc$" b)
+						(h 'haml-mode-hook nil 2)
+					)
 				)
 			)
 
