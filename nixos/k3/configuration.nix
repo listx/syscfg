@@ -11,13 +11,6 @@
   boot.loader.grub.enable = true;
   boot.loader.grub.version = 2;
   boot.loader.grub.device = "/dev/disk/by-id/ata-ST9500420AS_5VJ59T8M";
-  boot.loader.grub.extraEntries = ''
-    menuentry "Windows7" {
-      insmod ntfs
-      set root='(hd0,2)'
-      chainloader +1
-    }
-  '';
   boot.initrd.luks.devices = [
     {
       name = "root";
@@ -25,6 +18,13 @@
       preLVM = true;
     }
   ];
+  boot.loader.grub.extraEntries = ''
+    menuentry "Windows7" {
+      insmod ntfs
+      set root='(hd0,2)'
+      chainloader +1
+    }
+  '';
 
   # KNOWN ISSUES
   #
