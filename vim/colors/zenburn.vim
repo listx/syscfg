@@ -1,0 +1,1 @@
+/home/l/prog/foreign/Zenburn/colors/zenburn.vim
