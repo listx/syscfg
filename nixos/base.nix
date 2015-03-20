@@ -88,14 +88,19 @@
     defaultLocale = "en_US.UTF-8";
   };
 
-  networking.extraHosts = ''
-    192.168.1.100 forest
-    192.168.1.110 k0
-    192.168.1.114 k1
-    192.168.1.116 k3
-    192.168.1.120 ocean
-    74.207.246.114 l0
-  '';
+  networking = {
+    extraHosts = ''
+      192.168.1.100 forest
+      192.168.1.110 k0
+      192.168.1.114 k1
+      192.168.1.116 k3
+      192.168.1.120 ocean
+      74.207.246.114 l0
+    '';
+    useDHCP = false;
+    defaultGateway = "192.168.1.254";
+    nameservers = [ "192.168.1.254" ];
+  };
 
 # allow installation of 'ati_unfree' video driver and also Firefox with Flash
   nixpkgs.config.allowUnfree = true;
