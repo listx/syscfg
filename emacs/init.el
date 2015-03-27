@@ -459,6 +459,12 @@ keybinding as it conflicts with Anthy input."
 		(modify-syntax-entry ?_ "w") ; add underscore as a word character, like in Vim
 	)
 )
+; conf-mode
+(add-hook 'conf-mode-hook
+	(lambda ()
+		(setq indent-tabs-mode nil)
+	)
+)
 
 ; Emblem --- use SLIM for now
 (add-to-list 'auto-mode-alist '("\\.emblem$" . slim-mode))
