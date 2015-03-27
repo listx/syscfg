@@ -21,15 +21,12 @@
 
   networking = {
     hostName = "k0";
-    interfaces = {
-      eno1 = {
-        ipAddress = "192.168.1.110";
-        prefixLength = 24;
-      };
-    };
   };
 
   services.xserver = {
     videoDrivers = [ "nvidia" ];
-  };
+    # export finalized xorg.conf to /etc/X11/xorg.conf
+    exportConfiguration = true;
+    config = pkgs.lib.mkOverride 50 (builtins.readFile ./quadmon.conf);
+ };
 }

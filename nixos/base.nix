@@ -18,6 +18,7 @@
     gnupg
     mutt
     htop
+    dhcpcd
 
     # Programming tools
     git
@@ -90,16 +91,14 @@
 
   networking = {
     extraHosts = ''
-      192.168.1.100 forest
-      192.168.1.110 k0
-      192.168.1.114 k1
-      192.168.1.116 k3
-      192.168.1.120 ocean
+      192.168.0.100 forest
+      192.168.0.110 k0
+      192.168.0.114 k1
+      192.168.0.116 k3
+      192.168.0.120 ocean
       74.207.246.114 l0
     '';
-    useDHCP = false;
-    defaultGateway = "192.168.1.254";
-    nameservers = [ "192.168.1.254" ];
+    networkmanager.enable = true;
   };
 
 # allow installation of 'ati_unfree' video driver and also Firefox with Flash
