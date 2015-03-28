@@ -1,4 +1,9 @@
+let
+  HEAD = import /home/l/prog/foreign/nixpkgs {};
+in
+
 { config, pkgs, ... }:
+
 {
   # List packages installed in system profile. To search by name, run:
   # $ nix-env -qaP | grep wget
@@ -45,7 +50,7 @@
     haskellngPackages.cabal-install
     # android development
     androidsdk_4_4
-    android-udev-rules
+    HEAD.android-udev-rules
 
     # Programming libraries
     glfw
@@ -63,7 +68,7 @@
     cmus
     evince
     pidgin
-    texLiveFull
+    HEAD.texLiveFull
   ];
 
   # Fonts
