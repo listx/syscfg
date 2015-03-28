@@ -128,13 +128,19 @@
     xkbVariant = "altgr-intl";
     xkbOptions = "terminate:ctrl_alt_bksp";
     desktopManager.default = "none";
+    # workaround for disabling xterm
+    # see https://github.com/NixOS/nixpkgs/issues/4300
+    desktopManager.xterm.enable = false;
     displayManager.sessionCommands = ''
       # remap Caps_Lock key to xmonad's own, exclusive 'mod' key (no "sharing"
       # with ALT or any other combination)
       ${pkgs.xlibs.xmodmap}/bin/xmodmap -e "remove Lock = Caps_Lock"
       ${pkgs.xlibs.xmodmap}/bin/xmodmap -e "add mod3 = Caps_Lock"
       ${pkgs.xlibs.xmodmap}/bin/xmodmap ~/.xmodmap
+      # set keyboard press repeat delay/rate
       ${pkgs.xlibs.xset}/bin/xset r rate 250 80
+      # disable mouse acceleration
+      ${pkgs.xlibs.xset}/bin/xset m 0 0
     '';
     displayManager.slim.defaultUser = "l";
     windowManager.xmonad.enable = true;
