@@ -13,22 +13,22 @@
   boot.extraModulePackages = [ ];
 
   fileSystems."/" =
-    { device = "/dev/disk/by-uuid/e30c7293-51b1-4786-b6e7-adcb8492caf9";
+    { device = "/dev/disk/by-id/dm-name-vg0-root";
       fsType = "ext4";
     };
 
   fileSystems."/boot" =
-    { device = "/dev/sda3";
+    { device = "/dev/disk/by-id/ata-ST9500420AS_5VJ59T8M-part3";
       fsType = "ext2";
     };
 
   fileSystems."/home" =
-    { device = "/dev/disk/by-uuid/876ddf6a-1c9c-42e2-b4c4-bebf27b3261e";
+    { device = "/dev/disk/by-id/dm-name-vg0-home";
       fsType = "ext4";
     };
 
-  swapDevices =
-    [ { device = "/dev/disk/by-uuid/e98031b6-649f-41a3-8ae5-40041855b0e3"; }
+  swapDevices = [
+    { device = "/dev/disk/by-id/dm-name-vg0-swap"; }
     ];
 
   nix.maxJobs = 8;
