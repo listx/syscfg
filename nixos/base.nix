@@ -160,6 +160,8 @@ in
 
   time.timeZone = "America/Los_Angeles";
 
+  uim.enable = true;
+
   users.extraGroups.l = { };
   # Set password for extra users with 'passwd' command as root.
   users.extraUsers.l = {
