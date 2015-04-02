@@ -25,6 +25,7 @@ in
     htop
     dhcpcd
     utillinuxCurses
+    lsof
 
     # Archiving
     p7zip
