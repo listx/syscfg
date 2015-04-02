@@ -4,6 +4,8 @@ HOST := $(shell hostname)
 all: acpi boxes cron emacs git gsy lesskey modprobe mpd mplayer mutt ncmpcpp pal pentadactyl rtorrent usbmnt vim xdefaults xinitrc xmodmap xmonad xorg zsh
 acpi:
 	ln -fs ${CFG}/acpi/${HOST}.sh						/etc/acpi/handler.sh
+bash:
+	ln -fs ${CFG}/bash/.bashrc								${HOME}
 boxes:
 	ln -fs ${CFG}/boxes/cfg								${HOME}/.boxes
 bundle:
