@@ -24,6 +24,13 @@ in
     mutt
     htop
     dhcpcd
+    utillinuxCurses
+
+    # Archiving
+    p7zip
+    unzip
+    lzma
+    unrar
 
     # Programming tools
     git
@@ -33,6 +40,8 @@ in
     gdb
     gnumake
     ruby
+    HEAD.bundler_HEAD
+    HEAD.bundix
     # For haskell development via `nix-shell`; run `sudo nix-channel --add
     # <nixpkgs-unstable>`, then do `sudo nix-channel --update`.
     # <nixpkgs-unstable> is located at
@@ -50,7 +59,7 @@ in
     haskellngPackages.cabal-install
     # android development
     androidsdk_4_4
-    HEAD.android-udev-rules
+    android-udev-rules
 
     # Programming libraries
     glfw
@@ -68,6 +77,7 @@ in
     cmus
     evince
     pidgin
+    links
     HEAD.texLiveFull
   ];
 
