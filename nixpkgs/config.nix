@@ -38,6 +38,7 @@
         # `haskellngPackages.cabal-install` installed either on your system, or
         # through nix-env.
         ztile = self.callPackage ./haskell/ztile.nix {};
+        timetracker = self.callPackage ./haskell/timetracker.nix {};
       };
     };
   };
