@@ -183,6 +183,7 @@ alias auca="~/prog/auca/dist/build/auca/auca"
 alias acmake="~/prog/auca/dist/build/auca/auca -c \"make -B\" -f"
 alias aclily="~/prog/auca/dist/build/auca/auca -C \"lilypond\" -f"
 alias actex="~/prog/auca/dist/build/auca/auca -C \"xelatex -halt-on-error\" -f"
+alias apush="~/syscfg/script/sys/apush.sh"
 alias c="~/syscfg/script/sys/utp.sh"
 alias cls="echo -ne '\x1bc'" # clear the screen buffer (don't just hide it like CTRL-L)
 alias fiv='~/syscfg/script/sys/fiv.sh'
