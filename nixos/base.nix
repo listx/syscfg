@@ -80,6 +80,7 @@ in
     pidgin
     links
     gimp
+    scrot
     HEAD.texLiveFull
   ];
 
