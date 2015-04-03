@@ -121,8 +121,8 @@
 		; command and parameters
 		(concat
 			(if f
-				"~/prog/nox/src/nox --sline "
-				"~/prog/nox/src/nox --uncomment --sline ")
+				"~/prog/nox/dist/build/nox/nox --sline "
+				"~/prog/nox/dist/build/nox/nox --uncomment --sline ")
 			(case (with-current-buffer (current-buffer) major-mode)
 				('c-mode "//")
 				('emacs-lisp-mode "\\;")
