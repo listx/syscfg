@@ -79,6 +79,7 @@ in
     evince
     pidgin
     links
+    gimp
     HEAD.texLiveFull
   ];
 
