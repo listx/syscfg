@@ -34,13 +34,6 @@
   networking = {
     hostName = "k3";
     hostId = "518ab295";
-    wireless.enable = true;
-    interfaces = {
-      wlp3s0 = {
-        ipAddress = "192.168.1.116";
-        prefixLength = 24;
-      };
-    };
   };
 
   services.xserver = {
