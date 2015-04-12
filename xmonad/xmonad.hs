@@ -469,7 +469,6 @@ myStartupHook hostname = do
     spawnIfGrpTopWSNotFull Net "firefox"
     spawnIfGrpNotFull Work $ term1 ++ " -name atWorkspace1"
     spawn $ term1 ++ schedToday
-    spawnIfGrpNotFull Sys $ term1 ++ " -e alsamixer"
     spawnIfGrpNotFull Sys $ term1 ++ " -e htop"
     case hostname of
         "k0" -> dualPortrait
