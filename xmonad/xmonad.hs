@@ -431,6 +431,7 @@ myManageHook = composeAll $
     , title     =? "mplayer"                    --> doShift =<< liftX (tryGetEmptyWSIDofGroup Music)
     , resource  =? "Navigator"                  --> doShift =<< liftX (tryGetEmptyWSIDofGroup Net)
     , className =? "Evince"                     --> doShift =<< liftX (tryGetEmptyWSIDofGroup Misc)
+    , resource  =? ".evince-wrapped"            --> doShift =<< liftX (tryGetEmptyWSIDofGroup Misc)
     , className =? "Blender:Render"             --> doFloat
     , resource  =? "Browser"                    --> doFloat
     , className =? "Galculator"                 --> doCenterFloat
