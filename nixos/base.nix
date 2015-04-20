@@ -73,6 +73,7 @@ in
     rtorrent
     geeqie
     mpv
+    ffmpeg
     vlc
     higan
     cmus
