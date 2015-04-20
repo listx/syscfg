@@ -20,12 +20,18 @@ in
     xsel
     vim
     silver-searcher
+    colordiff
     gnupg
     mutt
     htop
     dhcpcd
     utillinuxCurses
     lsof
+
+    # Docs
+    manpages
+    pthreadmanpages
+    stdmanpages
 
     # Archiving
     p7zip
