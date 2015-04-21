@@ -743,7 +743,7 @@ keybinding as it conflicts with Anthy input."
 		((string-match "^k3" system-name)
 			102
 		)
-		(t 90)
+		(t 91)
 	)
 )
 ; auto-generated stuff by emacs itself...
