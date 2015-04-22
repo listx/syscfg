@@ -65,13 +65,13 @@ prompt_kody_precmd() {
 
     day=""
     case $(date +%a) in
-        Mon) day="%B%F{$prompt_color2}M%b%f" ;;
-        Tue) day="%B%F{$prompt_color2}T%b%f" ;;
-        Wed) day="%B%F{$prompt_color2}W%b%f" ;;
-        Thu) day="%B%F{$prompt_color2}R%b%f" ;;
-        Fri) day="%B%F{$prompt_color8}F%b%f" ;;
-        Sat) day="%B%F{$prompt_color6}S%b%f" ;;
-        Sun) day="%B%F{$prompt_color6}N%b%f" ;;
+        Mon) day="%B%F{$prompt_color2}月%b%f" ;;
+        Tue) day="%B%F{$prompt_color2}火%b%f" ;;
+        Wed) day="%B%F{$prompt_color2}水%b%f" ;;
+        Thu) day="%B%F{$prompt_color2}木%b%f" ;;
+        Fri) day="%B%F{$prompt_color8}金%b%f" ;;
+        Sat) day="%B%F{$prompt_color6}土%b%f" ;;
+        Sun) day="%B%F{$prompt_color6}日%b%f" ;;
     esac
 
     # determine the percentage of the year that is complete
@@ -110,7 +110,7 @@ prompt_kody_precmd() {
         *)          [[ -n "$SSH_CLIENT" ]] && prompt_charcolor=$prompt_color2 || prompt_charcolor=$prompt_color4 ;;
     esac
     prompt_username="%F{$prompt_charcolor}%n%f"
-    prompt_at_sign="%B%F{$prompt_color4}@%b%f"
+    prompt_at_sign="%F{$prompt_color4}_%f"
     prompt_hostname="%F{$prompt_hostcolor}%m%f"
     # set user@host
     prompt_userhost="$prompt_username$prompt_at_sign$prompt_hostname"
