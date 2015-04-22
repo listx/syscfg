@@ -1,3 +1,4 @@
+#!/usr/bin/env zsh
 # kody prompt theme, based on adam2
 
 prompt_kody_setup() {
@@ -185,5 +186,3 @@ prompt_kody_choose_prompt() {
 }
 
 prompt_kody_setup "$@"
-
-# vim:syntax=zsh
