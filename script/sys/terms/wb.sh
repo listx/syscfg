@@ -32,10 +32,10 @@ c_15="#ffffff" # white bright
 c_01="#d78787" # red regular
 c_09="#d70000" # red bright
 
-c_02="#60b48a" # green
+c_02="#53ae80" # green
 c_10="#87ff87" # green bright
 
-c_04="#94bff3" # blue
+c_04="#2a80e7" # blue
 c_12="#94bff3" # blue bright
 
 c_03="#d7d7af" # yellow
