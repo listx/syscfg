@@ -13,15 +13,16 @@
 ; NixOS: This enables the various emacs scripts that are installed by
 ; nixos-rebuild. The script below is taken from
 ; https://gitorious.org/goibhniu/configuration-files.
-(defconst nixos-sys-packages
-	'("/run/current-system/sw/share/emacs/site-lisp"))
-	(mapcar
-		'(lambda(p)
-		(add-to-list 'load-path p)
-		(cd p)
-		(normal-top-level-add-subdirs-to-load-path)
-		)
-		nixos-sys-packages)
+(when (not (string= system-name "k1"))
+	(defconst nixos-sys-packages
+		'("/run/current-system/sw/share/emacs/site-lisp"))
+		(mapcar
+			'(lambda(p)
+			(add-to-list 'load-path p)
+			(cd p)
+			(normal-top-level-add-subdirs-to-load-path)
+			)
+			nixos-sys-packages))
 
 ; MELPA
 (require 'package)
