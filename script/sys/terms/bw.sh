@@ -62,5 +62,3 @@ opts+=" --color0 $c_00 --color1 $c_01 --color2 $c_02 --color3 $c_03 --color4 $c_
 opts+=" -fade $c_fade"
 
 urxvt ${(z)opts} -fn $fonts $@ & disown
-
-# vim:syntax=zsh
