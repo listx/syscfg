@@ -43,6 +43,7 @@ in
     git
     tig
     mercurial
+    clang
     gcc
     gdb
     gnumake
