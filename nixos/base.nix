@@ -102,6 +102,7 @@ in
       dejavu_fonts
       ipafont
       libertine
+      source-serif-pro
       terminus_font
       ubuntu_font_family
     ];
