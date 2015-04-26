@@ -78,6 +78,9 @@ export LEDGER_FILE=~/money/master.ledger
 # make GCC print errors in color
 export GCC_COLORS=1
 
+# path to local nixpkgs git repo
+export NIXPKGS=~/prog/foreign/nixpkgs
+
 # stop zsh from eating space before pipe symbol
 export ZLE_REMOVE_SUFFIX_CHARS=""
 
