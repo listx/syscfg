@@ -72,6 +72,7 @@ in
     # Programming libraries
     glfw
     glxinfo
+    HEAD.pcg_c
 
     # Browsers and multimedia
     firefoxWrapper
