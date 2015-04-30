@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/usr/bin/env zsh
 # creates a playlist for mplayer
 
 # colors
@@ -102,5 +102,3 @@ else
     eval $com | sort | sed "s/^/  $c1>$ce /"
     echo "\nFound $fnum audio files (dry run)"
 fi
-
-# vim:syntax=zsh
