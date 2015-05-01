@@ -27,4 +27,16 @@
 				href=\"css/style.css\"
 				type=\"text/css\"/>"
 		)
+		("day"
+			:base-directory "~/org/day"
+			:publishing-directory "~/org/day/public_html"
+			:publishing-function org-html-publish-to-html
+			:section-numbers t
+			:with-toc nil
+			:html-preamble nil
+			:html-postamble nil
+			:html-head "<link rel=\"stylesheet\"
+				href=\"css/style.css\"
+				type=\"text/css\"/>"
+		)
 ))
