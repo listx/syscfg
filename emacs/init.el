@@ -713,13 +713,13 @@ keybinding as it conflicts with Anthy input."
 (define-key evil-normal-state-map ",_"
 	(lambda ()
 		(interactive)
-        (global-text-scale-adjust -1)
+        (global-text-scale-adjust -2)
 	)
 )
 (define-key evil-normal-state-map ",-"
 	(lambda ()
 		(interactive)
-        (global-text-scale-adjust 1)
+        (global-text-scale-adjust 2)
 	)
 )
 ; disable fringes
