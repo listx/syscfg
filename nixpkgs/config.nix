@@ -37,6 +37,7 @@
         # the `cabal` binary available. To do this, you should have
         # `haskellngPackages.cabal-install` installed either on your system, or
         # through nix-env.
+        auca = self.callPackage ./haskell/auca.nix {};
         ztile = self.callPackage ./haskell/ztile.nix {};
         timetracker = self.callPackage ./haskell/timetracker.nix {};
       };

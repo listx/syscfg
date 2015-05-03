@@ -1,6 +1,4 @@
-#--------------------------------------------------------------------------------------------------#
-# Environment variables                                                                            #
-#--------------------------------------------------------------------------------------------------#
+# Environment variables
 
 # Set 'ls' command's color theme
 # See "dircolors -p" for more info
@@ -132,10 +130,8 @@ LISTMAX=9999 # don't ask 'do you wish to see all N possibilities' unless N > 999
 # make '*' expand to catch dotfiles as well
 setopt GLOB_DOTS
 
-#==================================================================================================#
-# Custom binds for some common operations. Note, however, that you can enter vi-like "normal mode" #
-# with CTRL+X, CTRL+V for some more advanced operations.                                           #
-#==================================================================================================#
+# Custom binds for some common operations. Note, however, that you can enter
+# vi-like "normal mode" with CTRL+X, CTRL+V for some more advanced operations.
 
 bindkey -v # use vim bindings!
 # use CTRL-R for history search (^R is bound to the 'redisplay' command by default, which is never used anyway)
@@ -158,10 +154,9 @@ alias ds=' dirs -v ; echo -n "\nSelect directory: " ; read n ; cd +$n && ll'
 # just show a list of dir stack without choose prompt
 alias dl=' dirs -v'
 
-#--------------------------------------------------------------------------------------------------#
-# Useful change dirs (first change to the directory, and then list the contents within; notice how #
-# you can use aliases within aliases! (the "l" is an alias here defined below)                     #
-#--------------------------------------------------------------------------------------------------#
+# Useful change dirs (first change to the directory, and then list the contents
+# within; notice how you can use aliases within aliases! (the "l" is an alias
+# here defined below)
 
 alias k=" cd ..;ll"
 alias kk=" cd ../../;ll"
@@ -178,14 +173,8 @@ alias kkkkkkkkkkkk=" cd ../../../../../../../../../../../../;ll"
 alias kkkkkkkkkkkkk=" cd ../../../../../../../../../../../../../;ll"
 alias kkkkkkkkkkkkkk=" cd ../../../../../../../../../../../../../../;ll"
 
-#--------------------------------------------------------------------------------------------------#
-# Custom aliases                                                                                   #
-#--------------------------------------------------------------------------------------------------#
+# Custom aliases
 
-alias auca="~/prog/auca/dist/build/auca/auca"
-alias acmake="~/prog/auca/dist/build/auca/auca -c \"make -B\" -f"
-alias aclily="~/prog/auca/dist/build/auca/auca -C \"lilypond\" -f"
-alias actex="~/prog/auca/dist/build/auca/auca -C \"xelatex -halt-on-error\" -f"
 alias apush="~/syscfg/script/sys/apush.sh"
 alias c="~/syscfg/script/sys/utp.sh"
 alias cls="echo -ne '\x1bc'" # clear the screen buffer (don't just hide it like CTRL-L)
@@ -289,7 +278,6 @@ alias ees=' ee galias_find_src'
 
 alias fl='find_long_lines '
 
-
 alias tma='tmux attach-session'
 
 alias skype='find ~/.Skype/Logs/ -type f -exec rm {} \; && skype'
@@ -331,7 +319,8 @@ alias rsy='rsync -ahP --no-whole-file --inplace'
 #forces rsync to always use the incremental rsync algorithm.
 alias cp2='rsync -ahP'
 
-# play safe! warn before overwrites, display verbose output, and also enable recursive option by default (useful when using only directory names)
+# play safe! warn before overwrites, display verbose output, and also enable
+# recursive option by default (useful when using only directory names)
 alias cp='cp -ivr'
 alias mv='mv -iv'
 alias rm='rm -Iv'
@@ -401,11 +390,6 @@ alias usbon='~/syscfg/script/sys/usbmnt'
 alias usbonn='~/syscfg/script/sys/usbmnt -a'
 alias usbof='~/syscfg/script/sys/usbmnt -u'
 alias usboff='~/syscfg/script/sys/usbmnt -U'
-
-#--------------------------------------------------------------------------------------------------#
-# Host-specific settings (different aliases, etc. for different computers                          #
-#     from http://www.jauu.net/data/jauu_backup/data/dotfiles/zshrc.html                           #
-#--------------------------------------------------------------------------------------------------#
 
 case $HOST in
     k0)
