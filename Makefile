@@ -109,9 +109,9 @@ ifeq ('${HOST}','forest')
 	ln -fns ${CFG}/xorg/10-dual-monitor-hybrid-forest.conf	/etc/X11/xorg.conf.d/
 endif
 zsh:
-	mkdir ${HOME}/.zsh-untracked
 	ln -fns ${CFG}/zsh									${HOME}/.zsh
-	ln -fs ${CFG}/zsh/cfg								${HOME}/.zshrc
+	ln -fs ${CFG}/zsh/.zshrc								${HOME}
+	mkdir ${HOME}/.zsh-untracked
 
 uninstall:
 	rm ${HOME}/.boxes
