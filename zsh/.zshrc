@@ -353,19 +353,23 @@ alias nu='nix-channel --update && sudo nixos-checkout'
 
 alias cal='cal -y'
 
-alias p='sudo pacman'
-alias pu='sudo pacman -Syu'
-alias py='sudo pacman -Syy'
-alias ps='sudo pacman -S'
-alias pq='sudo pacman -Q'
+nixos_hosts=(k0 k3)
 
-# use of yaourt with root privileges is a big security hole!
-alias y='yaourt'
-alias yu='yaourt -Sybu --aur'
-alias yy='yaourt -Syy'
-alias ys='yaourt -S'
-alias yurc='pkgs=${(s:\n:)$(pacman -Qq | grep -E -- "-(bzr|darcs|git|hg|svn)")}; echo "Syncing: $pkgs\n"; ys ${(s: :)pkgs}'
-alias yc=' sudo yaourt -C'
+if [[ -z ${nixos_hosts[(r)$HOST]} ]]; then
+    alias p='sudo pacman'
+    alias pu='sudo pacman -Syu'
+    alias py='sudo pacman -Syy'
+    alias ps='sudo pacman -S'
+    alias pq='sudo pacman -Q'
+
+    # use of yaourt with root privileges is a big security hole!
+    alias y='yaourt'
+    alias yu='yaourt -Sybu --aur'
+    alias yy='yaourt -Syy'
+    alias ys='yaourt -S'
+    alias yurc='pkgs=${(s:\n:)$(pacman -Qq | grep -E -- "-(bzr|darcs|git|hg|svn)")}; echo "Syncing: $pkgs\n"; ys ${(s: :)pkgs}'
+    alias yc=' sudo yaourt -C'
+fi
 
 # update all packages ending in "-git" (all git-based packages)
 alias pg='for pkg in $(pq | grep -- "-git" | cut -d " " -f1); do bs $pkg; done'
