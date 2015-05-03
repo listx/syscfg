@@ -371,13 +371,6 @@ if [[ -z ${nixos_hosts[(r)$HOST]} ]]; then
     alias yc=' sudo yaourt -C'
 fi
 
-# update all packages ending in "-git" (all git-based packages)
-alias pg='for pkg in $(pq | grep -- "-git" | cut -d " " -f1); do bs $pkg; done'
-
-# start and stop the default network interface (ethernet port)
-alias neu='sudo /etc/rc.d/network start'
-alias ned='sudo /etc/rc.d/network stop'
-
 # memory management
 alias reset_cache='free && sync && echo 3 >/proc/sys/vm/drop_caches && free'
 alias reset_swap='free && swapoff -a && swapon -a && free'
