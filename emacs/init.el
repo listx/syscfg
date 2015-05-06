@@ -32,6 +32,7 @@
 ; Define packages that we'll be using.
 (defvar my/packages
 	'(
+	ace-jump-mode
 	color-theme ; needed for dbrock's old zenburn
 	column-enforce-mode
 	coffee-mode
@@ -722,6 +723,11 @@ keybinding as it conflicts with Anthy input."
         (global-text-scale-adjust 2)
 	)
 )
+; ace-jump-mode
+; This robs "f" of its normal function (finding the given character on the
+; current line), but as ace-jump is essentially acting as a superset of normal
+; "f", this makes the most sense.
+(define-key evil-normal-state-map "f" 'ace-jump-mode)
 ; disable fringes
 (fringe-mode 0)
 ; set default line length (as used by 'fill-paragraph) to be 80 characters
