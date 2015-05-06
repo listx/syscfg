@@ -178,6 +178,10 @@
 			((string-match "\\.nix$" b)
 				(h 'nix-mode-hook nil 2)
 			)
+			; Org-mode
+			((string-match "\\.org$" b)
+				(h 'org-mode-hook nil 2)
+			)
 			; PKGBUILD and .install files (Arch Linux)
 			(
 				(or
