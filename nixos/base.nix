@@ -48,8 +48,8 @@ in
     gdb
     gnumake
     ruby
-#    HEAD.bundler_HEAD
-#    HEAD.bundix
+    bundler_HEAD
+    bundix
     # For haskell development via `nix-shell`; run `sudo nix-channel --add
     # <nixpkgs-unstable>`, then do `sudo nix-channel --update`.
     # <nixpkgs-unstable> is located at
@@ -70,9 +70,10 @@ in
     android-udev-rules
 
     # Programming libraries
+    boehmgc
     glfw
     glxinfo
-    HEAD.pcg_c
+    pcg_c
 
     # Browsers and multimedia
     firefoxWrapper
@@ -90,7 +91,7 @@ in
     links
     gimp
     scrot
-    HEAD.texLiveFull
+    texLiveFull
   ];
 
   # Fonts
