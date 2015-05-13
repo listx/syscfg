@@ -58,7 +58,7 @@ univ_open() {
             (mid|midi)
                 timidity $@
             ;;
-            (asf|avi|divx|flv|ogm|ogv|m4v|mkv|mov|mp4|mpg|mpeg|rm|rmvb|webm|wmv)
+            (asf|avi|divx|flv|ogm|ogv|m4a|m4v|mkv|mov|mp4|mpg|mpeg|rm|rmvb|webm|wmv)
                 mpv $@ &>/dev/null & disown
             ;;
             (mts)
