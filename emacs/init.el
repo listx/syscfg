@@ -113,6 +113,8 @@
 	'("IPAGothic" . "unicode-bmp")
 )
 
+(setq tramp-default-method "ssh")
+
 ; Custom functions
 (defun my-addrem-comment-region (b e f)
 	"Use the `nox' command to comment the current region."
