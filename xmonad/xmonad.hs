@@ -77,7 +77,7 @@ myWorkspaces = map fst myWorkspaceGroups -- 1..9, 0, F1-F12
 term1, term2, term3, suspend, xinitrc :: String
 term1 = "~/syscfg/script/sys/terms/wb.sh"
 term2 = "~/syscfg/script/sys/terms/bw.sh"
-term3 = "~/syscfg/script/sys/terms/wB.sh"
+term3 = "~/syscfg/script/sys/terms/wblue.sh"
 suspend = "sudo systemctl suspend"
 xinitrc = "sh ~/syscfg/xinitrc/cfg"
 
