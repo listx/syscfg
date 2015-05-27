@@ -34,7 +34,7 @@
 			; Work settings
 			(
 				(or
-					(string-match "^/Users/larver/z/" b)
+					(string-match "/Users/larver/z/" b)
 				)
 				(cond
 					(
@@ -49,6 +49,13 @@
 									"ruby-indent-level set to %d"
 									ruby-indent-level
 								)
+							)
+						)
+					)
+					((string-match ".+\\.js?$" b)
+						(h 'js-mode-hook nil 4
+							(progn
+								(setq js-indent-level 4)
 							)
 						)
 					)
