@@ -13,7 +13,11 @@
 ; NixOS: This enables the various emacs scripts that are installed by
 ; nixos-rebuild. The script below is taken from
 ; https://gitorious.org/goibhniu/configuration-files.
-(when (not (string= system-name "k1"))
+(when (not (or
+	(string= system-name "k1")
+	(string= system-name "foo-VirtualBox")
+	(string-match "^Linuss" system-name)
+	))
 	(defconst nixos-sys-packages
 		'("/run/current-system/sw/share/emacs/site-lisp"))
 		(mapcar

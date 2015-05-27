@@ -31,6 +31,37 @@
 			; TODO: import these project-specific conditions somehow from an
 			; external .el file.
 
+			; Work settings
+			(
+				(or
+					(string-match "^/Users/larver/z/" b)
+				)
+				(cond
+					(
+						(or
+							(string-match ".+\\.gemspec$" b)
+							(string-match ".+\\.rb$" b)
+						)
+						(h 'ruby-mode-hook nil 2
+							(progn
+								(setq ruby-indent-level 2)
+								(message
+									"ruby-indent-level set to %d"
+									ruby-indent-level
+								)
+							)
+						)
+					)
+					((string-match ".+\\.md$" b)
+						(progn
+							(h 'markdown-mode-hook t 4)
+							(define-key markdown-mode-map [backspace] nil)
+							(define-key markdown-mode-map [tab] nil)
+						)
+					)
+				)
+			)
+
 			; Webdev settings --- where basically everyone (only in the Rails
 			; community?) likes using 2-space indentation.
 			(
