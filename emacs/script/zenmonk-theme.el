@@ -1,1 +1,0 @@
-/home/l/prog/zenmonk/zenmonk-theme.el
