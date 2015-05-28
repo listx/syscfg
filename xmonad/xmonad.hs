@@ -143,7 +143,7 @@ myKeys hostname conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((mod4Mask              , xK_2     ), spawn (term1 ++ schedYTT))
     , ((mod4Mask              , xK_0     ), spawn "emacs ~/org/life.org ~/org/grid.org ~/org/sleep ~/org/prog.org")
     , ((mod4Mask              , xK_c     ), spawn "galculator")
-    , ((mod4Mask              , xK_e     ), spawn (term1 ++ " -e mutt"))
+    , ((mod4Mask              , xK_e     ), spawn "emacs")
     , ((mod4Mask              , xK_h     ), spawn (term2 ++ " -e ncmpcpp"))
     , ((mod4Mask .|. shiftMask, xK_h     ), spawn (term2 ++ " -e mplayer -ao alsa -softvol -volume 100 -volstep 1 -demuxer ogg -prefer-ipv4 http://192.168.0.110:8000/mpd.ogg"))
     , ((mod4Mask              , xK_i     ), spawn "gimp")
