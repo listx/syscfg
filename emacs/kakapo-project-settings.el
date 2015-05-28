@@ -66,6 +66,15 @@
 							(define-key markdown-mode-map [tab] nil)
 						)
 					)
+					; Python
+					((string-match "\\.py$" b)
+						(h 'python-mode-hook nil 4
+							(progn
+								(setq python-indent 4)
+								(message "python-indent set to %d" python-indent)
+							)
+						)
+					)
 				)
 			)
 
