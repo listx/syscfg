@@ -556,6 +556,13 @@ keybinding as it conflicts with Anthy input."
 ; Haml Coffee mode
 (add-to-list 'auto-mode-alist '("\\.hamlc$" . haml-mode))
 
+; JavaScript
+(add-hook 'js-mode-hook
+	(lambda ()
+		(modify-syntax-entry ?_ "w")
+	)
+)
+
 ; Ledger
 (autoload 'ledger-mode "ledger-mode" "A major mode for Ledger" t)
 (add-to-list 'auto-mode-alist '("\\.ledger$" . ledger-mode))
@@ -578,6 +585,13 @@ keybinding as it conflicts with Anthy input."
 	"Major mode for editing Markdown files"
 	t)
 (setq auto-mode-alist (cons '("\.md$" . markdown-mode) auto-mode-alist))
+
+; Python
+(add-hook 'python-mode-hook
+	(lambda ()
+		(modify-syntax-entry ?_ "w")
+	)
+)
 
 ; Ruby
 (add-hook 'ruby-mode-hook
