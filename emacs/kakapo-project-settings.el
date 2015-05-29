@@ -35,6 +35,8 @@
 			(
 				(or
 					(string-match "/Users/larver/z/" b)
+					(string-match "^/home/l/z/" b)
+					(string-match "^/home/l/a/" b)
 				)
 				(cond
 					(
@@ -61,7 +63,7 @@
 					)
 					((string-match ".+\\.md$" b)
 						(progn
-							(h 'markdown-mode-hook t 4)
+							(h 'markdown-mode-hook nil 4)
 							(define-key markdown-mode-map [backspace] nil)
 							(define-key markdown-mode-map [tab] nil)
 						)
