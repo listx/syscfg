@@ -34,5 +34,27 @@
         Option "TapButton3" "0"
       EndSection
     '';
+    displayManager.sessionCommands = ''
+      # We are running NixOS as a guest from Mac OSX host through VirtualBox. On
+      # the Mac, make the CapsLock key do nothing under the Keyboard -> Modifier
+      # Keys settings. Then install "Seil" and make CapsLock behave as the
+      # *right* Command key (Super_R from X11's pov). The final trick is to use
+      # xmodmap to make Super_R become part of the mod3 modifer group, which is
+      # what we're doing below.
+      #
+      # The only reason we are doing this is because the extra Mac OSX and
+      # VirtualBox layers mess up our keys before they are even sent into the
+      # VM. Whereas the base configuration handles removing Caps_Lock with
+      # xmodmap, we take care of that step from the host OS (Mac + Seil), and
+      # simply define a key into the mod3 group (which our XMonad config uses.)
+      ${pkgs.xlibs.xmodmap}/bin/xmodmap -e "remove mod4 = Super_R"
+      ${pkgs.xlibs.xmodmap}/bin/xmodmap -e "add mod3 = Super_R"
+      # set keyboard press repeat delay/rate
+      ${pkgs.xlibs.xset}/bin/xset r rate 250 80
+      # disable mouse acceleration
+      ${pkgs.xlibs.xset}/bin/xset m 0 0
+      # use arrow, not "X" symbol, for default mouse pointer
+      ${pkgs.xlibs.xsetroot}/bin/xsetroot -cursor_name left_ptr
+    '';
   };
 }
