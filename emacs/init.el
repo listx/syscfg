@@ -40,6 +40,7 @@
 	color-theme ; needed for dbrock's old zenburn
 	column-enforce-mode
 	coffee-mode
+	dockerfile-mode
 	elscreen
 	evil
 	haml-mode
