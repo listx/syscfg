@@ -474,6 +474,7 @@ myStartupHook hostname = do
     case hostname of
         "k0" -> dualPortrait
         "k1" -> spawnIfGrpNotFull Net2 $ term3 ++ " -e rtorrent"
+        "vbox" -> spawn "~/syscfg/script/sys/initkeys.sh"
         _ -> return ()
 	where
 	dualPortrait = do
