@@ -554,7 +554,14 @@ main = do
 		, focusFollowsMouse  = True
 		, clickJustFocuses   = True
 		, borderWidth        = 1
-		, modMask            = mod3Mask -- use the CAPSLOCK key
+		-- Use 'mod3' from 'xmodmap' output as our 'modMask' key. We alias it
+		-- (XMonad.modMask) it as `modm` in our configuration above. Either
+		-- before or immediately after XMonad starts, 'mod3' should be populated
+		-- with some special key. This is handled usually by xsession scripts.
+		-- On Arch Linux, this is `~/.xinitrc` because we use `startx` there. On
+		-- NixOS, it is baked in directly to the system configuration file under
+		-- the `services.xserver.displayManager.sessionCommands` option.
+		, modMask            = mod3Mask
 		, workspaces         = myWorkspaces
 		, normalBorderColor  = "#000000"
 		, focusedBorderColor = "#ffffff"
