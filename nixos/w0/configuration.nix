@@ -15,6 +15,20 @@
   networking = {
     hostName = "w0";
     hostId =  "2650ce1d";
+    extraHosts = ''
+      192.168.0.100 forest
+      192.168.0.110 k0
+      192.168.0.114 k1
+      192.168.0.116 k3
+      192.168.0.120 ocean
+      192.168.0.130 mac
+      192.168.0.132 w0
+      74.207.246.114 l0
+
+      127.0.0.1 dashboard.twinprime.dev
+      127.0.0.1 web-api.twinprime.dev
+    '';
+    networkmanager.enable = true;
   };
 
   virtualisation.docker.enable = true;
