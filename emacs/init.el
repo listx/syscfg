@@ -771,6 +771,9 @@ keybinding as it conflicts with Anthy input."
 		((string-match "^k3" system-name)
 			102
 		)
+		((string-match "^w0" system-name)
+			102
+		)
 		(t 91)
 	)
 )
