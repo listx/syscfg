@@ -352,7 +352,7 @@ alias nu='nix-channel --update && sudo nixos-checkout'
 
 alias cal='cal -y'
 
-nixos_hosts=(k0 k3)
+nixos_hosts=(k0 k3 w0)
 
 if [[ -z ${nixos_hosts[(r)$HOST]} ]]; then
     alias p='sudo pacman'
