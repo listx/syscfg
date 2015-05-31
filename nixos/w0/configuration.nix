@@ -33,6 +33,13 @@
 
   virtualisation.docker.enable = true;
 
+  # When we import from `base.nix`, we get the values defined there as well.
+  # `base.nix` defines "wheel" for us, so we add any other extra groups we
+  # should belong to below."
+  users.extraUsers.l.extraGroups = [
+    "docker"
+  ];
+
   services.xserver = {
     synaptics = {
       enable = true;
