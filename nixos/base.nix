@@ -13,6 +13,7 @@ in
     curl
     zsh
     xlibs.xmodmap
+    xlibs.xev
     rxvt_unicode
     rxvt_unicode.terminfo
     tmux
@@ -83,6 +84,8 @@ in
     geeqie
     mpv
     ffmpeg
+    flac
+    shntool
     vlc
     higan
     cmus
