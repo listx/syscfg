@@ -15,7 +15,6 @@
   networking = {
     hostName = "w0";
     hostId =  "2650ce1d";
-
   };
 
   services.xserver = {
