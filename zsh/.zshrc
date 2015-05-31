@@ -268,9 +268,6 @@ alias ocm="cd ~/org; gcm -am \"$HOST\"; gpl && gps"
 alias e='emacs_open'
 alias ee='gvim -p'
 alias v='vim -p'
-# for editing files that are encrypted (enable encrypted backups (foo.txt~),
-# but disable unencrypted swapfiles and ~/.viminfo entries)
-alias eeb='vim -x --cmd "set backup" --cmd "set noswapfile" --cmd "set nowritebackup" --cmd "set viminfo=\"\""'
 
 alias -g galias_find_src='$(find -maxdepth 5 -type f -iregex ".*\.\(c\|cpp\|h\|hpp\|factor\|hs\|lhs\|pl\|py\|rb\|sh\)$" | sort)'
 alias es=' e galias_find_src'
@@ -397,14 +394,6 @@ case $HOST in
         alias discof='sudo umount /dev/disk/by-id/ata-PIONEER_DVD-RW_DVR-215D'
         alias disc2on='sudo mount /dev/disk/by-id/ata-LITE-ON_DVDRW_SHW-160P6S'
         alias disc2of='sudo umount /dev/disk/by-id/ata-LITE-ON_DVDRW_SHW-160P6S'
-    ;;
-    k2)
-        alias iftope='sudo iftop -B -i eth0'
-        alias iftopw='sudo iftop -B -i wlan0'
-        alias discon='sudo mount /dev/sr0'
-        alias discof='sudo umount /dev/sr0'
-        alias nwu='sudo netcfg -c k2-wireless-home'
-        alias nwd='sudo netcfg -d k2-wireless-home'
     ;;
     k1)
         alias iftope='sudo iftop -B -i eth0'
