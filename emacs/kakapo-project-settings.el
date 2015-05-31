@@ -37,6 +37,7 @@
 					(string-match "/Users/larver/z/" b)
 					(string-match "^/home/l/z/" b)
 					(string-match "^/home/l/a/" b)
+					(string-match "^/home/l/k/" b)
 				)
 				(cond
 					(
@@ -57,7 +58,7 @@
 					((string-match ".+\\Dockerfile$" b)
 						(h 'dockerfile-mode-hook nil 4)
 					)
-					((string-match ".+\\.js$" b)
+					((string-match ".+\\.js\\(on\\)?$" b)
 						(h 'js-mode-hook nil 4
 							(progn
 								(setq js-indent-level 4)
