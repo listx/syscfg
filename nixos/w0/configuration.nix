@@ -17,6 +17,8 @@
     hostId =  "2650ce1d";
   };
 
+  virtualisation.docker.enable = true;
+
   services.xserver = {
     synaptics = {
       enable = true;
