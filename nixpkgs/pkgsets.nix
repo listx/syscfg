@@ -9,7 +9,20 @@ in
 # `rec` keyword simply defines a recursive set instead of a plain set
 # (attributes can be defined in terms of each other in a recursive manner).
 with super; rec {
-  l_set_home = buildEnv {
+  # Notice how our package sets refer to other package sets. We need to have
+  # some system of resolving collisions between them. The first step is to allow
+  # collisions in the first place with `ignoreCollisions = true`. The second
+  # step is to set priority levels (the more fine grained the set, the higher
+  # the priority) so that Nix can resolve them. For more on priority levels,
+  # have a look at `lowPrio` (10), and `hiPrio` (-10) in official Nixpkgs repo,
+  # `nixpkgs/lib/meta.nix`. The higher the priority (precedence), the lower the
+  # number (-10 being the default for `hiPrio`).
+
+  # The `setPrio` function is taken from
+  # https://github.com/jagajaga/my_configs/blob/master/.nixpkgs/common.nix.
+  setPrio = prio: drv: lib.addMetaAttrs { priority = prio; } drv;
+
+  l_set_home = setPrio "10" (buildEnv {
     name = "l-set-home";
     ignoreCollisions = true;
     paths = [
@@ -18,9 +31,9 @@ with super; rec {
       l_set_media
       l_set_haskell
     ];
-  };
+  });
 
-  l_set_work = buildEnv {
+  l_set_work = setPrio "10" (buildEnv {
     name = "l-set-work";
     ignoreCollisions = true;
     paths = [
@@ -31,7 +44,7 @@ with super; rec {
       l_set_av
       l_set_office
     ];
-  };
+  });
 
   l_set_base = buildEnv {
     name = "l-set-base";
@@ -96,7 +109,7 @@ with super; rec {
     ];
   };
 
-  l_set_media = buildEnv {
+  l_set_media = setPrio "9" (buildEnv {
     name = "l-set-media";
     ignoreCollisions = true;
     paths = [
@@ -106,7 +119,7 @@ with super; rec {
       l_set_games
       l_set_misc
     ];
-  };
+  });
 
   l_set_web = buildEnv {
     name = "l-set-web";
