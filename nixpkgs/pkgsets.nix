@@ -11,6 +11,7 @@ in
 with super; rec {
   l_set_home = buildEnv {
     name = "l-set-home";
+    ignoreCollisions = true;
     paths = [
       l_set_base
       l_set_dev
@@ -21,6 +22,7 @@ with super; rec {
 
   l_set_work = buildEnv {
     name = "l-set-work";
+    ignoreCollisions = true;
     paths = [
       l_set_base
       l_set_dev
@@ -33,6 +35,7 @@ with super; rec {
 
   l_set_base = buildEnv {
     name = "l-set-base";
+    ignoreCollisions = true;
     paths = [
       # Basic console tools
       wget
@@ -70,6 +73,7 @@ with super; rec {
 
   l_set_dev = buildEnv {
     name = "l-set-dev";
+    ignoreCollisions = true;
     paths = [
       # Programming tools
       git
@@ -94,6 +98,7 @@ with super; rec {
 
   l_set_media = buildEnv {
     name = "l-set-media";
+    ignoreCollisions = true;
     paths = [
       l_set_web
       l_set_av
@@ -105,6 +110,7 @@ with super; rec {
 
   l_set_web = buildEnv {
     name = "l-set-web";
+    ignoreCollisions = true;
     paths = [
       firefoxWrapper
       chromium
@@ -116,6 +122,7 @@ with super; rec {
 
   l_set_av = buildEnv {
     name = "l-set-av";
+    ignoreCollisions = true;
     paths = [
       scrot
       geeqie
@@ -131,6 +138,7 @@ with super; rec {
 
   l_set_office = buildEnv {
     name = "l-set-office";
+    ignoreCollisions = true;
     paths = [
       evince
     ];
@@ -138,6 +146,7 @@ with super; rec {
 
   l_set_games = buildEnv {
     name = "l-set-games";
+    ignoreCollisions = true;
     paths = [
       higan
       sdlmame
@@ -146,6 +155,7 @@ with super; rec {
 
   l_set_misc = buildEnv {
     name = "l-set-misc";
+    ignoreCollisions = true;
     paths = [
       pidgin
       texLiveFull
