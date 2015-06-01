@@ -587,6 +587,13 @@ keybinding as it conflicts with Anthy input."
 	t)
 (setq auto-mode-alist (cons '("\.md$" . markdown-mode) auto-mode-alist))
 
+; Nix Expression Language
+(add-hook 'nix-mode-hook
+	(lambda ()
+		(modify-syntax-entry ?_ "w") ; add underscore as a word character, like in Vim
+	)
+)
+
 ; Python
 (add-hook 'python-mode-hook
 	(lambda ()
