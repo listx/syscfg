@@ -3,7 +3,7 @@
 }:
 mkDerivation {
   pname = "auca";
-  version = "0.0.1.3";
+  version = "0.0.1.5";
   src = /home/l/prog/auca;
   isLibrary = false;
   isExecutable = true;
