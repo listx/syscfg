@@ -121,7 +121,7 @@ with super; rec {
     ];
   });
 
-  l_set_web = buildEnv {
+  l_set_web = setPrio "8" (buildEnv {
     name = "l-set-web";
     ignoreCollisions = true;
     paths = [
@@ -131,9 +131,9 @@ with super; rec {
       aria2
       rtorrent
     ];
-  };
+  });
 
-  l_set_av = buildEnv {
+  l_set_av = setPrio "8" (buildEnv {
     name = "l-set-av";
     ignoreCollisions = true;
     paths = [
@@ -147,33 +147,33 @@ with super; rec {
       vlc
       cmus
     ];
-  };
+  });
 
-  l_set_office = buildEnv {
+  l_set_office = setPrio "8" (buildEnv {
     name = "l-set-office";
     ignoreCollisions = true;
     paths = [
       evince
     ];
-  };
+  });
 
-  l_set_games = buildEnv {
+  l_set_games = setPrio "8" (buildEnv {
     name = "l-set-games";
     ignoreCollisions = true;
     paths = [
       higan
       sdlmame
     ];
-  };
+  });
 
-  l_set_misc = buildEnv {
+  l_set_misc = setPrio "8" (buildEnv {
     name = "l-set-misc";
     ignoreCollisions = true;
     paths = [
       pidgin
       texLiveFull
     ];
-  };
+  });
 
   # Taken from
   # http://lists.science.uu.nl/pipermail/nix-dev/2015-January/015601.html. We
@@ -218,7 +218,7 @@ with super; rec {
     };
   };
 
-  l_set_haskell = buildEnv {
+  l_set_haskell = setPrio "8" (buildEnv {
     name = "l-haskell-set";
     paths = with haskellngPackages; [
       # For haskell development via `nix-shell`; run `sudo nix-channel --add
@@ -241,5 +241,5 @@ with super; rec {
       ztile
       timetracker
     ];
-  };
+  });
 }
