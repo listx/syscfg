@@ -1,5 +1,16 @@
 super:
 {
+  # Get proprietary programs too, such as Adobe Flash.
+  allowUnfree = true;
+  firefox = {
+    enableGoogleTalkPlugin = true;
+    enableAdobeFlash = true;
+  };
+  chromium = {
+    enablePepperFlash = true; # Chromium's non-NSAPI alternative to Adobe Flash
+    enablePepperPDF = true;
+  };
+
   # Nix evaluates this file and will call the `packageOverrides` attribute as a
   # *function* and given the original Nixpkgs list of packages as a parameter
   # (actually, the attribute within the passed-in-parameter, called `pkgs`,
