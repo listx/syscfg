@@ -1,7 +1,7 @@
 CFG := $(shell pwd)
 HOST := $(shell hostname)
 # add the -n flag for directories, as otherwise, stray symlinks will be created inside the CFG directory itself
-all: acpi boxes cron emacs git gpg gsy lesskey modprobe mpd mplayer mutt ncmpcpp pal pentadactyl rtorrent usbmnt vim xdefaults xinitrc xmonad xorg zsh
+all: acpi boxes cron emacs git gpg gsy lesskey modprobe mpd mplayer mutt ncmpcpp pal pentadactyl rtorrent urxvt usbmnt vim xdefaults xinitrc xmonad xorg zsh
 acpi:
 	ln -fs ${CFG}/acpi/${HOST}.sh						/etc/acpi/handler.sh
 bash:
@@ -112,6 +112,8 @@ zsh:
 	ln -fns ${CFG}/zsh									${HOME}/.zsh
 	ln -fs ${CFG}/zsh/.zshrc								${HOME}
 	mkdir ${HOME}/.zsh-untracked
+urxvt:
+	ln -fns ${CFG}/urxvt                                ${HOME}/.urxvt
 
 uninstall:
 	rm ${HOME}/.boxes
