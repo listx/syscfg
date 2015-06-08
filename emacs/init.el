@@ -61,11 +61,11 @@
         finally (return t)))
 
 (unless (my/packages-installed-p)
-  (message "%s" "Refreshing package database...")
-  (package-refresh-contents)
-  (dolist (pkg my/packages)
-    (when (not (package-installed-p pkg))
-      (package-install pkg))))
+	(message "%s" "Refreshing package database...")
+	(package-refresh-contents)
+	(dolist (pkg my/packages)
+		(when (not (package-installed-p pkg))
+		(package-install pkg))))
 
 (require 'evil)
 (evil-mode 1)
