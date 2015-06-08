@@ -61,3 +61,6 @@ map <leader>c :sbclose<cr>
 " show/hide menubar
 map <F1> :set guioptions+=mT<cr>
 map <F2> :set guioptions-=mT<cr>
+
+cmap <A-k> <up>
+cmap <A-j> <down>
