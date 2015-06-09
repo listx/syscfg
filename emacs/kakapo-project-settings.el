@@ -81,6 +81,10 @@
 							)
 						)
 					)
+					; Shell
+					((string-match "\\.sh$" b)
+						(h 'sh-mode-hook nil 4)
+					)
 				)
 			)
 
