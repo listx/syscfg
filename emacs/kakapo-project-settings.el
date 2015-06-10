@@ -59,9 +59,9 @@
 						(h 'dockerfile-mode-hook nil 4)
 					)
 					((string-match ".+\\.js\\(on\\)?$" b)
-						(h 'js-mode-hook nil 4
+						(h 'js-mode-hook nil 2
 							(progn
-								(setq js-indent-level 4)
+								(setq js-indent-level 2)
 							)
 						)
 					)
