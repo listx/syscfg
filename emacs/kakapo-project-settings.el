@@ -72,6 +72,10 @@
 							(define-key markdown-mode-map [tab] nil)
 						)
 					)
+					; Org-mode
+					((string-match "\\.org$" b)
+						(h 'org-mode-hook nil 2)
+					)
 					; Python
 					((string-match "\\.py$" b)
 						(h 'python-mode-hook nil 4
