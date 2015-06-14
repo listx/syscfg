@@ -46,7 +46,7 @@ with super; rec {
     ];
   });
 
-  l_set_base = buildEnv {
+  l_set_base = setPrio "8" (buildEnv {
     name = "l-set-base";
     ignoreCollisions = true;
     paths = [
@@ -84,9 +84,9 @@ with super; rec {
       lzma
       unrar
     ];
-  };
+  });
 
-  l_set_dev = buildEnv {
+  l_set_dev = setPrio "8" (buildEnv {
     name = "l-set-dev";
     ignoreCollisions = true;
     paths = [
@@ -109,7 +109,7 @@ with super; rec {
       glxinfo
       pcg_c
     ];
-  };
+  });
 
   l_set_media = setPrio "9" (buildEnv {
     name = "l-set-media";
