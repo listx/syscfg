@@ -1,7 +1,7 @@
 CFG := $(shell pwd)
 HOST := $(shell hostname)
 # add the -n flag for directories, as otherwise, stray symlinks will be created inside the CFG directory itself
-all: acpi boxes cron emacs git gpg gsy lesskey modprobe mpd mplayer mutt ncmpcpp pal pentadactyl rtorrent urxvt usbmnt vim xdefaults xinitrc xmonad xorg zsh
+all: acpi boxes cron emacs git gpg gsy lesskey modprobe mpd mplayer mutt ncmpcpp pal pentadactyl rtorrent urxvt usbmnt vim xdefaults xinitrc xinitrc-ubuntu xmonad xorg zsh
 acpi:
 	ln -fs ${CFG}/acpi/${HOST}.sh						/etc/acpi/handler.sh
 bash:
@@ -90,6 +90,10 @@ xinitrc:
 	ln -fs ${CFG}/xinitrc/cfg							${HOME}/.xinitrc
 xmonad:
 	ln -fns ${CFG}/xmonad								${HOME}/.xmonad
+xmonad-ubuntu:
+	ln -fs ${CFG}/xmonad/xmonad-start.desktop           /usr/share/xsessions/
+	cp ${CFG}/xinitrc/cfg							/usr/local/bin/xmonad-start
+	chmod +x /usr/local/bin/xmonad-start
 xorg:
 	ln -fns ${CFG}/xorg/10-keyboard.conf				/etc/X11/xorg.conf.d/
 	ln -fns ${CFG}/xorg/10-server-flags.conf			/etc/X11/xorg.conf.d/

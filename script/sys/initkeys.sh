@@ -39,5 +39,14 @@ xmodmap -e "remove mod4 = Hyper_L"
 # Hyper_L is now "free", so add it to mod3.
 xmodmap -e "add mod3 = Hyper_L"
 
+# On w1 (Ubuntu VM), we actually run it as a guest VM from Mac, and on the Mac,
+# we set Caps_Lock to behave as Scroll_Lock (because it is supported by the
+# "Seil" program. Hyper_L does not exist on OSX, it seems. But scroll lock
+# does, and that's what we use (since MacBook Air keyboard does not come with
+# scroll lock, we can use it.
+if [[ $HOST == "w1" ]]; then
+    xmodmap -e "keysym Scroll_Lock = Hyper_L"
+fi
+
 # set keystroke repeat speed (delay, speed)
 xset r rate 250 80
