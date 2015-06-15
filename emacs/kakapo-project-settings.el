@@ -34,7 +34,10 @@
 			; Work settings
 			(
 				(or
-					(string-match "^/Users/larver/z/" b)
+					(string-match "/Users/larver/z/" b)
+					(string-match "^/home/l/z/" b)
+					(string-match "^/home/l/a/" b)
+					(string-match "^/home/l/k/" b)
 				)
 				(cond
 					(
@@ -52,12 +55,39 @@
 							)
 						)
 					)
+					((string-match ".+\\Dockerfile$" b)
+						(h 'dockerfile-mode-hook nil 4)
+					)
+					((string-match ".+\\.js\\(on\\)?$" b)
+						(h 'js-mode-hook nil 2
+							(progn
+								(setq js-indent-level 2)
+							)
+						)
+					)
 					((string-match ".+\\.md$" b)
 						(progn
-							(h 'markdown-mode-hook t 4)
+							(h 'markdown-mode-hook nil 4)
 							(define-key markdown-mode-map [backspace] nil)
 							(define-key markdown-mode-map [tab] nil)
 						)
+					)
+					; Org-mode
+					((string-match "\\.org$" b)
+						(h 'org-mode-hook nil 2)
+					)
+					; Python
+					((string-match "\\.py$" b)
+						(h 'python-mode-hook nil 4
+							(progn
+								(setq python-indent 4)
+								(message "python-indent set to %d" python-indent)
+							)
+						)
+					)
+					; Shell
+					((string-match "\\.sh$" b)
+						(h 'sh-mode-hook nil 4)
 					)
 				)
 			)
@@ -89,7 +119,7 @@
 					((string-match ".+\\.htm[l]?$" b)
 						(h 'html-mode-hook nil 2)
 					)
-					((string-match ".+\\.js?$" b)
+					((string-match ".+\\.js$" b)
 						(h 'js-mode-hook nil 2
 							(progn
 								(setq js-indent-level 2)

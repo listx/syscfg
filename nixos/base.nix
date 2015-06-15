@@ -1,99 +1,6 @@
-let
-  HEAD = import /home/l/prog/foreign/nixpkgs {};
-in
-
 { config, pkgs, ... }:
 
 {
-  # List packages installed in system profile. To search by name, run:
-  # $ nix-env -qaP | grep wget
-  environment.systemPackages = with pkgs; [
-    # Basic console tools
-    wget
-    curl
-    zsh
-    xlibs.xmodmap
-    rxvt_unicode
-    rxvt_unicode.terminfo
-    tmux
-    emacs
-    xsel
-    vim
-    silver-searcher
-    colordiff
-    gnupg
-    mutt
-    htop
-    dhcpcd
-    utillinuxCurses
-    lsof
-
-    # Docs
-    manpages
-    pthreadmanpages
-    stdmanpages
-
-    # Archiving
-    p7zip
-    unzip
-    lzma
-    unrar
-
-    # Programming tools
-    git
-    tig
-    mercurial
-    clang
-    gcc
-    gdb
-    gnumake
-    ruby
-    bundler_HEAD
-    bundix
-    # For haskell development via `nix-shell`; run `sudo nix-channel --add
-    # <nixpkgs-unstable>`, then do `sudo nix-channel --update`.
-    # <nixpkgs-unstable> is located at
-    # https://nixos.org/channels/nixpkgs-unstable. The `haskellngPackages` set
-    # is only in nixpkgs-unstable as of 2014-02-06.
-    #
-    # It's OK to have multple NixOS channels at the same time. Nix takes care of
-    # dependencies without issue.
-    haskellngPackages.cabal2nix
-    # For invoking, e.g., `cabal2nix cabal://some-package`, because cabal2nix
-    # depends on `cabal update`. We also get `cabal repl` and other commands
-    # from the `cabal` binary with this package. The package
-    # 'haskellPackages.cabalInstall' has been renamed to
-    # 'haskellngPackages.cabal-install'.
-    haskellngPackages.cabal-install
-    # android development
-    androidsdk_4_4
-    android-udev-rules
-
-    # Programming libraries
-    boehmgc
-    glfw
-    glxinfo
-    pcg_c
-
-    # Browsers and multimedia
-    firefoxWrapper
-    chromium
-    aria2
-    rtorrent
-    geeqie
-    mpv
-    ffmpeg
-    vlc
-    higan
-    cmus
-    evince
-    pidgin
-    links
-    gimp
-    scrot
-    texLiveFull
-  ];
-
   # Fonts
   fonts = {
     enableFontDir = true;
@@ -126,6 +33,7 @@ in
       192.168.0.116 k3
       192.168.0.120 ocean
       192.168.0.130 mac
+      192.168.0.132 w0
       74.207.246.114 l0
     '';
     networkmanager.enable = true;
@@ -162,11 +70,14 @@ in
     # see https://github.com/NixOS/nixpkgs/issues/4300
     desktopManager.xterm.enable = false;
     displayManager.sessionCommands = ''
-      # remap Caps_Lock key to xmonad's own, exclusive 'mod' key (no "sharing"
-      # with ALT or any other combination)
+      # Disable Caps_Lock from behaving like a "Lock" key, convert it to behave
+      # as a Hyper_L key, and then add Hyper_L to its own unique modifer group,
+      # mod3 (mod3 is unused by default). We use mod3 as our XMonad key as
+      # "mod3Mask" in xmonad.hs.
       ${pkgs.xlibs.xmodmap}/bin/xmodmap -e "remove Lock = Caps_Lock"
-      ${pkgs.xlibs.xmodmap}/bin/xmodmap -e "add mod3 = Caps_Lock"
-      ${pkgs.xlibs.xmodmap}/bin/xmodmap ~/.xmodmap
+      ${pkgs.xlibs.xmodmap}/bin/xmodmap -e "keysym Caps_Lock = Hyper_L"
+      ${pkgs.xlibs.xmodmap}/bin/xmodmap -e "remove mod4 = Hyper_L"
+      ${pkgs.xlibs.xmodmap}/bin/xmodmap -e "add mod3 = Hyper_L"
       # set keyboard press repeat delay/rate
       ${pkgs.xlibs.xset}/bin/xset r rate 250 80
       # disable mouse acceleration
@@ -198,5 +109,4 @@ in
     shell = "/run/current-system/sw/bin/zsh";
     uid = 1000;
   };
-
 }

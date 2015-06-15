@@ -1,9 +1,22 @@
 ! disable XIM input for emacs (use SCIM-bridge instead)
-Emacs*useXIM: false
+Emacs.useXIM: false
 
 ! xterm
-XTerm*background: #000000
-XTerm*foreground: #ffffff
+XTerm.background: #000000
+XTerm.foreground: #ffffff
+
+! Import urxvt perl plugins. The way it works is we simply download perl scripts
+! and place them under ~/.urxvt/ext, and import them with
+! `URxvt.perl-ext-common` resource. If we use a different folder than
+! ~/.urxvt/ext, then define it with `URxvt.perl-lib` resource (however, `~` does
+! not work; aboslute paths only). Do `xrdb -merge <path-to-this-file>` to load
+! everything in.
+
+! The font-size script is from https://github.com/majutsushi/urxvt-font-size.git
+! (and must be linked from ~/.urxvt/ext); keyboard-select, url-select, and
+! clipboard are from nixpkgs.urxvt_perls and are usable with this package
+! installed.
+URxvt.perl-ext-common: font-size,keyboard-select,url-select,clipboard
 
 ! default urxvt settings for all urxvt windows, unless overridden
 ! with commandline arguments
@@ -15,53 +28,78 @@ XTerm*foreground: #ffffff
 ! First set base font to Terminus to handle all Latin glyphs
 ! ...then set Japanese font to take care of most Chinese kanji and also hiragana/katakana
 ! ...then finally only use Korean font for hangul characters
-URxvt*font: xft:Terminus:pixelsize=14,xft:IPAGothic,xft:Baekmuk Gulim
-URxvt*geometry: 100x70
+URxvt.font: xft:Terminus:pixelsize=14,xft:IPAGothic,xft:Baekmuk Gulim
+URxvt.geometry: 100x70
 
 ! urxvt colors
 
 ! dim the colors by 20 percent when the window is inactive
-URxvt*fading: 20
-URxvt*cursorColor: green
+URxvt.fading: 20
+URxvt.cursorColor: green
 
 ! very basic, elementary-color, black background color theme
-URxvt*background: #000000
-URxvt*foreground: #cccccc
+URxvt.background: #000000
+URxvt.foreground: #cccccc
 ! black
-URxvt*color0:  #000000
-URxvt*color8:  #333333
+URxvt.color0:  #000000
+URxvt.color8:  #333333
 ! white
-URxvt*color7:  #cccccc
-URxvt*color15: #ffffff
+URxvt.color7:  #cccccc
+URxvt.color15: #ffffff
 ! red
-URxvt*color1:  #cc0000
-URxvt*color9:  #ff3333
+URxvt.color1:  #cc0000
+URxvt.color9:  #ff3333
 ! green
-URxvt*color2:  #00cc00
-URxvt*color10: #33ff33
+URxvt.color2:  #00cc00
+URxvt.color10: #33ff33
 ! yellow
-URxvt*color3:  #cccc00
-URxvt*color11: #ffff33
+URxvt.color3:  #cccc00
+URxvt.color11: #ffff33
 ! blue
-URxvt*color4:  #0000cc
-URxvt*color12: #3333ff
+URxvt.color4:  #0000cc
+URxvt.color12: #3333ff
 ! purple
-URxvt*color5:  #cc00cc
-URxvt*color13: #ff33ff
+URxvt.color5:  #cc00cc
+URxvt.color13: #ff33ff
 ! cyan
-URxvt*color6:  #00cccc
-URxvt*color14: #33ffff
+URxvt.color6:  #00cccc
+URxvt.color14: #33ffff
 
 ! misc urxvt settings
 
-! bind CTRL+ALT to change to different font sizes
-URxvt.keysym.M-C-6: command:\033]710;xft:dejavu sans mono:pixelsize=12,xft:IPAGothic,xft:Baekmuk Gulim\007
-URxvt.keysym.M-C-7: command:\033]710;xft:dejavu sans mono:pixelsize=14,xft:IPAGothic,xft:Baekmuk Gulim\007
-URxvt.keysym.M-C-8: command:\033]710;xft:dejavu sans mono:pixelsize=24,xft:IPAGothic,xft:Baekmuk Gulim\007
-URxvt.keysym.M-C-9: command:\033]710;xft:dejavu sans mono:pixelsize=36,xft:IPAGothic,xft:Baekmuk Gulim\007
-URxvt.keysym.M-C-0: command:\033]710;xft:Terminus:pixelsize=10,xft:IPAGothic,xft:Baekmuk Gulim\007
-URxvt.keysym.M-C-minus: command:\033]710;xft:Terminus:pixelsize=14,xft:IPAGothic,xft:Baekmuk Gulim\007
-URxvt.keysym.M-C-equal: command:\033]710;xft:Terminus:pixelsize=20,xft:IPAGothic,xft:Baekmuk Gulim\007
+! Disable the default Control-Shift key that enables the obscure ISO-14755 mode
+! that nobody uses.
+URxvt.iso14755: False
+
+! bind CTRL+ALT to change to different font sets (with default sizes)
+URxvt.keysym.C-9: command:\033]710;xft:dejavu sans mono:pixelsize=12,xft:IPAGothic,xft:Baekmuk Gulim\007
+URxvt.keysym.C-0: command:\033]710;xft:Terminus:pixelsize=14,xft:IPAGothic,xft:Baekmuk Gulim\007
+
+! `font-size` plugin
+URxvt.keysym.C-minus: perl:font-size:decrease
+URxvt.keysym.C-equal: perl:font-size:increase
+! The default font increase step size is 1. This is for portability across all
+! fonts (some fonts do not support particular font sizes). Because changing font
+! size only really makes sense for anti-aliased fonts (Terminus is bitmapped),
+! and because anti-aliased fonts support any size, it makes sense to just use a
+! size step of 4 for faster transitions between font size changes.
+URxvt.font-size.step: 4
+
+! keyboard-select
+URxvt.keysym.M-s: perl:keyboard-select:activate
+
+! clipboard
+! update clipboard whenever primary gets updated
+URxvt.clipboard.autocopy: true
+URxvt.keysym.M-c: perl:clipboard:copy
+URxvt.keysym.M-v: perl:clipboard:paste
+URxvt.keysym.M-C-v: perl:clipboard:paste_escaped
+
+! url-select. We can middle-click on any url and this will launch the browser
+! defined by `URxvt.url-select.launcher`.
+URxvt.keysym.M-u: perl:url-select:select_next
+URxvt.url-select.underline: true
+URxvt.url-select.launcher: firefox
 
 ! some navigation commands
 URxvt.keysym.Control-j: command:\033]721;1\007
@@ -70,12 +108,11 @@ URxvt.keysym.Control-h: command:\033]720;10\007
 URxvt.keysym.Control-l: command:\033]721;10\007
 
 ! make urxvt the login shell
-URxvt*loginShell:   true
+URxvt.loginShell:   true
 !cutchars are characterse used as delimiters for double-click word selection
-URxvt*cutchars: "\"()*,<>[]{}|\'"
-URxvt*saveLines: 32767
-URxvt*scrollBar: off
-URxvt*urlLauncher: firefox
+URxvt.cutchars: "\"()*,<>[]{}|\'"
+URxvt.saveLines: 32767
+URxvt.scrollBar: off
 ! prevent Print Screen key from printing out the entire contents of the terminal via the lpr(1) command
 URxvt.print-pipe: cat > $(echo /tmp/urxvt-dump.$(date +%Y-%m-%d_%H:%M:%S_%N))
 

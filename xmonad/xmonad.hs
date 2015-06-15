@@ -143,7 +143,7 @@ myKeys hostname conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((mod4Mask              , xK_2     ), spawn (term1 ++ schedYTT))
     , ((mod4Mask              , xK_0     ), spawn "emacs ~/org/life.org ~/org/grid.org ~/org/sleep ~/org/prog.org")
     , ((mod4Mask              , xK_c     ), spawn "galculator")
-    , ((mod4Mask              , xK_e     ), spawn (term1 ++ " -e mutt"))
+    , ((mod4Mask              , xK_e     ), spawn "emacs")
     , ((mod4Mask              , xK_h     ), spawn (term2 ++ " -e ncmpcpp"))
     , ((mod4Mask .|. shiftMask, xK_h     ), spawn (term2 ++ " -e mplayer -ao alsa -softvol -volume 100 -volstep 1 -demuxer ogg -prefer-ipv4 http://192.168.0.110:8000/mpd.ogg"))
     , ((mod4Mask              , xK_i     ), spawn "gimp")
@@ -555,7 +555,14 @@ main = do
 		, focusFollowsMouse  = True
 		, clickJustFocuses   = True
 		, borderWidth        = 1
-		, modMask            = mod3Mask -- use the CAPSLOCK key
+		-- Use 'mod3' from 'xmodmap' output as our 'modMask' key. We alias it
+		-- (XMonad.modMask) it as `modm` in our configuration above. Either
+		-- before or immediately after XMonad starts, 'mod3' should be populated
+		-- with some special key. This is handled usually by xsession scripts.
+		-- On Arch Linux, this is `~/.xinitrc` because we use `startx` there. On
+		-- NixOS, it is baked in directly to the system configuration file under
+		-- the `services.xserver.displayManager.sessionCommands` option.
+		, modMask            = mod3Mask
 		, workspaces         = myWorkspaces
 		, normalBorderColor  = "#000000"
 		, focusedBorderColor = "#ffffff"

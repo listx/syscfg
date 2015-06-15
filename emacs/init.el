@@ -40,6 +40,7 @@
 	color-theme ; needed for dbrock's old zenburn
 	column-enforce-mode
 	coffee-mode
+	dockerfile-mode
 	elscreen
 	evil
 	haml-mode
@@ -60,11 +61,28 @@
         finally (return t)))
 
 (unless (my/packages-installed-p)
-  (message "%s" "Refreshing package database...")
-  (package-refresh-contents)
-  (dolist (pkg my/packages)
-    (when (not (package-installed-p pkg))
-      (package-install pkg))))
+	(message "%s" "Refreshing package database...")
+	(package-refresh-contents)
+	(dolist (pkg my/packages)
+		(when (not (package-installed-p pkg))
+		(package-install pkg))))
+
+; http://www.emacswiki.org/emacs/GenericMode
+(require 'generic-x)
+
+(define-generic-mode
+	'xdefaults-mode
+	'("!") ; comments
+	'() ; static keywords e.g., ("if" "else" "return")
+	'(
+		; regexes for matching aginst font-lock
+		("^\\w+" . 'font-lock-type-face)
+		("[*.:]" . 'font-lock-builtin-face)
+	)
+	'("\\.Xdefaults$") ; files to activate this mode (FIXME: maybe move it to kakapo instead?)
+	nil ; other functions to call
+	"A mode for ~/.Xdefaults and ~/.Xresources files" ; docstring for this mode
+)
 
 (require 'evil)
 (evil-mode 1)
@@ -556,6 +574,13 @@ keybinding as it conflicts with Anthy input."
 ; Haml Coffee mode
 (add-to-list 'auto-mode-alist '("\\.hamlc$" . haml-mode))
 
+; JavaScript
+(add-hook 'js-mode-hook
+	(lambda ()
+		(modify-syntax-entry ?_ "w")
+	)
+)
+
 ; Ledger
 (autoload 'ledger-mode "ledger-mode" "A major mode for Ledger" t)
 (add-to-list 'auto-mode-alist '("\\.ledger$" . ledger-mode))
@@ -578,6 +603,20 @@ keybinding as it conflicts with Anthy input."
 	"Major mode for editing Markdown files"
 	t)
 (setq auto-mode-alist (cons '("\.md$" . markdown-mode) auto-mode-alist))
+
+; Nix Expression Language
+(add-hook 'nix-mode-hook
+	(lambda ()
+		(modify-syntax-entry ?_ "w") ; add underscore as a word character, like in Vim
+	)
+)
+
+; Python
+(add-hook 'python-mode-hook
+	(lambda ()
+		(modify-syntax-entry ?_ "w")
+	)
+)
 
 ; Ruby
 (add-hook 'ruby-mode-hook
@@ -754,6 +793,9 @@ keybinding as it conflicts with Anthy input."
 			95
 		)
 		((string-match "^k3" system-name)
+			102
+		)
+		((string-match "^w0" system-name)
 			102
 		)
 		(t 91)

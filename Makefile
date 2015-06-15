@@ -1,7 +1,7 @@
 CFG := $(shell pwd)
 HOST := $(shell hostname)
 # add the -n flag for directories, as otherwise, stray symlinks will be created inside the CFG directory itself
-all: acpi boxes cron emacs git gsy lesskey modprobe mpd mplayer mutt ncmpcpp pal pentadactyl rtorrent usbmnt vim xdefaults xinitrc xinitrc-ubuntu xmodmap xmonad xorg zsh
+all: acpi boxes cron emacs git gpg gsy lesskey modprobe mpd mplayer mutt ncmpcpp pal pentadactyl rtorrent urxvt usbmnt vim xdefaults xinitrc xinitrc-ubuntu xmonad xorg zsh
 acpi:
 	ln -fs ${CFG}/acpi/${HOST}.sh						/etc/acpi/handler.sh
 bash:
@@ -18,6 +18,8 @@ emacs:
 git:
 	ln -fs ${CFG}/git/cfg								${HOME}/.gitconfig
 	ln -fs ${CFG}/git/sendemail-aliases					${HOME}/.git-sendemail-aliases
+gpg:
+	ln -fs ${CFG}/gpg                                   ${HOME}/.gnupg
 gsy:
 	ln -fs ${CFG}/gsy/cfg								${HOME}/.gsy
 gtk:
@@ -86,8 +88,6 @@ xdefaults:
 	ln -fs ${CFG}/xdefaults/cfg							${HOME}/.Xdefaults
 xinitrc:
 	ln -fs ${CFG}/xinitrc/cfg							${HOME}/.xinitrc
-xmodmap:
-	ln -fs ${CFG}/xmodmap/cfg							${HOME}/.xmodmap
 xmonad:
 	ln -fns ${CFG}/xmonad								${HOME}/.xmonad
 xmonad-ubuntu:
@@ -116,6 +116,8 @@ zsh:
 	ln -fns ${CFG}/zsh									${HOME}/.zsh
 	ln -fs ${CFG}/zsh/.zshrc								${HOME}
 	mkdir ${HOME}/.zsh-untracked
+urxvt:
+	ln -fns ${CFG}/urxvt                                ${HOME}/.urxvt
 
 uninstall:
 	rm ${HOME}/.boxes

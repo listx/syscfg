@@ -182,7 +182,7 @@ alias fiv='~/syscfg/script/sys/fiv.sh'
 alias aex='~/syscfg/script/sys/aex.sh'
 alias x='~/syscfg/script/sys/terms/wb.sh D'
 alias up='~/syscfg/script/sys/up'
-alias fop='~/prog/fop/src/fop'
+alias fop='~/prog/fop/dist/build/fop/fop'
 alias cascade='~/syscfg/script/sys/cascade.sh'
 alias initkeys="~/syscfg/script/sys/initkeys.sh"
 alias INITKEYS="~/syscfg/script/sys/initkeys.sh" # for cases when capslock can't be turned off
@@ -246,8 +246,8 @@ alias rsm="rand_open norecurse mpv m3u $ft_mov"
 alias rsmm="rand_open recurse mpv\ --loop-file\ inf\ \ --playlist m3u $ft_mov"
 
 alias g='git'
-alias gdf=" [[ \$(git diff | wc -l) -gt 0 ]] && git diff || ([[ \$(git diff 2>&1 | wc -l) -eq 0 ]] && echo \"No changes\")"
-alias gdfc=" [[ \$(git diff --cached | wc -l) -gt 0 ]] && git diff --cached || ([[ \$(git diff --cached 2>&1 | wc -l) -eq 0 ]] && echo \"Index empty\")"
+alias gdf=" [[ \$(git diff | wc -l) -gt 0 ]] && git diff || ([[ \$(git diff 2>&1 | wc -l) -eq 0 ]] && echo \"No changes.\")"
+alias gdfc=" [[ \$(git diff --cached | wc -l) -gt 0 ]] && git diff --cached || ([[ \$(git diff --cached 2>&1 | wc -l) -eq 0 ]] && echo \"Index empty.\")"
 alias gst='git status'
 alias gbr='git branch'
 alias gcm='git commit --verbose'
@@ -268,9 +268,6 @@ alias ocm="cd ~/org; gcm -am \"$HOST\"; gpl && gps"
 alias e='emacs_open'
 alias ee='gvim -p'
 alias v='vim -p'
-# for editing files that are encrypted (enable encrypted backups (foo.txt~),
-# but disable unencrypted swapfiles and ~/.viminfo entries)
-alias eeb='vim -x --cmd "set backup" --cmd "set noswapfile" --cmd "set nowritebackup" --cmd "set viminfo=\"\""'
 
 alias -g galias_find_src='$(find -maxdepth 5 -type f -iregex ".*\.\(c\|cpp\|h\|hpp\|factor\|hs\|lhs\|pl\|py\|rb\|sh\)$" | sort)'
 alias es=' e galias_find_src'
@@ -355,7 +352,7 @@ alias nu='nix-channel --update && sudo nixos-checkout'
 
 alias cal='cal -y'
 
-nixos_hosts=(k0 k3)
+nixos_hosts=(k0 k3 w0)
 
 if [[ -z ${nixos_hosts[(r)$HOST]} ]]; then
     alias p='sudo pacman'
@@ -397,14 +394,6 @@ case $HOST in
         alias discof='sudo umount /dev/disk/by-id/ata-PIONEER_DVD-RW_DVR-215D'
         alias disc2on='sudo mount /dev/disk/by-id/ata-LITE-ON_DVDRW_SHW-160P6S'
         alias disc2of='sudo umount /dev/disk/by-id/ata-LITE-ON_DVDRW_SHW-160P6S'
-    ;;
-    k2)
-        alias iftope='sudo iftop -B -i eth0'
-        alias iftopw='sudo iftop -B -i wlan0'
-        alias discon='sudo mount /dev/sr0'
-        alias discof='sudo umount /dev/sr0'
-        alias nwu='sudo netcfg -c k2-wireless-home'
-        alias nwd='sudo netcfg -d k2-wireless-home'
     ;;
     k1)
         alias iftope='sudo iftop -B -i eth0'
