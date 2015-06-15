@@ -15,7 +15,7 @@
 ; https://gitorious.org/goibhniu/configuration-files.
 (when (not (or
 	(string= system-name "k1")
-	(string= system-name "foo-VirtualBox")
+	(string= system-name "w1")
 	(string-match "^Linuss" system-name)
 	))
 	(defconst nixos-sys-packages
