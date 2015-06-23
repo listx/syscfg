@@ -72,6 +72,7 @@ with super; rec {
       dhcpcd
       utillinuxCurses
       lsof
+      tree
 
       # Docs
       manpages
