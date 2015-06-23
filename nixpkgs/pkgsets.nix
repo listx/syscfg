@@ -46,7 +46,7 @@ with super; rec {
     ];
   });
 
-  l_set_base = setPrio "8" (buildEnv {
+  l_set_base = setPrio "7" (buildEnv {
     name = "l-set-base";
     ignoreCollisions = true;
     paths = [
