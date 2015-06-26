@@ -87,6 +87,7 @@ URxvt.font-size.step: 4
 
 ! keyboard-select
 URxvt.keysym.M-s: perl:keyboard-select:activate
+URxvt.keysym.M-r: perl:keyboard-select:search
 
 ! clipboard
 ! update clipboard whenever primary gets updated
