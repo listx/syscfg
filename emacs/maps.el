@@ -157,6 +157,7 @@
 
 (evil-define-key 'normal org-mode-map (kbd "M-i") 'org-insert-link)
 (evil-define-key 'insert org-mode-map (kbd "M-i") 'org-insert-link)
+(evil-define-key 'normal org-mode-map (kbd "M-l") 'org-open-at-point)
 (evil-define-key 'normal org-mode-map (kbd "M-n") 'org-shiftright)
 ; heading-based navigation
 (evil-define-key 'normal org-mode-map (kbd "M-k")
@@ -178,7 +179,6 @@
 (evil-define-key 'normal org-mode-map (kbd "<C-S-iso-lefttab>") 'org-shifttab)
 
 ; insert hyperlink, or edit an existing one
-(evil-define-key 'normal org-mode-map ",l" 'org-insert-link)
 (evil-define-key 'normal org-mode-map ",W" 'org-publish-current-project)
 
 ; Disable default orgmode hotkeys that interfere with our global hotkeys defined
