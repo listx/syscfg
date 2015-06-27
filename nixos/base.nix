@@ -61,6 +61,12 @@
   # Enable the OpenSSH daemon.
   services.openssh.enable = true;
 
+  # In services.xserver, we start gpg-agent daemon --- it is called with
+  # `--enable-ssh-support` [1], so it also acts as ssh-agent. To avoid
+  # conflicts, disable ssh-agent.
+  # [1]: nixpkgs/nixos/modules/services/x11/display-managers/default.nix
+  programs.ssh.startAgent = false;
+
   services.xserver = {
     enable = true;
     layout = "us";
@@ -90,7 +96,22 @@
     windowManager.xmonad.enable = true;
     windowManager.xmonad.enableContribAndExtras = true;
     windowManager.default = "xmonad";
+    startGnuPGAgent = true;
   };
+
+  services.udev.extraRules = ''
+    # For Yubikey, enable 'ykinfo -v' and 'gpg2 --card-status' commands as normal (non-root) user.
+    # From http://stafwag.github.io/blog/blog/2015/06/16/using-yubikey-neo-as-gpg-smartcard-for-ssh-authentication/
+    ACTION!="add|change", GOTO="yubico_end"
+
+    # Udev rules for letting the console user access the Yubikey USB
+    # device node, needed for challenge/response to work correctly.
+
+    # Yubico Yubikey II
+    ATTRS{idVendor}=="1050", ATTRS{idProduct}=="0010|0110|0111|0114|0116|0401|0403|0405|0407|0410", OWNER="l", MODE="0600"
+
+    LABEL="yubico_end"
+  '';
 
   # Enable CUPS to print documents.
   services.printing.enable = true;
