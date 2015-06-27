@@ -5,6 +5,10 @@
 cblrepo/haskell-*
 emacs/auto-save-list
 emacs/elpa
+emacs/ido.last
+gpg/.gpg-v21-migrated
+gpg/private-keys-v1.d/
+gpg/random_seed
 mplayer/mplayerplug-in.conf
 ncmpcpp/config
 ncmpcpp/keys
