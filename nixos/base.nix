@@ -61,10 +61,8 @@
   # Enable the OpenSSH daemon.
   services.openssh.enable = true;
 
-  # In services.xserver, we start gpg-agent daemon --- it is called with
-  # `--enable-ssh-support` [1], so it also acts as ssh-agent. To avoid
-  # conflicts, disable ssh-agent.
-  # [1]: nixpkgs/nixos/modules/services/x11/display-managers/default.nix
+  # We're going to use `gpg-agent` with SSH support --- so to avoid conflict,
+  # disable OpenSSH's ssh-agent.
   programs.ssh.startAgent = false;
 
   services.xserver = {
