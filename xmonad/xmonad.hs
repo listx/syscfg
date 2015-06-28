@@ -80,12 +80,11 @@ myWorkspaces :: [WorkspaceId]
 myWorkspaces = map fst myWorkspaceGroups -- 1..9, 0, F1-F12
 
 -- terminals (various different color themes)
-term1, term2, term3, suspend, xinitrc :: String
+term1, term2, term3, suspend :: String
 term1 = "~/syscfg/script/sys/terms/wb.sh"
 term2 = "~/syscfg/script/sys/terms/bw.sh"
 term3 = "~/syscfg/script/sys/terms/wblue.sh"
 suspend = "sudo systemctl suspend"
-xinitrc = "sh ~/syscfg/xinitrc/cfg"
 
 schedToday :: String
 schedToday = " -name floatme -e ~/org/org.sh today"
@@ -183,9 +182,6 @@ myKeys hostname conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
 	, ((modm              , xK_equal     ), spawn "amixer -q set Master 1.5+ unmute")
 	-- screen brightness toggle
 	, ((modm .|. shiftMask, xK_backslash ), spawn "sudo brightness") -- toggle brightness (100% or 0%)
-	, ((modm .|. shiftMask, xK_minus ), cpufreqSet "powersave" hostname)
-	, ((modm .|. shiftMask, xK_equal ), cpufreqSet "ondemand" hostname)
-	, ((modm .|. shiftMask, xK_BackSpace ), cpufreqSet "performance" hostname)
 	-- move mouse away to bottom-right of currently focused window
 	, ((modm              , xK_BackSpace), warpToWindow 1 1)
 	-- external monitor enabling/positioning
@@ -253,15 +249,6 @@ mpcSeek hostname sec = "mpc -h 192.168.0.110 -p " ++ port ++ " seek " ++ show' s
 	show' n
 		| n < 0 = show n
 		| otherwise = '+':show n
-
-cpufreqSet :: String -> String -> X ()
-cpufreqSet governor hostname = case hostname of
-	"k0"   -> mapM_ (spawn . cpu) ([0..3]::[Int])
-	"k1"    -> mapM_ (spawn . cpu) ([0..1]::[Int])
-	"k2"    -> mapM_ (spawn . cpu) ([0]::[Int])
-	_ -> return ()
-	where
-	cpu n = "sudo cpufreq-set -c " ++ show n ++ " -g " ++ governor
 
 -- Depending on the current MyWSGroup, open up different new "windows" that make sense for that
 -- workspace group.
@@ -472,8 +459,6 @@ myManageHook = composeAll $
 
 myStartupHook :: String -> X ()
 myStartupHook hostname = do
-	-- k2 runs NixOS, and needs to execute xinitrc manually
-	when (hostname == "k2") $ spawn xinitrc
 	spawnIfGrpTopWSNotFull Net "firefox"
 	spawnIfGrpNotFull Work $ term1 ++ " -name atWorkspace1"
 	spawn $ term1 ++ schedToday
