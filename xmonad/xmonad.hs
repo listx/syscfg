@@ -3,7 +3,6 @@ module Main where
 -- required imports
 import XMonad
 import qualified XMonad.Layout.LayoutModifier as XLL
-import Data.Monoid
 import System.Exit
 import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
@@ -17,8 +16,6 @@ import XMonad.Actions.CycleWS -- for workspace-to-workspace navigation
 import XMonad.Hooks.ManageHelpers -- for doCenterFloat
 
 import XMonad.Layout.NoBorders -- enable borderless layouts
-import XMonad.Layout.Circle -- circle layout
-import XMonad.Layout.LayoutHints -- for (among other things) removing GVim's dead borders automatically
 import XMonad.Layout.ResizableTile -- allow changing width/height of any window
 
 import XMonad.Util.WorkspaceCompare (getSortByIndex)
@@ -27,7 +24,6 @@ import System.Posix.Unistd -- for getting hostname
 import System.Random
 import Data.Array.IO
 import Control.Monad
-import Control.Concurrent
 
 altMask :: KeyMask
 altMask = mod1Mask -- alias "altMask" for left alt key
@@ -155,7 +151,7 @@ myKeys hostname conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
 	, ((mod4Mask              , xK_m     ), spawn "blender")
 	, ((mod4Mask              , xK_n     ), spawn "firefox")
 	, ((mod4Mask .|. shiftMask, xK_n     ), io sitesRand >>= spawn . ("firefox " ++))
-	, ((mod4Mask .|. controlMask, xK_n     ), spawn "chromium")
+	, ((mod4Mask .|. controlMask, xK_n   ), spawn "chromium")
 	, ((mod4Mask              , xK_p     ), spawn "pidgin")
 	, ((mod4Mask              , xK_w     ), spawn "soffice")
 	, ((mod4Mask              , xK_x     ), spawn term1)
@@ -185,11 +181,11 @@ myKeys hostname conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
 	-- move mouse away to bottom-right of currently focused window
 	, ((modm              , xK_BackSpace), warpToWindow 1 1)
 	-- external monitor enabling/positioning
-	, ((modm .|. shiftMask, xK_Up),		spawn "~/syscfg/script/sys/monitor_external_enable.sh top")
-	, ((modm .|. shiftMask, xK_Down),	spawn "~/syscfg/script/sys/monitor_external_enable.sh bottom")
-	, ((modm .|. shiftMask, xK_Left),	spawn "~/syscfg/script/sys/monitor_external_enable.sh left")
-	, ((modm .|. shiftMask, xK_Right),	spawn "~/syscfg/script/sys/monitor_external_enable.sh right")
-	, ((modm .|. shiftMask, xK_Return),	spawn "~/syscfg/script/sys/monitor_toggle.sh")
+	, ((modm .|. shiftMask, xK_Up),     spawn "~/syscfg/script/sys/monitor_external_enable.sh top")
+	, ((modm .|. shiftMask, xK_Down),   spawn "~/syscfg/script/sys/monitor_external_enable.sh bottom")
+	, ((modm .|. shiftMask, xK_Left),   spawn "~/syscfg/script/sys/monitor_external_enable.sh left")
+	, ((modm .|. shiftMask, xK_Right),  spawn "~/syscfg/script/sys/monitor_external_enable.sh right")
+	, ((modm .|. shiftMask, xK_Return), spawn "~/syscfg/script/sys/monitor_toggle.sh")
 	]
 	++
 
@@ -200,8 +196,7 @@ myKeys hostname conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
 		, (f, m) <- [(W.greedyView, 0), (W.shift, shiftMask)]]
 	++
 
-	[
-	((modm .|. altMask,   xK_j),              moveTo Next nonEmptyGrpWS) -- go to next non-empty WS, in current Group
+	[ ((modm .|. altMask,   xK_j),              moveTo Next nonEmptyGrpWS) -- go to next non-empty WS, in current Group
 	, ((modm .|. altMask,   xK_k),              moveTo Prev nonEmptyGrpWS) -- go to prev non-empty WS, in current Group
 	, ((modm .|. altMask,   xK_l),              moveTo Next $ diffGrpWS 1)     -- go to next WS Group
 	, ((modm .|. altMask,   xK_h),              moveTo Next $ diffGrpWS (-1))  -- go to previous WS Group (the "moveTo Next" part here ensures that, after getting our desired new WSGroup, that we always display the top WS of that Group
@@ -255,7 +250,8 @@ mpcSeek hostname sec = "mpc -h 192.168.0.110 -p " ++ port ++ " seek " ++ show' s
 action_o :: X ()
 action_o = do
 	currentWS <- gets (W.currentTag . windowset)
-	let currentWSGrp = getWSGroup currentWS
+	let
+		currentWSGrp = getWSGroup currentWS
 	-- first try to move to the next empty WS in the group
 	moveTo Next emptyGrpWS
 	-- now do a specific action that suits this WS group
@@ -267,7 +263,8 @@ action_o = do
 emptyGrpWS :: WSType
 emptyGrpWS = WSIs $ do
 	currentWS <- gets (W.currentTag . windowset)
-	let currentWSGrp = getWSGroup currentWS
+	let
+		currentWSGrp = getWSGroup currentWS
 		isEmpty = isNothing . W.stack
 		isCurrentWSGrp = isWSGroup currentWSGrp . W.tag
 	return (\w -> isEmpty w && isCurrentWSGrp w)
@@ -276,7 +273,8 @@ emptyGrpWS = WSIs $ do
 nonEmptyGrpWS :: WSType
 nonEmptyGrpWS = WSIs $ do
 	currentWS <- gets (W.currentTag . windowset)
-	let currentWSGrp = getWSGroup currentWS
+	let
+		currentWSGrp = getWSGroup currentWS
 		isNonEmpty = isJust . W.stack
 		isCurrentWSGrp = isWSGroup currentWSGrp . W.tag
 	return (\w -> isNonEmpty w && isCurrentWSGrp w)
@@ -284,14 +282,16 @@ nonEmptyGrpWS = WSIs $ do
 -- An empty WS belonging to the given group.
 emptyWSGrp :: MyWSGroup -> WSType
 emptyWSGrp grp = WSIs $ do
-	let isEmpty = isNothing . W.stack
+	let
+		isEmpty = isNothing . W.stack
 		isMemberOfGivenGrp = isWSGroup grp . W.tag
 	return (\w -> isEmpty w && isMemberOfGivenGrp w)
 
 -- A non-empty WS belonging to any group except those in the given group list.
 nonEmptyWSExceptGrps :: [MyWSGroup] -> WSType
 nonEmptyWSExceptGrps grps = WSIs $ do
-	let isNonEmpty = isJust . W.stack
+	let
+		isNonEmpty = isJust . W.stack
 		isMemberOfGivenGrps = isWSGroups grps . W.tag
 	return (\w -> isNonEmpty w && not (isMemberOfGivenGrps w))
 
@@ -299,7 +299,8 @@ nonEmptyWSExceptGrps grps = WSIs $ do
 diffGrpWS :: Int -> WSType
 diffGrpWS dir = WSIs $ do
 	currentWS <- gets (W.currentTag . windowset)
-	let currentWSGrp = getWSGroup currentWS
+	let
+		currentWSGrp = getWSGroup currentWS
 		diffGrp = if dir > 0
 			then nextGrp currentWSGrp
 			else prevGrp currentWSGrp
@@ -309,7 +310,8 @@ diffGrpWS dir = WSIs $ do
 grpWS :: WSType
 grpWS = WSIs $ do
 	currentWS <- gets (W.currentTag . windowset)
-	let currentWSGrp = getWSGroup currentWS
+	let
+		currentWSGrp = getWSGroup currentWS
 	return (\w -> isWSGroup currentWSGrp . W.tag $ w)
 
 -- The next or previous group of given group. Will cycle back to the first group if the given one is
@@ -362,14 +364,18 @@ tryGetEmptyWSIDofGroup g = do
 
 myMouseBindings :: XConfig t -> M.Map (KeyMask, Button) (Window -> X ())
 myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
-	-- mod-button1, Set the window to floating mode and move by dragging
-	[ ((modm, button1), (\w -> focus w >> mouseMoveWindow w
-									>> windows W.shiftMaster))
+	[
+		-- mod-button1, Set the window to floating mode and move by dragging
+		( (modm, button1)
+		, (\w -> focus w >> mouseMoveWindow w >> windows W.shiftMaster)
+		)
 	-- mod-button2, Raise the window to the top of the stack
 	, ((modm, button2), (\w -> focus w >> windows W.shiftMaster))
-	-- mod-button3, Set the window to floating mode and resize by dragging
-	, ((modm, button3), (\w -> focus w >> mouseResizeWindow w
-									>> windows W.shiftMaster))
+	,
+		-- mod-button3, Set the window to floating mode and resize by dragging
+		( (modm, button3)
+		, (\w -> focus w >> mouseResizeWindow w >> windows W.shiftMaster)
+		)
 	-- you may also bind events to the mouse scroll wheel (button4 and button5)
 	]
 
