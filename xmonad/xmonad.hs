@@ -32,7 +32,13 @@ import Control.Concurrent
 altMask :: KeyMask
 altMask = mod1Mask -- alias "altMask" for left alt key
 
-data MyWSGroup = Work | Net | Misc | Music | Net2 | Sys
+data MyWSGroup
+	= Work
+	| Net
+	| Misc
+	| Music
+	| Net2
+	| Sys
 	deriving (Eq, Ord, Enum, Show)
 
 _MYWSGROUPS :: [MyWSGroup]
@@ -239,7 +245,8 @@ myKeys hostname conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
 		else sendMessage master
 
 mpcSeek :: String -> Int -> String
-mpcSeek hostname sec = "mpc -h 192.168.0.110 -p " ++ port ++ " seek " ++ show' sec where
+mpcSeek hostname sec = "mpc -h 192.168.0.110 -p " ++ port ++ " seek " ++ show' sec
+	where
 	port = case hostname of
 		"k0" -> "6600" -- alsa
 		_ -> "6601" -- icecast
@@ -254,7 +261,7 @@ cpufreqSet governor hostname = case hostname of
 	"k2"    -> mapM_ (spawn . cpu) ([0]::[Int])
 	_ -> return ()
 	where
-		cpu n = "sudo cpufreq-set -c " ++ show n ++ " -g " ++ governor
+	cpu n = "sudo cpufreq-set -c " ++ show n ++ " -g " ++ governor
 
 -- Depending on the current MyWSGroup, open up different new "windows" that make sense for that
 -- workspace group.
@@ -266,8 +273,8 @@ action_o = do
 	moveTo Next emptyGrpWS
 	-- now do a specific action that suits this WS group
 	case currentWSGrp of
-	Net   -> spawn "firefox"
-	_     -> spawn term1
+		Net -> spawn "firefox"
+		_ -> spawn term1
 
 -- An empty WS belonging to the same group as the current one.
 emptyGrpWS :: WSType
@@ -350,7 +357,7 @@ isWSGroups grps str
 	| lookup str myWorkspaceGroups' /= Nothing = True
 	| otherwise = False
 	where
-		myWorkspaceGroups' = filter (\(_, y) -> any (==y) grps) myWorkspaceGroups
+	myWorkspaceGroups' = filter (\(_, y) -> any (==y) grps) myWorkspaceGroups
 
 -- same as CycleWS's moveTo, but w/ view instead of greedyView
 moveToNogreed :: Direction1D -> WSType -> X ()
@@ -483,9 +490,11 @@ myStartupHook hostname = do
 
 -- reset all xinerama screens to point to top WS of each group
 resetScreensToWSTops :: X ()
-resetScreensToWSTops = gets (W.screens . windowset) >>= myloop . length where
+resetScreensToWSTops = gets (W.screens . windowset) >>= myloop . length
+	where
 	myloop :: Int -> X ()
-	myloop ss = recurse (S 0) (S (ss - 1)) where
+	myloop ss = recurse (S 0) (S (ss - 1))
+		where
 		recurse :: ScreenId -> ScreenId -> X ()
 		recurse acc until' = if acc <= until'
 			then do
@@ -493,7 +502,8 @@ resetScreensToWSTops = gets (W.screens . windowset) >>= myloop . length where
 				windows $ W.greedyView (head (getWSids (_MYWSGROUPS!!(toint acc))))
 				recurse (acc + 1) until'
 			else return ()
-			where toint (S a) = a
+			where
+			toint (S a) = a
 
 spawnIfGrpNotFull :: MyWSGroup -> String -> X ()
 spawnIfGrpNotFull g command = do
@@ -521,9 +531,9 @@ shuffle xs = do
 		writeArray ar j vi
 		return vj
 	where
-		n = length xs
-		newArray' :: Int -> [a] -> IO (IOArray Int a)
-		newArray' n' xs' =  newListArray (1, n') xs'
+	n = length xs
+	newArray' :: Int -> [a] -> IO (IOArray Int a)
+	newArray' n' xs' =  newListArray (1, n') xs'
 
 sites :: [String]
 sites =
