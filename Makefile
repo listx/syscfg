@@ -94,6 +94,8 @@ xmonad-ubuntu:
 	ln -fs ${CFG}/xmonad/xmonad-start.desktop           /usr/share/xsessions/
 	cp ${CFG}/xinitrc/cfg							/usr/local/bin/xmonad-start
 	chmod +x /usr/local/bin/xmonad-start
+xsession:
+	ln -fs ${CFG}/xsession/cfg                          ${HOME}/.xsession
 xorg:
 	ln -fns ${CFG}/xorg/10-keyboard.conf				/etc/X11/xorg.conf.d/
 	ln -fns ${CFG}/xorg/10-server-flags.conf			/etc/X11/xorg.conf.d/

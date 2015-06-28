@@ -96,7 +96,6 @@
     windowManager.xmonad.enable = true;
     windowManager.xmonad.enableContribAndExtras = true;
     windowManager.default = "xmonad";
-    startGnuPGAgent = true;
   };
 
   services.udev.extraRules = ''

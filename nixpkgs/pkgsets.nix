@@ -66,6 +66,7 @@ with super; rec {
       silver-searcher
       colordiff
       gnupg
+      pinentry
       cryptsetup
       mutt
       htop
