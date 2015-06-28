@@ -115,7 +115,6 @@ endif
 zsh:
 	ln -fns ${CFG}/zsh									${HOME}/.zsh
 	ln -fs ${CFG}/zsh/.zshrc								${HOME}
-	ln -fs ${CFG}/zsh/.zprofile								${HOME}
 	mkdir ${HOME}/.zsh-untracked
 urxvt:
 	ln -fns ${CFG}/urxvt                                ${HOME}/.urxvt
