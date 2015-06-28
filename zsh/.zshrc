@@ -403,6 +403,9 @@ case $HOST in
 		alias nwu='sudo netcfg -c aether-wireless-home'
 		alias nwd='sudo netcfg -d aether-wireless-home'
 	;;
+	w0)
+		alias yk='gpg-connect-agent updatestartuptty /bye'
+	;;
 	*)
 		alias discon='sudo mount /dev/sr0'
 		alias discof='sudo umount /dev/sr0'
