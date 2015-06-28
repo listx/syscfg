@@ -131,28 +131,4 @@
     shell = "/run/current-system/sw/bin/zsh";
     uid = 1000;
   };
-
-  # This is NixOS's way of declaring what goes inside something like ~/.profile.
-  # X login managers like SLiM do not treat "/bin/sh" as a login shell, so this
-  # is our way of writing a "fake" ~/.profile.
-  environment.loginShellInit = ''
-    # Excerpt from gnupg docs regarding the `--enable-ssh-support` flag:
-    #
-    # -------------------------------------------------------------------------
-    # Note: in case the gpg-agent receives a signature request, the user might
-    # need to be prompted for a passphrase, which is necessary for decrypting
-    # the stored key. Since the ssh-agent protocol does not contain a mechanism
-    # for telling the agent on which display/terminal it is running, gpg-agent's
-    # ssh-support will use the TTY or X display where gpg-agent has been
-    # started. To switch this display to the current one, the following command
-    # may be used:
-    #
-    #   gpg-connect-agent updatestartuptty /bye
-    # -------------------------------------------------------------------------
-    #
-    # We would ordinarily put this in ~/.profile, so that it gets executed one
-    # time (for all subsequent interactive nonlogin shells to enjoy), but we use
-    # SLiM and SLiM does not treat the shell used to "log in" as a login shell!
-    gpg-connect-agent updatestartuptty /bye
-  '';
 }
