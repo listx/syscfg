@@ -355,19 +355,19 @@ alias cal='cal -y'
 nixos_hosts=(k0 k3 w0)
 
 if [[ -z ${nixos_hosts[(r)$HOST]} ]]; then
-    alias p='sudo pacman'
-    alias pu='sudo pacman -Syu'
-    alias py='sudo pacman -Syy'
-    alias ps='sudo pacman -S'
-    alias pq='sudo pacman -Q'
+	alias p='sudo pacman'
+	alias pu='sudo pacman -Syu'
+	alias py='sudo pacman -Syy'
+	alias ps='sudo pacman -S'
+	alias pq='sudo pacman -Q'
 
-    # use of yaourt with root privileges is a big security hole!
-    alias y='yaourt'
-    alias yu='yaourt -Sybu --aur'
-    alias yy='yaourt -Syy'
-    alias ys='yaourt -S'
-    alias yurc='pkgs=${(s:\n:)$(pacman -Qq | grep -E -- "-(bzr|darcs|git|hg|svn)")}; echo "Syncing: $pkgs\n"; ys ${(s: :)pkgs}'
-    alias yc=' sudo yaourt -C'
+	# use of yaourt with root privileges is a big security hole!
+	alias y='yaourt'
+	alias yu='yaourt -Sybu --aur'
+	alias yy='yaourt -Syy'
+	alias ys='yaourt -S'
+	alias yurc='pkgs=${(s:\n:)$(pacman -Qq | grep -E -- "-(bzr|darcs|git|hg|svn)")}; echo "Syncing: $pkgs\n"; ys ${(s: :)pkgs}'
+	alias yc=' sudo yaourt -C'
 fi
 
 # memory management
@@ -388,23 +388,23 @@ alias usbof='~/syscfg/script/sys/usbmnt -u'
 alias usboff='~/syscfg/script/sys/usbmnt -U'
 
 case $HOST in
-    k0)
-        alias iftop='sudo iftop -B -i eno1'
-        alias discon='sudo mount /dev/disk/by-id/ata-PIONEER_DVD-RW_DVR-215D'
-        alias discof='sudo umount /dev/disk/by-id/ata-PIONEER_DVD-RW_DVR-215D'
-        alias disc2on='sudo mount /dev/disk/by-id/ata-LITE-ON_DVDRW_SHW-160P6S'
-        alias disc2of='sudo umount /dev/disk/by-id/ata-LITE-ON_DVDRW_SHW-160P6S'
-    ;;
-    k1)
-        alias iftope='sudo iftop -B -i eth0'
-        alias iftopw='sudo iftop -B -i wlan0'
-        alias discon='sudo mount /dev/sr0'
-        alias discof='sudo umount /dev/sr0'
-        alias nwu='sudo netcfg -c aether-wireless-home'
-        alias nwd='sudo netcfg -d aether-wireless-home'
-    ;;
-    *)
-        alias discon='sudo mount /dev/sr0'
-        alias discof='sudo umount /dev/sr0'
-    ;;
+	k0)
+		alias iftop='sudo iftop -B -i eno1'
+		alias discon='sudo mount /dev/disk/by-id/ata-PIONEER_DVD-RW_DVR-215D'
+		alias discof='sudo umount /dev/disk/by-id/ata-PIONEER_DVD-RW_DVR-215D'
+		alias disc2on='sudo mount /dev/disk/by-id/ata-LITE-ON_DVDRW_SHW-160P6S'
+		alias disc2of='sudo umount /dev/disk/by-id/ata-LITE-ON_DVDRW_SHW-160P6S'
+	;;
+	k1)
+		alias iftope='sudo iftop -B -i eth0'
+		alias iftopw='sudo iftop -B -i wlan0'
+		alias discon='sudo mount /dev/sr0'
+		alias discof='sudo umount /dev/sr0'
+		alias nwu='sudo netcfg -c aether-wireless-home'
+		alias nwd='sudo netcfg -d aether-wireless-home'
+	;;
+	*)
+		alias discon='sudo mount /dev/sr0'
+		alias discof='sudo umount /dev/sr0'
+	;;
 esac
