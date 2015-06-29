@@ -44,6 +44,7 @@
 						(or
 							(string-match ".+\\.gemspec$" b)
 							(string-match ".+\\.rb$" b)
+							(string-match "Vagrantfile$" b)
 						)
 						(h 'ruby-mode-hook nil 2
 							(progn
