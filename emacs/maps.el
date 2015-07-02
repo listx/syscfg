@@ -181,6 +181,9 @@
 ; publish project
 (evil-define-key 'normal org-mode-map ",W" 'org-publish-current-project)
 
+; publish slides to PDF (beamer mode)
+(evil-define-key 'normal org-mode-map ",s" 'org-beamer-export-to-pdf)
+
 ; Disable default orgmode hotkeys that interfere with our global hotkeys defined
 ; elsewhere.
 (add-hook 'org-mode-hook
