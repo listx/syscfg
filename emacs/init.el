@@ -56,9 +56,9 @@
 
 ; Install packages if they are missing.
 (defun my/packages-installed-p ()
-  (loop for pkg in my/packages
-        when (not (package-installed-p pkg)) do (return nil)
-        finally (return t)))
+	(loop for pkg in my/packages
+		when (not (package-installed-p pkg)) do (return nil)
+		finally (return t)))
 
 (unless (my/packages-installed-p)
 	(message "%s" "Refreshing package database...")
@@ -193,15 +193,15 @@
 ; Vim-like visual selection. Make the visual selection update the X primary
 ; buffer.
 (defun evil-visual-update-x-selection (&optional buffer)
-  "Update the X selection with the current visual region."
-  (let ((buf (or buffer (current-buffer))))
-    (when (buffer-live-p buf)
-      (with-current-buffer buf
-        (when (and (evil-visual-state-p)
-                   (fboundp 'x-select-text)
-                   (or (not (boundp 'ns-initialized))
-                       (with-no-warnings ns-initialized))
-                   (not (eq evil-visual-selection 'block)))
+	"Update the X selection with the current visual region."
+	(let ((buf (or buffer (current-buffer))))
+		(when (buffer-live-p buf)
+		(with-current-buffer buf
+			(when (and (evil-visual-state-p)
+					(fboundp 'x-select-text)
+					(or (not (boundp 'ns-initialized))
+						(with-no-warnings ns-initialized))
+					(not (eq evil-visual-selection 'block)))
 ;			; Vanilla evil, as of commit
 ;			; 1def26dc9c4d084e766364eff2d9f3aa51613cf7.
 
@@ -474,7 +474,8 @@ keybinding as it conflicts with Anthy input."
 ; Allow single/double quote marks in inline '='-delimited verbatim formatting.
 ; see https://lists.gnu.org/archive/html/emacs-orgmode/2014-04/msg00199.html
 (setq org-emphasis-regexp-components
-  '(" \t('\"{" "- \t.,:!?;'\")}\\" " \t\r\n" "." 1))
+	'(" \t('\"{" "- \t.,:!?;'\")}\\" " \t\r\n" "." 1))
+
 
 (defun always-insert-item ()
 	(interactive)
@@ -631,9 +632,9 @@ keybinding as it conflicts with Anthy input."
 
 ; Shell script
 (add-hook 'sh-mode-hook
-    (lambda ()
+	(lambda ()
 		(modify-syntax-entry ?_ "w") ; add underscore as a word character
-    )
+	)
 )
 
 ; YAML
@@ -759,13 +760,13 @@ keybinding as it conflicts with Anthy input."
 (define-key evil-normal-state-map ",_"
 	(lambda ()
 		(interactive)
-        (global-text-scale-adjust -2)
+		(global-text-scale-adjust -2)
 	)
 )
 (define-key evil-normal-state-map ",-"
 	(lambda ()
 		(interactive)
-        (global-text-scale-adjust 2)
+		(global-text-scale-adjust 2)
 	)
 )
 ; ace-jump-mode
