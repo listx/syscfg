@@ -178,7 +178,7 @@
 ; keyboard layout also.
 (evil-define-key 'normal org-mode-map (kbd "<C-S-iso-lefttab>") 'org-shifttab)
 
-; insert hyperlink, or edit an existing one
+; publish project
 (evil-define-key 'normal org-mode-map ",W" 'org-publish-current-project)
 
 ; Disable default orgmode hotkeys that interfere with our global hotkeys defined
