@@ -37,6 +37,7 @@
 (defvar my/packages
 	'(
 	ace-jump-mode
+	alect-themes
 	color-theme ; needed for dbrock's old zenburn
 	column-enforce-mode
 	coffee-mode
@@ -100,6 +101,9 @@
 ; load publishing settings for org-mode
 (load "~/.emacs.d/publish")
 
+; load zenmonk theme settings
+(load "~/.emacs.d/script/zenmonk")
+
 ; load Packages
 ; -------------
 ; fix "<dead-grave> is undefined" error
@@ -112,7 +116,8 @@
 (require 'hiwin)
 (hiwin-activate)
 (set-face-background 'hiwin-face
-	(if window-system "gray22" "gray32"))
+	; set default to alect-light
+	(if window-system "#ded6c5" "gray16"))
 
 ; read uim.el
 (autoload 'uim-mode "uim" nil t)
@@ -650,22 +655,61 @@ keybinding as it conflicts with Anthy input."
 	)
 )
 
-
 ; Appearance
+(defvar my/themes
+	'(
+	alect-light
+	alect-dark
+	alect-black
+	) "Default themes")
 
-; zenmonk color theme
+(defvar my/theme-idx 0)
+
+(defun my/theme-name ()
+	(nth my/theme-idx my/themes)
+)
+
+; Install packages if they are missing.
+(defun my/cycle-theme ()
+	(progn
+		; Increment current theme index
+		(setq my/theme-idx (mod (+ 1 my/theme-idx) (length my/themes)))
+
+		; Apply the theme
+		(load-theme (my/theme-name) t)
+
+		; Set colors depending on theme name.
+		(if (string-match "light" (format "%s" (my/theme-name)))
+			(progn
+				(set-face-background 'hiwin-face
+					; set default to alect-light
+					(if window-system "#ded6c5" "gray16"))
+				(setq evil-insert-state-cursor '("#000000" box))
+				(setq evil-normal-state-cursor '("DodgerBlue1" box))
+			)
+			(progn
+				(set-face-background 'hiwin-face
+					(if window-system "gray5" "gray16"))
+				(setq evil-insert-state-cursor '("#ffffff" box))
+				(setq evil-normal-state-cursor '("#00ff00" box))
+			)
+		)
+	)
+)
+
+; Select theme based on GUI or ncurses mode.
 (if window-system
-	(load-theme 'zenmonk t)
+	(load-theme 'alect-light t)
 	(progn
 		(require 'zenburn)
 		(zenburn)
 	)
 )
+
 ; highlight matching parenthese
 (show-paren-mode 1)
 ; highlight the current cursor line
 (global-hl-line-mode 1)
-(set-face-background 'hl-line "#434443")
 ; disable cursor line highlight during insert mode
 (add-hook 'evil-insert-state-entry-hook
 	(lambda ()
@@ -737,15 +781,14 @@ keybinding as it conflicts with Anthy input."
 		(global-hl-line-mode 1)
 	)
 )
-; cursor colors for the various states
-(setq evil-insert-state-cursor '("#ffffff" box))
+; cursor colors for the various states; default to alect-light for normal-state cursor
+; default cursor colors for alect-light
+(setq evil-insert-state-cursor '("#000000" box))
 (setq evil-emacs-state-cursor '("#ff0000" box))
-(setq evil-normal-state-cursor '("#00ff00" box))
+(setq evil-normal-state-cursor '("DodgerBlue1" box))
 (setq evil-visual-state-cursor '("#0000ff" box))
 ; visual line mode (word wrap on whole words) by default
 (global-visual-line-mode 1)
-; green cursor
-(set-cursor-color "#00ff00")
 ; make the color in set-cursor-color be the default color recognized by Evil
 ; (for the non-customized states, such as visual mode)
 ; (this is required because we change the color *after* enabling evil)

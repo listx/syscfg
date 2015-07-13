@@ -14,6 +14,10 @@
 	(lambda () (interactive) (insert (x-selection 'PRIMARY)))) ; paste X primary
 (define-key evil-normal-state-map "gw" 'fill-paragraph) ; insert hard line breaks
 
+; cycle through defined themes
+(define-key evil-normal-state-map ",t"
+	(lambda () (interactive) (my/cycle-theme)))
+
 ; Add newlines above/below, without going through kakapo-open. We have a hook
 ; that runs on exit of insert mode, which discards purely whitespace insertions,
 ; so this way we can insert whitespace (newlines) without worrying about the
