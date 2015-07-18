@@ -110,6 +110,8 @@
     LABEL="yubico_end"
   '';
 
+  services.virtualboxHost.enable = true;
+
   # Enable CUPS to print documents.
   services.printing.enable = true;
 
@@ -124,7 +126,7 @@
     description = "Linus Arver";
     createHome = true;
     home = "/home/l";
-    extraGroups = [ "wheel" ] ;
+    extraGroups = [ "wheel" "vboxusers" ] ;
     shell = "/run/current-system/sw/bin/zsh";
     uid = 1000;
   };
