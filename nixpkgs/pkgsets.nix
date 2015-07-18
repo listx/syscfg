@@ -223,7 +223,7 @@ with super; rec {
   };
 
   l_set_haskell = setPrio "8" (buildEnv {
-    name = "l-haskell-set";
+    name = "l-set-haskell";
     paths = with haskellngPackages; [
       # For haskell development via `nix-shell`; run `sudo nix-channel --add
       # <nixpkgs-unstable>`, then do `sudo nix-channel --update`.
