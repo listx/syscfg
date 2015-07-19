@@ -56,6 +56,7 @@ super:
       l_set_office
       l_set_games
       l_set_misc
+      l_set_vm
       l_set_haskell
       # Haskell packages are hidden by default. To search for, e.g., "auca"
       # defined from pkgsets.nix, do `nix-env -qaP -A

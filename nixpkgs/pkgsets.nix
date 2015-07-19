@@ -30,6 +30,7 @@ with super; rec {
       l_set_dev
       l_set_media
       l_set_haskell
+      l_set_vm
     ];
   });
 
@@ -176,6 +177,17 @@ with super; rec {
     paths = [
       pidgin
       texLiveFull
+    ];
+  });
+
+  l_set_vm = setPrio "9" (buildEnv {
+    name = "l-set-vm";
+    ignoreCollisions = true;
+    paths = [
+      docker
+      vagrant
+      linuxPackages.virtualbox
+      linuxPackages.virtualboxGuestAdditions
     ];
   });
 
