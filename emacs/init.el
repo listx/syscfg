@@ -304,16 +304,17 @@
 	(global-text-scale-mode 1)
 )
 
-(setq my-current-font 0)
+(defvar my/font-collection '("Terminus" "Liberation Mono"))
+(setq my/font-choice 0)
 (defun my-toggle-font ()
-	"Toggle font between Terminus and Liberation Mono"
+	"Cycle through font collection."
 	(interactive)
-	(setq my-current-font (if (= my-current-font 0) 1 0))
+	(setq my/font-choice (mod (+ 1 my/font-choice) (length my/font-collection)))
 	(set-face-attribute
 		'default
 		nil
 		:font
-		(if (= my-current-font 1) "Liberation Mono" "Terminus")
+		(nth my/font-choice my/font-collection)
 	)
 	(redraw-display)
 )
