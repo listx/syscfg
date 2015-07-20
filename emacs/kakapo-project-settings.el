@@ -34,7 +34,7 @@
 			; Work settings
 			(
 				(or
-					(string-match "/Users/larver/z/" b)
+					(string-match "/Users/larver/k/" b)
 					(string-match "^/home/l/z/" b)
 					(string-match "^/home/l/a/" b)
 					(string-match "^/home/l/k/" b)
