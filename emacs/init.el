@@ -834,19 +834,15 @@ keybinding as it conflicts with Anthy input."
 ; behavior.
 (defun my-text-height ()
 	(cond
-		((string-match "^k[12]" system-name)
+		(
+			(or
+				(string-match "^k[12]" system-name)
+				(string-match "^w0" system-name)
+			)
 			95
 		)
 		((string-match "^k3" system-name)
 			102
-		)
-		; This works only if we have w0 in a maximized VM window on the 27"
-		; screen. Actually, the behavior of "DPI" changes depending on how we
-		; start the VM --- in full screen, or windowed mode (and if windowed,
-		; then how big that window is). It also might change if we change the
-		; window size dynamically.
-		((string-match "^w0" system-name)
-			60
 		)
 		(t 91)
 	)
