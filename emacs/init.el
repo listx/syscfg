@@ -672,27 +672,47 @@ keybinding as it conflicts with Anthy input."
 
 ; Install packages if they are missing.
 (defun my/cycle-theme ()
-	(progn
-		; Increment current theme index
-		(setq my/theme-idx (mod (+ 1 my/theme-idx) (length my/themes)))
+		(progn
+			; Increment current theme index
+			(setq my/theme-idx (mod (+ 1 my/theme-idx) (length my/themes)))
 
-		; Apply the theme
-		(load-theme (my/theme-name) t)
+			; Apply the theme
+			(load-theme (my/theme-name) t)
 
-		; Set colors depending on theme name.
-		(if (string-match "light" (format "%s" (my/theme-name)))
-			(progn
-				(set-face-background 'hiwin-face
-					; set default to alect-light
-					(if window-system "#ded6c5" "gray16"))
-				(setq evil-insert-state-cursor '("#000000" box))
-				(setq evil-normal-state-cursor '("DodgerBlue1" box))
-			)
-			(progn
-				(set-face-background 'hiwin-face
-					(if window-system "gray5" "gray16"))
-				(setq evil-insert-state-cursor '("#ffffff" box))
-				(setq evil-normal-state-cursor '("#00ff00" box))
+			; Set colors depending on theme name.
+	(let
+		(
+			(theme (format "%s" (my/theme-name)))
+		)
+			(cond
+				((string= "alect-light" theme)
+					(progn
+						(set-face-background 'hiwin-face
+							; set default to alect-light
+							(if window-system "#ded6c5" "gray16"))
+						(setq evil-insert-state-cursor '("#000000" box))
+						(setq evil-normal-state-cursor '("DodgerBlue1" box))
+					)
+				)
+				(
+					(or
+						(string= "alect-dark" theme)
+						(string= "alect-black" theme)
+					)
+					(progn
+						(set-face-background 'hiwin-face
+							(if window-system
+								(if (string= "alect-dark" theme)
+									"#14141b"
+									"gray0"
+								)
+								"gray16"
+							)
+						)
+						(setq evil-insert-state-cursor '("#ffffff" box))
+						(setq evil-normal-state-cursor '("#00ff00" box))
+					)
+				)
 			)
 		)
 	)

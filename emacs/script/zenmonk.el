@@ -189,6 +189,8 @@ Each element has the form (NAME . HEX).
 			(alect-set-color 'dark 'cyan-1 ,zm-red+1)
 			(alect-set-color 'dark 'cursor "#00ff00")
 			(alect-set-color 'dark 'yellow+2 ,zm-yellow)
+
+			(alect-set-color 'black 'bg-1 "gray10")
 		)
 	)
 )
