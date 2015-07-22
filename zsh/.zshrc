@@ -290,7 +290,7 @@ alias sl0='ssh l@l0'
 alias so='ssh otter@ocean'
 alias sforest='ssh tiger@forest'
 alias sm='export TERM=xterm && ssh larver@mac'
-alias sf='ssh foo@d'
+alias sw0='ssh l@w0'
 
 # GLOBAL, position-independent aliases for quick scp operations
 alias -g K0='l@k0:'
