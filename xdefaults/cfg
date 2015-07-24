@@ -75,6 +75,15 @@ URxvt.iso14755: False
 URxvt.keysym.C-9: command:\033]710;xft:dejavu sans mono:pixelsize=12,xft:IPAGothic,xft:Baekmuk Gulim\007
 URxvt.keysym.C-0: command:\033]710;xft:Terminus:pixelsize=14,xft:IPAGothic,xft:Baekmuk Gulim\007
 
+! Some directory history navigation. 'h' goes backward in history, and 'l' goes
+! "forward". Essentially this amounts to simulating a doubly-linked-list
+! traversal, forwards and backwards. 'k' is for moving up a directory; the
+! advantage of using the plain 'k' alias is that we don't have to repeatedly
+! press "ENTER" between each invocation.
+URxvt.keysym.M-C-k: k\n
+URxvt.keysym.M-C-h: dirs $(dirs -lp | awk 'NR==1{store=$0;next}1;END{print store}') && popd && ll\n
+URxvt.keysym.M-C-l: cd -0 && ll\n
+
 ! `font-size` plugin
 URxvt.keysym.C-minus: perl:font-size:decrease
 URxvt.keysym.C-equal: perl:font-size:increase
