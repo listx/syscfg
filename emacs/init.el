@@ -554,8 +554,8 @@ keybinding as it conflicts with Anthy input."
 	(end-of-line)
 	(insert "\n")
 	(delete-blank-lines)
-	(insert "\\end{code}\n\n\n\n\\begin{code}")
-	(forward-line -2)
+	(insert "\\end{code}\n\n\n\n\\begin{code}\n")
+	(forward-line -3)
 	(evil-append nil)
 )
 
