@@ -108,12 +108,16 @@ Each element has the form (NAME . HEX).
 (with-zenmonk-color-vars
 	(setq alect-overriding-faces
 		`(
+			(ace-jump-face-foreground
+				((t
+				:foreground "red"
+				:background bg-1
+				:underline t
+				)))
+			; column-enforce-mode
+			(column-enforce-face ((t :foreground ,zm-bg
+				:background ,zm-red+2 :underline nil)))
 			(default ((t :foreground magenta-1 :background bg-1 :weight bold)))
-			(region ((((background light))
-					:foreground "#376161" :background "#f2ffcf" :weight bold)
-					(((background dark))
-					:foreground ,zm-blue-5 :background ,zm-green+4)))
-
 			; FIXME: make the alect-dark palette more zenmonk-like, and then use
 			; those regular alect colors as much as possible.
 			(font-lock-builtin-face  ((t :foreground magenta-1 :weight bold)))
@@ -121,7 +125,14 @@ Each element has the form (NAME . HEX).
 			(font-lock-constant-face ((t :foreground cyan-1 :weight bold)))
 			(font-lock-doc-face ((t :foreground fg-1)))
 			(font-lock-function-name-face ((t :foreground blue-1 :weight bold)))
-			(font-lock-negation-char-face ((t :foreground ,zm-yellow :weight bold)))
+			(font-lock-negation-char-face
+				((((background light))
+				:foreground red+1
+				:weight bold
+				(((background dark))
+				:foreground ,zm-yellow
+				:weight bold
+				))))
 			(font-lock-operator-face ((t :foreground ,zm-blue-1 :weight bold)))
 			(font-lock-preprocessor-face ((t :foreground green-1 :weight bold)))
 			(font-lock-pseudo-keyword-face ((t :foreground ,zm-orange :weight bold)))
@@ -134,9 +145,16 @@ Each element has the form (NAME . HEX).
 			(font-lock-hex-face ((t :foreground cyan-2 :weight bold)))
 			(font-lock-float-face ((t :foreground magenta-2)))
 			(font-lock-octal-face ((t :foreground magenta-2 :weight bold)))
-			; column-enforce-mode
-			(column-enforce-face ((t :foreground ,zm-bg
-				:background ,zm-red+2 :underline nil)))
+			(isearch
+				((t
+				:inherit lazy-highlight
+				)))
+			(lazy-highlight
+				((t
+				:foreground "blue"
+				:background "yellow"
+				:underline t
+				)))
 			(mode-line              ((((background light))
 										:foreground fg :background bg
 										:box (:line-width 2 :style released-button))
@@ -150,6 +168,10 @@ Each element has the form (NAME . HEX).
 										:foreground "grey32" :background "black"
 										:box (:line-width 2 :color "gray32" :style nil))))
 			(mode-line-buffer-id    ((t :foreground magenta+1 :weight bold)))
+			(region ((((background light))
+					:foreground "#376161" :background "#f2ffcf" :weight bold)
+					(((background dark))
+					:foreground ,zm-blue-5 :background ,zm-green+4)))
 		)
 	)
 
@@ -163,7 +185,6 @@ Each element has the form (NAME . HEX).
 			; cursor line highlight
 			(alect-set-color 'light 'bg "#e2efbf")
 			; visual line selection
-			(alect-set-color 'light 'bg+2 "DodgerBlue3")
 			(alect-set-color 'light 'cursor "DodgerBlue1")
 			(alect-set-color 'light 'red ,zm-red+2)
 			(alect-set-color 'light 'magenta-1 ,zl-fg)
@@ -171,6 +192,8 @@ Each element has the form (NAME . HEX).
 			(alect-set-color 'light 'red-2 ,zl-red)
 			(alect-set-color 'light 'cyan-2 "DodgerBlue1")
 			(alect-set-color 'light 'green-1 "firebrick3")
+			; ace-jump's background face's foreground color
+			(alect-set-color 'light 'bg+2 "#8e876c")
 
 			; general background
 			(alect-set-color 'dark 'bg-1 ,zm-bg)
