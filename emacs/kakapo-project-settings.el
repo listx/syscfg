@@ -209,8 +209,17 @@
 				)
 			)
 			; Haskell
-			((string-match "\\.[l]?hs$" b)
+			((string-match "\\.hs$" b)
 				(h 'haskell-mode-hook t 4)
+			)
+			; Literate Haskell
+			((string-match "\\.lhs$" b)
+				(progn
+					(h 'latex-mode-hook t 4)
+					(setq mmm-global-mode 't)
+					(setq mmm-submode-decoration-level 1)
+					(mmm-ify-by-class 'literate-haskell-latex)
+				)
 			)
 			; Hazelnut
 			((string-match "\\.hzl$" b)

@@ -168,6 +168,12 @@ Each element has the form (NAME . HEX).
 										:foreground "grey32" :background "black"
 										:box (:line-width 2 :color "gray32" :style nil))))
 			(mode-line-buffer-id    ((t :foreground magenta+1 :weight bold)))
+			(mmm-default-submode-face
+				((((background light))
+				:background "#fbf9f3"
+				(((background dark))
+				:background bg+1
+				))))
 			(region ((((background light))
 					:foreground "#376161" :background "#f2ffcf" :weight bold)
 					(((background dark))
