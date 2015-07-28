@@ -117,6 +117,8 @@ URxvt.keysym.Control-k: command:\033]720;1\007
 URxvt.keysym.Control-h: command:\033]720;10\007
 URxvt.keysym.Control-l: command:\033]721;10\007
 
+! make urxvt the login shell
+URxvt.loginShell:   true
 !cutchars are characterse used as delimiters for double-click word selection
 URxvt.cutchars: "\"()*,<>[]{}|\'"
 URxvt.saveLines: 32767
