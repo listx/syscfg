@@ -59,6 +59,9 @@
 					((string-match ".+\\Dockerfile$" b)
 						(h 'dockerfile-mode-hook nil 4)
 					)
+					((string-match ".+\\.htm[l]?$" b)
+						(h 'html-mode-hook nil 2)
+					)
 					((string-match ".+\\.js\\(on\\)?$" b)
 						(h 'js-mode-hook nil 2
 							(progn
