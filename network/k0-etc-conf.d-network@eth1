@@ -1,4 +1,0 @@
-address=192.168.1.110
-netmask=24
-broadcast=192.168.1.255
-gateway=192.168.1.254

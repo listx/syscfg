@@ -1,7 +1,0 @@
-Description='A basic static ethernet connection'
-Interface=eno1
-Connection=ethernet
-IP=static
-Address=('192.168.1.110/24')
-Gateway='192.168.1.254'
-DNS=('192.168.1.254')

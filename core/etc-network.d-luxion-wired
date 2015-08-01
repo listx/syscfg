@@ -1,6 +1,0 @@
-CONNECTION="ethernet"
-DESCRIPTION="ethernet with dhcp"
-INTERFACE=eth0
-IP="dhcp"
-DHCP_TIMEOUT=60
-TIMEOUT=1
