@@ -81,14 +81,17 @@
 ; buffer movement
 (define-key evil-normal-state-map "H" 'evil-next-buffer)
 (define-key evil-normal-state-map "L" 'evil-prev-buffer)
-; find file
-(define-key evil-normal-state-map ",e" 'ido-find-file)
 ; set line ending to UNIX
 (define-key evil-normal-state-map ",E"
 	(lambda () (interactive) (set-buffer-file-coding-system 'utf-8-unix t)))
 ; replace all /r/n with just /n
 ; make "kj" behave as ESC key, adapted from http://article.gmane.org/gmane.emacs.vim-emulation/980
 (define-key evil-insert-state-map "k" #'cofi/maybe-exit)
+
+; Helm
+; find file
+(define-key evil-normal-state-map "-" 'helm-find-files)
+(define-key evil-normal-state-map ",g" 'helm-mini)
 
 ; Elscreen
 ; new tab

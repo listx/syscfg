@@ -46,6 +46,7 @@
 	evil
 	haml-mode
 	haskell-mode
+	helm
 	hiwin
 	htmlize
 	kakapo-mode
@@ -458,11 +459,8 @@ keybinding as it conflicts with Anthy input."
 (load "elscreen" "ElScreen" t)
 (elscreen-start)
 
-; Ido mode
-(setq ido-enable-flex-matching t)
-(setq ido-everywhere t)
-(ido-mode 1)
-(setq ido-ignore-files (append ido-ignore-files '("\\.hi$")))
+; Helm
+(helm-mode 1)
 
 ; Org-mode
 ; start up org-mode for .org files
