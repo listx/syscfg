@@ -67,12 +67,46 @@
 	(lambda () (interactive) (split-window-vertically) (balance-windows)))
 (define-key evil-normal-state-map ",v"
 	(lambda () (interactive) (split-window-horizontally) (balance-windows)))
-; move to next window
-(define-key evil-normal-state-map (kbd "TAB") 'other-window)
-; move to previous window
-(define-key evil-normal-state-map [backtab]
-	(lambda () (interactive) (other-window -1))
-)
+; window navigation
+(define-key evil-normal-state-map (kbd "TAB")
+	(defhydra hydra-window ()
+	"Window navigation with hydra."
+	("TAB" other-window "x" :exit t)
+	("h" windmove-left)
+	("j" windmove-down)
+	("k" windmove-up)
+	("l" windmove-right)
+	(";" (lambda ()
+			(interactive)
+			(ace-window 1)
+			(add-hook 'ace-window-end-once-hook
+						'hydra-window/body))
+			"ace" :exit t)
+	("v" (lambda ()
+			(interactive)
+			(split-window-right)
+			(windmove-right))
+			"vert" :exit t)
+	("x" (lambda ()
+			(interactive)
+			(split-window-below)
+			(windmove-down))
+			"horz" :exit t)
+	("s" (lambda ()
+			(interactive)
+			(ace-window 4)
+			(add-hook 'ace-window-end-once-hook
+						'hydra-window/body))
+			"swap" :exit t)
+	("d" (lambda ()
+			(interactive)
+			(ace-window 16)
+			(add-hook 'ace-window-end-once-hook
+						'hydra-window/body))
+			"del" :exit t)
+	("I" delete-other-windows "1" :exit t)
+	("i" ace-maximize-window "a1" :exit t)
+	("q" nil "cancel")))
 ; Change K from being mapped to interactive man pages to being used as the
 ; vanilla comma ',' key's functionality (intra-line backwards search repeat for
 ; any t, T, f, F searches).

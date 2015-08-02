@@ -37,6 +37,7 @@
 (defvar my/packages
 	'(
 	ace-jump-mode
+	ace-window
 	alect-themes
 	color-theme ; needed for dbrock's old zenburn
 	column-enforce-mode
@@ -49,6 +50,7 @@
 	helm
 	hiwin
 	htmlize
+	hydra
 	kakapo-mode
 	markdown-mode
 	mmm-mode
@@ -108,6 +110,14 @@
 
 ; load Packages
 ; -------------
+
+; ace-window
+
+; Number each window's unique number into the mode line.
+(ace-window-display-mode)
+; Disable background color-changing when entering ace-window mode.
+(setq aw-background nil)
+
 ; fix "<dead-grave> is undefined" error
 (require 'iso-transl)
 
