@@ -45,6 +45,7 @@
 	dockerfile-mode
 	elscreen
 	evil
+	evil-leader
 	haml-mode
 	haskell-mode
 	helm
@@ -89,6 +90,11 @@
 	"A mode for ~/.Xdefaults and ~/.Xresources files" ; docstring for this mode
 )
 
+; evil-leader-mode
+(global-evil-leader-mode)
+(evil-leader/set-leader ",")
+(setq evil-leader/in-all-states 1)
+
 (require 'evil)
 (evil-mode 1)
 
@@ -108,6 +114,14 @@
 ; load zenmonk theme settings
 (load "~/.emacs.d/script/zenmonk")
 
+; http://stackoverflow.com/a/3217206/437583
+(defun save-buffer-always ()
+	"Save the buffer even if it is not modified."
+	(interactive)
+	(set-buffer-modified-p t)
+	(save-buffer)
+)
+
 ; load Packages
 ; -------------
 
@@ -117,6 +131,8 @@
 (ace-window-display-mode)
 ; Disable background color-changing when entering ace-window mode.
 (setq aw-background nil)
+; Prefer home row over the 0-9 candidate characters.
+(setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l ?0 ?1 ?2 ?3 ?4 ?5 ?6 ?7 ?8 ?9))
 
 ; fix "<dead-grave> is undefined" error
 (require 'iso-transl)
@@ -377,20 +393,6 @@ otherwise, close current tab (elscreen)."
 (setq-default major-mode 'text-mode)
 ; Use kakapo's "o" and "O" for opening new lines.
 (setq my/before-open-line nil)
-(define-key evil-normal-state-map "o"
-	(lambda ()
-		(interactive)
-		(setq my/before-open-line (kakapo-lc))
-		(kakapo-open nil)
-	)
-)
-(define-key evil-normal-state-map "O"
-	(lambda ()
-		(interactive)
-		(setq my/before-open-line (kakapo-lc))
-		(kakapo-open t)
-	)
-)
 (setq my/something-inserted nil)
 (defun my/check-for-some-insertion ()
 	(if (and
@@ -404,12 +406,6 @@ otherwise, close current tab (elscreen)."
 	)
 )
 (add-hook 'post-self-insert-hook 'my/check-for-some-insertion)
-; make ENTER key insert indentation after inserting a newline (noticeable when
-; editing C files)
-(define-key evil-insert-state-map (kbd "RET") 'kakapo-ret-and-indent)
-(define-key evil-insert-state-map (kbd "<S-backspace>") 'kakapo-upline)
-; for all minor modes, make backspace behave like backspace in insert mode
-(define-key evil-insert-state-map (kbd "DEL") 'kakapo-backspace)
 
 ; Modes
 
@@ -838,25 +834,6 @@ keybinding as it conflicts with Anthy input."
 ; show empty whitespace
 (setq-default indicate-empty-lines t)
 (setq-default show-trailing-whitespace t)
-; toggle between fonts
-(define-key evil-normal-state-map ",f" 'my-toggle-font)
-(define-key evil-normal-state-map ",_"
-	(lambda ()
-		(interactive)
-		(global-text-scale-adjust -2)
-	)
-)
-(define-key evil-normal-state-map ",-"
-	(lambda ()
-		(interactive)
-		(global-text-scale-adjust 2)
-	)
-)
-; ace-jump-mode
-; This robs "f" of its normal function (finding the given character on the
-; current line), but as ace-jump is essentially acting as a superset of normal
-; "f", this makes the most sense.
-(define-key evil-normal-state-map "f" 'ace-jump-mode)
 ; disable fringes
 (fringe-mode 0)
 ; set default line length (as used by 'fill-paragraph) to be 80 characters

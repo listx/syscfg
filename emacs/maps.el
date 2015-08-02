@@ -1,22 +1,117 @@
 ; Emacs
 (define-key evil-normal-state-map [f1] 'menu-bar-mode) ; toggle the menu bar
-(define-key evil-normal-state-map ",w" 'save-buffer) ; save
-(define-key evil-normal-state-map ",W" ":w!") ; force save
-(define-key evil-normal-state-map ",q" 'vimlike-quit) ; close current elscreen, or current window if only one elscreen
-(define-key evil-normal-state-map ",Q" ":q!") ; close current window, *even if modified*
-(define-key evil-normal-state-map ",d" 'kill-this-buffer) ; kill current buffer without confirmation
-(define-key evil-motion-state-map "z" 'kill-this-buffer)
-(define-key evil-normal-state-map ",D" 'kill-this-buffer-volatile) ; kill current buffer without confirmation, *even if modified*
-(define-key evil-normal-state-map ",x" 'save-buffers-kill-emacs) ; save and quit
-(define-key evil-normal-state-map ",u" 'undo-tree-visualize) ; see undo history in tree format (this will be opened in a new split window)
-(define-key evil-normal-state-map ",z" 'suspend-emacs)
+; ace-jump-mode
+; This robs "f" of its normal function (finding the given character on the
+; current line), but as ace-jump is essentially acting as a superset of normal
+; "f", this makes the most sense.
+(define-key evil-normal-state-map "f" 'ace-jump-mode)
+(define-key evil-normal-state-map (kbd "TAB") 'other-window)
+(evil-leader/set-key
+	"-"
+		(defhydra hydra-zoom ()
+		"zoom"
+			("k"
+				(lambda () (interactive) (global-text-scale-adjust 1))
+				"in")
+			("j"
+				(lambda () (interactive) (global-text-scale-adjust -1))
+				"out")
+		)
+	"TAB"
+		(defhydra hydra-window ()
+			"Window navigation with hydra."
+			("TAB" nil "exit" :exit t)
+			("h" windmove-left)
+			("j" windmove-down)
+			("k" windmove-up)
+			("l" windmove-right)
+			(","
+				(lambda ()
+					(interactive)
+					(ace-window 1)
+					(add-hook 'ace-window-end-once-hook 'hydra-window/body))
+				"ace"
+				:exit t)
+			("v"
+				(lambda ()
+					(interactive)
+					(split-window-right)
+					(windmove-right))
+				"vert"
+				:exit t)
+			("x"
+				(lambda ()
+					(interactive)
+					(split-window-below)
+					(windmove-down))
+				"horz"
+				:exit t)
+			("s"
+				(lambda ()
+					(interactive)
+					(ace-window 4)
+					(add-hook 'ace-window-end-once-hook 'hydra-window/body))
+				"swap"
+				:exit t)
+			("d"
+			 (lambda ()
+					(interactive)
+					(ace-window 16)
+					(add-hook 'ace-window-end-once-hook 'hydra-window/body))
+				"del"
+				:exit t)
+			("I" delete-other-windows "1" :exit t)
+			("i" ace-maximize-window "a1" :exit t)
+		)
+
+	; Nox integration (comment/uncomment regions)
+	"c" (lambda () (interactive) (my-addrem-comment t))
+	"C" (lambda () (interactive) (my-addrem-comment nil))
+
+	; kill buffer
+	"d" 'kill-this-buffer
+
+	; kill current buffer without confirmation, *even if modified*
+	"D" 'kill-this-buffer-volatile
+
+	; set line ending to UNIX
+	"E" (lambda () (interactive) (set-buffer-file-coding-system 'utf-8-unix t))
+
+	"h" (lambda () (interactive) (split-window-vertically) (balance-windows))
+
+	; close current elscreen, or current window if only one elscreen
+	"q" 'vimlike-quit
+
+	; close current window, *even if modified*
+	"Q" (lambda () (interactive) (evil-quit t))
+
+	"t" 'my-toggle-font
+
+	; cycle through various themes
+	"T" (lambda () (interactive) (my/cycle-theme))
+
+	; see undo history in tree format (this will be opened in a new split
+	; window)
+	"u" 'undo-tree-visualize
+
+	"v" (lambda () (interactive) (split-window-horizontally) (balance-windows))
+
+	; save
+	"w" 'save-buffer
+
+	; force save
+	"W" 'save-buffer-always
+
+	; save and quit
+	"x" 'save-buffers-kill-emacs
+
+	; put emacs into the background; only works in terminal mode
+	"Z" 'suspend-emacs
+	)
+
 (define-key evil-insert-state-map [S-insert]
 	(lambda () (interactive) (insert (x-selection 'PRIMARY)))) ; paste X primary
 (define-key evil-normal-state-map "gw" 'fill-paragraph) ; insert hard line breaks
-
-; cycle through defined themes
-(define-key evil-normal-state-map ",t"
-	(lambda () (interactive) (my/cycle-theme)))
 
 ; Add newlines above/below, without going through kakapo-open. We have a hook
 ; that runs on exit of insert mode, which discards purely whitespace insertions,
@@ -63,50 +158,6 @@
 		(evil-scroll-line-to-center nil)
 	)
 )
-(define-key evil-normal-state-map ",h"
-	(lambda () (interactive) (split-window-vertically) (balance-windows)))
-(define-key evil-normal-state-map ",v"
-	(lambda () (interactive) (split-window-horizontally) (balance-windows)))
-; window navigation
-(define-key evil-normal-state-map (kbd "TAB")
-	(defhydra hydra-window ()
-	"Window navigation with hydra."
-	("TAB" other-window "x" :exit t)
-	("h" windmove-left)
-	("j" windmove-down)
-	("k" windmove-up)
-	("l" windmove-right)
-	(";" (lambda ()
-			(interactive)
-			(ace-window 1)
-			(add-hook 'ace-window-end-once-hook
-						'hydra-window/body))
-			"ace" :exit t)
-	("v" (lambda ()
-			(interactive)
-			(split-window-right)
-			(windmove-right))
-			"vert" :exit t)
-	("x" (lambda ()
-			(interactive)
-			(split-window-below)
-			(windmove-down))
-			"horz" :exit t)
-	("s" (lambda ()
-			(interactive)
-			(ace-window 4)
-			(add-hook 'ace-window-end-once-hook
-						'hydra-window/body))
-			"swap" :exit t)
-	("d" (lambda ()
-			(interactive)
-			(ace-window 16)
-			(add-hook 'ace-window-end-once-hook
-						'hydra-window/body))
-			"del" :exit t)
-	("I" delete-other-windows "1" :exit t)
-	("i" ace-maximize-window "a1" :exit t)
-	("q" nil "cancel")))
 ; Change K from being mapped to interactive man pages to being used as the
 ; vanilla comma ',' key's functionality (intra-line backwards search repeat for
 ; any t, T, f, F searches).
@@ -115,9 +166,6 @@
 ; buffer movement
 (define-key evil-normal-state-map "H" 'evil-next-buffer)
 (define-key evil-normal-state-map "L" 'evil-prev-buffer)
-; set line ending to UNIX
-(define-key evil-normal-state-map ",E"
-	(lambda () (interactive) (set-buffer-file-coding-system 'utf-8-unix t)))
 ; replace all /r/n with just /n
 ; make "kj" behave as ESC key, adapted from http://article.gmane.org/gmane.emacs.vim-emulation/980
 (define-key evil-insert-state-map "k" #'cofi/maybe-exit)
@@ -125,28 +173,18 @@
 ; Helm
 ; find file
 (define-key evil-normal-state-map "-" 'helm-find-files)
-(define-key evil-normal-state-map ",g" 'helm-mini)
+(evil-leader/set-key "g" 'helm-mini)
 
 ; Elscreen
 ; new tab
-(define-key evil-normal-state-map ",n" 'elscreen-create)
+(evil-leader/set-key "n" 'elscreen-create)
 ; new tab, but clone the current tab's window-splits (if any) layout
-(define-key evil-normal-state-map ",N" 'elscreen-clone)
+(evil-leader/set-key "N" 'elscreen-clone)
 ; tab navigation
 (define-key evil-normal-state-map (kbd "C-l") 'elscreen-next)
 (define-key evil-normal-state-map (kbd "C-h") 'elscreen-previous)
 (define-key evil-insert-state-map (kbd "C-l") 'elscreen-next)
 (define-key evil-insert-state-map (kbd "C-h") 'elscreen-previous)
-
-; Nox integration (comment/uncomment regions)
-(define-key evil-visual-state-map ",c"
-	(lambda () (interactive) (my-addrem-comment t))) ; add comment
-(define-key evil-visual-state-map ",C"
-	(lambda () (interactive) (my-addrem-comment nil))) ; remove comment
-(define-key evil-normal-state-map ",c"
-  (lambda () (interactive) (my-addrem-comment t)))
-(define-key evil-normal-state-map ",C"
-  (lambda () (interactive) (my-addrem-comment nil)))
 
 ; org-mode
 (evil-define-key 'normal org-mode-map (kbd "M-o")
@@ -193,8 +231,11 @@
 	)
 )
 (evil-define-key 'normal org-mode-map "T" 'org-todo) ; mark a TODO item as DONE
-(evil-define-key 'normal org-mode-map ",a" 'org-agenda) ; access agenda buffer
-(evil-define-key 'normal org-mode-map "-" 'org-cycle-list-bullet) ; change bullet style
+(evil-leader/set-key-for-mode 'org-mode
+	"b" 'org-cycle-list-bullet
+	"s" 'org-beamer-export-to-pdf
+	"W" 'org-publish-current-project
+)
 
 (evil-define-key 'normal org-mode-map (kbd "M-i") 'org-insert-link)
 (evil-define-key 'insert org-mode-map (kbd "M-i") 'org-insert-link)
@@ -219,12 +260,6 @@
 ; keyboard layout also.
 (evil-define-key 'normal org-mode-map (kbd "<C-S-iso-lefttab>") 'org-shifttab)
 
-; publish project
-(evil-define-key 'normal org-mode-map ",W" 'org-publish-current-project)
-
-; publish slides to PDF (beamer mode)
-(evil-define-key 'normal org-mode-map ",s" 'org-beamer-export-to-pdf)
-
 ; Disable default orgmode hotkeys that interfere with our global hotkeys defined
 ; elsewhere.
 (add-hook 'org-mode-hook
@@ -238,3 +273,25 @@
 (evil-define-key 'normal dired-mode-map "H" 'evil-next-buffer)
 (evil-define-key 'normal dired-mode-map "L" 'evil-prev-buffer)
 (evil-define-key 'normal dired-mode-map "K" 'dired-up-directory)
+
+; Kakapo
+(define-key evil-normal-state-map "o"
+	(lambda ()
+		(interactive)
+		(setq my/before-open-line (kakapo-lc))
+		(kakapo-open nil)
+	)
+)
+(define-key evil-normal-state-map "O"
+	(lambda ()
+		(interactive)
+		(setq my/before-open-line (kakapo-lc))
+		(kakapo-open t)
+	)
+)
+; make ENTER key insert indentation after inserting a newline (noticeable when
+; editing C files)
+(define-key evil-insert-state-map (kbd "RET") 'kakapo-ret-and-indent)
+(define-key evil-insert-state-map (kbd "<S-backspace>") 'kakapo-upline)
+; for all minor modes, make backspace behave like backspace in insert mode
+(define-key evil-insert-state-map (kbd "DEL") 'kakapo-backspace)
