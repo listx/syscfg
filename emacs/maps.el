@@ -81,8 +81,6 @@
 ; buffer movement
 (define-key evil-normal-state-map "H" 'evil-next-buffer)
 (define-key evil-normal-state-map "L" 'evil-prev-buffer)
-; new buffer
-(define-key evil-normal-state-map ",n" 'vimlike-:tabe)
 ; find file
 (define-key evil-normal-state-map ",e" 'ido-find-file)
 ; set line ending to UNIX
@@ -93,8 +91,10 @@
 (define-key evil-insert-state-map "k" #'cofi/maybe-exit)
 
 ; Elscreen
-; new vimlike "tab", aka "screen"
-(define-key evil-normal-state-map ",N" 'elscreen-create)
+; new tab
+(define-key evil-normal-state-map ",n" 'elscreen-create)
+; new tab, but clone the current tab's window-splits (if any) layout
+(define-key evil-normal-state-map ",N" 'elscreen-clone)
 ; tab navigation
 (define-key evil-normal-state-map (kbd "C-l") 'elscreen-next)
 (define-key evil-normal-state-map (kbd "C-h") 'elscreen-previous)

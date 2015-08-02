@@ -345,14 +345,7 @@ otherwise, close current tab (elscreen)."
 		)
 	)
 )
-; A function that behaves like Vim's ':tabe' commnad for creating a new tab and
-; buffer (the name "[No Name]" is also taken from Vim).
-(defun vimlike-:tabe ()
-	"Vimlike ':tabe' behavior for creating a new tab and buffer."
-	(interactive)
-	; create new tab
-	(elscreen-create)
-)
+
 ; start *scratch* buffer without the annoying ad
 (setq initial-scratch-message "")
 ; set *scratch* mode to text mode
