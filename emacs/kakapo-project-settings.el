@@ -59,7 +59,7 @@
 					((string-match ".+\\.conf$" b)
 						(h 'conf-unix-mode-hook nil 4)
 					)
-					((string-match ".+\\Dockerfile$" b)
+					((string-match ".+Dockerfile$" b)
 						(h 'dockerfile-mode-hook nil 4)
 					)
 					((string-match ".+\\.htm[l]?$" b)
