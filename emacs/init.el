@@ -832,7 +832,6 @@ keybinding as it conflicts with Anthy input."
 	(let
 		(
 			(pos (point))
-			(pos-column (current-column))
 			(line-max (save-excursion (end-of-line) (point)))
 			(xpribuf (x-selection 'PRIMARY))
 		)
@@ -844,7 +843,8 @@ keybinding as it conflicts with Anthy input."
 				(progn
 					(beginning-of-line)
 					(my/paste-X-primary)
-					(move-to-column pos-column)
+					(goto-char pos)
+					(evil-first-non-blank)
 				)
 				(progn
 					(if (= line-max (point-max))
@@ -857,6 +857,9 @@ keybinding as it conflicts with Anthy input."
 					(beginning-of-line)
 					(my/paste-X-primary)
 					(goto-char pos)
+					(forward-line 1)
+					(evil-first-non-blank)
+					(forward-char 1)
 				)
 			)
 			(my/paste-X-primary)
