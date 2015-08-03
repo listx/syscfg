@@ -16,11 +16,11 @@
 			("j"
 				(lambda () (interactive) (global-text-scale-adjust -1))
 				"out")
+			("q" nil "exit" :exit t)
 		)
 	"TAB"
 		(defhydra hydra-window ()
 			"Window navigation with hydra."
-			("TAB" nil "exit" :exit t)
 			("h" windmove-left)
 			("j" windmove-down)
 			("k" windmove-up)
@@ -60,8 +60,9 @@
 					(add-hook 'ace-window-end-once-hook 'hydra-window/body))
 				"del"
 				:exit t)
-			("I" delete-other-windows "1" :exit t)
-			("i" ace-maximize-window "a1" :exit t)
+			("I" delete-other-windows "max" :exit t)
+			("i" ace-maximize-window "max-choose" :exit t)
+			("q" nil "exit" :exit t)
 		)
 
 	; Nox integration (comment/uncomment regions)
@@ -74,10 +75,22 @@
 	; kill current buffer without confirmation, *even if modified*
 	"D" 'kill-this-buffer-volatile
 
+	; find files (like dired, but better)
+	"e" 'helm-find-files
+
 	; set line ending to UNIX
 	"E" (lambda () (interactive) (set-buffer-file-coding-system 'utf-8-unix t))
 
+	; buffers list
+	"f" 'helm-mini
+
 	"h" (lambda () (interactive) (split-window-vertically) (balance-windows))
+
+	; new tab
+	"n" 'elscreen-create
+
+	; new tab, but clone the current tab's window-splits (if any) layout
+	"N" 'elscreen-clone
 
 	; close current elscreen, or current window if only one elscreen
 	"q" 'vimlike-quit
@@ -108,6 +121,34 @@
 	; put emacs into the background; only works in terminal mode
 	"Z" 'suspend-emacs
 	)
+
+; We need to use 'eval-after-load' because o therwise we get an error about
+; `helm-map' not existing yet.
+(with-eval-after-load "helm-mode"
+	(define-key helm-map (kbd "TAB") 'hydra-helm/body)
+	; As of 576cc21f381977e1d3c509d94f73853a74612cff, the
+	; `helm-find-files-doc-header' hardcodes the default `C-l' binding. We set
+	; it to nil to suppress the message from `helm-find-files'.
+	(setq helm-find-files-doc-header nil)
+	(define-key helm-find-files-map (kbd "C-l") nil)
+	(define-key helm-find-files-map (kbd "C-k") 'helm-find-files-up-one-level)
+)
+
+; From http://angelic-sedition.github.io/blog/2015/02/03/a-more-evil-helm/.
+(defhydra hydra-helm (:foreign-keys warn)
+	"vim movement"
+	("h" (helm-find-files-up-one-level 1) "up")
+	("j" helm-next-line "down")
+	("k" helm-previous-line "up")
+	("l" helm-execute-persistent-action "open")
+	("RET" helm-execute-persistent-action "open"
+		:exit t)
+	("i" nil "exit hyrda")
+	("<SPC>" helm-select-action "action")
+	("g" helm-beginning-of-buffer "top")
+	("G" helm-end-of-buffer "bottom")
+	("q" keyboard-escape-quit "exit")
+)
 
 (define-key evil-insert-state-map [S-insert]
 	(lambda () (interactive) (insert (x-selection 'PRIMARY)))) ; paste X primary
@@ -170,16 +211,7 @@
 ; make "kj" behave as ESC key, adapted from http://article.gmane.org/gmane.emacs.vim-emulation/980
 (define-key evil-insert-state-map "k" #'cofi/maybe-exit)
 
-; Helm
-; find file
-(define-key evil-normal-state-map "-" 'helm-find-files)
-(evil-leader/set-key "g" 'helm-mini)
-
 ; Elscreen
-; new tab
-(evil-leader/set-key "n" 'elscreen-create)
-; new tab, but clone the current tab's window-splits (if any) layout
-(evil-leader/set-key "N" 'elscreen-clone)
 ; tab navigation
 (define-key evil-normal-state-map (kbd "C-l") 'elscreen-next)
 (define-key evil-normal-state-map (kbd "C-h") 'elscreen-previous)

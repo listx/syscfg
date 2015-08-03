@@ -466,6 +466,38 @@ keybinding as it conflicts with Anthy input."
 (elscreen-start)
 
 ; Helm
+(setq helm-buffers-fuzzy-matching t)
+(setq helm-recentf-fuzzy-match t)
+(setq helm-locate-fuzzy-match t)
+(setq helm-ff-skip-boring-files t)
+(with-eval-after-load "helm-mode"
+	(loop for ext in '("\\.elc$")
+		do (add-to-list 'helm-boring-file-regexp-list ext))
+
+	; From http://emacs.stackexchange.com/a/7896. Slightly modified as usual.
+	(defun fu/helm-find-files-navigate-forward (orig-fun &rest args)
+	(if (and
+			(not (string-match "\/\\.$" (helm-get-selection)))
+			(file-directory-p (helm-get-selection)))
+		(apply orig-fun args)
+		(helm-maybe-exit-minibuffer)))
+	(advice-add 'helm-execute-persistent-action :around #'fu/helm-find-files-navigate-forward)
+	(define-key helm-find-files-map (kbd "RET") 'helm-execute-persistent-action)
+
+	(defun fu/helm-find-files-navigate-back (orig-fun &rest args)
+	(if (= (length helm-pattern) (length (helm-find-files-initial-input)))
+		(helm-find-files-up-one-level 1)
+		(apply orig-fun args)))
+	(advice-add 'helm-ff-delete-char-backward
+		:around #'fu/helm-find-files-navigate-back)
+)
+
+; Fuzzy matching for "M-x". We have to add the binding as well, because without
+; it we get vanilla M-x (which, although it is 'helmified', does not use the
+; fuzzy matching behavior).
+(setq helm-M-x-fuzzy-match t)
+(global-set-key (kbd "M-x") 'helm-M-x)
+
 (helm-mode 1)
 
 ; Org-mode
