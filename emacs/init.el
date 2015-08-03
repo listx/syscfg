@@ -482,6 +482,9 @@ keybinding as it conflicts with Anthy input."
 (setq helm-recentf-fuzzy-match t)
 (setq helm-locate-fuzzy-match t)
 (setq helm-ff-skip-boring-files t)
+; Disable help string. See http://stackoverflow.com/a/19954900/437583.
+(defadvice helm-display-mode-line (after undisplay-header activate)
+	(setq header-line-format nil))
 
 ; Fuzzy matching for "M-x". We have to add the binding as well, because without
 ; it we get vanilla M-x (which, although it is 'helmified', does not use the
