@@ -6,6 +6,12 @@
 ; "f", this makes the most sense.
 (define-key evil-normal-state-map "f" 'ace-jump-mode)
 (define-key evil-normal-state-map (kbd "TAB") 'other-window)
+(define-key evil-normal-state-map [backtab]
+	(lambda ()
+		(interactive)
+		(other-window -1)
+	)
+)
 (evil-leader/set-key
 	"-"
 		(defhydra hydra-zoom ()
@@ -60,9 +66,9 @@
 					(add-hook 'ace-window-end-once-hook 'hydra-window/body))
 				"del"
 				:exit t)
+			("i" nil "choose" :exit t)
 			("I" delete-other-windows "max" :exit t)
-			("i" ace-maximize-window "max-choose" :exit t)
-			("q" nil "exit" :exit t)
+			("o" ace-maximize-window "max-choose" :exit t)
 		)
 
 	; Nox integration (comment/uncomment regions)
@@ -122,29 +128,61 @@
 	"Z" 'suspend-emacs
 	)
 
-; We need to use 'eval-after-load' because o therwise we get an error about
+; We need to use 'eval-after-load' because otherwise we get an error about
 ; `helm-map' not existing yet.
 (with-eval-after-load "helm-mode"
-	(define-key helm-map (kbd "TAB") 'hydra-helm/body)
+	(loop for ext in '("\\.elc$")
+		do (add-to-list 'helm-boring-file-regexp-list ext))
+
+	; From http://emacs.stackexchange.com/a/7896. Slightly modified as usual.
+
+	; `helm-maybe-exit-minibuffer' opens the argument and exits helm.
+	; `helm-execute-persistent-action' pseudo-opens the argument, and stays in
+	; helm. We want to use the second one and stay in helm as much as possible
+	; (e.g., esp. when navigating directories), because then we basically get
+	; most of the power of Dired-mode but combined with helm's fuzzy-matching.
+	; We could technically just call `fu/helm-find-files-navigate-forward'
+	; directly instead of using `advice-add', but it's worth keeping for
+	; historical reasons.
+	(defun fu/helm-find-files-navigate-forward (orig-fun &rest args)
+		(cond
+			(
+				(and
+					(eq 'string (type-of (helm-get-selection)))
+					(not (string-match "\/\\.$" (helm-get-selection)))
+					(file-directory-p (helm-get-selection))
+				)
+				(apply orig-fun args)
+			)
+			(t (helm-maybe-exit-minibuffer))
+		)
+	)
+	(advice-add 'helm-execute-persistent-action :around #'fu/helm-find-files-navigate-forward)
+
+	(defun fu/helm-find-files-navigate-back (orig-fun &rest args)
+	(if (= (length helm-pattern) (length (helm-find-files-initial-input)))
+		(helm-find-files-up-one-level 1)
+		(apply orig-fun args)))
+	(advice-add 'helm-ff-delete-char-backward
+		:around #'fu/helm-find-files-navigate-back)
+
+	(define-key helm-map " " 'hydra-helm/body)
 	; As of 576cc21f381977e1d3c509d94f73853a74612cff, the
 	; `helm-find-files-doc-header' hardcodes the default `C-l' binding. We set
 	; it to nil to suppress the message from `helm-find-files'.
 	(setq helm-find-files-doc-header nil)
-	(define-key helm-find-files-map (kbd "C-l") nil)
-	(define-key helm-find-files-map (kbd "C-k") 'helm-find-files-up-one-level)
+	(define-key helm-find-files-map (kbd "RET") 'helm-execute-persistent-action)
 )
 
 ; From http://angelic-sedition.github.io/blog/2015/02/03/a-more-evil-helm/.
 (defhydra hydra-helm (:foreign-keys warn)
-	"vim movement"
-	("h" (helm-find-files-up-one-level 1) "up")
+	("h" (helm-find-files-up-one-level 1) "parent")
 	("j" helm-next-line "down")
 	("k" helm-previous-line "up")
 	("l" helm-execute-persistent-action "open")
-	("RET" helm-execute-persistent-action "open"
-		:exit t)
-	("i" nil "exit hyrda")
-	("<SPC>" helm-select-action "action")
+	("RET" helm-maybe-exit-minibuffer "open")
+	("<SPC>" nil "exit hyrda")
+	("TAB" helm-select-action "action")
 	("g" helm-beginning-of-buffer "top")
 	("G" helm-end-of-buffer "bottom")
 	("q" keyboard-escape-quit "exit")
