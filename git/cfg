@@ -2,9 +2,9 @@
 	name = Linus Arver
 	email = linusarver@gmail.com
 [color]
-	branch = always
-	diff = always
-	status = always
+	branch = auto
+	diff = auto
+	status = auto
 [color "diff"]
 	meta = yellow bold
 	commit = blue bold reverse
