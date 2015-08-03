@@ -15,64 +15,67 @@
 	)
 )
 
+(defhydra hydra-zoom ()
+"zoom"
+	("k"
+		(lambda () (interactive) (global-text-scale-adjust 1))
+		"in")
+	("j"
+		(lambda () (interactive) (global-text-scale-adjust -1))
+		"out")
+	("q" nil "exit" :exit t)
+)
+
+(defhydra hydra-window ()
+	"Window navigation with hydra."
+	("h" windmove-left)
+	("j" windmove-down)
+	("k" windmove-up)
+	("l" windmove-right)
+	(","
+		(lambda ()
+			(interactive)
+			(ace-window 1)
+			(add-hook 'ace-window-end-once-hook 'hydra-window/body))
+		"ace"
+		:exit t)
+	("v"
+		(lambda ()
+			(interactive)
+			(split-window-right)
+			(windmove-right))
+		"vert"
+		:exit t)
+	("x"
+		(lambda ()
+			(interactive)
+			(split-window-below)
+			(windmove-down))
+		"horz"
+		:exit t)
+	("s"
+		(lambda ()
+			(interactive)
+			(ace-window 4)
+			(add-hook 'ace-window-end-once-hook 'hydra-window/body))
+		"swap"
+		:exit t)
+	("d"
+		(lambda ()
+			(interactive)
+			(ace-window 16)
+			(add-hook 'ace-window-end-once-hook 'hydra-window/body))
+		"del"
+		:exit t)
+	("i" nil "choose" :exit t)
+	("I" delete-other-windows "max" :exit t)
+	("o" ace-maximize-window "max-choose" :exit t)
+)
+
 (evil-leader/set-key
-	"-"
-		(defhydra hydra-zoom ()
-		"zoom"
-			("k"
-				(lambda () (interactive) (global-text-scale-adjust 1))
-				"in")
-			("j"
-				(lambda () (interactive) (global-text-scale-adjust -1))
-				"out")
-			("q" nil "exit" :exit t)
-		)
-	"TAB"
-		(defhydra hydra-window ()
-			"Window navigation with hydra."
-			("h" windmove-left)
-			("j" windmove-down)
-			("k" windmove-up)
-			("l" windmove-right)
-			(","
-				(lambda ()
-					(interactive)
-					(ace-window 1)
-					(add-hook 'ace-window-end-once-hook 'hydra-window/body))
-				"ace"
-				:exit t)
-			("v"
-				(lambda ()
-					(interactive)
-					(split-window-right)
-					(windmove-right))
-				"vert"
-				:exit t)
-			("x"
-				(lambda ()
-					(interactive)
-					(split-window-below)
-					(windmove-down))
-				"horz"
-				:exit t)
-			("s"
-				(lambda ()
-					(interactive)
-					(ace-window 4)
-					(add-hook 'ace-window-end-once-hook 'hydra-window/body))
-				"swap"
-				:exit t)
-			("d"
-			 (lambda ()
-					(interactive)
-					(ace-window 16)
-					(add-hook 'ace-window-end-once-hook 'hydra-window/body))
-				"del"
-				:exit t)
-			("i" nil "choose" :exit t)
-			("I" delete-other-windows "max" :exit t)
-			("o" ace-maximize-window "max-choose" :exit t)
-		)
+	"-" 'hydra-zoom/body
+	"TAB" 'hydra-window/body
+	"<SPC>" 'hydra-window/body
 
 	; Nox integration (comment/uncomment regions)
 	"c" (lambda () (interactive) (my-addrem-comment t))
