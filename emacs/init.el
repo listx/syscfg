@@ -400,6 +400,7 @@ otherwise, close current tab (elscreen)."
 ; Per-project indentation rules, from ~/.emacs.d/kakapo-project-settings.el
 (add-hook 'prog-mode-hook 'my-kakapo-indents)
 (add-hook 'text-mode-hook 'my-kakapo-indents)
+(add-hook 'conf-mode-hook 'my-kakapo-indents)
 (add-hook 'css-mode-hook 'my-kakapo-indents)
 
 ;(setq kakapo-debug nil)
@@ -538,12 +539,6 @@ keybinding as it conflicts with Anthy input."
 	(lambda ()
 		(c-set-style "linux")
 		(modify-syntax-entry ?_ "w") ; add underscore as a word character, like in Vim
-	)
-)
-; conf-mode
-(add-hook 'conf-mode-hook
-	(lambda ()
-		(setq indent-tabs-mode nil)
 	)
 )
 
