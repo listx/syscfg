@@ -779,6 +779,7 @@ keybinding as it conflicts with Anthy input."
 		(global-hl-line-mode 0)
 	)
 )
+; Aggressively undo any "o" or "O" command if we only enter whitespace.
 (add-hook 'evil-insert-state-exit-hook
 	(lambda ()
 		(interactive)
@@ -818,6 +819,13 @@ keybinding as it conflicts with Anthy input."
 		(setq my/before-open-line nil)
 		(setq my/something-inserted nil)
 	)
+)
+(defun my/paste-X-primary ()
+	(interactive)
+	(insert (x-selection 'PRIMARY))
+	; Prevent our 'undo usage of 'o' Insert state exit hook from undoing
+	; this paste.
+	(setq my/before-open-line nil)
 )
 (add-hook 'evil-visual-state-entry-hook
 	(lambda ()

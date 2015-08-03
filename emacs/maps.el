@@ -187,9 +187,8 @@
 	("G" helm-end-of-buffer "bottom")
 	("q" keyboard-escape-quit "exit")
 )
-
-(define-key evil-insert-state-map [S-insert]
-	(lambda () (interactive) (insert (x-selection 'PRIMARY)))) ; paste X primary
+; paste X primary
+(define-key evil-insert-state-map [S-insert] 'my/paste-X-primary)
 (define-key evil-normal-state-map "gw" 'fill-paragraph) ; insert hard line breaks
 
 ; Add newlines above/below, without going through kakapo-open. We have a hook
