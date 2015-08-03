@@ -934,14 +934,13 @@ keybinding as it conflicts with Anthy input."
 ; behavior.
 (defun my-text-height ()
 	(cond
-		(
-			(or
-				(string-match "^k[12]" system-name)
-				(string-match "^w0" system-name)
-			)
+		((string-match "^k[12]" system-name)
 			95
 		)
 		((string-match "^k3" system-name)
+			102
+		)
+		((string-match "^w0" system-name)
 			102
 		)
 		(t 91)
