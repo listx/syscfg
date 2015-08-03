@@ -1,3 +1,5 @@
+; Customize how hydra displays keybindings (no brackets/colons).
+(setq hydra-head-format "%s ")
 ; Emacs
 (define-key evil-normal-state-map [f1] 'menu-bar-mode) ; toggle the menu bar
 ; ace-jump-mode
@@ -12,6 +14,7 @@
 		(other-window -1)
 	)
 )
+
 (evil-leader/set-key
 	"-"
 		(defhydra hydra-zoom ()
