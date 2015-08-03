@@ -188,7 +188,28 @@
 	("q" keyboard-escape-quit "exit")
 )
 ; paste X primary
-(define-key evil-insert-state-map [S-insert] 'my/paste-X-primary)
+(define-key evil-normal-state-map (kbd "C-p")
+	(lambda ()
+		(interactive)
+		(evil-append nil)
+		(my/paste-X-primary-smart nil)
+		(evil-normal-state)
+	)
+)
+(define-key evil-normal-state-map (kbd "C-S-p")
+	(lambda ()
+		(interactive)
+		(my/paste-X-primary-smart t)
+		(evil-normal-state)
+	)
+)
+(define-key evil-insert-state-map [S-insert]
+	(lambda ()
+		(interactive)
+		(my/paste-X-primary-smart nil)
+	)
+)
+
 (define-key evil-normal-state-map "gw" 'fill-paragraph) ; insert hard line breaks
 
 ; Add newlines above/below, without going through kakapo-open. We have a hook
@@ -196,28 +217,22 @@
 ; so this way we can insert whitespace (newlines) without worrying about the
 ; hook.
 (defun my-insert-newline-below ()
-	(progn
-		(forward-line 1)
-		(beginning-of-line)
-		(insert "\n")
-		(forward-line -1)
-	)
+	(interactive)
+	(forward-line 1)
+	(beginning-of-line)
+	(insert "\n")
+	(forward-line -1)
 )
 (defun my-insert-newline-above ()
-	(progn
-		(beginning-of-line)
-		(insert "\n")
-		(forward-line -1)
-	)
+	(interactive)
+	(beginning-of-line)
+	(insert "\n")
+	(forward-line -1)
 )
-(define-key evil-insert-state-map (kbd "C-o")
-	(lambda () (interactive) (my-insert-newline-below)))
-(define-key evil-normal-state-map (kbd "C-o")
-	(lambda () (interactive) (my-insert-newline-below)))
-(define-key evil-insert-state-map (kbd "C-S-o")
-	(lambda () (interactive) (my-insert-newline-above)))
-(define-key evil-normal-state-map (kbd "C-S-o")
-	(lambda () (interactive) (my-insert-newline-above)))
+(define-key evil-insert-state-map (kbd "C-o") 'my-insert-newline-below)
+(define-key evil-normal-state-map (kbd "C-o") 'my-insert-newline-below)
+(define-key evil-insert-state-map (kbd "C-S-o") 'my-insert-newline-above)
+(define-key evil-normal-state-map (kbd "C-S-o") 'my-insert-newline-above)
 
 ; navigation
 ; simulate vim's "nnoremap <space> 10jzz"

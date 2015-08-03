@@ -822,10 +822,46 @@ keybinding as it conflicts with Anthy input."
 )
 (defun my/paste-X-primary ()
 	(interactive)
-	(insert (x-selection 'PRIMARY))
-	; Prevent our 'undo usage of 'o' Insert state exit hook from undoing
-	; this paste.
+	(insert xpribuf)
+	; Prevent our 'undo usage of 'o' Insert state exit hook from undoing this
+	; paste.
 	(setq my/before-open-line nil)
+)
+(defun my/paste-X-primary-smart (backward)
+	(interactive)
+	(let
+		(
+			(pos (point))
+			(pos-column (current-column))
+			(line-max (save-excursion (end-of-line) (point)))
+			(xpribuf (x-selection 'PRIMARY))
+		)
+		; If what we want to paste has a newline in it, then we should paste it
+		; starting at the beginning of a line, not at point (which could be in
+		; the middle of a line on some text).
+		(if (string-match "\n" xpribuf)
+			(if backward
+				(progn
+					(beginning-of-line)
+					(my/paste-X-primary)
+					(move-to-column pos-column)
+				)
+				(progn
+					(if (= line-max (point-max))
+						(progn
+							(end-of-line)
+							(insert "\n")
+						)
+						(forward-line 1)
+					)
+					(beginning-of-line)
+					(my/paste-X-primary)
+					(goto-char pos)
+				)
+			)
+			(my/paste-X-primary)
+		)
+	)
 )
 (add-hook 'evil-visual-state-entry-hook
 	(lambda ()
