@@ -93,6 +93,9 @@
 	; buffers list
 	"f" 'helm-mini
 
+	"g" 'helm-projectile-switch-project
+	"G" 'helm-projectile
+
 	"h" (lambda () (interactive) (split-window-vertically) (balance-windows))
 
 	; new tab

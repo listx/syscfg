@@ -50,6 +50,7 @@
 	haml-mode
 	haskell-mode
 	helm
+	helm-projectile
 	hiwin
 	htmlize
 	hydra
@@ -493,6 +494,12 @@ keybinding as it conflicts with Anthy input."
 (global-set-key (kbd "M-x") 'helm-M-x)
 
 (helm-mode 1)
+
+; `helm-projectile' settings
+(projectile-global-mode)
+(setq projectile-completion-system 'helm)
+(helm-projectile-on)
+(setq projectile-switch-project-action 'helm-projectile)
 
 ; Org-mode
 ; start up org-mode for .org files
