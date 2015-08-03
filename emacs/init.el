@@ -55,6 +55,7 @@
 	htmlize
 	hydra
 	kakapo-mode
+	magit
 	markdown-mode
 	mmm-mode
 	nix-mode
@@ -500,6 +501,9 @@ keybinding as it conflicts with Anthy input."
 (setq projectile-completion-system 'helm)
 (helm-projectile-on)
 (setq projectile-switch-project-action 'helm-projectile)
+
+; Magit
+(add-hook 'git-commit-mode-hook 'evil-insert-state)
 
 ; Org-mode
 ; start up org-mode for .org files

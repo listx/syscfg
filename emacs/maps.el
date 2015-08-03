@@ -75,7 +75,7 @@
 (evil-leader/set-key
 	"-" 'hydra-zoom/body
 	"TAB" 'hydra-window/body
-	"<SPC>" 'hydra-window/body
+	"<SPC>" 'magit-status
 
 	; Nox integration (comment/uncomment regions)
 	"c" (lambda () (interactive) (my-addrem-comment t))
@@ -196,6 +196,7 @@
 	("G" helm-end-of-buffer "bottom")
 	("q" keyboard-escape-quit "exit")
 )
+
 ; paste X primary
 (define-key evil-normal-state-map (kbd "C-p")
 	(lambda ()
