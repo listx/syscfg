@@ -42,6 +42,7 @@
 	color-theme ; needed for dbrock's old zenburn
 	column-enforce-mode
 	coffee-mode
+	delight
 	dockerfile-mode
 	elscreen
 	evil
@@ -352,6 +353,17 @@
 	(set-buffer-modified-p nil)
 	(kill-this-buffer)
 )
+
+; See http://www.emacswiki.org/emacs/DelightedModes.
+(delight
+	'(
+		(column-enforce-mode nil column-enforce-mode)
+		(helm-mode nil helm-mode)
+		(undo-tree-mode nil undo-tree)
+		(visual-line-mode nil simple)
+	)
+)
+
 ; Either close the current elscreen, or if only one screen, use the ":q" Evil
 ; command; this simulates the ":q" behavior of Vim when used with tabs.
 (defun vimlike-quit ()
