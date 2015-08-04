@@ -155,7 +155,7 @@
 		(
 			(replace-me (regexp-quote (if (region-active-p)
 				(buffer-substring-no-properties (region-beginning) (region-end))
-				(thing-at-point 'symbol))
+				(thing-at-point 'word))
 				))
 		)
 		; Instead of calling vanilla `evil-ex', call it with a hook to set up
