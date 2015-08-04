@@ -47,6 +47,7 @@
 	elscreen
 	evil
 	evil-leader
+	evil-surround
 	evil-visualstar
 	haml-mode
 	haskell-mode
@@ -143,6 +144,9 @@
 
 ; Emulate TextMate's "auto-paired characters"
 (electric-pair-mode 1)
+
+(require 'evil-surround)
+(global-evil-surround-mode 1)
 
 ; Pressing * of # after a visual mode selection will perform an incremental
 ; search.
