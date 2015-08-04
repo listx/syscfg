@@ -148,6 +148,33 @@
 ; search.
 (global-evil-visualstar-mode)
 
+; Inspired by evil-mark-replace (https://github.com/redguardtoo/evil-mark-replace).
+(defun my/replace-in-buffer ()
+	(interactive)
+	(let
+		(
+			(replace-me (regexp-quote (if (region-active-p)
+				(buffer-substring-no-properties (region-beginning) (region-end))
+				(thing-at-point 'symbol))
+				))
+		)
+		; Instead of calling vanilla `evil-ex', call it with a hook to set up
+		; the cursor's position as well. This way we can "pre-type" to the end
+		; of the string and then bring the cursor back where we want it.
+		(minibuffer-with-setup-hook
+			; Move cursor back 3 columns, behind the trailing "/gc" string.
+			(lambda () (backward-char 3))
+			(evil-ex (concat
+				"%s/"
+				(if (region-active-p)
+					replace-me
+					(concat "\\<" replace-me "\\>")
+				)
+				"//gc"))
+		)
+	)
+)
+
 ; darken inactive windows
 (require 'hiwin)
 (hiwin-activate)

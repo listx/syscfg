@@ -113,6 +113,10 @@
 	; close current window, *even if modified*
 	"Q" (lambda () (interactive) (evil-quit t))
 
+	; Place selected region (or word-area under point in Normal mode) into
+	; buffer-wise search-and-replace interactive prompt.
+	"s" 'my/replace-in-buffer
+
 	"t" 'my-toggle-font
 
 	; cycle through various themes
