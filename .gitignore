@@ -6,6 +6,9 @@ cblrepo/haskell-*
 emacs/auto-save-list
 emacs/elpa
 emacs/ido.last
+emacs/projectile-bookmarks.eld
+emacs/recentf
+emacs/tramp
 gpg/.gpg-v21-migrated
 gpg/private-keys-v1.d/
 gpg/random_seed
