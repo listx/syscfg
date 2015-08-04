@@ -16,7 +16,7 @@
 )
 
 (defhydra hydra-zoom ()
-"zoom"
+	"zoom"
 	("k"
 		(lambda () (interactive) (global-text-scale-adjust 1))
 		"in")
