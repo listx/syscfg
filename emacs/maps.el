@@ -15,6 +15,15 @@
 	)
 )
 
+; Interactive search-and-replace "bindings". These are not real bindings in the
+; sense that they call functions --- this is a limitation of upstream's design
+; of query-replace. See
+; http://www.gnu.org/software/emacs/manual/html_node/elisp/Search-and-Replace.html.
+(define-key query-replace-map [return] 'act)
+(define-key query-replace-map "N" 'backup)
+(define-key query-replace-map "a" 'automatic)
+(define-key query-replace-map "e" 'edit-replacement)
+
 (defhydra hydra-zoom ()
 	"zoom"
 	("k"
