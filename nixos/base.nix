@@ -96,6 +96,9 @@
     windowManager.default = "xmonad";
   };
 
+  # NTP for automated system clock adjustments.
+  services.ntp.enable = true;
+
   services.udev.extraRules = ''
     # For Yubikey, enable 'ykinfo -v' and 'gpg2 --card-status' commands as normal (non-root) user.
     # From http://stafwag.github.io/blog/blog/2015/06/16/using-yubikey-neo-as-gpg-smartcard-for-ssh-authentication/
