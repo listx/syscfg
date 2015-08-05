@@ -46,6 +46,7 @@
 	dockerfile-mode
 	elscreen
 	evil
+	evil-jumper
 	evil-leader
 	evil-matchit
 	evil-surround
@@ -145,6 +146,8 @@
 
 ; Emulate TextMate's "auto-paired characters"
 (electric-pair-mode 1)
+
+(global-evil-jumper-mode)
 
 (require 'evil-surround)
 (global-evil-surround-mode 1)

@@ -24,6 +24,17 @@
 (define-key query-replace-map "a" 'automatic)
 (define-key query-replace-map "e" 'edit-replacement)
 
+; `evil-jumper'.
+; Unmap the C-o and C-i keys bound by evil-jumper. The C-i binding interferes
+; with terminal Emacs' definition of the "TAB" key.
+(evil-define-key 'normal evil-jumper-mode-map (kbd "C-o") nil)
+(evil-define-key 'normal evil-jumper-mode-map (kbd "C-i") nil)
+; Parens in Vim normal mode bind to prev/forward sentence. We generally follow
+; the "1-sentence-per-line" rule for long prose documents so these keybindings
+; are basically useless. Perfect for jumping!
+(define-key evil-normal-state-map "(" 'evil-jumper/backward)
+(define-key evil-normal-state-map ")" 'evil-jumper/forward)
+
 (defhydra hydra-zoom ()
 	"zoom"
 	("k"
