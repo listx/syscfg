@@ -96,6 +96,8 @@
 	"-" 'hydra-zoom/body
 	"TAB" 'hydra-window/body
 	"<SPC>" 'magit-status
+	; set line ending to UNIX
+	"\\" (lambda () (interactive) (set-buffer-file-coding-system 'utf-8-unix t))
 
 	; Nox integration (comment/uncomment regions)
 	"c" (lambda () (interactive) (my-addrem-comment t))
@@ -109,15 +111,13 @@
 
 	; find files (like dired, but better)
 	"e" 'helm-find-files
-
-	; set line ending to UNIX
-	"E" (lambda () (interactive) (set-buffer-file-coding-system 'utf-8-unix t))
-
 	; buffers list
-	"f" 'helm-mini
+	"E" 'helm-mini
 
-	"g" 'helm-projectile-switch-project
-	"G" 'helm-projectile
+	"f" 'helm-projectile
+	"F" 'helm-projectile-switch-project
+
+	"g" 'helm-all-mark-rings
 
 	"h" (lambda () (interactive) (split-window-vertically) (balance-windows))
 
