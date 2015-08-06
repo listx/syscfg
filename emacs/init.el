@@ -1010,3 +1010,13 @@ keybinding as it conflicts with Anthy input."
 ; Misc
 ; always follow symlink that points to a version-controlled file
 (setq vc-follow-symlinks t)
+
+; If we give emacs an argument (e.g., file or directory) when we invoke it,
+; emacs automatically sets the default directory (to search for when we want to
+; open other files) to the directory that holds the given file/directory
+; argument. If there is no argument, then always set it to the home directory.
+; We have to set it last because other packages/init stuff can change the value
+; of this variable.
+(if (= (length argv) 0)
+	(setq default-directory "~/")
+)
