@@ -99,6 +99,9 @@
 	; set line ending to UNIX
 	"\\" (lambda () (interactive) (set-buffer-file-coding-system 'utf-8-unix t))
 
+	"a" 'projectile-helm-ag
+	"A" 'helm-ag
+
 	; Nox integration (comment/uncomment regions)
 	"c" (lambda () (interactive) (my-addrem-comment t))
 	"C" (lambda () (interactive) (my-addrem-comment nil))

@@ -54,6 +54,7 @@
 	haml-mode
 	haskell-mode
 	helm
+	helm-ag
 	helm-projectile
 	hiwin
 	htmlize
@@ -185,6 +186,11 @@
 		)
 	)
 )
+
+; Take from README of https://github.com/syohex/emacs-helm-ag.
+(defun projectile-helm-ag ()
+	(interactive)
+	(helm-ag (projectile-project-root)))
 
 ; darken inactive windows
 (require 'hiwin)
