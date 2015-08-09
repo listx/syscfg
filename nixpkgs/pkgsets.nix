@@ -230,7 +230,7 @@ with super; rec {
       # through nix-env.
       auca = self.callPackage ./haskell/auca.nix {};
       ztile = self.callPackage ./haskell/ztile.nix {};
-      timetracker = self.callPackage ./haskell/timetracker.nix {};
+      ox = self.callPackage ./haskell/ox.nix {};
     };
   };
 
@@ -255,7 +255,7 @@ with super; rec {
 
       auca
       ztile
-      timetracker
+      ox
     ];
   });
 }
