@@ -92,6 +92,18 @@
 	("o" ace-maximize-window "max-choose" :exit t)
 )
 
+; See https://github.com/asok/.emacs.d/.
+(defhydra hydra-magit (:color blue)
+	"magit"
+	("s" magit-status "status")
+	("c" magit-checkout "checkout")
+	("b" magit-branch-manager "branch manager")
+	("m" magit-merge "merge")
+	("l" magit-log "log")
+	("!" magit-git-command "command")
+	("$" magit-process "process")
+)
+
 (evil-leader/set-key
 	"-" 'hydra-zoom/body
 	"TAB" 'hydra-window/body
@@ -123,6 +135,8 @@
 	"g" 'helm-all-mark-rings
 
 	"h" (lambda () (interactive) (split-window-vertically) (balance-windows))
+
+	"m" 'hydra-magit/body
 
 	; new tab
 	"n" 'elscreen-create
