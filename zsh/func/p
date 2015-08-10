@@ -1,0 +1,16 @@
+#!/usr/bin/env zsh
+
+# p() is a shorcut for "ps aux | ag PATTERN".
+
+p()
+{
+	pattern=$1
+	if [[ -z "$pattern" ]]; then
+		echo "Need pattern argument"
+	fi
+	type ag 2>&1 >/dev/null
+	if (( $? != 0 )); then
+		echo "\`ag' is not installed"
+	fi
+	ps aux | ag $pattern
+}
