@@ -122,7 +122,9 @@
 
   uim.enable = true;
 
-  users.extraGroups.l = { };
+  users.extraGroups.l = {
+    gid = 1000;
+  };
   # Set password for extra users with 'passwd' command as root.
   users.extraUsers.l = {
     group = "l";
