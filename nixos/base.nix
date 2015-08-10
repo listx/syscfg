@@ -115,6 +115,8 @@
 
   services.virtualboxHost.enable = true;
 
+  virtualisation.docker.enable = true;
+
   # Enable CUPS to print documents.
   services.printing.enable = true;
 
@@ -131,7 +133,7 @@
     description = "Linus Arver";
     createHome = true;
     home = "/home/l";
-    extraGroups = [ "wheel" "vboxusers" ] ;
+    extraGroups = [ "wheel" "docker" "vboxusers" ] ;
     shell = "/run/current-system/sw/bin/zsh";
     uid = 1000;
   };
