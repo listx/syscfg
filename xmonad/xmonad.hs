@@ -98,9 +98,6 @@ myKeys hostname conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
 	--  Reset the layouts on the current workspace to default
 	, ((modm .|. shiftMask, xK_space ), setLayout $ XMonad.layoutHook conf)
 
-	-- Resize viewed windows to the correct size
-	, ((modm,               xK_n     ), refresh)
-
 	-- Move focus to the next window
 	, ((modm,               xK_Tab   ), windows W.focusDown)
 
