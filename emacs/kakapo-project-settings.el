@@ -72,6 +72,9 @@
 							)
 						)
 					)
+					((string-match ".+\\.less$" b)
+						(h 'less-css-mode-hook nil 2)
+					)
 					((string-match ".+\\.md$" b)
 						(progn
 							(h 'markdown-mode-hook nil 4)

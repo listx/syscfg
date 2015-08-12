@@ -60,6 +60,7 @@
 	htmlize
 	hydra
 	kakapo-mode
+	less-css-mode
 	magit
 	markdown-mode
 	mmm-mode
