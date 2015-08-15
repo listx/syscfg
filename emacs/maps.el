@@ -385,10 +385,15 @@
 	)
 )
 (evil-define-key 'normal org-mode-map "T" 'org-todo) ; mark a TODO item as DONE
+(defhydra hydra-org (:foreign-keys warn)
+	"org"
+	("b" org-cycle-list-bullet "cycle-bullet-type")
+	("s" org-beamer-export-to-pdf "save beamer to pdf")
+	("w" org-publish-current-project "save beamer to pdf")
+	("q" nil "exit" :exit t)
+)
 (evil-leader/set-key-for-mode 'org-mode
-	"b" 'org-cycle-list-bullet
-	"s" 'org-beamer-export-to-pdf
-	"W" 'org-publish-current-project
+	"1" 'hydra-org/body
 )
 
 (evil-define-key 'normal org-mode-map (kbd "M-i") 'org-insert-link)
