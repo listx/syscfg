@@ -192,6 +192,9 @@
 (defun projectile-helm-ag ()
 	(interactive)
 	(helm-ag (projectile-project-root)))
+; Default search term for helm-ag.
+(custom-set-variables
+ '(helm-ag-insert-at-point 'word))
 
 ; darken inactive windows
 (require 'hiwin)
