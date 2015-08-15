@@ -188,6 +188,26 @@
 	)
 )
 
+; Adopted from http://stackoverflow.com/questions/2416655/file-path-to-clipboard-in-emacs
+(defun my/copy-file-name-to-clipboard ()
+	"Copy the current buffer file name to the clipboard."
+	(interactive)
+	(let
+		(
+			(filename
+				(if (equal major-mode 'dired-mode)
+					default-directory
+					(buffer-file-name)
+				)
+			)
+		)
+		(progn
+			(kill-new filename)
+			(message "Clipboard: '%s'" filename)
+		)
+	)
+)
+
 ; Take from README of https://github.com/syohex/emacs-helm-ag.
 (defun projectile-helm-ag ()
 	(interactive)
