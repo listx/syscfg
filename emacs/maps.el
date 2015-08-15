@@ -414,6 +414,19 @@
 ; keyboard layout also.
 (evil-define-key 'normal org-mode-map (kbd "<C-S-iso-lefttab>") 'org-shifttab)
 
+
+(evil-define-key 'normal org-mode-map (kbd "M-p")
+	(lambda ()
+		(interactive)
+		(evil-append nil)
+		(insert "\n#+begin_src\n")
+		(my/paste-X-primary-smart nil)
+		(insert "\n#+end_src\n")
+		(evil-normal-state)
+		(message nil)
+	)
+)
+
 ; Disable default orgmode hotkeys that interfere with our global hotkeys defined
 ; elsewhere.
 (add-hook 'org-mode-hook
