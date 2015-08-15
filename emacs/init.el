@@ -208,6 +208,166 @@
 	)
 )
 
+(defun my/github-link-prefix (project-folder)
+	"Generate a github upstream link. It is assumed that projectile is
+functioning already here."
+	(interactive)
+	(let*
+		(
+			(com
+				(concat
+					"cd "
+					project-folder
+					" && git remote show -n upstream | grep Push"
+				)
+			)
+			(github-user/repo (replace-regexp-in-string "\n" ""
+				(car (last (split-string (shell-command-to-string com) ":")))))
+			(upstream-url
+				(concat
+					"https://github.com/"
+					github-user/repo
+					"/blob/develop"
+				)
+			)
+		)
+		upstream-url
+	)
+)
+
+(defun my/copy-for-slack ()
+	"Copy region for Slack, and also add metadata/formatting around it for easy
+pasting. If no region is selected, copy just the buffer's filename."
+	(interactive)
+	(let*
+		(
+			(filename
+				(if (equal major-mode 'dired-mode)
+					default-directory
+					(buffer-file-name)
+				)
+			)
+			(project-name
+				(nth 1 (reverse (split-string (projectile-project-root) "/")))
+			)
+			(delete-me
+				(regexp-quote
+					(concat
+						project-name
+					)
+				)
+			)
+			(project-filename
+				(replace-regexp-in-string
+					(concat
+						"\/.+??"
+						delete-me
+					)
+					"" filename)
+			)
+			(region-end-no-newline
+				(if (use-region-p)
+					(- (region-end)
+						(if (char-equal ?\n (char-before (region-end))) 1 0)
+					)
+					nil
+				)
+			)
+			(selection
+				(if (use-region-p)
+					(buffer-substring-no-properties
+						(region-beginning)
+						region-end-no-newline
+					)
+					(buffer-substring-no-properties
+						(line-beginning-position)
+						(line-end-position)
+					)
+				)
+			)
+			(selection-lines
+				(if (use-region-p)
+					(let
+						(
+							(line-beg (line-number-at-pos (region-beginning)))
+							(line-end (line-number-at-pos
+								region-end-no-newline))
+						)
+						; If we do an intra-line selection, the beginning and
+						; end regions will be on the same line. In this case,
+						; just return 1 single line.
+						(if (= line-beg line-end)
+							(list (number-to-string line-beg))
+							(mapcar 'number-to-string
+								(list line-beg line-end))
+						)
+					)
+					(list (number-to-string (line-number-at-pos
+						(line-beginning-position))))
+				)
+			)
+			(selection-lines-header
+				(if (< 1 (length selection-lines))
+					(concat
+						"lines "
+						(car selection-lines)
+						" - "
+						(nth 1 selection-lines)
+						"\n"
+					)
+					""
+				)
+			)
+			(github-link
+				(if (projectile-project-root)
+					; We're in a projectile-handled folder. Presumably this
+					; means we are in a github repo. If so, look for a github
+					; remote called "upstream" and lift parts of that to build
+					; our link to github (which is presumably where upstream is
+					; located).
+					(concat
+						" "
+						(my/github-link-prefix (projectile-project-root))
+						project-filename
+						"#"
+						(if (< 1 (length selection-lines))
+							(concat
+								"L"
+								(car selection-lines)
+								"-"
+								"L"
+								(nth 1 selection-lines)
+							)
+							(concat "L" (car selection-lines))
+						)
+					)
+					""
+				)
+			)
+			(slack-msg
+				(concat
+					"`"
+					(concat project-name project-filename)
+					"`\n"
+					github-link
+					":\n```"
+					""
+					selection-lines-header
+					(replace-regexp-in-string "." "-"
+						selection-lines-header)
+					selection
+					"```"
+				)
+			)
+		)
+		(progn
+			(kill-new slack-msg)
+			(message "Clipboard: '%s' contents for Slack" project-filename)
+		)
+	)
+)
+
+
 ; Take from README of https://github.com/syohex/emacs-helm-ag.
 (defun projectile-helm-ag ()
 	(interactive)
