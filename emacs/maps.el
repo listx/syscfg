@@ -270,6 +270,13 @@
 		(my/paste-X-primary-smart nil)
 	)
 )
+; For Mac OSX laptops without the insert key.
+(define-key evil-insert-state-map (kbd "C-p")
+	(lambda ()
+		(interactive)
+		(my/paste-X-primary-smart nil)
+	)
+)
 
 (define-key evil-normal-state-map "gw" 'fill-paragraph) ; insert hard line breaks
 
