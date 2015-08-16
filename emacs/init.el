@@ -31,7 +31,8 @@
 ; MELPA
 (require 'package)
 (package-initialize)
-(add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t)
+(add-to-list 'package-archives
+	'("melpa" . "http://melpa.milkbox.net/packages/") t)
 
 ; Define packages that we'll be using.
 (defvar my/packages
@@ -608,13 +609,14 @@ otherwise, close current tab (elscreen)."
 	(let
 		((one-elscreen (elscreen-one-screen-p)) (one-window (one-window-p)))
 		(cond
-			; if current tab has split windows in it, close the current live window
+			; if current tab has split windows in it, close the current live
+			; window
 			((not one-window) (delete-window) (balance-windows) nil)
 			; if there are multiple elscreens (tabs), close the current elscreen
 			((not one-elscreen) (elscreen-kill) nil)
-			; if there is only one elscreen, just try to quit (calling elscreen-kill
-			; will not work, because elscreen-kill fails if there is only one
-			; elscreen)
+			; if there is only one elscreen, just try to quit (calling
+			; elscreen-kill will not work, because elscreen-kill fails if there
+			; is only one elscreen)
 			(one-elscreen (evil-quit) nil)
 		)
 	)
@@ -763,7 +765,8 @@ keybinding as it conflicts with Anthy input."
 (add-hook 'c-mode-hook
 	(lambda ()
 		(c-set-style "linux")
-		(modify-syntax-entry ?_ "w") ; add underscore as a word character, like in Vim
+		; add underscore as a word character, like in Vim
+		(modify-syntax-entry ?_ "w")
 	)
 )
 
@@ -771,7 +774,7 @@ keybinding as it conflicts with Anthy input."
 (add-hook 'c++-mode-hook
 	(lambda ()
 		(c-set-style "linux")
-		(modify-syntax-entry ?_ "w") ; add underscore as a word character, like in Vim
+		(modify-syntax-entry ?_ "w")
 	)
 )
 
@@ -781,7 +784,7 @@ keybinding as it conflicts with Anthy input."
 ; Emacs lisp
 (add-hook 'emacs-lisp-mode-hook
 	(lambda ()
-		(modify-syntax-entry ?- "w") ; add hyphen as a word character
+		(modify-syntax-entry ?- "w")
 	)
 )
 
@@ -792,7 +795,8 @@ keybinding as it conflicts with Anthy input."
 ; haskell-mode comes with. In exchange, enable LaTeX mode whenever we open up a
 ; `.lhs' file. Using mmm-mode, we will activate `haskell-mode' in the code
 ; sections.
-(setq auto-mode-alist (remove (rassoc 'literate-haskell-mode auto-mode-alist) auto-mode-alist))
+(setq auto-mode-alist
+	(remove (rassoc 'literate-haskell-mode auto-mode-alist) auto-mode-alist))
 (add-to-list 'auto-mode-alist '("\\.lhs$" . latex-mode))
 
 ; The "Haskell-Cabal" mode that comes built-in with haskell-mode needs some
@@ -871,7 +875,8 @@ keybinding as it conflicts with Anthy input."
 ; Ledger
 (autoload 'ledger-mode "ledger-mode" "A major mode for Ledger" t)
 (add-to-list 'auto-mode-alist '("\\.ledger$" . ledger-mode))
-(add-hook 'ledger-mode-hook 'evil-goto-line) ; go to the lastest entries at the end
+; go to the lastest entries at the end
+(add-hook 'ledger-mode-hook 'evil-goto-line)
 
 ; Lilypond
 (autoload 'LilyPond-mode "lilypond-mode" "LilyPond Editing Mode" t)
@@ -894,7 +899,7 @@ keybinding as it conflicts with Anthy input."
 ; Nix Expression Language
 (add-hook 'nix-mode-hook
 	(lambda ()
-		(modify-syntax-entry ?_ "w") ; add underscore as a word character, like in Vim
+		(modify-syntax-entry ?_ "w")
 	)
 )
 
@@ -908,7 +913,7 @@ keybinding as it conflicts with Anthy input."
 ; Ruby
 (add-hook 'ruby-mode-hook
 	(lambda ()
-		(modify-syntax-entry ?_ "w") ; add underscore as a word character
+		(modify-syntax-entry ?_ "w")
 	)
 )
 
@@ -919,7 +924,7 @@ keybinding as it conflicts with Anthy input."
 ; Shell script
 (add-hook 'sh-mode-hook
 	(lambda ()
-		(modify-syntax-entry ?_ "w") ; add underscore as a word character
+		(modify-syntax-entry ?_ "w")
 	)
 )
 
@@ -1129,8 +1134,8 @@ keybinding as it conflicts with Anthy input."
 		(global-hl-line-mode 1)
 	)
 )
-; cursor colors for the various states; default to alect-light for normal-state cursor
-; default cursor colors for alect-light
+; Cursor colors for the various states --- by default, we choose cursor colors
+; for alect-light (as it is the first theme loaded).
 (setq evil-insert-state-cursor '("#000000" box))
 (setq evil-emacs-state-cursor '("#ff0000" box))
 (setq evil-normal-state-cursor '("DodgerBlue1" box))
