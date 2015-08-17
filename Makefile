@@ -14,6 +14,7 @@ emacs:
 	ln -fns ${C}/emacs                                  ${H}/.emacs.d
 git:
 	ln -fs ${C}/git/cfg                                 ${H}/.gitconfig
+	ln -fs ${C}/git/template                            ${H}/.git-templates
 	ln -fs ${C}/git/sendemail-aliases                   ${H}/.git-sendemail-aliases
 gpg:
 	ln -fs ${C}/gpg                                     ${H}/.gnupg

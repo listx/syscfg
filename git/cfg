@@ -25,3 +25,5 @@
 	vertical-split = false
 [core]
 	editor = vim
+[init]
+	templateDir = ~/.git-templates
