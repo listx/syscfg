@@ -102,6 +102,8 @@ pasting. If no region is selected, copy just the buffer's filename."
 					)
 					"" filename)
 			)
+			(github-link-prefix
+				(my/github-link-prefix (projectile-project-root)))
 			(region-beg
 				(if (use-region-p)
 					(save-excursion
@@ -123,8 +125,6 @@ pasting. If no region is selected, copy just the buffer's filename."
 					nil
 				)
 			)
-			(github-link-prefix
-				(my/github-link-prefix (projectile-project-root)))
 			(selection
 				(if (use-region-p)
 					(buffer-substring-no-properties
