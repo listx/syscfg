@@ -102,10 +102,23 @@ pasting. If no region is selected, copy just the buffer's filename."
 					)
 					"" filename)
 			)
+			(region-beg
+				(if (use-region-p)
+					(save-excursion
+						(goto-char (region-beginning))
+						(line-beginning-position)
+					)
+					nil
+				)
+			)
 			(region-end-no-newline
 				(if (use-region-p)
-					(- (region-end)
-						(if (char-equal ?\n (char-before (region-end))) 1 0)
+					(save-excursion
+						(goto-char (region-end))
+						(if (char-equal ?\n (point))
+							(- (point) 1)
+							(line-end-position)
+						)
 					)
 					nil
 				)
@@ -115,7 +128,7 @@ pasting. If no region is selected, copy just the buffer's filename."
 			(selection
 				(if (use-region-p)
 					(buffer-substring-no-properties
-						(region-beginning)
+						region-beg
 						region-end-no-newline
 					)
 					(buffer-substring-no-properties
