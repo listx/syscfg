@@ -72,6 +72,10 @@ functioning already here."
 	)
 )
 
+(defun my/strip-leading-zeroes (str)
+	(replace-regexp-in-string "^0+" "" str)
+)
+
 (defun my/copy-for-slack ()
 	"Copy region for Slack, and also add metadata/formatting around it for easy
 pasting. If no region is selected, copy just the buffer's filename."
@@ -202,10 +206,12 @@ pasting. If no region is selected, copy just the buffer's filename."
 						(if (< 1 (length selection-lines))
 							(concat
 								"L"
-								(car selection-lines)
+								(my/strip-leading-zeroes
+									(car selection-lines))
 								"-"
 								"L"
-								(nth 1 selection-lines)
+								(my/strip-leading-zeroes
+									(car (last selection-lines)))
 							)
 							(concat "L" (car selection-lines))
 						)
