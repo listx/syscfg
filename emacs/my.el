@@ -151,23 +151,22 @@ pasting. If no region is selected, copy just the buffer's filename."
 						(if (= line-beg line-end)
 							(list (number-to-string line-beg))
 							(mapcar 'number-to-string
-								(list line-beg line-end))
+								(number-sequence line-beg line-end))
 						)
 					)
 					(list (number-to-string (line-number-at-pos
 						(line-beginning-position))))
 				)
 			)
-			(selection-lines-header
-				(if (< 1 (length selection-lines))
-					(concat
-						"lines "
-						(car selection-lines)
-						" - "
-						(nth 1 selection-lines)
-						"\n"
+			(selection-with-lines
+				(let
+					(
+						(line-num-and-line-pairs
+							(mapcar* 'cons selection-lines
+								(split-string selection "\n")))
 					)
-					""
+					(mapconcat (lambda (pair) (concat (car pair) " |" (cdr pair)))
+						line-num-and-line-pairs "\n")
 				)
 			)
 			(github-link
@@ -206,10 +205,7 @@ pasting. If no region is selected, copy just the buffer's filename."
 					"`\n"
 					github-link
 					"```"
-					selection-lines-header
-					(replace-regexp-in-string "." "-"
-						selection-lines-header)
-					selection
+					selection-with-lines
 					"```"
 				)
 			)
