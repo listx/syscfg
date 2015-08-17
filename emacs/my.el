@@ -139,19 +139,35 @@ pasting. If no region is selected, copy just the buffer's filename."
 			)
 			(selection-lines
 				(if (use-region-p)
-					(let
+					(let*
 						(
 							(line-beg (line-number-at-pos (region-beginning)))
 							(line-end (line-number-at-pos
 								region-end-no-newline))
+							(line-num-list
+								; If we do an intra-line selection, the
+								; beginning and end regions will be on the same
+								; line. In this case, just return 1 single line.
+								(if (= line-beg line-end)
+									(list (number-to-string line-beg))
+									(mapcar 'number-to-string
+										(number-sequence line-beg line-end))
+								)
+							)
+							(max-digits (length (car (last line-num-list))))
 						)
-						; If we do an intra-line selection, the beginning and
-						; end regions will be on the same line. In this case,
-						; just return 1 single line.
-						(if (= line-beg line-end)
-							(list (number-to-string line-beg))
-							(mapcar 'number-to-string
-								(number-sequence line-beg line-end))
+						(mapcar
+							(lambda (num-str)
+								(if (< (length num-str) max-digits)
+									(concat
+										(make-string
+											(- max-digits (length num-str)) ?0)
+										num-str
+									)
+									num-str
+								)
+							)
+							line-num-list
 						)
 					)
 					(list (number-to-string (line-number-at-pos
