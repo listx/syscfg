@@ -117,7 +117,7 @@ pasting. If no region is selected, copy just the buffer's filename."
 				(if (use-region-p)
 					(save-excursion
 						(goto-char (region-end))
-						(if (char-equal ?\n (point))
+						(if (char-equal ?\n (progn (backward-char 1) (point)))
 							(- (point) 1)
 							(line-end-position)
 						)
