@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+
+# Detect trailing whitespace and files without newlines at the end in the index.
+
+error_found=0
+noeol="\\ No newline at end of file"
+
+# Detect trailing whitespace.
+if [ $(git --no-pager diff --check --cached | wc -l) != 0 ]; then
+	echo "You are attempting to add trailing whitespace!"
+	echo "Please remove trailing whitespace from the following offending lines:"
+	git diff --check --cached \
+		| sed -e '/^+/d' -e 's/: trailing whitespace\.$//' -e 's/^/  /'
+	error_found=1
+fi
+
+# Detect files without a newline at the end.
+if [ $(git diff --cached | grep "$noeol" | wc -l) != 0 ]; then
+	echo "You are attempting to add text without a final newline!"
+	echo "Please add a newline to the following files:"
+	for file in $(git --no-pager diff --cached --name-only); do
+		if [ $(git diff --cached "$file" | grep "$noeol" | wc -l) != 0 ]; then
+			echo "  $file"
+		fi
+	done
+	error_found=1
+fi
+
+if [ $error_found == "1" ]; then
+	exit 1
+fi
