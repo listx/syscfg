@@ -110,6 +110,8 @@ pasting. If no region is selected, copy just the buffer's filename."
 					nil
 				)
 			)
+			(github-link-prefix
+				(my/github-link-prefix (projectile-project-root)))
 			(selection
 				(if (use-region-p)
 					(buffer-substring-no-properties
@@ -156,7 +158,9 @@ pasting. If no region is selected, copy just the buffer's filename."
 				)
 			)
 			(github-link
-				(if (projectile-project-root)
+				(if (and
+						(projectile-project-root)
+						(not (string-match " " github-link-prefix)))
 					; We're in a projectile-handled folder. Presumably this
 					; means we are in a github repo. If so, look for a github
 					; remote called "upstream" and lift parts of that to build
@@ -164,7 +168,7 @@ pasting. If no region is selected, copy just the buffer's filename."
 					; located).
 					(concat
 						" "
-						(my/github-link-prefix (projectile-project-root))
+						github-link-prefix
 						project-filename
 						"#"
 						(if (< 1 (length selection-lines))
@@ -177,6 +181,7 @@ pasting. If no region is selected, copy just the buffer's filename."
 							)
 							(concat "L" (car selection-lines))
 						)
+						"\n"
 					)
 					""
 				)
@@ -187,8 +192,7 @@ pasting. If no region is selected, copy just the buffer's filename."
 					(concat project-name project-filename)
 					"`\n"
 					github-link
-					":\n```"
-					""
+					"```"
 					selection-lines-header
 					(replace-regexp-in-string "." "-"
 						selection-lines-header)
