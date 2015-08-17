@@ -185,7 +185,8 @@ pasting. If no region is selected, copy just the buffer's filename."
 							(mapcar* 'cons selection-lines
 								(split-string selection "\n")))
 					)
-					(mapconcat (lambda (pair) (concat (car pair) " |" (cdr pair)))
+					(mapconcat
+						(lambda (pair) (concat (car pair) " |" (cdr pair)))
 						line-num-and-line-pairs "\n")
 				)
 			)
