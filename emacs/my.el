@@ -58,8 +58,9 @@ functioning already here."
 					" && git remote show -n upstream | grep Push"
 				)
 			)
-			(github-user/repo (replace-regexp-in-string "\n" ""
-				(car (last (split-string (shell-command-to-string com) ":")))))
+			(github-user/repo (replace-regexp-in-string "\.git$" ""
+				(replace-regexp-in-string "\n" ""
+				(car (last (split-string (shell-command-to-string com) ":"))))))
 			(upstream-url
 				(concat
 					"https://github.com/"
