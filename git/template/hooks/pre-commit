@@ -43,6 +43,6 @@ if (($(git diff --cached | grep "$noeol" | wc -l))); then
 	fi
 fi
 
-if [ $error_found == "1" ]; then
+if ((error_found)); then
 	exit 1
 fi
