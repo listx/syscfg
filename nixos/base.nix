@@ -113,7 +113,7 @@
     LABEL="yubico_end"
   '';
 
-  services.virtualboxHost.enable = true;
+  virtualisation.virtualbox.host.enable = true;
 
   virtualisation.docker.enable = true;
 

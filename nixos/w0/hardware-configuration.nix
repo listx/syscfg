@@ -27,5 +27,5 @@
     ];
 
   nix.maxJobs = 1;
-  services.virtualboxGuest.enable = true;
+  virtualisation.virtualbox.guest.enable = true;
 }
