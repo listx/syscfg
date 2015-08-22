@@ -22,7 +22,7 @@ function print_hash()
 
 errors_nl=0
 errors_tw=0
-noeol="\\ No newline at end of file"
+noeol="^\\\ No newline at end of file"
 declare -A tw nl
 
 # Detect files without a newline at the end.

@@ -3,7 +3,7 @@
 # Detect trailing whitespace and files without newlines at the end in the index.
 
 error_found=0
-noeol="\\ No newline at end of file"
+noeol="^\\\ No newline at end of file"
 
 # Detect trailing whitespace.
 if (($(git diff --check --cached | wc -l))); then
