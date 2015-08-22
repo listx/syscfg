@@ -21,13 +21,13 @@
 
 set -e
 
-function print_hash()
+function print_keys()
 {
 	hash_definition=$(declare -p $1)
 	eval "declare -A hash="${hash_definition#*=}
 	for key in "${!hash[@]}"; do
-		echo -n "$key"
-	done | sort
+		echo "$key"
+	done
 }
 
 errors_bl=0
@@ -87,7 +87,7 @@ fi
 
 # Fix all files which need to be fixed for trailing whitespace.
 if ((errors_tw)); then
-	print_hash tw | while read file; do
+	print_keys tw | while read file; do
 		bools=""
 		for lnum in ${tw[$file]}; do
 			if [ -z "$bools" ]; then
