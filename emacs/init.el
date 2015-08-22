@@ -609,6 +609,14 @@ otherwise, close current tab (elscreen)."
 ; Haml Coffee mode
 (add-to-list 'auto-mode-alist '("\\.hamlc$" . haml-mode))
 
+; HTML
+(add-hook 'html-mode-hook
+	(lambda ()
+		(modify-syntax-entry ?_ "w")
+		(modify-syntax-entry ?- "w")
+	)
+)
+
 ; JavaScript
 (add-hook 'js-mode-hook
 	(lambda ()
