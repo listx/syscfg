@@ -6,7 +6,7 @@ error_found=0
 noeol="\\ No newline at end of file"
 
 # Detect trailing whitespace.
-if [ $(git --no-pager diff --check --cached | wc -l) != 0 ]; then
+if (($(git diff --check --cached | wc -l))); then
 	echo "You are attempting to add trailing whitespace!"
 	echo "Please remove trailing whitespace from the following offending lines:"
 	git diff --check --cached \
@@ -15,15 +15,31 @@ if [ $(git --no-pager diff --check --cached | wc -l) != 0 ]; then
 fi
 
 # Detect files without a newline at the end.
-if [ $(git diff --cached | grep "$noeol" | wc -l) != 0 ]; then
-	echo "You are attempting to add text without a final newline!"
-	echo "Please add a newline to the following files:"
-	for file in $(git --no-pager diff --cached --name-only); do
-		if [ $(git diff --cached "$file" | grep "$noeol" | wc -l) != 0 ]; then
-			echo "  $file"
+if (($(git diff --cached | grep "$noeol" | wc -l))); then
+	declare -a files
+	for file in $(git diff --cached --name-only); do
+		# Condition 1: check if file with noeol message has not been deleted
+		# (i.e., cached diffs of such files are OK if we are deleting those same
+		# files).
+		#
+		# Condition 2: check that the noeol message appears at the very end of
+		# the diff --- it could be that we are fixing such files by adding a
+		# newline (in which case the noeol message will still appear, but
+		# followed by some content.)
+		if (($(git status --porcelain "$file" | grep -v "^D" | wc -l))) \
+			&& (($(git diff --cached "$file" \
+				| tail -n1 | grep "$noeol" | wc -l))); then
+			files+=("$file")
 		fi
 	done
-	error_found=1
+	if ((${#files[@]})); then
+		echo "You are attempting to add text without a final newline!"
+		echo "Please add a newline to the following files:"
+		for file in ${files[*]}; do
+			echo "  $file"
+		done
+		error_found=1
+	fi
 fi
 
 if [ $error_found == "1" ]; then

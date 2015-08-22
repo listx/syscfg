@@ -36,7 +36,9 @@ errors_tw=$(($(git diff --check --cached \
 # Mark files without a final newline.
 if ((errors_nl)); then
 	while read file; do
-		if (($(git diff --cached "$file" | grep "$noeol" | wc -l))); then
+		if (($(git status --porcelain "$file" | grep -v "^D" | wc -l))) \
+			&& (($(git diff --cached "$file" \
+				| tail -n1 | grep "$noeol" | wc -l))); then
 			nl[$file]="x"
 		fi
 	done < <(git diff --cached --name-only)
