@@ -93,6 +93,8 @@ autoload -U ~/.zsh/func/*(:t) # load all functions in ~/.zsh/func
 autoload -U promptinit
 promptinit
 
+autoload -U zmv
+
 # This will set the default prompt to the kody theme
 prompt kody
 
