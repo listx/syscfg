@@ -762,9 +762,9 @@ otherwise, close current tab (elscreen)."
 		(delete-trailing-whitespace)
 		; Every time we enter insert mode with `kakapo-open', we mark the
 		; current line with `my/before-open-line'. If all we did was just enter
-		; a bunch of whitespace, we try to keep unoing until we reach a point
-		; where `point' is on a line that matches `my/before-open-line'. The
-		; edge case we have to look out for is if we enter insert mode without
+		; a bunch of whitespace, we keep undoing until we reach a point where
+		; `point' is on a line that matches `my/before-open-line'. The edge case
+		; we have to look out for is if we enter insert mode without
 		; `kakapo-open' --- in this case, it is important to check if
 		; `my/before-open-line' is set; if it is set, it means that we did use
 		; `kakapo-open', so it's safe to undergo the undo chain. Lastly, if all
