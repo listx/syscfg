@@ -1,4 +1,4 @@
-(require 'cl)
+(require 'cl-lib)
 
 ; Make paragraph-filling put 1 space after a period (full stop), not 2 spaces.
 (setq sentence-end-double-space nil)
@@ -32,8 +32,8 @@
 	))
 	(defconst nixos-sys-packages
 		'("/run/current-system/sw/share/emacs/site-lisp"))
-		(mapcar
-			'(lambda(p)
+		(mapc
+			#'(lambda(p)
 			(add-to-list 'load-path p)
 			(cd p)
 			(normal-top-level-add-subdirs-to-load-path)
@@ -42,9 +42,11 @@
 
 ; MELPA
 (require 'package)
-(package-initialize)
+(eval-and-compile
+	(package-initialize)
+)
 (add-to-list 'package-archives
-	'("melpa" . "http://melpa.milkbox.net/packages/") t)
+'("melpa" . "http://melpa.milkbox.net/packages/") t)
 
 ; Define packages that we'll be using.
 (defvar my/packages
@@ -84,7 +86,7 @@
 
 ; Install packages if they are missing.
 (defun my/packages-installed-p ()
-	(loop for pkg in my/packages
+	(cl-loop for pkg in my/packages
 		when (not (package-installed-p pkg)) do (return nil)
 		finally (return t)))
 
