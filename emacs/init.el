@@ -558,30 +558,6 @@ otherwise, close current tab (elscreen)."
 	)
 )
 
-(defun hs-literate-begend ()
-	(interactive)
-	(end-of-line)
-	(insert "\n")
-	(delete-blank-lines)
-	(insert "\n\\begin{code}\n\n\\end{code}\n")
-	(forward-line -2)
-	(evil-append nil)
-)
-
-(defun hs-literate-endbeg ()
-	(interactive)
-	(end-of-line)
-	(insert "\n")
-	(delete-blank-lines)
-	(insert "\\end{code}\n\n\n\n\\begin{code}\n")
-	(forward-line -3)
-	(evil-append nil)
-)
-
-; literate haskell: write end/begin code blocks, and enter insert mode
-(evil-define-key 'normal haskell-mode-map ",B" 'hs-literate-begend)
-(evil-define-key 'normal haskell-mode-map ",b" 'hs-literate-endbeg)
-
 ; Literate Haskell - mmm-mode. Adopted from
 ; https://wiki.haskell.org/Literate_programming#Multi-mode_support_in_Emacs
 (require 'mmm-auto)

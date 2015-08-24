@@ -138,6 +138,10 @@
 
 	"h" (lambda () (interactive) (split-window-vertically) (balance-windows))
 
+	; literate haskell: write end/begin code blocks, and enter insert mode
+	"j" 'hs-literate-endbeg
+	"J" 'hs-literate-begend
+
 	"m" 'hydra-magit/body
 
 	; new tab
