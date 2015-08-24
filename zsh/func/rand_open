@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/usr/bin/env zsh
 
 # rand_open() [recurse/norecurse] ['command string'] [extensions...]
 

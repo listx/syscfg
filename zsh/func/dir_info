@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/usr/bin/env zsh
 
 # dir_info(), a function that acts as an intelligent "ls". This function is
 # used by univ_open() to display directory contents, but it should additionally

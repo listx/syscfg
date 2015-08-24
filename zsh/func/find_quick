@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/usr/bin/env zsh
 
 # should be called so that $1 is the mode (file, directory, or text), and
 # $2, $3, etc. are search keywords

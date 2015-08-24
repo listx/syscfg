@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/usr/bin/env zsh
 
 # susp() optionally sleeps for the given time amount, then suspends the system
 # using systemctl.

@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/usr/bin/env zsh
 
 # univ_open() is intended to be used to pass either a SINGLE valid FILE or
 # DIRECTORY. For illustrative purposes, we assume "d" to be aliased to

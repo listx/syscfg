@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/usr/bin/env zsh
 
 # Find files with lines that have 80+ columns.
 # Usage: find_long_lines DIRECTORY TABWIDTH
