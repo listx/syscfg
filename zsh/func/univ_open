@@ -13,97 +13,97 @@
 # default args) to work properly
 
 univ_open() {
-    if [[ -z $@ ]]; then
-        if [[ -d /mnt/u0/h ]]; then
-            if [[ $PWD == "/mnt/u0/h" ]]; then
-                cd && dir_info # ("cd" w/o any arguments goes to the home directory)
-            else
-                cd /mnt/u0/h && dir_info
-            fi
-        else
-            cd && dir_info
-        fi
-    elif [[ -f $1 || -f ${=@[-1]} ]]; then
-        # if we're here, it means that the user either (1) provided a single valid file name, or (2) a number of
-        # commandline arguments PLUS a single valid file name; use of the $@ variable ensures that we preserve all the
-        # arguments the user passed to us
+	if [[ -z $@ ]]; then
+		if [[ -d /mnt/u0/h ]]; then
+			if [[ $PWD == "/mnt/u0/h" ]]; then
+				cd && dir_info # ("cd" w/o any arguments goes to the home directory)
+			else
+				cd /mnt/u0/h && dir_info
+			fi
+		else
+			cd && dir_info
+		fi
+	elif [[ -f $1 || -f ${=@[-1]} ]]; then
+		# if we're here, it means that the user either (1) provided a single valid file name, or (2) a number of
+		# commandline arguments PLUS a single valid file name; use of the $@ variable ensures that we preserve all the
+		# arguments the user passed to us
 
-        # $1 is the first arg; ${=@[-1]} is the last arg (i.e., if user passes "-o -m FILE" to us, then obviously the
-        # last arg is the filename
-        #
-        # we use && and || for simple ternary operation (like ? and : in C)
-        [[ -f $1 ]] && file=$1 || file=${=@[-1]}
-        case $file:e:l in
-            (doc|docx|odf|odt|rtf)
-                soffice -writer $@ &>/dev/null & disown
-            ;;
-            (pps|ppt)
-                soffice -impress $@ &>/dev/null & disown
-            ;;
-            (htm|html)
-                firefox $@ &>/dev/null & disown
-            ;;
-            (djvu|dvi|eps|pdf|ps)
-                evince -f $@ &>/dev/null & disown
-            ;;
-            (bmp|gif|jpg|jpeg|pcx|png|svg|tga|tif|tiff)
-                geeqie -f $@ &>/dev/null & disown
-            ;;
-            (psd|xcf)
-                gimp $@ &>/dev/null & disown
-            ;;
-            (aac|flac|mp3|ogg|wav|wma)
-                mpv --loop inf $( [[ $file:e:l == flac ]] && echo "--vo null" ) $@
-            ;;
-            (mid|midi)
-                timidity $@
-            ;;
-            (asf|avi|divx|flv|ogm|ogv|m4a|m4v|mkv|mov|mp4|mpg|mpeg|rm|rmvb|webm|wmv)
-                mpv $@ &>/dev/null & disown
-            ;;
-            (mts)
-                vlc $@ &>/dev/null & disown
-            ;;
-            (exe)
-                wine $@ &>/dev/null & disown
-            ;;
-            (otf|ttf)
-                fontforge $@ &>/dev/null & disown
-            ;;
-            (chm)
-                xchm $@ &>/dev/null & disown
-            ;;
-            *)
-                emacs --no-window-system $@
-            ;;
-        esac
-    elif [[ -d $1 ]]; then
-        # if the first argument is a valid directory, just cd into it -- ignore
-        # any trailing arguments (in zsh, '#' is the same as ARGC, and denotes the number of arguments passed to the
-        # script (so '$#' is the same as $ARGC)
-        if [[ $# -eq 1 ]]; then
-            cd $@ && dir_info
-        else
-            # if the first argument was a valid directory, but there was more than 1 argument, then we ignore these
-            # trailing args but still cd into the first given directory
-            cd $1 && dir_info
-            # i.e., show arguments 2 ... all the way to the last one (last one has an index of -1 argument array)
-            echo "\nuniv_open: argument(s) ignored: \`${=@[2,-1]}\`"
-            echo "univ_open: went to \`$1'\n"
-        fi
-    elif [[ ! -e $@ ]]; then
-        [[ $# -gt 1 ]] && head=$1:h || head=$@:h
-        # if we're given just 1 argument, and that argument does not exist,
-        # then go to the nearest valid parent directory; we use a while loop to
-        # find the closest valid directory, just in case the user gave a
-        # butchered-up path
-        while [[ ! -d $head ]]; do head=$head:h; done
-        cd $head && dir_info
-        echo "\nuniv_open: path \`$@' does not exist"
-        [[ $head == "." ]] && echo "univ_open: stayed in same directory\n" || echo "univ_open: relocated to nearest parent directory \`$head'\n"
-    else
-        # possible error -- should re-program the above if this ever happens,
-        # but, it seems unlikely
-        echo "\nuniv_open: error -- exiting peacefully"
-    fi
+		# $1 is the first arg; ${=@[-1]} is the last arg (i.e., if user passes "-o -m FILE" to us, then obviously the
+		# last arg is the filename
+		#
+		# we use && and || for simple ternary operation (like ? and : in C)
+		[[ -f $1 ]] && file=$1 || file=${=@[-1]}
+		case $file:e:l in
+			(doc|docx|odf|odt|rtf)
+				soffice -writer $@ &>/dev/null & disown
+			;;
+			(pps|ppt)
+				soffice -impress $@ &>/dev/null & disown
+			;;
+			(htm|html)
+				firefox $@ &>/dev/null & disown
+			;;
+			(djvu|dvi|eps|pdf|ps)
+				evince -f $@ &>/dev/null & disown
+			;;
+			(bmp|gif|jpg|jpeg|pcx|png|svg|tga|tif|tiff)
+				geeqie -f $@ &>/dev/null & disown
+			;;
+			(psd|xcf)
+				gimp $@ &>/dev/null & disown
+			;;
+			(aac|flac|mp3|ogg|wav|wma)
+				mpv --loop inf $( [[ $file:e:l == flac ]] && echo "--vo null" ) $@
+			;;
+			(mid|midi)
+				timidity $@
+			;;
+			(asf|avi|divx|flv|ogm|ogv|m4a|m4v|mkv|mov|mp4|mpg|mpeg|rm|rmvb|webm|wmv)
+				mpv $@ &>/dev/null & disown
+			;;
+			(mts)
+				vlc $@ &>/dev/null & disown
+			;;
+			(exe)
+				wine $@ &>/dev/null & disown
+			;;
+			(otf|ttf)
+				fontforge $@ &>/dev/null & disown
+			;;
+			(chm)
+				xchm $@ &>/dev/null & disown
+			;;
+			*)
+				emacs --no-window-system $@
+			;;
+		esac
+	elif [[ -d $1 ]]; then
+		# if the first argument is a valid directory, just cd into it -- ignore
+		# any trailing arguments (in zsh, '#' is the same as ARGC, and denotes the number of arguments passed to the
+		# script (so '$#' is the same as $ARGC)
+		if [[ $# -eq 1 ]]; then
+			cd $@ && dir_info
+		else
+			# if the first argument was a valid directory, but there was more than 1 argument, then we ignore these
+			# trailing args but still cd into the first given directory
+			cd $1 && dir_info
+			# i.e., show arguments 2 ... all the way to the last one (last one has an index of -1 argument array)
+			echo "\nuniv_open: argument(s) ignored: \`${=@[2,-1]}\`"
+			echo "univ_open: went to \`$1'\n"
+		fi
+	elif [[ ! -e $@ ]]; then
+		[[ $# -gt 1 ]] && head=$1:h || head=$@:h
+		# if we're given just 1 argument, and that argument does not exist,
+		# then go to the nearest valid parent directory; we use a while loop to
+		# find the closest valid directory, just in case the user gave a
+		# butchered-up path
+		while [[ ! -d $head ]]; do head=$head:h; done
+		cd $head && dir_info
+		echo "\nuniv_open: path \`$@' does not exist"
+		[[ $head == "." ]] && echo "univ_open: stayed in same directory\n" || echo "univ_open: relocated to nearest parent directory \`$head'\n"
+	else
+		# possible error -- should re-program the above if this ever happens,
+		# but, it seems unlikely
+		echo "\nuniv_open: error -- exiting peacefully"
+	fi
 }
