@@ -306,10 +306,15 @@ keybinding as it conflicts with Anthy input."
 
 (defun my/paste-X-primary ()
 	(interactive)
-	(insert xpribuf)
-	; Prevent our 'undo usage of 'o' Insert state exit hook from undoing this
-	; paste.
-	(setq my/before-open-line nil)
+	(let
+		(
+			(xpribuf (x-selection 'PRIMARY))
+		)
+		(insert xpribuf)
+		; Prevent our 'undo usage of 'o' Insert state exit hook from undoing this
+		; paste.
+		(setq my/before-open-line nil)
+	)
 )
 (defun my/paste-X-primary-smart (backward)
 	(interactive)
