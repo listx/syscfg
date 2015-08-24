@@ -37,10 +37,10 @@
 
 (defhydra hydra-zoom ()
 	"zoom"
-	("k"
+	("j"
 		(lambda () (interactive) (global-text-scale-adjust 1))
 		"in")
-	("j"
+	("k"
 		(lambda () (interactive) (global-text-scale-adjust -1))
 		"out")
 	("q" nil "exit" :exit t)
