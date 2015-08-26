@@ -75,6 +75,7 @@ with super; rec {
       utillinuxCurses
       lsof
       tree
+      sshfsFuse
 
       # Docs
       manpages
