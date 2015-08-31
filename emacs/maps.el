@@ -215,7 +215,8 @@
 			(t (helm-maybe-exit-minibuffer))
 		)
 	)
-	(advice-add 'helm-execute-persistent-action :around #'fu/helm-find-files-navigate-forward)
+	(advice-add 'helm-execute-persistent-action
+		:around #'fu/helm-find-files-navigate-forward)
 
 	(defun fu/helm-find-files-navigate-back (orig-fun &rest args)
 	(if (= (length helm-pattern) (length (helm-find-files-initial-input)))
@@ -286,7 +287,8 @@
 	)
 )
 
-(define-key evil-normal-state-map "gw" 'fill-paragraph) ; insert hard line breaks
+; insert hard line breaks
+(define-key evil-normal-state-map "gw" 'fill-paragraph)
 
 ; Add newlines above/below, without going through kakapo-open. We have a hook
 ; that runs on exit of insert mode, which discards purely whitespace insertions,
@@ -335,8 +337,8 @@
 ; buffer movement
 (define-key evil-normal-state-map "H" 'evil-next-buffer)
 (define-key evil-normal-state-map "L" 'evil-prev-buffer)
-; replace all /r/n with just /n
-; make "kj" behave as ESC key, adapted from http://article.gmane.org/gmane.emacs.vim-emulation/980
+; make "kj" behave as ESC key, adapted from
+; http://article.gmane.org/gmane.emacs.vim-emulation/980
 (define-key evil-insert-state-map "k" #'cofi/maybe-exit)
 
 ; Elscreen

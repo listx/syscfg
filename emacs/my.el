@@ -1,4 +1,5 @@
-; Inspired by evil-mark-replace (https://github.com/redguardtoo/evil-mark-replace).
+; Inspired by evil-mark-replace
+; (https://github.com/redguardtoo/evil-mark-replace).
 (defun my/replace-in-buffer ()
 	(interactive)
 	(let
@@ -25,7 +26,8 @@
 	)
 )
 
-; Adopted from http://stackoverflow.com/questions/2416655/file-path-to-clipboard-in-emacs
+; Adopted from
+; http://stackoverflow.com/questions/2416655/file-path-to-clipboard-in-emacs
 (defun my/copy-file-name-to-clipboard ()
 	"Copy the current buffer file name to the clipboard."
 	(interactive)
@@ -311,8 +313,8 @@ keybinding as it conflicts with Anthy input."
 			(xpribuf (x-selection 'PRIMARY))
 		)
 		(insert xpribuf)
-		; Prevent our 'undo usage of 'o' Insert state exit hook from undoing this
-		; paste.
+		; Prevent our 'undo usage of 'o' Insert state exit hook from undoing
+		; this paste.
 		(setq my/before-open-line nil)
 	)
 )
