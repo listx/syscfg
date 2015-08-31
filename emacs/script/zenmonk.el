@@ -200,6 +200,8 @@ Each element has the form (NAME . HEX).
 			(alect-set-color 'light 'green-1 "firebrick3")
 			; ace-jump's background face's foreground color
 			(alect-set-color 'light 'bg+2 "#8e876c")
+			; elisp docstring color
+			(alect-set-color 'light 'fg-1 "#059a05")
 
 			; general background
 			(alect-set-color 'dark 'bg-1 ,zm-bg)
