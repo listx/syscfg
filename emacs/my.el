@@ -79,7 +79,7 @@ functioning already here."
 	(replace-regexp-in-string "^0+" "" str)
 )
 
-(defun my/copy-for-slack ()
+(defun my/copy-for-slack (insert-github-link)
 	"Copy region for Slack, and also add metadata/formatting around it for easy
 pasting. If no region is selected, copy just the buffer's filename."
 	(interactive)
@@ -229,7 +229,7 @@ pasting. If no region is selected, copy just the buffer's filename."
 					"`"
 					(concat project-name project-filename)
 					"`\n"
-					github-link
+					(when insert-github-link github-link)
 					"```"
 					selection-with-lines
 					"```"
