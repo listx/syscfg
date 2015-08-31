@@ -326,7 +326,7 @@
 	(global-text-scale-mode 1)
 )
 
-(defvar my/font-collection '("Terminus" "Liberation Mono"))
+(defvar my/font-collection '("Terminus" "Input"))
 (setq my/font-choice 0)
 (defun my-toggle-font ()
 	"Cycle through font collection."
