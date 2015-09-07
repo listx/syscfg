@@ -46,6 +46,8 @@ rf:
 	ln -fs ${C}/rf/cfg                                  ${H}/.rf
 rtorrent:
 	ln -fs ${C}/rtorrent/cfg                            ${H}/.rtorrent.rc
+tig:
+	ln -fs ${C}/tig/.tigrc                              ${H}
 usbmnt:
 	ln -fs ${C}/usbmnt/cfg                              ${H}/.usbmnt
 vim:
