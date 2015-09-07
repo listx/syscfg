@@ -398,7 +398,7 @@
 	"org"
 	("b" org-cycle-list-bullet "cycle-bullet-type")
 	("s" org-beamer-export-to-pdf "save beamer to pdf")
-	("w" org-publish-current-project "save beamer to pdf")
+	("w" org-publish-current-project "publish current project")
 	("q" nil "exit" :exit t)
 )
 (evil-leader/set-key-for-mode 'org-mode
