@@ -395,7 +395,6 @@ otherwise, close current tab (elscreen)."
 (add-hook 'conf-mode-hook 'my-kakapo-indents)
 (add-hook 'css-mode-hook 'my-kakapo-indents)
 
-;(setq kakapo-debug nil)
 ; first, set default mode to text-mode
 (setq-default major-mode 'text-mode)
 ; Use kakapo's "o" and "O" for opening new lines.
