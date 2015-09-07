@@ -151,6 +151,16 @@
 					)
 				)
 			)
+			(
+				(or
+					(string-match "^/home/l/prog/elementary-haskell/" b)
+				)
+				(cond
+					((string-match "\\.hs$" b)
+						(h 'haskell-mode-hook nil 4)
+					)
+				)
+			)
 
 			; Default options by language
 
