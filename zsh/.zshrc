@@ -230,14 +230,7 @@ alias  li=' dir_info 7'
 
 alias q=' exit'
 
-alias m='mplayer -loop 0 -demuxer lavf'
-alias mp='mplayer -loop 0 -demuxer lavf -playlist'
-alias mpa='mplayer -loop 0 -demuxer lavf -vo null -playlist'
-alias mpas='mplayer -loop 0 -shuffle -demuxer lavf -vo null -playlist'
-alias mpf='mplayer -loop 0 -fs -demuxer lavf -playlist'
-alias mps='mplayer -loop 0 -shuffle -demuxer lavf -playlist'
-alias mpfs='mplayer -loop 0 -fs -shuffle -demuxer lavf -playlist'
-alias ms='smplayer'
+alias mp='mpv -playlist'
 alias make_plist="~/syscfg/script/audio/make_plist.sh"
 
 alias rsa="rand_open norecurse 'mplayer -loop 0 -demuxer lavf -vo null -playlist' '' $ft_snd"
