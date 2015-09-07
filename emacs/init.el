@@ -87,8 +87,8 @@
 ; Install packages if they are missing.
 (defun my/packages-installed-p ()
 	(cl-loop for pkg in my/packages
-		when (not (package-installed-p pkg)) do (return nil)
-		finally (return t)))
+		when (not (package-installed-p pkg)) do (cl-return nil)
+		finally (cl-return t)))
 
 (unless (my/packages-installed-p)
 	(message "%s" "Refreshing package database...")
