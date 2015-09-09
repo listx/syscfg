@@ -42,6 +42,13 @@ nixpkgs:
 	ln -fns ${C}/nixpkgs                                ${H}/.nixpkgs
 pentadactyl:
 	ln -fs ${C}/pentadactyl/cfg                         ${H}/.pentadactylrc
+pulse:
+	rm -rf ${H}/.config/pulse
+	rm -rf ${H}/.pulse
+	mkdir -p ${H}/.config/pulse
+	mkdir ${H}/.pulse
+	cp ${C}/pulse/daemon.conf                           ${H}/.config/pulse
+	cp ${C}/pulse/default.pa                            ${H}/.pulse
 rf:
 	ln -fs ${C}/rf/cfg                                  ${H}/.rf
 rtorrent:
