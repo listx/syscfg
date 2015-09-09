@@ -1,1 +1,1 @@
-set main-view = date author id:width=10 commit-title:yes,graph
+set main-view = date author id:width=10 commit-title:yes,graph,refs
