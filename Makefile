@@ -47,8 +47,13 @@ pulse:
 	rm -rf ${H}/.pulse
 	mkdir -p ${H}/.config/pulse
 	mkdir ${H}/.pulse
-	cp ${C}/pulse/daemon.conf                           ${H}/.config/pulse
-	cp ${C}/pulse/default.pa                            ${H}/.pulse
+ifeq ('${T}','k0')
+	cp ${C}/pulse/daemon.conf.k0                        ${H}/.config/pulse/daemon.conf
+	cp ${C}/pulse/default.pa.k0                         ${H}/.pulse/default.pa
+else
+	cp ${C}/pulse/daemon.conf.w0                        ${H}/.config/pulse/daemon.conf
+	cp ${C}/pulse/default.pa                            ${H}/.pulse/default.pa
+endif
 rf:
 	ln -fs ${C}/rf/cfg                                  ${H}/.rf
 rtorrent:
