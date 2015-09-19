@@ -235,6 +235,7 @@
 			((string-match "\\.lhs$" b)
 				(progn
 					(h 'latex-mode-hook t 4)
+					(h 'literate-haskell-mode-hook t 4)
 					(setq mmm-global-mode 't)
 					(setq mmm-submode-decoration-level 1)
 					(mmm-ify-by-class 'literate-haskell-latex)
