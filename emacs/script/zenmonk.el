@@ -170,10 +170,10 @@ Each element has the form (NAME . HEX).
 			(mode-line-buffer-id    ((t :foreground magenta+1 :weight bold)))
 			(mmm-default-submode-face
 				((((background light))
-				:background "#fbf9f3"
+				:background "#fbf9f3")
 				(((background dark))
-				:background bg+1
-				))))
+				:background "#1d1d22")
+				))
 			(region ((((background light))
 					:foreground "#376161" :background "#f2ffcf" :weight bold)
 					(((background dark))
