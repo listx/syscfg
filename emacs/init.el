@@ -71,6 +71,7 @@
 	helm
 	helm-ag
 	helm-projectile
+	hl-line+
 	hiwin
 	htmlize
 	hydra
@@ -743,7 +744,10 @@ otherwise, close current tab (elscreen)."
 
 ; highlight matching parenthese
 (show-paren-mode 1)
-; highlight the current cursor line
+; Highlight the current cursor line; set overlay to a high number to override
+; other properties (e.g., mmm-default-submode-face).
+(require 'hl-line+)
+(setq hl-line-overlay-priority most-positive-fixnum)
 (global-hl-line-mode 1)
 ; disable cursor line highlight during insert mode
 (add-hook 'evil-insert-state-entry-hook
