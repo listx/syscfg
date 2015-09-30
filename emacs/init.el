@@ -747,7 +747,7 @@ otherwise, close current tab (elscreen)."
 ; Highlight the current cursor line; set overlay to a high number to override
 ; other properties (e.g., mmm-default-submode-face).
 (require 'hl-line+)
-(setq hl-line-overlay-priority most-positive-fixnum)
+(setq hl-line-overlay-priority (/ most-positive-fixnum (expt 2 55)))
 (global-hl-line-mode 1)
 ; disable cursor line highlight during insert mode
 (add-hook 'evil-insert-state-entry-hook
