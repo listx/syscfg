@@ -91,6 +91,7 @@
 						(h 'python-mode-hook nil 4
 							(progn
 								(setq python-indent 4)
+								(electric-indent-mode -1)
 								(message "python-indent set to %d" python-indent)
 							)
 						)
