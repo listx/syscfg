@@ -377,3 +377,21 @@ keybinding as it conflicts with Anthy input."
 	(forward-line -3)
 	(evil-append nil)
 )
+
+(defun my-buffer-restart ()
+	(interactive)
+	(let
+		(
+			(file (buffer-file-name))
+			(p (point))
+		)
+		(undo-tree-save-history)
+		(kill-this-buffer)
+		(find-file file)
+		(if (string-match "\\.lhs$" file)
+			(latex-mode)
+		)
+		(undo-tree-load-history)
+		(goto-char p)
+	)
+)

@@ -142,6 +142,8 @@
 	"j" 'hs-literate-endbeg
 	"J" 'hs-literate-begend
 
+	"l" 'my-buffer-restart
+
 	"m" 'hydra-magit/body
 
 	; new tab

@@ -566,7 +566,7 @@ otherwise, close current tab (elscreen)."
 	'((literate-haskell-latex
 		:submode haskell-mode
 		:front "^\\\\begin{code}\n"
-		:back "^\\\\end{code}"
+		:back "^\\\\end{code}$"
 	)))
 
 ; Haml
