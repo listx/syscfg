@@ -116,6 +116,7 @@
   virtualisation.virtualbox.host.enable = true;
 
   virtualisation.docker.enable = true;
+  virtualisation.docker.storageDriver = "devicemapper";
 
   # Enable CUPS to print documents.
   services.printing.enable = true;
