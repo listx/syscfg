@@ -99,8 +99,8 @@ autoload -U zmv
 prompt kody
 
 # history settings
-HISTSIZE=10000
-SAVEHIST=10000
+HISTSIZE=20000
+SAVEHIST=20000
 HISTFILE=~/.zsh-untracked/history
 
 # Directory stack size
