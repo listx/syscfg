@@ -21,7 +21,7 @@
 
   boot.kernel.sysctl = {
     # Make the kernel reluctant to use swap.
-    vm.swappiness = 5;
+    "vm.swappiness" = 5;
   };
 
   networking = {
