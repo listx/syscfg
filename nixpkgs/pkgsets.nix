@@ -102,6 +102,7 @@ with super; rec {
       gcc
       gdb
       gnumake
+      python
       ruby
       # android development
       androidsdk_4_4
@@ -178,6 +179,8 @@ with super; rec {
     paths = [
       pidgin
       texLiveFull
+      fontforge
+      pandoc
     ];
   });
 
