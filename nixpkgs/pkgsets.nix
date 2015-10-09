@@ -104,6 +104,7 @@ with super; rec {
       gnumake
       python
       ruby
+      cloc
       # android development
       androidsdk_4_4
       android-udev-rules
