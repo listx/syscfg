@@ -397,6 +397,8 @@
 (defhydra hydra-org (:foreign-keys warn)
 	"org"
 	("b" org-cycle-list-bullet "cycle-bullet-type")
+	("l" mmm-parse-buffer "turn on mmm-mode")
+	("m" mmm-mode "turn on mmm-mode")
 	("s" org-beamer-export-to-pdf "save beamer to pdf")
 	("w" org-publish-current-project "publish current project")
 	("q" nil "exit" :exit t)
