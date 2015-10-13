@@ -569,6 +569,29 @@ otherwise, close current tab (elscreen)."
 		:back "^\\\\end{code}$"
 	)))
 
+; mmm-mode: add subclasses for #+begin_src blocks in org-mode
+(mapc 'my-mmm-org-auto-class
+	'(
+	"awk"
+	"bibtex"
+	"c"
+	"cpp"
+	"css"
+	"haskell"
+	"html"
+	"latex"
+	"lisp"
+	"makefile"
+	"markdown"
+	"python"
+	"r"
+	"ruby"
+	"sql"
+	"stata"
+	"xml"
+	)
+)
+
 ; Haml
 (evil-define-key 'insert haml-mode-map (kbd "<tab>") 'kakapo-tab)
 (evil-define-key 'insert haml-mode-map (kbd "<backspace>") 'kakapo-backspace)
