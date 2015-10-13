@@ -592,6 +592,10 @@ otherwise, close current tab (elscreen)."
 	)
 )
 
+; Re-fontify sub-mode portions when idle. The manual command for this is
+; `mmm-parse-buffer'.
+(setq mmm-parse-when-idle 't)
+
 ; Haml
 (evil-define-key 'insert haml-mode-map (kbd "<tab>") 'kakapo-tab)
 (evil-define-key 'insert haml-mode-map (kbd "<backspace>") 'kakapo-backspace)

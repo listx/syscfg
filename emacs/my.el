@@ -378,24 +378,6 @@ keybinding as it conflicts with Anthy input."
 	(evil-append nil)
 )
 
-(defun my-buffer-restart ()
-	(interactive)
-	(let
-		(
-			(file (buffer-file-name))
-			(p (point))
-		)
-		(undo-tree-save-history)
-		(kill-this-buffer)
-		(find-file file)
-		(if (string-match "\\.lhs$" file)
-			(latex-mode)
-		)
-		(undo-tree-load-history)
-		(goto-char p)
-	)
-)
-
 ; For mode names that match the 'lang' in '#+begin_src lang', we don't need to
 ; provide an optional submode. But for those that don't match, we can do it like
 ; this:
