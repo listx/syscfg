@@ -544,6 +544,7 @@ otherwise, close current tab (elscreen)."
 (setq auto-mode-alist
 	(remove (rassoc 'literate-haskell-mode auto-mode-alist) auto-mode-alist))
 (add-to-list 'auto-mode-alist '("\\.lhs$" . latex-mode))
+(add-hook 'literate-haskell-mode-hook (lambda () (latex-mode)))
 
 ; The "Haskell-Cabal" mode that comes built-in with haskell-mode needs some
 ; manual tooth-removal to get it to submit and behave.
