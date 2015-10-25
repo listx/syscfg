@@ -239,6 +239,7 @@
 					(setq mmm-global-mode 't)
 					(setq mmm-submode-decoration-level 1)
 					(mmm-ify-by-class 'literate-haskell-latex)
+					(column-enforce-mode)
 				)
 			)
 			; Hazelnut
