@@ -115,8 +115,7 @@ Each element has the form (NAME . HEX).
 				:underline t
 				)))
 			; column-enforce-mode
-			(column-enforce-face ((t :foreground ,zm-bg
-				:background ,zm-red+2 :underline nil)))
+			(column-enforce-face ((t :underline t)))
 			(default ((t :foreground magenta-1 :background bg-1 :weight bold)))
 			; FIXME: make the alect-dark palette more zenmonk-like, and then use
 			; those regular alect colors as much as possible.
