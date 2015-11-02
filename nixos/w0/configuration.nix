@@ -44,9 +44,9 @@
       # We are running NixOS as a guest from Mac OSX host through VirtualBox. On
       # the Mac, make the CapsLock key do nothing under the Keyboard -> Modifier
       # Keys settings. Then install "Seil" and make CapsLock behave as the
-      # Scroll Lock key (Scroll_Lock from X11's pov), by assigning it the Mac
-      # keycode 107 (listed in the menu as F14). There is no way to make Seil
-      # make capslock behave as Hyper_L, so we make it behave as Scroll_Lock
+      # Print key ("Print" X11's pov), by assigning it the Mac
+      # keycode 105 (listed in the menu as F13). There is no way to make Seil
+      # make capslock behave as Hyper_L, so we make it behave as Print (F13)
       # instead.
 
       # Apparently, importing from `base.nix` results in still reading those
@@ -55,8 +55,7 @@
       # `sessionCommands` config option in `base.nix`. We piggyback along on top
       # of the existing Hyper_L settings defined there.
 
-      # First prevent Scroll Lock from behaving like a toggled key.
-      ${pkgs.xlibs.xmodmap}/bin/xmodmap -e "keysym Scroll_Lock = Hyper_L"
+      ${pkgs.xlibs.xmodmap}/bin/xmodmap -e "keysym Print = Hyper_L"
     '';
   };
 }
