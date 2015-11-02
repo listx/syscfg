@@ -168,7 +168,7 @@ myKeys hostname conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
 	-- toggle borders
 	, ((modm              , xK_b ),   withFocused toggleBorder)
 	-- gridselect
-	, ((modm              , xK_f), goToSelected defaultGSConfig)
+	, ((mod4Mask, xK_f), goToSelected defaultGSConfig)
 	-- volume controls
 	, ((modm              , xK_backslash ), spawn "amixer -q set Master toggle")
 	, ((modm              , xK_minus     ), spawn "amixer -q set Master 1- unmute")
