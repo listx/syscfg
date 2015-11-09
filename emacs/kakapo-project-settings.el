@@ -100,6 +100,10 @@
 					((string-match "\\.sh$" b)
 						(h 'sh-mode-hook nil 4)
 					)
+					; SQL
+					((string-match "\\.sql$" b)
+						(h 'sql-mode-hook nil 4)
+					)
 				)
 			)
 
