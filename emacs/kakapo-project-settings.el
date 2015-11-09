@@ -8,6 +8,7 @@
 		(add-hook hook
 			(lambda ()
 				(kakapo-mode)
+				(electric-indent-mode -1)
 				(setq indent-tabs-mode tmode)
 				(setq tab-width twidth)
 				(setq evil-shift-width twidth)
@@ -91,7 +92,6 @@
 						(h 'python-mode-hook nil 4
 							(progn
 								(setq python-indent 4)
-								(electric-indent-mode -1)
 								(message "python-indent set to %d" python-indent)
 							)
 						)
