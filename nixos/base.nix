@@ -9,7 +9,7 @@
       baekmuk-ttf
       corefonts
       dejavu_fonts
-      ipafont
+      #ipafont
       libertine
       source-serif-pro
       terminus_font
