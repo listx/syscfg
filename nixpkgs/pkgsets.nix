@@ -59,6 +59,7 @@ with super; rec {
       xlibs.xev
       rxvt_unicode
       rxvt_unicode.terminfo
+      urxvt_font_size
       urxvt_perls
       tmux
       emacs

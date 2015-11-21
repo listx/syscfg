@@ -80,3 +80,4 @@ zsh:
 	mkdir -p ${H}/.zsh-untracked
 urxvt:
 	ln -fns ${C}/urxvt                                  ${H}/.urxvt
+	ln -fs ${H}/.nix-profile/lib/urxvt/perl             ${H}/.urxvt/ext
