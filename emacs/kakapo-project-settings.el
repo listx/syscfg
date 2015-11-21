@@ -274,6 +274,18 @@
 			((string-match "\\.nix$" b)
 				(h 'nix-mode-hook nil 2)
 			)
+			; Objective-C
+			((string-match "\\.m$" b)
+				(h 'objc-mode-hook t 8
+					(progn
+						(setq default-tab-width 8)
+						(message
+							"default-tab-width set to %d"
+							default-tab-width
+						)
+					)
+				)
+			)
 			; Org-mode
 			((string-match "\\.org$" b)
 				(h 'org-mode-hook nil 2)
