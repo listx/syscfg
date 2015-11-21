@@ -103,7 +103,7 @@
 
 (define-generic-mode
 	'xdefaults-mode
-	'("!") ; comments
+	'(("!") ("/*" . "*/")) ; comments
 	'() ; static keywords e.g., ("if" "else" "return")
 	'(
 		; regexes for matching aginst font-lock
