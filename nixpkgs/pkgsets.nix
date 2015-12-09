@@ -199,9 +199,9 @@ with super; rec {
 
   # Taken from
   # http://lists.science.uu.nl/pipermail/nix-dev/2015-January/015601.html. We
-  # redefine the default 'haskellngPackages' set, to enable profiling. We also
+  # redefine the default 'haskellPackages' set, to enable profiling. We also
   # add in some custom Haskell packages.
-  haskellngPackages = super.haskellngPackages.override {
+  haskellPackages = super.haskellPackages.override {
     overrides = self: super: {
       # Enable profiling. Taken from
       # http://lists.science.uu.nl/pipermail/nix-dev/2015-January/015620.html.
@@ -232,7 +232,7 @@ with super; rec {
       # to create a nix-shell environment. You can just do `nix-shell` after
       # that to get ghci. For cabal2nix to work properly, you need to have
       # the `cabal` binary available. To do this, you should have
-      # `haskellngPackages.cabal-install` installed either on your system, or
+      # `haskellPackages.cabal-install` installed either on your system, or
       # through nix-env.
       auca = self.callPackage ./haskell/auca.nix {};
       ztile = self.callPackage ./haskell/ztile.nix {};
@@ -242,11 +242,11 @@ with super; rec {
 
   l_set_haskell = setPrio "8" (buildEnv {
     name = "l-set-haskell";
-    paths = with haskellngPackages; [
+    paths = with haskellPackages; [
       # For haskell development via `nix-shell`; run `sudo nix-channel --add
       # <nixpkgs-unstable>`, then do `sudo nix-channel --update`.
       # <nixpkgs-unstable> is located at
-      # https://nixos.org/channels/nixpkgs-unstable. The `haskellngPackages` set
+      # https://nixos.org/channels/nixpkgs-unstable. The `haskellPackages` set
       # is only in nixpkgs-unstable as of 2015-02-06.
       #
       # It's OK to have multple NixOS channels at the same time. Nix takes care
@@ -256,7 +256,7 @@ with super; rec {
       # depends on `cabal update`. We also get `cabal repl` and other commands
       # from the `cabal` binary with this package. The package
       # 'haskellPackages.cabalInstall' has been renamed to
-      # 'haskellngPackages.cabal-install'.
+      # 'haskellPackages.cabal-install'.
       cabal-install
 
       auca
