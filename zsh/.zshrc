@@ -202,10 +202,6 @@ alias enc='gpg2 -e -r linusarver'
 alias dec='~/syscfg/script/sys/decrypt.sh outfile'
 alias decless='~/syscfg/script/sys/decrypt.sh viewfile'
 
-alias buf1='xsel -p'
-alias buf2='xsel -s'
-alias buf3='xsel -b'
-
 # sanitize directory/file permissions
 alias sanitize_files='find -type d -exec chmod 755 {} \; ; find -type f -exec chmod 644 {} \;'
 
@@ -270,8 +266,6 @@ alias es=' e galias_find_src'
 alias ees=' ee galias_find_src'
 
 alias fl='find_long_lines '
-
-alias tma='tmux attach-session'
 
 alias skype='find ~/.Skype/Logs/ -type f -exec rm {} \; && skype'
 
@@ -339,33 +333,15 @@ alias clean_files='find -type f -exec chmod 644 {} \;'
 alias of=' poweroff & disown; exit' # power off
 alias ofo=' reboot & disown; exit' # reboot
 
-alias nix='. ~/.nix-profile/etc/profile.d/nix.sh'
 alias n='nix-env'
 alias nl='nix-env --list-generations'
 alias np='ls -l --color=always ~/.nix-profile'
-alias nq='nix-env -q \*'
+alias nq='nix-env -qaP'
 alias nls='sudo nix-env -p /nix/var/nix/profiles/system --list-generations'
-alias nu='nix-channel --update && sudo nixos-checkout'
 
 alias cal='cal -y'
 
 nixos_hosts=(k0 k3 w0)
-
-if [[ -z ${nixos_hosts[(r)$HOST]} ]]; then
-	alias p='sudo pacman'
-	alias pu='sudo pacman -Syu'
-	alias py='sudo pacman -Syy'
-	alias ps='sudo pacman -S'
-	alias pq='sudo pacman -Q'
-
-	# use of yaourt with root privileges is a big security hole!
-	alias y='yaourt'
-	alias yu='yaourt -Sybu --aur'
-	alias yy='yaourt -Syy'
-	alias ys='yaourt -S'
-	alias yurc='pkgs=${(s:\n:)$(pacman -Qq | grep -E -- "-(bzr|darcs|git|hg|svn)")}; echo "Syncing: $pkgs\n"; ys ${(s: :)pkgs}'
-	alias yc=' sudo yaourt -C'
-fi
 
 # memory management
 alias reset_cache='free && sync && echo 3 >/proc/sys/vm/drop_caches && free'
