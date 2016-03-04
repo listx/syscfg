@@ -27,8 +27,8 @@
   networking = {
     hostName = "k0";
     extraHosts = ''
-      192.168.0.132 dashboard.twinprime.dev
-      192.168.0.132 web-api.twinprime.dev
+      127.0.0.1 dashboard.twinprime.dev
+      127.0.0.1 web-api.twinprime.dev
     '';
   };
 
