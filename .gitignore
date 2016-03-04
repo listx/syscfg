@@ -16,6 +16,8 @@ mplayer/mplayerplug-in.conf
 ncmpcpp/config
 ncmpcpp/keys
 mutt/hcache
+qutebrowser/bookmarks
+qutebrowser/quickmarks
 vim/.VimballRecord
 vim/.netrwhist
 vim/colors

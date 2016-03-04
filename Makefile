@@ -54,6 +54,8 @@ else
 	cp ${C}/pulse/daemon.conf.w0                        ${H}/.config/pulse/daemon.conf
 	cp ${C}/pulse/default.pa                            ${H}/.pulse/default.pa
 endif
+qutebrowser:
+	ln -fns ${C}/qutebrowser                            ${H}/.config
 rf:
 	ln -fs ${C}/rf/cfg                                  ${H}/.rf
 rtorrent:
