@@ -98,7 +98,6 @@ with super; rec {
       # Programming tools
       git
       tig
-      mercurial
       clang
       gcc
       gdb
