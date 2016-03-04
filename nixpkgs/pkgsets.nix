@@ -136,6 +136,7 @@ with super; rec {
     paths = [
       firefoxWrapper
       chromium
+      qutebrowser
       links
       aria2
       rtorrent
