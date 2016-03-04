@@ -549,7 +549,7 @@ main = do
 		then xmonad (myconf hostname) {layoutHook = layoutNoMirror}
 		else xmonad $ myconf hostname
 	where
-	myconf hostname = XConfig
+	myconf hostname = def
 		{ terminal           = "urxvt"
 		, focusFollowsMouse  = True
 		, clickJustFocuses   = True
