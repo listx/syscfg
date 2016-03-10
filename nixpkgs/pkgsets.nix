@@ -80,7 +80,6 @@ with super; rec {
 
       # Docs
       manpages
-      pthreadmanpages
       stdmanpages
 
       # Archiving
