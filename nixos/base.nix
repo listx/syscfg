@@ -123,7 +123,7 @@
 
   time.timeZone = "America/Los_Angeles";
 
-  uim.enable = true;
+  i18n.inputMethod.uim.enable = true;
 
   users.extraGroups.l = {
     gid = 1000;
