@@ -58,4 +58,6 @@
       ${pkgs.xlibs.xmodmap}/bin/xmodmap -e "keysym Print = Hyper_L"
     '';
   };
+
+  virtualisation.virtualbox.host.enable = pkgs.lib.mkForce false;
 }
