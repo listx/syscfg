@@ -1,1 +1,1 @@
-/home/l/prog/foreign/Zenburn/colors/zenburn.vim
+../../../prog/foreign/Zenburn/colors/zenburn.vim
