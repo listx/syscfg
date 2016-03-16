@@ -324,7 +324,14 @@
 	(global-text-scale-mode 1)
 )
 
-(defvar my/font-collection '("Terminus" "Input"))
+(defvar my/font-collection
+	(cond
+		((string-match "^Linuss" system-name)
+            '("Input Mono Narrow Regular")
+		)
+		(t '("Terminus" "Input"))
+	)
+)
 (setq my/font-choice 0)
 (defun my-toggle-font ()
 	"Cycle through font collection."
@@ -888,9 +895,13 @@ otherwise, close current tab (elscreen)."
 		((string-match "^w0" system-name)
 			102
 		)
+		((string-match "^Linuss" system-name)
+			144
+		)
 		(t 91)
 	)
 )
+
 ; auto-generated stuff by emacs itself...
 (custom-set-variables
   ;; custom-set-variables was added by Custom.
@@ -905,7 +916,7 @@ otherwise, close current tab (elscreen)."
   ;; If you edit it by hand, you could mess it up, so be careful.
   ;; Your init file should contain only one such instance.
   ;; If there is more than one, they won't work right.
- `(default ((t (:inherit nil :stipple nil :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height ,(my-text-height) :width normal :foundry "xos4" :family "Terminus")))))
+ `(default ((t (:inherit nil :stipple nil :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height ,(my-text-height) :width normal :foundry "xos4" :family (nth 0 my/font-collection))))))
 
 ; If we give emacs an argument (e.g., file or directory) when we invoke it,
 ; emacs automatically sets the default directory (to search for when we want to
