@@ -1,0 +1,22 @@
+#!/usr/bin/env zsh
+
+vertical_label()
+{
+	c=$3
+	ce="\x1b[0m"
+	label=$2
+	i=1
+	eval $1 | sed  's/^/X/ ; s/\t/    /g' | while read -r line; do
+		case $label[$i] in
+		" ") printf "  " ;;
+		"-") printf " $c\u2503$ce" ;;
+		*) printf " $c$label[$i]$ce" ;;
+		esac
+		line_not_padded=$line[2,-1]
+		printf "  ${line_not_padded//\\/\\\\\\\\}\n"
+		((i+=1))
+		if (( i > $#label )); then
+			i=1
+		fi
+	done
+}

@@ -237,8 +237,6 @@ alias rsm="rand_open norecurse mpv m3u $ft_mov"
 alias rsmm="rand_open recurse mpv\ --loop-file\ inf\ \ --playlist m3u $ft_mov"
 
 alias g='git'
-alias gdf=" [[ \$(git diff | wc -l) -gt 0 ]] && git diff || ([[ \$(git diff 2>&1 | wc -l) -eq 0 ]] && echo \"No changes.\")"
-alias gdfc=" [[ \$(git diff --cached | wc -l) -gt 0 ]] && git diff --cached || ([[ \$(git diff --cached 2>&1 | wc -l) -eq 0 ]] && echo \"Index empty.\")"
 alias gst='git status'
 alias gbr='git branch'
 alias gcm='git commit --verbose'

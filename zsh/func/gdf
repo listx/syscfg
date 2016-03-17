@@ -1,0 +1,39 @@
+#!/usr/bin/env zsh
+
+gdf()
+{
+	c="\x1b[1;32m"
+	ce="\x1b[0m"
+
+	git_diff=$(git diff --color=always)
+	git_diff_c=$(git diff --cached --color=always)
+
+	if [[ -z "$git_diff" && -z "$git_diff_c" ]]; then
+		printf "NO CHANGES!\n"
+		git status
+	else
+		if [[ -n "$git_diff" ]]; then
+			# The sed '$ d' below is to remove the extra trailing whitespace
+			# line that seems to get added into `git diff' but not `git diff
+			# --cached'.
+			msg=$(vertical_label \
+				"git diff --color=always | sed '$ d'" \
+				"TREE ------------------------ " \
+				"$c")
+			msg+="\n"
+			printf $msg | less
+		fi
+
+		c="\x1b[1;35m"
+		if [[ -n "$git_diff_c" ]]; then
+			msg=$(vertical_label \
+				"git diff --cached --color=always" \
+				"INDEX ------------------------ " \
+				"$c")
+			msg+="\n"
+			printf $msg | less
+		fi
+
+		git status
+	fi
+}
