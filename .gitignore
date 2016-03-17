@@ -7,11 +7,14 @@ emacs/auto-save-list
 emacs/elpa
 emacs/ido.last
 emacs/projectile-bookmarks.eld
+emacs/projectile.cache
 emacs/recentf
 emacs/tramp
 gpg/.gpg-v21-migrated
 gpg/private-keys-v1.d/
 gpg/random_seed
+gpg/reader_0.status
+gpg/sshcontrol
 mplayer/mplayerplug-in.conf
 ncmpcpp/config
 ncmpcpp/keys
