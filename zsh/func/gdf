@@ -9,7 +9,7 @@ gdf()
 	git_diff_c=$(git diff --cached --color=always)
 
 	if [[ -z "$git_diff" && -z "$git_diff_c" ]]; then
-		printf "NO CHANGES!\n"
+		printf "${c}NO CHANGES!$ce\n\n"
 		git status
 	else
 		if [[ -n "$git_diff" ]]; then
