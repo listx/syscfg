@@ -6,14 +6,18 @@ vertical_label()
 	ce="\x1b[0m"
 	label=$2
 	i=1
-	eval $1 | sed  's/^/X/ ; s/\t/    /g' | while read -r line; do
+	# The `s/^/x/' marks each line's beginning with a non-whitespace character
+	# `x' so that when we pipe it to the `read' zsh builtin, we read all leading
+	# indentation as well (otherwise we lose it). The `s/\t/ /g' standardizes
+	# all tab characters to four spaces; this is purely for visual aesthetics.
+	eval $1 | sed  's/^/x/ ; s/\t/    /g' | while read -r line; do
 		case $label[$i] in
 		" ") printf "  " ;;
 		"-") printf " $c\u2503$ce" ;;
 		*) printf " $c$label[$i]$ce" ;;
 		esac
-		line_not_padded=$line[2,-1]
-		printf "  ${line_not_padded//\\/\\\\\\\\}\n"
+		line_without_x=$line[2,-1]
+		printf "  ${line_without_x//\\/\\\\\\\\}\n"
 		((i+=1))
 		if (( i > $#label )); then
 			i=1
