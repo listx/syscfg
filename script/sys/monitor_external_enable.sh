@@ -1,7 +1,7 @@
 #!/usr/bin/env zsh
-# enable external VGA monitor
+# enable external HDMI screen
 
-monitor_external=$(xrandr | grep VGA-0)
+monitor_external=$(xrandr | grep HDMI-0)
 external_location="right-of"
 
 if [[ -n $monitor_external ]]; then
@@ -23,4 +23,4 @@ if [[ -n $monitor_external ]]; then
     esac
 fi
 
-xrandr --output LVDS --auto --output VGA-0 --auto --$external_location LVDS
+xrandr --output LVDS --auto --output HDMI-0 --auto --$external_location LVDS

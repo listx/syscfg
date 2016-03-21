@@ -1,7 +1,7 @@
 #!/usr/bin/env zsh
 
 internal="LVDS"
-external="VGA-0"
+external="HDMI-0"
 
 if [[ -n $(xrandr | grep "$external" | grep "+") ]]; then
     xrandr --output $external --off --output $internal --auto
