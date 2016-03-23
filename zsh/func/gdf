@@ -10,8 +10,7 @@ gdf()
 
 	if [[ -z "$git_diff" && -z "$git_diff_c" ]]; then
 		printf "${c}NO CHANGES!$ce\n\n"
-		git status
-		git stash list
+		gst
 	else
 		if [[ -n "$git_diff" ]]; then
 			# The sed '$ d' below is to remove the extra trailing whitespace
@@ -35,7 +34,6 @@ gdf()
 			printf $msg | less
 		fi
 
-		git status
-		git stash list
+		gst
 	fi
 }

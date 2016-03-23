@@ -1,0 +1,9 @@
+#!/usr/bin/env zsh
+
+gst()
+{
+	git status
+	git stash list
+	printf "HEAD: "
+	git rev-parse HEAD
+}
