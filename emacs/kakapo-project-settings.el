@@ -159,10 +159,22 @@
 			(
 				(or
 					(string-match "^/home/l/prog/elementary-haskell/" b)
+					(string-match "^/home/l/prog/nisse/new-keyboard/" b)
 				)
 				(cond
 					((string-match "\\.hs$" b)
 						(h 'haskell-mode-hook nil 4)
+					)
+					((string-match "\\.[ch]$" b)
+						(h 'c-mode-hook nil 4
+							(progn
+								(setq default-tab-width 4)
+								(message
+									"default-tab-width set to %d"
+									default-tab-width
+								)
+							)
+						)
 					)
 				)
 			)
