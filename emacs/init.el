@@ -327,7 +327,7 @@
 (defvar my/font-collection
 	(cond
 		((string-match "^Linuss" system-name)
-            '("Input Mono Narrow Regular")
+            '("Input Mono Narrow")
 		)
 		(t '("Terminus" "Input"))
 	)
