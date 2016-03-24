@@ -255,14 +255,25 @@
 
 ;			; We explicitly use 'xsel' to update the primary selection; this
 ;			; way, we can emulate Vim's behavior in both terminal and GUI emacs.
-			(call-process-region
-				evil-visual-beginning
-				evil-visual-end
-				"xsel"
-				nil
+			(if (string-match "^Linuss" system-name)
+				(call-process-region
+					evil-visual-beginning
+					evil-visual-end
+					"pbcopy"
+					nil
 					0
-				nil
-				"--primary" "--input"
+					nil
+					"-pboard" "-general"
+				)
+				(call-process-region
+					evil-visual-beginning
+					evil-visual-end
+					"xsel"
+					nil
+					0
+					nil
+					"--primary" "--input"
+				)
 			)
 )))))
 
