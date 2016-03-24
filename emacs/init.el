@@ -126,6 +126,11 @@
 (add-to-list 'load-path "~/.emacs.d/script")
 (add-to-list 'custom-theme-load-path "~/.emacs.d/script")
 
+; for Mac, load brew paths
+(if (string-match "^Linuss" system-name)
+	(setq exec-path (append exec-path '("/usr/local/bin")))
+)
+
 ; load per-project indentation style settings
 (load "~/.emacs.d/kakapo-project-settings")
 
