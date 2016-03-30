@@ -27,3 +27,5 @@
 	editor = vim
 [init]
 	templateDir = ~/.git-templates
+[rerere]
+	enabled = true
