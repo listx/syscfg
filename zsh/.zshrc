@@ -248,6 +248,7 @@ alias gap='git add --patch'
 alias grp='git reset --patch'
 alias gps='git push'
 alias gp='gsy -p '
+alias gre='git rerere'
 alias gtag='~/syscfg/script/sys/gtag.sh'
 
 alias tig='tig -n1000'
