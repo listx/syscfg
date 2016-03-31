@@ -2,8 +2,11 @@
 
 gst()
 {
-	git status
+    # We could use `git --no-pager show ...` but it seems to behave
+    # inconsistently with or without newlines.
+    local gshow=$(git show --pretty=format:'%h %D | %s' --no-patch \
+        | sed 's/HEAD -> //')
+    printf "$gshow\n"
+	git status --short
 	git stash list
-	printf "HEAD: "
-	git rev-parse HEAD
 }
