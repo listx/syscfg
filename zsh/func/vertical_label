@@ -10,7 +10,7 @@ vertical_label()
 	# `x' so that when we pipe it to the `read' zsh builtin, we read all leading
 	# indentation as well (otherwise we lose it). The `s/\t/ /g' standardizes
 	# all tab characters to four spaces; this is purely for visual aesthetics.
-	eval $1 | sed  's/^/x/ ; s/\t/    /g ; s/%/%%/g' | while read -r line; do
+	eval $1 | sed  's/^/x/ ; s/\t/    /g ; s/%/%%%%/g' | while read -r line; do
 		case $label[$i] in
 		" ") printf "  " ;;
 		"-") printf " $c\u2503$ce" ;;
