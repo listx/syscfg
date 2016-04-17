@@ -68,6 +68,7 @@ with super; rec {
       silver-searcher
       colordiff
       gnupg
+      openssl
       pinentry
       cryptsetup
       mutt
@@ -77,6 +78,8 @@ with super; rec {
       lsof
       tree
       sshfsFuse
+      bmon
+      inetutils
 
       # Docs
       manpages
@@ -179,9 +182,8 @@ with super; rec {
     ignoreCollisions = true;
     paths = [
       pidgin
-      texLiveFull
       fontforge
-      pandoc
+      gnuplot
     ];
   });
 
