@@ -57,6 +57,7 @@ with super; rec {
       zsh
       xlibs.xmodmap
       xlibs.xev
+      xdotool
       rxvt_unicode
       rxvt_unicode.terminfo
       urxvt_font_size
@@ -116,6 +117,12 @@ with super; rec {
       glfw
       glxinfo
       pcg_c
+
+      # Database
+      postgresql
+
+      # Ops
+      ansible2
     ];
   });
 
@@ -151,12 +158,15 @@ with super; rec {
       scrot
       geeqie
       gimp
+      imagemagick
       mpv
       ffmpeg
       flac
       shntool
       vlc
       cmus
+      lilypond
+      darktable
     ];
   });
 
@@ -192,6 +202,7 @@ with super; rec {
     ignoreCollisions = true;
     paths = [
       docker
+      python27Packages.docker_compose
       vagrant
       linuxPackages.virtualbox
       linuxPackages.virtualboxGuestAdditions
@@ -259,6 +270,14 @@ with super; rec {
       # 'haskellPackages.cabalInstall' has been renamed to
       # 'haskellPackages.cabal-install'.
       cabal-install
+
+      # We need GHC because it provides the useful 'ghci' REPL; useful for quick
+      # calculator math, etc.
+      ghc
+
+      # Misc userland packages.
+      hledger
+      hledger-web
 
       auca
       ztile
