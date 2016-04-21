@@ -724,6 +724,7 @@ otherwise, close current tab (elscreen)."
 	'(
 	alect-light
 	alect-dark
+	misterioso
 	) "Default themes")
 
 (defvar my/theme-idx 0)
@@ -775,6 +776,20 @@ otherwise, close current tab (elscreen)."
 						(setq evil-normal-state-cursor '("#00ff00" box))
 					)
 				)
+				((string= "misterioso" theme)
+					(progn
+						(set-face-background 'hiwin-face
+							"#172a41")
+						(setq evil-insert-state-cursor '("#000000" box))
+						(setq evil-normal-state-cursor '("#00ff00" box))
+						(set-face-attribute
+							'hl-line
+							nil
+							:background
+							"dim gray"
+						)
+					)
+				)
 			)
 		)
 	)
@@ -784,8 +799,13 @@ otherwise, close current tab (elscreen)."
 (if window-system
 	(load-theme 'alect-light t)
 	(progn
-		(require 'zenburn)
-		(zenburn)
+		(load-theme 'misterioso t)
+		(set-face-attribute
+			'hl-line
+			nil
+			:background
+			"dim gray"
+		)
 	)
 )
 
