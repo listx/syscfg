@@ -64,6 +64,8 @@ tig:
 	ln -fs ${C}/tig/.tigrc                              ${H}
 usbmnt:
 	ln -fs ${C}/usbmnt/cfg                              ${H}/.usbmnt
+uim:
+	ln -fns ${C}/uim                                    ${H}/.uim.d
 vim:
 	ln -fns ${C}/vim                                    ${H}/.vim
 	ln -fs ${C}/vim/cfg                                 ${H}/.vimrc
