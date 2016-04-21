@@ -301,8 +301,18 @@ keybinding as it conflicts with Anthy input."
 	(interactive)
 	(uim-mode)
 	(if uim-mode
-		(define-key evil-insert-state-map "k" nil)
-		(define-key evil-insert-state-map "k" #'cofi/maybe-exit)
+		(progn
+			(define-key evil-insert-state-map "k" nil)
+			(define-key evil-insert-state-map (kbd "RET") 'newline)
+			(define-key evil-insert-state-map (kbd "<S-backspace>") 'backward-delete-char-untabify)
+			(define-key evil-insert-state-map (kbd "DEL") 'backward-delete-char-untabify)
+		)
+		(progn
+			(define-key evil-insert-state-map "k" #'cofi/maybe-exit)
+			(define-key evil-insert-state-map (kbd "RET") 'kakapo-ret-and-indent)
+			(define-key evil-insert-state-map (kbd "<S-backspace>") 'kakapo-upline)
+			(define-key evil-insert-state-map (kbd "DEL") 'kakapo-backspace)
+		)
 	)
 )
 
