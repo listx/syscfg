@@ -81,6 +81,7 @@
 	mmm-mode
 	nix-mode
 	org
+	page-break-lines
 	yaml-mode
 	) "Default packages")
 
@@ -960,6 +961,14 @@ otherwise, close current tab (elscreen)."
 	:font
 	(nth my/font-choice my/font-collection)
 )
+
+(global-page-break-lines-mode)
+(set-fontset-font
+	"fontset-default"
+	(cons page-break-lines-char page-break-lines-char)
+	(face-attribute 'default :family)
+)
+
 
 ; If we give emacs an argument (e.g., file or directory) when we invoke it,
 ; emacs automatically sets the default directory (to search for when we want to
