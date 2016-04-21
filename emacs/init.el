@@ -724,7 +724,6 @@ otherwise, close current tab (elscreen)."
 	'(
 	alect-light
 	alect-dark
-	alect-black
 	) "Default themes")
 
 (defvar my/theme-idx 0)
