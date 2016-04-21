@@ -310,7 +310,10 @@ keybinding as it conflicts with Anthy input."
 	(interactive)
 	(let
 		(
-			(xpribuf (x-selection 'PRIMARY))
+			(xpribuf (if (window-system)
+				(shell-command-to-string "xsel --primary --output")
+				(x-get-selection 'PRIMARY))
+			)
 		)
 		(insert xpribuf)
 		; Prevent our 'undo usage of 'o' Insert state exit hook from undoing
