@@ -229,8 +229,8 @@ alias q=' exit'
 alias mp='mpv -playlist'
 alias make_plist="~/syscfg/script/audio/make_plist.sh"
 
-alias rsa="rand_open norecurse 'mplayer -loop 0 -demuxer lavf -vo null -playlist' '' $ft_snd"
-alias rsaa="rand_open recurse 'mplayer -loop 0 -demuxer lavf -vo null -playlist' '' $ft_snd"
+alias rsa="rand_open norecurse 'mpv -vo null -playlist' '' $ft_snd"
+alias rsaa="rand_open recurse 'mpv -vo null -playlist' '' $ft_snd"
 alias rsp="rand_open norecurse 'feh --auto-zoom --fullscreen --draw-filename --filelist' '' $ft_pic"
 alias rspp="rand_open recurse 'feh --auto-zoom --fullscreen --draw-filename --filelist' '' $ft_pic"
 alias rsm="rand_open norecurse mpv m3u $ft_mov"
