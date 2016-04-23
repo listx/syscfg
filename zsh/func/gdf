@@ -13,11 +13,11 @@ gdf()
 		gst
 	else
 		if [[ -n "$git_diff" ]]; then
-			# The sed '$ d' below is to remove the extra trailing whitespace
+			# The sed '/^$/d' below is to remove the extra trailing whitespace
 			# line that seems to get added into `git diff' but not `git diff
 			# --cached'.
 			msg=$(vertical_label \
-				"git diff --color=always | sed '$ d'" \
+				"git diff --color=always | sed '/^$/d'" \
 				"TREE ------------------------ " \
 				"$c")
 			msg+="\n"
