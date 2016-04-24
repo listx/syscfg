@@ -10,6 +10,10 @@
 (tool-bar-mode -1)
 ; remove menu
 (menu-bar-mode -1)
+; Disable alarm bell sound on Mac
+(when (string-match "^Linuss" system-name)
+	(setq visible-bell t)
+)
 
 ; Backups
 ; put all auto-saves/backups to the temp directory
