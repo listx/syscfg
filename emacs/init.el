@@ -207,8 +207,6 @@
 
 ; read uim.el
 (autoload 'uim-mode "uim" nil t)
-; key-binding for activate uim (ex. C-\)
-(global-set-key "\C-\\" 'my-uim-mode)
 ; Set Hiragana input mode at activating uim.
 (setq uim-default-im-prop '("action_anthy_utf8_hiragana"))
 ; display candidates inline (near where the actual text is) instead of below the

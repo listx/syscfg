@@ -15,6 +15,9 @@
 	)
 )
 
+; UIM mode
+(define-key evil-insert-state-map (kbd "C-.") 'my-uim-mode)
+
 ; Interactive search-and-replace "bindings". These are not real bindings in the
 ; sense that they call functions --- this is a limitation of upstream's design
 ; of query-replace. See
