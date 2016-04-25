@@ -5,11 +5,11 @@ gst()
 	local c="\x1b[1;35m"
 	local ce="\x1b[0m"
 
-    # We could use `git --no-pager show ...` but it seems to behave
-    # inconsistently with or without newlines.
-    local gshow=$(git show --pretty=format:'%h %D | %s' --no-patch \
-        | sed 's/HEAD -> //')
-    printf "$gshow\n"
+	# We could use `git --no-pager show ...` but it seems to behave
+	# inconsistently with or without newlines.
+	local gshow=$(git show --pretty=format:'%h %D | %s' --no-patch \
+		| sed 's/HEAD -> //')
+	printf "$gshow\n"
 	git status --short
 	local gstash=$(git stash list)
 	if [[ -n "$gstash" ]]; then
