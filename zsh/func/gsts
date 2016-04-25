@@ -2,6 +2,8 @@
 
 gsts()
 {
+	local groot=$(git rev-parse --show-toplevel)
+
 	local gref=$(git rev-parse --abbrev-ref HEAD)
 	if [[ $gref == HEAD ]]; then
 		gref=$(git rev-parse HEAD)
@@ -18,6 +20,14 @@ gsts()
 		gchanged="s"
 	fi
 
+	local gextra=$(cd "$groot" && git ls-files --other --exclude-standard \
+		| wc -l)
+	if (( $gextra == 0 )); then
+		gextra="-"
+	elif (( $gextra > 9 )); then
+		gextra="!"
+	fi
+
 	local gstash=$(git stash list | wc -l)
 	if (( $gstash == 0 )); then
 		gstash="-"
@@ -25,7 +35,6 @@ gsts()
 		gstash="!"
 	fi
 
-	local groot=$(git rev-parse --show-toplevel)
 	local gau=$(cd "$groot" && git ls-files -v | grep "^[[:lower:]]" | wc -l)
 	if (( $gau == 0 )); then
 		gau="-"
@@ -33,5 +42,5 @@ gsts()
 		gau="!"
 	fi
 
-	printf "$gref:$gchanged$gstash$gau"
+	printf "$gref:$gchanged$gextra$gstash$gau"
 }
