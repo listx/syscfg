@@ -1,0 +1,37 @@
+#!/usr/bin/env zsh
+
+gsts()
+{
+	local gref=$(git rev-parse --abbrev-ref HEAD)
+	if [[ $gref == HEAD ]]; then
+		gref=$(git rev-parse HEAD)
+	fi
+
+	local gdiff=$(git diff)
+	local gdiffc=$(git diff --cached)
+	local gchanged="-"
+	if [[ -n $gdiff && -n $gdiffc ]]; then
+		gchanged="x"
+	elif [[ -n $gdiff ]]; then
+		gchanged="d"
+	elif [[ -n $gdiffc ]]; then
+		gchanged="s"
+	fi
+
+	local gstash=$(git stash list | wc -l)
+	if (( $gstash == 0 )); then
+		gstash="-"
+	elif (( $gstash > 9 )); then
+		gstash="!"
+	fi
+
+	local groot=$(git rev-parse --show-toplevel)
+	local gau=$(cd "$groot" && git ls-files -v | grep "^[[:lower:]]" | wc -l)
+	if (( $gau == 0 )); then
+		gau="-"
+	elif (( $gau > 9 )); then
+		gau="!"
+	fi
+
+	printf "$gref:$gchanged$gstash$gau"
+}

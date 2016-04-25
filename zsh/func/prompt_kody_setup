@@ -74,23 +74,16 @@ prompt_kody_setup() {
 		Sun) day="%B%F{$prompt_color6}日%b%f" ;;
 	esac
 
-	# determine the percentage of the year that is complete
-	year=$(date +%Y)
-	ydays=0
-	(( ydays = ( ((($year % 4 == 0 && $year % 100 != 0)) || (($year % 400 == 0))) ? 366 : 365 ) ))
-	days=$(date +%j)
-	hours=$(date +%k)
-	mins=$(date +%M)
-	secs=$(date +%S)
-	float secs_year=0
-	secs_elapsed_this_year=0
-	year_perc=0
-	(( secs_year = $ydays*86400))
-	(( secs_elapsed_this_year = ($days*86400)+($hours*3600)+($mins*60)+$secs ))
-	(( year_perc = $secs_elapsed_this_year/$secs_year*100 ))
+	# Git info (if we're inside a git repo).
+	git rev-parse --is-inside-work-tree >/dev/null 2>&1
+	if (( $? == 0 )); then
+		ginfo_short=$(gsts)
+		prompt_kody_time_a="%B%F{$prompt_color4}[%b%f$day %D{%d}%B%F{$prompt_color4}]%b%f %* [${ginfo_short}]"
+	else
+		prompt_kody_time_a="%B%F{$prompt_color4}[%b%f$day %D{%d}%B%F{$prompt_color4}]%b%f %* -"
+	fi
 
 	# set timestamps
-	prompt_kody_time_a="%B%F{$prompt_color4}[%b%f$day %D{%d}%B%F{$prompt_color4}]%b%f $(printf "%.4f" $year_perc) %*"
 	prompt_kody_time_b="%B%F{$prompt_color4}[%b%f$day %D{%d}%B%F{$prompt_color4}]%b%f %*"
 	prompt_kody_time_c="%D{%d} %*"
 
