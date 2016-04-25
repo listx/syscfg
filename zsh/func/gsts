@@ -42,5 +42,5 @@ gsts()
 		gau="!"
 	fi
 
-	printf "$gref:$gchanged$gextra$gstash$gau"
+	printf "$gref:$gchanged$gextra:$gstash$gau"
 }
