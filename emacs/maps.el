@@ -482,3 +482,10 @@
 (define-key evil-insert-state-map (kbd "<S-backspace>") 'kakapo-upline)
 ; for all minor modes, make backspace behave like backspace in insert mode
 (define-key evil-insert-state-map (kbd "DEL") 'kakapo-backspace)
+
+; Disable YAML <backspace> binding.
+(add-hook 'yaml-mode-hook
+	'(lambda ()
+	(define-key yaml-mode-map (kbd "<backspace>") nil)
+	)
+)
