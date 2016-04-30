@@ -1,19 +1,18 @@
 #!/usr/bin/env zsh
 # Git tagging script
 
-# Usage: gtag <PROGRAM-NAME> <VERSION-NUMBER>
+# Usage: gtag <PROGRAM_NAME> <VERSION_NUMBER>
 
-# Note: <VERSION-NUMBER> should only be the version number itself; this script
+# Note: <VERSION_NUMBER> should only be the version number itself; this script
 # will add "v" as a prefix when tagging it with git.
 
-msg=$1
+program_name=$1
+version_number=$2
 
-if [[ -z "$msg" ]]; then
-    echo "empty commit message -- aborting"
+if [[ -z $program_name || -z $version_number ]]; then
+    echo "usage: gtag.sh <PROGRAM_NAME> <VERSION_NUMBER>"
     exit 1
 fi
 
-ver=$(echo $msg | cut -d ' ' -f2)
-
-git commit -am "$msg"
-git tag -a "v$ver" -m "$msg"
+git commit -am "$program_name $version_number"
+git tag -a "v$version_number" -m "$program_name $version_number"
