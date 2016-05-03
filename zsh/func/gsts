@@ -1,46 +1,78 @@
 #!/usr/bin/env zsh
 
+gsts_hash()
+{
+	local g_hash=$(git rev-parse --short HEAD)
+	printf "$g_hash"
+}
+
+gsts_ref()
+{
+	local g_ref=$(git rev-parse --abbrev-ref HEAD)
+	if [[ $g_ref == HEAD ]]; then
+		g_ref=$(git rev-parse HEAD)
+	fi
+	printf "$g_ref"
+}
+
+gsts_bare()
+{
+	local g_ref=$(gsts_ref)
+	local g_hash=$(gsts_hash)
+	printf "<bare>:$g_ref:$g_hash"
+}
+
+gsts_nonbare()
+{
+	local g_path=$(git rev-parse --show-toplevel)
+
+	local g_ref=$(gsts_ref)
+	local g_hash=$(gsts_hash)
+
+	local g_diff=$(git diff)
+	local g_diffc=$(git diff --cached)
+	local g_changed="-"
+	if [[ -n $g_diff && -n $g_diffc ]]; then
+		g_changed="x"
+	elif [[ -n $g_diff ]]; then
+		g_changed="d"
+	elif [[ -n $g_diffc ]]; then
+		g_changed="s"
+	fi
+
+	local g_extra=$(cd "$g_path" && git ls-files --other --exclude-standard \
+		| wc -l)
+	if (( $g_extra == 0 )); then
+		g_extra="-"
+	elif (( $g_extra > 9 )); then
+		g_extra="!"
+	fi
+
+	local g_stashed=$(git stash list | wc -l)
+	if (( $g_stashed == 0 )); then
+		g_stashed="-"
+	elif (( $g_stashed > 9 )); then
+		g_stashed="!"
+	fi
+
+	local g_untracked=$(cd "$g_path" && git ls-files -v | grep "^[[:lower:]]" | wc -l)
+	if (( $g_untracked == 0 )); then
+		g_untracked="-"
+	elif (( $g_untracked > 9 )); then
+		g_untracked="!"
+	fi
+
+	printf "$g_ref:$g_hash:$g_changed$g_extra:$g_stashed$g_untracked"
+}
+
 gsts()
 {
-	local groot=$(git rev-parse --show-toplevel)
-
-	local gref=$(git rev-parse --abbrev-ref HEAD)
-	if [[ $gref == HEAD ]]; then
-		gref=$(git rev-parse HEAD)
+	if [[ $(git rev-parse --is-bare-repository) == true ]]; then
+		gsts_bare
+	else
+		gsts_nonbare
 	fi
 
-	local gdiff=$(git diff)
-	local gdiffc=$(git diff --cached)
-	local gchanged="-"
-	if [[ -n $gdiff && -n $gdiffc ]]; then
-		gchanged="x"
-	elif [[ -n $gdiff ]]; then
-		gchanged="d"
-	elif [[ -n $gdiffc ]]; then
-		gchanged="s"
-	fi
-
-	local gextra=$(cd "$groot" && git ls-files --other --exclude-standard \
-		| wc -l)
-	if (( $gextra == 0 )); then
-		gextra="-"
-	elif (( $gextra > 9 )); then
-		gextra="!"
-	fi
-
-	local gstash=$(git stash list | wc -l)
-	if (( $gstash == 0 )); then
-		gstash="-"
-	elif (( $gstash > 9 )); then
-		gstash="!"
-	fi
-
-	local gau=$(cd "$groot" && git ls-files -v | grep "^[[:lower:]]" | wc -l)
-	if (( $gau == 0 )); then
-		gau="-"
-	elif (( $gau > 9 )); then
-		gau="!"
-	fi
-
-	printf "$gref:$gchanged$gextra:$gstash$gau"
 }
+
+gsts "$@"
