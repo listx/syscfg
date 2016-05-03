@@ -19,7 +19,7 @@ gsts_bare()
 {
 	local g_ref=$(gsts_ref)
 	local g_hash=$(gsts_hash)
-	printf "<bare>:$g_ref:$g_hash"
+	printf "<bare>:$g_hash:$g_ref"
 }
 
 gsts_nonbare()
@@ -62,7 +62,7 @@ gsts_nonbare()
 		g_untracked="!"
 	fi
 
-	printf "$g_ref:$g_hash:$g_changed$g_extra:$g_stashed$g_untracked"
+	printf "$g_hash:$g_changed$g_extra:$g_stashed$g_untracked:$g_ref"
 }
 
 gsts()
