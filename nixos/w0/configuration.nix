@@ -21,6 +21,9 @@
       127.0.0.1 sdk.twinprime.dev
       192.168.56.1 lmac
     '';
+    localCommands = ''
+      ip addr add 192.168.56.101/24 broadcast 192.168.56.255 dev enp0s3
+    '';
   };
 
   services.xserver = {
