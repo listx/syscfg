@@ -21,7 +21,6 @@
       127.0.0.1 sdk.twinprime.dev
       192.168.56.1 lmac
     '';
-    networkmanager.enable = true;
   };
 
   services.xserver = {

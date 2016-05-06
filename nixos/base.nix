@@ -37,7 +37,6 @@
       192.168.0.132 w0
       74.207.246.114 l0
     '';
-    networkmanager.enable = true;
   };
 
 # allow installation of 'ati_unfree' video driver and also Firefox with Flash

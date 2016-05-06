@@ -34,6 +34,7 @@
   networking = {
     hostName = "k3";
     hostId = "518ab295";
+    networkmanager.enable = true;
   };
 
   services.xserver = {
