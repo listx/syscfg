@@ -79,6 +79,7 @@
 					((string-match ".+\\.md$" b)
 						(progn
 							(h 'markdown-mode-hook nil 4)
+							(define-key markdown-mode-map (kbd "<S-iso-lefttab>") nil)
 							(define-key markdown-mode-map [backspace] nil)
 							(define-key markdown-mode-map [tab] nil)
 						)
