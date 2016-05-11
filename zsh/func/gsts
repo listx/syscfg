@@ -10,7 +10,7 @@ gsts_ref()
 {
 	local g_ref=$(git rev-parse --abbrev-ref HEAD)
 	if [[ $g_ref == HEAD ]]; then
-		g_ref=$(git rev-parse HEAD)
+		g_ref=" $(git rev-parse HEAD)"
 	fi
 	printf "$g_ref"
 }
@@ -62,7 +62,10 @@ gsts_nonbare()
 		g_untracked="!"
 	fi
 
-	printf "$g_hash:$g_changed$g_extra:$g_stashed$g_untracked:$g_ref"
+	printf "$g_hash:$g_changed$g_extra:$g_stashed$g_untracked"
+	if [[ $g_ref[1] != ' ' ]]; then
+		printf ":$g_ref"
+	fi
 }
 
 gsts()
