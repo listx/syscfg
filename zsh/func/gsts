@@ -58,14 +58,14 @@ gsts_nonbare()
         g_stashed="\e[1;31m$g_stashed\e[0m"
 	fi
 
-	local g_untracked=$(cd "$g_path" && git ls-files -v | grep "^[[:lower:]]" | wc -l)
-	if (( $g_untracked == 0 )); then
-		g_untracked="-"
-	elif (( $g_untracked > 9 )); then
-		g_untracked="!"
+	local g_assume_unchanged=$(cd "$g_path" && git ls-files -v | grep "^[[:lower:]]" | wc -l)
+	if (( $g_assume_unchanged == 0 )); then
+		g_assume_unchanged="-"
+	elif (( $g_assume_unchanged > 9 )); then
+		g_assume_unchanged="!"
 	fi
 
-	printf "$g_hash:$g_changed$g_extra:$g_stashed$g_untracked"
+	printf "$g_hash:$g_changed$g_extra:$g_stashed$g_assume_unchanged"
 	if [[ $g_ref[1] != ' ' ]]; then
 		printf ":$g_ref"
 	fi
