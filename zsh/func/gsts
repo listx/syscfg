@@ -51,8 +51,11 @@ gsts_nonbare()
 	local g_stashed=$(git stash list | wc -l)
 	if (( $g_stashed == 0 )); then
 		g_stashed="-"
-	elif (( $g_stashed > 9 )); then
-		g_stashed="!"
+    else
+        if (( $g_stashed > 9 )); then
+            g_stashed="!"
+        fi
+        g_stashed="\e[1;31m$g_stashed\e[0m"
 	fi
 
 	local g_untracked=$(cd "$g_path" && git ls-files -v | grep "^[[:lower:]]" | wc -l)
