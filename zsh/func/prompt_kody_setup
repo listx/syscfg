@@ -1,7 +1,8 @@
 #!/usr/bin/env zsh
 # kody prompt theme, based on adam2
 
-prompt_kody_setup() {
+prompt_kody_setup()
+{
 	# Usage (if customizing the colors at run time):
 	# prompt_kody_setup 8bit <color1> <color2> <color3> ... <color8>
 
@@ -28,10 +29,11 @@ prompt_kody_setup() {
 	prompt_color8=${8-'magenta'}
 
 	add-zsh-hook precmd prompt_kody_precmd
-	}
+}
 
-	# the actual prompt
-	prompt_kody_precmd() {
+# the actual prompt
+prompt_kody_precmd()
+{
 	# Special ZSH Prompt Escape Characters (see 'man zshmisc' for more info on these)
 	#
 	# Visual effects
@@ -130,52 +132,37 @@ prompt_kody_setup() {
 	# PS3 -> what you see when you are given a selection option screen (e.g., selecting a directory in the directory stack)
 	PS3="$prompt_line_2%B%F{$prompt_charcolor}?# %b%f"
 	zle_highlight[(r)default:*]="default:fg=$prompt_charcolor,bold"
-	}
+}
 
-	# resize the prompt according to the working directory's length
-	prompt_kody_choose_prompt() {
-	# get the displayed character width of the candidate prompt lines (excluding color escape sequences)
-	# breakdown: ${ -> variable/value
-	#              #${ -> the length/size of this value
-	#                  (S%%) -> since the `%' flag is given twice, full prompt
-	#                  expansion is done on the resulting words, depending on
-	#                  the setting of the PROMPT_PERCENT, PROMPT_SUBST and
-	#                  PROMPT_BANG options (e.g., we use things like %D{...} to
-	#                  set the time and stuff, so we need the double %% here)
-	#                        -> the `S' means to do non-greedy matching in this context of ...//.../...
-	#                          ${name//pattern/repl} -> this is global substitution
-	#                          (here we don't have a replacement pattern, so we
-	#                          just leave it blank and also do not give the
-	#                          final "/" (effectively deleting whatever was
-	#                          matched, which is what we want to do)
-	#
-	# In short, the fancy parameter expansions below serve solely to remove all
-	# ZSH color escape sequence characters:
-	#   e.g., prompt_line_1a_width=${#${(S%%)prompt_line_1a//(\%[FK]\{*\}|\%[Bbfk])}}
+# See http://www.zsh.org/mla/users/2015/msg00566.html (which references
+# http://stackoverflow.com/a/10564427/15690).
+visible_length()
+{
+	local zero='%([BSUbfksu]|([FB]|){*})'
+	print ${#${(S%%)1//$~zero}}
+}
 
-	# if there is enough screen space for everything, then just use
-	# prompt_line_1a (and skip rest of the code below with `return')
-	prompt_line_1a_width=${#${(S%%)prompt_line_1a//(\%[FK]\{*\}|\%[Bbfk])}}
-	if (( COLUMNS - prompt_line_1a_width >= 0 )); then prompt_line_1="$prompt_line_1a"; return; fi
+# Resize the prompt according to the working directory's length.
+prompt_kody_choose_prompt()
+{
+	# Default prompt.
+	prompt_line_1="$prompt_l_brack%B%F{$prompt_color2}%$COLUMNS<...<%~%<<$prompt_r_brack%b"
 
-	# not enough space for line_1a; try to see if line_1b fits
-	prompt_line_1b_width=${#${(S%%)prompt_line_1b//(\%[FK]\{*\}|\%[Bbfk])}}
-	if (( COLUMNS - prompt_line_1b_width >= 0 )); then prompt_line_1="$prompt_line_1b"; return; fi
+	# Try to set longer prompt lines if we can do it.
+	longer_prompt_lines=(
+		"$prompt_line_1a"
+		"$prompt_line_1b"
+		"$prompt_line_1c"
+		"$prompt_line_1d"
+		"$prompt_line_1e"
+	)
+	for line in $longer_prompt_lines; do
+		if (( $COLUMNS - $(visible_length "$line") >= 0 )); then
+			prompt_line_1=$line;
+			break;
+		fi
+	done
 
-	# try to see if line_1c fits
-	prompt_line_1c_width=${#${(S%%)prompt_line_1c//(\%[FK]\{*\}|\%[Bbfk])}}
-	if (( COLUMNS - prompt_line_1c_width >= 0 )); then prompt_line_1="$prompt_line_1c"; return; fi
-
-	# etc.
-	prompt_line_1d_width=${#${(S%%)prompt_line_1d//(\%[FK]\{*\}|\%[Bbfk])}}
-	if (( COLUMNS - prompt_line_1d_width >= 0 )); then prompt_line_1="$prompt_line_1d"; return; fi
-
-	prompt_line_1e_width=${#${(S%%)prompt_line_1e//(\%[FK]\{*\}|\%[Bbfk])}}
-	if (( COLUMNS - prompt_line_1e_width >= 0 )); then prompt_line_1="$prompt_line_1e"; return; fi
-
-	# our last resort -- use custom truncated version
-	prompt_pwd_size=$COLUMNS
-	prompt_line_1="$prompt_l_brack%B%F{$prompt_color2}%$prompt_pwd_size<...<%~%<<$prompt_r_brack%b"
 }
 
 prompt_kody_setup "$@"
