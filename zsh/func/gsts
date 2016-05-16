@@ -3,7 +3,7 @@
 gsts_hash()
 {
 	local g_hash=$(git rev-parse --short HEAD)
-	printf "$g_hash"
+	print -nP "$g_hash"
 }
 
 gsts_ref()
@@ -12,14 +12,14 @@ gsts_ref()
 	if [[ $g_ref == HEAD ]]; then
 		g_ref=" $(git rev-parse HEAD)"
 	fi
-	printf "$g_ref"
+	print -nP "$g_ref"
 }
 
 gsts_bare()
 {
 	local g_ref=$(gsts_ref)
 	local g_hash=$(gsts_hash)
-	printf "<bare>:$g_hash:$g_ref"
+	print -nP "<bare>:$g_hash:$g_ref"
 }
 
 gsts_nonbare()
@@ -33,41 +33,47 @@ gsts_nonbare()
 	local g_diffc=$(git diff --cached)
 	local g_changed="-"
 	if [[ -n $g_diff && -n $g_diffc ]]; then
-		g_changed="x"
+		g_changed="%B%F{208}X%b%f"
 	elif [[ -n $g_diff ]]; then
-		g_changed="d"
+		g_changed="%B%F{green}D%b%f"
 	elif [[ -n $g_diffc ]]; then
-		g_changed="s"
+		g_changed="%B%F{magenta}S%b%f"
 	fi
 
-	local g_extra=$(cd "$g_path" && git ls-files --other --exclude-standard \
+	local g_untracked=$(cd "$g_path" && git ls-files --other --exclude-standard \
 		| wc -l)
-	if (( $g_extra == 0 )); then
-		g_extra="-"
-	elif (( $g_extra > 9 )); then
-		g_extra="!"
+	if (( $g_untracked == 0 )); then
+		g_untracked="-"
+	else
+		if (( $g_untracked > 9 )); then
+			g_untracked="!"
+		fi
+		g_untracked="%B%F{yellow}${g_untracked}%b%f"
 	fi
 
 	local g_stashed=$(git stash list | wc -l)
 	if (( $g_stashed == 0 )); then
 		g_stashed="-"
-    else
-        if (( $g_stashed > 9 )); then
-            g_stashed="!"
-        fi
-        g_stashed="\e[1;31m$g_stashed\e[0m"
+	else
+		if (( $g_stashed > 9 )); then
+			g_stashed="!"
+		fi
+		g_stashed="%B%F{196}${g_stashed}%b%f"
 	fi
 
 	local g_assume_unchanged=$(cd "$g_path" && git ls-files -v | grep "^[[:lower:]]" | wc -l)
 	if (( $g_assume_unchanged == 0 )); then
 		g_assume_unchanged="-"
-	elif (( $g_assume_unchanged > 9 )); then
-		g_assume_unchanged="!"
+	else
+		if (( $g_assume_unchanged > 9 )); then
+			g_assume_unchanged="!"
+		fi
+		g_assume_unchanged="%B%F{201}$g_assume_unchanged%b%f"
 	fi
 
-	printf "$g_hash:$g_changed$g_extra:$g_stashed$g_assume_unchanged"
+	print -nP "$g_hash:$g_changed$g_untracked$g_stashed$g_assume_unchanged"
 	if [[ $g_ref[1] != ' ' ]]; then
-		printf ":$g_ref"
+		print -nP ":$g_ref"
 	fi
 }
 

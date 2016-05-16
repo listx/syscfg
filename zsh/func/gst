@@ -2,7 +2,7 @@
 
 gst()
 {
-	local c="\x1b[1;35m"
+	local c="\x1b[1;38;5;196m"
 	local ce="\x1b[0m"
 
 	# We could use `git --no-pager show ...` but it seems to behave
@@ -18,7 +18,7 @@ gst()
 	local groot=$(git rev-parse --show-toplevel)
 	local gau=$(cd "$groot" && git ls-files -v | grep "^[[:lower:]]")
 	if [[ -n "$gau" ]]; then
-		c="\x1b[1;31m"
+		c="\x1b[1;38;5;201m"
 		printf "\n${c}-- ASSUME UNCHANGED --${ce}\n$gau\n"
 	fi
 }
