@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # prints a color table of 8bg * 8fg * 2 states (regular/bold)
 echo
