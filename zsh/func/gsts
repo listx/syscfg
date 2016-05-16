@@ -1,9 +1,20 @@
 #!/usr/bin/env zsh
 
+local for_prompt=$1
+
+gsts_print()
+{
+	if [[ $for_prompt == for_prompt ]]; then
+		print -n $1
+	else
+		print -nP $1
+	fi
+}
+
 gsts_hash()
 {
 	local g_hash=$(git rev-parse --short HEAD)
-	print -nP "$g_hash"
+	gsts_print "$g_hash"
 }
 
 gsts_ref()
@@ -12,14 +23,14 @@ gsts_ref()
 	if [[ $g_ref == HEAD ]]; then
 		g_ref=" $(git rev-parse HEAD)"
 	fi
-	print -nP "$g_ref"
+	gsts_print "$g_ref"
 }
 
 gsts_bare()
 {
 	local g_ref=$(gsts_ref)
 	local g_hash=$(gsts_hash)
-	print -nP "<bare>:$g_hash:$g_ref"
+	gsts_print "<bare>:$g_hash:$g_ref"
 }
 
 gsts_nonbare()
@@ -71,20 +82,14 @@ gsts_nonbare()
 		g_assume_unchanged="%B%F{201}$g_assume_unchanged%b%f"
 	fi
 
-	print -nP "$g_hash:$g_changed$g_untracked$g_stashed$g_assume_unchanged"
+	gsts_print "$g_hash:$g_changed$g_untracked$g_stashed$g_assume_unchanged"
 	if [[ $g_ref[1] != ' ' ]]; then
-		print -nP ":$g_ref"
+		gsts_print ":$g_ref"
 	fi
 }
 
-gsts()
-{
-	if [[ $(git rev-parse --is-bare-repository) == true ]]; then
-		gsts_bare
-	else
-		gsts_nonbare
-	fi
-
-}
-
-gsts "$@"
+if [[ $(git rev-parse --is-bare-repository) == true ]]; then
+	gsts_bare
+else
+	gsts_nonbare
+fi
