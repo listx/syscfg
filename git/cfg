@@ -8,6 +8,8 @@
 [color "diff"]
 	meta = yellow bold
 	commit = blue bold reverse
+[color "status"]
+    untracked = yellow bold
 [push]
 	default = matching
 [gui]
