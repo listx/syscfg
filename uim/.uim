@@ -70,13 +70,13 @@
 ("f" (choseong-bieub . 1) (jongseong-bieub . 3) (jongseong-bieub . 4))
 ("F" (choseong-ssangbieub . 5))
 
-("g" (choseong-hieuh . 1) (jongseong-hieuh . 1) (jongseong-hieuh . 4))
-("G" (choseong-hieuh . 1) (jongseong-hieuh . 1) (jongseong-hieuh . 4))
+("g" (choseong-jieuj . 1) (jongseong-jieuj . 1) (jongseong-jieuj . 4))
+("G" (choseong-ssangjieuj . 5))
 
 ("w" (choseong-chieuch . 1) (jongseong-chieuch . 1))
 ("W" (choseong-chieuch . 1) (jongseong-chieuch . 1))
 
-("c" (choseong-jieuj . 1) (jongseong-jieuj . 1) (jongseong-jieuj . 4))
-("C" (choseong-ssangjieuj . 5))
+("c" (choseong-hieuh . 1) (jongseong-hieuh . 1) (jongseong-hieuh . 4))
+("C" (choseong-hieuh . 1) (jongseong-hieuh . 1) (jongseong-hieuh . 4))
 
 )
