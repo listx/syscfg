@@ -729,6 +729,7 @@ otherwise, close current tab (elscreen)."
 		(setq indent-tabs-mode nil)
 		(setq tab-width 2)
 		(setq evil-shift-width 2)
+		(modify-syntax-entry ?_ "w")
 	)
 )
 
