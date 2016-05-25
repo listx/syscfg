@@ -306,9 +306,7 @@
 	(insert "\n")
 	(forward-line -1)
 )
-(define-key evil-insert-state-map (kbd "C-o") 'my-insert-newline-below)
 (define-key evil-normal-state-map (kbd "C-o") 'my-insert-newline-below)
-(define-key evil-insert-state-map (kbd "C-S-o") 'my-insert-newline-above)
 (define-key evil-normal-state-map (kbd "C-S-o") 'my-insert-newline-above)
 
 ; navigation
