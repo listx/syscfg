@@ -108,55 +108,6 @@
 				)
 			)
 
-			; Webdev settings --- where basically everyone (only in the Rails
-			; community?) likes using 2-space indentation.
-			(
-				(or
-					(string-match "^/home/l/webdev/" b)
-					(string-match "^/home/l/prog/foreign/rails/" b)
-					(string-match "^/home/l/prog/dyla/" b)
-				)
-				(cond
-					(
-						(or
-							(string-match ".+\\.gemspec$" b)
-							(string-match ".+\\.rb$" b)
-						)
-						(h 'ruby-mode-hook nil 2
-							(progn
-								(setq ruby-indent-level 2)
-								(message
-									"ruby-indent-level set to %d"
-									ruby-indent-level
-								)
-							)
-						)
-					)
-					((string-match ".+\\.htm[l]?$" b)
-						(h 'html-mode-hook nil 2)
-					)
-					((string-match ".+\\.js$" b)
-						(h 'js-mode-hook nil 2
-							(progn
-								(setq js-indent-level 2)
-							)
-						)
-					)
-					((string-match "\\.coffee$" b)
-						(h 'coffee-mode-hook nil 2
-							(progn
-								(define-key coffee-mode-map [tab] nil)
-							)
-						)
-					)
-					((string-match "\\.emblem$" b)
-						(h 'slim-mode-hook nil 2)
-					)
-					((string-match "\\.hamlc$" b)
-						(h 'haml-mode-hook nil 2)
-					)
-				)
-			)
 			(
 				(or
 					(string-match "^/home/l/prog/elementary-haskell/" b)
