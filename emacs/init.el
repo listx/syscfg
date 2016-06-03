@@ -69,6 +69,7 @@
 	evil-matchit
 	evil-surround
 	evil-visualstar
+	groovy-mode
 	haml-mode
 	haskell-mode
 	helm
@@ -626,6 +627,13 @@ otherwise, close current tab (elscreen)."
 ; Re-fontify sub-mode portions when idle. The manual command for this is
 ; `mmm-parse-buffer'.
 (setq mmm-parse-when-idle 't)
+
+; Docker
+(add-to-list 'auto-mode-alist '("Dockertemplate$" . dockerfile-mode))
+
+; Groovy
+(add-to-list 'auto-mode-alist '("\\.groovy$" . groovy-mode))
+(add-to-list 'auto-mode-alist '("Jenkinsfile$" . groovy-mode))
 
 ; Haml
 (evil-define-key 'insert haml-mode-map (kbd "<tab>") 'kakapo-tab)
