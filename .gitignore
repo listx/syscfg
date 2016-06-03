@@ -12,6 +12,7 @@ emacs/projectile.cache
 emacs/recentf
 emacs/tramp
 gpg/.gpg-v21-migrated
+gpg/pubring.kbx
 gpg/private-keys-v1.d/
 gpg/random_seed
 gpg/reader_0.status
