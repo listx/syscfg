@@ -277,7 +277,6 @@ with super; rec {
 
       # Misc userland packages.
       hledger
-      hledger-web
 
       auca
       ztile
