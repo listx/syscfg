@@ -100,7 +100,7 @@ prompt kody
 
 # history settings
 HISTSIZE=20000
-SAVEHIST=20000
+SAVEHIST=40000
 HISTFILE=~/.zsh-untracked/history
 
 # Directory stack size
@@ -110,6 +110,7 @@ setopt INC_APPEND_HISTORY
 setopt EXTENDED_HISTORY # puts timestamps in the history
 setopt HIST_IGNORE_ALL_DUPS
 setopt HIST_IGNORE_SPACE # if a command or alias begins with a space, do not store into history
+setopt HIST_SAVE_NO_DUPS
 
 # bring up the completion menu with <tab><tab>, but with just <tab>, behave like the default
 setopt auto_menu
