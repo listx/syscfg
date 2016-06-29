@@ -23,4 +23,4 @@ if [[ -n $monitor_external ]]; then
     esac
 fi
 
-xrandr --output LVDS --auto --output HDMI-0 --auto --$external_location LVDS
+xrandr --output LVDS --auto --output HDMI-0 --mode 1920x1080 --$external_location LVDS
