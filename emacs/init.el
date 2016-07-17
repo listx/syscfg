@@ -802,7 +802,7 @@ otherwise, close current tab (elscreen)."
 					(progn
 						(set-face-background 'hiwin-face
 							"#172a41")
-						(setq evil-insert-state-cursor '("#000000" box))
+						(setq evil-insert-state-cursor '("#ffffff" box))
 						(setq evil-normal-state-cursor '("#00ff00" box))
 						(set-face-attribute
 							'hl-line
