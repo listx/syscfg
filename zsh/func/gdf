@@ -2,6 +2,8 @@
 
 gdf()
 {
+	not_git_repo && return
+
 	c="\x1b[1;32m"
 	ce="\x1b[0m"
 
