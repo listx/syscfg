@@ -77,8 +77,7 @@ prompt_kody_precmd()
 	esac
 
 	# Git info (if we're inside a git repo).
-	git rev-parse --is-inside-work-tree >/dev/null 2>&1
-	if (( $? == 0 )); then
+	if git rev-parse --is-inside-work-tree &> /dev/null; then
 		ginfo_short=$(gsts for_prompt)
 		prompt_kody_time_a="%B%F{$prompt_color4}[%b%f$day %D{%d} %*%B%F{$prompt_color4}]%b%f ${ginfo_short}"
 	else
