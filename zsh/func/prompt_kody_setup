@@ -1,6 +1,32 @@
 #!/usr/bin/env zsh
 # kody prompt theme, based on adam2
 
+# preexec() is a hook function under "SPECIAL FUNCTIONS"; it is executed just
+# after a command has been read, but before it is executed.
+preexec() {
+	ran_something=true
+}
+
+# precmd() is executed before each prompt.
+precmd()
+{
+	# Catch cases where we press C-c to stop execution; we want to treat such
+	# cases as non-error exits. So, if we did not run anything (preexec() did
+	# not get executed due to C-c), then assign exit_status as 0.
+	exit_status=$?
+	if ! $ran_something; then
+		exit_status=0
+	fi
+	ran_something=false
+}
+
+maybe_show_exit_status() {
+	case $exit_status in
+		0) ;;
+		*) echo "%B%F{$prompt_color5}$exit_status%b%f " ;;
+	esac
+}
+
 prompt_kody_setup()
 {
 	# Usage (if customizing the colors at run time):
@@ -65,6 +91,12 @@ prompt_kody_precmd()
 	# %D{string}
 	#         string is formatted with the strftime function. See 'man 3 strftime' for more details.
 
+	# Git info (if we're inside a git repo).
+	local ginfo_short="-"
+	if git rev-parse --is-inside-work-tree &> /dev/null; then
+		ginfo_short=$(gsts for_prompt)
+	fi
+
 	day=""
 	case $(date +%a) in
 		Mon) day="%B%F{$prompt_color2}月%b%f" ;;
@@ -76,15 +108,7 @@ prompt_kody_precmd()
 		Sun) day="%B%F{$prompt_color6}日%b%f" ;;
 	esac
 
-	# Git info (if we're inside a git repo).
-	if git rev-parse --is-inside-work-tree &> /dev/null; then
-		ginfo_short=$(gsts for_prompt)
-		prompt_kody_time_a="%B%F{$prompt_color4}[%b%f$day %D{%d} %*%B%F{$prompt_color4}]%b%f ${ginfo_short}"
-	else
-		prompt_kody_time_a="%B%F{$prompt_color4}[%b%f$day %D{%d} %*%B%F{$prompt_color4}]%b%f -"
-	fi
-
-	# set timestamps
+	prompt_kody_time_a="%B%F{$prompt_color4}[%b%f$day %D{%d} %*%B%F{$prompt_color4}]%b%f $(maybe_show_exit_status)${ginfo_short}"
 	prompt_kody_time_b="%B%F{$prompt_color4}[%b%f$day %D{%d} %*%B%F{$prompt_color4}]%b%f"
 	prompt_kody_time_c="%D{%d} %*"
 
