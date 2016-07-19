@@ -176,7 +176,7 @@ Each element has the form (NAME . HEX).
 			(region ((((background light))
 					:foreground "#ffffcc" :background "#ff66cc" :weight bold)
 					(((background dark))
-					:foreground ,zm-blue-5 :background ,zm-green+4)))
+					:foreground ,zm-blue-5 :background ,zm-green+4 :weight bold)))
 		)
 	)
 
