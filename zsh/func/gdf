@@ -7,8 +7,8 @@ gdf()
 	c="\x1b[1;32m"
 	ce="\x1b[0m"
 
-	git_diff=$(git diff --color=always)
-	git_diff_c=$(git diff --cached --color=always)
+	local git_diff=$(git diff --color=always)
+	local git_diff_c=$(git diff --cached --color=always)
 
 	if [[ -z "$git_diff" && -z "$git_diff_c" ]]; then
 		printf "${c}NO CHANGES!$ce\n\n"
