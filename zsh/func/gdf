@@ -4,35 +4,41 @@ gdf()
 {
 	not_git_repo && return
 
-	c="\x1b[1;32m"
-	ce="\x1b[0m"
+	local c_blue="\x1b[1;34m"
+	local c_green="\x1b[1;32m"
+	local c_magenta="\x1b[1;35m"
+	local ce="\x1b[0m"
 
+	local git_repo=$(git_find_repo)
+	local tag="    ${c_blue}-- $git_repo --${ce}\n"
 	local git_diff=$(git diff --color=always)
 	local git_diff_c=$(git diff --cached --color=always)
 
 	if [[ -z "$git_diff" && -z "$git_diff_c" ]]; then
-		printf "${c}NO CHANGES!$ce\n\n"
+		printf "${c_green}NO CHANGES!$ce\n\n"
 		gst
 	else
+		local msg=""
 		if [[ -n "$git_diff" ]]; then
 			# The sed '/^$/d' below is to remove the extra trailing whitespace
 			# line that seems to get added into `git diff' but not `git diff
 			# --cached'.
-			msg=$(vertical_label \
+			msg="$tag"
+			msg+=$(vertical_label \
 				"git diff --color=always | sed '/^$/d'" \
 				"TREE ------------------------ " \
-				"$c")
-			msg+="\n"
+				"$c_green")
+			msg+="\n$tag"
 			printf $msg | less
 		fi
 
-		c="\x1b[1;35m"
 		if [[ -n "$git_diff_c" ]]; then
-			msg=$(vertical_label \
+			msg="$tag"
+			msg+=$(vertical_label \
 				"git diff --cached --color=always" \
 				"INDEX ------------------------ " \
-				"$c")
-			msg+="\n"
+				"$c_magenta")
+			msg+="\n$tag"
 			printf $msg | less
 		fi
 

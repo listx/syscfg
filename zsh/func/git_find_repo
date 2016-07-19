@@ -1,0 +1,13 @@
+#!/usr/bin/env zsh
+
+git_find_repo()
+{
+	while [[ ! -d .git ]]; do
+		cd ..
+		if [[ $PWD == / ]]; then
+			echo "error: .git folder not found"
+			return
+		fi
+	done
+	echo ${PWD##*/}
+}
