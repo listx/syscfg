@@ -3,12 +3,6 @@
 git_contents()
 {
     # Is this a git repo?
-    git status &> /dev/null
-    rc1=$?
-    # If so, does it actually have any git objects in it (is it a non-empty
-    # repo)?
-    [[ $(git count-objects) == "0 objects"* ]]
-    rc2=$?
-
-    [[ $rc1 == 0 && $rc2 == 1 ]]
+    # If so, does it actually have any files in it (is it a non-empty repo)?
+    git status &> /dev/null && [[ -n $(git ls-files) ]]
 }
