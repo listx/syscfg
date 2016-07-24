@@ -19,6 +19,11 @@
     }
   ];
 
+  # Mount our secondary luks (RAID1) device. Actual path is just
+  # "/root/keyfile", but we are in "stage 1" where the root filesystem is
+  # mounted at "/mnt-root", not "/".
+  boot.initrd.postMountCommands = "cryptsetup luksOpen --key-file /mnt-root/root/keyfile /dev/md127 craid";
+
   boot.kernel.sysctl = {
     # Make the kernel reluctant to use swap.
     "vm.swappiness" = 5;
