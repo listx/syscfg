@@ -2,7 +2,7 @@
 
 gst()
 {
-	not_git_repo && return
+	! git_contents && return
 
 	local c="\x1b[1;38;5;196m"
 	local ce="\x1b[0m"

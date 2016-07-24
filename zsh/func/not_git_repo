@@ -1,6 +1,0 @@
-#!/usr/bin/env zsh
-
-not_git_repo()
-{
-	! git status &> /dev/null
-}

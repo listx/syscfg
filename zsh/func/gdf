@@ -2,7 +2,7 @@
 
 gdf()
 {
-	not_git_repo && return
+	! git_contents && return
 
 	local c_blue="\x1b[1;34m"
 	local c_green="\x1b[1;32m"

@@ -88,7 +88,7 @@ gsts_nonbare()
 	fi
 }
 
-not_git_repo && return
+! git_contents && return
 
 if [[ $(git rev-parse --is-bare-repository) == true ]]; then
 	gsts_bare
