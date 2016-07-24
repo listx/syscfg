@@ -17,6 +17,9 @@
       192.168.0.132 w0
       74.207.246.114 l0
     '';
+    # Port 22 is opened automatically if SSH daemon is enabled (no need to specify it here).
+    # 8001 is for the nix-serve HTTP daemon.
+    firewall.allowedTCPPorts = [ 8001 ];
   };
 
   # allow installation of 'ati_unfree' video driver and also Firefox with Flash
