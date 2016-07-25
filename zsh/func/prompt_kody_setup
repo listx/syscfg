@@ -97,6 +97,8 @@ prompt_kody_precmd()
 		ginfo_short=$(gsts for_prompt)
         if [[ -z $ginfo_short ]]; then
             ginfo_short=""
+        else
+            ginfo_short=" ${ginfo_short}"
         fi
 	fi
 
