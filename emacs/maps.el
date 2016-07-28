@@ -454,6 +454,14 @@
 	)
 )
 
+; Disable default tab/S-tab bindings in compilation-mode.
+(add-hook 'compilation-mode-hook
+	'(lambda ()
+	(define-key compilation-mode-map [(tab)] 'other-window)
+	(define-key compilation-mode-map (kbd "<S-iso-lefttab>") (lambda () (interactive) (other-window -1)))
+	)
+)
+
 ; Dired mode.
 (evil-define-key 'normal dired-mode-map "H" 'evil-next-buffer)
 (evil-define-key 'normal dired-mode-map "L" 'evil-prev-buffer)
