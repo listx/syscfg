@@ -31,7 +31,7 @@ rand_open()
 		find_recurse="-maxdepth 1"
 	fi
 
-	find $PWD ${(z)find_recurse} -type f -iregex $regex_str \
+	find -L $PWD ${(z)find_recurse} -type f -iregex $regex_str \
 		| shuf --random-source /dev/urandom \
 		> $output_file
 
