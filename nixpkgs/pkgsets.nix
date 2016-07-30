@@ -289,7 +289,12 @@ with super; rec {
 
       # Misc userland packages.
       hledger
+    ];
+  });
 
+  l_set_haskell_custom = setPrio "8" (buildEnv {
+    name = "l-set-haskell";
+    paths = with haskellPackages; [
       auca
       ztile
       ox
