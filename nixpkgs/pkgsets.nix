@@ -293,7 +293,7 @@ with super; rec {
   });
 
   l_set_haskell_custom = setPrio "8" (buildEnv {
-    name = "l-set-haskell";
+    name = "l-set-haskell-custom";
     paths = with haskellPackages; [
       auca
       ztile
