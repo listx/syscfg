@@ -92,11 +92,10 @@ with super; rec {
       lzma
       unrar
 
-      # filesystem/backups
+      # filesystem
       fuse
       gparted
       ntfs3g
-      gitAndTools.git-annex
     ];
   });
 
@@ -204,6 +203,7 @@ with super; rec {
       abcde
       bitcoin
       cdparanoia
+      gitAndTools.git-annex
       pidgin
       fontforge
     ];
