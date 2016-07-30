@@ -91,6 +91,12 @@ with super; rec {
       unzip
       lzma
       unrar
+
+      # filesystem/backups
+      fuse
+      gparted
+      ntfs3g
+      git-annex
     ];
   });
 
@@ -123,6 +129,9 @@ with super; rec {
 
       # Ops
       ansible2
+
+      # analysis
+      gnuplot
     ];
   });
 
@@ -175,6 +184,7 @@ with super; rec {
     ignoreCollisions = true;
     paths = [
       evince
+      mupdf
     ];
   });
 
@@ -191,9 +201,11 @@ with super; rec {
     name = "l-set-misc";
     ignoreCollisions = true;
     paths = [
+      abcde
+      bitcoin
+      cdparanoia-III
       pidgin
       fontforge
-      gnuplot
     ];
   });
 
