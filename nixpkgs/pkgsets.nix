@@ -96,7 +96,7 @@ with super; rec {
       fuse
       gparted
       ntfs3g
-      git-annex
+      gitAndTools.git-annex
     ];
   });
 
