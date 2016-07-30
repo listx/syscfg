@@ -203,7 +203,7 @@ with super; rec {
     paths = [
       abcde
       bitcoin
-      cdparanoia-III
+      cdparanoia
       pidgin
       fontforge
     ];
