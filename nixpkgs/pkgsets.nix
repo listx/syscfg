@@ -81,6 +81,7 @@ with super; rec {
       sshfsFuse
       bmon
       inetutils
+      bind # 'dig' cli program
 
       # Docs
       manpages
