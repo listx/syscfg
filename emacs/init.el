@@ -12,7 +12,7 @@
 (menu-bar-mode -1)
 ; Disable alarm bell sound on Mac
 (when (string-match "^Linuss" system-name)
-	(setq visible-bell t)
+	(setq ring-bell-function 'ignore)
 )
 
 ; Backups
