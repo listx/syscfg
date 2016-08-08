@@ -524,6 +524,16 @@ otherwise, close current tab (elscreen)."
 ; write timestamp when a TODO changes to DONE
 (setq org-log-done t)
 (setq org-agenda-files (list "~/org"))
+; org-babel settings (for evaluating code blocks)
+(org-babel-do-load-languages
+	'org-babel-load-languages
+	'(
+		(C . t)
+		(haskell . t)
+		(java . t)
+		(python . t)
+	)
+)
 
 ; Allow single/double quote marks in inline '='-delimited verbatim formatting.
 ; see https://lists.gnu.org/archive/html/emacs-orgmode/2014-04/msg00199.html
