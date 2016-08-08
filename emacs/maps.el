@@ -354,24 +354,6 @@
 		(evil-append nil)
 	)
 )
-(evil-define-key 'normal org-mode-map "O"
-	(lambda ()
-		(interactive)
-		(end-of-line)
-		(org-insert-heading)
-		(org-metaright)
-		(evil-append nil)
-	)
-)
-(evil-define-key 'normal org-mode-map "o"
-	(lambda ()
-		(interactive)
-		(end-of-line)
-		(always-insert-item)
-		(evil-append nil)
-	)
-)
-
 (evil-define-key 'normal org-mode-map "t"
 	(lambda ()
 		(interactive)
