@@ -382,3 +382,11 @@ case $HOST in
 		alias discof='sudo umount /dev/sr0'
 	;;
 esac
+
+# Get rid of odd ^[[2004h characters from Emacs' `M-x shell'. The problem has to
+# do with ZSH trying to set bracketed paste mode which came out in ZSH 5.1.1,
+# even though the "dumb" terminal that `M-x shell' sets is unable to handle it.
+# See https://github.com/syl20bnr/spacemacs/issues/3035.
+if [[ $TERM == "dumb" ]]; then
+    unset zle_bracketed_paste
+fi

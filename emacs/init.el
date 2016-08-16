@@ -172,6 +172,10 @@
 ; Prefer home row over the 0-9 candidate characters.
 (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l ?0 ?1 ?2 ?3 ?4 ?5 ?6 ?7 ?8 ?9))
 
+; `M-x shell'
+; Disable command echo.
+(setq comint-process-echoes t)
+
 ; fix "<dead-grave> is undefined" error
 (require 'iso-transl)
 
