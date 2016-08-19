@@ -60,6 +60,8 @@ rf:
 	ln -fs ${C}/rf/cfg                                  ${H}/.rf
 rtorrent:
 	ln -fs ${C}/rtorrent/cfg                            ${H}/.rtorrent.rc
+sage:
+	ln -fns ${C}/sage                                   ${H}/.sage
 tig:
 	ln -fs ${C}/tig/.tigrc                              ${H}
 usbmnt:

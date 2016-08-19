@@ -18,6 +18,7 @@ ncmpcpp/keys
 mutt/hcache
 qutebrowser/bookmarks
 qutebrowser/quickmarks
+sage/*
 vim/.VimballRecord
 vim/.netrwhist
 vim/colors
