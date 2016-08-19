@@ -360,7 +360,7 @@
 		((string-match "^Linuss" system-name)
             '("Input Mono Compressed" "PT Mono")
 		)
-		(t '("Terminus" "Input"))
+		(t '("Terminus" "Input Mono Narrow"))
 	)
 )
 (setq my/font-choice 0)
