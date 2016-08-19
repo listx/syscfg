@@ -60,7 +60,7 @@ find_quick() {
 			rest+="$find_type $find_search *$term*"
 			c+=1
 		done
-		find ${=find_type} ${=rest}
+		find -L ${=find_type} ${=rest}
 	else
 		for term in $argv; do
 			[[ $c -gt 0 ]] && rest+="|"
