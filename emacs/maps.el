@@ -476,6 +476,6 @@
 ; Disable YAML <backspace> binding.
 (add-hook 'yaml-mode-hook
 	'(lambda ()
-	(define-key yaml-mode-map (kbd "<backspace>") nil)
+		(define-key yaml-mode-map (kbd "<backspace>") nil)
 	)
 )
