@@ -473,6 +473,14 @@
 ; set TAB to be kakapo-tab for text mode
 (evil-define-key 'insert text-mode-map (kbd "<tab>") 'kakapo-tab)
 
+; Shell mode
+(add-hook 'shell-mode-hook
+	'(lambda ()
+		(define-key shell-mode-map (kbd "M-j") 'comint-next-input)
+		(define-key shell-mode-map (kbd "M-k") 'comint-previous-input)
+	)
+)
+
 ; Disable YAML <backspace> binding.
 (add-hook 'yaml-mode-hook
 	'(lambda ()
