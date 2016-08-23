@@ -536,6 +536,7 @@ otherwise, close current tab (elscreen)."
 		(haskell . t)
 		(java . t)
 		(python . t)
+		(sh . t)
 	)
 )
 
