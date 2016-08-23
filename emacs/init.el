@@ -580,6 +580,13 @@ otherwise, close current tab (elscreen)."
 	)
 )
 
+; Emacs orgmode
+(add-hook 'org-mode-hook
+	(lambda ()
+		(modify-syntax-entry ?_ "w")
+	)
+)
+
 ; Haskell
 ; adopted from http://sequence.complete.org/node/365
 (remove-hook 'haskell-mode-hook 'turn-on-haskell-indent)
