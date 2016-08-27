@@ -454,9 +454,26 @@ otherwise, close current tab (elscreen)."
 ; show 80-character limit on long lines for all source code files
 (require 'column-enforce-mode)
 ; disable highlighting long lines if they are comment lines
-(add-hook 'prog-mode-hook (lambda ()
-	(setq column-enforce-comments nil)
-	(column-enforce-mode)
+(add-hook 'prog-mode-hook
+	(lambda ()
+		(setq column-enforce-comments nil)
+		(column-enforce-mode)
+		; add underscore as a word character, like in Vim
+		(modify-syntax-entry ?_ "w")
+	)
+)
+
+(add-hook 'text-mode-hook
+	(lambda ()
+		(modify-syntax-entry ?_ "w")
+		(modify-syntax-entry ?- "w")
+	)
+)
+
+(add-hook 'conf-mode-hook
+	(lambda ()
+		(modify-syntax-entry ?_ "w")
+		(modify-syntax-entry ?- "w")
 	)
 )
 
@@ -557,8 +574,6 @@ otherwise, close current tab (elscreen)."
 (add-hook 'c-mode-hook
 	(lambda ()
 		(c-set-style "linux")
-		; add underscore as a word character, like in Vim
-		(modify-syntax-entry ?_ "w")
 	)
 )
 
@@ -566,7 +581,6 @@ otherwise, close current tab (elscreen)."
 (add-hook 'c++-mode-hook
 	(lambda ()
 		(c-set-style "linux")
-		(modify-syntax-entry ?_ "w")
 	)
 )
 
@@ -683,13 +697,6 @@ otherwise, close current tab (elscreen)."
 	)
 )
 
-; JavaScript
-(add-hook 'js-mode-hook
-	(lambda ()
-		(modify-syntax-entry ?_ "w")
-	)
-)
-
 ; Latex
 (add-to-list 'auto-mode-alist '("\\.tex$" . latex-mode))
 
@@ -717,37 +724,9 @@ otherwise, close current tab (elscreen)."
 	t)
 (setq auto-mode-alist (cons '("\.md$" . markdown-mode) auto-mode-alist))
 
-; Nix Expression Language
-(add-hook 'nix-mode-hook
-	(lambda ()
-		(modify-syntax-entry ?_ "w")
-	)
-)
-
-; Python
-(add-hook 'python-mode-hook
-	(lambda ()
-		(modify-syntax-entry ?_ "w")
-	)
-)
-
-; Ruby
-(add-hook 'ruby-mode-hook
-	(lambda ()
-		(modify-syntax-entry ?_ "w")
-	)
-)
-
 ; Sass
 (autoload 'sass-mode "sass-mode" "Major mode for editing Sass files" t)
 (add-to-list 'auto-mode-alist '("\\.sass$" . sass-mode))
-
-; Shell script
-(add-hook 'sh-mode-hook
-	(lambda ()
-		(modify-syntax-entry ?_ "w")
-	)
-)
 
 ; YAML
 (autoload 'yaml-mode "yaml-mode" "A major mode for YAML" t)
