@@ -26,6 +26,23 @@ gsts_ref()
 	gsts_print "$g_ref"
 }
 
+# Adapted from http://www.zsh.org/mla/users/2016/msg00664.html.
+gsts_upstream_divergence() {
+	git rev-parse @{upstream} >/dev/null 2>&1 || return
+	local -a x
+	x=( $(git rev-list --left-right --count HEAD...@{upstream}) )
+	if (( x[1] )) || (( x[2] )); then
+		if (( x[1] )); then
+			gsts_print "%B%F{green}\u25b2%b%f"
+		fi
+		if (( x[2] )); then
+			gsts_print "%B%F{red}\u25bc%b%f"
+		fi
+	else
+		gsts_print "%B%F{white}\u25cf%b%f"
+	fi
+}
+
 gsts_bare()
 {
 	local g_ref=$(gsts_ref)
@@ -86,6 +103,7 @@ gsts_nonbare()
 	if [[ $g_ref[1] != ' ' ]]; then
 		gsts_print ":$g_ref"
 	fi
+	gsts_upstream_divergence
 }
 
 ! git_contents && return
