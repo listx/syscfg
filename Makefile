@@ -29,6 +29,11 @@ mplayer:
 	ln -fns ${C}/mplayer                                ${H}/.mplayer
 mpv:
 	ln -fns ${C}/mpv ${H}/.config/mpv
+ifeq ('${T}','Linuss-MacBook-Air.local')
+	ln -fs ${C}/mpv/mpv.osx.conf                        ${H}/.config/mpv/mpv.conf
+else
+	ln -fs ${C}/mpv/mpv.linux.conf                      ${H}/.config/mpv/mpv.conf
+endif
 mupen:
 	ln -fs ${C}/mupen/InputAutoCfg.ini                  /usr/share/mupen64plus
 mutt:

@@ -15,6 +15,7 @@ gpg
 mplayer/mplayerplug-in.conf
 ncmpcpp/config
 ncmpcpp/keys
+mpv/mpv.conf
 mutt/hcache
 qutebrowser/bookmarks
 qutebrowser/quickmarks
