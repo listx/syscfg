@@ -321,9 +321,16 @@ keybinding as it conflicts with Anthy input."
 	(interactive)
 	(let
 		(
-			(xpribuf (if (window-system)
-				(shell-command-to-string "xsel --primary --output")
-				(x-get-selection 'PRIMARY))
+			(xpribuf
+				(if (window-system)
+					(if (string-match "^Linuss" system-name)
+						; Mac has no concept of primary vs clipboard
+						; selection. Everything is just "clipboard".
+						(x-get-selection 'CLIPBOARD)
+						; For Linux, use primary selection.
+						(x-get-selection 'PRIMARY)
+					)
+				)
 			)
 		)
 		(insert xpribuf)
