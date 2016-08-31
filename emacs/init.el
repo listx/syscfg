@@ -279,7 +279,7 @@
 					nil
 					0
 					nil
-					"-pboard" "-general"
+					"-pboard" "general"
 				)
 				(call-process-region
 					evil-visual-beginning
