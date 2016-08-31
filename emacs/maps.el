@@ -112,7 +112,8 @@
 	"a" 'projectile-helm-ag
 	"A" 'helm-ag
 
-	"b" 'my/copy-file-name-to-clipboard
+	"b" 'helm-buffers-list
+	"B" 'my/copy-file-name-to-clipboard
 
 	; Nox integration (comment/uncomment regions)
 	"c" (lambda () (interactive) (my-addrem-comment t))
