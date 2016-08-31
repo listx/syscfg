@@ -132,8 +132,9 @@
 (add-to-list 'load-path "~/.emacs.d/script")
 (add-to-list 'custom-theme-load-path "~/.emacs.d/script")
 
-; for Mac, load brew paths
+; Mac OSX
 (if (string-match "^Linuss" system-name)
+	; Load brew paths
 	(setq exec-path (append exec-path '("/usr/local/bin")))
 )
 
