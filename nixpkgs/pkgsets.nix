@@ -52,6 +52,7 @@ with super; rec {
     ignoreCollisions = true;
     paths = [
       # Basic console tools
+      rsync
       wget
       curl
       zsh
