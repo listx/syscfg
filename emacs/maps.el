@@ -319,6 +319,16 @@
 		(evil-scroll-line-to-center nil)
 	)
 )
+
+; For visual state, we have to work with motions.
+; See http://stackoverflow.com/a/39338250/437583
+(evil-define-motion my/evil-godown ()
+	(interactive)
+    (next-line 10)
+    (evil-scroll-line-to-center nil)
+)
+(define-key evil-visual-state-map " " 'my/evil-godown)
+
 ; simulate vim's "nnoremap <backspace> 10kzz"
 (define-key evil-normal-state-map (kbd "DEL")
 	(lambda ()
@@ -327,6 +337,13 @@
 		(evil-scroll-line-to-center nil)
 	)
 )
+
+(evil-define-motion my/evil-goup ()
+	(interactive)
+    (previous-line 10)
+    (evil-scroll-line-to-center nil)
+)
+(define-key evil-visual-state-map (kbd "DEL") 'my/evil-goup)
 ; Change K from being mapped to interactive man pages to being used as the
 ; vanilla comma ',' key's functionality (intra-line backwards search repeat for
 ; any t, T, f, F searches).
