@@ -53,8 +53,8 @@
       ${pkgs.xlibs.xset}/bin/xset r rate 250 80
       # disable mouse acceleration
       ${pkgs.xlibs.xset}/bin/xset m 0 0
-      # use arrow, not "X" symbol, for default mouse pointer
-      ${pkgs.xlibs.xsetroot}/bin/xsetroot -cursor_name left_ptr
+      # use circle, not "X" symbol, for default mouse pointer
+      ${pkgs.xlibs.xsetroot}/bin/xsetroot -cursor_name circle
     '';
     displayManager.slim.defaultUser = "l";
     windowManager.xmonad.enable = true;
