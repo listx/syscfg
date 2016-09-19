@@ -184,6 +184,9 @@
 
 	; put emacs into the background; only works in terminal mode
 	"Z" 'suspend-emacs
+
+	; evaluate source code block
+	"z" 'org-ctrl-c-ctrl-c
 	)
 
 ; We need to use 'eval-after-load' because otherwise we get an error about

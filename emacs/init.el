@@ -557,6 +557,10 @@ otherwise, close current tab (elscreen)."
 		(sh . t)
 	)
 )
+; Disable source-code evaluation prompt. The prompt is enabled by default for
+; security reasons, but disable it because I'm not downloading other people's
+; org-mode files and running babel on them.
+(setq org-confirm-babel-evaluate nil)
 
 ; Allow single/double quote marks in inline '='-delimited verbatim formatting.
 ; see https://lists.gnu.org/archive/html/emacs-orgmode/2014-04/msg00199.html
