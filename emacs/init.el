@@ -364,7 +364,7 @@
 		((string-match "^w0" system-name)
             '("Terminus" "Input Mono Compressed Book")
 		)
-		(t '("Terminus" "Input Mono Narrow"))
+		(t '("Terminus" "Input Mono Narrow" "Input Mono Compressed Book"))
 	)
 )
 (setq my/font-choice 0)
