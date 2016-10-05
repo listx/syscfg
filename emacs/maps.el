@@ -465,6 +465,12 @@
 	)
 )
 
+(add-hook 'markdown-mode-hook
+	'(lambda ()
+		(define-key markdown-mode-map (kbd "<S-tab>") nil)
+	)
+)
+
 ; Dired mode.
 (evil-define-key 'normal dired-mode-map "H" 'evil-next-buffer)
 (evil-define-key 'normal dired-mode-map "L" 'evil-prev-buffer)
