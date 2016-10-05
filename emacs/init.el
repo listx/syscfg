@@ -560,6 +560,7 @@ otherwise, close current tab (elscreen)."
 		(java . t)
 		(python . t)
 		(shell . t)
+		(sql . t)
 	)
 )
 ; Disable source-code evaluation prompt. The prompt is enabled by default for
