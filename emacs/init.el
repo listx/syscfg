@@ -51,6 +51,8 @@
 )
 (add-to-list 'package-archives
 '("melpa" . "http://melpa.milkbox.net/packages/") t)
+(add-to-list 'package-archives
+'("org" . "http://orgmode.org/elpa/") t)
 
 ; Define packages that we'll be using.
 (defvar my/packages
@@ -557,7 +559,7 @@ otherwise, close current tab (elscreen)."
 		(haskell . t)
 		(java . t)
 		(python . t)
-		(sh . t)
+		(shell . t)
 	)
 )
 ; Disable source-code evaluation prompt. The prompt is enabled by default for
