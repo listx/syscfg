@@ -37,5 +37,11 @@
     # export finalized xorg.conf to /etc/X11/xorg.conf
     exportConfiguration = true;
     config = pkgs.lib.mkOverride 50 (builtins.readFile ./quadmon.conf);
- };
+  };
+
+  services.mysql = {
+    enable = true;
+    dataDir = "/var/db/mysql";
+    package = pkgs.mysql;
+  };
 }
