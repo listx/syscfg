@@ -62,4 +62,10 @@
   };
 
   virtualisation.virtualbox.host.enable = pkgs.lib.mkForce false;
+
+  services.mysql = {
+    enable = true;
+    dataDir = "/var/db/mysql";
+    package = pkgs.mysql;
+  };
 }
