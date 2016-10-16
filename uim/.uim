@@ -37,8 +37,8 @@
 ("w" (jungseong-ya . 1))
 ("W" (jungseong-ya . 1))
 
-("m" (choseong-pieup . 1) (jongseong-pieup . 1) (jongseong-pieup . 4))
-("M" (choseong-pieup . 1) (jongseong-pieup . 1) (jongseong-pieup . 4))
+("f" (choseong-pieup . 1) (jongseong-pieup . 1) (jongseong-pieup . 4))
+("F" (choseong-pieup . 1) (jongseong-pieup . 1) (jongseong-pieup . 4))
 
 ("h" (choseong-tieut . 1) (jongseong-tieut . 1) (jongseong-tieut . 4))
 ("H" (choseong-tieut . 1) (jongseong-tieut . 1) (jongseong-tieut . 4))
@@ -46,14 +46,14 @@
 ("b" (choseong-kieuk . 1) (jongseong-kieuk . 1))
 ("B" (choseong-kieuk . 1) (jongseong-kieuk . 1))
 
-("f" (choseong-mieum . 1) (jongseong-mieum . 1) (jongseong-mieum . 4))
-("F" (choseong-mieum . 1) (jongseong-mieum . 1) (jongseong-mieum . 4))
+("d" (choseong-mieum . 1) (jongseong-mieum . 1) (jongseong-mieum . 4))
+("D" (choseong-mieum . 1) (jongseong-mieum . 1) (jongseong-mieum . 4))
 
 ("j" (choseong-nieun . 1) (jongseong-nieun . 3))
 ("J" (choseong-nieun . 1) (jongseong-nieun . 3))
 
-("d" (choseong-bieub . 1) (jongseong-bieub . 3) (jongseong-bieub . 4))
-("D" (choseong-ssangbieub . 5))
+("m" (choseong-bieub . 1) (jongseong-bieub . 3) (jongseong-bieub . 4))
+("M" (choseong-ssangbieub . 5))
 
 ("t" (choseong-sios . 1) (jongseong-sios . 1) (jongseong-sios . 4))
 ("T" (choseong-ssangsios . 5) (jongseong-ssangsios . 5))
