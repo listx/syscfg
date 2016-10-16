@@ -13,8 +13,8 @@
 ("i" (jungseong-eu . 3))
 ("I" (jungseong-eu . 3))
 
-("x" (jungseong-e . 1) (jungseong-e . 4))
-("X" (jungseong-ye . 1))
+("x" (jungseong-ae . 1) (jungseong-ae . 4))
+("X" (jungseong-yae . 1))
 
 ("o" (jungseong-eo . 1) (jungseong-eo . 4))
 ("O" (jungseong-eo . 1) (jungseong-eo . 4))
@@ -25,8 +25,8 @@
 ("q" (jungseong-yeo . 1))
 ("Q" (jungseong-yeo . 1))
 
-("p" (jungseong-ae . 1) (jungseong-ae . 4))
-("P" (jungseong-yae . 1))
+("p" (jungseong-e . 1) (jungseong-e . 4))
+("P" (jungseong-ye . 1))
 
 ("u" (jungseong-i . 1) (jungseong-i . 4))
 ("U" (jungseong-i . 1) (jungseong-i . 4))
