@@ -85,7 +85,10 @@ with super; rec {
       bind # 'dig' cli program
 
       # Docs
-      manpages
+      bgnet
+      man-pages
+      posix_man_pages
+      stdman
       stdmanpages
 
       # Archiving
