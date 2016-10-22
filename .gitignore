@@ -19,6 +19,7 @@ mpv/mpv.conf
 mutt/hcache
 qutebrowser/bookmarks
 qutebrowser/quickmarks
+qutebrowser/qsettings
 sage/*
 vim/.VimballRecord
 vim/.netrwhist
