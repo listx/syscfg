@@ -33,6 +33,7 @@ URxvt.perl-ext-common: font-size,keyboard-select,url-select,clipboard
  * finally only use Korean font for hangul characters
  */
 URxvt.font: xft:Terminus:pixelsize=14,xft:IPAGothic,xft:Baekmuk Gulim
+URxvt.imFont: xft:Terminus:pixelsize=14,xft:IPAGothic,xft:Baekmuk Gulim
 URxvt.geometry: 100x70
 
 /* urxvt colors */
