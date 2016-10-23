@@ -60,6 +60,8 @@
 	ace-jump-mode
 	ace-window
 	alect-themes
+	cider
+	clojure-mode
 	color-theme ; needed for dbrock's old zenburn
 	column-enforce-mode
 	coffee-mode
@@ -556,6 +558,7 @@ otherwise, close current tab (elscreen)."
 	'org-babel-load-languages
 	'(
 		(C . t)
+		(clojure . t)
 		(haskell . t)
 		(java . t)
 		(python . t)
@@ -563,6 +566,10 @@ otherwise, close current tab (elscreen)."
 		(sql . t)
 	)
 )
+; Use cider for evaluating clojure source code blocks. This requires starting
+; up cider first, with `M-x cider-jack-in' before doing C-c C-c.
+(setq org-babel-clojure-backend 'cider)
+
 ; Disable source-code evaluation prompt. The prompt is enabled by default for
 ; security reasons, but disable it because I'm not downloading other people's
 ; org-mode files and running babel on them.
