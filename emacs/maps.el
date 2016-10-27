@@ -500,6 +500,13 @@
 ; set TAB to be kakapo-tab for text mode
 (evil-define-key 'insert text-mode-map (kbd "<tab>") 'kakapo-tab)
 
+; Disable Python <backspace> binding.
+(add-hook 'python-mode-hook
+	'(lambda ()
+		(define-key python-mode-map (kbd "<backspace>") nil)
+	)
+)
+
 ; Shell mode
 (add-hook 'shell-mode-hook
 	'(lambda ()
