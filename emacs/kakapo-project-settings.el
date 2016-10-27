@@ -117,6 +117,7 @@
 			(
 				(or
 					(string-match "^/home/l/prog/elementary-haskell/" b)
+					(string-match "/prog/codex/" b)
 					(string-match "^/home/l/prog/nisse/new-keyboard/" b)
 				)
 				(cond
@@ -131,6 +132,14 @@
 									"default-tab-width set to %d"
 									default-tab-width
 								)
+							)
+						)
+					)
+					((string-match "\\.py$" b)
+						(h 'python-mode-hook nil 4
+							(progn
+								(setq python-indent 4)
+								(message "python-indent set to %d" python-indent)
 							)
 						)
 					)
