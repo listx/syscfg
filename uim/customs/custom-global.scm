@@ -9,7 +9,7 @@
 (define enable-im-toggle? #t)
 (define toggle-im-key '("<IgnoreShift><Control>,"))
 (define toggle-im-key? (make-key-predicate '("<IgnoreShift><Control>,")))
-(define toggle-im-alt-im 'anthy-utf8)
+(define toggle-im-alt-im 'byeoru)
 (define uim-color 'uim-color-uim)
 (define candidate-window-style 'vertical)
 (define candidate-window-position 'caret)
