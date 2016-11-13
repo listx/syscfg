@@ -10,11 +10,7 @@
     extraHosts = ''
       192.168.0.100 m0
       192.168.0.110 k0
-      192.168.0.114 k1
-      192.168.0.116 k3
-      192.168.0.130 mac
-      192.168.0.131 w1
-      192.168.0.132 w0
+      192.168.0.112 k1
       74.207.246.114 l0
     '';
     # Port 22 is opened automatically if SSH daemon is enabled (no need to specify it here).
