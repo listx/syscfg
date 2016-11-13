@@ -965,10 +965,7 @@ otherwise, close current tab (elscreen)."
 ; behavior.
 (defun my-text-height ()
 	(cond
-		((string-match "^k[12]" system-name)
-			95
-		)
-		((string-match "^k3" system-name)
+		((string-match "^k[123]" system-name)
 			102
 		)
 		((string-match "^w0" system-name)
