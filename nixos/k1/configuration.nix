@@ -10,21 +10,26 @@
 
   boot.loader.grub.enable = true;
   boot.loader.grub.version = 2;
-  boot.loader.grub.device = "/dev/disk/by-id/ata-ST9500420AS_5VJ59T8M";
+  boot.loader.grub.device = "/dev/disk/by-id/ata-FUJITSU_MHZ2320BH_G2_K623T922A38A";
   boot.initrd.luks.devices = [
     {
       name = "root";
-      device = "/dev/disk/by-uuid/1414ec8e-89fb-476a-9796-13b158fa1019";
+      device = "/dev/disk/by-id/ata-FUJITSU_MHZ2320BH_G2_K623T922A38A-part2";
       preLVM = true;
     }
   ];
-  boot.loader.grub.extraEntries = ''
-    menuentry "Windows7" {
-      insmod ntfs
-      set root='(hd0,2)'
-      chainloader +1
-    }
-  '';
+
+  # List packages installed in system profile. To search by name, run:
+  # $ nix-env -qaP | grep wget
+  #
+  # The ones below help to bootstrap the system upon an initial NixOS install.
+  environment.systemPackages = with pkgs; [
+    dhcpcd
+    git
+    gnumake
+    vim
+    wpa_supplicant
+  ];
 
   # KNOWN ISSUES
   #
@@ -32,16 +37,17 @@
   # connection won't work. The command `ping www.google.com` won't work. To fix
   # this, manually invoke `systemctl restart network-addresses-wlp3s0.service`.
   networking = {
-    hostName = "k3";
+    hostName = "k1";
     hostId = "518ab295";
-    networkmanager.enable = true;
+    # Enables wireless support via wpa_supplicant.
+    wireless.enable = true;
   };
 
   services.xserver = {
-    videoDrivers = [ "ati" ];
+    videoDrivers = [ "intel" ];
     synaptics = {
       enable = true;
-      twoFingerScroll = true;
+      vertEdgeScroll = true;
     };
     config = ''
       Section "InputClass"
@@ -55,4 +61,8 @@
       EndSection
     '';
   };
+
+  # The NixOS release to be compatible with for stateful data such as databases.
+  system.stateVersion = "16.09";
+
 }
