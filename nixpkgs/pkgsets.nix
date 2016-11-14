@@ -115,7 +115,8 @@ with super; rec {
       gcc
       gdb
       gnumake
-      python
+      python # 'python' is python2
+      python3
       ruby
       cloc
       # android development
@@ -219,7 +220,7 @@ with super; rec {
     ignoreCollisions = true;
     paths = [
       docker
-      python27Packages.docker_compose
+      python35Packages.docker_compose
       vagrant
       linuxPackages.virtualbox
       linuxPackages.virtualboxGuestAdditions
