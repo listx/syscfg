@@ -240,6 +240,7 @@ alias rsmm="rand_open recurse mpv\ --loop-file\ inf\ \ --playlist m3u $ft_mov"
 alias g='git'
 alias gbr='git branch'
 alias gcm='git commit --verbose'
+alias gcma='git commit --verbose --amend'
 alias gco='git checkout'
 alias gft='git fetch'
 alias glg='git log'
