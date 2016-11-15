@@ -84,6 +84,9 @@ xinitrc:
 	ln -fs ${C}/xinitrc/cfg                             ${H}/.xinitrc
 xmonad:
 	ln -fns ${C}/xmonad                                 ${H}/.xmonad
+ifeq ('${T}','w1')
+	ln -fns ${C}/xmonad/ubuntu-xmonad-startup.sh        ${H}/.xmonad/xmonad-session-rc
+endif
 xsession:
 	ln -fs ${C}/xsession/cfg                            ${H}/.xsession
 zsh:
@@ -92,4 +95,8 @@ zsh:
 	mkdir -p ${H}/.zsh-untracked
 urxvt:
 	ln -fns ${C}/urxvt                                  ${H}/.urxvt
+ifeq ('${T}','w1')
+	ln -fs ${H}/prog/foreign/urxvt-perls                ${H}/.urxvt/ext
+else
 	ln -fs ${H}/.nix-profile/lib/urxvt/perl             ${H}/.urxvt/ext
+endif

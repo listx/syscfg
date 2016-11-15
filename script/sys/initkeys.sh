@@ -44,9 +44,9 @@ xmodmap -e "add mod3 = Hyper_L"
 # "Seil" program. Hyper_L does not exist on OSX, it seems. But scroll lock
 # does, and that's what we use (since MacBook Air keyboard does not come with
 # scroll lock, we can use it.
-if [[ $HOST == "w1" ]]; then
-    xmodmap -e "keysym Scroll_Lock = Hyper_L"
-fi
+#if [[ $HOST == "w1" ]]; then
+#    xmodmap -e "keysym Scroll_Lock = Hyper_L"
+#fi
 
 # set keystroke repeat speed (delay, speed)
 xset r rate 250 80

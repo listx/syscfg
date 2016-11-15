@@ -31,7 +31,7 @@
 ; https://gitorious.org/goibhniu/configuration-files.
 (when (not (or
 	(string= system-name "k1")
-	(string= system-name "w1")
+	(string-match "^w1" system-name)
 	(string-match "^Linuss" system-name)
 	))
 	(defconst nixos-sys-packages
@@ -106,6 +106,17 @@
 	(dolist (pkg my/packages)
 		(when (not (package-installed-p pkg))
 		(package-install pkg))))
+
+; Set default Frame size for non-XMonad machines.
+(add-hook 'after-init-hook '(lambda ()
+	(when window-system
+		(cond
+			((string-match "^w1" system-name)
+				(set-frame-size (selected-frame) 160 73)
+			)
+		)
+	)
+))
 
 ; http://www.emacswiki.org/emacs/GenericMode
 (require 'generic-x)
@@ -367,6 +378,9 @@
 		)
 		((string-match "^w0" system-name)
             '("Terminus" "Input Mono Compressed Book")
+		)
+		((string-match "^w1" system-name)
+            '("Input Mono Narrow" "Terminus")
 		)
 		(t '("Terminus" "Input Mono Narrow" "Input Mono Compressed Book"))
 	)
@@ -968,7 +982,7 @@ otherwise, close current tab (elscreen)."
 		((string-match "^k[123]" system-name)
 			102
 		)
-		((string-match "^w0" system-name)
+		((string-match "^w[1]" system-name)
 			102
 		)
 		((string-match "^Linuss" system-name)
