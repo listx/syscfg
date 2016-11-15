@@ -18,6 +18,11 @@ git:
 	ln -fs ${C}/git/sendemail-aliases                   ${H}/.git-sendemail-aliases
 gpg:
 	ln -fs ${C}/gpg                                     ${H}/.gnupg
+ifeq ('${T}','w1')
+	ln -fs ${C}/gpg/gpg-agent.ubuntu.conf               ${H}/.gnupg/gpg-agent.conf
+else
+	ln -fs ${C}/gpg/gpg-agent.nixos.conf                ${H}/.gnupg/gpg-agent.conf
+endif
 gsy:
 	ln -fs ${C}/gsy/cfg                                 ${H}/.gsy
 gtk:
