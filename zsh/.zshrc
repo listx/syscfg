@@ -282,13 +282,8 @@ alias agi='ag -i'
 # these sane hostnames depend on the /etc/hosts file!
 alias sk0='ssh l@k0'
 alias sk1='ssh l@k1'
-alias sk2='ssh l@k2'
-alias sk3='ssh l@k3'
 alias sl0='ssh l@l0'
 alias sm0='ssh l@m0'
-alias sw0='ssh l@w0'
-alias smac='export TERM=xterm-256color && ssh mac'
-alias slmac='export TERM=xterm-256color && ssh lmac'
 
 # GLOBAL, position-independent aliases for quick scp operations
 alias -g K0='l@k0:'
