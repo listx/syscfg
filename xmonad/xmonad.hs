@@ -471,8 +471,8 @@ myManageHook = composeAll $
 myStartupHook :: String -> X ()
 myStartupHook hostname = do
 	spawnIfGrpTopWSNotFull Net "firefox"
-	when (elem hostname ubuntuMachines) spawnWorkStuff
 	spawnIfGrpNotFull Work $ term1 ++ " -name atWorkspace1"
+	when (elem hostname ubuntuMachines) spawnWorkStuff
 	spawn $ term1 ++ schedToday
 	spawnIfGrpNotFull Sys $ term1 ++ " -e htop"
 	case hostname of
