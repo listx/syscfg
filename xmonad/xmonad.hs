@@ -28,6 +28,9 @@ import Control.Monad
 altMask :: KeyMask
 altMask = mod1Mask -- alias "altMask" for left alt key
 
+ubuntuMachines :: [String]
+ubuntuMachines = ["larver-w0", "larver-w1"]
+
 data MyWSGroup
 	= Work
 	| Net
@@ -149,7 +152,7 @@ myKeys hostname conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
 	, ((mod4Mask              , xK_n     ), spawn "qutebrowser")
 	, ((mod4Mask .|. altMask  , xK_n     ), spawn "firefox")
 	, ((mod4Mask .|. shiftMask, xK_n     ), io sitesRand >>= spawn . ("firefox " ++))
-	, ((mod4Mask .|. controlMask, xK_n   ), spawn "chromium")
+	, ((mod4Mask .|. controlMask, xK_n   ), spawn chromium)
 	, ((mod4Mask              , xK_p     ), spawn "pidgin")
 	, ((mod4Mask              , xK_w     ), spawn "soffice")
 	, ((mod4Mask              , xK_x     ), spawn term1)
@@ -233,6 +236,9 @@ myKeys hostname conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
 	fstIfDualPortrait slave master = if elem hostname ["k0"]
 		then sendMessage slave
 		else sendMessage master
+	chromium
+		| elem hostname ubuntuMachines = "chromium-browser"
+		| otherwise = "chromium"
 
 mpcSeek :: String -> Int -> String
 mpcSeek hostname sec = "mpc -h 192.168.0.110 -p " ++ port ++ " seek " ++ show' sec
@@ -465,7 +471,7 @@ myManageHook = composeAll $
 myStartupHook :: String -> X ()
 myStartupHook hostname = do
 	spawnIfGrpTopWSNotFull Net "firefox"
-	when (elem hostname ["larver-w0", "larver-w1"]) spawnEmacsWorkLog
+	when (elem hostname ubuntuMachines) spawnWorkStuff
 	spawnIfGrpNotFull Work $ term1 ++ " -name atWorkspace1"
 	spawn $ term1 ++ schedToday
 	spawnIfGrpNotFull Sys $ term1 ++ " -e htop"
@@ -477,8 +483,9 @@ myStartupHook hostname = do
 	dualPortrait = do
 		spawnIfGrpTopWSNotFull Music $ term2 ++ " -e ncmpcpp"
 		spawnIfGrpNotFull Net2 $ term3 ++ " -e rtorrent"
-	spawnEmacsWorkLog = do
+	spawnWorkStuff = do
 		spawnIfGrpNotFull Work $ "emacs /home/larver/notes_work_imvu/wlog.org"
+		spawnIfGrpNotFull Work $ term2 ++ " -name floatme -e ssh-add"
 
 -- reset all xinerama screens to point to top WS of each group
 resetScreensToWSTops :: X ()
