@@ -465,6 +465,7 @@ myManageHook = composeAll $
 myStartupHook :: String -> X ()
 myStartupHook hostname = do
 	spawnIfGrpTopWSNotFull Net "firefox"
+	when (elem hostname ["larver-w0", "larver-w1"]) spawnEmacsWorkLog
 	spawnIfGrpNotFull Work $ term1 ++ " -name atWorkspace1"
 	spawn $ term1 ++ schedToday
 	spawnIfGrpNotFull Sys $ term1 ++ " -e htop"
@@ -476,6 +477,8 @@ myStartupHook hostname = do
 	dualPortrait = do
 		spawnIfGrpTopWSNotFull Music $ term2 ++ " -e ncmpcpp"
 		spawnIfGrpNotFull Net2 $ term3 ++ " -e rtorrent"
+	spawnEmacsWorkLog = do
+		spawnIfGrpNotFull Work $ "emacs /home/larver/notes_work_imvu/wlog.org"
 
 -- reset all xinerama screens to point to top WS of each group
 resetScreensToWSTops :: X ()
@@ -545,7 +548,7 @@ sitesRand = shuffle sites >>= return . unwords
 main :: IO ()
 main = do
 	hostname <- fmap nodeName getSystemID
-	if elem hostname ["k0"]
+	if elem hostname ["k0", "larver-w0"]
 		then xmonad (myconf hostname) {layoutHook = layoutNoMirror}
 		else xmonad $ myconf hostname
 	where

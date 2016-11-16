@@ -8,3 +8,9 @@
 
 # Disable touchpad tapping.
 synclient TapButton1=0
+
+# Swap left/right mouse buttons.
+
+if [[ "$(hostname)" == larver-w0 ]]; then
+    xmodmap -e "pointer = 3 2 1"
+fi

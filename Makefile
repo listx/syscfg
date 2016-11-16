@@ -18,7 +18,9 @@ git:
 	ln -fs ${C}/git/sendemail-aliases                   ${H}/.git-sendemail-aliases
 gpg:
 	ln -fs ${C}/gpg                                     ${H}/.gnupg
-ifeq ('${T}','w1')
+ifeq ('${T}','larver-w0')
+	ln -fs ${C}/gpg/gpg-agent.ubuntu.conf               ${H}/.gnupg/gpg-agent.conf
+else ifeq ('${T}','larver-w1')
 	ln -fs ${C}/gpg/gpg-agent.ubuntu.conf               ${H}/.gnupg/gpg-agent.conf
 else
 	ln -fs ${C}/gpg/gpg-agent.nixos.conf                ${H}/.gnupg/gpg-agent.conf
@@ -79,6 +81,15 @@ usbmnt:
 uim:
 	ln -fns ${C}/uim/.uim                               ${H}/.uim
 	ln -fns ${C}/uim                                    ${H}/.uim.d
+urxvt:
+	ln -fns ${C}/urxvt                                  ${H}/.urxvt
+ifeq ('${T}','larver-w0')
+	ln -fs ${H}/prog/foreign/urxvt-perls                ${H}/.urxvt/ext
+else ifeq ('${T}','larver-w1')
+	ln -fs ${H}/prog/foreign/urxvt-perls                ${H}/.urxvt/ext
+else
+	ln -fs ${H}/.nix-profile/lib/urxvt/perl             ${H}/.urxvt/ext
+endif
 vim:
 	ln -fns ${C}/vim                                    ${H}/.vim
 	ln -fs ${C}/vim/cfg                                 ${H}/.vimrc
@@ -89,7 +100,9 @@ xinitrc:
 	ln -fs ${C}/xinitrc/cfg                             ${H}/.xinitrc
 xmonad:
 	ln -fns ${C}/xmonad                                 ${H}/.xmonad
-ifeq ('${T}','w1')
+ifeq ('${T}','larver-w0')
+	ln -fns ${C}/xmonad/ubuntu-xmonad-startup.sh        ${H}/.xmonad/xmonad-session-rc
+else ifeq ('${T}','larver-w1')
 	ln -fns ${C}/xmonad/ubuntu-xmonad-startup.sh        ${H}/.xmonad/xmonad-session-rc
 endif
 xsession:
@@ -98,10 +111,3 @@ zsh:
 	ln -fns ${C}/zsh                                    ${H}/.zsh
 	ln -fs ${C}/zsh/.zshrc                              ${H}
 	mkdir -p ${H}/.zsh-untracked
-urxvt:
-	ln -fns ${C}/urxvt                                  ${H}/.urxvt
-ifeq ('${T}','w1')
-	ln -fs ${H}/prog/foreign/urxvt-perls                ${H}/.urxvt/ext
-else
-	ln -fs ${H}/.nix-profile/lib/urxvt/perl             ${H}/.urxvt/ext
-endif

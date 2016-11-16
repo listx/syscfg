@@ -31,7 +31,8 @@
 ; https://gitorious.org/goibhniu/configuration-files.
 (when (not (or
 	(string= system-name "k1")
-	(string-match "^w1" system-name)
+	(string-match "^larver-w0" system-name)
+	(string-match "^larver-w1" system-name)
 	(string-match "^Linuss" system-name)
 	))
 	(defconst nixos-sys-packages
@@ -111,7 +112,7 @@
 (add-hook 'after-init-hook '(lambda ()
 	(when window-system
 		(cond
-			((string-match "^w1" system-name)
+			((string-match "^larver-w1" system-name)
 				(set-frame-size (selected-frame) 160 73)
 			)
 		)
@@ -376,10 +377,10 @@
 		((string-match "^Linuss" system-name)
             '("Input Mono Compressed" "PT Mono")
 		)
-		((string-match "^w0" system-name)
-            '("Terminus" "Input Mono Compressed Book")
+		((string-match "^larver-w0" system-name)
+            '("Input Mono Narrow" "Terminus")
 		)
-		((string-match "^w1" system-name)
+		((string-match "^larver-w1" system-name)
             '("Input Mono Narrow" "Terminus")
 		)
 		(t '("Terminus" "Input Mono Narrow" "Input Mono Compressed Book"))
