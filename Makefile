@@ -17,7 +17,7 @@ git:
 	ln -fs ${C}/git/template                            ${H}/.git-templates
 	ln -fs ${C}/git/sendemail-aliases                   ${H}/.git-sendemail-aliases
 gpg:
-	ln -fs ${C}/gpg                                     ${H}/.gnupg
+	ln -fns ${C}/gpg                                    ${H}/.gnupg
 ifeq ('${T}','larver-w0')
 	ln -fs ${C}/gpg/gpg-agent.ubuntu.conf               ${H}/.gnupg/gpg-agent.conf
 else ifeq ('${T}','larver-w1')
