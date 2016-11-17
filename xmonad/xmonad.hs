@@ -135,10 +135,13 @@ myKeys hostname conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
 	, ((modm .|. controlMask, xK_Escape     ), io (exitWith ExitSuccess))
 
 	-- Restart xmonad
-	, ((modm,               xK_Escape     ), spawn "xmonad --recompile; xmonad --restart")
+	, ((modm .|. shiftMask, xK_Escape     ), spawn "xmonad --recompile; xmonad --restart")
 
 	-- Suspend to RAM
 	, ((modm .|. controlMask,   xK_s     ), spawn suspend)
+
+	-- Lock computer (Ubuntu only)
+	, ((modm,               xK_Escape  ), spawn "gnome-screensaver-command --lock")
 
 	, ((mod4Mask              , xK_1     ), spawn (term1 ++ schedToday))
 	, ((mod4Mask              , xK_2     ), spawn (term1 ++ schedYTT))
