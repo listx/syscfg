@@ -13,8 +13,12 @@ cron:
 emacs:
 	ln -fns ${C}/emacs                                  ${H}/.emacs.d
 git:
-	ln -fs ${C}/git/cfg                                 ${H}/.gitconfig
-	ln -fs ${C}/git/template                            ${H}/.git-templates
+ifeq ('${T}','larver-w0')
+	ln -fs ${C}/git/cfg.imvu.conf                       ${H}/.gitconfig
+else
+	ln -fs ${C}/git/cfg.personal.conf                   ${H}/.gitconfig
+endif
+	ln -fns ${C}/git/template                           ${H}/.git-templates
 	ln -fs ${C}/git/sendemail-aliases                   ${H}/.git-sendemail-aliases
 gpg:
 	ln -fns ${C}/gpg                                    ${H}/.gnupg
