@@ -416,10 +416,10 @@
 (evil-define-key 'normal org-mode-map (kbd "M-j")
 	'outline-next-visible-heading)
 ; move items around, including child nodes
-(evil-define-key 'normal org-mode-map (kbd "M-L") 'org-shiftmetaright)
-(evil-define-key 'normal org-mode-map (kbd "M-H") 'org-shiftmetaleft)
-(evil-define-key 'normal org-mode-map (kbd "M-K") 'org-shiftmetaup)
-(evil-define-key 'normal org-mode-map (kbd "M-J") 'org-shiftmetadown)
+(evil-define-key 'normal org-mode-map (kbd "M-L") 'org-demote-subtree)
+(evil-define-key 'normal org-mode-map (kbd "M-H") 'org-promote-subtree)
+(evil-define-key 'normal org-mode-map (kbd "M-K") 'org-move-subtree-up)
+(evil-define-key 'normal org-mode-map (kbd "M-J") 'org-move-subtree-down)
 
 (evil-define-key 'normal org-mode-map (kbd "<f12>") 'org-html-export-to-html)
 
