@@ -487,7 +487,7 @@ myStartupHook hostname = do
 		spawnIfGrpTopWSNotFull Music $ term2 ++ " -e ncmpcpp"
 		spawnIfGrpNotFull Net2 $ term3 ++ " -e rtorrent"
 	spawnWorkStuff = do
-		spawnIfGrpNotFull Work $ "emacs /home/larver/notes_work_imvu/wlog.org"
+		spawnIfGrpNotFull Work $ "emacs /home/larver/k/notes_work_imvu/wlog.org"
 		spawnIfGrpNotFull Work $ term2 ++ " -name floatme -e ssh-add"
 
 -- reset all xinerama screens to point to top WS of each group
