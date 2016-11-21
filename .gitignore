@@ -21,6 +21,10 @@ qutebrowser/bookmarks
 qutebrowser/quickmarks
 qutebrowser/qsettings
 sage/*
+ssh/authorized_keys
+ssh/config
+ssh/id_*
+ssh/known_hosts
 vim/.VimballRecord
 vim/.netrwhist
 vim/colors
