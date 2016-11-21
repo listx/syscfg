@@ -78,6 +78,15 @@ rtorrent:
 	ln -fs ${C}/rtorrent/cfg                            ${H}/.rtorrent.rc
 sage:
 	ln -fns ${C}/sage                                   ${H}/.sage
+ssh:
+	ln -fns ${C}/ssh                                    ${H}/.ssh
+ifeq ('${T}','larver-w0')
+	ln -fs ${C}/ssh/config.imvu.conf                    ${H}/.ssh/config
+else ifeq ('${T}','larver-w1')
+	ln -fs ${C}/ssh/config.imvu.conf                    ${H}/.ssh/config
+else
+	ln -fs ${C}/ssh/config.home.conf                    ${H}/.ssh/config
+endif
 tig:
 	ln -fs ${C}/tig/.tigrc                              ${H}
 usbmnt:
