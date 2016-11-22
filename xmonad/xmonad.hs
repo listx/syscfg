@@ -236,7 +236,7 @@ myKeys hostname conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
 	, ((modm .|. shiftMask, xK_e     ), fstIfDualPortrait Expand MirrorShrink)
 	]
 	where
-	fstIfDualPortrait slave master = if elem hostname ["k0"]
+	fstIfDualPortrait slave master = if elem hostname ["k0", "larver-w0"]
 		then sendMessage slave
 		else sendMessage master
 	chromium
