@@ -69,7 +69,7 @@
 					)
 					; Haskell
 					((string-match "\\.hs$" b)
-						(h 'haskell-mode-hook nil 4)
+						(h 'haskell-mode-hook nil 2)
 					)
 					((string-match ".+\\.htm[l]?$" b)
 						(h 'html-mode-hook nil 2)
