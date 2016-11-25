@@ -84,6 +84,7 @@
 	hiwin
 	htmlize
 	hydra
+	intero
 	kakapo-mode
 	less-css-mode
 	magit
@@ -645,6 +646,9 @@ otherwise, close current tab (elscreen)."
 	(remove (rassoc 'literate-haskell-mode auto-mode-alist) auto-mode-alist))
 (add-to-list 'auto-mode-alist '("\\.lhs$" . latex-mode))
 (add-hook 'literate-haskell-mode-hook (lambda () (latex-mode)))
+
+; Enable intero mode for Haskell.
+(add-hook 'haskell-mode-hook 'intero-mode)
 
 ; The "Haskell-Cabal" mode that comes built-in with haskell-mode needs some
 ; manual tooth-removal to get it to submit and behave.
