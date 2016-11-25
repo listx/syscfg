@@ -74,8 +74,6 @@
 	evil-matchit
 	evil-surround
 	evil-visualstar
-	flycheck
-	flycheck-haskell
 	groovy-mode
 	haml-mode
 	haskell-mode
@@ -698,12 +696,6 @@ otherwise, close current tab (elscreen)."
 ; Re-fontify sub-mode portions when idle. The manual command for this is
 ; `mmm-parse-buffer'.
 (setq mmm-parse-when-idle 't)
-
-;; flycheck-haskell
-(eval-after-load 'flycheck
-	'(add-hook 'flycheck-mode-hook #'flycheck-haskell-setup)
-)
-(global-flycheck-mode)
 
 ; Docker
 (add-to-list 'auto-mode-alist '("Dockertemplate$" . dockerfile-mode))
