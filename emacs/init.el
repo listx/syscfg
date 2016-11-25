@@ -80,8 +80,9 @@
 	helm
 	helm-ag
 	helm-projectile
-	hl-line+
 	hiwin
+	hl-line+
+	hlint-refactor
 	htmlize
 	hydra
 	intero
@@ -649,6 +650,17 @@ otherwise, close current tab (elscreen)."
 
 ; Enable intero mode for Haskell.
 (add-hook 'haskell-mode-hook 'intero-mode)
+
+; Make intero mode also use hlint warnings. See
+; https://stackoverflow.com/questions/40400547/using-hlint-with-intero-on-emacs.
+(add-hook 'intero-mode-hook
+	(lambda ()
+		(flycheck-add-next-checker 'intero '(t . haskell-hlint))
+	)
+)
+
+; Enable automated HLint suggestion application
+(add-hook 'haskell-mode-hook 'hlint-refactor-mode)
 
 ; The "Haskell-Cabal" mode that comes built-in with haskell-mode needs some
 ; manual tooth-removal to get it to submit and behave.
