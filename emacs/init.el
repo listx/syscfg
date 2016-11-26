@@ -74,6 +74,8 @@
 	evil-matchit
 	evil-surround
 	evil-visualstar
+	fringe-helper
+	git-gutter-fringe
 	groovy-mode
 	haml-mode
 	haskell-mode
@@ -225,6 +227,46 @@
  '(column-number-mode t)
  '(helm-ag-insert-at-point (quote word))
  '(inhibit-startup-buffer-menu t))
+
+; Git diff +/- marks, but directly in the fringe.
+(require 'git-gutter-fringe)
+(global-git-gutter-mode +1)
+(setq-default left-fringe-width 10)
+(fringe-helper-define 'git-gutter-fr:added nil
+	"XXXXXXXX"
+	"XXXXXXXX"
+	"XXXXXXXX"
+	"XXXXXXXX"
+	"XXXXXXXX"
+	"XXXXXXXX"
+	"XXXXXXXX"
+	"XXXXXXXX")
+(fringe-helper-define 'git-gutter-fr:deleted nil
+	"XXXXXXXX"
+	"XXXXXXXX"
+	"XXXXXXXX"
+	"XXXXXXXX"
+	"XXXXXXXX"
+	"XXXXXXXX"
+	"XXXXXXXX"
+	"XXXXXXXX")
+(fringe-helper-define 'git-gutter-fr:modified nil
+	"XXXXXXXX"
+	"XXXXXXXX"
+	"XXXXXXXX"
+	"XXXXXXXX"
+	"XXXXXXXX"
+	"XXXXXXXX"
+	"XXXXXXXX"
+	"XXXXXXXX")
+(set-face-background 'git-gutter-fr:added "lime green")
+(set-face-foreground 'git-gutter-fr:added "lime green")
+(set-face-background 'git-gutter-fr:modified "purple")
+(set-face-foreground 'git-gutter-fr:modified "purple")
+(set-face-background 'git-gutter-fr:deleted "red")
+(set-face-foreground 'git-gutter-fr:deleted "red")
+; Enable only left-side fringe
+(set-fringe-mode '(1 . 0))
 
 ; darken inactive windows
 (require 'hiwin)
@@ -980,8 +1022,6 @@ otherwise, close current tab (elscreen)."
 ; show empty whitespace
 (setq-default indicate-empty-lines t)
 (setq-default show-trailing-whitespace t)
-; disable fringes
-(fringe-mode 0)
 ; set default line length (as used by 'fill-paragraph) to be 80 characters
 (setq-default fill-column 80)
 ; add newline (silently) at the end of a file, just like Vim
