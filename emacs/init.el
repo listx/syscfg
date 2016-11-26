@@ -74,8 +74,7 @@
 	evil-matchit
 	evil-surround
 	evil-visualstar
-	fringe-helper
-	git-gutter-fringe
+	git-gutter
 	groovy-mode
 	haml-mode
 	haskell-mode
@@ -228,43 +227,15 @@
  '(helm-ag-insert-at-point (quote word))
  '(inhibit-startup-buffer-menu t))
 
-; Git diff +/- marks, but directly in the fringe.
-(require 'git-gutter-fringe)
+; Git diff +/- marks.
 (global-git-gutter-mode +1)
-(setq-default left-fringe-width 10)
-(fringe-helper-define 'git-gutter-fr:added nil
-	"XXXXXXXX"
-	"XXXXXXXX"
-	"XXXXXXXX"
-	"XXXXXXXX"
-	"XXXXXXXX"
-	"XXXXXXXX"
-	"XXXXXXXX"
-	"XXXXXXXX")
-(fringe-helper-define 'git-gutter-fr:deleted nil
-	"XXXXXXXX"
-	"XXXXXXXX"
-	"XXXXXXXX"
-	"XXXXXXXX"
-	"XXXXXXXX"
-	"XXXXXXXX"
-	"XXXXXXXX"
-	"XXXXXXXX")
-(fringe-helper-define 'git-gutter-fr:modified nil
-	"XXXXXXXX"
-	"XXXXXXXX"
-	"XXXXXXXX"
-	"XXXXXXXX"
-	"XXXXXXXX"
-	"XXXXXXXX"
-	"XXXXXXXX"
-	"XXXXXXXX")
-(set-face-background 'git-gutter-fr:added "lime green")
-(set-face-foreground 'git-gutter-fr:added "lime green")
-(set-face-background 'git-gutter-fr:modified "purple")
-(set-face-foreground 'git-gutter-fr:modified "purple")
-(set-face-background 'git-gutter-fr:deleted "red")
-(set-face-foreground 'git-gutter-fr:deleted "red")
+(custom-set-variables
+ '(git-gutter:modified-sign " ")
+ '(git-gutter:added-sign " ")
+ '(git-gutter:deleted-sign " "))
+(set-face-background 'git-gutter:added "lime green")
+(set-face-background 'git-gutter:modified "purple")
+(set-face-background 'git-gutter:deleted "red")
 ; Enable only left-side fringe
 (set-fringe-mode '(1 . 0))
 
