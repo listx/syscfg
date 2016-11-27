@@ -141,6 +141,10 @@
 	"j" 'hs-literate-endbeg
 	"J" 'hs-literate-begend
 
+	"kk" 'flycheck-list-errors
+	"kn" 'flycheck-next-error
+	"kN" 'flycheck-previous-error
+
 	"m" 'hydra-magit/body
 
 	; new tab
