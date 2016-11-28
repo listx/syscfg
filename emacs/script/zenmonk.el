@@ -161,10 +161,10 @@ Each element has the form (NAME . HEX).
 										:foreground ,zm-green+1 :background ,zm-green-2
 										:box (:line-width 2 :color bg-2 :style released-button))))
 			(mode-line-inactive     ((((background light))
-										:foreground fg+1 :background bg+1
+										:foreground fg+1 :background "#ded6c5"
 										:box (:line-width 2 :color bg-2 :style nil))
 										(((background dark))
-										:foreground "grey32" :background "black"
+										:foreground "grey32" :background "#14141b"
 										:box (:line-width 2 :color "gray32" :style nil))))
 			(mode-line-buffer-id    ((t :foreground magenta+1 :weight bold)))
 			(mmm-default-submode-face
