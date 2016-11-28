@@ -428,6 +428,7 @@
 		(helm-mode nil helm-mode)
 		(undo-tree-mode nil undo-tree)
 		(visual-line-mode nil simple)
+		(git-gutter-mode nil git-gutter)
 	)
 )
 
