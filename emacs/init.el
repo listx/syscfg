@@ -852,7 +852,7 @@ otherwise, close current tab (elscreen)."
 						(set-face-background 'hiwin-face
 							(if window-system
 								(if (string= "alect-dark" theme)
-									"#14141b"
+									"#0d0d0f"
 									"gray0"
 								)
 								"gray16"
