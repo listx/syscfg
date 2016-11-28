@@ -133,8 +133,10 @@
 	"f" 'helm-projectile
 	"F" 'helm-projectile-switch-project
 
+	"gj" 'git-gutter:revert-hunk
 	"gn" 'git-gutter:next-hunk
 	"gN" 'git-gutter:previous-hunk
+	"gs" 'git-gutter:popup-hunk ; show full diff of hunk
 
 	"G" 'helm-all-mark-rings
 
@@ -144,6 +146,8 @@
 	"j" 'hs-literate-endbeg
 	"J" 'hs-literate-begend
 
+	"kj" 'hlint-refactor-refactor-at-point
+	"kJ" 'hlint-refactor-refactor-buffer
 	"kk" 'flycheck-list-errors
 	"kn" 'flycheck-next-error
 	"kN" 'flycheck-previous-error
