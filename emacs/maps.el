@@ -133,7 +133,10 @@
 	"f" 'helm-projectile
 	"F" 'helm-projectile-switch-project
 
-	"g" 'helm-all-mark-rings
+	"gn" 'git-gutter:next-hunk
+	"gN" 'git-gutter:previous-hunk
+
+	"G" 'helm-all-mark-rings
 
 	"h" (lambda () (interactive) (split-window-vertically) (balance-windows))
 
