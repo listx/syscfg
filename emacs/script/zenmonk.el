@@ -173,6 +173,41 @@ Each element has the form (NAME . HEX).
 				(((background dark))
 				:background "#1d1d22")
 				))
+			(org-done
+					((((background light))
+					:foreground fg :weight bold)
+					(((background dark))
+					:foreground fg :weight bold)))
+			(org-special-keyword
+					((((background light))
+					:foreground fg :underline t)
+					(((background dark))
+					:foreground fg :underline t)))
+			(org-todo
+					((((background light))
+					:foreground "#ff0000" :weight bold)
+					(((background dark))
+					:foreground "#ff0000" :weight bold)))
+			(org-level-1
+					((((background light))
+					:foreground "#ff0000" :weight bold)
+					(((background dark))
+					:foreground "#ff0000" :weight bold)))
+			(org-level-2
+					((((background light))
+					:foreground "#0000ff" :weight bold)
+					(((background dark))
+					:foreground ,zm-blue+1 :weight bold)))
+			(org-level-3
+					((((background light))
+					:foreground green+1 :weight bold)
+					(((background dark))
+					:foreground green+1 :weight bold)))
+			(org-level-4
+					((((background light))
+					:foreground magenta+1 :weight bold)
+					(((background dark))
+					:foreground magenta+1 :weight bold)))
 			(region ((((background light))
 					:foreground "#ffffcc" :background "#ff66cc" :weight bold)
 					(((background dark))
