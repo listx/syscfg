@@ -662,8 +662,13 @@ otherwise, close current tab (elscreen)."
 (add-to-list 'auto-mode-alist '("\\.lhs$" . latex-mode))
 (add-hook 'literate-haskell-mode-hook (lambda () (latex-mode)))
 
-; Enable intero mode for Haskell.
-(add-hook 'haskell-mode-hook 'intero-mode)
+; Blacklist some projects; enable intero-mode for every other Haskell project.
+(setq intero-blacklist '("~/k/resty"))
+(add-hook 'haskell-mode-hook (lambda ()
+	(require 'intero)
+	(intero-mode-blacklist)
+))
+;(add-hook 'haskell-mode-hook 'intero-mode-blacklist)
 
 ; Make intero mode also use hlint warnings. See
 ; https://stackoverflow.com/questions/40400547/using-hlint-with-intero-on-emacs.
