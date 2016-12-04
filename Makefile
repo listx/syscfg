@@ -5,11 +5,6 @@ T := $(shell hostname)
 # inside the C (config) directory itself.
 bash:
 	ln -fs ${C}/bash/.bashrc                            ${H}
-bundle:
-	mkdir ${H}/.bundle
-	ln -fs ${C}/bundle/cfg                              ${H}/.bundle/config
-cron:
-	${C}/cron/setcron.sh
 emacs:
 	ln -fns ${C}/emacs                                  ${H}/.emacs.d
 git:
@@ -36,8 +31,6 @@ gtk:
 lesskey:
 	ln -fs ${C}/lesskey/cfg                             ${H}/.lesskey
 	lesskey
-mplayer:
-	ln -fns ${C}/mplayer                                ${H}/.mplayer
 mpv:
 	ln -fns ${C}/mpv ${H}/.config/mpv
 ifeq ('${T}','Linuss-MacBook-Air.local')
@@ -109,8 +102,6 @@ vim:
 	ln -fs ${C}/vim/cfg                                 ${H}/.gvimrc
 xdefaults:
 	ln -fs ${C}/xdefaults/cfg                           ${H}/.Xdefaults
-xinitrc:
-	ln -fs ${C}/xinitrc/cfg                             ${H}/.xinitrc
 xmonad:
 	ln -fns ${C}/xmonad                                 ${H}/.xmonad
 ifeq ('${T}','larver-w0')
@@ -118,8 +109,6 @@ ifeq ('${T}','larver-w0')
 else ifeq ('${T}','larver-w1')
 	ln -fns ${C}/xmonad/ubuntu-xmonad-startup.sh        ${H}/.xmonad/xmonad-session-rc
 endif
-xsession:
-	ln -fs ${C}/xsession/cfg                            ${H}/.xsession
 zsh:
 	ln -fns ${C}/zsh                                    ${H}/.zsh
 	ln -fs ${C}/zsh/.zshrc                              ${H}
