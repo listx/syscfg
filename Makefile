@@ -10,6 +10,8 @@ emacs:
 git:
 ifeq ('${T}','larver-w0')
 	ln -fs ${C}/git/cfg.imvu.conf                       ${H}/.gitconfig
+else ifeq ('${T}','larver-w1')
+	ln -fs ${C}/git/cfg.imvu.conf                       ${H}/.gitconfig
 else
 	ln -fs ${C}/git/cfg.personal.conf                   ${H}/.gitconfig
 endif
