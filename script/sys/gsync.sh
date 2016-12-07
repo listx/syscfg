@@ -11,7 +11,6 @@ com="$@"
 repos=(
 	k/notes_work_imvu
 	secure
-	syscfg
 )
 
 parallel --no-notice -k "echo -en '{}:\n  ' && git -C {} $com 2>&1 && echo" ::: ${repos[@]}
