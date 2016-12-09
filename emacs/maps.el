@@ -487,6 +487,9 @@
 (evil-define-key 'normal dired-mode-map "L" 'evil-prev-buffer)
 (evil-define-key 'normal dired-mode-map "K" 'dired-up-directory)
 
+; Help mode: use normal mode as default.
+(evil-set-initial-state 'help-mode 'normal)
+
 ; Kakapo
 (define-key evil-normal-state-map "o"
 	(lambda ()
