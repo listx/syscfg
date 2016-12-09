@@ -468,6 +468,11 @@
 	)
 )
 
+; PHP-mode: disable default keybindings
+(with-eval-after-load "php-mode"
+	(define-key php-mode-map (kbd "<tab>") 'nil)
+)
+
 ; Disable default tab/S-tab bindings in compilation-mode.
 (add-hook 'compilation-mode-hook
 	'(lambda ()
