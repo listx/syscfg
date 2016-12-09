@@ -95,6 +95,7 @@
 	nix-mode
 	org
 	page-break-lines
+	php-mode
 	yaml-mode
 	) "Default packages")
 
