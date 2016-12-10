@@ -1,6 +1,104 @@
+; Disable "*GNU Emacs*" startup buffer.
+(setq inhibit-startup-screen t)
+
+; Disable all version control minor modes (e.g., vc-git).
+(setq vc-handled-backends nil)
+
+; Emulate TextMate's "auto-paired characters".
+(electric-pair-mode 1)
+
+; Put all auto-saves/backups to the temp directory.
+(setq backup-directory-alist
+	`((".*" . ,temporary-file-directory)))
+(setq auto-save-file-name-transforms
+	`((".*" ,temporary-file-directory t)))
+
+; Scroll more like Vim (no jumping around).
+(setq
+	scroll-margin 3
+	scroll-conservatively 100000
+	scroll-preserve-screen-position 1)
+
+; `M-x shell'
+; Disable command echo.
+(setq comint-process-echoes t)
+
+; Set default line length (as used by 'fill-paragraph) to be 80 characters.
+(setq-default fill-column 80)
+
+; Add newline (silently) at the end of a file, just like Vim.
+(setq require-final-newline t)
+
+; NixOS: This enables the various emacs scripts that are installed by
+; nixos-rebuild. The script below is taken from
+; https://gitorious.org/goibhniu/configuration-files. In particular, this ends
+; up loading /run/current-system/sw/share/emacs/site-lisp/uim-el/* which has UIM
+; elisp files (not found on Melpa).
+(when (not (or
+	(string= system-name "k1")
+	(string-match "^larver-w0" system-name)
+	(string-match "^larver-w1" system-name)
+	(string-match "^Linuss" system-name)
+	))
+	(defconst nixos-sys-packages
+		'("/run/current-system/sw/share/emacs/site-lisp"))
+		(mapc
+			#'(lambda(p)
+			(add-to-list 'load-path p)
+			(cd p)
+			(normal-top-level-add-subdirs-to-load-path)
+			)
+			nixos-sys-packages))
+
+; Make paragraph-filling put 1 space after a period (full stop), not 2 spaces
+; (the Vim equivalent of "gwap" in normal mode). Also see `fill-paragraph'.
+(setq sentence-end-double-space nil)
+
+; Set default major mode to text-mode.
+(setq-default major-mode 'text-mode)
+
+; Disable alarm bell sound on Mac. For some reason, Emacs on Mac likes to sound
+; the alarm a lot for small things, and what's worse, this alarm gets converted
+; into a visual bell; but this visual alarm is horrible because Emacs has a GUI
+; rendering bug, which results in a distorted buffer in the center of the screen
+; (presumably where the visual bell would have been rendered). So, disable for
+; now.
+(when (string-match "^Linuss" system-name)
+	(setq ring-bell-function 'ignore)
+)
+
+; Set default Frame size for non-XMonad machines.
+(add-hook 'after-init-hook '(lambda ()
+	(when window-system
+		(cond
+			((string-match "^larver-w1" system-name)
+				(set-frame-size (selected-frame) 160 73)
+			)
+		)
+	)
+))
+
+; For Mac, load brew paths. This is the analogue to NixOS's need to load system
+; packages.
+(if (string-match "^Linuss" system-name)
+	; Load brew paths
+	(setq exec-path (append exec-path '("/usr/local/bin")))
+)
+
+; Default search term for helm-ag.
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(helm-ag-insert-at-point (quote word)))
+
+; TRAMP mode: use ssh by default.
+(setq tramp-default-method "ssh")
+
 ; Inspired by evil-mark-replace
 ; (https://github.com/redguardtoo/evil-mark-replace).
-(defun my/replace-in-buffer ()
+(defun l/replace-in-buffer ()
 	(interactive)
 	(let
 		(
@@ -26,28 +124,7 @@
 	)
 )
 
-; Adopted from
-; http://stackoverflow.com/questions/2416655/file-path-to-clipboard-in-emacs
-(defun my/copy-file-name-to-clipboard ()
-	"Copy the current buffer file name to the clipboard."
-	(interactive)
-	(let
-		(
-			(filename
-				(if (equal major-mode 'dired-mode)
-					default-directory
-					(buffer-file-name)
-				)
-			)
-		)
-		(progn
-			(kill-new filename)
-			(message "Clipboard: '%s'" filename)
-		)
-	)
-)
-
-(defun my/github-link-prefix (project-folder)
+(defun l/github-link-prefix (project-folder)
 	"Generate a github upstream link. It is assumed that projectile is
 functioning already here."
 	(interactive)
@@ -75,11 +152,11 @@ functioning already here."
 	)
 )
 
-(defun my/strip-leading-zeroes (str)
+(defun l/strip-leading-zeroes (str)
 	(replace-regexp-in-string "^0+" "" str)
 )
 
-(defun my/copy-for-slack (insert-github-link)
+(defun l/copy-for-slack (insert-github-link)
 	"Copy region for Slack, and also add metadata/formatting around it for easy
 pasting. If no region is selected, copy just the buffer's filename."
 	(interactive)
@@ -110,7 +187,7 @@ pasting. If no region is selected, copy just the buffer's filename."
 					"" filename)
 			)
 			(github-link-prefix
-				(my/github-link-prefix (projectile-project-root)))
+				(l/github-link-prefix (projectile-project-root)))
 			(region-beg
 				(if (use-region-p)
 					(save-excursion
@@ -210,11 +287,11 @@ pasting. If no region is selected, copy just the buffer's filename."
 						(if (< 1 (length selection-lines))
 							(concat
 								"L"
-								(my/strip-leading-zeroes
+								(l/strip-leading-zeroes
 									(car selection-lines))
 								"-"
 								"L"
-								(my/strip-leading-zeroes
+								(l/strip-leading-zeroes
 									(car (last selection-lines)))
 							)
 							(concat "L" (car selection-lines))
@@ -243,7 +320,7 @@ pasting. If no region is selected, copy just the buffer's filename."
 	)
 )
 
-(defun my-addrem-comment-region (b e f)
+(defun l/addrem-comment-region (b e f)
 	"Use the `nox' command to comment the current region."
 	(interactive)
 	(shell-command-on-region
@@ -281,14 +358,14 @@ pasting. If no region is selected, copy just the buffer's filename."
 	)
 )
 
-(defun my-addrem-comment (f)
+(defun l/addrem-comment (f)
 	(if (use-region-p)
 		(progn
-			(my-addrem-comment-region (region-beginning) (region-end) f)
+			(l/addrem-comment-region (region-beginning) (region-end) f)
 			(evil-visual-char)
 			(evil-exit-visual-state)
 		)
-		(my-addrem-comment-region
+		(l/addrem-comment-region
 			(line-beginning-position)
 			(line-beginning-position 2)
 			f
@@ -296,129 +373,7 @@ pasting. If no region is selected, copy just the buffer's filename."
 	)
 )
 
-(defun my-uim-mode ()
-	"Toggle UIM minor mode, and also toggle #'cofi/maybe-exit
-keybinding as it conflicts with Anthy input."
-	(interactive)
-	(uim-mode)
-	(if uim-mode
-		(progn
-			(define-key evil-insert-state-map "k" nil)
-			(define-key evil-insert-state-map (kbd "RET") 'newline)
-			(define-key evil-insert-state-map (kbd "<S-backspace>") 'backward-delete-char-untabify)
-			(define-key evil-insert-state-map (kbd "DEL") 'backward-delete-char-untabify)
-		)
-		(progn
-			(define-key evil-insert-state-map "k" #'cofi/maybe-exit)
-			(define-key evil-insert-state-map (kbd "RET") 'kakapo-ret-and-indent)
-			(define-key evil-insert-state-map (kbd "<S-backspace>") 'kakapo-upline)
-			(define-key evil-insert-state-map (kbd "DEL") 'kakapo-backspace)
-		)
-	)
-)
+; Fix "<dead-grave> is undefined" error.
+(require 'iso-transl)
 
-(defun my/paste-X-primary ()
-	(interactive)
-	(let
-		(
-			(xpribuf
-				(if (window-system)
-					(if (string-match "^Linuss" system-name)
-						; Mac has no concept of primary vs clipboard
-						; selection. Everything is just "clipboard".
-						(x-get-selection 'CLIPBOARD)
-						; For Linux, use primary selection.
-						(x-get-selection 'PRIMARY)
-					)
-				)
-			)
-		)
-		(insert xpribuf)
-		; Prevent our 'undo usage of 'o' Insert state exit hook from undoing
-		; this paste.
-		(setq my/before-open-line nil)
-	)
-)
-(defun my/paste-X-primary-smart (backward)
-	(interactive)
-	(let
-		(
-			(pos (point))
-			(line-max (save-excursion (end-of-line) (point)))
-			(xpribuf (x-selection 'PRIMARY))
-		)
-		; If what we want to paste has a newline in it, then we should paste it
-		; starting at the beginning of a line, not at point (which could be in
-		; the middle of a line on some text).
-		(if (string-match "\n" xpribuf)
-			(if backward
-				(progn
-					(beginning-of-line)
-					(my/paste-X-primary)
-					(goto-char pos)
-					(evil-first-non-blank)
-				)
-				(progn
-					(if (= line-max (point-max))
-						(progn
-							(end-of-line)
-							(insert "\n")
-						)
-						(forward-line 1)
-					)
-					(beginning-of-line)
-					(my/paste-X-primary)
-					(goto-char pos)
-					(forward-line 1)
-					(evil-first-non-blank)
-					(forward-char 1)
-				)
-			)
-			(my/paste-X-primary)
-		)
-	)
-)
-
-(defun hs-literate-begend ()
-	(interactive)
-	(end-of-line)
-	(insert "\n")
-	(delete-blank-lines)
-	(insert "\n\\begin{code}\n\n\\end{code}\n")
-	(forward-line -2)
-	(evil-append nil)
-)
-
-(defun hs-literate-endbeg ()
-	(interactive)
-	(end-of-line)
-	(insert "\n")
-	(delete-blank-lines)
-	(insert "\\end{code}\n\n\n\n\\begin{code}\n")
-	(forward-line -3)
-	(evil-append nil)
-)
-
-; For mode names that match the 'lang' in '#+begin_src lang', we don't need to
-; provide an optional submode. But for those that don't match, we can do it like
-; this:
-;
-;   (my-mmm-org-auto-class "fortran" 'f90-mode)
-;   (my-mmm-org-auto-class "perl" 'cperl-mode)
-;   (my-mmm-org-auto-class "shell" 'shell-script-mode)
-;
-; Adopted from http://jblevins.org/log/mmm.
-(defun my-mmm-org-auto-class (lang &optional submode)
-	"Define a mmm-mode class for LANG in `org-mode' using SUBMODE.
-	If SUBMODE is not provided, use `LANG-mode' by default."
-	(let
-		(
-			(class (intern (concat "org-my-mmm-" lang)))
-			(submode (or submode (intern (concat lang "-mode"))))
-			(front (concat "^\\#\\+begin_src " lang "\n"))
-			(back "^\\#\\+end_src$")
-		)
-		(mmm-add-classes (list (list class :submode submode :front front :back back)))
-		(mmm-add-mode-ext-class 'org-mode nil class)
-	)
-)
+(provide 'l-misc)

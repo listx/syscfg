@@ -1,8 +1,10 @@
+*.elc
 *.log
 *.hi
 *.o
 *.swp
 *.DS_Store
+*~
 cblrepo/haskell-*
 emacs/auto-save-list
 emacs/elpa
