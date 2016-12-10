@@ -1,4 +1,6 @@
-(defun my-add-hook (hook tmode twidth &optional func)
+(use-package kakapo-mode)
+
+(defun l/add-hook (hook tmode twidth &optional func)
 	(lexical-let
 		(
 			(tmode tmode)
@@ -18,14 +20,14 @@
 	)
 )
 
-; Adapted from KimStorm's solution from http://www.emacswiki.org/ProjectSettings
-(defun my-kakapo-indents ()
+; Adapted from KimStorm's solution from http://www.emacswiki.org/ProjectSettings.
+(defun l/kakapo-indents ()
 	(let
 		(
 			(b (buffer-file-name))
 		)
 		(defun h (hook tmode twidth &optional func)
-			(my-add-hook hook tmode twidth func)
+			(l/add-hook hook tmode twidth func)
 		)
 		(if b
 		(cond
@@ -218,15 +220,15 @@
 				(h 'haskell-mode-hook t 4)
 			)
 			; Literate Haskell
-			((string-match "\\.lhs$" b)
-				(progn
-					(h 'latex-mode-hook t 4)
-					(setq mmm-global-mode 't)
-					(setq mmm-submode-decoration-level 1)
-					(mmm-ify-by-class 'literate-haskell-latex)
-					(column-enforce-mode)
-				)
-			)
+			;((string-match "\\.lhs$" b)
+			;	(progn
+			;		(h 'latex-mode-hook t 4)
+			;		(setq mmm-global-mode 't)
+			;		(setq mmm-submode-decoration-level 1)
+			;		(mmm-ify-by-class 'literate-haskell-latex)
+			;		(column-enforce-mode)
+			;	)
+			;)
 			; Hazelnut
 			((string-match "\\.hzl$" b)
 				(h 'text-mode-hook t 4)
@@ -344,3 +346,11 @@
 		)
 	)
 )
+
+; Per-project indentation rules.
+(add-hook 'prog-mode-hook 'l/kakapo-indents)
+(add-hook 'text-mode-hook 'l/kakapo-indents)
+(add-hook 'conf-mode-hook 'l/kakapo-indents)
+(add-hook 'css-mode-hook 'l/kakapo-indents)
+
+(provide 'l-kakapo-mode)

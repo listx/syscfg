@@ -259,3 +259,5 @@ Each element has the form (NAME . HEX).
 		)
 	)
 )
+
+(provide 'l-zenmonk)
