@@ -3,6 +3,7 @@
 	; See http://www.emacswiki.org/emacs/DelightedModes.
 	(delight
 		'(
+			(auto-revert-mode nil magit)
 			(column-enforce-mode nil column-enforce-mode)
 			(git-gutter-mode nil git-gutter)
 			(global-whitespace-mode nil whitespace)
