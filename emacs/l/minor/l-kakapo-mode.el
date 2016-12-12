@@ -220,15 +220,15 @@
 				(h 'haskell-mode-hook t 4)
 			)
 			; Literate Haskell
-			;((string-match "\\.lhs$" b)
-			;	(progn
-			;		(h 'latex-mode-hook t 4)
-			;		(setq mmm-global-mode 't)
-			;		(setq mmm-submode-decoration-level 1)
-			;		(mmm-ify-by-class 'literate-haskell-latex)
-			;		(column-enforce-mode)
-			;	)
-			;)
+			((string-match "\\.lhs$" b)
+				(progn
+					(h 'latex-mode-hook t 4)
+					(setq mmm-global-mode 't)
+					(setq mmm-submode-decoration-level 1)
+					(mmm-ify-by-class 'literate-haskell-latex)
+					(column-enforce-mode)
+				)
+			)
 			; Hazelnut
 			((string-match "\\.hzl$" b)
 				(h 'text-mode-hook t 4)
