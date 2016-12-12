@@ -352,7 +352,6 @@
 ; ESC", we leave it here.
 (defun l/undo-blank-insertion ()
 	(interactive)
-	(global-hl-line-mode 1)
 	; like Vim, remove whitespace if nothing was inserted
 	(delete-trailing-whitespace)
 	; Every time we enter insert mode with `kakapo-open', we mark the current
