@@ -20,18 +20,18 @@
 	;
 	; Adopted from http://jblevins.org/log/mmm.
 	(defun l/mmm-org-auto-class (lang &optional submode)
-			"Define a mmm-mode class for LANG in `org-mode' using SUBMODE.
-			If SUBMODE is not provided, use `LANG-mode' by default."
-			(let
-					(
-							(class (intern (concat "org-my-mmm-" lang)))
-							(submode (or submode (intern (concat lang "-mode"))))
-							(front (concat "^\\#\\+begin_src " lang "\n"))
-							(back "^\\#\\+end_src$")
-					)
-					(mmm-add-classes (list (list class :submode submode :front front :back back)))
-					(mmm-add-mode-ext-class 'org-mode nil class)
+		"Define a mmm-mode class for LANG in `org-mode' using SUBMODE.
+		If SUBMODE is not provided, use `LANG-mode' by default."
+		(let
+			(
+				(class (intern (concat "org-my-mmm-" lang)))
+				(submode (or submode (intern (concat lang "-mode"))))
+				(front (concat "^\\#\\+begin_src " lang "\n"))
+				(back "^\\#\\+end_src$")
 			)
+			(mmm-add-classes (list (list class :submode submode :front front :back back)))
+			(mmm-add-mode-ext-class 'org-mode nil class)
+		)
 	)
 
 	; Add subclasses for #+begin_src blocks in org-mode.
