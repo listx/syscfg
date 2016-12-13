@@ -11,27 +11,14 @@
 	(add-to-list 'auto-mode-alist '("\\.lhs$" . latex-mode))
 	(add-hook 'literate-haskell-mode-hook 'latex-mode)
 
-	(add-hook 'haskell-mode-hook 'l/haskell-setup)
-
 	; The "Haskell-Cabal" mode that comes built-in with haskell-mode needs some
 	; manual tooth-removal to get it to submit and behave.
 	(evil-define-key 'insert haskell-cabal-mode-map (kbd "<tab>") 'kakapo-tab)
 	(evil-define-key 'insert haskell-cabal-mode-map (kbd "DEL") 'kakapo-backspace)
 	(add-hook 'haskell-cabal-mode-hook 'l/haskell-cabal-setup)
 
-	(use-package intero
-		:config
-		(add-hook 'intero-mode-hook 'l/haskell-intero-setup)
-	)
+	(use-package intero)
 	(use-package hlint-refactor)
-)
-
-(defun l/haskell-setup ()
-	; Blacklist some projects; enable intero-mode for every other Haskell project.
-	(setq intero-blacklist '("~/k/resty"))
-	(intero-mode-blacklist)
-	; Enable automated HLint suggestion application
-	(hlint-refactor-mode)
 )
 
 (defun l/haskell-cabal-setup ()
@@ -42,6 +29,10 @@
 )
 
 (defun l/haskell-intero-setup ()
+	; Enable intero mode for Haskell.
+	(intero-mode)
+	; Enable automated HLint suggestion application.
+	(hlint-refactor-mode)
 	; Make intero mode also use hlint warnings. See
 	; https://stackoverflow.com/questions/40400547/using-hlint-with-intero-on-emacs.
 	(flycheck-add-next-checker 'intero '(t . haskell-hlint))
