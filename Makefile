@@ -92,11 +92,11 @@ uim:
 urxvt:
 	ln -fns ${C}/urxvt                                  ${H}/.urxvt
 ifeq ('${T}','larver-w0')
-	ln -fs ${H}/prog/foreign/urxvt-perls                ${H}/.urxvt/ext
+	ln -fns ${H}/prog/foreign/urxvt-perls                ${H}/.urxvt/ext
 else ifeq ('${T}','larver-w1')
-	ln -fs ${H}/prog/foreign/urxvt-perls                ${H}/.urxvt/ext
+	ln -fns ${H}/prog/foreign/urxvt-perls                ${H}/.urxvt/ext
 else
-	ln -fs ${H}/.nix-profile/lib/urxvt/perl             ${H}/.urxvt/ext
+	ln -fns ${H}/.nix-profile/lib/urxvt/perl             ${H}/.urxvt/ext
 endif
 vim:
 	ln -fns ${C}/vim                                    ${H}/.vim
