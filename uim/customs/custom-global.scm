@@ -1,7 +1,7 @@
 (define custom-activate-default-im-name? #t)
 (define custom-preserved-default-im-name 'byeoru)
 (define default-im-name 'byeoru)
-(define enabled-im-list '(anthy-utf8 byeoru))
+(define enabled-im-list '(byeoru anthy-utf8))
 (define enable-im-switch? #t)
 (define switch-im-key '("<IgnoreShift><Control>)"))
 (define switch-im-key? (make-key-predicate '("<IgnoreShift><Control>)")))
