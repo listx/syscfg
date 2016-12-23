@@ -35,6 +35,22 @@
 	; Do not convert TAB characters in source code blocks into spaces.
 	(setq org-src-preserve-indentation t)
 
+	; Hide formatting characters (e.g., the `/' in /italic text/).
+	(setq org-hide-emphasis-markers t)
+
+	; Use Unicode bullets for headings with `org-bullets' package.
+	(use-package org-bullets)
+
+	; Make leading heading asterisks invisible.
+	(font-lock-add-keywords 'org-mode
+		'(("^\\([*]+\\)[*] "
+		(0 (add-text-properties (match-beginning 1) (match-end 1) '(invisible t))))))
+
+	; Use Unicode bullet character for bullets and lists.
+	(font-lock-add-keywords 'org-mode
+		'(("^ *\\([-]\\) "
+		(0 (compose-region (match-beginning 1) (match-end 1) "•")))))
+
 	(setq org-publish-project-alist
 		'(
 			("eh"
@@ -83,6 +99,9 @@
 	; defined elsewhere.
 	(define-key org-mode-map [(tab)] nil)
 	(define-key org-mode-map (kbd "<S-iso-lefttab>") nil)
+
+	; Enable org-bullets-mode.
+	(org-bullets-mode 1)
 )
 
 (defhydra hydra-org (:foreign-keys warn)
