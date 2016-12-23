@@ -1,6 +1,6 @@
 (use-package general
 	:config
-	(setq general-default-keymaps 'evil-normal-state-map)
+	(setq general-default-keymaps '(evil-normal-state-map evil-visual-state-map))
 	(setq general-default-prefix ",")
 
 	; Global bindings.
