@@ -163,6 +163,35 @@
 					)
 				)
 			)
+			(
+				(or
+					(string-match "prog/gordias/" b)
+				)
+				(cond
+					((string-match "\\.hs$" b)
+						(h 'haskell-mode-hook nil 2)
+					)
+					((string-match "\\.[ch]$" b)
+						(h 'c-mode-hook nil 8
+							(progn
+								(setq default-tab-width 8)
+								(message
+									"default-tab-width set to %d"
+									default-tab-width
+								)
+							)
+						)
+					)
+					((string-match "\\.py$" b)
+						(h 'python-mode-hook nil 4
+							(progn
+								(setq python-indent 4)
+								(message "python-indent set to %d" python-indent)
+							)
+						)
+					)
+				)
+			)
 
 			; Default options by language
 
