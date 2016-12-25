@@ -34,21 +34,29 @@
 ; https://gitorious.org/goibhniu/configuration-files. In particular, this ends
 ; up loading /run/current-system/sw/share/emacs/site-lisp/uim-el/* which has UIM
 ; elisp files (not found on Melpa).
-(when (not (or
-	(string= system-name "k1")
-	(string-match "^larver-w0" system-name)
-	(string-match "^larver-w1" system-name)
-	(string-match "^Linuss" system-name)
-	))
-	(defconst nixos-sys-packages
-		'("/run/current-system/sw/share/emacs/site-lisp"))
-		(mapc
-			#'(lambda(p)
-			(add-to-list 'load-path p)
-			(cd p)
-			(normal-top-level-add-subdirs-to-load-path)
+(defun l/add-paths (paths)
+	(mapc 'l/add-path paths)
+)
+(defun l/add-path (p)
+	(add-to-list 'load-path p)
+	(cd p)
+	(normal-top-level-add-subdirs-to-load-path)
+)
+(let
+	(
+		(nixos-paths '("/run/current-system/sw/share/emacs/site-lisp"))
+	)
+	(cond
+		(
+			(or
+				(string-match "^k0" system-name)
+				(string-match "^k1" system-name)
+				(string-match "^m0" system-name)
 			)
-			nixos-sys-packages))
+			(l/add-paths nixos-paths)
+		)
+	)
+)
 
 ; Make paragraph-filling put 1 space after a period (full stop), not 2 spaces
 ; (the Vim equivalent of "gwap" in normal mode). Also see `fill-paragraph'.
