@@ -169,6 +169,7 @@
 				)
 				(cond
 					((string-match "\\.hs$" b)
+						(add-hook 'haskell-mode-hook 'l/haskell-intero-setup)
 						(h 'haskell-mode-hook nil 2)
 					)
 					((string-match "\\.[ch]$" b)
