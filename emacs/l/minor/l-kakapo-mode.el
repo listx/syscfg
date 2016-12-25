@@ -165,7 +165,7 @@
 			)
 			(
 				(or
-					(string-match "prog/gordias/" b)
+					(string-match "prog/miro/" b)
 				)
 				(cond
 					((string-match "\\.hs$" b)
