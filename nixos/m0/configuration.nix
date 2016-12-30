@@ -31,5 +31,10 @@
 
   networking = {
     hostName = "m0";
+
+    # Static IP.
+    interfaces.enp2s0.ip4 = [ { address = "192.168.0.3"; prefixLength = 24; } ];
+    defaultGateway = "192.168.0.1";
+    nameservers = [ "8.8.8.8" ];
   };
 }

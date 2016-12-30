@@ -8,10 +8,9 @@
 
   networking = {
     extraHosts = ''
-      192.168.0.100 m0
-      192.168.0.110 k0
-      192.168.0.112 k1
-      74.207.246.114 l0
+      192.168.0.3 m0
+      192.168.0.4 k0
+      192.168.0.5 k1
     '';
     # Port 22 is opened automatically if SSH daemon is enabled (no need to specify it here).
     # 8001 is for the nix-serve HTTP daemon.
