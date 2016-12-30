@@ -31,9 +31,5 @@
 
   networking = {
     hostName = "m0";
-    extraHosts = ''
-      127.0.0.1 dashboard.twinprime.dev
-      127.0.0.1 web-api.twinprime.dev
-    '';
   };
 }
