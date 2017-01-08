@@ -71,7 +71,7 @@ export WINEDLLOVERRIDES='winemenubuilder.exe=d'
 export PKGBUILD_HASKELL_ENABLE_PROFILING=1
 
 # default ledger file (to avoid using -f option every time)
-export LEDGER_FILE=~/org/master.ledger
+export LEDGER_FILE=~/org/master.hledger
 
 # make GCC print errors in color
 export GCC_COLORS=1
