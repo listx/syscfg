@@ -39,12 +39,23 @@
 	(setq org-hide-emphasis-markers t)
 
 	; Use Unicode bullets for headings with `org-bullets' package.
-	(use-package org-bullets)
-
-	; Make leading heading asterisks invisible.
-	(font-lock-add-keywords 'org-mode
-		'(("^\\([*]+\\)[*] "
-		(0 (add-text-properties (match-beginning 1) (match-end 1) '(invisible t))))))
+	(use-package org-bullets
+		:config
+		(setq org-bullets-bullet-list
+			'(
+				"*"
+				"-"
+				"-"
+				"-"
+				"-"
+				"-"
+				"-"
+				"-"
+				"-"
+				"-"
+			)
+		)
+	)
 
 	; Use Unicode bullet character for bullets and lists.
 	(font-lock-add-keywords 'org-mode
