@@ -277,22 +277,14 @@ alias fl='find_long_lines '
 
 alias skype='find ~/.Skype/Logs/ -type f -exec rm {} \; && skype'
 
-alias agi='ag -i'
-
 # these sane hostnames depend on the /etc/hosts file!
 alias sk0='ssh l@k0'
 alias sk1='ssh l@k1'
 alias sl0='ssh l@l0'
 alias sm0='ssh l@m0'
 
-# GLOBAL, position-independent aliases for quick scp operations
-alias -g K0='l@k0:'
-alias -g K2='l@k2:'
-alias -g K1='l@k1:'
-alias -g O='otter@ocean:'
-alias -g F='tiger@forest:'
-
-# for detaching a process from the shell (useful for starting GUI apps as standalones, without arguments)
+# GLOBAL, position-independent aliases for detaching a process from the shell
+# (useful for starting GUI apps as standalones, without arguments).
 alias -g D='& disown'
 alias -g Q='& disown; exit'
 
