@@ -169,7 +169,7 @@
 		((string-match "^k[123]" system-name)
 			102
 		)
-		((string-match "^w[1]" system-name)
+		((string-match "^larver-w[01]" system-name)
 			102
 		)
 		((string-match "^Linuss" system-name)
