@@ -74,17 +74,16 @@
 						; Use custom logic for blacklisting certain projects
 						; from enabling intero-mode. This is because if we use
 						; intero-blacklist-mode naively, we get an error.
-						(progn
-							(if
-								(not
-									(or
-										(string-match "/home/l/k/resty" b)
-										(string-match "/home/larver/k/resty" b)
-									)
-								)
+						(if
+							(or
+								(string-match "/home/l/k/resty" b)
+								(string-match "/home/larver/k/resty" b)
+							)
+							(h 'haskell-mode-hook nil 4)
+							(progn
+								(h 'haskell-mode-hook nil 2)
 								(add-hook 'haskell-mode-hook 'l/haskell-intero-setup)
 							)
-							(h 'haskell-mode-hook nil 2)
 						)
 					)
 					((string-match ".+\\.htm[l]?$" b)
