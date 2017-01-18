@@ -308,6 +308,9 @@ nmap <localleader>H :sp<space>.<cr>
 nmap <localleader>v :vsp<cr>
 nmap <localleader>V :vsp<space>.<cr>
 
+" Per-file linting commit message macro.
+nnoremap <localleader>r 5j2Wy$ggilint:<space><space><esc>P:x<cr>
+
 " make <s-insert> input the X selection in gvim, just like in regular vim (under urxvt)
 if has ("gui_running")
     imap <s-insert> <middlemouse>
