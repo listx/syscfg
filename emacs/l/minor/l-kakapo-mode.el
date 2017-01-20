@@ -38,7 +38,9 @@
 			(
 				(or
 					(string-match "/home/l/k/" b)
+					(string-match "/home/l/imvu/resty" b)
 					(string-match "/home/larver/k/" b)
+					(string-match "/home/larver/imvu/resty" b)
 				)
 				(cond
 					(
@@ -77,7 +79,9 @@
 						(if
 							(or
 								(string-match "/home/l/k/resty" b)
+								(string-match "/home/l/imvu/resty" b)
 								(string-match "/home/larver/k/resty" b)
+								(string-match "/home/larver/imvu/resty" b)
 							)
 							(h 'haskell-mode-hook nil 4)
 							(progn
