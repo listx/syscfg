@@ -43,6 +43,8 @@
 (require 'l-delight)
 (require 'l-elscreen)
 (require 'l-evil)
+(require 'l-evil-ediff)
+(require 'l-evil-magit)
 (require 'l-evil-surround)
 (require 'l-evil-visualstar)
 (require 'l-evil-matchit)
