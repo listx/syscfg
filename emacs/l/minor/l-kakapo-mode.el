@@ -37,8 +37,10 @@
 			; Work settings
 			(
 				(or
+					(string-match "/home/l/j/" b)
 					(string-match "/home/l/k/" b)
 					(string-match "/home/l/imvu/resty" b)
+					(string-match "/home/larver/j/" b)
 					(string-match "/home/larver/k/" b)
 					(string-match "/home/larver/imvu/resty" b)
 				)
