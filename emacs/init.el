@@ -91,6 +91,7 @@
 
 ;; Load things related to themes/appearance.
 (require 'l-alect-themes)
+(require 'l-arjen-grey-theme)
 (require 'l-zenmonk)
 (require 'l-cosmetics)
 
