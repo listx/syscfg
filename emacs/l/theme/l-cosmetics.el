@@ -73,7 +73,7 @@
 	'(
 	alect-light
 	alect-dark
-	misterioso
+	arjen-grey
 	) "Default themes")
 
 (defvar l/theme-idx 0)
@@ -126,21 +126,20 @@
 						(setq evil-normal-state-cursor '("#00ff00" box))
 					)
 				)
-				((string= "misterioso" theme)
+				(
+					(string= "arjen-grey" theme)
 					(progn
 						(set-face-background 'hiwin-face
-							"#172a41")
-						(set-face-attribute
-							'hl-line
-							nil
-							:background
-							"gray25"
+							(if window-system
+								(if (string= "arjen-grey" theme)
+									"#0d0d0f"
+									"gray0"
+								)
+								"gray16"
+							)
 						)
-						(set-face-background 'region "#88aa88")
-						(set-face-foreground 'region "#335533")
 						(setq evil-insert-state-cursor '("#ffffff" box))
 						(setq evil-normal-state-cursor '("#00ff00" box))
-						(setq evil-visual-state-cursor '("#ffff00" box))
 					)
 				)
 			)
