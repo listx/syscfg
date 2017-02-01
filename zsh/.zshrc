@@ -106,7 +106,7 @@ HISTFILE=~/.zsh-untracked/history
 # Directory stack size
 DIRSTACKSIZE=20
 
-setopt INC_APPEND_HISTORY
+setopt SHARE_HISTORY
 setopt EXTENDED_HISTORY # puts timestamps in the history
 setopt HIST_IGNORE_ALL_DUPS
 setopt HIST_IGNORE_SPACE # if a command or alias begins with a space, do not store into history
