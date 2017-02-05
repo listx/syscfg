@@ -3,7 +3,8 @@ module Main where
 import Control.Monad
 import Data.Array.IO
 import Data.Maybe
-	( isJust
+	( fromMaybe
+	, isJust
 	, isNothing
 	)
 import System.Exit
@@ -35,6 +36,7 @@ import XMonad.Actions.Warp
 	( warpToWindow )
 import XMonad.Hooks.ManageHelpers
 	( doCenterFloat )
+import XMonad.Layout.IndependentScreens
 import XMonad.Layout.NoBorders
 	( WithBorder
 	, noBorders
@@ -61,46 +63,38 @@ isPersonal = flip elem ["k0", "k1"]
 isPortraitMonitorLayout :: String -> Bool
 isPortraitMonitorLayout = flip elem ["k0", "larver-w0"]
 
-data MyWSGroup
+data MyVWGroup
 	= Work
 	| Net
 	| Misc
 	| Sys
 	deriving (Eq, Ord, Enum, Show)
 
--- Use an association list for more flexible custom workspace manipulation.
---
--- The fact that we do not necessarily follow the ordering of the MYWSGroup data
--- type allows for maximum flexibility: we can either directly choose, via xK_1
--- ... xK_F12 keys what we want (like we did in the past), but at the same time
--- we can also choose to navigate via the ordering in MyWSGroup via the custom
--- diffGrpWS function.
-myWorkspaceGroups :: [(WorkspaceId, MyWSGroup)]
+-- Use an association list for more flexible custom workspace manipulation. We
+-- basically just attach some more data to a VirtualWorkspace.
+myWorkspaceGroups :: [(VirtualWorkspace, MyVWGroup)]
 myWorkspaceGroups =
-	[ ("1",   Work)
-	, ("2",   Work)
-	, ("3",   Work)
-	, ("4",   Work)
-	, ("5",   Work)
-	, ("6",   Work)
-	, ("7",   Net)
-	, ("8",   Net)
-	, ("9",   Net)
-	, ("0",   Sys)
-	, ("F1",  Misc)
-	, ("F2",  Misc)
-	, ("F3",  Misc)
-	, ("F4",  Misc)
-	, ("F5",  Misc)
-	, ("F6",  Misc)
-	, ("F7",  Misc)
-	, ("F8",  Misc)
-	, ("F9",  Misc)
-	, ("F10", Misc)
+	[ ("a", Work)
+	, ("b", Work)
+	, ("c", Work)
+	, ("d", Work)
+	, ("e", Work)
+	, ("f", Work)
+	, ("g", Net)
+	, ("h", Net)
+	, ("i", Net)
+	, ("j", Sys)
+	, ("k", Misc)
+	, ("l", Misc)
+	, ("m", Misc)
+	, ("n", Misc)
+	, ("o", Misc)
+	, ("p", Misc)
+	, ("q", Misc)
+	, ("r", Misc)
+	, ("s", Misc)
+	, ("t", Misc)
 	]
-
-myWorkspaces :: [WorkspaceId]
-myWorkspaces = map fst myWorkspaceGroups
 
 -- Terminals (using various different color themes).
 term1, term2 :: String
@@ -148,11 +142,12 @@ myKeys hostname conf@XConfig {XMonad.modMask = modm} = M.fromList $
 	, ((modm,   xK_m            ), sendMessage (IncMasterN 1))
 	, ((modmS,  xK_m            ), sendMessage (IncMasterN (-1)))
 
-	-- Go to any non-empty WS, except those WS belonging to the given WS Groups
+	-- Go to any non-empty VW, except those VW belonging to the given VW Groups
 	-- (for making sure that our "desk" is clean before we log off/shutdown).
-	, ((modm,   xK_n            ), moveTo Next $ nonEmptyWSExceptGrps [Sys])
+	, ((modm,   xK_n            ), moveTo Next $ nonEmptyVWExceptGrps [Sys] False)
+	, ((modmS,  xK_n            ), moveTo Next $ nonEmptyVWExceptGrps [Sys] True)
 
-	-- Go to WS displayed previously.
+	-- Go to VW displayed previously.
 	, ((modm,   xK_t            ), toggleWS)
 
 	-- View all windows as a grid.
@@ -170,13 +165,22 @@ myKeys hostname conf@XConfig {XMonad.modMask = modm} = M.fromList $
 	++
 	-- modm-[1..9, 0, F1-F10]: Switch to workspace N.
 	-- modmS-[1..9, 0, F1-F10]: Move focused window to workspace N.
-	[((modm .|. mask, k), windows $ f i)
-		| (i, k) <- zip (XMonad.workspaces conf) ([xK_1..xK_9] ++ [xK_0] ++ [xK_F1..xK_F10])
+	-- NOTE: Depending on the machine, we change the order of keys to optimize
+	-- for the keyboard layout used on the machine. The order in
+	-- `forQwertyKeyboard' is coincidentally optimized for that layout, because
+	-- the "1", "2", "3" keys etc. are nearest the left side of the keyboard
+	-- where we have our XMonad mod key (CapsLock remapped to Hyper key). In
+	-- `forZQKeyboard', the middle finger of the numeric home row gets priority
+	-- as the first VW because it is more ergonomic than the "1" key.
+	[((modm .|. mask, k         ), windows $ onCurrentScreen f i)
+		| (i, k) <- zip (workspaces' conf) $ if isPortraitMonitorLayout hostname
+			then forZQKeyboard
+			else forQwertyKeyboard
 		, (f, mask) <- [(W.greedyView, 0), (W.shift, shiftMask)]]
 	++
 	-- modm-{h,l}: Switch to prev/next Xinerama screens.
 	-- modS-{h,l}: Move client to prev/next screen.
-	[((m .|. modm, key), (screenWorkspace =<< sc) >>= flip whenJust (windows . f))
+	[((m .|. modm, key          ), flip whenJust (windows . f) =<< screenWorkspace =<< sc)
 		| (key, sc) <- [(xK_h, screenBy (-1)),(xK_l, screenBy 1)]
 		, (f, m) <- [(W.view, 0), (W.shift, shiftMask)]]
 	++
@@ -214,77 +218,135 @@ myKeys hostname conf@XConfig {XMonad.modMask = modm} = M.fromList $
 		marginTop = 1/6
 		windowWidth = 2/3
 		windowHeight = 2/3
+	forZQKeyboard =
+		[ xK_5
+		, xK_6
+		, xK_4
+		, xK_2
+		, xK_3
+		, xK_1
+		, xK_8
+		, xK_7
+		, xK_9
+		, xK_0
+		, xK_F1
+		, xK_F2
+		, xK_F3
+		, xK_F4
+		, xK_F5
+		, xK_F6
+		, xK_F7
+		, xK_F8
+		, xK_F9
+		, xK_F10
+		]
+	forQwertyKeyboard =
+		[ xK_1
+		, xK_2
+		, xK_3
+		, xK_4
+		, xK_5
+		, xK_6
+		, xK_7
+		, xK_8
+		, xK_9
+		, xK_0
+		, xK_F1
+		, xK_F2
+		, xK_F3
+		, xK_F4
+		, xK_F5
+		, xK_F6
+		, xK_F7
+		, xK_F8
+		, xK_F9
+		, xK_F10
+		]
 
--- An empty WS belonging to the same group as the current one.
-emptyGrpWS :: WSType
-emptyGrpWS = WSIs $ do
-	currentWS <- gets (W.currentTag . windowset)
+-- An empty VW belonging to the given group, _in the current screen_.
+emptyVWinGrp :: MyVWGroup -> WSType
+emptyVWinGrp grp = WSIs $ do
+	(S currentScreen) <- gets (W.screen . W.current . windowset)
 	let
-		currentWSGrp = getWSGroup currentWS
-		isEmpty = isNothing . W.stack
-		isCurrentWSGrp = isWSGroup currentWSGrp . W.tag
-	return (\w -> isEmpty w && isCurrentWSGrp w)
+		isMemberOfGivenGrp = flip isVWinGroups [grp] . getVW
+	return $ \w
+		-> isEmpty w
+		&& isMemberOfGivenGrp w
+		&& show currentScreen == takeWhile (/='_') (W.tag w)
 
--- An empty WS belonging to the given group.
-emptyWSGrp :: MyWSGroup -> WSType
-emptyWSGrp grp = WSIs $ do
+-- A non-empty VW belonging to any group except those in the given group list.
+nonEmptyVWExceptGrps :: [MyVWGroup] -> Bool -> WSType
+nonEmptyVWExceptGrps grps acrossScreens = WSIs $ do
+	(S currentScreen) <- gets (W.screen . W.current . windowset)
 	let
-		isEmpty = isNothing . W.stack
-		isMemberOfGivenGrp = isWSGroup grp . W.tag
-	return (\w -> isEmpty w && isMemberOfGivenGrp w)
+		nonEmptyExceptGrps w = all ($ w) [isNonEmpty, isNotMemberOfGivenGrps]
+		isNotMemberOfGivenGrps = not . flip isVWinGroups grps . getVW
+	return $ if acrossScreens
+		then nonEmptyExceptGrps
+		else \w
+			-> nonEmptyExceptGrps w
+			&& show currentScreen == takeWhile (/='_') (W.tag w)
 
--- A non-empty WS belonging to any group except those in the given group list.
-nonEmptyWSExceptGrps :: [MyWSGroup] -> WSType
-nonEmptyWSExceptGrps grps = WSIs $ do
-	let
-		isNonEmpty = isJust . W.stack
-		isMemberOfGivenGrps = isWSGroups grps . W.tag
-	return (\w -> isNonEmpty w && not (isMemberOfGivenGrps w))
+-- Because of IndependentScreens, tags take the form of
+-- "<ScreenId>_<VirtualWorkspace>". So to get to just the
+-- VirtualWorkspace (VW), we have to drop all leading characters up to
+-- the underscore. As there is no "dropWhileUpto" function in Haskell,
+-- we emulate it with reverse+takeWhile. The caveat here is that our VWs
+-- must not have an underscore in them.
+getVW :: W.Workspace String l a -> String
+getVW = removePWtag . W.tag
 
-getWSids :: MyWSGroup -> [WorkspaceId]
-getWSids g
+removePWtag :: String -> String
+removePWtag = reverse . takeWhile (/='_') . reverse
+
+isEmpty :: W.Workspace i l a -> Bool
+isEmpty = isNothing . W.stack
+
+isNonEmpty :: W.Workspace i l a -> Bool
+isNonEmpty = isJust . W.stack
+
+getVWsOfGroup :: MyVWGroup -> [VirtualWorkspace]
+getVWsOfGroup g
 	= map fst
 	$ filter ((== g) . snd) myWorkspaceGroups
 
-getWSGroup :: WorkspaceId -> MyWSGroup
-getWSGroup wsid
-	= head
-	. map snd
-	$ filter ((== wsid) . fst) myWorkspaceGroups
+-- If we cannot find the group for this VW, default to "Work" group. A VW always
+-- carries around with it the physical screen info as a prefix, so we have to
+-- drop this prefix when we're doing lookups into `myWorkspaceGroups'.
+getGroupOfVW :: VirtualWorkspace -> MyVWGroup
+getGroupOfVW vw = fromMaybe Work $ lookup vw myWorkspaceGroups
 
--- Confirms if a given WorkspaceId str is part of a given MyWSGroup g.
---
--- The order of the arguments is "backwards" because we compose this function
--- with StackSet's tag function, which returns the WorkspaceId, e.g., "(\w ->
--- isWSGroup Net . W.tag $ w)".
-isWSGroup :: MyWSGroup -> WorkspaceId -> Bool
-isWSGroup grp str
-	| lookup str myWorkspaceGroups == Just grp = True
-	| otherwise = False
+-- Check if given VW belongs to any one of the given vw groups.
+isVWinGroups :: VirtualWorkspace -> [MyVWGroup] -> Bool
+isVWinGroups vw = elem (getGroupOfVW vw)
 
--- Same as isWSGroup, but takes a list of valid MyWSGroups instead of just a
--- single MyWSGroup.
-isWSGroups :: [MyWSGroup] -> WorkspaceId -> Bool
-isWSGroups grps str
-	| isJust (lookup str myWorkspaceGroups') = True
-	| otherwise = False
-	where
-	myWorkspaceGroups' = filter (\(_, y) -> elem y grps) myWorkspaceGroups
+-- Try to find an empty VW belonging to the given group _in the current screen_,
+-- and return its name. If group is full, then return the current VW.
+tryVWofGroup :: MyVWGroup -> X VirtualWorkspace
+tryVWofGroup g = do
+	vw0 <- findWorkspace getSortByIndex Next (emptyVWinGrp g) 0
+	vw1 <- findWorkspace getSortByIndex Next (emptyVWinGrp g) 1
+	-- If current VW also happens to be an empty VW of the group g, then return
+	-- this VW.
+	return $ if isVWinGroups (removePWtag vw0) [g]
+		then vw0
+		else vw1
 
--- Try to find an empty WSID belonging to the given group, and return its name.
--- If group is full, then return the current WSID.
-tryGetEmptyWSIDofGroup :: MyWSGroup -> X WorkspaceId
-tryGetEmptyWSIDofGroup g = do
-	-- ws0: An empty WS of group g 0 WSs away from current WS.
-	ws0 <- findWorkspace getSortByIndex Next (emptyWSGrp g) 0
-	-- ws1: An empty WS of group g 1 WSs away from current WS.
-	ws1 <- findWorkspace getSortByIndex Next (emptyWSGrp g) 1
-	-- If current WS also happens to be an empty WS of the group g, then return
-	-- this WSID; the empty WS of group g, NOT counting the current WS; if such
-	-- a WS does not exist, then ws1 is just the current WS.
-	return $ if isWSGroup g ws0
-		then ws0
-		else ws1
+spawnIfGrpNotFull :: MyVWGroup -> String -> X ()
+spawnIfGrpNotFull g command = do
+	vw <- tryVWofGroup g
+	let
+		vw' = removePWtag vw
+	when (isVWinGroups vw' [g])
+		$ spawn command
+
+spawnIfGrpTopVWNotFull :: MyVWGroup -> String -> X ()
+spawnIfGrpTopVWNotFull g command = do
+	vw <- tryVWofGroup g
+	let
+		vw' = removePWtag vw
+	when (isVWinGroups vw' [g] && vw' == head (getVWsOfGroup $ getGroupOfVW vw'))
+		$ spawn command
 
 myMouseBindings :: XConfig t -> M.Map (KeyMask, Button) (Window -> X ())
 myMouseBindings XConfig {XMonad.modMask = modm} = M.fromList
@@ -351,9 +413,10 @@ myManageHook = composeAll $
 	, stringProperty "WM_ICON_NAME" =? "iftop"  --> doShift "0"
 	, title     =? "alsamixer"                  --> doShift "0"
 	, resource  =? "floatme"                    --> doCenterFloat
-	, resource  =? "Navigator"                  --> doShift =<< liftX (tryGetEmptyWSIDofGroup Net)
-	, className =? "Evince"                     --> doShift =<< liftX (tryGetEmptyWSIDofGroup Misc)
-	, resource  =? ".evince-wrapped"            --> doShift =<< liftX (tryGetEmptyWSIDofGroup Misc)
+	, className =? "qutebrowser"                --> doShift =<< liftX (tryVWofGroup Net)
+	, resource  =? "Navigator"                  --> doShift =<< liftX (tryVWofGroup Net)
+	, className =? "Evince"                     --> doShift =<< liftX (tryVWofGroup Work)
+	, resource  =? ".evince-wrapped"            --> doShift =<< liftX (tryVWofGroup Work)
 	, className =? "Blender:Render"             --> doFloat
 	, resource  =? "Browser"                    --> doFloat
 	, className =? "Galculator"                 --> doCenterFloat
@@ -390,9 +453,9 @@ myManageHook = composeAll $
 
 myStartupHook :: String -> X ()
 myStartupHook hostname = do
-	spawnIfGrpTopWSNotFull Net "qutebrowser"
-	spawnIfGrpTopWSNotFull Work $ term1 ++ " -name atWorkspace1"
-	spawnIfGrpTopWSNotFull Sys $ term1 ++ " -e htop"
+	spawnIfGrpTopVWNotFull Net "qutebrowser"
+	spawnIfGrpTopVWNotFull Work $ term1 ++ " -name atWorkspace1"
+	spawnIfGrpTopVWNotFull Sys $ term1 ++ " -e htop"
 	when (isUbuntu hostname) spawnWorkStuff
 	when (isPersonal hostname) systemUtils
 	where
@@ -401,26 +464,15 @@ myStartupHook hostname = do
 		spawnIfGrpNotFull Work "emacs /home/larver/k/notes_work_imvu/wlog.org"
 		spawnIfGrpNotFull Work $ term2 ++ " -name floatme -e ssh-add"
 
-spawnIfGrpNotFull :: MyWSGroup -> String -> X ()
-spawnIfGrpNotFull g command = do
-	wsid <- tryGetEmptyWSIDofGroup g
-	when (isWSGroup g wsid)
-		$ spawn command
-
-spawnIfGrpTopWSNotFull :: MyWSGroup -> String -> X ()
-spawnIfGrpTopWSNotFull g command = do
-	wsid <- tryGetEmptyWSIDofGroup g
-	when (isWSGroup g wsid && wsid == head (getWSids . getWSGroup $ wsid))
-		$ spawn command
-
 main :: IO ()
 main = do
+	nScreens <- countScreens
 	hostname <- fmap nodeName getSystemID
 	if isPortraitMonitorLayout hostname
-		then xmonad (myconf hostname) {layoutHook = layoutNoMirror}
-		else xmonad $ myconf hostname
+		then xmonad (myconf hostname nScreens) {layoutHook = layoutNoMirror}
+		else xmonad $ myconf hostname nScreens
 	where
-	myconf hostname = def
+	myconf hostname nScreens = def
 		{ terminal           = "urxvt"
 		, focusFollowsMouse  = True
 		, clickJustFocuses   = True
@@ -433,7 +485,7 @@ main = do
 		-- NixOS, it is baked in directly to the system configuration file under
 		-- the `services.xserver.displayManager.sessionCommands` option.
 		, modMask            = mod3Mask
-		, workspaces         = myWorkspaces
+		, workspaces         = withScreens nScreens $ map fst myWorkspaceGroups
 		, normalBorderColor  = "#000000"
 		, focusedBorderColor = "#ffffff"
 		, keys               = myKeys hostname
@@ -441,6 +493,6 @@ main = do
 		, layoutHook         = defaultLayout
 		, manageHook         = myManageHook
 		, handleEventHook    = mempty
-		, logHook            = return ()
+		, logHook            = mempty
 		, startupHook        = myStartupHook hostname
 		}
