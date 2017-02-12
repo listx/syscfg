@@ -4,6 +4,29 @@ setopt ERR_EXIT
 setopt NO_UNSET
 setopt PIPE_FAIL
 
+duration_pretty()
+{
+	local t=$1
+
+	local d=$((t/60/60/24))
+	local h=$((t/60/60%24))
+	local m=$((t/60%60))
+	local s=$((t%60))
+
+	if ((d)); then
+		((d == 1)) && echo -n "$d day " || echo -n "$d days "
+	fi
+	if ((h)); then
+		((h == 1)) && echo -n "$h hour " || echo -n "$h hours "
+	fi
+	if ((m)); then
+		((m == 1)) && echo -n "$m minute " || echo -n "$m minutes "
+	fi
+	if ((s)); then
+		((s == 1)) && echo -n "$s second " || echo -n "$s seconds "
+	fi
+}
+
 # Run a command at a specified date. Works by simply converting the given
 # timestamp to UNIX Epoch (seconds), then taking the diff of the current time in
 # UNIX Epoch, and then sleeping X seconds (the difference between the two
@@ -47,13 +70,14 @@ while true; do
 	t1=$(date +%s)
 	t1_pretty=$(date --iso-8601=seconds)
 	sleep_amount=$(( $t2 - $t1 ))
+	sleep_amount_pretty=$(duration_pretty $sleep_amount)
 
 	if (( $sleep_amount <= 0 )); then
 		echo -e "\033[2K\rDone waiting.\n"
 		break
 	fi
 
-	echo -en "\033[K\rCurrent time $t1_pretty; $sleep_amount seconds to go."
+	echo -en "\033[2K\rCurrent time $t1_pretty; ${sleep_amount_pretty}to go."
 	sleep 1
 done
 
