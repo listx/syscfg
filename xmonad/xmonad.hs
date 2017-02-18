@@ -150,6 +150,9 @@ myKeys hostname conf@XConfig {XMonad.modMask = modm} = M.fromList $
 	, ((modm,   xK_n            ), moveTo Next $ nonEmptyVWExceptGrps [Sys] False)
 	, ((modmS,  xK_n            ), moveTo Next $ nonEmptyVWExceptGrps [Sys] True)
 
+	-- Go to empty VW. If all VWs in this screen are full, then do nothing.
+	, ((modm,   xK_o            ), moveTo Next emptyVW)
+
 	-- Go to VW displayed previously.
 	, ((modm,   xK_t            ), toggleWS)
 
@@ -265,6 +268,14 @@ myKeys hostname conf@XConfig {XMonad.modMask = modm} = M.fromList $
 		, xK_F9
 		, xK_F10
 		]
+
+-- An empty VW _in the current screen_.
+emptyVW :: WSType
+emptyVW = WSIs $ do
+	(S currentScreen) <- gets (W.screen . W.current . windowset)
+	return $ \w
+		-> isEmpty w
+		&& show currentScreen == takeWhile (/='_') (W.tag w)
 
 -- An empty VW belonging to the given group, _in the current screen_.
 emptyVWinGrp :: MyVWGroup -> WSType
