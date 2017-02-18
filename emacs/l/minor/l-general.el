@@ -149,12 +149,14 @@ otherwise, close current tab (elscreen)."
 	(interactive)
 	(split-window-vertically)
 	(balance-windows)
+	(other-window 1)
 )
 (defun l/split-horizontally ()
 	"Split window horizontally."
 	(interactive)
 	(split-window-horizontally)
 	(balance-windows)
+	(other-window 1)
 )
 
 ; http://stackoverflow.com/a/3217206/437583
