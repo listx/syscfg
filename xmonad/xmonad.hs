@@ -35,7 +35,10 @@ import XMonad.Actions.NoBorders
 import XMonad.Actions.Warp
 	( warpToWindow )
 import XMonad.Hooks.ManageHelpers
-	( doCenterFloat )
+	( (-?>)
+	, doCenterFloat
+	, composeOne
+	)
 import XMonad.Layout.IndependentScreens
 import XMonad.Layout.NoBorders
 	( WithBorder
@@ -400,55 +403,62 @@ layoutNoMirror = ResizableTall 0 (3/100) (1/2) [] ||| noBorders Full
 --
 -- then Qt-subapplication is resource, and VirtualBox is className.
 myManageHook :: ManageHook
-myManageHook = composeAll $
-	[ className =? "MPlayer"                    --> doFloat
-	, className =? "Gimp"                       --> doFloat
-	, className =? "Agave"                      --> doCenterFloat
-	, resource  =? "desktop_window"             --> doIgnore
-	, resource  =? "kdesktop"                   --> doIgnore
-	, resource  =? "vlc"                        --> doCenterFloat
-	, resource  =? "WeeChat"                    --> doShift "0"
-	, title     =? "rtorrent"                   --> doShift "0"
-	, title     =? "htop"                       --> doShift "0"
-	, stringProperty "WM_ICON_NAME" =? "iftop"  --> doShift "0"
-	, title     =? "alsamixer"                  --> doShift "0"
-	, resource  =? "floatme"                    --> doCenterFloat
-	, className =? "qutebrowser"                --> doShift =<< liftX (tryVWofGroup Net)
-	, resource  =? "Navigator"                  --> doShift =<< liftX (tryVWofGroup Net)
-	, className =? "Evince"                     --> doShift =<< liftX (tryVWofGroup Work)
-	, resource  =? ".evince-wrapped"            --> doShift =<< liftX (tryVWofGroup Work)
-	, className =? "Blender:Render"             --> doFloat
-	, resource  =? "Browser"                    --> doFloat
-	, className =? "Galculator"                 --> doCenterFloat
-	, className =? "Gcalctool"                  --> doCenterFloat
-	, className =? "XClock"                     --> doCenterFloat
-	, className =? "Audacity"                   --> doFloat
-	, className =? "Gitk"                       --> doCenterFloat
-	, className =? "XDvi"                       --> doCenterFloat
-	, className =? "Scid"                       --> doFloat
-	, title     =? "Scid"                       --> doFloat
-	, className =? "Toplevel"                   --> doFloat -- Scid's many popup windows
-	, className =? "Pychess"                    --> doFloat
-	, className =? "Glchess"                    --> doFloat
-	, className =? "Raptor"                     --> doFloat
-	, className =? "Smplayer"                   --> doFloat
-	, className =? "linux_client"               --> doFloat
-	, className =? "Bsnes"                      --> doCenterFloat
-	, className =? "Phoenix"                    --> doCenterFloat
-	, className =? "VirtualBox"                 --> doFloat
-	, className =? "libreoffice-writer"         --> doFloat
-	, className =? "Xsane"                      --> doFloat
-	, className =? "Spektra"                    --> doFloat
-	, className =? "Glade"                      --> doFloat
-	, className =? "Anki"                       --> doFloat
-	, className =? "Qcp"                        --> doFloat
-	, className =? "mupen64plus"                --> doFloat
+myManageHook = composeOne $
+	[ className =? "MPlayer"                    -?> doFloat
+	, className =? "Gimp"                       -?> doFloat
+	, className =? "Agave"                      -?> doCenterFloat
+	, resource  =? "desktop_window"             -?> doIgnore
+	, resource  =? "kdesktop"                   -?> doIgnore
+	, resource  =? "vlc"                        -?> doCenterFloat
+	, resource  =? "WeeChat"                    -?> doShift "0"
+	, title     =? "rtorrent"                   -?> doShift "0"
+	, title     =? "htop"                       -?> doShift "0"
+	, stringProperty "WM_ICON_NAME" =? "iftop"  -?> doShift "0"
+	, title     =? "alsamixer"                  -?> doShift "0"
+	, resource  =? "floatme"                    -?> doCenterFloat
+	, className =? "qutebrowser"                -?> doShift =<< liftX (tryVWofGroup Net)
+	, resource  =? "Navigator"                  -?> doShift =<< liftX (tryVWofGroup Net)
+	, className =? "Evince"                     -?> doShift =<< liftX (tryVWofGroup Work)
+	, resource  =? ".evince-wrapped"            -?> doShift =<< liftX (tryVWofGroup Work)
+	, className =? "Blender:Render"             -?> doFloat
+	, resource  =? "Browser"                    -?> doFloat
+	, className =? "Galculator"                 -?> doCenterFloat
+	, className =? "Gcalctool"                  -?> doCenterFloat
+	, className =? "XClock"                     -?> doCenterFloat
+	, className =? "Audacity"                   -?> doFloat
+	, className =? "Gitk"                       -?> doCenterFloat
+	, className =? "XDvi"                       -?> doCenterFloat
+	, className =? "Scid"                       -?> doFloat
+	, title     =? "Scid"                       -?> doFloat
+	, className =? "Toplevel"                   -?> doFloat -- Scid's many popup windows
+	, className =? "Pychess"                    -?> doFloat
+	, className =? "Glchess"                    -?> doFloat
+	, className =? "Raptor"                     -?> doFloat
+	, className =? "Smplayer"                   -?> doFloat
+	, className =? "linux_client"               -?> doFloat
+	, className =? "Bsnes"                      -?> doCenterFloat
+	, className =? "Phoenix"                    -?> doCenterFloat
+	, className =? "VirtualBox"                 -?> doFloat
+	, className =? "libreoffice-writer"         -?> doFloat
+	, className =? "Xsane"                      -?> doFloat
+	, className =? "Spektra"                    -?> doFloat
+	, className =? "Glade"                      -?> doFloat
+	, className =? "Anki"                       -?> doFloat
+	, className =? "Qcp"                        -?> doFloat
+	, className =? "mupen64plus"                -?> doFloat
 	]
 	++
 	-- This is useful for auto-moving a terminal screen we spawn elsewhere in
 	-- this config file to a particular workspace.
-	[ resource =? ("atWorkspace" ++ s) --> doShift s
+	[ resource =? ("atWorkspace" ++ s) -?> doShift s
 	| s <- map show ([0..9]::[Int]) ++ map (('F':) . show) ([1..10]::[Int])
+	]
+	++
+	-- Force new windows down (i.e., if a screen has 1 window (master) and we
+	-- spawn a new window, don't become the new master window). See "Make new
+	-- windows appear 'below' rather than 'above' the current window" at
+	-- https://wiki.haskell.org/Xmonad/Frequently_asked_questions.
+	[ return True -?> doF W.swapDown
 	]
 
 myStartupHook :: String -> X ()
