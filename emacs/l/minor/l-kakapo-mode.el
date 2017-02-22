@@ -42,6 +42,7 @@
 					(string-match "/home/l/imvu/resty" b)
 					(string-match "/home/larver/j/" b)
 					(string-match "/home/larver/k/" b)
+					(string-match "/home/larver/imvu" b)
 					(string-match "/home/larver/imvu/resty" b)
 				)
 				(cond
