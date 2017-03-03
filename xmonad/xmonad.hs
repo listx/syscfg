@@ -22,6 +22,7 @@ import XMonad.Actions.CycleWS
 	, findWorkspace
 	, moveTo
 	, screenBy
+	, shiftTo
 	, toggleWS
 	)
 import XMonad.Actions.GridSelect
@@ -152,6 +153,7 @@ myKeys hostname conf@XConfig {XMonad.modMask = modm} = M.fromList $
 
 	-- Go to empty VW. If all VWs in this screen are full, then do nothing.
 	, ((modm,   xK_o            ), moveTo Next emptyVW)
+	, ((modmS,  xK_o            ), shiftTo Next emptyVW)
 
 	-- Go to VW displayed previously.
 	, ((modm,   xK_t            ), toggleWS)
