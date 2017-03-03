@@ -149,7 +149,8 @@ myKeys hostname conf@XConfig {XMonad.modMask = modm} = M.fromList $
 	-- Go to any non-empty VW, except those VW belonging to the given VW Groups
 	-- (for making sure that our "desk" is clean before we log off/shutdown).
 	, ((modm,   xK_n            ), moveTo Next $ nonEmptyVWExceptGrps [Sys] False)
-	, ((modmS,  xK_n            ), moveTo Next $ nonEmptyVWExceptGrps [Sys] True)
+	, ((modmS,  xK_n            ), shiftTo Next $ nonEmptyVWExceptGrps [Sys] False)
+	, ((modmAS, xK_n            ), moveTo Next $ nonEmptyVWExceptGrps [Sys] True)
 
 	-- Go to empty VW. If all VWs in this screen are full, then do nothing.
 	, ((modm,   xK_o            ), moveTo Next emptyVW)
@@ -217,6 +218,7 @@ myKeys hostname conf@XConfig {XMonad.modMask = modm} = M.fromList $
 	-- Alias "altMask" for left alt key.
 	altMask = mod1Mask
 	modmS = modm .|. shiftMask
+	modmAS = modm .|. shiftMask .|. altMask
 	supr = mod4Mask
 	suprS = supr .|. shiftMask
 	relativeDimenions
