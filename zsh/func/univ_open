@@ -74,7 +74,7 @@ univ_open() {
 				xchm $@ &>/dev/null & disown
 			;;
 			*)
-				emacs --no-window-system $@
+				emacsclient --alternate-editor "" --create-frame $@
 			;;
 		esac
 	elif [[ -d $1 ]]; then
