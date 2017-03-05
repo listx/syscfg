@@ -185,15 +185,8 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- `(default ((t (:inherit nil :stipple nil :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height ,(l/text-height) :width normal :foundry "xos4" :family (nth 0 l/font-collection))))))
+ `(default ((t (:inherit nil :stipple nil :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height ,(l/text-height) :width normal :foundry "xos4" :family ,(nth 0 l/font-collection))))))
 
-; Fix font setup. For some reason, if we define a function call for :family above, the initial load does not use that font. Callling set-face-attribute manually fixes the issue.
-(set-face-attribute
-	'default
-	nil
-	:font
-	(nth l/font-choice l/font-collection)
-)
 
 ; If we give emacs an argument (e.g., file or directory) when we invoke it,
 ; emacs automatically sets the default directory (to search for when we want to
