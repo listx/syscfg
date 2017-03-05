@@ -77,7 +77,7 @@
 
 ; Set default Frame size for non-XMonad machines.
 (add-hook 'after-init-hook '(lambda ()
-	(when window-system
+	(when (display-graphic-p)
 		(cond
 			((string-match "^larver-w1" system-name)
 				(set-frame-size (selected-frame) 160 73)

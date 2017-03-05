@@ -102,7 +102,7 @@
 					(progn
 						(set-face-background 'hiwin-face
 							; set default to alect-light
-							(if window-system "#ded6c5" "gray16"))
+							(if (display-graphic-p) "#ded6c5" "gray16"))
 						(setq evil-insert-state-cursor '("#000000" box))
 						(setq evil-normal-state-cursor '("DodgerBlue1" box))
 					)
@@ -114,7 +114,7 @@
 					)
 					(progn
 						(set-face-background 'hiwin-face
-							(if window-system
+							(if (display-graphic-p)
 								(if (string= "alect-dark" theme)
 									"#0d0d0f"
 									"gray0"
@@ -130,7 +130,7 @@
 					(string= "arjen-grey" theme)
 					(progn
 						(set-face-background 'hiwin-face
-							(if window-system
+							(if (display-graphic-p)
 								(if (string= "arjen-grey" theme)
 									"#0d0d0f"
 									"gray0"
@@ -148,7 +148,7 @@
 )
 
 ; Select theme based on GUI or ncurses mode.
-(if window-system
+(if (display-graphic-p)
 	(load-theme 'alect-light t)
 	(progn
 		(load-theme 'misterioso t)
