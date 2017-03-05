@@ -70,6 +70,7 @@
 (require 'l-docker)
 (require 'l-elisp)
 (require 'l-generic-x)
+(require 'l-git-rebase)
 (require 'l-groovy)
 (require 'l-haskell-mode)
 (require 'l-html)
