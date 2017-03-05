@@ -233,7 +233,7 @@
 ; blog post at
 ; http://hugoheden.wordpress.com/2009/03/08/copypaste-with-emacs-in-terminal/
 ; touches on this topic; here is a modified version of that blog post:
-(unless window-system
+(unless (display-graphic-p)
 	(when (getenv "DISPLAY")
 		; Callback for when user cuts
 		(defun xsel-cut-function (text &optional push)
@@ -282,7 +282,7 @@
 	(let
 		(
 			(xpribuf
-				(if (window-system)
+				(if (display-graphic-p)
 					(if (string-match "^Linuss" system-name)
 						; Mac has no concept of primary vs clipboard
 						; selection. Everything is just "clipboard".
