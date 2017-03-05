@@ -12,7 +12,6 @@ import System.Posix.Unistd
 	( nodeName
 	, getSystemID
 	)
-import System.Random
 import XMonad
 import XMonad.Actions.CycleWS
 	( Direction1D
