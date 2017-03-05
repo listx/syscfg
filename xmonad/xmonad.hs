@@ -99,6 +99,30 @@ myWorkspaceGroups =
 	, ("t", Misc)
 	]
 
+data PDirection
+	= PLeft
+	| PRight
+	deriving (Eq, Ord, Enum, Show)
+
+getVWToward :: PDirection -> MyVWGroup -> ScreenId -> VirtualWorkspace
+getVWToward d g (S s) = case d of
+	PLeft -> leftMost ++ "_" ++ vw
+	PRight -> rightMost ++ "_" ++ vw
+	where
+	leftMost = show 0
+	rightMost = show s
+	-- NOTE: In the future we can make `vw' smarter by trying to grab workspaces
+	-- on the fly based on some arbitrary predicate. But, we don't need that
+	-- much power because we only really use this function in `myStartupHook'.
+	vw = head $ getVWsOfGroup g
+
+-- For a group, get a workspace belonging to that group for every physical
+-- screen.
+getGroupSlice :: MyVWGroup -> Int -> [VirtualWorkspace]
+getGroupSlice g n = map (\pwId -> show pwId ++ "_" ++ vw) [0..n]
+	where
+	vw = head $ getVWsOfGroup g
+
 -- Terminals (using various different color themes).
 term1, term2 :: String
 term1 = "~/syscfg/script/sys/terms/wb.sh"
@@ -147,9 +171,9 @@ myKeys hostname conf@XConfig {XMonad.modMask = modm} = M.fromList $
 
 	-- Go to any non-empty VW, except those VW belonging to the given VW Groups
 	-- (for making sure that our "desk" is clean before we log off/shutdown).
-	, ((modm,   xK_n            ), moveTo Next $ nonEmptyVWExceptGrps [Sys] False)
-	, ((modmS,  xK_n            ), shiftTo Next $ nonEmptyVWExceptGrps [Sys] False)
-	, ((modmAS, xK_n            ), moveTo Next $ nonEmptyVWExceptGrps [Sys] True)
+	, ((modm,   xK_n            ), moveTo Next $ nonEmptyVWExceptGrps [] False)
+	, ((modmS,  xK_n            ), shiftTo Next $ nonEmptyVWExceptGrps [] False)
+	, ((modmAS, xK_n            ), moveTo Next $ nonEmptyVWExceptGrps [] True)
 
 	-- Go to empty VW. If all VWs in this screen are full, then do nothing.
 	, ((modm,   xK_o            ), moveTo Next emptyVW)
@@ -349,22 +373,6 @@ tryVWofGroup g = do
 		then vw0
 		else vw1
 
-spawnIfGrpNotFull :: MyVWGroup -> String -> X ()
-spawnIfGrpNotFull g command = do
-	vw <- tryVWofGroup g
-	let
-		vw' = removePWtag vw
-	when (isVWinGroups vw' [g])
-		$ spawn command
-
-spawnIfGrpTopVWNotFull :: MyVWGroup -> String -> X ()
-spawnIfGrpTopVWNotFull g command = do
-	vw <- tryVWofGroup g
-	let
-		vw' = removePWtag vw
-	when (isVWinGroups vw' [g] && vw' == head (getVWsOfGroup $ getGroupOfVW vw'))
-		$ spawn command
-
 myMouseBindings :: XConfig t -> M.Map (KeyMask, Button) (Window -> X ())
 myMouseBindings XConfig {XMonad.modMask = modm} = M.fromList
 	-- modm-button1 (left-click): Set the window to floating mode and move by
@@ -416,57 +424,30 @@ layoutNoMirror = ResizableTall 0 (3/100) (1/2) [] ||| noBorders Full
 --   WM_CLASS(STRING) = "Qt-subapplication", "VirtualBox"
 --
 -- then Qt-subapplication is resource, and VirtualBox is className.
-myManageHook :: ManageHook
-myManageHook = composeOne $
-	[ className =? "MPlayer"                    -?> doFloat
-	, className =? "Gimp"                       -?> doFloat
-	, className =? "Agave"                      -?> doCenterFloat
-	, resource  =? "desktop_window"             -?> doIgnore
-	, resource  =? "kdesktop"                   -?> doIgnore
-	, resource  =? "vlc"                        -?> doCenterFloat
-	, resource  =? "WeeChat"                    -?> doShift "0"
-	, title     =? "rtorrent"                   -?> doShift "0"
-	, title     =? "htop"                       -?> doShift "0"
-	, stringProperty "WM_ICON_NAME" =? "iftop"  -?> doShift "0"
-	, title     =? "alsamixer"                  -?> doShift "0"
-	, resource  =? "floatme"                    -?> doCenterFloat
-	, className =? "qutebrowser"                -?> doShift =<< liftX (tryVWofGroup Net)
-	, resource  =? "Navigator"                  -?> doShift =<< liftX (tryVWofGroup Net)
-	, className =? "Evince"                     -?> doShift =<< liftX (tryVWofGroup Work)
-	, resource  =? ".evince-wrapped"            -?> doShift =<< liftX (tryVWofGroup Work)
-	, className =? "Blender:Render"             -?> doFloat
-	, resource  =? "Browser"                    -?> doFloat
-	, className =? "Galculator"                 -?> doCenterFloat
-	, className =? "Gcalctool"                  -?> doCenterFloat
-	, className =? "XClock"                     -?> doCenterFloat
-	, className =? "Audacity"                   -?> doFloat
-	, className =? "Gitk"                       -?> doCenterFloat
-	, className =? "XDvi"                       -?> doCenterFloat
-	, className =? "Scid"                       -?> doFloat
-	, title     =? "Scid"                       -?> doFloat
-	, className =? "Toplevel"                   -?> doFloat -- Scid's many popup windows
-	, className =? "Pychess"                    -?> doFloat
-	, className =? "Glchess"                    -?> doFloat
-	, className =? "Raptor"                     -?> doFloat
-	, className =? "Smplayer"                   -?> doFloat
-	, className =? "linux_client"               -?> doFloat
-	, className =? "Bsnes"                      -?> doCenterFloat
-	, className =? "Phoenix"                    -?> doCenterFloat
-	, className =? "VirtualBox"                 -?> doFloat
-	, className =? "libreoffice-writer"         -?> doFloat
-	, className =? "Xsane"                      -?> doFloat
-	, className =? "Spektra"                    -?> doFloat
-	, className =? "Glade"                      -?> doFloat
-	, className =? "Anki"                       -?> doFloat
-	, className =? "Qcp"                        -?> doFloat
-	, className =? "mupen64plus"                -?> doFloat
+myManageHook :: ScreenId  -> ManageHook
+myManageHook nScreens = composeOne $
+	[ className =? "Gimp"               -?> doFloat
+	, className =? "Agave"              -?> doCenterFloat
+	, resource  =? "desktop_window"     -?> doIgnore
+	, resource  =? "kdesktop"           -?> doIgnore
+	, resource  =? "floatme"            -?> doCenterFloat
+	, className =? "qutebrowser"        -?> doShift =<< liftX (tryVWofGroup Net)
+	, resource  =? "Navigator"          -?> doShift =<< liftX (tryVWofGroup Net)
+	, className =? "Blender:Render"     -?> doFloat
+	, resource  =? "Browser"            -?> doFloat
+	, className =? "Xsane"              -?> doFloat
+	, className =? "Spektra"            -?> doFloat
+	, className =? "Glade"              -?> doFloat
+	, className =? "Anki"               -?> doFloat
+	, className =? "Qcp"                -?> doFloat
+	, className =? "mupen64plus"        -?> doFloat
 	]
 	++
 	-- This is useful for auto-moving a terminal screen we spawn elsewhere in
 	-- this config file to a particular workspace.
-	[ resource =? ("atWorkspace" ++ s) -?> doShift s
-	| s <- map show ([0..9]::[Int]) ++ map (('F':) . show) ([1..10]::[Int])
-	]
+	map
+		(\pvw -> resource =? ("atWorkspace_" ++ pvw) -?> doShift pvw)
+		allWorkspaces
 	++
 	-- Force new windows down (i.e., if a screen has 1 window (master) and we
 	-- spawn a new window, don't become the new master window). See "Make new
@@ -474,19 +455,41 @@ myManageHook = composeOne $
 	-- https://wiki.haskell.org/Xmonad/Frequently_asked_questions.
 	[ return True -?> doF W.swapDown
 	]
+	where
+	allWorkspaces =
+		[ pw ++ "_" ++ vw
+		| pw <- map show [0..(fromIntegral nScreens - 1)]
+		, vw <- map (:[]) ['a'..'t']
+		]
 
-myStartupHook :: String -> X ()
-myStartupHook hostname = do
-	spawnIfGrpTopVWNotFull Net "qutebrowser"
-	spawnIfGrpTopVWNotFull Work $ term1 ++ " -name atWorkspace1"
-	spawnIfGrpTopVWNotFull Sys $ term1 ++ " -e htop"
+myStartupHook :: String -> ScreenId -> X ()
+myStartupHook hostname nScreens = do
+	-- The way this works is a little bit involved. First,
+	-- `spawnIfGrpTopVWNotFull' checks if the given VW group (e.g., 'Net' or
+	-- 'Work') _in the current screen that has focus_ is occupied with windows.
+	-- If occupied, we abort the spawn of the given command. It does not by
+	-- itself spawn the command given. If we do end up spawning something, then
+	-- at that point `myManageHook' kicks in and places the window at a
+	-- particular VW (if we have a rule for that command's window).
+	spawn "qutebrowser"
+	-- Spawn one terminal in every window.
+	mapM_
+		(\pvw -> spawn $ term1 ++ " -name atWorkspace_" ++ pvw)
+		. getGroupSlice Work
+		$ fromIntegral nScreens'
+	spawn "emacs --daemon"
 	when (isUbuntu hostname) spawnWorkStuff
 	when (isPersonal hostname) systemUtils
 	where
-	systemUtils = spawnIfGrpNotFull Sys $ term2 ++ " -e rtorrent"
+	-- Subtract 1 from nScreens because physical screens are indexed from 0.
+	nScreens' = nScreens - 1
+	systemUtils = spawn $ term2
+		++ " -name atWorkspace_"
+		++ getVWToward PRight Sys nScreens'
+		++ " -e rtorrent"
 	spawnWorkStuff = do
-		spawnIfGrpNotFull Work "emacs /home/larver/k/notes_work_imvu/wlog.org"
-		spawnIfGrpNotFull Work $ term2 ++ " -name floatme -e ssh-add"
+		spawn "emacs /home/larver/k/notes_work_imvu/wlog.org"
+		spawn $ term2 ++ " -name floatme -e ssh-add"
 
 main :: IO ()
 main = do
@@ -515,8 +518,8 @@ main = do
 		, keys               = myKeys hostname
 		, mouseBindings      = myMouseBindings
 		, layoutHook         = defaultLayout
-		, manageHook         = myManageHook
+		, manageHook         = myManageHook nScreens
 		, handleEventHook    = mempty
 		, logHook            = mempty
-		, startupHook        = myStartupHook hostname
+		, startupHook        = myStartupHook hostname nScreens
 		}
