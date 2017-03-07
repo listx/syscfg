@@ -477,6 +477,10 @@ myStartupHook hostname nScreens = do
 		(\pvw -> spawn $ term1 ++ " -name atWorkspace_" ++ pvw)
 		. getGroupSlice Work
 		$ fromIntegral nScreens'
+	spawn $ term1
+		++ " -name atWorkspace_"
+		++ getVWToward PRight Sys nScreens'
+		++ " -e htop"
 	spawn "emacs --daemon"
 	when (isUbuntu hostname) spawnWorkStuff
 	when (isPersonal hostname) systemUtils
