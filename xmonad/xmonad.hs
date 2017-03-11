@@ -171,9 +171,8 @@ myKeys hostname conf@XConfig {XMonad.modMask = modm} = M.fromList $
 
 	-- Go to any non-empty VW, except those VW belonging to the given VW Groups
 	-- (for making sure that our "desk" is clean before we log off/shutdown).
-	, ((modm,   xK_n            ), moveTo Next $ nonEmptyVWExceptGrps [] False)
-	, ((modmS,  xK_n            ), shiftTo Next $ nonEmptyVWExceptGrps [] False)
-	, ((modmAS, xK_n            ), moveTo Next $ nonEmptyVWExceptGrps [] True)
+	, ((modm,   xK_n            ), moveTo Next $ nonEmptyVWExceptGrps [])
+	, ((modmS,  xK_n            ), shiftTo Next $ nonEmptyVWExceptGrps [])
 
 	-- Go to empty VW. If all VWs in this screen are full, then do nothing.
 	, ((modm,   xK_o            ), moveTo Next emptyVW)
@@ -316,17 +315,14 @@ emptyVWinGrp grp = WSIs $ do
 		&& show currentScreen == takeWhile (/='_') (W.tag w)
 
 -- A non-empty VW belonging to any group except those in the given group list.
-nonEmptyVWExceptGrps :: [MyVWGroup] -> Bool -> WSType
-nonEmptyVWExceptGrps grps acrossScreens = WSIs $ do
+nonEmptyVWExceptGrps :: [MyVWGroup] -> WSType
+nonEmptyVWExceptGrps grps  = WSIs $ do
 	(S currentScreen) <- gets (W.screen . W.current . windowset)
 	let
 		nonEmptyExceptGrps w = all ($ w) [isNonEmpty, isNotMemberOfGivenGrps]
 		isNotMemberOfGivenGrps = not . flip isVWinGroups grps . getVW
-	return $ if acrossScreens
-		then nonEmptyExceptGrps
-		else \w
-			-> nonEmptyExceptGrps w
-			&& show currentScreen == takeWhile (/='_') (W.tag w)
+	return $ \w -> nonEmptyExceptGrps w
+		&& show currentScreen == takeWhile (/='_') (W.tag w)
 
 -- Because of IndependentScreens, tags take the form of
 -- "<ScreenId>_<VirtualWorkspace>". So to get to just the
