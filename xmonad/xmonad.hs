@@ -128,8 +128,6 @@ term1, term2 :: String
 term1 = "~/syscfg/script/sys/terms/wb.sh"
 term2 = "~/syscfg/script/sys/terms/wblue.sh"
 
--- Key bindings. Roughly, modm (XMonad key) deals with general window-management
--- features, while supr (super key) deals with launching applications.
 myKeys :: String -> XConfig Layout -> M.Map (KeyMask, KeySym) (X ())
 myKeys hostname conf@XConfig {XMonad.modMask = modm} = M.fromList $
 	-- Close focused window.
@@ -216,12 +214,10 @@ myKeys hostname conf@XConfig {XMonad.modMask = modm} = M.fromList $
 		, (f, m) <- [(W.view, 0), (W.shift, shiftMask)]]
 	++
 	-- Launch apps.
-	[ ((supr,   xK_e            ), spawn "emacs")
-	, ((supr,   xK_i            ), spawnSelected defaultGSConfig ["gimp", "blender"])
-	, ((supr,   xK_n            ), spawn "qutebrowser")
-	, ((suprS,  xK_n            ), spawnSelected defaultGSConfig ["firefox", chromium])
-	, ((supr,   xK_x            ), spawn term1)
-	, ((suprS,  xK_x            ), spawn term2)
+	[ ((modm,   xK_i            ), spawn "qutebrowser")
+	, ((modmS,  xK_i            ), spawnSelected defaultGSConfig ["firefox", chromium])
+	, ((modm,   xK_e            ), spawn term1)
+	, ((modmS,  xK_e            ), spawn term2)
 	]
 	where
 	lockOrQuit
@@ -241,8 +237,6 @@ myKeys hostname conf@XConfig {XMonad.modMask = modm} = M.fromList $
 	altMask = mod1Mask
 	modmS = modm .|. shiftMask
 	modmAS = modm .|. shiftMask .|. altMask
-	supr = mod4Mask
-	suprS = supr .|. shiftMask
 	relativeDimenions
 		= W.RationalRect marginLeft marginTop windowWidth windowHeight
 		where
