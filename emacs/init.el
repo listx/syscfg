@@ -87,6 +87,7 @@
 (require 'l-php)
 (require 'l-python)
 (require 'l-sass)
+(require 'l-sh)
 (require 'l-shell)
 (require 'l-yaml)
 
