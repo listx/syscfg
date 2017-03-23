@@ -69,6 +69,7 @@
 (require 'l-dired)
 (require 'l-docker)
 (require 'l-elisp)
+(require 'l-factor)
 (require 'l-generic-x)
 (require 'l-git-rebase)
 (require 'l-groovy)
