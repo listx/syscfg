@@ -150,7 +150,7 @@ prompt_kody_precmd()
 	prompt_line_1e="$prompt_userhost $prompt_kody_pwd"
 	prompt_line_1f="$prompt_kody_pwd"
 	prompt_line_2="%B%F{$prompt_color4} "
-	prompt_char="%(!.# .>"
+	prompt_char="%(!.# .$"
 
 	# choose the correct prompt, depending on screen length
 	prompt_kody_choose_prompt
