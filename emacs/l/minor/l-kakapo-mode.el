@@ -267,12 +267,15 @@
 			)
 			; Haskell
 			((string-match "\\.hs$" b)
-				(h 'haskell-mode-hook t 4)
+				(h 'haskell-mode-hook nil 2)
+			)
+			((string-match "\\.hsc$" b)
+				(h 'haskell-mode-hook nil 2)
 			)
 			; Literate Haskell
 			((string-match "\\.lhs$" b)
 				(progn
-					(h 'latex-mode-hook t 4)
+					(h 'latex-mode-hook nil 2)
 					(setq mmm-global-mode 't)
 					(setq mmm-submode-decoration-level 1)
 					(mmm-ify-by-class 'literate-haskell-latex)
