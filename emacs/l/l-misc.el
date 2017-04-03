@@ -376,4 +376,8 @@ pasting. If no region is selected, copy just the buffer's filename."
 ; Fix "<dead-grave> is undefined" error.
 (require 'iso-transl)
 
+; Do not use init.el for auto-writing custom-set-variables definitions.
+(setq custom-file "~/.emacs.d/custom.el")
+(load custom-file)
+
 (provide 'l-misc)
