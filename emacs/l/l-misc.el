@@ -329,8 +329,8 @@ pasting. If no region is selected, copy just the buffer's filename."
 		; command and parameters
 		(concat
 			(if f
-				"~/prog/nox/dist/build/nox/nox --sline "
-				"~/prog/nox/dist/build/nox/nox --uncomment --sline ")
+				"nox --sline "
+				"nox --uncomment --sline ")
 			(case (with-current-buffer (current-buffer) major-mode)
 				('c-mode "//")
 				('emacs-lisp-mode "\\;")
