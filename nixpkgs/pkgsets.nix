@@ -67,7 +67,7 @@ with super; rec {
       emacs
       xsel
       vim
-      silver-searcher
+      ripgrep
       colordiff
       gnupg
       openssl
@@ -82,6 +82,7 @@ with super; rec {
       sshfsFuse
       bmon
       inetutils
+      pciutils # lspci
       bind # 'dig' cli program
 
       # Docs
@@ -96,6 +97,7 @@ with super; rec {
       unzip
       lzma
       unrar
+      zip
 
       # filesystem
       fuse
@@ -114,14 +116,21 @@ with super; rec {
       clang
       gcc
       gdb
+      valgrind
       gnumake
       python # 'python' is python2
       python3
       ruby
       cloc
+      cwebbin
+      noweb
       # android development
       androidsdk_4_4
       android-udev-rules
+      # linters
+      cppcheck
+      dos2unix
+      jq
 
       # Programming libraries
       boehmgc
@@ -130,10 +139,8 @@ with super; rec {
       pcg_c
 
       # Database
+      mysql
       postgresql
-
-      # Ops
-      ansible2
 
       # analysis
       gnuplot
@@ -172,6 +179,7 @@ with super; rec {
       scrot
       geeqie
       gimp
+      inkscape
       imagemagick
       mpv
       ffmpeg
@@ -181,6 +189,9 @@ with super; rec {
       cmus
       lilypond
       darktable
+      rawtherapee
+      ufraw
+      xsane
     ];
   });
 
@@ -207,9 +218,7 @@ with super; rec {
     ignoreCollisions = true;
     paths = [
       abcde
-      bitcoin
       cdparanoia
-      gitAndTools.git-annex
       pidgin
       fontforge
     ];
@@ -294,7 +303,13 @@ with super; rec {
       ghc
 
       # Misc userland packages.
+      auca
       hledger
+      hlint
+      shellcheck
+      stack
+      pandoc
+      gitAndTools.git-annex
     ];
   });
 
