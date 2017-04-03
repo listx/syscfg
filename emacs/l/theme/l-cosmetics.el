@@ -10,8 +10,8 @@
 ; Disable buffer scrollbars.
 (scroll-bar-mode 0)
 
-; Enable only right-side fringe.
-(set-fringe-mode '(1 . 0))
+; Enable only left-side fringe.
+(set-fringe-mode '(10 . 0))
 
 ; Visual line mode (word wrap on whole words) by default.
 (global-visual-line-mode 1)
