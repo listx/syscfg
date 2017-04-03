@@ -274,6 +274,7 @@ with super; rec {
       # `haskellPackages.cabal-install` installed either on your system, or
       # through nix-env.
       auca = self.callPackage ./haskell/auca.nix {};
+      nox = self.callPackage ./haskell/nox.nix {};
       ztile = self.callPackage ./haskell/ztile.nix {};
       ox = self.callPackage ./haskell/ox.nix {};
     };
@@ -304,6 +305,7 @@ with super; rec {
 
       # Misc userland packages.
       auca
+      nox
       hledger
       hlint
       shellcheck
