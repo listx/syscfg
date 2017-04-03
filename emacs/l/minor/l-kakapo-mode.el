@@ -296,7 +296,7 @@
 			)
 			; Latex
 			((string-match "\\.tex$" b)
-				(h 'latex-mode-hook t 4)
+				(h 'latex-mode-hook t 2)
 			)
 			; Markdown
 			((string-match "\\.md$" b)
