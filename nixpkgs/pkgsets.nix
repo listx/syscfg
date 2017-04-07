@@ -120,6 +120,7 @@ with super; rec {
       gnumake
       python # 'python' is python2
       python3
+      python35Packages.pylint
       ruby
       cloc
       cwebbin
