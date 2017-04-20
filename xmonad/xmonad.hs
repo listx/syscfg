@@ -219,6 +219,7 @@ myKeys hostname conf@XConfig {XMonad.modMask = modm} = M.fromList $
 	, ((modm,   xK_e            ), spawn term1)
 	, ((supr,   xK_e            ), spawn term1) -- Backup in case Hyper key is not bound (xmodmap error.)
 	, ((modmS,  xK_e            ), spawn term2)
+	, ((modm,   xK_u            ), spawn "emacs")
 	]
 	where
 	lockOrQuit
