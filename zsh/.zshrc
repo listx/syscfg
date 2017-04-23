@@ -244,6 +244,7 @@ alias gcma='git commit --amend'
 # The "f" here is for "fixing up" the last commit (i.e., equivalent of "git
 # commit; git rebase HEAD~2" then marking the tip commit as "f" for fixup.
 alias gcmf='git commit --amend --no-edit'
+alias gcmm='git commit -m'
 alias gcmu='git commit -m update'
 alias gco='git checkout'
 alias gft='git fetch'
