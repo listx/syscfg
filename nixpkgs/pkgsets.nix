@@ -119,7 +119,7 @@ with super; rec {
       valgrind
       gnumake
       python # 'python' is python2
-      python3
+      python36
       python35Packages.pylint
       ruby
       cloc
