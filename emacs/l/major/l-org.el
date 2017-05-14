@@ -35,9 +35,6 @@
 	; Do not convert TAB characters in source code blocks into spaces.
 	(setq org-src-preserve-indentation t)
 
-	; Hide formatting characters (e.g., the `/' in /italic text/).
-	(setq org-hide-emphasis-markers t)
-
 	; Use Unicode bullets for headings with `org-bullets' package.
 	(use-package org-bullets
 		:config
