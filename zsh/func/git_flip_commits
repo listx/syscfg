@@ -1,0 +1,30 @@
+#!/usr/bin/env zsh
+
+# Flip the order of the top 2 commits.
+git_flip_commits()
+{
+    # If the tree is dirty, abort.
+    if [[ -n "$(git diff)" || -n "$(git diff --cached)" ]]; then
+        echo "dirty tree; aborting"
+        return 1
+    fi
+
+    # Find the commits to flip.
+    commit_new=$(git rev-parse HEAD)
+    commit_old=$(git rev-parse HEAD~)
+
+    # Flip commits.
+    git reset --hard HEAD~2
+    git cherry-pick $commit_new
+    if (( $? )); then
+        echo "could not cherry-pick back HEAD commit; aborting"
+        git reset --hard $commit_new
+        return 1
+    fi
+    git cherry-pick $commit_old
+    if (( $? )); then
+        echo "could not cherry-pick back HEAD~ commit; aborting"
+        git reset --hard $commit_new
+        return 1
+    fi
+}
