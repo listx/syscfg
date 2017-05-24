@@ -8,3 +8,6 @@
 
 # Disable touchpad tapping.
 synclient TapButton1=0
+
+# Start xscreensaver.
+xscreensaver -nosplash &

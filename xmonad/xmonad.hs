@@ -223,7 +223,7 @@ myKeys hostname conf@XConfig {XMonad.modMask = modm} = M.fromList $
 	]
 	where
 	lockOrQuit
-		| isUbuntu hostname = spawn "gnome-screensaver-command --lock"
+		| isUbuntu hostname = spawn "xscreensaver-command -lock"
 		| otherwise = runSelectedAction defaultGSConfig sessionActions
 	sessionActions =
 		[ ("Recompile/restart XMonad", spawn "xmonad --recompile && xmonad --restart")
