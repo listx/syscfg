@@ -26,8 +26,6 @@ else ifeq ('${T}','larver-w1')
 else
 	ln -fs ${C}/gpg/gpg-agent.nixos.conf                ${H}/.gnupg/gpg-agent.conf
 endif
-gsy:
-	ln -fs ${C}/gsy/cfg                                 ${H}/.gsy
 gtk:
 	ln -fs ${C}/gtk/cfg                                 ${H}/.gtkrc-2.0.mine
 lesskey:
@@ -67,8 +65,6 @@ else
 endif
 qutebrowser:
 	ln -fns ${C}/qutebrowser                            ${H}/.config
-rf:
-	ln -fs ${C}/rf/cfg                                  ${H}/.rf
 rtorrent:
 	ln -fs ${C}/rtorrent/cfg                            ${H}/.rtorrent.rc
 sage:
@@ -84,8 +80,6 @@ else
 endif
 tig:
 	ln -fs ${C}/tig/.tigrc                              ${H}
-usbmnt:
-	ln -fs ${C}/usbmnt/cfg                              ${H}/.usbmnt
 uim:
 	ln -fns ${C}/uim/.uim                               ${H}/.uim
 	ln -fns ${C}/uim                                    ${H}/.uim.d
