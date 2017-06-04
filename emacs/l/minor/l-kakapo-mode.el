@@ -172,6 +172,7 @@
 			(
 				(or
 					(string-match "prog/miro/" b)
+					(string-match "prog/lovelace/" b)
 				)
 				(cond
 					((string-match "\\.hs$" b)
