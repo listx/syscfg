@@ -283,6 +283,9 @@ alias fl='find_long_lines '
 
 alias skype='find ~/.Skype/Logs/ -type f -exec rm {} \; && skype'
 
+# Make ssh pretend we are using xterm, because some machines do not recognize
+# our usual terminal emulator (rxvt-unicode-256coler).
+alias ssh='TERM=xterm ssh'
 # these sane hostnames depend on the /etc/hosts file!
 alias sk0='ssh l@k0'
 alias sk1='ssh l@k1'
