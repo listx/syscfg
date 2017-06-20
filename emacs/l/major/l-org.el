@@ -127,6 +127,9 @@
 	:keymaps 'org-mode-map
 	:states '(normal)
 	"1" 'hydra-org/body
+	; Cycle section visibility level.
+	"l" 'org-cycle
+	"L" 'org-global-cycle
 	; Evaluate source code block.
 	"z" 'org-ctrl-c-ctrl-c
 )
