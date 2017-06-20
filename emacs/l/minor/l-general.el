@@ -81,8 +81,6 @@
 
 		"y" (lambda () (interactive) (l/copy-for-slack nil))
 		"Y" (lambda () (interactive) (l/copy-for-slack t))
-		; Evaluate source code block.
-		"z" 'org-ctrl-c-ctrl-c
 		; Put emacs into the background; only works in terminal mode.
 		"Z" 'suspend-emacs
 	)
