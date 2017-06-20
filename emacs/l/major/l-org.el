@@ -127,6 +127,8 @@
 	:keymaps 'org-mode-map
 	:states '(normal)
 	"1" 'hydra-org/body
+	; Evaluate source code block.
+	"z" 'org-ctrl-c-ctrl-c
 )
 
 (evil-define-key 'normal org-mode-map (kbd "M-i") 'org-insert-link)
