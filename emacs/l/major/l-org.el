@@ -35,25 +35,6 @@
 	; Do not convert TAB characters in source code blocks into spaces.
 	(setq org-src-preserve-indentation t)
 
-	; Use Unicode bullets for headings with `org-bullets' package.
-	(use-package org-bullets
-		:config
-		(setq org-bullets-bullet-list
-			'(
-				"*"
-				"-"
-				"-"
-				"-"
-				"-"
-				"-"
-				"-"
-				"-"
-				"-"
-				"-"
-			)
-		)
-	)
-
 	; Use Unicode bullet character for bullets and lists.
 	(font-lock-add-keywords 'org-mode
 		'(("^ *\\([-]\\) "
