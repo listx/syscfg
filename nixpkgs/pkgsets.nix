@@ -125,6 +125,12 @@ with super; rec {
       cloc
       cwebbin
       noweb
+
+      # Lisps
+      ccl # clozure
+      clisp
+      sbcl
+
       # android development
       androidsdk_4_4
       android-udev-rules
