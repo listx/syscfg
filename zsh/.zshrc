@@ -286,11 +286,11 @@ alias skype='find ~/.Skype/Logs/ -type f -exec rm {} \; && skype'
 # Make ssh pretend we are using xterm, because some machines do not recognize
 # our usual terminal emulator (rxvt-unicode-256coler).
 alias ssh='TERM=xterm ssh'
-# these sane hostnames depend on the /etc/hosts file!
+# These hostnames depend on either /etc/hosts or ~/.ssh/config.
 alias sk0='ssh l@k0'
-alias sk1='ssh l@k1'
 alias sl0='ssh l@l0'
 alias sm0='ssh l@m0'
+alias sw1='ssh w1'
 
 # GLOBAL, position-independent aliases for detaching a process from the shell
 # (useful for starting GUI apps as standalones, without arguments).
