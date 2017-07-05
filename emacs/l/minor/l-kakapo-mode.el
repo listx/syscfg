@@ -251,7 +251,7 @@
 			)
 			; Emacs lisp
 			((string-match "\\.el$" b)
-				(h 'emacs-lisp-mode-hook t 4)
+				(h 'emacs-lisp-mode-hook nil 2)
 			)
 			; Emblem
 			((string-match "\\.emblem$" b)
