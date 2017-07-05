@@ -295,6 +295,10 @@
 			((string-match "\\.html\\.erb?$" b)
 				(h 'html-mode-hook nil 2)
 			)
+			; Idris
+			((string-match "\\.idr$" b)
+				(h 'idris-mode-hook nil 2)
+			)
 			; Latex
 			((string-match "\\.tex$" b)
 				(h 'latex-mode-hook t 2)

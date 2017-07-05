@@ -75,6 +75,7 @@
 (require 'l-groovy)
 (require 'l-haskell-mode)
 (require 'l-html)
+(require 'l-idris)
 (require 'l-latex)
 (require 'l-ledger)
 (require 'l-less-css)
