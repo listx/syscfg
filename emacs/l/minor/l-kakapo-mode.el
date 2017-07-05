@@ -382,6 +382,10 @@
 			((string-match "\\.sh$" b)
 				(h 'sh-mode-hook t 4)
 			)
+			; Shen
+			((string-match "\\.shen$" b)
+				(h 'shen-mode-hook nil 2)
+			)
 			; Slim
 			((string-match "\\.slim$" b)
 				(h 'slim-mode-hook nil 2)
