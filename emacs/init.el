@@ -90,6 +90,7 @@
 (require 'l-sass)
 (require 'l-sh)
 (require 'l-shell)
+(require 'l-shen)
 (require 'l-yaml)
 
 ;; Load things related to themes/appearance.
