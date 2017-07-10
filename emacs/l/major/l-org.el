@@ -88,9 +88,6 @@
 	; defined elsewhere.
 	(define-key org-mode-map [(tab)] nil)
 	(define-key org-mode-map (kbd "<S-iso-lefttab>") nil)
-
-	; Enable org-bullets-mode.
-	(org-bullets-mode 1)
 )
 
 (defhydra hydra-org (:foreign-keys warn)
