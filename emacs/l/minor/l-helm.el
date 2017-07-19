@@ -54,7 +54,8 @@
 		(advice-add 'helm-ff-delete-char-backward
 			:around #'fu/helm-find-files-navigate-back)
 
-		(define-key helm-map " " 'hydra-helm/body)
+		(define-key helm-map (kbd "<tab>") 'hydra-helm/body)
+
 		; As of 576cc21f381977e1d3c509d94f73853a74612cff, the
 		; `helm-find-files-doc-header' hardcodes the default `C-l' binding. We set
 		; it to nil to suppress the message from `helm-find-files'.
