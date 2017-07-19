@@ -43,7 +43,6 @@
 (require 'l-delight)
 (require 'l-elscreen)
 (require 'l-evil)
-(require 'l-evil-ediff)
 (require 'l-evil-magit)
 (require 'l-evil-surround)
 (require 'l-evil-visualstar)
@@ -61,6 +60,7 @@
 (require 'l-prog-mode)
 (require 'l-text-mode)
 (require 'l-uim)
+(require 'l-vdiff)
 
 ;; Load major-mode packages.
 (require 'l-c)
