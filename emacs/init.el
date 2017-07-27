@@ -1,3 +1,11 @@
+; Increase garbage collection threshhold during startup to inhibit its
+; activation. This way, startup can be a little bit faster. See
+; https://github.com/nilcons/emacs-use-package-fast.
+(setq gc-cons-threshold 64000000)
+(add-hook 'after-init-hook #'(lambda ()
+  ;; restore after startup
+  (setq gc-cons-threshold 800000)))
+
 ; Bootstrap `use-package'. See
 ; http://www.lunaryorn.com/posts/my-emacs-configuration-with-use-package.html.
 (require 'package)
