@@ -233,7 +233,7 @@ myKeys hostname conf@XConfig {XMonad.modMask = modm} = M.fromList $
 		then sendMessage slave
 		else sendMessage master
 	chromium
-		| isUbuntu hostname = "chromium-browser"
+		| isUbuntu hostname = "google-chrome-stable"
 		| otherwise = "chromium"
 	-- Alias "altMask" for left alt key.
 	altMask = mod1Mask
