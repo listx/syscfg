@@ -44,6 +44,17 @@
 	`(add-hook ,hook (lambda () (interactive) (,func ,@args)))
 )
 
+;; Load things related to themes/appearance.
+(require 'l-alect-themes)
+(require 'l-arjen-grey-theme)
+(require 'l-zenmonk)
+(require 'l-hl-line+)
+(require 'l-cosmetics)
+
+;; Load misc customizations.
+(require 'l-misc)
+(require 'l-scratch)
+
 ; Load minor-mode packages.
 (require 'l-ace-window)
 (require 'l-column-enforce-mode)
@@ -61,7 +72,6 @@
 (require 'l-helm-ag)
 (require 'l-helm-projectile)
 (require 'l-hiwin)
-(require 'l-hl-line+)
 (require 'l-hydra)
 (require 'l-kakapo-mode)
 (require 'l-page-break-lines)
@@ -101,13 +111,3 @@
 (require 'l-shell)
 (require 'l-shen)
 (require 'l-yaml)
-
-;; Load things related to themes/appearance.
-(require 'l-alect-themes)
-(require 'l-arjen-grey-theme)
-(require 'l-zenmonk)
-(require 'l-cosmetics)
-
-;; Load misc customizations.
-(require 'l-misc)
-(require 'l-scratch)
