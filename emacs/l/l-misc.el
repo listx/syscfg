@@ -29,6 +29,11 @@
 ; Add newline (silently) at the end of a file, just like Vim.
 (setq require-final-newline t)
 
+; Ignore "File changed on disk" minibuffer modal prompt for git commit/rebase
+; messages (even with this setting, we can always just undo to get it back
+; anyway.)
+(setq revert-without-query '(".*COMMIT_EDITMSG" ".*git-rebase-todo"))
+
 ; NixOS: This enables the various emacs scripts that are installed by
 ; nixos-rebuild. The script below is taken from
 ; https://gitorious.org/goibhniu/configuration-files. In particular, this ends
