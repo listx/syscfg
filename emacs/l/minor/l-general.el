@@ -24,10 +24,10 @@
 		"d" 'kill-this-buffer
 		; Kill current buffer without confirmation, even if modified.
 		"D" 'l/kill-this-buffer!
-		; Find files (like dired, but better).
-		"e" 'helm-find-files
 		; buffers list
-		"E" 'helm-mini
+		"e" 'helm-mini
+		; Find files (like dired, but better).
+		"E" 'helm-find-files
 
 		"f" 'helm-projectile
 		"F" 'helm-projectile-switch-project
