@@ -118,6 +118,10 @@
 					((string-match "\\.org$" b)
 						(h 'org-mode-hook nil 2)
 					)
+					; PHP
+					((string-match "\\.php$" b)
+						(h 'php-mode-hook nil 4)
+					)
 					; Python
 					((string-match "\\.py$" b)
 						(h 'python-mode-hook nil 4
