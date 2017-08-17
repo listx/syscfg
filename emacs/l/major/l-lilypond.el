@@ -4,7 +4,6 @@
 (add-hook 'LilyPond-mode-hook 'l/lilypond-setup)
 
 (defun l/lilypond-setup ()
-	(turn-on-font-lock)
-)
+  (turn-on-font-lock))
 
 (provide 'l-lilypond)
