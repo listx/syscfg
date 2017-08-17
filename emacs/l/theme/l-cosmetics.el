@@ -42,141 +42,108 @@
 (show-paren-mode 1)
 
 (defvar l/font-collection
-	(cond
-		((string-match "^Linuss" system-name)
-            '("Input Mono Compressed" "PT Mono")
-		)
-		((string-match "^larver-w0" system-name)
-            '("Input Mono Narrow" "Terminus")
-		)
-		((string-match "^larver-w1" system-name)
-            '("Input Mono Narrow" "Terminus")
-		)
-		(t '("Terminus" "Input Mono Narrow" "Input Mono Compressed Book"))
-	)
-)
+  (cond
+    ((string-match "^Linuss" system-name)
+      '("Input Mono Compressed" "PT Mono"))
+    ((string-match "^larver-w0" system-name)
+      '("Input Mono Narrow" "Terminus"))
+    ((string-match "^larver-w1" system-name)
+      '("Input Mono Narrow" "Terminus"))
+    (t '("Terminus" "Input Mono Narrow" "Input Mono Compressed Book"))))
 (setq l/font-choice 0)
 (defun l/toggle-font ()
-	"Cycle through font collection."
-	(interactive)
-	(setq l/font-choice (mod (+ 1 l/font-choice) (length l/font-collection)))
-	(set-face-attribute
-		'default
-		nil
-		:font
-		(nth l/font-choice l/font-collection)
-	)
-	(redraw-display)
-)
+  "Cycle through font collection."
+  (interactive)
+  (setq l/font-choice (mod (+ 1 l/font-choice) (length l/font-collection)))
+  (set-face-attribute
+    'default
+    nil
+    :font
+    (nth l/font-choice l/font-collection))
+  (redraw-display))
 
 (defvar l/themes
-	'(
-	alect-light
-	alect-dark
-	arjen-grey
-	) "Default themes")
+  '(
+    alect-light
+    alect-dark
+    arjen-grey)
+  "Default themes")
 
 (defvar l/theme-idx 0)
 
 (defun l/theme-name ()
-	(nth l/theme-idx l/themes)
-)
+  (nth l/theme-idx l/themes))
 
 ; Install packages if they are missing.
 (defun l/cycle-theme ()
-	(interactive)
-	(progn
-		; Increment current theme index
-		(setq l/theme-idx (mod (+ 1 l/theme-idx) (length l/themes)))
+  (interactive)
+  (progn
+    ; Increment current theme index
+    (setq l/theme-idx (mod (+ 1 l/theme-idx) (length l/themes)))
 
-		; Apply the theme
-		(load-theme (l/theme-name) t)
+    ; Apply the theme
+    (load-theme (l/theme-name) t)
 
-		; Set colors depending on theme name.
-		(let
-			(
-				(theme (format "%s" (l/theme-name)))
-			)
-			(cond
-				((string= "alect-light" theme)
-					(progn
-						(set-face-background 'hiwin-face
-							; set default to alect-light
-							(if (display-graphic-p) "#ded6c5" "gray16"))
-						(setq evil-insert-state-cursor '("#000000" box))
-						(setq evil-normal-state-cursor '("DodgerBlue1" box))
-					)
-				)
-				(
-					(or
-						(string= "alect-dark" theme)
-						(string= "alect-black" theme)
-					)
-					(progn
-						(set-face-background 'hiwin-face
-							(if (display-graphic-p)
-								(if (string= "alect-dark" theme)
-									"#0d0d0f"
-									"gray0"
-								)
-								"gray16"
-							)
-						)
-						(setq evil-insert-state-cursor '("#ffffff" box))
-						(setq evil-normal-state-cursor '("#00ff00" box))
-					)
-				)
-				(
-					(string= "arjen-grey" theme)
-					(progn
-						(set-face-background 'hiwin-face
-							(if (display-graphic-p)
-								(if (string= "arjen-grey" theme)
-									"#0d0d0f"
-									"gray0"
-								)
-								"gray16"
-							)
-						)
-						(setq evil-insert-state-cursor '("#ffffff" box))
-						(setq evil-normal-state-cursor '("#00ff00" box))
-					)
-				)
-			)
-		)
-	)
-)
+    ; Set colors depending on theme name.
+    (let
+      (
+        (theme (format "%s" (l/theme-name))))
+      (cond
+        ((string= "alect-light" theme)
+          (progn
+            (set-face-background 'hiwin-face
+              ; set default to alect-light
+              (if (display-graphic-p) "#ded6c5" "gray16"))
+            (setq evil-insert-state-cursor '("#000000" box))
+            (setq evil-normal-state-cursor '("DodgerBlue1" box))))
+        ((or
+            (string= "alect-dark" theme)
+            (string= "alect-black" theme))
+          (progn
+            (set-face-background 'hiwin-face
+              (if (display-graphic-p)
+                (if (string= "alect-dark" theme)
+                  "#0d0d0f"
+                  "gray0")
+                "gray16"))
+            (setq evil-insert-state-cursor '("#ffffff" box))
+            (setq evil-normal-state-cursor '("#00ff00" box))))
+        ((string= "arjen-grey" theme)
+          (progn
+            (set-face-background 'hiwin-face
+              (if (display-graphic-p)
+                (if (string= "arjen-grey" theme)
+                  "#0d0d0f"
+                  "gray0")
+                "gray16"))
+            (setq evil-insert-state-cursor '("#ffffff" box))
+            (setq evil-normal-state-cursor '("#00ff00" box))))))))
 
 ; Select theme based on GUI or ncurses mode.
 (if (display-graphic-p)
-	(load-theme 'alect-light t)
-	(progn
-		(load-theme 'misterioso t)
-		(set-face-attribute
-			'hl-line
-			nil
-			:background
-			"dim gray"
-		)
-	)
-)
+  (load-theme 'alect-light t)
+  (progn
+    (load-theme 'misterioso t)
+    (set-face-attribute
+      'hl-line
+      nil
+      :background
+      "dim gray")))
 
 ; If we're on our laptop, make the text slightly bigger to match my desktop's
 ; behavior.
 (defun l/text-height ()
-	(cond
-		((string-match "^k[123]" system-name)
-			102
-		)
-		((string-match "^larver-w[01]" system-name)
-			102
-		)
-		((string-match "^Linuss" system-name)
-			144
-		)
-		(t 91)
-	)
-)
+  (cond
+    ((string-match "^k[123]" system-name)
+      102
+    )
+    ((string-match "^larver-w[01]" system-name)
+      102
+    )
+    ((string-match "^Linuss" system-name)
+      144
+    )
+    (t 91)))
 
 ; auto-generated stuff by emacs itself...
 
@@ -195,7 +162,6 @@
 ; We have to set it last because other packages/init stuff can change the value
 ; of this variable.
 (if (= (length argv) 0)
-	(setq default-directory "~/")
-)
+  (setq default-directory "~/"))
 
 (provide 'l-cosmetics)

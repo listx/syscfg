@@ -11,12 +11,12 @@
 (require 'package)
 (setq package-enable-at-startup nil)
 (add-to-list 'package-archives
-	'("melpa" . "https://melpa.org/packages/")
-	'("org" . "http://orgmode.org/elpa/"))
+  '("melpa" . "https://melpa.org/packages/")
+  '("org" . "http://orgmode.org/elpa/"))
 (package-initialize)
 (unless (package-installed-p 'use-package)
-	(package-refresh-contents)
-	(package-install 'use-package))
+  (package-refresh-contents)
+  (package-install 'use-package))
 
 ; Ensure that all packages handled by use-package are always installed if not
 ; present.
@@ -33,16 +33,13 @@
 ; See
 ; http://emacs.stackexchange.com/questions/17420/how-to-pass-a-parameter-together-with-function.
 (defmacro l/define-key-args (map key func &rest args)
-	`(define-key ,map ,key (lambda () (interactive) (,func ,@args)))
-)
+  `(define-key ,map ,key (lambda () (interactive) (,func ,@args))))
 
 (defmacro l/lambda-args (map key func &rest args)
-	`(define-key ,map ,key (lambda () (interactive) (,func ,@args)))
-)
+  `(define-key ,map ,key (lambda () (interactive) (,func ,@args))))
 
 (defmacro l/add-hook-args (hook func &rest args)
-	`(add-hook ,hook (lambda () (interactive) (,func ,@args)))
-)
+  `(add-hook ,hook (lambda () (interactive) (,func ,@args))))
 
 ;; Load things related to themes/appearance.
 (require 'l-alect-themes)
