@@ -202,6 +202,9 @@
 							)
 						)
 					)
+					((string-match "\\.sh$" b)
+						(h 'sh-mode-hook t 4)
+					)
 				)
 			)
 
