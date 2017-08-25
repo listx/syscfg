@@ -1,6 +1,6 @@
 #!/usr/bin/env zsh
 
-gdf()
+gd()
 {
 	! git_contents && return
 
