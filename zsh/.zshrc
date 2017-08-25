@@ -261,7 +261,6 @@ alias grbc='git rebase --continue'
 alias grbi='git rebase -i'
 alias grp='git reset --patch'
 alias gps='git push'
-alias gp='gsy -p '
 alias gre='git rerere'
 alias gtag='~/syscfg/script/sys/gtag.sh'
 
