@@ -129,7 +129,7 @@
               (add-hook 'haskell-mode-hook 'l/haskell-intero-setup)
               (h 'haskell-mode-hook nil 2))
             ((string-match "\\.[ch]$" b)
-              (h 'c-mode-hook nil 8
+              (h 'c-mode-hook t 8
                 (progn
                   (setq default-tab-width 8)
                   (message
