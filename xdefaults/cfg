@@ -131,6 +131,21 @@ URxvt.keysym.Control-k: command:\033]720;1\007
 URxvt.keysym.Control-h: command:\033]720;10\007
 URxvt.keysym.Control-l: command:\033]721;10\007
 
+/*
+ * Some shell programs deserve their own hotkey, because we use them so
+ * frequently. Mod4 is the Super key (windows key).
+ *
+ * Some commands are used so often that they are not worth recording into the
+ * shell history. At least for our Zsh configuration, we set HIST_IGNORE_SPACE
+ * which skips recording of a command into the shell history if the command
+ * begins with a space character. Hence, some programs below are prepended with
+ * `\ ' (escaped ASCII space character). For more about such characters, grep
+ * for "keysym" in urxvt(1) and also "RESOURCES" in X(7).
+ */
+URxvt.keysym.Mod4-t: \ tig\n
+URxvt.keysym.Mod4-l: \ ls -ahls --color\n
+URxvt.keysym.Mod4-k: \ cd .. && ls -ahls --color\n
+
 /* make urxvt the login shell */
 URxvt.loginShell:   true
 /* cutchars are characters used as delimiters for double-click word selection */
