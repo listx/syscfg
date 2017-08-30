@@ -244,6 +244,8 @@ alias gp='git push'
 alias gre='git rerere'
 alias gtag='~/syscfg/script/sys/gtag.sh'
 
+alias rgi='rg -i'
+
 alias tig='tig -n1000'
 
 alias ocm="cd ~/org; gcm -am \"$HOST\"; gpl && gps"
