@@ -43,9 +43,6 @@ for t in $ft_ark; do LS_COLORS+="*.$t=32:"; done
 for t in $ft_pic; do LS_COLORS+="*.$t=35:"; done
 for t in $ft_mov; do LS_COLORS+="*.$t=1;35:"; done
 for t in $ft_snd; do LS_COLORS+="*.$t=34:"; done
-# custom file types not covered by 'dircolors -p'
-LS_COLORS+="*.toucan=0;38;5;48:"
-LS_COLORS+="*.cog=0;38;5;48:"
 export LS_COLORS
 
 # colors for the 'less' pager
@@ -60,15 +57,6 @@ export LESS_TERMCAP_ue=$'\E[0m'         # end underline
 # default text editor--set it to vim, not vi
 export VISUAL=vim
 export EDITOR=vim
-
-# wine directory (prevent wine/msiexec from creating a default .wine folder)
-export WINEARCH=win32
-export WINEPREFIX=~/.win32
-# disable wine from creating retarded file associations (e.g., opening .txt files with notepad.exe from Firefox)
-export WINEDLLOVERRIDES='winemenubuilder.exe=d'
-
-# haskell AUR packages: enable profiling (-p) option
-export PKGBUILD_HASKELL_ENABLE_PROFILING=1
 
 # default ledger file (to avoid using -f option every time)
 export LEDGER_FILE=~/org/master.hledger
@@ -176,35 +164,28 @@ alias kkkkkkkkkkkk=" cd ../../../../../../../../../../../../;ll"
 alias kkkkkkkkkkkkk=" cd ../../../../../../../../../../../../../;ll"
 alias kkkkkkkkkkkkkk=" cd ../../../../../../../../../../../../../../;ll"
 
-# Custom aliases
-
 alias apush="~/syscfg/script/sys/apush.sh"
 alias c="~/syscfg/script/sys/utp.sh"
 alias cls="echo -ne '\x1bc'" # clear the screen buffer (don't just hide it like CTRL-L)
 alias fiv='~/syscfg/script/sys/fiv.sh'
 alias aex='~/syscfg/script/sys/aex.sh'
 alias x='~/syscfg/script/sys/terms/wb.sh D'
-alias up='~/syscfg/script/sys/up'
 alias fop='~/prog/fop/dist/build/fop/fop'
 alias cascade='~/syscfg/script/sys/cascade.sh'
 alias initkeys="~/syscfg/script/sys/initkeys.sh"
 alias INITKEYS="~/syscfg/script/sys/initkeys.sh" # for cases when capslock can't be turned off
-alias switch_audio="~/syscfg/alsa/switch_audio.sh"
 alias private=' HISTFILE=/tmp/zsh-history'
 alias unprivate=' HISTFILE=~/.zsh-untracked/history'
 
 alias d='univ_open'
 alias df=' df -h'
-alias dmesg='dmesg --color=always | less'
+alias dmesg='dmesg --color=always L'
 alias du='du -h'
 alias dus='du -ah --max-depth 1 | sort -h'
 
 alias enc='gpg2 -e -r linusarver'
 alias dec='~/syscfg/script/sys/decrypt.sh outfile'
 alias decless='~/syscfg/script/sys/decrypt.sh viewfile'
-
-# sanitize directory/file permissions
-alias sanitize_files='find -type d -exec chmod 755 {} \; ; find -type f -exec chmod 644 {} \;'
 
 # easy find command (see find_quick() function)
 alias fa='find_quick a '
@@ -268,32 +249,21 @@ alias tig='tig -n1000'
 alias ocm="cd ~/org; gcm -am \"$HOST\"; gpl && gps"
 
 alias e='emacs_open'
-alias ee='gvim -p'
 alias v='vim -p'
 
-alias -g galias_find_src='$(find -maxdepth 5 -type f -iregex ".*\.\(c\|cpp\|h\|hpp\|factor\|hs\|lhs\|pl\|py\|rb\|sh\)$" | sort)'
-alias es=' e galias_find_src'
-alias ees=' ee galias_find_src'
-
 alias fl='find_long_lines '
-
-alias skype='find ~/.Skype/Logs/ -type f -exec rm {} \; && skype'
 
 # Make ssh pretend we are using xterm, because some machines do not recognize
 # our usual terminal emulator (rxvt-unicode-256coler).
 alias ssh='TERM=xterm ssh'
 # These hostnames depend on either /etc/hosts or ~/.ssh/config.
 alias sk0='ssh l@k0'
-alias sl0='ssh l@l0'
 alias sm0='ssh l@m0'
 alias sw1='ssh w1'
 
 # GLOBAL, position-independent aliases for detaching a process from the shell
 # (useful for starting GUI apps as standalones, without arguments).
 alias -g D='& disown'
-alias -g Q='& disown; exit'
-
-# for quiet processes
 alias -g Z='> /dev/null 2>&1'
 alias -g L='| less'
 
@@ -317,6 +287,7 @@ alias rm='rm -Iv'
 # clean up botched permissions
 alias clean_dirs='find -type d -exec chmod 755 {} \;'
 alias clean_files='find -type f -exec chmod 644 {} \;'
+alias clean_tree='clean_dirs; clean_files'
 
 # sync the following with visudo to disable passwords!
 #
@@ -339,8 +310,6 @@ alias nq='nix-env -qaP'
 alias nls='sudo nix-env -p /nix/var/nix/profiles/system --list-generations'
 
 alias cal='cal -y'
-
-nixos_hosts=(k0 k3 w0)
 
 # memory management
 alias reset_cache='free && sync && echo 3 >/proc/sys/vm/drop_caches && free'
@@ -366,17 +335,6 @@ case $HOST in
 		alias discof='sudo umount /dev/disk/by-id/ata-PIONEER_DVD-RW_DVR-215D'
 		alias disc2on='sudo mount /dev/disk/by-id/ata-LITE-ON_DVDRW_SHW-160P6S'
 		alias disc2of='sudo umount /dev/disk/by-id/ata-LITE-ON_DVDRW_SHW-160P6S'
-	;;
-	k1)
-		alias iftope='sudo iftop -B -i eth0'
-		alias iftopw='sudo iftop -B -i wlan0'
-		alias discon='sudo mount /dev/sr0'
-		alias discof='sudo umount /dev/sr0'
-		alias nwu='sudo netcfg -c aether-wireless-home'
-		alias nwd='sudo netcfg -d aether-wireless-home'
-	;;
-	w0)
-		alias yk='gpg-connect-agent updatestartuptty /bye'
 	;;
 	*)
 		alias discon='sudo mount /dev/sr0'
