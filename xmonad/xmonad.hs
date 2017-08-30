@@ -217,7 +217,6 @@ myKeys hostname conf@XConfig {XMonad.modMask = modm} = M.fromList $
 	[ ((modm,   xK_i            ), spawn "qutebrowser")
 	, ((modmS,  xK_i            ), spawnSelected defaultGSConfig ["firefox", chromium])
 	, ((modm,   xK_e            ), spawn term1)
-	, ((supr,   xK_e            ), spawn term1) -- Backup in case Hyper key is not bound (xmodmap error.)
 	, ((modmS,  xK_e            ), spawn term2)
 	, ((modm,   xK_u            ), spawn "emacs")
 	]
@@ -237,7 +236,6 @@ myKeys hostname conf@XConfig {XMonad.modMask = modm} = M.fromList $
 		| otherwise = "chromium"
 	-- Alias "altMask" for left alt key.
 	altMask = mod1Mask
-	supr = mod4Mask
 	modmS = modm .|. shiftMask
 	modmAS = modm .|. shiftMask .|. altMask
 	relativeDimenions
