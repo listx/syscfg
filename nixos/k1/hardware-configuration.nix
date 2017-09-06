@@ -8,28 +8,29 @@
     [ <nixpkgs/nixos/modules/installer/scan/not-detected.nix>
     ];
 
-  boot.initrd.availableKernelModules = [ "uhci_hcd" "ehci_pci" "ahci" "usb_storage" "ums_realtek" "sd_mod" "sr_mod" ];
+  boot.initrd.availableKernelModules = [ "uhci_hcd" "ehci_pci" "ata_piix" "usb_storage" "ums_realtek" "sd_mod" "sr_mod" ];
   boot.kernelModules = [ ];
   boot.extraModulePackages = [ ];
 
   fileSystems."/" =
-    { device = "/dev/disk/by-uuid/87ff8aa9-8e22-4883-a94e-8627caf9890e";
+    { device = "/dev/disk/by-uuid/3adb795c-f155-4a9b-a53c-609bbcd28238";
       fsType = "ext4";
     };
 
   fileSystems."/boot" =
-    { device = "/dev/disk/by-uuid/a7b66031-34b9-401d-866e-d4e74d923e0c";
+    { device = "/dev/disk/by-uuid/4d0d83c3-dcfb-4c06-95f9-3b29c755d3ef";
       fsType = "ext4";
     };
 
   fileSystems."/home" =
-    { device = "/dev/disk/by-uuid/fee08443-1aab-4fb7-a47c-0dd46da894d4";
+    { device = "/dev/disk/by-uuid/8a51a7f0-124b-4ce7-b7d4-86a09602e64e";
       fsType = "ext4";
     };
 
   swapDevices =
-    [ { device = "/dev/disk/by-uuid/14e27ed6-c932-4a55-835b-8132dfe9cb82"; }
+    [ { device = "/dev/disk/by-uuid/5d435cd0-059d-4c42-880a-2dca398cef2a"; }
     ];
 
   nix.maxJobs = lib.mkDefault 2;
+  powerManagement.cpuFreqGovernor = "ondemand";
 }

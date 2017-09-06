@@ -14,7 +14,7 @@
   boot.initrd.luks.devices = [
     {
       name = "root";
-      device = "/dev/disk/by-id/ata-FUJITSU_MHZ2320BH_G2_K623T922A38A-part2";
+      device = "/dev/disk/by-id/ata-FUJITSU_MHZ2320BH_G2_K623T922A38A-part3";
       preLVM = true;
     }
   ];
@@ -74,6 +74,6 @@
   };
 
   # The NixOS release to be compatible with for stateful data such as databases.
-  system.stateVersion = "16.09";
+  system.stateVersion = "17.03";
 
 }
