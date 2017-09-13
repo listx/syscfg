@@ -9,6 +9,8 @@
   (add-hook 'markdown-mode-hook 'l/markdown-setup))
 
 (defun l/markdown-setup ()
-  (define-key markdown-mode-map (kbd "<S-tab>") nil))
+  (define-key markdown-mode-map (kbd "<S-tab>") nil)
+  (define-key markdown-mode-map (kbd "<S-iso-lefttab>") nil)
+  (define-key markdown-mode-map (kbd "<backtab>") nil))
 
 (provide 'l-markdown)
