@@ -1,7 +1,7 @@
 #!/usr/bin/env zsh
 
 # Shortcut for "git rebase -i HEAD~<N>" where <N> is a positive integer.
-grbh()
+grh()
 {
 	# The odd-looking "<->" pattern is a zsh-ism tht checks to see that the
 	# string only has digits [1].
