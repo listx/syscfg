@@ -217,7 +217,7 @@
           (h 'idris-mode-hook nil 2))
         ; Latex
         ((string-match "\\.tex$" b)
-          (h 'latex-mode-hook t 2))
+          (h 'latex-mode-hook nil 2))
         ; Markdown
         ((string-match "\\.md$" b)
           (progn
