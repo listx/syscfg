@@ -245,15 +245,9 @@ with super; rec {
 
   # Taken from
   # http://lists.science.uu.nl/pipermail/nix-dev/2015-January/015601.html. We
-  # redefine the default 'haskellPackages' set, to enable profiling. We also
   # add in some custom Haskell packages.
   haskellPackages = super.haskellPackages.override {
     overrides = self: super: {
-      # Enable profiling. Taken from
-      # http://lists.science.uu.nl/pipermail/nix-dev/2015-January/015620.html.
-      mkDerivation = expr: super.mkDerivation (expr // {
-        enableLibraryProfiling = true; });
-
       # Local packages not found on Hackage, but which still exist on the
       # local machine. As long as they have a .cabal file, we can use
       # `cabal2nix` to generate a Nix expression to build them.
