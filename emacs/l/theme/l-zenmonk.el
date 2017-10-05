@@ -222,6 +222,13 @@ Each element has the form (NAME . HEX).
         (((background dark))
         :inherit 'alect-title-4
         :foreground magenta+1 :weight bold)))
+      (org-level-7
+        ((((background light))
+        :inherit 'alect-title-7
+        :foreground magenta+1 :weight bold)
+        (((background dark))
+        :inherit 'alect-title-7
+        :foreground magenta+1 :weight bold)))
       (region ((((background light))
         :foreground "#ffffcc" :background "#ff66cc" :weight bold)
         (((background dark))
