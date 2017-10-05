@@ -1,6 +1,7 @@
 (use-package org
   :config
   (add-hook 'org-mode-hook 'l/org-mode-hook)
+  (add-hook 'after-save-hook 'l/org-mode-save-hook)
   ; Write timestamp when a TODO changes to DONE.
   (setq org-log-done t)
   ; Mark a TODO item as DONE.
@@ -142,5 +143,14 @@
   (evil-normal-state)
   (forward-line -1)
   (message nil))
+
+; Add a blank line after a #+end_src line, to suppress awkward coloring of the
+; header containing that block when we fold it. Inspired by
+; https://www.reddit.com/r/emacs/comments/749t8a/keep_a_blank_line_after_a_code_block_in_orgmode/dnwvmlc/.
+(defun l/org-mode-save-hook ()
+  (when (string= major-mode "org-mode")
+    (save-excursion
+      (while (re-search-forward "^#\\+end_src\n\\([^\n]\\)" nil t)
+        (replace-match "\n\\1" nil nil nil 1)))))
 
 (provide 'l-org)
