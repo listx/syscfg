@@ -53,22 +53,6 @@ set cursorline " highlight cursor horizontally
 " so zenburn's background is properly loaded ... 2008/12/23
 set t_Co=256
 
-" choose the appropriate colorscheme, based on the custom
-" TERM_COLOR_SCHEME_CURRENT environment variable
-if $TERM != 'linux'
-    if $TERM_COLOR_SCHEME_CURRENT == 'wb' " white on black
-        colorscheme zenburn
-    elseif $TERM_COLOR_SCHEME_CURRENT == 'wB' " white on blue
-        colorscheme darkblue2-ex
-    elseif $TERM_COLOR_SCHEME_CURRENT == 'bw' " black on white
-        colorscheme mayansmoke
-    else
-        colorscheme zenburn " always default to the white on black theme
-    endif
-else " if we are in a virtual console, use a simple colorscheme
-    colorscheme delek
-endif
-
 " Turn off blinking for the n, v, & c states:
 "let &guicursor = substitute(&guicursor, "n-v-c:", "n-v-c:blinkon0-", "")
 " NOTE: To stop all blinking:
