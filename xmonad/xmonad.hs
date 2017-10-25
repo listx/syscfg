@@ -474,11 +474,11 @@ myStartupHook hostname nScreens = do
 		++ " -e htop"
 	spawn "emacs --daemon"
 	when (isUbuntu hostname) spawnWorkStuff
-	when (isPersonal hostname) systemUtils
+	when (elem hostname ["k0"]) rtorrent
 	where
 	-- Subtract 1 from nScreens because physical screens are indexed from 0.
 	nScreens' = nScreens - 1
-	systemUtils = spawn $ term2
+	rtorrent = spawn $ term2
 		++ " -name atWorkspace_"
 		++ getVWToward PRight Sys nScreens'
 		++ " -e rtorrent"
