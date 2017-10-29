@@ -49,8 +49,6 @@ nixos:
 	ln -fs ${C}/nixos/${T}/hardware-configuration.nix   /etc/nixos
 nixpkgs:
 	ln -fns ${C}/nixpkgs                                ${H}/.nixpkgs
-pentadactyl:
-	ln -fs ${C}/pentadactyl/cfg                         ${H}/.pentadactylrc
 pulse:
 	rm -rf ${H}/.config/pulse
 	rm -rf ${H}/.pulse
