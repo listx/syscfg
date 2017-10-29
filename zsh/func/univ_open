@@ -44,7 +44,7 @@ univ_open() {
 				firefox $@ &>/dev/null & disown
 			;;
 			(djvu|dvi|eps|pdf|ps)
-				evince -f $@ &>/dev/null & disown
+				mupdf-x11 $@ &>/dev/null & disown
 			;;
 			(bmp|gif|jpg|jpeg|pcx|png|svg|tga|tif|tiff)
 				geeqie -f $@ &>/dev/null & disown
