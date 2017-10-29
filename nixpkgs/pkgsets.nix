@@ -120,7 +120,7 @@ with super; rec {
       gnumake
       python # 'python' is python2
       python36
-      python35Packages.pylint
+      HEAD.python36Packages.pylint
       ruby
       cloc
       cwebbin
@@ -235,7 +235,7 @@ with super; rec {
     ignoreCollisions = true;
     paths = [
       docker
-      python35Packages.docker_compose
+      HEAD.python36Packages.docker_compose
       vagrant
       linuxPackages.virtualbox
       linuxPackages.virtualboxGuestAdditions
