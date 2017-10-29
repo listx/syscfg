@@ -226,7 +226,6 @@ with super; rec {
     paths = [
       abcde
       cdparanoia
-      pidgin
       fontforge
     ];
   });
