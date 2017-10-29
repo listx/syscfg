@@ -170,9 +170,9 @@ with super; rec {
     name = "l-set-web";
     ignoreCollisions = true;
     paths = [
-      firefoxWrapper
-      chromium
-      qutebrowser
+      HEAD.firefox
+      HEAD.chromium
+      HEAD.qutebrowser
       links
       aria2
       rtorrent
