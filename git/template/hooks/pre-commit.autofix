@@ -19,13 +19,12 @@
 
 # We define "newline" as the traditional UNIX line feed character (0x0a).
 
-set -e
+set -o errexit
 
+# Print associative array.
 function print_keys()
 {
-	hash_definition=$(declare -p $1)
-	eval "declare -A hash="${hash_definition#*=}
-	for key in "${!hash[@]}"; do
+	for key in "$@"; do
 		echo "$key"
 	done
 }
@@ -38,19 +37,19 @@ declare -a bl nl
 declare -A tw
 
 # Mark files without a final newline.
-while read file; do
-	if (($(git status --porcelain "$file" | grep -v "^D" | wc -l))) \
+while read -r file; do
+	if (($(git status --porcelain "$file" | grep -c -v "^D"))) \
 		&& (($(git diff --cached "$file" \
-			| tail -n1 | grep "$noeol" | wc -l))); then
+			| tail -n1 | grep -c "$noeol"))); then
 		nl+=("$file")
 		errors_nl=1
 	fi
 done < <(git diff --cached --name-only)
 
 # Mark files that have trailing whitespace.
-while read line; do
-	file=$(echo $line | cut -d: -f1)
-	lnum=$(echo $line | cut -d: -f2)
+while read -r line; do
+	file=$(echo "$line" | cut -d: -f1)
+	lnum=$(echo "$line" | cut -d: -f2)
 	mode=$(git ls-files --stage | cut -d " " -f1)
 	if [ -z "${tw[$file]}" ]; then
 		tw[$file]=$lnum
@@ -65,8 +64,8 @@ done < <(git diff --check --cached \
 # Mark files that have unnecessary trailing blank lines. By default, Git does
 # not mark all newly-added trailing blank lines; i.e., a file may have 100 newly
 # added trailing blank lines, but Git will only complain on the first such line.
-while read line; do
-	file=$(echo $line | cut -d: -f1)
+while read -r line; do
+	file=$(echo "$line" | cut -d: -f1)
 	bl+=("$file")
 	errors_bl=1
 done < <(git diff --check --cached \
@@ -76,18 +75,18 @@ done < <(git diff --check --cached \
 # Fix all files which need to be fixed for the final newline.
 if ((errors_nl)); then
 	for file in ${nl[*]}; do
-		mode=$(git ls-files --stage $file | cut -d " " -f1)
-		sha1=$((cat $file && echo) | git hash-object -w --stdin)
+		mode=$(git ls-files --stage "$file" | cut -d " " -f1)
+		sha1=$( (cat "$file" && echo) | git hash-object -w --stdin )
 		# Fix index.
-		git update-index --cacheinfo $mode,$sha1,$file
+		git update-index --cacheinfo "$mode","$sha1","$file"
 		# Fix working tree.
-		echo >> $file
+		echo >> "$file"
 	done
 fi
 
 # Fix all files which need to be fixed for trailing whitespace.
 if ((errors_tw)); then
-	print_keys tw | while read file; do
+	print_keys "${!tw[@]}" | while read -r file; do
 		bools=""
 		for lnum in ${tw[$file]}; do
 			if [ -z "$bools" ]; then
@@ -96,13 +95,13 @@ if ((errors_tw)); then
 				bools+=" || \$. == $lnum"
 			fi
 		done
-		mode=$(git ls-files --stage $file | cut -d " " -f1)
-		sha1=$(perl -p -e "s/[\t ]+$// if ($bools)" $file \
+		mode=$(git ls-files --stage "$file" | cut -d " " -f1)
+		sha1=$(perl -p -e "s/[\t ]+$// if ($bools)" "$file" \
 			| git hash-object -w --stdin)
 		# Fix index.
-		git update-index --cacheinfo $mode,$sha1,$file
+		git update-index --cacheinfo "$mode","$sha1","$file"
 		# Fix working tree.
-		perl -pi -e "s/[\t ]+$// if ($bools)" $file
+		perl -pi -e "s/[\t ]+$// if ($bools)" "$file"
 	done
 fi
 
@@ -116,13 +115,13 @@ fi
 # with consecutive newline characters.
 if ((errors_bl)); then
 	for file in ${bl[*]}; do
-		mode=$(git ls-files --stage $file | cut -d " " -f1)
-		sha1=$(perl -0777 -p -e "s/\n+\z/\n/" $file \
+		mode=$(git ls-files --stage "$file" | cut -d " " -f1)
+		sha1=$(perl -0777 -p -e "s/\n+\z/\n/" "$file" \
 			| git hash-object -w --stdin)
 		# Fix index.
-		git update-index --cacheinfo $mode,$sha1,$file
+		git update-index --cacheinfo "$mode","$sha1","$file"
 		# Fix working tree.
-		perl -0777 -pi -e "s/\n+\z/\n/" $file
+		perl -0777 -pi -e "s/\n+\z/\n/" "$file"
 	done
 fi
 

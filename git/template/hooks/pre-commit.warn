@@ -16,7 +16,7 @@ if (($(git diff --check --cached | wc -l))); then
 fi
 
 # Detect files without a newline at the end.
-if (($(git diff --cached | grep "$noeol" | wc -l))); then
+if (($(git diff --cached | grep -c "$noeol"))); then
 	declare -a files
 	for file in $(git diff --cached --name-only); do
 		# Condition 1: check if file with noeol message has not been deleted
@@ -27,9 +27,9 @@ if (($(git diff --cached | grep "$noeol" | wc -l))); then
 		# the diff --- it could be that we are fixing such files by adding a
 		# newline (in which case the noeol message will still appear, but
 		# followed by some content.)
-		if (($(git status --porcelain "$file" | grep -v "^D" | wc -l))) \
+		if (($(git status --porcelain "$file" | grep -cv "^D"))) \
 			&& (($(git diff --cached "$file" \
-				| tail -n1 | grep "$noeol" | wc -l))); then
+				| tail -n1 | grep -c "$noeol"))); then
 			files+=("$file")
 		fi
 	done
