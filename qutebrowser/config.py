@@ -14,9 +14,6 @@ c.content.default_encoding = "utf-8"
 # Only autocomplete the most recent 1000 items.
 c.completion.web_history_max_items = 1000
 
-# 10-second timeout for messages. Use `:messages' to see full log.
-c.messages.timeout = 10000
-
 # Allow partial-completion binding menu to display indefinitely (press <escape>
 # to exit).
 c.input.partial_timeout = 0
