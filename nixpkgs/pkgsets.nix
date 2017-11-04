@@ -173,6 +173,7 @@ with super; rec {
       HEAD.firefox
       HEAD.chromium
       HEAD.qutebrowser
+      HEAD.offlineimap
       links
       aria2
       rtorrent

@@ -2,6 +2,7 @@
 *.log
 *.hi
 *.o
+*.pyc
 *.swp
 *.DS_Store
 *~
