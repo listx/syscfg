@@ -49,6 +49,8 @@ nixos:
 	ln -fs ${C}/nixos/${T}/hardware-configuration.nix   /etc/nixos
 nixpkgs:
 	ln -fns ${C}/nixpkgs                                ${H}/.nixpkgs
+offlineimap:
+	ln -fs ${C}/offlineimap/offlineimaprc               ${H}/.offlineimaprc
 pulse:
 	rm -rf ${H}/.config/pulse
 	rm -rf ${H}/.pulse

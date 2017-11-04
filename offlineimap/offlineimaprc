@@ -1,0 +1,22 @@
+[general]
+accounts = main
+pythonfile = ~/syscfg/offlineimap/secrets.py
+
+[Account main]
+localrepository = main-local
+remoterepository = main-remote
+
+[Repository main-local]
+type = Maildir
+localfolders = ~/mail
+
+[Repository main-remote]
+type = Gmail
+maxconnections = 1
+remoteuser = linusarver@gmail.com
+folderfilter = lambda foldername: foldername in ['[Gmail]/All Mail', '[Gmail]/Sent Mail']
+nametrans = lambda foldername: re.sub('^\[Gmail\]/All Mail$', 'all', re.sub('^\[Gmail\]/Sent Mail$', 'sent', foldername))
+sslcacertfile = /etc/ssl/certs/ca-certificates.crt
+oauth2_client_id_eval = decrypt_secret("oauth2_client_id")
+oauth2_client_secret_eval = decrypt_secret("oauth2_client_secret")
+oauth2_refresh_token_eval = decrypt_secret("oauth2_refresh_token")
