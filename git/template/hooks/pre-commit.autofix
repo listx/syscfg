@@ -128,6 +128,8 @@ fi
 # It could be that after fixing all whitespace problems, there is actually
 # nothing to commit! In this case, we exit with an error.
 if (( $(git diff --cached | wc -l) == 0 )); then
-	echo "Nothing to commit."
-	exit 1
+	if [[ $(ps -ocommand= -p $PPID) != "git commit --amend" ]]; then
+		echo "pre-commit hook: Nothing to commit."
+		exit 1
+	fi
 fi
