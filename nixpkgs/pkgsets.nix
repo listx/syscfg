@@ -84,6 +84,11 @@ with super; rec {
       inetutils
       pciutils # lspci
       bind # 'dig' cli program
+      ncdu
+      perf-tools
+      sysstat
+      tcpdump
+      wireshark-cli # tshark
 
       # Docs
       bgnet
@@ -103,6 +108,9 @@ with super; rec {
       fuse
       gparted
       ntfs3g
+
+      # nix itself (nix-env and other nix-* CLI tools)
+      nix
     ];
   });
 
@@ -120,7 +128,8 @@ with super; rec {
       gnumake
       python # 'python' is python2
       python36
-      HEAD.python36Packages.pylint
+      python36Packages.pylint
+      python36Packages.flake8
       ruby
       cloc
       cwebbin
@@ -174,6 +183,7 @@ with super; rec {
       HEAD.chromium
       HEAD.qutebrowser
       HEAD.offlineimap
+      HEAD.notmuch
       links
       aria2
       rtorrent
