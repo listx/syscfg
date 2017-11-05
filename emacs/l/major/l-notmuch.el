@@ -1,0 +1,198 @@
+(use-package notmuch
+  :defer t
+  :config
+
+  ; Bindings.
+  (evil-define-key 'normal notmuch-show-mode-map "d" 'l/toggle-deleted)
+  (evil-define-key 'normal notmuch-show-mode-map "f" 'l/toggle-flagged)
+  (evil-define-key 'normal notmuch-show-mode-map "r" 'notmuch-show-reply)
+  (evil-define-key 'normal notmuch-show-mode-map "R" 'notmuch-show-reply-sender)
+
+  (evil-define-key 'normal notmuch-search-mode-map "q" 'notmuch-bury-or-kill-this-buffer)
+  (evil-define-key 'normal notmuch-show-mode-map "q" 'notmuch-bury-or-kill-this-buffer)
+  (evil-define-key 'normal notmuch-tree-mode-map "q" 'notmuch-bury-or-kill-this-buffer)
+
+  (evil-define-key 'normal notmuch-search-mode-map "g" 'notmuch-refresh-this-buffer)
+  (evil-define-key 'normal notmuch-tree-mode-map "g" 'notmuch-refresh-this-buffer)
+
+  (evil-define-key 'normal notmuch-show-mode-map (kbd ")") 'notmuch-show-next-message)
+  (evil-define-key 'normal notmuch-show-mode-map (kbd "(") 'notmuch-show-previous-message)
+  (evil-define-key 'normal notmuch-show-mode-map (kbd "}") 'notmuch-show-next-thread-show)
+  (evil-define-key 'normal notmuch-show-mode-map (kbd "{") 'notmuch-show-previous-thread-show)
+
+  (evil-define-key 'normal notmuch-tree-mode-map (kbd ")") 'notmuch-tree-next-message)
+  (evil-define-key 'normal notmuch-tree-mode-map (kbd "(") 'notmuch-tree-prev-message)
+  (evil-define-key 'normal notmuch-tree-mode-map (kbd "}") 'notmuch-tree-next-thread)
+  (evil-define-key 'normal notmuch-tree-mode-map (kbd "{") 'notmuch-tree-prev-thread)
+
+  (evil-define-key 'normal notmuch-search-mode-map (kbd "RET") 'notmuch-search-show-thread)
+  (evil-define-key 'normal notmuch-tree-mode-map   (kbd "RET") 'notmuch-tree-show-message)
+
+  ; Change how the notmuch-hello page looks. Inspired by
+  ; http://www.holgerschurig.de/en/emacs-notmuch-hello/.
+  (setq notmuch-saved-searches
+      '((:key "i" :name "inbox" :query "tag:inbox")
+        (:key "z" :name "zsh-users" :query "tag:zsh-users")
+        (:key "d" :name "deleted" :query "tag:deleted")
+        (:key "f" :name "flagged" :query "tag:flagged")
+        (:key "s" :name "sent" :query "tag:sent")
+        (:key "u" :name "unread" :query "tag:unread")
+        ))
+
+  (setq notmuch-hello-sections '(
+    l/notmuch-hello-insert-searches
+    notmuch-hello-insert-search
+    l/notmuch-hello-insert-recent-searches))
+
+  (defface l/notmuch-hello-header-face
+    '((t :weight bold))
+    "Font for the header in `l/notmuch-hello-insert-searches`."
+    :group 'notmuch-faces)
+
+  ; Authentication for sending emails.
+  (setq
+    auth-sources
+      '((:source "~/secure/authinfo.gpg"))
+    smtpmail-smtp-server "smtp.gmail.com"
+    smtpmail-smtp-service 587)
+  (setq mail-user-agent 'message-user-agent)
+  (setq user-mail-address "linusarver@gmail.com"
+        user-full-name "Linus Arver")
+  ; Set from-address to either `mail-envelope-from' or `user-mail-address' as
+  ; fallback.
+  (setq mail-specify-envelope-from t)
+  (setq mail-envelope-from 'header)
+  (setq message-sendmail-envelope-from 'header)
+  ; Add Cc and Bcc headers to the message buffer.
+  (setq message-default-mail-headers "Cc: \nBcc: \n")
+  ; Save message drafts to ~/tmp if we save the buffer during message
+  ; composition.
+  (setq message-auto-save-directory "~/tmp")
+  ; Change the directory to store the sent mail.
+  (setq message-directory "~/mail/")
+  ; Kill buffer after sending mail.
+  (setq message-kill-buffer-on-exit t)
+
+  ; Add a thousandth separator for message counts.
+  (setq notmuch-hello-thousands-separator ",")
+  ; Display newest email up top.
+  (setq notmuch-search-oldest-first nil))
+
+(defun l/notmuch-hello-insert-searches ()
+  "Insert the saved-searches section."
+  (widget-insert (propertize "New     Total      Key  List\n" 'face 'l/notmuch-hello-header-face))
+  (mapc (lambda (elem)
+          (when elem
+            (let* ((q_tot (plist-get elem :query))
+                    (q_new (concat q_tot " AND tag:unread"))
+                    (n_tot (l/count-query q_tot))
+                    (n_new (l/count-query q_new)))
+              (l/notmuch-hello-query-insert n_new q_new elem)
+              (l/notmuch-hello-query-insert n_tot q_tot elem)
+              (widget-insert "   ")
+              (widget-insert (plist-get elem :key))
+              (widget-insert "    ")
+              (widget-insert (plist-get elem :name))
+              (widget-insert "\n")
+            ))
+          )
+        notmuch-saved-searches))
+
+(defun l/count-query (query)
+  (with-temp-buffer
+    (insert query "\n")
+    (unless (= (call-process-region (point-min) (point-max) notmuch-command
+                                    t t nil "count" "--batch") 0)
+      (notmuch-logged-error "notmuch count --batch failed"
+"Please check that the notmuch CLI is new enough to support `count
+--batch'. In general we recommend running matching versions of
+the CLI and emacs interface."))
+
+    (goto-char (point-min))
+    (let ((n (read (current-buffer))))
+      (if (= n 0)
+          nil
+        (notmuch-hello-nice-number n)))))
+
+(defun l/notmuch-hello-query-insert (cnt query elem)
+  (if cnt
+      (let* ((str (format "%s" cnt))
+              (widget-push-button-prefix "")
+              (widget-push-button-suffix "")
+              (oldest-first (case (plist-get elem :sort-order)
+                              (newest-first nil)
+                              (oldest-first t)
+                              (otherwise notmuch-search-oldest-first))))
+        (widget-create 'push-button
+                        :notify #'notmuch-hello-widget-search
+                        :notmuch-search-terms query
+                        :notmuch-search-oldest-first oldest-first
+                        :notmuch-search-type 'tree
+                        str)
+        (widget-insert (make-string (- 8 (length str)) ? )))
+    (widget-insert "        ")))
+
+(defun l/notmuch-hello-insert-recent-searches ()
+  "Insert recent searches."
+  (when notmuch-search-history
+    (widget-insert "Recent searches:")
+    (widget-insert "\n\n")
+    (let ((start (point)))
+      (loop for i from 1 to notmuch-hello-recent-searches-max
+        for search in notmuch-search-history do
+        (let ((widget-symbol (intern (format "notmuch-hello-search-%d" i))))
+          (set widget-symbol
+           (widget-create 'editable-field
+                  ;; Don't let the search boxes be
+                  ;; less than 8 characters wide.
+                  :size (max 8
+                         (- (window-width)
+                        ;; Leave some space
+                        ;; at the start and
+                        ;; end of the
+                        ;; boxes.
+                        (* 2 notmuch-hello-indent)
+                        ;; 1 for the space
+                        ;; before the `[del]'
+                        ;; button. 5 for the
+                        ;; `[del]' button.
+                        1 5))
+                  :action (lambda (widget &rest ignore)
+                        (notmuch-hello-search (widget-value widget)))
+                  search))
+          (widget-insert " ")
+          (widget-create 'push-button
+                 :notify (lambda (widget &rest ignore)
+                       (when (y-or-n-p "Are you sure you want to delete this search? ")
+                     (notmuch-hello-delete-search-from-history widget)))
+                 :notmuch-saved-search-widget widget-symbol
+                 "del"))
+        (widget-insert "\n"))
+      (indent-rigidly start (point) notmuch-hello-indent))
+    nil))
+
+(defun l/toggle-deleted ()
+  "toggle deleted tag for message"
+  (interactive)
+  (if (member "deleted" (notmuch-show-get-tags))
+    (notmuch-show-tag '("-deleted"))
+    (notmuch-show-tag '("+deleted" "-inbox" "-unread"))))
+
+(defun l/toggle-flagged ()
+  "toggle deleted tag for message"
+  (interactive)
+  (if (member "flagged" (notmuch-show-get-tags))
+    (notmuch-show-tag '("-flagged"))
+    (notmuch-show-tag '("+flagged"))))
+
+(defhydra hydra-notmuch-show (:foreign-keys warn)
+  "notmuch-show"
+  ("f" l/toggle-flagged "toggle flagged tag")
+  ("q" nil "exit" :exit t))
+
+(general-define-key
+  :keymaps 'notmuch-show-mode-map
+  :states '(normal)
+  "m" 'hydra-notmuch-show/body)
+
+(provide 'l-notmuch)
