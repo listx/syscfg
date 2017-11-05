@@ -5,18 +5,18 @@ pythonfile = ~/syscfg/offlineimap/secrets.py
 [Account main]
 localrepository = main-local
 remoterepository = main-remote
+autorefresh = 1
+postsynchook = ~/syscfg/offlineimap/postsync
 
 [Repository main-local]
 type = Maildir
 localfolders = ~/mail
+nametrans = lambda f: '[Gmail]/' + f if f in ['Drafts', 'Spam', 'Trash', 'Sent Mail'] else f
 
 [Repository main-remote]
 type = Gmail
 maxconnections = 1
 remoteuser = linusarver@gmail.com
-folderfilter = lambda foldername: foldername in ['[Gmail]/All Mail', '[Gmail]/Sent Mail']
-nametrans = lambda foldername: re.sub('^\[Gmail\]/All Mail$', 'all', re.sub('^\[Gmail\]/Sent Mail$', 'sent', foldername))
+nametrans = lambda f: f.replace('[Gmail]/', '') if f.startswith('[Gmail]/') else f
 sslcacertfile = /etc/ssl/certs/ca-certificates.crt
-oauth2_client_id_eval = decrypt_secret("oauth2_client_id")
-oauth2_client_secret_eval = decrypt_secret("oauth2_client_secret")
-oauth2_refresh_token_eval = decrypt_secret("oauth2_refresh_token")
+remotepasseval = decrypt_secret("linusarver@gmail.com")

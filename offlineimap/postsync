@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+# Sync notmuch to offlineimap.
+notmuch new
+
+# Organize messages with tags.
+notmuch tag --batch --input="$HOME"/syscfg/notmuch/tags

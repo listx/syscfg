@@ -1,0 +1,8 @@
+# Mailing lists.
+-inbox +zsh-users to:zsh-users@zsh.org tag:inbox
+
+# Other.
+-inbox +deleted folder:Spam
+-inbox +deleted folder:Trash
+-inbox +sent -unread from:linusarver@gmail.com
+-inbox +sent -unread from:linus@ucla.edu

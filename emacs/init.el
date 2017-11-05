@@ -100,6 +100,7 @@
 (require 'l-markdown)
 (require 'l-mmm-mode)
 (require 'l-nix-mode)
+(require 'l-notmuch)
 (require 'l-org)
 (require 'l-php)
 (require 'l-python)
