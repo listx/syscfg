@@ -20,6 +20,14 @@
 # We define "newline" as the traditional UNIX line feed character (0x0a).
 
 set -o errexit
+# Make this script interactive (by default, git hooks are not run in an
+# interactive prompt.) In particular, this allows us to read STDIN from the
+# user.
+exec < /dev/tty
+
+red=$'\e[1;31m'
+blue=$'\e[1;34m'
+nocolor=$'\e[0m'
 
 # Print associative array.
 function print_keys()
@@ -29,9 +37,48 @@ function print_keys()
 	done
 }
 
+function ask_to_fix
+{
+	response=""
+	while true; do
+		read -r -p "${blue}Autofix [y,Y,n,q,?]?${nocolor} " response
+		case $response in
+			y) response="fix_index"; break ;;
+			Y) response="fix_both"; break ;;
+			n) exit 1 ;;
+			q) exit 1 ;;
+			*) echo -e "${red}\
+y - fix staging area
+Y - fix staging area and working tree
+n - abort commit
+q - abort commit
+? - print help${nocolor}" ;;
+		esac
+	done
+}
+
+function confirm_commit
+{
+	response=""
+	while true; do
+		read -r -p "${blue}Continue to commit [y,n,q,?]?${nocolor} " response
+		case $response in
+			y) break ;;
+			n) exit 1 ;;
+			q) exit 1 ;;
+			*) echo -e "${red}\
+y - commit
+n - abort commit
+q - abort commit
+? - print help${nocolor}" ;;
+		esac
+	done
+}
 errors_bl=0
 errors_nl=0
 errors_tw=0
+empty_index=0
+amending=0
 noeol="^\\\ No newline at end of file"
 declare -a bl nl
 declare -A tw
@@ -72,15 +119,49 @@ done < <(git diff --check --cached \
 	| grep "new blank line at EOF\.$" \
 	| sed -e '/^+/d')
 
+if ((errors_nl)) || ((errors_tw)) || ((errors_bl)); then
+	if ((errors_nl)); then
+		echo -e "${blue}Files without a final newline:${nocolor}"
+		for file in ${nl[*]}; do
+			echo "  $file"
+		done
+	fi
+	if ((errors_tw)); then
+		echo -e "${blue}Trailing whitespace:${nocolor}"
+		print_keys tw | while read file; do
+			printf "  $file: line"
+			case ${tw[$file]} in
+				*" "*) printf "s"
+			esac
+			for lnum in ${tw[$file]}; do
+				printf " $lnum"
+			done
+			echo
+		done
+	fi
+	if ((errors_bl)); then
+		echo -e "${blue}Trailing blank lines at EOF:${nocolor}"
+		for file in ${bl[*]}; do
+			echo "  $file"
+		done
+	fi
+	ask_to_fix
+fi
+
 # Fix all files which need to be fixed for the final newline.
 if ((errors_nl)); then
 	for file in ${nl[*]}; do
-		mode=$(git ls-files --stage "$file" | cut -d " " -f1)
-		sha1=$( (cat "$file" && echo) | git hash-object -w --stdin )
-		# Fix index.
-		git update-index --cacheinfo "$mode","$sha1","$file"
-		# Fix working tree.
-		echo >> "$file"
+		if [ "$response" == "fix_both" ] \
+		|| [ "$response" == "fix_index" ]; then
+			# Fix index.
+			mode=$(git ls-files --stage "$file" | cut -d " " -f1)
+			sha1=$( (cat "$file" && echo) | git hash-object -w --stdin )
+			git update-index --cacheinfo "$mode","$sha1","$file"
+		fi
+		if [ "$response" == "fix_both" ]; then
+			# Fix working tree.
+			echo >> "$file"
+		fi
 	done
 fi
 
@@ -95,13 +176,18 @@ if ((errors_tw)); then
 				bools+=" || \$. == $lnum"
 			fi
 		done
-		mode=$(git ls-files --stage "$file" | cut -d " " -f1)
-		sha1=$(perl -p -e "s/[\t ]+$// if ($bools)" "$file" \
-			| git hash-object -w --stdin)
-		# Fix index.
-		git update-index --cacheinfo "$mode","$sha1","$file"
-		# Fix working tree.
-		perl -pi -e "s/[\t ]+$// if ($bools)" "$file"
+		if [ "$response" == "fix_both" ] \
+		|| [ "$response" == "fix_index" ]; then
+			# Fix index.
+			mode=$(git ls-files --stage "$file" | cut -d " " -f1)
+			sha1=$(perl -p -e "s/[\t ]+$// if ($bools)" "$file" \
+				| git hash-object -w --stdin)
+			git update-index --cacheinfo "$mode","$sha1","$file"
+		fi
+		if [ "$response" == "fix_both" ]; then
+			# Fix working tree.
+			perl -pi -e "s/[\t ]+$// if ($bools)" "$file"
+		fi
 	done
 fi
 
@@ -115,21 +201,32 @@ fi
 # with consecutive newline characters.
 if ((errors_bl)); then
 	for file in ${bl[*]}; do
-		mode=$(git ls-files --stage "$file" | cut -d " " -f1)
-		sha1=$(perl -0777 -p -e "s/\n+\z/\n/" "$file" \
-			| git hash-object -w --stdin)
-		# Fix index.
-		git update-index --cacheinfo "$mode","$sha1","$file"
-		# Fix working tree.
-		perl -0777 -pi -e "s/\n+\z/\n/" "$file"
+		if [ "$response" == "fix_both" ] \
+		|| [ "$response" == "fix_index" ]; then
+			# Fix index.
+			mode=$(git ls-files --stage "$file" | cut -d " " -f1)
+			sha1=$(perl -0777 -p -e "s/\n+\z/\n/" "$file" \
+				| git hash-object -w --stdin)
+			git update-index --cacheinfo "$mode","$sha1","$file"
+		fi
+		if [ "$response" == "fix_both" ]; then
+			# Fix working tree.
+			perl -0777 -pi -e "s/\n+\z/\n/" "$file"
+		fi
 	done
 fi
 
 # It could be that after fixing all whitespace problems, there is actually
-# nothing to commit! In this case, we exit with an error.
+# nothing to commit! If the user was merely amending a commit, then there is no
+# error (the user could be trying to just reword the commit message).
 if (( $(git diff --cached | wc -l) == 0 )); then
-	if [[ $(ps -ocommand= -p $PPID) != "git commit --amend" ]]; then
-		echo "pre-commit hook: Nothing to commit."
-		exit 1
+	empty_index=1
+	if [[ $(ps -ocommand= -p $PPID) == "git commit --amend" ]]; then
+		amending=1
 	fi
+fi
+
+# Otherwise, pause for user input before opening up the commit message editor.
+if ((errors_nl)) || ((errors_tw)) || ((errors_bl)) || ((empty_index && !amending)); then
+	confirm_commit
 fi
