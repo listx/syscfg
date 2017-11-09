@@ -179,6 +179,11 @@ Each element has the form (NAME . HEX).
         :background "#fbf9f3")
         (((background dark))
         :background "#1d1d22")))
+      (widget-button
+        ((((background light))
+        :inherit 'default)
+        (((background dark))
+        :inherit 'default)))
       (org-done
         ((((background light))
         :foreground fg :weight bold)
