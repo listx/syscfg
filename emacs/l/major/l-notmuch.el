@@ -2,7 +2,24 @@
   :defer t
   :config
 
+  ; It's easier to make notmuch-hello-mode's Emacs state behave more sanely than
+  ; to make it use Normal state.
+  (evil-set-initial-state 'notmuch-hello-mode 'emacs)
+
   ; Bindings.
+  (evil-define-key 'emacs notmuch-hello-mode-map "h" 'widget-backward)
+  (evil-define-key 'emacs notmuch-hello-mode-map "j" 'widget-forward)
+  (evil-define-key 'emacs notmuch-hello-mode-map "k" 'widget-backward)
+  (evil-define-key 'emacs notmuch-hello-mode-map "l" 'widget-forward)
+  (evil-define-key 'emacs notmuch-hello-mode-map (kbd "<tab>") 'other-window)
+  (evil-define-key 'emacs notmuch-hello-mode-map [escape] 'evil-force-normal-state)
+  (evil-define-key 'emacs notmuch-hello-mode-map "H" 'evil-next-buffer)
+  (evil-define-key 'emacs notmuch-hello-mode-map "L" 'evil-prev-buffer)
+
+  (evil-define-key 'emacs notmuch-hello-mode-map "e" 'notmuch-jump-search)
+  (evil-define-key 'emacs notmuch-hello-mode-map "g" 'notmuch-poll-and-refresh-this-buffer)
+  (evil-define-key 'emacs notmuch-hello-mode-map "/" 'notmuch-search)
+
   (evil-define-key 'normal notmuch-show-mode-map "d" 'l/toggle-deleted)
   (evil-define-key 'normal notmuch-show-mode-map "f" 'l/toggle-flagged)
   (evil-define-key 'normal notmuch-show-mode-map "r" 'notmuch-show-reply)
@@ -41,7 +58,6 @@
 
   (setq notmuch-hello-sections '(
     l/notmuch-hello-insert-searches
-    notmuch-hello-insert-search
     l/notmuch-hello-insert-recent-searches))
 
   (defface l/notmuch-hello-header-face
