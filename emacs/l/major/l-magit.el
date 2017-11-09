@@ -1,4 +1,5 @@
 (use-package magit
+  :defer t
   :config
   (add-hook 'magit-mode-hook 'l/magit-setup))
 

@@ -1,4 +1,5 @@
 (use-package evil-magit
+  :defer t
   :config
   (defun l/nop (orig-fun &rest args)
     "Ignore `orig-fun'.")

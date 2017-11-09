@@ -1,4 +1,5 @@
 (use-package helm-projectile
+  :defer t
   :config
   (projectile-global-mode)
   (setq projectile-completion-system 'helm)

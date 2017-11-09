@@ -1,6 +1,9 @@
 ; Disable "*GNU Emacs*" startup buffer.
 (setq inhibit-startup-screen t)
 
+; Suppress defadvice redefinition warnings (such as by third party packages).
+(setq ad-redefinition-action 'accept)
+
 ; Disable all version control minor modes (e.g., vc-git).
 (setq vc-handled-backends nil)
 
