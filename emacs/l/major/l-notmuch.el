@@ -20,8 +20,11 @@
   (evil-define-key 'emacs notmuch-hello-mode-map "g" 'notmuch-poll-and-refresh-this-buffer)
   (evil-define-key 'emacs notmuch-hello-mode-map "/" 'notmuch-search)
 
-  (evil-define-key 'normal notmuch-show-mode-map "d" 'l/toggle-deleted)
-  (evil-define-key 'normal notmuch-show-mode-map "f" 'l/toggle-flagged)
+  (evil-define-key 'normal notmuch-show-mode-map "d" (lambda () (interactive) (l/toggle-tag "deleted")))
+  (evil-define-key 'normal notmuch-tree-mode-map "d" (lambda () (interactive) (l/toggle-tag "deleted")))
+  (evil-define-key 'normal notmuch-show-mode-map "f" (lambda () (interactive) (l/toggle-tag "flagged")))
+  (evil-define-key 'normal notmuch-tree-mode-map "f" (lambda () (interactive) (l/toggle-tag "flagged")))
+  (evil-define-key 'normal notmuch-show-mode-map "o" 'hydra-notmuch-show/body)
   (evil-define-key 'normal notmuch-show-mode-map "r" 'notmuch-show-reply)
   (evil-define-key 'normal notmuch-show-mode-map "R" 'notmuch-show-reply-sender)
 
@@ -182,28 +185,18 @@ the CLI and emacs interface."))
       (indent-rigidly start (point) notmuch-hello-indent))
     nil))
 
-(defun l/toggle-deleted ()
-  "toggle deleted tag for message"
-  (interactive)
-  (if (member "deleted" (notmuch-show-get-tags))
-    (notmuch-show-tag '("-deleted"))
-    (notmuch-show-tag '("+deleted" "-inbox" "-unread"))))
-
-(defun l/toggle-flagged ()
-  "toggle deleted tag for message"
-  (interactive)
-  (if (member "flagged" (notmuch-show-get-tags))
-    (notmuch-show-tag '("-flagged"))
-    (notmuch-show-tag '("+flagged"))))
+(defun l/toggle-tag (tag)
+  "toggle a tag for message"
+  (let
+    ((f (if (string= major-mode "notmuch-tree-mode") 'notmuch-tree-tag 'notmuch-show-tag)))
+    (if (member tag (notmuch-show-get-tags))
+      (funcall f `( ,(concat "-" tag) ))
+      (funcall f `( ,(concat "+" tag) )))))
 
 (defhydra hydra-notmuch-show (:foreign-keys warn)
   "notmuch-show"
-  ("f" l/toggle-flagged "toggle flagged tag")
+  ("d" (lambda () (interactive) (l/toggle-tag "deleted")) "(un)delete")
+  ("f" (lambda () (interactive) (l/toggle-tag "flagged")) "(un)flag")
   ("q" nil "exit" :exit t))
-
-(general-define-key
-  :keymaps 'notmuch-show-mode-map
-  :states '(normal)
-  "m" 'hydra-notmuch-show/body)
 
 (provide 'l-notmuch)
