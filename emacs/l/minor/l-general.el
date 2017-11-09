@@ -40,6 +40,8 @@
     "G" 'helm-all-mark-rings
     "h" 'l/split-vertically
 
+    "i" 'notmuch
+
     ; Literate haskell: write end/begin code blocks, and enter insert mode.
     ; TODO: make this just 1 funcion that does the right thing.
     "j" 'l/hs-literate-endbeg
