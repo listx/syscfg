@@ -1,3 +1,4 @@
-(use-package fuel)
+(use-package fuel
+  :defer t)
 
 (provide 'l-factor)
