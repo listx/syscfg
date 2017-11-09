@@ -32,15 +32,10 @@
   (evil-define-key 'normal notmuch-search-mode-map "g" 'notmuch-refresh-this-buffer)
   (evil-define-key 'normal notmuch-tree-mode-map "g" 'notmuch-refresh-this-buffer)
 
-  (evil-define-key 'normal notmuch-show-mode-map (kbd ")") 'notmuch-show-next-message)
-  (evil-define-key 'normal notmuch-show-mode-map (kbd "(") 'notmuch-show-previous-message)
-  (evil-define-key 'normal notmuch-show-mode-map (kbd "}") 'notmuch-show-next-thread-show)
-  (evil-define-key 'normal notmuch-show-mode-map (kbd "{") 'notmuch-show-previous-thread-show)
-
-  (evil-define-key 'normal notmuch-tree-mode-map (kbd ")") 'notmuch-tree-next-message)
-  (evil-define-key 'normal notmuch-tree-mode-map (kbd "(") 'notmuch-tree-prev-message)
-  (evil-define-key 'normal notmuch-tree-mode-map (kbd "}") 'notmuch-tree-next-thread)
-  (evil-define-key 'normal notmuch-tree-mode-map (kbd "{") 'notmuch-tree-prev-thread)
+  (evil-define-key 'normal notmuch-tree-mode-map (kbd "j") 'notmuch-tree-next-message)
+  (evil-define-key 'normal notmuch-tree-mode-map (kbd "k") 'notmuch-tree-prev-message)
+  (evil-define-key 'normal notmuch-tree-mode-map (kbd ")") 'notmuch-tree-next-thread)
+  (evil-define-key 'normal notmuch-tree-mode-map (kbd "(") 'notmuch-tree-prev-thread)
 
   (evil-define-key 'normal notmuch-search-mode-map (kbd "RET") 'notmuch-search-show-thread)
   (evil-define-key 'normal notmuch-tree-mode-map   (kbd "RET") 'notmuch-tree-show-message)
