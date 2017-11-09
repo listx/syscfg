@@ -48,6 +48,7 @@
   (setq notmuch-saved-searches
       '((:key "i" :name "inbox" :query "tag:inbox")
         (:key "z" :name "zsh-users" :query "tag:zsh-users")
+        (:key "n" :name "notmuch" :query "tag:notmuch")
         (:key "d" :name "deleted" :query "tag:deleted")
         (:key "f" :name "flagged" :query "tag:flagged")
         (:key "s" :name "sent" :query "tag:sent")
