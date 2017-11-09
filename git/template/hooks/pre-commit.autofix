@@ -79,6 +79,7 @@ errors_nl=0
 errors_tw=0
 empty_index=0
 amending=0
+rebasing=0
 noeol="^\\\ No newline at end of file"
 declare -a bl nl
 declare -A tw
@@ -224,9 +225,16 @@ if (( $(git diff --cached | wc -l) == 0 )); then
 	if [[ $(ps -ocommand= -p $PPID) == "git commit --amend" ]]; then
 		amending=1
 	fi
+	if [[ -d "$(git rev-parse --git-path rebase-merge)" \
+		|| -d "$(git rev-parse --git-path rebase-apply)" ]]; then
+		rebasing=1
+	fi
 fi
 
 # Otherwise, pause for user input before opening up the commit message editor.
-if ((errors_nl)) || ((errors_tw)) || ((errors_bl)) || ((empty_index && !amending)); then
+if ((errors_nl)) \
+	|| ((errors_tw)) \
+	|| ((errors_bl)) \
+	|| ((empty_index && !(amending || rebasing))); then
 	confirm_commit
 fi
