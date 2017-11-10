@@ -8,6 +8,6 @@ import subprocess
 def decrypt_secret(secret_type):
     """ Shell out to gpg CLI to retrieve the desired secret."""
     home = os.getenv("HOME")
-    path = "gpg2 -dq {}/secure/{}.gpg".format(home, secret_type)
-    secret = subprocess.check_output(path, shell=True).rstrip()
+    cmd = "gpg2 -dq {}/secure/{}.gpg".format(home, secret_type)
+    secret = subprocess.check_output(cmd, shell=True).rstrip()
     return secret
