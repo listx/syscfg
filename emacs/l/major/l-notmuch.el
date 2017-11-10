@@ -24,6 +24,8 @@
   (evil-define-key 'normal notmuch-tree-mode-map "d" (lambda () (interactive) (l/toggle-tag "deleted")))
   (evil-define-key 'normal notmuch-show-mode-map "f" (lambda () (interactive) (l/toggle-tag "flagged")))
   (evil-define-key 'normal notmuch-tree-mode-map "f" (lambda () (interactive) (l/toggle-tag "flagged")))
+  (evil-define-key 'normal notmuch-show-mode-map "u" (lambda () (interactive) (l/toggle-tag "unread")))
+  (evil-define-key 'normal notmuch-tree-mode-map "u" (lambda () (interactive) (l/toggle-tag "unread")))
   (evil-define-key 'normal notmuch-show-mode-map "o" 'hydra-notmuch-show/body)
   (evil-define-key 'normal notmuch-show-mode-map "r" 'notmuch-show-reply)
   (evil-define-key 'normal notmuch-show-mode-map "R" 'notmuch-show-reply-sender)
