@@ -6,6 +6,19 @@ import subprocess
 
 
 HOME = os.getenv("HOME")
+FOLDERS = {
+    "drafts": "[Gmail]/Drafts",
+    "inbox": "INBOX",
+    "sent": "[Gmail]/Sent Mail",
+    "spam": "[Gmail]/Spam",
+    "trash": "[Gmail]/Trash"}
+FOLDERS_REVERSED = {v: k for k, v in FOLDERS.items()}
+
+def nametrans_local(folder_name):
+    return FOLDERS.get(folder_name, folder_name)
+
+def nametrans_remote(folder_name):
+    return FOLDERS_REVERSED.get(folder_name, folder_name)
 
 def decrypt_secret(secret_type):
     """ Shell out to gpg CLI to retrieve the desired secret."""
