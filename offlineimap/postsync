@@ -4,7 +4,7 @@
 notmuch new
 
 # Organize messages with tags.
-notmuch tag --batch --input="$HOME"/syscfg/notmuch/tags
+notmuch tag --batch --input="$HOME"/tmp/notmuch-tags
 
 # Move deleted files to Trash folder.
 for f in $(notmuch search --output=files tag:deleted folder:INBOX); do

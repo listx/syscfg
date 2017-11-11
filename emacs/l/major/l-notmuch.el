@@ -49,12 +49,16 @@
   ; http://www.holgerschurig.de/en/emacs-notmuch-hello/.
   (setq notmuch-saved-searches
       '((:key "i" :name "inbox" :query "tag:inbox")
-        (:key "z" :name "zsh-users" :query "tag:zsh-users")
-        (:key "n" :name "notmuch" :query "tag:notmuch")
+        (:key "u" :name "unread" :query "tag:unread")
         (:key "d" :name "deleted" :query "tag:deleted")
         (:key "f" :name "flagged" :query "tag:flagged")
         (:key "s" :name "sent" :query "tag:sent")
-        (:key "u" :name "unread" :query "tag:unread")
+        (:key "z" :name "zsh-users" :query "tag:zsh-users")
+        (:key "n" :name "notmuch" :query "tag:notmuch")
+        (:key "w" :name "woodworking" :query "tag:woodworking")
+        (:key "p" :name "purchases" :query "tag:purchases")
+        (:key "S" :name "social" :query "tag:social")
+        (:key "F" :name "finance" :query "tag:finance")
         ))
 
   (setq notmuch-hello-sections '(
