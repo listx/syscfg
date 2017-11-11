@@ -1,11 +1,12 @@
 [general]
 accounts = main
-pythonfile = ~/syscfg/offlineimap/secrets.py
+pythonfile = ~/syscfg/offlineimap/lib.py
 
 [Account main]
 localrepository = main-local
 remoterepository = main-remote
 autorefresh = 1
+presynchook = ~/syscfg/offlineimap/lib.py
 postsynchook = ~/syscfg/offlineimap/postsync
 
 [Repository main-local]
