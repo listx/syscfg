@@ -12,12 +12,12 @@ postsynchook = ~/syscfg/offlineimap/postsync
 [Repository main-local]
 type = Maildir
 localfolders = ~/mail
-nametrans = lambda f: '[Gmail]/' + f if f in ['Drafts', 'Spam', 'Trash', 'Sent Mail'] else f
+nametrans = nametrans_local
 
 [Repository main-remote]
 type = Gmail
 maxconnections = 1
 remoteuser = linusarver@gmail.com
-nametrans = lambda f: f.replace('[Gmail]/', '') if f.startswith('[Gmail]/') else f
+nametrans = nametrans_remote
 sslcacertfile = /etc/ssl/certs/ca-certificates.crt
 remotepasseval = decrypt_secret("linusarver@gmail.com")
