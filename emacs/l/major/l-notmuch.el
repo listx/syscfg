@@ -26,6 +26,11 @@
   (evil-define-key 'normal notmuch-tree-mode-map "f" (lambda () (interactive) (l/toggle-tag "flagged")))
   (evil-define-key 'normal notmuch-show-mode-map "u" (lambda () (interactive) (l/toggle-tag "unread")))
   (evil-define-key 'normal notmuch-tree-mode-map "u" (lambda () (interactive) (l/toggle-tag "unread")))
+
+  (evil-define-key 'normal notmuch-tree-mode-map "D" (lambda () (interactive) (l/toggle-tag "deleted" t)))
+  (evil-define-key 'normal notmuch-tree-mode-map "F" (lambda () (interactive) (l/toggle-tag "flagged" t)))
+  (evil-define-key 'normal notmuch-tree-mode-map "U" (lambda () (interactive) (l/toggle-tag "unread" t)))
+
   (evil-define-key 'normal notmuch-show-mode-map "o" 'hydra-notmuch-show/body)
   (evil-define-key 'normal notmuch-show-mode-map "r" 'notmuch-show-reply)
   (evil-define-key 'normal notmuch-show-mode-map "R" 'notmuch-show-reply-sender)
@@ -192,10 +197,15 @@ the CLI and emacs interface."))
       (indent-rigidly start (point) notmuch-hello-indent))
     nil))
 
-(defun l/toggle-tag (tag)
+(defun l/toggle-tag (tag &optional thread)
   "toggle a tag for message"
   (let
-    ((f (if (string= major-mode "notmuch-tree-mode") 'notmuch-tree-tag 'notmuch-show-tag)))
+    ((f
+      (if (string= major-mode "notmuch-tree-mode")
+        (if thread
+          'notmuch-tree-tag-thread
+          'notmuch-tree-tag)
+        'notmuch-show-tag)))
     (if (member tag (notmuch-show-get-tags))
       (funcall f `( ,(concat "-" tag) ))
       (funcall f `( ,(concat "+" tag) )))))
