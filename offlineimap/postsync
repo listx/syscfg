@@ -7,6 +7,9 @@ notmuch new
 notmuch tag --batch --input="$HOME"/tmp/notmuch-tags
 
 # Move deleted files to Trash folder.
-for f in $(notmuch search --output=files tag:deleted folder:INBOX); do
+for f in $(notmuch search --output=files \
+	tag:deleted \
+	'(not (folder:Trash or folder:Spam or tag:sent))'); do
+
 	mv "$f" ~/mail/Trash/cur
 done
