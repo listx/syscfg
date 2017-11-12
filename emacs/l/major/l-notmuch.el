@@ -20,14 +20,16 @@
   (evil-define-key 'emacs notmuch-hello-mode-map "g" 'notmuch-poll-and-refresh-this-buffer)
   (evil-define-key 'emacs notmuch-hello-mode-map "/" 'notmuch-search)
 
-  (evil-define-key 'normal notmuch-show-mode-map "d" (lambda () (interactive) (l/toggle-tag "deleted")))
-  (evil-define-key 'normal notmuch-tree-mode-map "d" (lambda () (interactive) (l/toggle-tag "deleted")))
+  (evil-define-key 'normal notmuch-show-mode-map "d" (lambda () (interactive) (l/toggle-tag "trash")))
+  (evil-define-key 'normal notmuch-tree-mode-map "d" (lambda () (interactive) (l/toggle-tag "trash")))
   (evil-define-key 'normal notmuch-show-mode-map "f" (lambda () (interactive) (l/toggle-tag "flagged")))
   (evil-define-key 'normal notmuch-tree-mode-map "f" (lambda () (interactive) (l/toggle-tag "flagged")))
   (evil-define-key 'normal notmuch-show-mode-map "u" (lambda () (interactive) (l/toggle-tag "unread")))
   (evil-define-key 'normal notmuch-tree-mode-map "u" (lambda () (interactive) (l/toggle-tag "unread")))
+  (evil-define-key 'normal notmuch-show-mode-map "s" (lambda () (interactive) (l/toggle-tag "spam")))
+  (evil-define-key 'normal notmuch-tree-mode-map "s" (lambda () (interactive) (l/toggle-tag "spam")))
 
-  (evil-define-key 'normal notmuch-tree-mode-map "D" (lambda () (interactive) (l/toggle-tag "deleted" t)))
+  (evil-define-key 'normal notmuch-tree-mode-map "D" (lambda () (interactive) (l/toggle-tag "trash" t)))
   (evil-define-key 'normal notmuch-tree-mode-map "F" (lambda () (interactive) (l/toggle-tag "flagged" t)))
   (evil-define-key 'normal notmuch-tree-mode-map "U" (lambda () (interactive) (l/toggle-tag "unread" t)))
 
@@ -55,7 +57,6 @@
   (setq notmuch-saved-searches
       '((:key "i" :name "inbox" :query "tag:inbox")
         (:key "u" :name "unread" :query "tag:unread")
-        (:key "d" :name "deleted" :query "tag:deleted")
         (:key "f" :name "flagged" :query "tag:flagged")
         (:key "s" :name "sent" :query "tag:sent")
         (:key "z" :name "zsh-users" :query "tag:zsh-users")
@@ -64,7 +65,7 @@
         (:key "p" :name "purchases" :query "tag:purchases")
         (:key "S" :name "social" :query "tag:social")
         (:key "F" :name "finance" :query "tag:finance")
-        (         :name "trash" :query "folder:trash")
+        (:key "d" :name "trash" :query "tag:trash")
         (         :name "spam" :query "folder:spam")
         ))
 
@@ -118,7 +119,11 @@
               (l/notmuch-hello-query-insert n_new q_new elem)
               (l/notmuch-hello-query-insert n_tot q_tot elem)
               (widget-insert "   ")
-              (widget-insert (plist-get elem :key))
+              (widget-insert
+                ; Only insert a hotkey if there is one.
+                (if (plist-member elem :key)
+                  (plist-get elem :key)
+                  " "))
               (widget-insert "    ")
               (widget-insert (plist-get elem :name))
               (widget-insert "\n")
@@ -214,7 +219,7 @@ the CLI and emacs interface."))
 
 (defhydra hydra-notmuch-show (:foreign-keys warn)
   "notmuch-show"
-  ("d" (lambda () (interactive) (l/toggle-tag "deleted")) "(un)delete")
+  ("d" (lambda () (interactive) (l/toggle-tag "trash")) "(un)delete")
   ("f" (lambda () (interactive) (l/toggle-tag "flagged")) "(un)flag")
   ("q" nil "exit" :exit t))
 

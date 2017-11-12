@@ -6,10 +6,14 @@ notmuch new
 # Organize messages with tags.
 notmuch tag --batch --input="$HOME"/tmp/notmuch-tags
 
-# Move deleted messages to "trash" folder.
+# Move messages tagged as "trash" to the "trash" folder. Messages downloaded
+# from the remote "[Gmail]/Trash" folder get tagged as "trash" above, so this
+# only grabs those "trash"-ed messages not already in the "trash" folder. This
+# is how we propagate our "tag as trash" operations in notmuch back up to Gmail.
+# The only caveat is that we do not allow deletion of sent messages.
 notmuch search --output=files \
-	tag:deleted \
-	'(not (folder:trash or folder:spam or tag:sent))' \
+	tag:trash \
+	'(not (folder:trash OR tag:sent))' \
 	| while read -r f; do
 
 	mv "$f" ~/mail/trash/cur
