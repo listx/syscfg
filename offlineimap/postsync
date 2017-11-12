@@ -6,10 +6,12 @@ notmuch new
 # Organize messages with tags.
 notmuch tag --batch --input="$HOME"/tmp/notmuch-tags
 
-# Move deleted files to Trash folder.
-for f in $(notmuch search --output=files \
+# Move deleted messages to "trash" folder.
+notmuch search --output=files \
 	tag:deleted \
-	'(not (folder:Trash or folder:Spam or tag:sent))'); do
+	'(not (folder:trash or folder:spam or tag:sent))' \
+	| while read -r f; do
 
-	mv "$f" ~/mail/Trash/cur
+	mv "$f" ~/mail/trash/cur
+
 done
