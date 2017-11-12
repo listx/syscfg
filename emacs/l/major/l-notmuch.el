@@ -101,6 +101,8 @@
   (setq message-directory "~/mail/")
   ; Kill buffer after sending mail.
   (setq message-kill-buffer-on-exit t)
+  ; Setup message signature.
+  (add-hook 'message-signature-setup-hook 'l/message-signature-setup)
 
   ; Add a thousandth separator for message counts.
   (setq notmuch-hello-thousands-separator ",")
@@ -216,6 +218,32 @@ the CLI and emacs interface."))
     (if (member tag (notmuch-show-get-tags))
       (funcall f `( ,(concat "-" tag) ))
       (funcall f `( ,(concat "+" tag) )))))
+
+(defun l/message-signature-setup ()
+  "Add signature."
+  ; We add our own custom bit of text, outside of the default framework provided
+  ; by `message-signature', because we don't want to add the "-- " prefix to our
+  ; signature. See
+  ; https://emacs.stackexchange.com/questions/28100/message-insert-signature-do-not-add-the-prefix.
+  ; NOTE: This code is actually half-baked, because we don't know how to create
+  ; replies such that the message-cite-reply-position variable actually varies
+  ; over different types of messages being replied to. Still, it's a start.
+  (let
+    ( (sig-ml "\n\n-- \nBest,\nLinus\n")
+      (sig-other "\n\nLinus"))
+    (save-excursion
+      (if (eq message-cite-reply-position 'above)
+        (progn
+          (message-goto-body)
+          (insert sig-other))
+        (progn
+          (message-goto-signature)
+          (insert sig-ml))))))
+
+(defun l/message-signature ()
+  "Email signature. In the future, this should depend on the `From:' header of
+the message."
+  (concat "Best regards,\n" "Linus"))
 
 (defhydra hydra-notmuch-show (:foreign-keys warn)
   "notmuch-show"
