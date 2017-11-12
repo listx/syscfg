@@ -351,3 +351,20 @@ esac
 if [[ $TERM == "dumb" ]]; then
     unset zle_bracketed_paste
 fi
+
+# ZSH Plugins with ZPlug. To install ZPlug, see https://github.com/zplug/zplug.
+source ~/.zplug/init.zsh
+
+zplug "MichaelAquilina/zsh-you-should-use"
+# Do not execute commands if there is an existing shorter alias.
+export YSU_HARDCORE=1
+
+# Install plugins if there are plugins that have not been installed
+if ! zplug check --verbose; then
+    printf "Install? [y/N]: "
+    if read -q; then
+        echo; zplug install
+    fi
+fi
+
+zplug load --verbose
