@@ -64,6 +64,8 @@
         (:key "p" :name "purchases" :query "tag:purchases")
         (:key "S" :name "social" :query "tag:social")
         (:key "F" :name "finance" :query "tag:finance")
+        (         :name "trash" :query "folder:trash")
+        (         :name "spam" :query "folder:spam")
         ))
 
   (setq notmuch-hello-sections '(
