@@ -7,27 +7,50 @@
   (evil-set-initial-state 'notmuch-hello-mode 'emacs)
 
   ; Bindings.
-  (evil-define-key 'emacs notmuch-hello-mode-map "h" 'widget-backward)
-  (evil-define-key 'emacs notmuch-hello-mode-map "j" 'widget-forward)
-  (evil-define-key 'emacs notmuch-hello-mode-map "k" 'widget-backward)
-  (evil-define-key 'emacs notmuch-hello-mode-map "l" 'widget-forward)
-  (evil-define-key 'emacs notmuch-hello-mode-map (kbd "<tab>") 'other-window)
-  (evil-define-key 'emacs notmuch-hello-mode-map [escape] 'evil-force-normal-state)
-  (evil-define-key 'emacs notmuch-hello-mode-map "H" 'evil-next-buffer)
-  (evil-define-key 'emacs notmuch-hello-mode-map "L" 'evil-prev-buffer)
+  (evil-define-key 'emacs notmuch-hello-mode-map
+    "h" 'widget-backward
+    "j" 'widget-forward
+    "k" 'widget-backward
+    "l" 'widget-forward
+    (kbd "<tab>") 'other-window
+    [escape] 'evil-force-normal-state
+    "H" 'evil-next-buffer
+    "L" 'evil-prev-buffer
+    "e" 'notmuch-jump-search
+    "g" 'notmuch-poll-and-refresh-this-buffer
+    "/" 'notmuch-search)
 
-  (evil-define-key 'emacs notmuch-hello-mode-map "e" 'notmuch-jump-search)
-  (evil-define-key 'emacs notmuch-hello-mode-map "g" 'notmuch-poll-and-refresh-this-buffer)
-  (evil-define-key 'emacs notmuch-hello-mode-map "/" 'notmuch-search)
+  ; Use consistent keybindings across multiple notmuch modes.
+  (l/bind-keys
+    'normal
+    '(
+      notmuch-show-mode-map
+      notmuch-tree-mode-map)
+    '(
+      (:key "d" :func (lambda () (interactive) (l/toggle-tag "trash")))
+      (:key "f" :func (lambda () (interactive) (l/toggle-tag "flagged")))
+      (:key "u" :func (lambda () (interactive) (l/toggle-tag "unread")))
+      (:key "s" :func (lambda () (interactive) (l/toggle-tag "spam")))
+    ))
 
-  (evil-define-key 'normal notmuch-show-mode-map "d" (lambda () (interactive) (l/toggle-tag "trash")))
-  (evil-define-key 'normal notmuch-tree-mode-map "d" (lambda () (interactive) (l/toggle-tag "trash")))
-  (evil-define-key 'normal notmuch-show-mode-map "f" (lambda () (interactive) (l/toggle-tag "flagged")))
-  (evil-define-key 'normal notmuch-tree-mode-map "f" (lambda () (interactive) (l/toggle-tag "flagged")))
-  (evil-define-key 'normal notmuch-show-mode-map "u" (lambda () (interactive) (l/toggle-tag "unread")))
-  (evil-define-key 'normal notmuch-tree-mode-map "u" (lambda () (interactive) (l/toggle-tag "unread")))
-  (evil-define-key 'normal notmuch-show-mode-map "s" (lambda () (interactive) (l/toggle-tag "spam")))
-  (evil-define-key 'normal notmuch-tree-mode-map "s" (lambda () (interactive) (l/toggle-tag "spam")))
+  (l/bind-keys
+    'normal
+    '(
+      notmuch-show-mode-map
+      notmuch-tree-mode-map
+      notmuch-search-mode-map)
+    '(
+      (:key "q" :func notmuch-bury-or-kill-this-buffer)
+    ))
+
+  (l/bind-keys
+   'normal
+   '(
+     notmuch-tree-mode-map
+     notmuch-search-mode-map)
+   '(
+      (:key "g" :func notmuch-refresh-this-buffer)
+    ))
 
   (evil-define-key 'normal notmuch-tree-mode-map "D" (lambda () (interactive) (l/toggle-tag "trash" t)))
   (evil-define-key 'normal notmuch-tree-mode-map "F" (lambda () (interactive) (l/toggle-tag "flagged" t)))
@@ -36,13 +59,6 @@
   (evil-define-key 'normal notmuch-show-mode-map "o" 'hydra-notmuch-show/body)
   (evil-define-key 'normal notmuch-show-mode-map "r" 'notmuch-show-reply)
   (evil-define-key 'normal notmuch-show-mode-map "R" 'notmuch-show-reply-sender)
-
-  (evil-define-key 'normal notmuch-search-mode-map "q" 'notmuch-bury-or-kill-this-buffer)
-  (evil-define-key 'normal notmuch-show-mode-map "q" 'notmuch-bury-or-kill-this-buffer)
-  (evil-define-key 'normal notmuch-tree-mode-map "q" 'notmuch-bury-or-kill-this-buffer)
-
-  (evil-define-key 'normal notmuch-search-mode-map "g" 'notmuch-refresh-this-buffer)
-  (evil-define-key 'normal notmuch-tree-mode-map "g" 'notmuch-refresh-this-buffer)
 
   (evil-define-key 'normal notmuch-tree-mode-map (kbd "j") 'notmuch-tree-next-message)
   (evil-define-key 'normal notmuch-tree-mode-map (kbd "k") 'notmuch-tree-prev-message)
@@ -108,6 +124,18 @@
   (setq notmuch-hello-thousands-separator ",")
   ; Display newest email up top.
   (setq notmuch-search-oldest-first nil))
+
+(defun l/bind-keys (mode keymaps plists)
+  "Call l/bind-key en masse for multiple keys."
+  (mapc (lambda (plist) (l/bind-key mode keymaps plist)) plists))
+
+(defun l/bind-key (mode keymaps plist)
+  "Bind the same key to multiple keymaps."
+  (let
+    (
+      (key (plist-get plist :key))
+      (func (plist-get plist :func)))
+    (mapc (lambda (keymap) (evil-define-key mode keymap key func)) keymaps)))
 
 (defun l/notmuch-hello-insert-searches ()
   "Insert the saved-searches section."
