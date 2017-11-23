@@ -7,6 +7,7 @@ bash:
 	ln -fs ${C}/bash/.bashrc                            ${H}
 emacs:
 	ln -fns ${C}/emacs                                  ${H}/.emacs.d
+	touch                                               ${H}/.emacs.d/custom.el
 git:
 ifeq ('${T}','larver-w0')
 	ln -fs ${C}/git/cfg.imvu.conf                       ${H}/.gitconfig
