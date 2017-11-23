@@ -353,7 +353,12 @@ if [[ $TERM == "dumb" ]]; then
 fi
 
 # ZSH Plugins with ZPlug. To install ZPlug, see https://github.com/zplug/zplug.
-source ~/.zplug/init.zsh
+if [[ $HOST =~ macbook ]]; then
+    export ZPLUG_HOME=$HOME/homebrew/opt/zplug
+    source $ZPLUG_HOME/init.zsh
+else
+    source ~/.zplug/init.zsh
+fi
 
 zplug "MichaelAquilina/zsh-you-should-use"
 # Do not execute commands if there is an existing shorter alias.
