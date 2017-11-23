@@ -111,3 +111,6 @@ zsh:
 	ln -fns ${C}/zsh                                    ${H}/.zsh
 	ln -fs ${C}/zsh/.zshrc                              ${H}
 	mkdir -p ${H}/.zsh-untracked
+ifneq (,$(findstring macbook,${T}))
+	ln -fs ${C}/zsh/zprofile-mac                        ${H}/.zprofile
+endif
