@@ -3,6 +3,27 @@
   (interactive)
   (string-equal system-type system))
 
+; If on Mac, make Emacs aware of special paths, esp. Homebrew (for `exec-path').
+; Unfortunately, setting "PATH" does not automatically set `exec-path'. So, we
+; do both for consistency. See
+; http://ergoemacs.org/emacs/emacs_env_var_paths.html.
+(if (l/os "darwin")
+  (let*
+    ((HOME (getenv "HOME"))
+     (PATH (getenv "PATH"))
+     (paths `(
+      ,(concat HOME "/bin")
+      ,(concat HOME "/homebrew/bin"))))
+    (setenv "PATH" (concat (mapconcat 'identity paths ":") ":" PATH))
+    ; The way in which `exec-path' is set here is hacky. It appears that
+    ; exec-directory has little bearing to $PATH, so we just prepend $PATH to
+    ; exec-directory and hope for the best. It could be that exec-directory is
+    ; useless, but we give upstream code the benefit of the doubt.
+    (setq exec-path
+      (append
+        (split-string (getenv "PATH") ":")
+        (list exec-directory)))))
+
 ; Increase garbage collection threshhold during startup to inhibit its
 ; activation. This way, startup can be a little bit faster. See
 ; https://github.com/nilcons/emacs-use-package-fast.
