@@ -18,7 +18,7 @@
   ; We need to use 'eval-after-load' because otherwise we get an error about
   ; `helm-map' not existing yet.
   (with-eval-after-load "helm-mode"
-    (loop for ext in '("\\.elc$")
+    (cl-loop for ext in '("\\.elc$")
       do (add-to-list 'helm-boring-file-regexp-list ext))
 
     ; From http://emacs.stackexchange.com/a/7896. Slightly modified as usual.
