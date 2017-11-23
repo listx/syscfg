@@ -4,7 +4,9 @@
 
 export TERM_COLOR_SCHEME_CURRENT='wb'
 
-case $HOST in
+case $(uname) in
+Linux)
+    case $HOST in
     k1)
         geom="100x50"
         fonts="xft:Terminus:pixelsize=14,xft:IPAGothic,xft:Baekmuk Gulim"
@@ -17,16 +19,38 @@ case $HOST in
         geom="100x70"
         fonts="xft:Terminus:pixelsize=14,xft:IPAGothic,xft:Baekmuk Gulim"
     ;;
+    esac
+;;
+Darwin)
+    geom="80x20"
+    fonts="xft:Input Mono Condensed:pixelsize=14,xft:IPAGothic,xft:Baekmuk Gulim"
+;;
 esac
 
 c_cursor="#00ff00"    # cursor color
 
+case $(uname) in
+Linux)
 c_bg="#22222a" # background
 c_00="#22222a" # black
+;;
+Darwin)
+c_bg="#11111a" # background
+c_00="#11111a" # black
+;;
+esac
 c_08="#709080" # black bright
 
+case $(uname) in
+Linux)
 c_fg="#cccccf" # foreground
 c_07="#cccccf" # white
+;;
+Darwin)
+c_fg="#ffffff" # foreground
+c_07="#ffffff" # white
+;;
+esac
 c_15="#ffffff" # white bright
 
 c_01="#d78787" # red regular
