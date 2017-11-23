@@ -13,3 +13,13 @@ export PATH="/Users/linusa/homebrew/opt/coreutils/libexec/gnubin:$PATH"
 
 # Prefer GNU sed over BSD sed.
 export PATH="/Users/linusa/homebrew/opt/gnu-sed/libexec/gnubin:$PATH"
+
+# Always pretend that we are using xterm-256color. Even iTerm2 does this.
+export TERM=xterm-256color
+
+# Make urxvt (started from XQuartz) happy. In particular, this makes our Zsh
+# prompt's use of Chinese characters for displaying the day of the week work
+# correctly (otherwise we get garbled characters instead).
+export LANG=en_US.UTF-8
+
+alias vi='vim -p'
