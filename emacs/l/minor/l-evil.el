@@ -187,7 +187,7 @@
 
 ;      ; We explicitly use 'xsel' to update the primary selection; this
 ;      ; way, we can emulate Vim's behavior in both terminal and GUI emacs.
-      (if (string-match "^Linuss" system-name)
+      (if (l/os "darwin")
         (call-process-region
           evil-visual-beginning
           evil-visual-end
@@ -253,7 +253,7 @@
     (
       (xpribuf
         (if (display-graphic-p)
-          (if (string-match "^Linuss" system-name)
+          (if (l/os "darwin")
             ; Mac has no concept of primary vs clipboard
             ; selection. Everything is just "clipboard".
             (x-get-selection 'CLIPBOARD)

@@ -43,8 +43,8 @@
 
 (defvar l/font-collection
   (cond
-    ((string-match "^Linuss" system-name)
-      '("Input Mono Compressed" "PT Mono"))
+    ((l/os "darwin")
+      '("Input Mono Condensed" "PT Mono"))
     ((string-match "^larver-w0" system-name)
       '("Input Mono Narrow" "Terminus"))
     ((string-match "^larver-w1" system-name)
@@ -140,7 +140,7 @@
     ((string-match "^larver-w[01]" system-name)
       102
     )
-    ((string-match "^Linuss" system-name)
+    ((l/os "darwin")
       144
     )
     (t 91)))

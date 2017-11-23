@@ -72,7 +72,7 @@
 ; rendering bug, which results in a distorted buffer in the center of the screen
 ; (presumably where the visual bell would have been rendered). So, disable for
 ; now.
-(when (string-match "^Linuss" system-name)
+(when (l/os "darwin")
   (setq ring-bell-function 'ignore))
 
 ; Set default Frame size for non-XMonad machines.
@@ -84,7 +84,7 @@
 
 ; For Mac, load brew paths. This is the analogue to NixOS's need to load system
 ; packages.
-(if (string-match "^Linuss" system-name)
+(if (l/os "darwin")
   ; Load brew paths
   (setq exec-path (append exec-path '("/usr/local/bin"))))
 
