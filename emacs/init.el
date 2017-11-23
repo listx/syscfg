@@ -35,9 +35,6 @@
 (defmacro l/define-key-args (map key func &rest args)
   `(define-key ,map ,key (lambda () (interactive) (,func ,@args))))
 
-(defmacro l/lambda-args (map key func &rest args)
-  `(define-key ,map ,key (lambda () (interactive) (,func ,@args))))
-
 (defmacro l/add-hook-args (hook func &rest args)
   `(add-hook ,hook (lambda () (interactive) (,func ,@args))))
 
