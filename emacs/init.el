@@ -1,3 +1,8 @@
+; Helper function for determining system type.
+(defun l/os (system)
+  (interactive)
+  (string-equal system-type system))
+
 ; Increase garbage collection threshhold during startup to inhibit its
 ; activation. This way, startup can be a little bit faster. See
 ; https://github.com/nilcons/emacs-use-package-fast.
