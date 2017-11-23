@@ -218,17 +218,23 @@
       ; Insert text to temp-buffer, and "send" content to xsel stdin
       (with-temp-buffer
         (insert text)
-        ; I prefer using the "clipboard" selection (the one the
-        ; typically is used by c-c/c-v) before the primary selection
-        ; (that uses mouse-select/middle-button-click)
-        (call-process-region
-          (point-min)
-          (point-max)
-          "xsel"
-          nil
-          0
-          nil
-          "--clipboard" "--input")))
+        (if (l/os "darwin")
+          (call-process-region
+            evil-visual-beginning
+            evil-visual-end
+            "pbcopy"
+            nil
+            0
+            nil
+            "-pboard" "general")
+          (call-process-region
+            (point-min)
+            (point-max)
+            "xsel"
+            nil
+            0
+            nil
+            "--clipboard" "--input"))))
     ; Call back for when user pastes
     ; Idea from
     ; http://shreevatsa.wordpress.com/2006/10/22/emacs-copypaste-and-x/
@@ -239,9 +245,10 @@
       ; it. Else, nil is returned, so whatever is in the top of the
       ; kill-ring will be used.
       (let
-        (
-          (xsel-output
-            (shell-command-to-string "xsel --clipboard --output")))
+        ((xsel-output (shell-command-to-string
+          (if (l/os "darwin")
+            "pbpaste"
+            "xsel --clipboard --output"))))
       (unless (string= (car kill-ring) xsel-output) xsel-output)))
     ; Attach callbacks to hooks
     (setq interprogram-cut-function 'xsel-cut-function)
