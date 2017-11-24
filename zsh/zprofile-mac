@@ -14,6 +14,12 @@ export PATH="/Users/linusa/homebrew/opt/coreutils/libexec/gnubin:$PATH"
 # Prefer GNU sed over BSD sed.
 export PATH="/Users/linusa/homebrew/opt/gnu-sed/libexec/gnubin:$PATH"
 
+# For urxvt running under XQuartz, set keystroke repeat speed (delay, speed)
+# manually (this is a bit hacky, but I am not aware of a cleaner way).
+if [[ $TERM == "rxvt-unicode-256color" ]]; then
+    xset r rate 250 80
+fi
+
 # Always pretend that we are using xterm-256color. Even iTerm2 does this.
 export TERM=xterm-256color
 
