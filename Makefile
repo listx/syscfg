@@ -85,6 +85,7 @@ urxvt:
 	ln -fns ${C}/urxvt                                  ${H}/.urxvt
 ifeq ('${S}','Darwin')
 	ln -fns ${H}/prog/foreign/urxvt-perls               ${H}/.urxvt/ext
+	ln -fns ${H}/prog/foreign/urxvt-font-size           ${H}/.urxvt/ext
 else
 	ln -fns ${H}/.nix-profile/lib/urxvt/perl            ${H}/.urxvt/ext
 endif
