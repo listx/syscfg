@@ -11,7 +11,7 @@ emacs:
 	touch                                               ${H}/.emacs.d/custom.el
 git:
 ifeq ('${S}','Darwin')
-	ln -fs ${C}/git/cfg.imvu.conf                       ${H}/.gitconfig
+	ln -fs ${C}/git/cfg.google.conf                     ${H}/.gitconfig
 else
 	ln -fs ${C}/git/cfg.personal.conf                   ${H}/.gitconfig
 endif
@@ -72,7 +72,7 @@ sage:
 ssh:
 	ln -fns ${C}/ssh                                    ${H}/.ssh
 ifeq ('${T}','Darwin')
-	ln -fs ${C}/ssh/config.imvu.conf                    ${H}/.ssh/config
+	ln -fs ${C}/ssh/config.google.conf                  ${H}/.ssh/config
 else
 	ln -fs ${C}/ssh/config.home.conf                    ${H}/.ssh/config
 endif

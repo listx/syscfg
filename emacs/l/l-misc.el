@@ -75,13 +75,6 @@
 (when (l/os "darwin")
   (setq ring-bell-function 'ignore))
 
-; Set default Frame size for non-XMonad machines.
-(add-hook 'after-init-hook '(lambda ()
-  (when (display-graphic-p)
-    (cond
-      ((string-match "^larver-w1" system-name)
-        (set-frame-size (selected-frame) 160 73))))))
-
 ; For Mac, load brew paths. This is the analogue to NixOS's need to load system
 ; packages.
 (if (l/os "darwin")

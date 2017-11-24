@@ -19,7 +19,8 @@
 (defun l/kakapo-indents ()
   (let
     (
-      (b (buffer-file-name)))
+      (b (buffer-file-name))
+      (h (getenv "HOME")))
     (defun h (hook tmode twidth &optional func)
       (l/add-hook hook tmode twidth func))
     (if b
@@ -29,13 +30,7 @@
 
         ; Work settings
         ((or
-          (string-match "/home/l/j/" b)
-          (string-match "/home/l/k/" b)
-          (string-match "/home/l/imvu/resty" b)
-          (string-match "/home/larver/j/" b)
-          (string-match "/home/larver/k/" b)
-          (string-match "/home/larver/imvu" b)
-          (string-match "/home/larver/imvu/resty" b))
+          (string-match "/k/" b))
           (cond
             ((or
               (string-match ".+\\.gemspec$" b)
@@ -55,21 +50,6 @@
               (h 'dockerfile-mode-hook nil 4))
             ((string-match ".+Jenkinsfile$" b)
               (h 'groovy-mode-hook nil 4))
-            ; Haskell
-            ((string-match "\\.hs$" b)
-              ; Use custom logic for blacklisting certain projects
-              ; from enabling intero-mode. This is because if we use
-              ; intero-blacklist-mode naively, we get an error.
-              (if
-                (or
-                  (string-match "/home/l/k/resty" b)
-                  (string-match "/home/l/imvu/resty" b)
-                  (string-match "/home/larver/k/resty" b)
-                  (string-match "/home/larver/imvu/resty" b))
-                (h 'haskell-mode-hook nil 4)
-                (progn
-                  (h 'haskell-mode-hook nil 2)
-                  (add-hook 'haskell-mode-hook 'l/haskell-intero-setup))))
             ((string-match ".+\\.htm[l]?$" b)
               (h 'html-mode-hook nil 2))
             ((string-match ".+\\.js\\(on\\)?$" b)
@@ -103,9 +83,9 @@
             ((string-match "\\.sql$" b)
               (h 'sql-mode-hook nil 4))))
         ((or
-          (string-match "^/home/l/prog/elementary-haskell/" b)
+          (string-match (concat h "/prog/elementary-haskell/") b)
           (string-match "/prog/codex/" b)
-          (string-match "^/home/l/prog/nisse/new-keyboard/" b))
+          (string-match (concat h "/prog/nisse/new-keyboard/") b))
           (cond
             ((string-match "\\.hs$" b)
               (h 'haskell-mode-hook nil 4))
