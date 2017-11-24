@@ -22,7 +22,7 @@ Linux)
     esac
 ;;
 Darwin)
-    geom="80x50"
+    geom="80x61"
     fonts="xft:Input Mono Condensed:pixelsize=14,xft:IPAGothic,xft:Baekmuk Gulim"
 ;;
 esac
