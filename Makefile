@@ -1,5 +1,6 @@
 C := $(shell pwd)
 H := ${HOME}
+S := $(shell uname)
 T := $(shell hostname)
 # Add the -n flag for directories, as otherwise, stray symlinks will be created
 # inside the C (config) directory itself.
@@ -9,9 +10,7 @@ emacs:
 	ln -fns ${C}/emacs                                  ${H}/.emacs.d
 	touch                                               ${H}/.emacs.d/custom.el
 git:
-ifeq ('${T}','larver-w0')
-	ln -fs ${C}/git/cfg.imvu.conf                       ${H}/.gitconfig
-else ifeq ('${T}','larver-w1')
+ifeq ('${S}','Darwin')
 	ln -fs ${C}/git/cfg.imvu.conf                       ${H}/.gitconfig
 else
 	ln -fs ${C}/git/cfg.personal.conf                   ${H}/.gitconfig
@@ -20,9 +19,7 @@ endif
 	ln -fs ${C}/git/sendemail-aliases                   ${H}/.git-sendemail-aliases
 gpg:
 	ln -fns ${C}/gpg                                    ${H}/.gnupg
-ifeq ('${T}','larver-w0')
-	ln -fs ${C}/gpg/gpg-agent.ubuntu.conf               ${H}/.gnupg/gpg-agent.conf
-else ifeq ('${T}','larver-w1')
+ifeq ('${S}','Darwin')
 	ln -fs ${C}/gpg/gpg-agent.ubuntu.conf               ${H}/.gnupg/gpg-agent.conf
 else
 	ln -fs ${C}/gpg/gpg-agent.nixos.conf                ${H}/.gnupg/gpg-agent.conf
@@ -74,9 +71,7 @@ sage:
 	ln -fns ${C}/sage                                   ${H}/.sage
 ssh:
 	ln -fns ${C}/ssh                                    ${H}/.ssh
-ifeq ('${T}','larver-w0')
-	ln -fs ${C}/ssh/config.imvu.conf                    ${H}/.ssh/config
-else ifeq ('${T}','larver-w1')
+ifeq ('${T}','Darwin')
 	ln -fs ${C}/ssh/config.imvu.conf                    ${H}/.ssh/config
 else
 	ln -fs ${C}/ssh/config.home.conf                    ${H}/.ssh/config
@@ -88,9 +83,7 @@ uim:
 	ln -fns ${C}/uim                                    ${H}/.uim.d
 urxvt:
 	ln -fns ${C}/urxvt                                  ${H}/.urxvt
-ifeq ('${T}','larver-w0')
-	ln -fns ${H}/prog/foreign/urxvt-perls               ${H}/.urxvt/ext
-else ifeq ('${T}','larver-w1')
+ifeq ('${S}','Darwin')
 	ln -fns ${H}/prog/foreign/urxvt-perls               ${H}/.urxvt/ext
 else
 	ln -fns ${H}/.nix-profile/lib/urxvt/perl            ${H}/.urxvt/ext
@@ -103,15 +96,13 @@ xdefaults:
 	ln -fs ${C}/xdefaults/cfg                           ${H}/.Xdefaults
 xmonad:
 	ln -fns ${C}/xmonad                                 ${H}/.xmonad
-ifeq ('${T}','larver-w0')
-	ln -fns ${C}/xmonad/ubuntu-xmonad-startup.sh        ${H}/.xmonad/xmonad-session-rc
-else ifeq ('${T}','larver-w1')
+ifneq (,$(findstring enif,${T}))
 	ln -fns ${C}/xmonad/ubuntu-xmonad-startup.sh        ${H}/.xmonad/xmonad-session-rc
 endif
 zsh:
 	ln -fns ${C}/zsh                                    ${H}/.zsh
 	ln -fs ${C}/zsh/.zshrc                              ${H}
 	mkdir -p ${H}/.zsh-untracked
-ifneq (,$(findstring macbook,${T}))
+ifeq ('${S}','Darwin')
 	ln -fs ${C}/zsh/zprofile-mac                        ${H}/.zprofile
 endif
