@@ -45,10 +45,6 @@
   (cond
     ((l/os "darwin")
       '("Input Mono Condensed" "PT Mono"))
-    ((string-match "^larver-w0" system-name)
-      '("Input Mono Narrow" "Terminus"))
-    ((string-match "^larver-w1" system-name)
-      '("Input Mono Narrow" "Terminus"))
     (t '("Terminus" "Input Mono Narrow" "Input Mono Compressed Book"))))
 (setq l/font-choice 0)
 (defun l/toggle-font ()
@@ -135,9 +131,6 @@
 (defun l/text-height ()
   (cond
     ((string-match "^k[123]" system-name)
-      102
-    )
-    ((string-match "^larver-w[01]" system-name)
       102
     )
     ((l/os "darwin")

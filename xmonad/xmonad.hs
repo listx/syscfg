@@ -58,13 +58,13 @@ import qualified XMonad.Layout.LayoutModifier as XLL
 import qualified XMonad.StackSet as W
 
 isUbuntu :: String -> Bool
-isUbuntu = flip elem ["larver-w0", "larver-w1"]
+isUbuntu = flip elem ["enif"]
 
 isPersonal :: String -> Bool
 isPersonal = flip elem ["k0", "k1"]
 
 isPortraitMonitorLayout :: String -> Bool
-isPortraitMonitorLayout = flip elem ["k0", "larver-w0"]
+isPortraitMonitorLayout = flip elem ["k0"]
 
 data MyVWGroup
 	= Work
@@ -473,7 +473,6 @@ myStartupHook hostname nScreens = do
 		++ getVWToward PRight Sys nScreens'
 		++ " -e htop"
 	spawn "emacs --daemon"
-	when (isUbuntu hostname) spawnWorkStuff
 	when (elem hostname ["k0"]) rtorrent
 	where
 	-- Subtract 1 from nScreens because physical screens are indexed from 0.
@@ -482,9 +481,6 @@ myStartupHook hostname nScreens = do
 		++ " -name atWorkspace_"
 		++ getVWToward PRight Sys nScreens'
 		++ " -e rtorrent"
-	spawnWorkStuff = do
-		spawn "emacs /home/larver/k/notes_work_imvu/wlog.org"
-		spawn $ term2 ++ " -name floatme -e ssh-add"
 
 main :: IO ()
 main = do
