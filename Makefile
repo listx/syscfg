@@ -26,6 +26,8 @@ else
 endif
 gtk:
 	ln -fs ${C}/gtk/cfg                                 ${H}/.gtkrc-2.0.mine
+launchctl:
+	${C}/launchctl/setup.sh
 lesskey:
 	ln -fs ${C}/lesskey/cfg                             ${H}/.lesskey
 	lesskey
