@@ -32,6 +32,11 @@
   ;; restore after startup
   (setq gc-cons-threshold 800000)))
 
+; For mac, increase initial frame size manually because we are not on XMonad.
+(when (l/os "darwin")
+  (add-to-list 'default-frame-alist '(height . 71))
+  (add-to-list 'default-frame-alist '(width . 80)))
+
 ; Bootstrap `use-package'. See
 ; http://www.lunaryorn.com/posts/my-emacs-configuration-with-use-package.html.
 (require 'package)
