@@ -104,6 +104,9 @@ xmonad:
 ifneq (,$(findstring enif,${T}))
 	ln -fns ${C}/xmonad/ubuntu-xmonad-startup.sh        ${H}/.xmonad/xmonad-session-rc
 endif
+xquartz:
+	ln -fs ${C}/xquartz/.xinitrc.d                      ${H}
+	${C}/xquartz/setup.sh
 zsh:
 	ln -fns ${C}/zsh                                    ${H}/.zsh
 	ln -fs ${C}/zsh/.zshrc                              ${H}
