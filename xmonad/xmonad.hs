@@ -1,7 +1,6 @@
 module Main where
 
 import Control.Monad
-import Data.Array.IO
 import Data.Maybe
 	( fromMaybe
 	, isJust
@@ -15,8 +14,7 @@ import System.Posix.Unistd
 import XMonad
 import XMonad.Actions.CycleWS
 	( Direction1D
-		( Next
-		, Prev)
+		( Next )
 	, WSType (WSIs)
 	, findWorkspace
 	, moveTo
@@ -25,7 +23,7 @@ import XMonad.Actions.CycleWS
 	, toggleWS
 	)
 import XMonad.Actions.GridSelect
-	( defaultGSConfig
+	( def
 	, goToSelected
 	, runSelectedAction
 	, spawnSelected
@@ -109,7 +107,7 @@ getVWToward d g (S s) = case d of
 	PLeft -> leftMost ++ "_" ++ vw
 	PRight -> rightMost ++ "_" ++ vw
 	where
-	leftMost = show 0
+	leftMost = show (0::Int)
 	rightMost = show s
 	-- NOTE: In the future we can make `vw' smarter by trying to grab workspaces
 	-- on the fly based on some arbitrary predicate. But, we don't need that
@@ -180,7 +178,7 @@ myKeys hostname conf@XConfig {XMonad.modMask = modm} = M.fromList $
 	, ((modm,   xK_t            ), toggleWS)
 
 	-- View all windows as a grid.
-	, ((modm,   xK_g            ), goToSelected defaultGSConfig)
+	, ((modm,   xK_g            ), goToSelected def)
 
 	-- Lock screen (Ubuntu only) or quit.
 	, ((modm,   xK_Escape       ), lockOrQuit)
@@ -215,7 +213,7 @@ myKeys hostname conf@XConfig {XMonad.modMask = modm} = M.fromList $
 	++
 	-- Launch apps.
 	[ ((modm,   xK_i            ), spawn "qutebrowser")
-	, ((modmS,  xK_i            ), spawnSelected defaultGSConfig [chromium, "firefox"])
+	, ((modmS,  xK_i            ), spawnSelected def [chromium, "firefox"])
 	, ((modm,   xK_e            ), spawn term1)
 	, ((modmS,  xK_e            ), spawn term2)
 	, ((modm,   xK_u            ), spawn "emacs")
@@ -223,7 +221,7 @@ myKeys hostname conf@XConfig {XMonad.modMask = modm} = M.fromList $
 	where
 	lockOrQuit
 		| isUbuntu hostname = spawn "xscreensaver-command -lock"
-		| otherwise = runSelectedAction defaultGSConfig sessionActions
+		| otherwise = runSelectedAction def sessionActions
 	sessionActions =
 		[ ("Recompile/restart XMonad", spawn "xmonad --recompile && xmonad --restart")
 		, ("Quit XMonad", io exitSuccess)
@@ -234,10 +232,7 @@ myKeys hostname conf@XConfig {XMonad.modMask = modm} = M.fromList $
 	chromium
 		| isUbuntu hostname = "google-chrome-stable"
 		| otherwise = "chromium"
-	-- Alias "altMask" for left alt key.
-	altMask = mod1Mask
 	modmS = modm .|. shiftMask
-	modmAS = modm .|. shiftMask .|. altMask
 	relativeDimenions
 		= W.RationalRect marginLeft marginTop windowWidth windowHeight
 		where
@@ -449,7 +444,7 @@ myManageHook nScreens = composeOne $
 	where
 	allWorkspaces =
 		[ pw ++ "_" ++ vw
-		| pw <- map show [0..(fromIntegral nScreens - 1)]
+		| pw <- map show ([0..(fromIntegral nScreens - 1)]::[Int])
 		, vw <- map (:[]) ['a'..'t']
 		]
 
