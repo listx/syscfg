@@ -116,3 +116,6 @@ zsh:
 ifeq ('${S}','Darwin')
 	ln -fs ${C}/zsh/zprofile-mac                        ${H}/.zprofile
 endif
+ifneq (,$(findstring enif,${T}))
+	ln -fs ${C}/zsh/zprofile-enif                       ${H}/.zprofile
+endif
