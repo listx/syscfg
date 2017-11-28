@@ -85,15 +85,15 @@ uim:
 	ln -fns ${C}/uim                                    ${H}/.uim.d
 urxvt:
 	ln -fns ${C}/urxvt                                  ${H}/.urxvt
-ifeq ('${S}','Darwin')
+ifeq ('${T}','k0')
+	ln -fns ${H}/.nix-profile/lib/urxvt/perl            ${H}/.urxvt/ext
+else
 	ln -fns ${H}/prog/foreign/urxvt-perls               ${H}/.urxvt/ext
 	# NOTE: These two plugins are deprecated, but we use them anyway because we
 	# are too lazy to fix it the "right" way.
 	ln -fs ${H}/prog/foreign/urxvt-perls/deprecated/clipboard  ${H}/.urxvt/ext
 	ln -fs ${H}/prog/foreign/urxvt-perls/deprecated/url-select ${H}/.urxvt/ext
 	ln -fs ${H}/prog/foreign/urxvt-font-size/font-size  ${H}/.urxvt/ext
-else
-	ln -fns ${H}/.nix-profile/lib/urxvt/perl            ${H}/.urxvt/ext
 endif
 vim:
 	ln -fns ${C}/vim                                    ${H}/.vim
