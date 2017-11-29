@@ -22,7 +22,9 @@ endif
 gpg:
 	ln -fns ${C}/gpg                                    ${H}/.gnupg
 ifeq ('${S}','Darwin')
-	ln -fs ${C}/gpg/gpg-agent.ubuntu.conf               ${H}/.gnupg/gpg-agent.conf
+	ln -fs ${C}/gpg/gpg-agent.google.conf               ${H}/.gnupg/gpg-agent.conf
+else ifneq (,$(findstring enif,${T}))
+	ln -fs ${C}/gpg/gpg-agent.google.conf               ${H}/.gnupg/gpg-agent.conf
 else
 	ln -fs ${C}/gpg/gpg-agent.nixos.conf                ${H}/.gnupg/gpg-agent.conf
 endif
