@@ -104,7 +104,8 @@ xdefaults:
 xmonad:
 	ln -fns ${C}/xmonad                                 ${H}/.xmonad
 ifneq (,$(findstring enif,${T}))
-	sudo ln -fns ${C}/xmonad/xmonad.desktop             /usr/share/xsessions
+	ln -fs ${H}/.local/bin/xmonad                       ${C}/xmonad/xmonad-x86_64-linux
+	sudo cp -f ${C}/xmonad/xmonad.desktop               /usr/share/xsessions
 endif
 xquartz:
 	ln -fs ${C}/xquartz/.xinitrc.d                      ${H}
