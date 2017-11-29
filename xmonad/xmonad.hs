@@ -1,6 +1,8 @@
 module Main where
 
 import Control.Monad
+import Data.List
+    ( isPrefixOf )
 import Data.Maybe
 	( fromMaybe
 	, isJust
@@ -56,7 +58,9 @@ import qualified XMonad.Layout.LayoutModifier as XLL
 import qualified XMonad.StackSet as W
 
 isUbuntu :: String -> Bool
-isUbuntu = flip elem ["enif"]
+isUbuntu givenHost = any (\ubuntuHost -> isPrefixOf ubuntuHost givenHost) ubuntuHosts
+	where
+	ubuntuHosts = ["enif"]
 
 isPersonal :: String -> Bool
 isPersonal = flip elem ["k0", "k1"]
@@ -230,7 +234,7 @@ myKeys hostname conf@XConfig {XMonad.modMask = modm} = M.fromList $
 		then sendMessage slave
 		else sendMessage master
 	chromium
-		| isUbuntu hostname = "google-chrome-stable"
+		| isUbuntu hostname = "google-chrome"
 		| otherwise = "chromium"
 	modmS = modm .|. shiftMask
 	relativeDimenions
@@ -418,6 +422,7 @@ myManageHook nScreens = composeOne $
 	, resource  =? "kdesktop"           -?> doIgnore
 	, resource  =? "floatme"            -?> doCenterFloat
 	, className =? "qutebrowser"        -?> doShift =<< liftX (tryVWofGroup Net)
+	, className =? "Google-chrome"      -?> doShift =<< liftX (tryVWofGroup Net)
 	, resource  =? "Navigator"          -?> doShift =<< liftX (tryVWofGroup Net)
 	, className =? "Blender:Render"     -?> doFloat
 	, resource  =? "Browser"            -?> doFloat

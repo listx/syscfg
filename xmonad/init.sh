@@ -6,4 +6,4 @@
 # Change mouse to be left-handed.
 xmodmap -e "pointer = 3 2 1"
 
-exec $HOME/.local/bin/xmonad
+exec ~/.local/bin/xmonad
