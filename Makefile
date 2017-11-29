@@ -12,6 +12,8 @@ emacs:
 git:
 ifeq ('${S}','Darwin')
 	ln -fs ${C}/git/cfg.google.conf                     ${H}/.gitconfig
+else ifneq (,$(findstring enif,${T}))
+	ln -fs ${C}/git/cfg.google.conf                     ${H}/.gitconfig
 else
 	ln -fs ${C}/git/cfg.personal.conf                   ${H}/.gitconfig
 endif
