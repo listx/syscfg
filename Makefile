@@ -77,6 +77,8 @@ ssh:
 	ln -fns ${C}/ssh                                    ${H}/.ssh
 ifeq ('${T}','Darwin')
 	ln -fs ${C}/ssh/config.google.conf                  ${H}/.ssh/config
+else ifneq (,$(findstring enif,${T}))
+	ln -fs ${C}/ssh/config.google.conf                  ${H}/.ssh/config
 else
 	ln -fs ${C}/ssh/config.home.conf                    ${H}/.ssh/config
 endif
