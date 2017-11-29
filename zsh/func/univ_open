@@ -77,11 +77,11 @@ univ_open() {
 				# Use emacsclient, but create a new frame only if there isn't
 				# one already. See
 				# http://superuser.com/questions/358037/emacsclient-create-a-frame-if-a-frame-does-not-exist
-				emacsclient -n -e "(if (> (length (frame-list)) 1) 't)" | grep t >/dev/null
+				emacsclient -n --eval "(if (> (length (frame-list)) 1) 't)" | grep t >/dev/null
 				if (( $? == 1 )); then
-					emacsclient -n -a "" -c "$@"
+                    emacsclient -n -a "" -c --eval "(find-file \"$@\")"
 				else
-					emacsclient -n -a "" "$@"
+					emacsclient -n -a "" --eval "(find-file \"$@\")"
 				fi
 			;;
 		esac
