@@ -49,6 +49,9 @@
   (package-refresh-contents)
   (package-install 'use-package))
 
+; Pull in Google-internal package if we are on a work machine.
+(when (string-match "enif" system-name) (require 'google))
+
 ; Ensure that all packages handled by use-package are always installed if not
 ; present.
 (setq use-package-always-ensure t)
