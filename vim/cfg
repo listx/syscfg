@@ -105,22 +105,22 @@ if !exists("autocommands_loaded")
     au BufRead,BufNewFile *.ly setlocal filetype=lilypond
 
     " Integration with my "nox" program.
-    au BufEnter * nmap <localleader>c !!~/prog/nox/src/nox<cr>
-    au BufEnter * vmap <localleader>c !~/prog/nox/src/nox<cr>
-    au BufEnter * nmap <localleader>C !!~/prog/nox/src/nox -u<cr>
-    au BufEnter * vmap <localleader>C !~/prog/nox/src/nox -u<cr>
-    au BufEnter *.c,*.cpp,*.h,*.hpp nmap <localleader>c1 !!/prog/nox/src/nox -l c<cr>
-    au BufEnter *.c,*.cpp,*.h,*.hpp vmap <localleader>c1 !/prog/nox/src/nox -l c<cr>
-    au BufEnter *.c,*.cpp,*.h,*.hpp nmap <localleader>CC !!/prog/nox/src/nox -l c -u<cr>
-    au BufEnter *.c,*.cpp,*.h,*.hpp vmap <localleader>CC !/prog/nox/src/nox -l c -u<cr>
-    au BufEnter *.ly,*.tex nmap <localleader>c1 !!/prog/nox/src/nox -l tex<cr>
-    au BufEnter *.ly,*.tex vmap <localleader>c1 !/prog/nox/src/nox -l tex<cr>
-    au BufEnter *.ly,*.tex nmap <localleader>CC !!/prog/nox/src/nox -l tex -u<cr>
-    au BufEnter *.ly,*.tex vmap <localleader>CC !/prog/nox/src/nox -l tex -u<cr>
-    au BufEnter *.hs nmap <localleader>c1 !!/prog/nox/src/nox -l hs<cr>
-    au BufEnter *.hs vmap <localleader>c1 !/prog/nox/src/nox -l hs<cr>
-    au BufEnter *.hs nmap <localleader>CC !!/prog/nox/src/nox -l hs -u<cr>
-    au BufEnter *.hs vmap <localleader>CC !/prog/nox/src/nox -l hs -u<cr>
+    au BufEnter * nmap <localleader>c !!nox<cr>
+    au BufEnter * vmap <localleader>c !nox<cr>
+    au BufEnter * nmap <localleader>C !!nox -u<cr>
+    au BufEnter * vmap <localleader>C !nox -u<cr>
+    au BufEnter *.c,*.cpp,*.h,*.hpp nmap <localleader>c1 !!nox -l c<cr>
+    au BufEnter *.c,*.cpp,*.h,*.hpp vmap <localleader>c1 !nox -l c<cr>
+    au BufEnter *.c,*.cpp,*.h,*.hpp nmap <localleader>CC !!nox -l c -u<cr>
+    au BufEnter *.c,*.cpp,*.h,*.hpp vmap <localleader>CC !nox -l c -u<cr>
+    au BufEnter *.ly,*.tex nmap <localleader>c1 !!nox -l tex<cr>
+    au BufEnter *.ly,*.tex vmap <localleader>c1 !nox -l tex<cr>
+    au BufEnter *.ly,*.tex nmap <localleader>CC !!nox -l tex -u<cr>
+    au BufEnter *.ly,*.tex vmap <localleader>CC !nox -l tex -u<cr>
+    au BufEnter *.hs nmap <localleader>c1 !!nox -l hs<cr>
+    au BufEnter *.hs vmap <localleader>c1 !nox -l hs<cr>
+    au BufEnter *.hs nmap <localleader>CC !!nox -l hs -u<cr>
+    au BufEnter *.hs vmap <localleader>CC !nox -l hs -u<cr>
     au BufEnter *.html vmap <localleader>bb iwoiw"zs<strong><C-R>z</strong><esc>
     au BufEnter *.html vmap <localleader>ii iwoiw"zs<em><C-R>z</em><esc>
     au BufEnter *.html vmap <localleader>bi iwoiw"zs<em><strong><C-R>z</strong></em><esc>
