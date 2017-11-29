@@ -6,4 +6,9 @@
 # Change mouse to be left-handed.
 xmodmap -e "pointer = 3 2 1"
 
+# Start ssh-agent.
+if [[ -z "$SSH_AUTH_SOCK" ]]; then
+    eval $(ssh-agent)
+fi
+
 exec ~/.local/bin/xmonad
