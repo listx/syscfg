@@ -125,4 +125,5 @@ ifeq ('${S}','Darwin')
 endif
 ifneq (,$(findstring enif,${T}))
 	ln -fs ${C}/zsh/zprofile-enif                       ${H}/.zprofile
+	ln -fs ${C}/zsh/zlogin-enif                         ${H}/.zlogin
 endif

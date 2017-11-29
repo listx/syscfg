@@ -1,0 +1,4 @@
+# Undo the messy bindings that come shipped with the distro used at work, notably
+# `/etc/zsh/zshrc and' friends.
+bindkey -M viins "$terminfo[cuu1]" up-line-or-history
+bindkey -M viins "$terminfo[kcud1]" down-line-or-history
