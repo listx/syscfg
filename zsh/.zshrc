@@ -268,6 +268,7 @@ alias sw1='ssh w1'
 alias -g D='& disown'
 alias -g Z='> /dev/null 2>&1'
 alias -g L='| less'
+alias -g S='| sort | less'
 
 # scp alternative, with a progress bar
 alias rsy='rsync -ahP --no-whole-file --inplace'
