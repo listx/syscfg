@@ -1,0 +1,13 @@
+#!/usr/bin/env zsh
+
+# apt_cache_search() is a shorcut for "apt-cache search PATTERN | sort | less".
+
+apt_cache_search()
+{
+	pattern=$1
+	if [[ -z "$pattern" ]]; then
+		echo "Need pattern argument"
+		return 1
+	fi
+	apt-cache search $pattern | sort | less
+}
