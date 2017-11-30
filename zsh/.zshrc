@@ -311,6 +311,10 @@ alias np='ls -l --color=always ~/.nix-profile'
 alias nq='nix-env -qaP'
 alias nls='sudo nix-env -p /nix/var/nix/profiles/system --list-generations'
 
+alias agi="sudo apt-get install"
+alias agr="sudo apt-get remove"
+alias acs="apt_cache_search"
+
 alias cal='cal -y'
 
 # memory management
