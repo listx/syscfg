@@ -16,6 +16,14 @@
 (setq auto-save-file-name-transforms
   `((".*" ,temporary-file-directory t)))
 
+; Use chromium-browser for opening URLs. See
+; https://stackoverflow.com/a/4506458.
+(setq
+  browse-url-browser-function 'browse-url-generic
+  browse-url-generic-program (if (string-match "^enif" system-name)
+    "google-chrome"
+    "chromium-browser"))
+
 ; Scroll more like Vim (no jumping around).
 (setq
   scroll-margin 3
