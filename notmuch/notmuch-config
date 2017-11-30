@@ -7,11 +7,11 @@
 # The only value supported here is 'path' which should be the top-level
 # directory where your mail currently exists and to where mail will be
 # delivered in the future. Files should be individual email messages.
-# Notmuch will store its database within a sub-directory of the path
-# configured here named ".notmuch".
+# Notmuch will store its database within a sub-directory of the path configured
+# here named ".notmuch".
+# NOTE: According to notmuch-config(1), it is either $MAILDIR or $HOME/mail.
 #
 [database]
-path=/home/l/mail
 
 # User configuration
 #
