@@ -153,4 +153,6 @@
       (while (re-search-forward "^#\\+end_src\n\\([^\n]\\)" nil t)
         (replace-match "\n\\1" nil nil nil 1)))))
 
+(use-package org-mind-map)
+
 (provide 'l-org)
