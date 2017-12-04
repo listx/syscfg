@@ -14,4 +14,10 @@ fi
 # Start xscreensaver.
 xscreensaver -nosplash &
 
+# Manually source .zprofile, to load in additional PATHs (including, e.g.,
+# ~/.local/bin). This manual step is necessary because the zsh session that
+# loads this script is not a login shell and thus does not automatically read
+# ~/.zprofile.
+source ~/.zprofile
+
 exec ~/.local/bin/xmonad
