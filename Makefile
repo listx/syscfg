@@ -30,6 +30,8 @@ else
 endif
 gtk:
 	ln -fs ${C}/gtk/cfg                                 ${H}/.gtkrc-2.0.mine
+launch-my-browser:
+	ln -fs ${C}/script/sys/launch-my-browser            ${H}/.local/bin
 launchctl:
 	${C}/launchctl/setup.sh
 lesskey:

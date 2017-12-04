@@ -123,7 +123,7 @@ URxvt.keysym.M-C-v: perl:clipboard:paste_escaped
  */
 URxvt.keysym.M-u: perl:url-select:select_next
 URxvt.url-select.underline: true
-URxvt.url-select.launcher: firefox
+URxvt.url-select.launcher: launch-my-browser
 
 /* some navigation commands */
 URxvt.keysym.Control-j: command:\033]721;1\007
