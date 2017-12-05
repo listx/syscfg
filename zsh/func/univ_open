@@ -41,7 +41,7 @@ univ_open() {
 				soffice -impress $@ &>/dev/null & disown
 			;;
 			(htm|html)
-				firefox $@ &>/dev/null & disown
+				launch-my-browser $@ &>/dev/null & disown
 			;;
 			(djvu|dvi|eps|pdf|ps)
 				mupdf-x11 $@ &>/dev/null & disown
