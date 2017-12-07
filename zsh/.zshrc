@@ -244,6 +244,8 @@ alias gee='git rerere'
 alias gp='git push'
 alias gtag='~/syscfg/script/sys/gtag.sh'
 
+alias gg='git5'
+
 alias rgi='rg -i'
 
 alias tig='tig -n1000'
