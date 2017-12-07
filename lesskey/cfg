@@ -5,12 +5,12 @@
 
 #env
 
-# -c: practically, this makes less paint lines from the top of the screen
-# regardless of line count (LESS will by default only paint from the top if the
-# line count exceeds the screen)
-#
 # -i: make lower-case-only searches case insensitive (mixed-case searches are
 # automatically case-sensitive!)
 #
+# -F: exit less if everything can be displayed in one screen
+#
 # -R: make 'git diff' more compliant with highly customized LESS_TERMCAP options
-LESS = -ciR
+#
+# -X: try not to clear the screen
+LESS = -FiRX
