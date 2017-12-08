@@ -368,8 +368,6 @@ else
 fi
 
 zplug "MichaelAquilina/zsh-you-should-use"
-# Do not execute commands if there is an existing shorter alias.
-export YSU_HARDCORE=1
 
 # Install plugins if there are plugins that have not been installed
 if ! zplug check --verbose; then
