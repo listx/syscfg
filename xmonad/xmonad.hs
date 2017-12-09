@@ -219,7 +219,14 @@ myKeys hostname conf@XConfig {XMonad.modMask = modm} = M.fromList $
 	[ ((modm,   xK_i            ), spawn "qutebrowser")
 	, ((modmS,  xK_i            ), spawnSelected def [chromium, "firefox"])
 	, ((modm,   xK_e            ), spawn term1)
-	, ((modmS,  xK_e            ), spawn term2)
+	-- Backup binding to launch a terminal in case our Hyper key (modm) is
+	-- unavailable. This happens whenever we unplug/replug our keyboard, and a
+	-- terminal isn't already showing in a window somewhere to be able to call
+	-- ~/syscfg/script/sys/initkeys.sh to re-initialize the Hyper key. Because the
+	-- Hyper key is used exclusively to maneuver around Xmonad, we need a
+	-- non-Hyper-key binding to launch a terminal to bootstrap ourselves back in
+	-- with initkeys.sh.
+	, ((mod1S,  xK_e            ), spawn term1)
 	, ((modm,   xK_u            ), spawn "emacs")
 	]
 	where
@@ -237,6 +244,9 @@ myKeys hostname conf@XConfig {XMonad.modMask = modm} = M.fromList $
 		| isUbuntu hostname = "google-chrome"
 		| otherwise = "chromium"
 	modmS = modm .|. shiftMask
+	-- Alias "altMask" for left alt key.
+	altMask = mod1Mask
+	mod1S = shiftMask .|. altMask
 	relativeDimenions
 		= W.RationalRect marginLeft marginTop windowWidth windowHeight
 		where
