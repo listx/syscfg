@@ -131,71 +131,71 @@ term1 = "~/syscfg/script/sys/terms/wb.sh"
 term2 = "~/syscfg/script/sys/terms/wblue.sh"
 
 myKeys :: String -> XConfig Layout -> M.Map (KeyMask, KeySym) (X ())
-myKeys hostname conf@XConfig {XMonad.modMask = modm} = M.fromList $
+myKeys hostname conf@XConfig {XMonad.modMask = hypr} = M.fromList $
 	-- Close focused window.
-	[ ((modm,   xK_d            ), kill)
+	[ ((hypr,   xK_d            ), kill)
 
 	-- Rotate through the available layout algorithms. The TAB key is bound for
 	-- better ergonomics for the ZQ layout (for the Esrille Nisse keyboard; see
 	-- https://github.com/listx/new-keyboard).
-	, ((modm,   xK_space        ), sendMessage NextLayout)
-	, ((modm,   xK_Tab          ), sendMessage NextLayout)
+	, ((hypr,   xK_space        ), sendMessage NextLayout)
+	, ((hypr,   xK_Tab          ), sendMessage NextLayout)
 
 	-- Reset the layouts on the current workspace to default.
-	, ((modm,   xK_q            ), setLayout $ XMonad.layoutHook conf)
+	, ((hypr,   xK_q            ), setLayout $ XMonad.layoutHook conf)
 
 	-- Move focus to the next/prev window.
-	, ((modm,   xK_j            ), windows W.focusDown)
-	, ((modm,   xK_k            ), windows W.focusUp)
+	, ((hypr,   xK_j            ), windows W.focusDown)
+	, ((hypr,   xK_k            ), windows W.focusUp)
 
 	-- Swap the focused window with the next/prev window.
-	, ((modmS,  xK_j            ), windows W.swapDown)
-	, ((modmS,  xK_k            ), windows W.swapUp)
+	, ((hyprS,  xK_j            ), windows W.swapDown)
+	, ((hyprS,  xK_k            ), windows W.swapUp)
 
 	-- Swap the focused window and the master window.
-	, ((modm,   xK_Return       ), windows W.swapMaster)
+	, ((hypr,   xK_Return       ), windows W.swapMaster)
 
 	-- Unfloat/float window.
-	, ((modm,   xK_f            ), withFocused $ windows . W.sink)
-	, ((modmS,  xK_f            ), withFocused $ windows . flip W.float relativeDimenions)
+	, ((hypr,   xK_f            ), withFocused $ windows . W.sink)
+	, ((hyprS,  xK_f            ), withFocused $ windows . flip W.float relativeDimenions)
 
 	-- Shrink/Expand work on the Master window; the Mirror* counterparts do the
 	-- same (although, from the looks of it, the definitions are somehow
 	-- *reversed*), but for a slave window.
-	, ((modmS,  xK_bracketleft  ), shrinkExpand Shrink MirrorExpand)
-	, ((modmS,  xK_bracketright ), shrinkExpand Expand MirrorShrink)
+	, ((hyprS,  xK_bracketleft  ), shrinkExpand Shrink MirrorExpand)
+	, ((hyprS,  xK_bracketright ), shrinkExpand Expand MirrorShrink)
 
 	-- Increment/decrement the number of windows in the master area.
-	, ((modm,   xK_m            ), sendMessage (IncMasterN 1))
-	, ((modmS,  xK_m            ), sendMessage (IncMasterN (-1)))
+	, ((hypr,   xK_m            ), sendMessage (IncMasterN 1))
+	, ((hyprS,  xK_m            ), sendMessage (IncMasterN (-1)))
 
 	-- Go to any non-empty VW, except those VW belonging to the given VW Groups
 	-- (for making sure that our "desk" is clean before we log off/shutdown).
-	, ((modm,   xK_n            ), moveTo Next $ nonEmptyVWExceptGrps [])
-	, ((modmS,  xK_n            ), shiftTo Next $ nonEmptyVWExceptGrps [])
+	, ((hypr,   xK_n            ), moveTo Next $ nonEmptyVWExceptGrps [])
+	, ((hyprS,  xK_n            ), shiftTo Next $ nonEmptyVWExceptGrps [])
 
 	-- Go to empty VW. If all VWs in this screen are full, then do nothing.
-	, ((modm,   xK_o            ), moveTo Next emptyVW)
-	, ((modmS,  xK_o            ), shiftTo Next emptyVW)
+	, ((hypr,   xK_o            ), moveTo Next emptyVW)
+	, ((hyprS,  xK_o            ), shiftTo Next emptyVW)
 
 	-- Go to VW displayed previously.
-	, ((modm,   xK_t            ), toggleWS)
+	, ((hypr,   xK_t            ), toggleWS)
 
 	-- View all windows as a grid.
-	, ((modm,   xK_g            ), goToSelected def)
+	, ((hypr,   xK_g            ), goToSelected def)
 
 	-- Lock screen (Ubuntu only) or quit.
-	, ((modm,   xK_Escape       ), lockOrQuit)
+	, ((hypr,   xK_Escape       ), lockOrQuit)
 
 	-- Toggle window borders.
-	, ((modm,   xK_b            ), withFocused toggleBorder)
+	, ((hypr,   xK_b            ), withFocused toggleBorder)
 
 	-- Move mouse away to bottom-right of currently focused window.
-	, ((modm,   xK_BackSpace    ), warpToWindow 1 1)
+	, ((hypr,   xK_BackSpace    ), warpToWindow 1 1)
 	]
 	++
-	-- modm-[1..9, 0, F1-F10]: Switch to workspace N.
-	-- modmS-[1..9, 0, F1-F10]: Move focused window to workspace N.
+	-- hypr-[1..9, 0, F1-F10]: Switch to workspace N.
+	-- hyprS-[1..9, 0, F1-F10]: Move focused window to workspace N.
 	-- NOTE: Depending on the machine, we change the order of keys to optimize
 	-- for the keyboard layout used on the machine. The order in
 	-- `forQwertyKeyboard' is coincidentally optimized for that layout, because
@@ -203,31 +203,31 @@ myKeys hostname conf@XConfig {XMonad.modMask = modm} = M.fromList $
 	-- where we have our XMonad mod key (CapsLock remapped to Hyper key). In
 	-- `forZQKeyboard', the middle finger of the numeric home row gets priority
 	-- as the first VW because it is more ergonomic than the "1" key.
-	[((modm .|. mask, k         ), windows $ onCurrentScreen f i)
+	[((hypr .|. mask, k         ), windows $ onCurrentScreen f i)
 		| (i, k) <- zip (workspaces' conf) $ if isPortraitMonitorLayout hostname
 			then forZQKeyboard
 			else forQwertyKeyboard
 		, (f, mask) <- [(W.greedyView, 0), (W.shift, shiftMask)]]
 	++
-	-- modm-{h,l}: Switch to prev/next Xinerama screens.
+	-- hypr-{h,l}: Switch to prev/next Xinerama screens.
 	-- modS-{h,l}: Move client to prev/next screen.
-	[((m .|. modm, key          ), flip whenJust (windows . f) =<< screenWorkspace =<< sc)
+	[((m .|. hypr, key          ), flip whenJust (windows . f) =<< screenWorkspace =<< sc)
 		| (key, sc) <- [(xK_h, screenBy (-1)),(xK_l, screenBy 1)]
 		, (f, m) <- [(W.view, 0), (W.shift, shiftMask)]]
 	++
 	-- Launch apps.
-	[ ((modm,   xK_i            ), spawn "qutebrowser")
-	, ((modmS,  xK_i            ), spawnSelected def [chromium, "firefox"])
-	, ((modm,   xK_e            ), spawn term1)
-	-- Backup binding to launch a terminal in case our Hyper key (modm) is
+	[ ((hypr,   xK_i            ), spawn "qutebrowser")
+	, ((hyprS,  xK_i            ), spawnSelected def [chromium, "firefox"])
+	, ((hypr,   xK_e            ), spawn term1)
+	-- Backup binding to launch a terminal in case our Hyper key (hypr) is
 	-- unavailable. This happens whenever we unplug/replug our keyboard, and a
 	-- terminal isn't already showing in a window somewhere to be able to call
 	-- ~/syscfg/script/sys/initkeys.sh to re-initialize the Hyper key. Because the
 	-- Hyper key is used exclusively to maneuver around Xmonad, we need a
 	-- non-Hyper-key binding to launch a terminal to bootstrap ourselves back in
 	-- with initkeys.sh.
-	, ((mod1S,  xK_e            ), spawn term1)
-	, ((modm,   xK_u            ), spawn "emacs")
+	, ((altS,   xK_e            ), spawn term1)
+	, ((hypr,   xK_u            ), spawn "emacs")
 	]
 	where
 	lockOrQuit
@@ -243,10 +243,10 @@ myKeys hostname conf@XConfig {XMonad.modMask = modm} = M.fromList $
 	chromium
 		| isUbuntu hostname = "google-chrome"
 		| otherwise = "chromium"
-	modmS = modm .|. shiftMask
+	hyprS = hypr .|. shiftMask
 	-- Alias "altMask" for left alt key.
 	altMask = mod1Mask
-	mod1S = shiftMask .|. altMask
+	altS = altMask .|. shiftMask
 	relativeDimenions
 		= W.RationalRect marginLeft marginTop windowWidth windowHeight
 		where
@@ -374,20 +374,20 @@ tryVWofGroup g = do
 		else vw1
 
 myMouseBindings :: XConfig t -> M.Map (KeyMask, Button) (Window -> X ())
-myMouseBindings XConfig {XMonad.modMask = modm} = M.fromList
-	-- modm-button1 (left-click): Set the window to floating mode and move by
+myMouseBindings XConfig {XMonad.modMask = hypr} = M.fromList
+	-- hypr-button1 (left-click): Set the window to floating mode and move by
 	-- dragging.
-	[ ( (modm, button1)
+	[ ( (hypr, button1)
 	, \w -> focus w >> mouseMoveWindow w >> windows W.shiftMaster
 	)
-	-- modm-button2 (middle-click): Raise the window to the top of the stack.
+	-- hypr-button2 (middle-click): Raise the window to the top of the stack.
 	-- This binding is almost never used, but we keep it here for instructive
 	-- purposes.
-	, ((modm, button2), \w -> focus w >> windows W.shiftMaster)
+	, ((hypr, button2), \w -> focus w >> windows W.shiftMaster)
 	,
-	-- modm-button3 (right-click): Set the window to floating mode and resize by
+	-- hypr-button3 (right-click): Set the window to floating mode and resize by
 	-- dragging.
-	( (modm, button3)
+	( (hypr, button3)
 	, \w -> focus w >> mouseResizeWindow w >> windows W.shiftMaster
 	)
 	-- You may also bind events to the mouse scroll wheel (button4 and button5).
@@ -506,12 +506,12 @@ main = do
 		, clickJustFocuses   = True
 		, borderWidth        = 1
 		-- Use 'mod3' from 'xmodmap' output as our 'modMask' key. We alias it
-		-- (XMonad.modMask) it as `modm` in our configuration above. Either
-		-- before or immediately after XMonad starts, 'mod3' should be populated
-		-- with some special key. This is handled usually by xsession scripts.
-		-- On Arch Linux, this is `~/.xinitrc` because we use `startx` there. On
-		-- NixOS, it is baked in directly to the system configuration file under
-		-- the `services.xserver.displayManager.sessionCommands` option.
+		-- (XMonad.modMask) it as `hypr` in our configuration above. Either before
+		-- or immediately after XMonad starts, 'mod3' should be populated as the
+		-- Hyper key (as this is how we call it above). This is handled usually by
+		-- xsession scripts. On NixOS, it is baked in directly to the system
+		-- configuration file under the
+		-- `services.xserver.displayManager.sessionCommands` option.
 		, modMask            = mod3Mask
 		, workspaces         = withScreens nScreens $ map fst myWorkspaceGroups
 		, normalBorderColor  = "#000000"
