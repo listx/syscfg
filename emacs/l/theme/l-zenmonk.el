@@ -202,35 +202,35 @@ Each element has the form (NAME . HEX).
       (org-level-1
         ((((background light))
         :inherit 'alect-title-1
-        :foreground "#ff0000" :weight bold)
+        :weight bold)
         (((background dark))
         :inherit 'alect-title-1
-        :foreground "#ff0000" :weight bold)))
+        :foreground ,zm-blue+1 :weight bold)))
       (org-level-2
         ((((background light))
         :inherit 'alect-title-2
-        :foreground "#0000ff" :weight bold)
+        :weight bold)
         (((background dark))
         :inherit 'alect-title-2
-        :foreground ,zm-blue+1 :weight bold)))
+        :foreground green+1 :weight bold)))
       (org-level-3
         ((((background light))
         :inherit 'alect-title-3
-        :foreground green+1 :weight bold)
+        :weight bold)
         (((background dark))
         :inherit 'alect-title-3
-        :foreground green+1 :weight bold)))
+        :foreground ,zm-red :weight bold)))
       (org-level-4
         ((((background light))
         :inherit 'alect-title-4
-        :foreground magenta+1 :weight bold)
+        :weight bold)
         (((background dark))
         :inherit 'alect-title-4
         :foreground magenta+1 :weight bold)))
       (org-level-7
         ((((background light))
         :inherit 'alect-title-7
-        :foreground magenta+1 :weight bold)
+        :weight bold)
         (((background dark))
         :inherit 'alect-title-7
         :foreground magenta+1 :weight bold)))
