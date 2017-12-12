@@ -2,3 +2,4 @@
 # `/etc/zsh/zshrc and' friends.
 bindkey -M viins "$terminfo[cuu1]" up-line-or-history
 bindkey -M viins "$terminfo[kcud1]" down-line-or-history
+source /etc/bash_completion.d/g4d
