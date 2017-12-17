@@ -23,6 +23,7 @@ ncmpcpp/config
 ncmpcpp/keys
 mpv/mpv.conf
 mutt/hcache
+openvpn/*.ovpn
 qutebrowser/bookmarks
 qutebrowser/quickmarks
 qutebrowser/qsettings

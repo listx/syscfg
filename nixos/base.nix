@@ -30,6 +30,16 @@
     enableAdobeFlash = true;
   };
 
+  services.openvpn.servers = {
+    # Unless `autoStart = false;', all entries here start automatically as a
+    # systemd service. To stop the `home' OpenVPN client service, run `sudo
+    # systemctl stop openvpn-home'.
+    home = {
+      config = builtins.readFile ../openvpn/home.ovpn;
+      up = "echo nameserver $nameserver | ${pkgs.openresolv}/sbin/resolvconf -m 0 -a $dev";
+      down = "${pkgs.openresolv}/sbin/resolvconf -d $dev";
+    };
+  };
 
   services.xserver = {
     enable = true;
