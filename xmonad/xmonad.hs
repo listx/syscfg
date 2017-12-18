@@ -66,7 +66,9 @@ isPersonal :: String -> Bool
 isPersonal = flip elem ["k0", "k1"]
 
 isPortraitMonitorLayout :: String -> Bool
-isPortraitMonitorLayout = flip elem ["k0"]
+isPortraitMonitorLayout givenHost = any (\portraitHost -> isPrefixOf portraitHost givenHost) portraitHosts
+	where
+	portraitHosts = ["k0", "enif"]
 
 data MyVWGroup
 	= Work
