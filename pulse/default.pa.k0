@@ -1,4 +1,4 @@
 # Load in distro defaults.
 .include /etc/pulse/default.pa
 
-set-default-sink 2
+set-default-sink 0
