@@ -115,6 +115,10 @@ ifneq (,$(findstring enif,${T}))
 	ln -fs ${H}/.local/bin/xmonad                       ${C}/xmonad/xmonad-x86_64-linux
 	sudo cp -f ${C}/xmonad/xmonad.desktop               /usr/share/xsessions
 endif
+xorg:
+ifneq (,$(findstring enif,${T}))
+	cp -f /etc/X11/xorg.conf                            ${C}/xorg/xorg.enif.conf
+endif
 xquartz:
 	ln -fs ${C}/xquartz/.xinitrc.d                      ${H}
 	${C}/xquartz/setup.sh
