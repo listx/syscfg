@@ -18,29 +18,40 @@ gd()
 		printf "${c_green}NO CHANGES!$ce\n\n"
 		gst
 	else
-		local msg=""
+		local msg_diff=""
+		local msg_diff_c=""
 		if [[ -n "$git_diff" ]]; then
 			# The sed '/^$/d' below is to remove the extra trailing whitespace
 			# line that seems to get added into `git diff' but not `git diff
 			# --cached'.
-			msg="$tag"
-			msg+=$(vertical_label \
+			msg_diff="$tag"
+			msg_diff+=$(vertical_label \
 				"git diff --color=always | sed '/^$/d'" \
 				"TREE ------------------------ " \
 				"$c_green")
-			msg+="\n$tag"
-			printf $msg | less
+			msg_diff+="\n$tag"
 		fi
 
 		if [[ -n "$git_diff_c" ]]; then
-			msg="$tag"
-			msg+=$(vertical_label \
+			msg_diff_c="$tag"
+			msg_diff_c+=$(vertical_label \
 				"git diff --cached --color=always" \
 				"INDEX ------------------------ " \
 				"$c_magenta")
-			msg+="\n$tag"
-			printf $msg | less
+			msg_diff_c+="\n$tag"
 		fi
+
+        if [[ -n "$git_diff" ]] && [[ -n "$git_diff_c" ]]; then
+            # If we have two buffers to show, force less to pause before
+            # showing the next one. We do this by unsetting the -F flag set in
+            # ~/.lesskey.
+            printf $msg_diff | less -+F
+            printf $msg_diff_c | less
+        elif [[ -n "$git_diff" ]]; then
+            printf $msg_diff | less
+        elif [[ -n "$git_diff_c" ]]; then
+            printf $msg_diff_c | less
+        fi
 
 		gst
 	fi
