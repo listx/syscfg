@@ -72,13 +72,6 @@
 (defmacro l/add-hook-args (hook func &rest args)
   `(add-hook ,hook (lambda () (interactive) (,func ,@args))))
 
-;; Load things related to themes/appearance.
-(require 'l-alect-themes)
-(require 'l-arjen-grey-theme)
-(require 'l-zenmonk)
-(require 'l-hl-line+)
-(require 'l-cosmetics)
-
 ;; Load misc customizations.
 (require 'l-misc)
 (require 'l-scratch)
@@ -140,3 +133,10 @@
 (require 'l-shell)
 (require 'l-shen)
 (require 'l-yaml)
+
+;; Load things related to themes/appearance.
+(require 'l-alect-themes)
+(require 'l-arjen-grey-theme)
+(require 'l-zenmonk)
+(require 'l-hl-line+)
+(require 'l-cosmetics)

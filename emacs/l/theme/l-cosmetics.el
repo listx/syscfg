@@ -60,9 +60,9 @@
 
 (defvar l/themes
   '(
+    arjen-grey
     alect-light
-    alect-dark
-    arjen-grey)
+    alect-dark)
   "Default themes")
 
 (defvar l/theme-idx 0)
@@ -79,45 +79,66 @@
 
     ; Apply the theme
     (load-theme (l/theme-name) t)
+    (l/theme-hook)
+    (when (string= "arjen-grey" (l/theme-name)) (l/arjen-hook))))
 
-    ; Set colors depending on theme name.
-    (let
-      (
-        (theme (format "%s" (l/theme-name))))
-      (cond
-        ((string= "alect-light" theme)
-          (progn
-            (set-face-background 'hiwin-face
-              ; set default to alect-light
-              (if (display-graphic-p) "#ded6c5" "gray16"))
-            (setq evil-insert-state-cursor '("#000000" box))
-            (setq evil-normal-state-cursor '("DodgerBlue1" box))))
-        ((or
-            (string= "alect-dark" theme)
-            (string= "alect-black" theme))
-          (progn
-            (set-face-background 'hiwin-face
-              (if (display-graphic-p)
-                (if (string= "alect-dark" theme)
-                  "#0d0d0f"
-                  "gray0")
-                "gray16"))
-            (setq evil-insert-state-cursor '("#ffffff" box))
-            (setq evil-normal-state-cursor '("#00ff00" box))))
-        ((string= "arjen-grey" theme)
-          (progn
-            (set-face-background 'hiwin-face
-              (if (display-graphic-p)
-                (if (string= "arjen-grey" theme)
-                  "#0d0d0f"
-                  "gray0")
-                "gray16"))
-            (setq evil-insert-state-cursor '("#ffffff" box))
-            (setq evil-normal-state-cursor '("#00ff00" box))))))))
+; Set colors depending on theme name.
+(defun l/theme-hook ()
+  (interactive)
+  (let
+    (
+      (theme (format "%s" (l/theme-name))))
+    (cond
+      ((string= "alect-light" theme)
+        (progn
+          (set-face-background 'hiwin-face
+            ; set default to alect-light
+            (if (display-graphic-p) "#ded6c5" "gray16"))
+          (setq evil-insert-state-cursor '("#000000" box))
+          (setq evil-normal-state-cursor '("DodgerBlue1" box))))
+      ((or
+          (string= "alect-dark" theme)
+          (string= "alect-black" theme))
+        (progn
+          (set-face-background 'hiwin-face
+            (if (display-graphic-p)
+              (if (string= "alect-dark" theme)
+                "#0d0d0f"
+                "gray0")
+              "gray16"))
+          (setq evil-insert-state-cursor '("#ffffff" box))
+          (setq evil-normal-state-cursor '("#00ff00" box))))
+      ((string= "arjen-grey" theme)
+        (progn
+          (set-face-background 'hiwin-face
+            (if (display-graphic-p)
+              (if (string= "arjen-grey" theme)
+                "#0d0d0f"
+                "gray0")
+              "gray16"))
+          (setq evil-insert-state-cursor '("#ffffff" box))
+          (setq evil-normal-state-cursor '("#00ff00" box)))))))
+
+(defun l/arjen-hook ()
+  (interactive)
+  (set-face-attribute 'mode-line-buffer-id nil :foreground "black" :distant-foreground "red")
+  (set-face-attribute 'mode-line nil :foreground "black" :background "pink" :box '(:line-width 2 :color "pink" :style nil))
+  (set-face-attribute 'mode-line-inactive nil :foreground "grey64" :box '(:line-width 2 :color "grey32" :style nil))
+  (set-face-attribute 'column-enforce-face nil :inherit 'default)
+  (set-face-attribute 'hl-line nil :background "#1a2126")
+  (set-face-attribute 'region nil :foreground "#7a1717" :background "pink" :weight 'bold)
+  (set-face-attribute 'lazy-highlight nil :foreground "pink" :background "#7a1717" :weight 'normal)
+  (set-face-attribute 'isearch nil :foreground "#7a1717" :background "pink" :weight 'bold)
+  (set-face-attribute 'helm-candidate-number nil :foreground "#7a1717" :background "pink" :weight 'bold)
+;  (set-face-attribute 'font-lock-builtin-face nil :foreground "pink")
+  )
 
 ; Select theme based on GUI or ncurses mode.
 (if (display-graphic-p)
-  (load-theme 'alect-light t)
+  (progn
+    (load-theme 'arjen-grey t)
+    (l/theme-hook)
+    (l/arjen-hook))
   (progn
     (load-theme 'misterioso t)
     (set-face-attribute
