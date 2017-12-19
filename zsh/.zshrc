@@ -263,7 +263,6 @@ alias ssh='TERM=xterm ssh'
 # These hostnames depend on either /etc/hosts or ~/.ssh/config.
 alias sk0='ssh l@k0'
 alias sm0='ssh l@m0'
-alias sw1='ssh w1'
 
 # GLOBAL, position-independent aliases for detaching a process from the shell
 # (useful for starting GUI apps as standalones, without arguments).
