@@ -83,7 +83,8 @@
   ; Disable default orgmode hotkeys that interfere with our global hotkeys
   ; defined elsewhere.
   (define-key org-mode-map [(tab)] nil)
-  (define-key org-mode-map (kbd "<S-iso-lefttab>") nil))
+  (define-key org-mode-map (kbd "<S-iso-lefttab>") nil)
+  (define-key org-mode-map (kbd "<backtab>") nil))
 
 (defhydra hydra-org (:foreign-keys warn)
   "org"
