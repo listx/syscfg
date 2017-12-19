@@ -10,7 +10,7 @@
     extraHosts = ''
       192.168.0.3 m0
       192.168.0.4 k0
-      192.168.0.5 k1
+      192.168.0.7 linusa-macbookpro
     '';
     # Port 22 is opened automatically if SSH daemon is enabled (no need to specify it here).
     # 8001 is for the nix-serve HTTP daemon.
