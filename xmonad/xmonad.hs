@@ -467,13 +467,6 @@ myManageHook nScreens = composeOne $
 
 myStartupHook :: String -> ScreenId -> X ()
 myStartupHook hostname nScreens = do
-	-- The way this works is a little bit involved. First,
-	-- `spawnIfGrpTopVWNotFull' checks if the given VW group (e.g., 'Net' or
-	-- 'Work') _in the current screen that has focus_ is occupied with windows.
-	-- If occupied, we abort the spawn of the given command. It does not by
-	-- itself spawn the command given. If we do end up spawning something, then
-	-- at that point `myManageHook' kicks in and places the window at a
-	-- particular VW (if we have a rule for that command's window).
 	spawn "qutebrowser"
 	-- Spawn one terminal in every window.
 	mapM_
