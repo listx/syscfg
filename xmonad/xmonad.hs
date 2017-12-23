@@ -174,7 +174,7 @@ myKeys hostname conf@XConfig {XMonad.modMask = hypr} = M.fromList $
 	-- Go to any non-empty VW, except those VW belonging to the given VW Groups
 	-- (for making sure that our "desk" is clean before we log off/shutdown).
 	, ((hypr,   xK_n            ), moveTo Next $ nonEmptyVWExceptGrps [])
-	, ((hyprS,  xK_n            ), shiftTo Next $ nonEmptyVWExceptGrps [])
+	, ((hyprS,  xK_n            ), preferNonEmpty Next)
 
 	-- Go to empty VW. If all VWs in this screen are full, then do nothing.
 	, ((hypr,   xK_o            ), moveTo Next emptyVW)
@@ -300,6 +300,17 @@ myKeys hostname conf@XConfig {XMonad.modMask = hypr} = M.fromList $
 		, xK_F9
 		, xK_F10
 		]
+
+-- When given a direction to move to, prefer to move to a non-empty VW in the
+-- current screen (via `nonEmptyVWExceptGrps'). If no such VW exists (we are
+-- already on the only non-empty VW in this screen), move to an empty one.
+preferNonEmpty :: Direction1D -> X ()
+preferNonEmpty dir = do
+	next <- findWorkspace getSortByIndex Next (nonEmptyVWExceptGrps []) 1
+	current <- gets (W.tag . W.workspace . W.current . windowset)
+	if next == current
+		then shiftTo dir emptyVW
+		else shiftTo dir $ nonEmptyVWExceptGrps []
 
 -- An empty VW _in the current screen_.
 emptyVW :: WSType
