@@ -62,9 +62,6 @@ isUbuntu givenHost = any (\ubuntuHost -> isPrefixOf ubuntuHost givenHost) ubuntu
 	where
 	ubuntuHosts = ["enif"]
 
-isPersonal :: String -> Bool
-isPersonal = flip elem ["k0", "k1"]
-
 isPortraitMonitorLayout :: String -> Bool
 isPortraitMonitorLayout givenHost = any (\portraitHost -> isPrefixOf portraitHost givenHost) portraitHosts
 	where
