@@ -99,7 +99,7 @@
 (general-define-key
   :keymaps 'org-mode-map
   :states '(normal)
-  "0" 'hydra-org/body
+  "\"" 'hydra-org/body
   ; Cycle section visibility level.
   "l" 'org-cycle
   "L" 'org-global-cycle
