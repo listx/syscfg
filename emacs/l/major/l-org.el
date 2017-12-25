@@ -92,6 +92,7 @@
   ("l" org-toggle-link-display "org-toggle-link-display")
   ("M" mmm-parse-buffer "turn on mmm-mode")
   ("m" mmm-mode "turn on mmm-mode")
+  ("o" l/sort-done-closed "sort DONE/CLOSED headings" :exit t)
   ("s" org-beamer-export-to-pdf "save beamer to pdf")
   ("w" org-publish-current-project "publish current project")
   ("q" nil "exit" :exit t))
@@ -153,5 +154,23 @@
     (save-excursion
       (while (re-search-forward "^#\\+end_src\n\\([^\n]\\)" nil t)
         (replace-match "\n\\1" nil nil nil 1)))))
+
+(defun l/sort-done-closed ()
+  "Replace entire buffer with output from morg.py."
+  (interactive)
+  (let
+    (
+      (output (shell-command-to-string
+        (concat
+          "~/life/torg.sh sort_done_closed --input-file "
+          (buffer-name))))
+    )
+    (if (string= output (buffer-string))
+      (message "NOP (torg output matches buffer)")
+      (progn
+        (setf (buffer-string) output)
+        ; Re-indent the buffer (buffer is not re-indented automatically by
+        ; org-mode).
+        (org-indent-indent-buffer)))))
 
 (provide 'l-org)
