@@ -1,13 +1,24 @@
 module Main where
 
 import Control.Monad
+  ( when )
 import Data.List
-    ( isPrefixOf )
-import Data.Maybe
-  ( fromMaybe
-  , isJust
-  , isNothing
+  ( find
+  , foldl'
+  , isPrefixOf
+  , nub
+  , sortBy
   )
+import Data.Maybe
+  ( isJust
+  , isNothing
+  , listToMaybe
+  )
+import Data.Ord
+  ( comparing
+  )
+import Safe
+  ( headDef )
 import System.Exit
 import System.Posix.Unistd
   ( nodeName
@@ -16,13 +27,14 @@ import System.Posix.Unistd
 import XMonad
 import XMonad.Actions.CycleWS
   ( Direction1D
-    ( Next )
+    ( Next
+    , Prev
+    )
   , WSType (WSIs)
   , findWorkspace
   , moveTo
   , screenBy
   , shiftTo
-  , toggleWS
   )
 import XMonad.Actions.GridSelect
   ( def
@@ -54,83 +66,466 @@ import XMonad.Layout.ResizableTile
 import XMonad.Util.WorkspaceCompare
   ( getSortByIndex )
 import qualified Data.Map as M
+import qualified Data.Map.Strict as H
 import qualified XMonad.Layout.LayoutModifier as XLL
 import qualified XMonad.StackSet as W
+import qualified XMonad.Util.ExtensibleState as XS
 
-isUbuntu :: String -> Bool
-isUbuntu givenHost = any (\ubuntuHost -> isPrefixOf ubuntuHost givenHost) ubuntuHosts
+-- The main concept behind this configuration is the 3-dimensional navigation of
+-- Workspaces. To my knowledge it is unique in the XMonad world. It builds on a
+-- simple idea from XMonad.Layout.IndependentScreens (the idea of adding a
+-- dimension by merely modifying a WorkspaceId (string)). A summary of how that
+-- works follows below. The other thing is that all toplevel functions in here
+-- are prefixed with "l_", in the style of my Emacs configuration (where all
+-- custom functions are prefixed with "l/").
+
+type XCoord = String
+type YCoord = String
+type ZCoord = String
+
+-- Remind ourselves of our "<X>_<Z>:<Y>" naming scheme of WorkspaceIds. The
+-- "<Z>:<Y>" suffix of each WorkspaceId is called "VirtualWorkspace" by
+-- IndependentScreens. See discussion below.
+type ZY = VirtualWorkspace
+-- Each WorkspaceId, aka Workspace name, is the unique cross-section of the X,
+-- Z, and Y axes.
+type XZY = WorkspaceId
+
+-- Each Workspace has a name associated; internally by XMonad it is called a
+-- "tag" and it is just a string (type synonym of "WorkspaceId"). We use a
+-- combination of X, Y, and Z-axis coordinates to get a 3-dimensional view of
+-- Workspaces. We do this by breaking up WorkspaceId into the following format:
+-- "<XCoord>_<ZCoord>:<YCoord>". Thankfully, we get "<XCoord>_<ZCoord>" for free
+-- by just using XMonad.Layout.IndependentScreens; that extension's
+-- "withScreens" adds the "<XCoord>_" prefix for us for all <ZCoord> names we
+-- define. (For reference, IndependentScreens calls the "<ZCoord>" part a
+-- VirtualWorkspace, and the full "<XCoord>_<ZCoord>" part a PhysicalWorkspace.)
+--
+-- So far in our discussion we are using just the X and Z coordinates. The
+-- H-h/H-l bindings move the active workspace (or window) focus across Xinerama
+-- screens in the X-axis direction (the vanilla XMonad bindings are
+-- Modkey-{Q,W,E}). We chose the name X-axis for this direction because on most
+-- multihead Xinerama setups, the monitors are placed horizontally in a
+-- left-to-right fashion. To move into our Z axis, we use H-n; this binding
+-- switches the workspace on the current Xinerama screen only and leaves all
+-- other screens as-is. Intuitively, we can imagine this 2-dimensional scheme as
+-- if each XMonad worspace is a playing card in a deck of cards. Each Xinerama
+-- screen has its own unique deck. Not to be pedantic, but for those unfamiliar
+-- with XMonad, each "playing card" here is its own "Desktop" with multiple GUI
+-- windows of applications.
+--
+-- Now we add in our final layer, the Y dimension, by appending ":<YCoord>" to
+-- the PhysicalWorkspace names. The H-M-j/H-M-k bindings move up and down the Y
+-- axis. Continuing with our playing card analogy, it's as if each <YCoord> in
+-- the Y axis has its own independent array of decks. The most interesting thing
+-- here is that moving up and down the Y axis changes *all* screens (every deck
+-- must change!). The effect is quite dramatic (and refreshing on my 4-monitor
+-- setup) and really shows off the power of Xinerama. This simulates the
+-- workflow demonstrated in https://youtu.be/w5_36BBGoU0?t=3m30s, where multiple
+-- screens all change content at once. The cool part about our setup is that we
+-- have the added Z dimension (for each unique X and Y coordinate pair), giving
+-- us much more room to place windows around. An important thing to keep in mind
+-- here is that even though we change by the Y coordinate with H-M-j/H-M-k, we
+-- actually change the Z coordinate as well if necessary on a per-screen basis
+-- (for each Xinerama screen (XCoord)). This is because whenever we move up/down
+-- the Y axis, we move to the *last used set of XZY workspaces at that YCoord*;
+-- using our playing card example, each Y coordinate (array of decks) remembers
+-- what ZCoord (playing card) each X screen (deck) was showing before focus
+-- changed to a different Y coordinate. This "last seen" concept is made
+-- possible with the "Seen" data type.
+--
+-- That's about it. Maybe one day this will become an XMonad extension...
+
+-- We have 22 ZCoords. The number 22 is important because we have 22 keybindings
+-- (H-[0-9] and H-[F1-F12]) that can in total work with 22 locations.
+l_ZCoords :: [ZCoord]
+l_ZCoords = take 22 $ map (:[]) ['a'..]
+
+-- The number of connected Xinerama screens can vary across OS boots (e.g., when
+-- we disconnect or connect an external monitor to a laptop). So we rely on
+-- XMonad.Layout.IndependentScreens to give us the correct number of X
+-- coordinates (see countScreens), and use it here as xineramaCount. (NOTE: we
+-- do use countScreens multiple times, and it is unclear what will happen if we
+-- change the number of Xinerama screens within a single X Session.)
+l_XCoords :: Int -> [XCoord]
+l_XCoords xineramaCount = map show $ take xineramaCount [(0::Int)..]
+
+-- We have 10 Y coordinates; we can add more as necessary in the future.
+l_YCoords :: [YCoord]
+l_YCoords = map show $ take 10 [(0::Int)..]
+
+-- Again, for reference our format for WorkspaceIds are "<x>_<z>:<y>".
+l_XFrom :: XZY -> XCoord
+l_XFrom = fst . break (=='_')
+l_ZFrom :: XZY -> XCoord
+l_ZFrom = drop 1 . fst . break (==':') . snd . break (=='_')
+l_YFrom :: XZY -> YCoord
+l_YFrom = drop 1 . dropWhile (/=':')
+
+-- Group ZCoords by type. Usinge our playing card analogy, these groups are like
+-- the "suits" of cards.
+data ZGroup
+  = ZGWork
+  | ZGNet
+  | ZGMisc
+  | ZGSys
+  deriving (Eq, Ord, Enum, Show)
+
+l_ZYGroups :: [(ZY, ZGroup)]
+l_ZYGroups =
+  [ (z ++ ":" ++ y, zGroup)
+  | (z, zGroup) <- l_ZCoordGroups
+  , y <- l_YCoords
+  ]
+
+l_ZCoordToGroup :: ZCoord -> ZGroup
+l_ZCoordToGroup z
+  | elem z $ map (:[]) ['a'..'f'] = ZGWork
+  | elem z $ map (:[]) ['g'..'i'] = ZGNet
+  | elem z $ map (:[]) ['j'..'j'] = ZGSys
+  | otherwise = ZGMisc
+
+l_ZGroupToZCoords :: ZGroup -> [ZCoord]
+l_ZGroupToZCoords zGroup
+  = map fst
+  $ filter ((== zGroup) . snd) l_ZCoordGroups
+
+l_ZCoordGroups :: [(ZCoord, ZGroup)]
+l_ZCoordGroups =
+  [ (z, l_ZCoordToGroup z)
+  | z <- l_ZCoords
+  ]
+
+-- Generate fully qualified WorkspaceIds from u
+l_XZYs :: Int -> [XZY]
+l_XZYs xineramaCount =
+  [ x ++ "_" ++ z ++ ":" ++ y
+  | x <- l_XCoords xineramaCount
+  , z <- l_ZCoords
+  , y <- l_YCoords
+  ]
+
+-- Each time we change the Y coordinate, we record the ZCoord on each XCoord.
+-- For simplicity, instead of storing the ZCoord and XCoord pair, we instead
+-- store the entire XZY triplet (which is also the full, unique WorkspaceId). We
+-- use XMonad.Util.ExtensibleState to store this state. See
+-- https://stackoverflow.com/questions/40270793/user-state-in-xmonad
+data Seen = Seen (H.Map YCoord [XZY])
+instance ExtensionClass Seen where
+  initialValue = Seen H.empty
+
+l_YFromWindowSet :: WindowSet -> YCoord
+l_YFromWindowSet = l_YFrom . W.tag . W.workspace . W.current
+
+l_CoordsFromWindowSet :: WindowSet -> (XCoord, ZCoord, YCoord)
+l_CoordsFromWindowSet windowSet =
+  ( l_XFrom xzy
+  , l_ZFrom xzy
+  , l_YFrom xzy
+  )
+  where
+  xzy = W.tag . W.workspace $ W.current windowSet
+
+l_YIncrementedBy :: Direction1D -> YCoord -> YCoord
+l_YIncrementedBy dir y = show $ mod (op (read y) 1) (length l_YCoords)
+  where
+  op = if dir == Next then (+) else (-)
+
+-- Given the X, Y, and ZGroup constraints, generate the full XZY coordinate
+-- WorkspaceId by deciding on the ZCoord.
+l_XZYFrom :: Int -> Int -> ZGroup -> YCoord -> XZY
+l_XZYFrom xCoord xineramaCount zGroup y = x ++ "_" ++ z ++ ":" ++ y
+  where
+  -- Wrap xCoord if it is out of bounds.
+  x = l_XCoords xineramaCount !! mod xCoord xineramaCount
+  -- We just grab the very first ZCoord in the ZGroup.
+  z = head $ l_ZGroupToZCoords zGroup
+
+-- For a given ZGroup and YCoord, get a list of XZYs belonging to that ZGroup
+-- for every XCoord. The pool of available ZCoords is modified once by
+-- transformZCoords.
+l_XZYsFrom :: Int -> ZGroup -> ([ZCoord] -> [ZCoord]) -> YCoord -> [XZY]
+l_XZYsFrom xineramaCount zGroup transformZCoords y =
+  [ x ++ "_" ++ z ++ ":" ++ y
+  | x <- l_XCoords xineramaCount
+  , z <- transformZCoords $ l_ZGroupToZCoords zGroup
+  ]
+
+-- Abstraction to help us search for a Workspace. See l_searchZ for more info.
+data WorkspaceQuery = WQ HasWindows ZGroupMemberships
+data HasWindows
+  = Empty
+  | NonEmpty
+  deriving (Eq)
+
+-- The boolean in the tuple determines whether we should check if the XZY in the
+-- Workspace belongs to the ZGroup (True for yes, it belongs; False for no it
+-- does not belong).
+type ZGroupMemberships = [(ZGroup, Bool)]
+
+-- This function was written to implemet the idea expressed in
+-- https://www.reddit.com/r/xmonad/comments/7mawso/switch_workspaces_on_multiple_monitors_with_1/.
+-- It involves less work for the user than XMonad.Actions.DynamicWorkspaceGroups
+-- because we don't have to manually name workspace groups (basically for us,
+-- every YCoord in l_YCoords is a "WorkspaceGroup").
+l_viewY :: Direction1D -> X ()
+l_viewY dir = do
+  windowSet <- gets windowset
+  let
+    -- (1) Get current (soon to be previous) YCoord.
+    yPrev = l_YFromWindowSet windowSet
+    -- Make note of all XZYs at the current YCoord.
+    xzys = map (\screen -> W.tag $ W.workspace screen) $ W.screens windowSet
+    recordXZYs (Seen hashmap)
+      = Seen
+      $ H.insert (l_YFromWindowSet windowSet) xzys hashmap
+    -- (2) Calculate next YCoord (wrap back around if we're already at an edge
+    -- level).
+    yNext = l_YIncrementedBy dir yPrev
+
+  -- (3) Activate next YCoord's workspaces. After this operation, visually all
+  -- screens will have switched their XZY coordinate to reflect yNext, not
+  -- yPrev.
+  l_activateY yNext
+
+  -- (4) Save xzys of yPrev, so that if and when we switch back to it, we get
+  -- back the same workspaces (and not just some random default set of XZYs).
+  XS.modify recordXZYs
+
+-- Make the given YCoord "active" by viewing its XZYs on all Xinerama screen(s).
+-- If we viewed the YCoord before, present its XZYs that we recorded when we
+-- switched away from it the last time around. Otherwise, show the default XZYs
+-- for the YCoord.
+l_activateY :: YCoord -> X ()
+l_activateY y = do
+  windowSet <- gets windowset
+  (Seen hashmap) <- XS.get :: X Seen
+  let
+    xineramaCount = length $ W.screens windowSet
+    xzys = case H.lookup y hashmap of
+      Just xzys' -> xzys'
+      Nothing -> l_defaultXZYsForY y xineramaCount
+  windows $ l_viewXZYs xzys
+
+-- Given a list of XZYs to view, convert each XZY to a "Workspace i l a" type
+-- (this is the type that XMonad cares about). In this conversion process, we
+-- only look at the `hidden' part of the StackSet (the idea is that we only
+-- really want to use this function to view workspaces on a YCoord other than
+-- the current one, which means that by definition they should be hidden).
+--
+-- First we sanitize the input XZYs by making sure that each XZY is (1) unique,
+-- (2) has a different XCoord, and (3) can be found in the `hidden' Workspaces
+-- list. We then make each XZY visible with `l_promoteFromHidden'.
+l_viewXZYs :: [XZY]
+  -> WindowSet
+  -> WindowSet
+l_viewXZYs xzyCandidates windowSet
+  -- If none of the xzyCandidates survived the sanity check, then do nothing.
+  | null xzys = windowSet
+  | otherwise = foldl' l_promoteFromHidden windowSet xzys
+  where
+  xzys
+    = concatMap (flip xzyToWorkspace $ W.hidden windowSet)
+    $ nub xzyCandidates
+  xzyToWorkspace xzy hiddenWorkspaces =
+    [ hiddenWorkspace
+    | hiddenWorkspace@(W.Workspace xzy' _ _) <- hiddenWorkspaces
+    , xzy' == xzy
+    ]
+
+-- As a reminder, XMonad.Core (confusingly) uses the type synonym WindowSpace to
+-- mean "Workspace i l a". We call a WindowSpace "ww" to make the code a little
+-- easier to read (better than using "workspace", considering how we already use
+-- XMonad.StackSet.workspace as W.workspace).
+l_promoteFromHidden :: WindowSet -> WindowSpace -> WindowSet
+l_promoteFromHidden windowSet ww
+  -- If the given XCoord matches the XCoord of the current (focused) screen, we
+  -- have to promote ww to be W.current and demote the existing W.current screen
+  -- to be hidden.
+  | matchesXCoordFromWW . W.screen $ W.current windowSet = windowSet
+    { W.current = (W.current windowSet) { W.workspace = ww }
+    , W.hidden = (W.workspace $ W.current windowSet) : otherHidden
+    }
+  -- If the workspace we want to see is for a visible screen (not focused), we
+  -- have to promote ww to be inside W.visible and demote the existing matching
+  -- workspace in W.visible to be hidden.
+  | (Just sc) <- find (matchesXCoordFromWW . W.screen) (W.visible windowSet) = windowSet
+    { W.visible
+      = sc { W.workspace = ww }
+      : filter (not . matchesXCoordFromWW . W.screen) (W.visible windowSet)
+    , W.hidden = W.workspace sc : otherHidden
+    }
+  | otherwise = windowSet
+  where
+  matchesXCoordFromWW (S s) = show s == (l_XFrom $ W.tag ww)
+  otherHidden = filter ((/= W.tag ww) . W.tag) $ W.hidden windowSet
+
+-- Pick out a default set of workspaces at a particular level. We make sure to
+-- pick 1 workspace for each physical screen (given by xineramaCount).
+l_defaultXZYsForY :: YCoord -> Int -> [XZY]
+l_defaultXZYsForY y xineramaCount
+  = selectForEachXCoord (l_XCoords xineramaCount)
+  . filter xzyIsOnYCoord
+  $ l_XZYs xineramaCount
+  where
+  xzyIsOnYCoord xzy = (drop 1 . snd $ break (==':') xzy) == y
+  selectForEachXCoord xCoords xzys =
+    [ xzy
+    | xzy <- xzys
+    , elem (l_XFrom xzy) xCoords
+    -- Select the xzy at the first ZCoord.
+    , l_ZFrom xzy == head l_ZCoords
+    ]
+
+-- Move currently focused window over to the next YCoord. Then view that YCoord.
+-- If there is no currently focused window, don't do anything. This is the
+-- Y-axis analogue of the H-S-{h,l} bindings powered by l_shiftAndView.
+l_shiftY :: Direction1D -> X ()
+l_shiftY dir = do
+  windowSet <- gets windowset
+  (Seen hashmap) <- XS.get :: X Seen
+  let
+    xineramaCount = length $ W.screens windowSet
+    yPrev = l_YFromWindowSet windowSet
+    yNext = l_YIncrementedBy dir yPrev
+    x = l_XFrom . W.tag . W.workspace $ W.current windowSet
+    -- Like in l_viewY, try to grab the XZY of the last used Workspace at the
+    -- target xzy.
+    xzys = case H.lookup yNext hashmap of
+      -- Grab the xzy with the same XCoord as the current screen.
+      Just xzys' -> xzys'
+      Nothing -> l_defaultXZYsForY yNext xineramaCount
+  flip
+    whenJust
+    (\xzy -> (windows $ W.shift xzy) >> l_viewY dir)
+    (find ((==x) . l_XFrom) xzys)
+
+-- Try to find a workspace based on the given WorkspaceQuery, but inside the
+-- current XCoord and YCoord. In other words, flip through the ZCoords available
+-- on the current Xinerama screen (X and Y coordinates stay constant).
+l_searchZ :: WorkspaceQuery -> WSType
+l_searchZ q = WSIs $ do
+  windowSet <- gets windowset
+  let
+    xzy = W.tag . W.workspace $ W.current windowSet
+    y = l_YFrom xzy
+    x = l_XFrom xzy
+    predicate ww = l_resolveQuery q ww
+      && l_XFrom (W.tag ww) == x
+      && l_YFrom (W.tag ww) == y
+  return predicate
+
+-- Like l_searchZ, but instead of only searching for the one workspace that
+-- satisfies the WorkspaceQuery, return an empty workspace if the search fails.
+l_searchZPreferNonEmpty :: X WSType
+l_searchZPreferNonEmpty = do
+  xzyNext <- findWorkspace getSortByIndex Next qNonEmpty 1
+  xzyCurrent <- gets (W.tag . W.workspace . W.current . windowset)
+  return $ if xzyNext == xzyCurrent
+    then qEmpty
+    else qNonEmpty
+  where
+  qEmpty = l_searchZ (WQ Empty [])
+  qNonEmpty = l_searchZ (WQ NonEmpty [])
+
+-- Like l_searchZ, but always return a XZY in a given ZGroup. When choosing
+-- among XZYs in the ZGroup, choose the one with the fewest number of windows.
+l_searchZPreferZGroup :: ZGroup -> X XZY
+l_searchZPreferZGroup zGroup = do
+  windowSet <- gets windowset
+  let
+    xineramaCount = length $ W.screens windowSet
+    xzyCurrent = W.tag $ W.workspace $ W.current windowSet
+    (x, _, y) = l_CoordsFromWindowSet windowSet
+    -- Get all XZYs at the current XCoord/YCoord combination that belong to
+    -- zGroup.
+    xzys = filter ((==x) . l_XFrom) $ l_XZYsFrom xineramaCount zGroup id y
+    xzysOfGroup =
+      [ (xzy, length $ W.integrate' stack)
+      | (W.Workspace xzy _ stack) <- W.workspaces windowSet
+      , elem xzy xzys
+      ]
+    xzyPicked
+      | null xzysOfGroup = xzyCurrent
+      | otherwise = fst . head $ customSort xzysOfGroup
+    customSort = sortBy $ l_compareDimensions
+      [ comparing snd
+      , comparing fst
+      ]
+  return xzyPicked
+
+l_compareDimensions :: [a -> b -> Ordering] -> a -> b -> Ordering
+l_compareDimensions ps x y
+  = headDef EQ
+  . dropWhile (==EQ)
+  $ map (\p -> p x y) ps
+
+-- Resolve the given WorkspaceQuery against the Workspace/WindowSpace. This is
+-- also where we resolve the ZGroup membership exclusion list.
+l_resolveQuery :: WorkspaceQuery -> WindowSpace -> Bool
+l_resolveQuery (WQ hasWindows zGroupMemberships) ww
+  = l_queryEmptiness hasWindows ww
+  && l_queryZGroupMemberships zGroupMemberships ww
+
+l_queryEmptiness :: HasWindows -> WindowSpace -> Bool
+l_queryEmptiness hasWindows ww = case hasWindows of
+  Empty -> isNothing $ W.stack ww
+  NonEmpty -> isJust $ W.stack ww
+
+l_queryZGroupMemberships :: ZGroupMemberships -> WindowSpace -> Bool
+l_queryZGroupMemberships zGroupMemberships ww = and $ map
+  (\(zGroup, expectedResult) -> expectedResult == l_inGroup zGroup ww)
+  zGroupMemberships
+
+l_inGroup :: ZGroup -> WindowSpace -> Bool
+l_inGroup zGroup ww = (l_ZCoordToGroup . l_ZFrom $ W.tag ww) == zGroup
+
+-- If shifting was unsuccessful, don't try to view it. I.e., either we can shift
+-- a window to anther workspace and view it, or there is no window to shift to
+-- begin with (and we do nothing).
+l_shiftAndView :: XZY -> WindowSet -> WindowSet
+l_shiftAndView xzy windowSet = W.view xzy (W.shift xzy windowSet)
+
+-- Only perform the given action if the given test pases.
+l_if :: X Bool -> X () -> X ()
+l_if test action = do
+  ok <- test
+  when ok action
+
+l_windowCountInCurrentWorkspaceExceeds :: Int -> X Bool
+l_windowCountInCurrentWorkspaceExceeds n = do
+  windowSet <- gets windowset
+  let
+    windowCount = length . W.integrate' . W.stack . W.workspace $ W.current windowSet
+  return $ windowCount > n
+
+l_workspaceIsEmpty :: XZY -> X Bool
+l_workspaceIsEmpty xzy = do
+  windowSet <- gets windowset
+  return . isJust $ listToMaybe
+    [ ww
+    | ww <- W.workspaces windowSet
+    , W.tag ww == xzy
+    , isNothing $ W.stack ww
+    ]
+
+-- Terminals (using various different color themes).
+l_term1, l_term2 :: String
+l_term1 = "~/syscfg/script/sys/terms/wb.sh"
+l_term2 = "~/syscfg/script/sys/terms/wblue.sh"
+
+l_isUbuntu :: String -> Bool
+l_isUbuntu givenHost = any (\ubuntuHost -> isPrefixOf ubuntuHost givenHost) ubuntuHosts
   where
   ubuntuHosts = ["enif"]
 
-isPortraitMonitorLayout :: String -> Bool
-isPortraitMonitorLayout givenHost = any (\portraitHost -> isPrefixOf portraitHost givenHost) portraitHosts
+l_isPortraitMonitorLayout :: String -> Bool
+l_isPortraitMonitorLayout givenHost = any (\portraitHost -> isPrefixOf portraitHost givenHost) portraitHosts
   where
   portraitHosts = ["k0", "enif"]
 
-data MyVWGroup
-  = Work
-  | Net
-  | Misc
-  | Sys
-  deriving (Eq, Ord, Enum, Show)
-
--- Use an association list for more flexible custom workspace manipulation. We
--- basically just attach some more data to a VirtualWorkspace.
-myWorkspaceGroups :: [(VirtualWorkspace, MyVWGroup)]
-myWorkspaceGroups =
-  [ ("a", Work)
-  , ("b", Work)
-  , ("c", Work)
-  , ("d", Work)
-  , ("e", Work)
-  , ("f", Work)
-  , ("g", Net)
-  , ("h", Net)
-  , ("i", Net)
-  , ("j", Sys)
-  , ("k", Misc)
-  , ("l", Misc)
-  , ("m", Misc)
-  , ("n", Misc)
-  , ("o", Misc)
-  , ("p", Misc)
-  , ("q", Misc)
-  , ("r", Misc)
-  , ("s", Misc)
-  , ("t", Misc)
-  ]
-
-data PDirection
-  = PLeft
-  | PRight
-  deriving (Eq, Ord, Enum, Show)
-
-getVWToward :: PDirection -> MyVWGroup -> ScreenId -> VirtualWorkspace
-getVWToward d g (S s) = case d of
-  PLeft -> leftMost ++ "_" ++ vw
-  PRight -> rightMost ++ "_" ++ vw
-  where
-  leftMost = show (0::Int)
-  rightMost = show s
-  -- NOTE: In the future we can make `vw' smarter by trying to grab workspaces
-  -- on the fly based on some arbitrary predicate. But, we don't need that
-  -- much power because we only really use this function in `myStartupHook'.
-  vw = head $ getVWsOfGroup g
-
--- For a group, get a workspace belonging to that group for every physical
--- screen.
-getGroupSlice :: MyVWGroup -> Int -> [VirtualWorkspace]
-getGroupSlice g n = map (\pwId -> show pwId ++ "_" ++ vw) [0..n]
-  where
-  vw = head $ getVWsOfGroup g
-
--- Terminals (using various different color themes).
-term1, term2 :: String
-term1 = "~/syscfg/script/sys/terms/wb.sh"
-term2 = "~/syscfg/script/sys/terms/wblue.sh"
-
-myKeys :: String -> XConfig Layout -> M.Map (KeyMask, KeySym) (X ())
-myKeys hostname conf@XConfig {XMonad.modMask = hypr} = M.fromList $
+l_keyBindings :: String -> XConfig Layout -> M.Map (KeyMask, KeySym) (X ())
+l_keyBindings hostname conf@XConfig {XMonad.modMask = hypr} = M.fromList $
   -- Close focused window.
   [ ((hypr,   xK_d            ), kill)
 
@@ -168,18 +563,6 @@ myKeys hostname conf@XConfig {XMonad.modMask = hypr} = M.fromList $
   , ((hypr,   xK_m            ), sendMessage (IncMasterN 1))
   , ((hyprS,  xK_m            ), sendMessage (IncMasterN (-1)))
 
-  -- Go to any non-empty VW, except those VW belonging to the given VW Groups
-  -- (for making sure that our "desk" is clean before we log off/shutdown).
-  , ((hypr,   xK_n            ), moveTo Next $ nonEmptyVWExceptGrps [])
-  , ((hyprS,  xK_n            ), preferNonEmpty Next)
-
-  -- Go to empty VW. If all VWs in this screen are full, then do nothing.
-  , ((hypr,   xK_o            ), moveTo Next emptyVW)
-  , ((hyprS,  xK_o            ), shiftTo Next emptyVW)
-
-  -- Go to VW displayed previously.
-  , ((hypr,   xK_t            ), toggleWS)
-
   -- View all windows as a grid.
   , ((hypr,   xK_g            ), goToSelected def)
 
@@ -191,8 +574,36 @@ myKeys hostname conf@XConfig {XMonad.modMask = hypr} = M.fromList $
 
   -- Move mouse away to bottom-right of currently focused window.
   , ((hypr,   xK_BackSpace    ), warpToWindow 1 1)
+
+  -- Go to empty Workspace, on the current YCoord, in the current Xinerama
+  -- screen. For shifting an existing window to an empty Workspace, only do so
+  -- if there is indeed a window to work with in the current Workspace (i.e., if
+  -- all ZCoords at this X/Y-coordinate pair is full, do nothing).
+  , ((hypr,   xK_o            ), moveTo Next $ l_searchZ (WQ Empty []))
+  , ((hyprS,  xK_o            ), l_if
+      (l_windowCountInCurrentWorkspaceExceeds 0)
+      (shiftTo Next $ l_searchZ (WQ Empty [])))
   ]
   ++
+  -- Go to any non-empty Workspace only within the Z-Axis (X and Y remain
+  -- untouched) The Z-axis direction is either Next or Prev (depending on the
+  -- key). If we use the Shift key, move the current window to that direction,
+  -- unless there is only 1 window.
+  [ ((modifier, key), action)
+  | (key, dir) <-
+    [ (xK_n, Next)
+    , (xK_p, Prev)
+    ]
+  , (modifier, action) <-
+    [ (hypr, moveTo dir $ l_searchZ (WQ NonEmpty []))
+    , (hyprS, l_if
+        (l_windowCountInCurrentWorkspaceExceeds 1)
+        (shiftTo dir =<< l_searchZPreferNonEmpty))
+    ]
+  ]
+  ++
+  -- NOTE: These bindings are rarely used any more, if at all. Consider
+  -- deprecating them.
   -- hypr-[1..9, 0, F1-F10]: Switch to workspace N.
   -- hyprS-[1..9, 0, F1-F10]: Move focused window to workspace N.
   -- NOTE: Depending on the machine, we change the order of keys to optimize
@@ -203,21 +614,44 @@ myKeys hostname conf@XConfig {XMonad.modMask = hypr} = M.fromList $
   -- `forZQKeyboard', the middle finger of the numeric home row gets priority
   -- as the first VW because it is more ergonomic than the "1" key.
   [((hypr .|. mask, k         ), windows $ onCurrentScreen f i)
-    | (i, k) <- zip (workspaces' conf) $ if isPortraitMonitorLayout hostname
+    | (i, k) <- zip (workspaces' conf) $ if l_isPortraitMonitorLayout hostname
       then forZQKeyboard
       else forQwertyKeyboard
     , (f, mask) <- [(W.greedyView, 0), (W.shift, shiftMask)]]
   ++
-  -- hypr-{h,l}: Switch to prev/next Xinerama screens.
-  -- modS-{h,l}: Move client to prev/next screen.
-  [((m .|. hypr, key          ), flip whenJust (windows . f) =<< screenWorkspace =<< sc)
-    | (key, sc) <- [(xK_h, screenBy (-1)),(xK_l, screenBy 1)]
-    , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]]
+  -- H-{h,l}: Switch focus across X-axis (prev/next Xinerama screen).
+  [((hypr, key), flip whenJust (windows . W.view) =<< screenWorkspace =<< sc)
+  | (key, sc) <- [(xK_h, screenBy (-1)), (xK_l, screenBy 1)]
+  ]
+  ++
+  -- H-S-{h,l}: Move focused window along X-axis. The difference here versus the
+  -- vanilla XMonad behavior is that we not only move the focused window, but
+  -- _move focus to it_ afterwards. This way, repeatedly pressing this binding
+  -- merely moves the focused window along; otherwise we just end up moving all
+  -- windows out of the current screen, which is not as useful in practice.
+  --
+  -- It is worth noting that this binding does nothing if there is no window in
+  -- the current workspace to move.
+  [((hyprS, key), l_if
+    (l_windowCountInCurrentWorkspaceExceeds 0)
+    (flip whenJust (windows . l_shiftAndView) =<< screenWorkspace =<< sc))
+  | (key, sc) <- [(xK_h, screenBy (-1)), (xK_l, screenBy 1)]
+  ]
+  ++
+  [ ((hya,    xK_j            ), l_viewY Next)
+  , ((hyaS,   xK_j            ), l_if
+                                  (l_windowCountInCurrentWorkspaceExceeds 0)
+                                  (l_shiftY Next))
+  , ((hya,    xK_k            ), l_viewY Prev)
+  , ((hyaS,   xK_k            ), l_if
+                                  (l_windowCountInCurrentWorkspaceExceeds 0)
+                                  (l_shiftY Prev))
+  ]
   ++
   -- Launch apps.
   [ ((hypr,   xK_i            ), spawn "qutebrowser")
   , ((hyprS,  xK_i            ), spawnSelected def [chromium, "firefox"])
-  , ((hypr,   xK_e            ), spawn term1)
+  , ((hypr,   xK_e            ), spawn l_term1)
   -- Backup binding to launch a terminal in case our Hyper key (hypr) is
   -- unavailable. This happens whenever we unplug/replug our keyboard, and a
   -- terminal isn't already showing in a window somewhere to be able to call
@@ -225,27 +659,29 @@ myKeys hostname conf@XConfig {XMonad.modMask = hypr} = M.fromList $
   -- Hyper key is used exclusively to maneuver around Xmonad, we need a
   -- non-Hyper-key binding to launch a terminal to bootstrap ourselves back in
   -- with initkeys.sh.
-  , ((altS,   xK_e            ), spawn term1)
+  , ((altS,   xK_e            ), spawn l_term1)
   , ((hypr,   xK_u            ), spawn "emacs")
   ]
   where
   lockOrQuit
-    | isUbuntu hostname = spawn "xscreensaver-command -lock"
+    | l_isUbuntu hostname = spawn "xscreensaver-command -lock"
     | otherwise = runSelectedAction def sessionActions
   sessionActions =
     [ ("Recompile/restart XMonad", spawn "xmonad --recompile && xmonad --restart")
     , ("Quit XMonad", io exitSuccess)
     ]
-  shrinkExpand master slave = if isPortraitMonitorLayout hostname
+  shrinkExpand master slave = if l_isPortraitMonitorLayout hostname
     then sendMessage slave
     else sendMessage master
   chromium
-    | isUbuntu hostname = "google-chrome"
+    | l_isUbuntu hostname = "google-chrome"
     | otherwise = "chromium"
   hyprS = hypr .|. shiftMask
   -- Alias "altMask" for left alt key.
   altMask = mod1Mask
   altS = altMask .|. shiftMask
+  hya = hypr .|. altMask
+  hyaS = hypr .|. altMask .|. shiftMask
   relativeDimenions
     = W.RationalRect marginLeft marginTop windowWidth windowHeight
     where
@@ -298,93 +734,8 @@ myKeys hostname conf@XConfig {XMonad.modMask = hypr} = M.fromList $
     , xK_F10
     ]
 
--- When given a direction to move to, prefer to move to a non-empty VW in the
--- current screen (via `nonEmptyVWExceptGrps'). If no such VW exists (we are
--- already on the only non-empty VW in this screen), move to an empty one.
-preferNonEmpty :: Direction1D -> X ()
-preferNonEmpty dir = do
-  next <- findWorkspace getSortByIndex Next (nonEmptyVWExceptGrps []) 1
-  current <- gets (W.tag . W.workspace . W.current . windowset)
-  if next == current
-    then shiftTo dir emptyVW
-    else shiftTo dir $ nonEmptyVWExceptGrps []
-
--- An empty VW _in the current screen_.
-emptyVW :: WSType
-emptyVW = WSIs $ do
-  (S currentScreen) <- gets (W.screen . W.current . windowset)
-  return $ \w
-    -> isEmpty w
-    && show currentScreen == takeWhile (/='_') (W.tag w)
-
--- An empty VW belonging to the given group, _in the current screen_.
-emptyVWinGrp :: MyVWGroup -> WSType
-emptyVWinGrp grp = WSIs $ do
-  (S currentScreen) <- gets (W.screen . W.current . windowset)
-  let
-    isMemberOfGivenGrp = flip isVWinGroups [grp] . getVW
-  return $ \w
-    -> isEmpty w
-    && isMemberOfGivenGrp w
-    && show currentScreen == takeWhile (/='_') (W.tag w)
-
--- A non-empty VW belonging to any group except those in the given group list.
-nonEmptyVWExceptGrps :: [MyVWGroup] -> WSType
-nonEmptyVWExceptGrps grps  = WSIs $ do
-  (S currentScreen) <- gets (W.screen . W.current . windowset)
-  let
-    nonEmptyExceptGrps w = all ($ w) [isNonEmpty, isNotMemberOfGivenGrps]
-    isNotMemberOfGivenGrps = not . flip isVWinGroups grps . getVW
-  return $ \w -> nonEmptyExceptGrps w
-    && show currentScreen == takeWhile (/='_') (W.tag w)
-
--- Because of IndependentScreens, tags take the form of
--- "<ScreenId>_<VirtualWorkspace>". So to get to just the
--- VirtualWorkspace (VW), we have to drop all leading characters up to
--- the underscore. As there is no "dropWhileUpto" function in Haskell,
--- we emulate it with reverse+takeWhile. The caveat here is that our VWs
--- must not have an underscore in them.
-getVW :: W.Workspace String l a -> String
-getVW = removePWtag . W.tag
-
-removePWtag :: String -> String
-removePWtag = reverse . takeWhile (/='_') . reverse
-
-isEmpty :: W.Workspace i l a -> Bool
-isEmpty = isNothing . W.stack
-
-isNonEmpty :: W.Workspace i l a -> Bool
-isNonEmpty = isJust . W.stack
-
-getVWsOfGroup :: MyVWGroup -> [VirtualWorkspace]
-getVWsOfGroup g
-  = map fst
-  $ filter ((== g) . snd) myWorkspaceGroups
-
--- If we cannot find the group for this VW, default to "Work" group. A VW always
--- carries around with it the physical screen info as a prefix, so we have to
--- drop this prefix when we're doing lookups into `myWorkspaceGroups'.
-getGroupOfVW :: VirtualWorkspace -> MyVWGroup
-getGroupOfVW vw = fromMaybe Work $ lookup vw myWorkspaceGroups
-
--- Check if given VW belongs to any one of the given vw groups.
-isVWinGroups :: VirtualWorkspace -> [MyVWGroup] -> Bool
-isVWinGroups vw = elem (getGroupOfVW vw)
-
--- Try to find an empty VW belonging to the given group _in the current screen_,
--- and return its name. If group is full, then return the current VW.
-tryVWofGroup :: MyVWGroup -> X VirtualWorkspace
-tryVWofGroup g = do
-  vw0 <- findWorkspace getSortByIndex Next (emptyVWinGrp g) 0
-  vw1 <- findWorkspace getSortByIndex Next (emptyVWinGrp g) 1
-  -- If current VW also happens to be an empty VW of the group g, then return
-  -- this VW.
-  return $ if isVWinGroups (removePWtag vw0) [g]
-    then vw0
-    else vw1
-
-myMouseBindings :: XConfig t -> M.Map (KeyMask, Button) (Window -> X ())
-myMouseBindings XConfig {XMonad.modMask = hypr} = M.fromList
+l_mouseBindings :: XConfig t -> M.Map (KeyMask, Button) (Window -> X ())
+l_mouseBindings XConfig {XMonad.modMask = hypr} = M.fromList
   -- hypr-button1 (left-click): Set the window to floating mode and move by
   -- dragging.
   [ ( (hypr, button1)
@@ -408,15 +759,15 @@ myMouseBindings XConfig {XMonad.modMask = hypr} = M.fromList
 -- windows in the master pane, y is the percent of the screen to increment by
 -- when resizing panes, and z is the default proportion of the screen occupied
 -- by the master pane.
-defaultLayout :: Choose (Mirror Tall) (Choose Tall (XLL.ModifiedLayout WithBorder Full)) Window
-defaultLayout = (Mirror $ tiled 1) ||| tiled 1 ||| noBorders Full
+l_layoutHook :: Choose (Mirror Tall) (Choose Tall (XLL.ModifiedLayout WithBorder Full)) Window
+l_layoutHook = (Mirror $ tiled 1) ||| tiled 1 ||| noBorders Full
   where
   tiled nmaster = Tall nmaster delta ratio
   delta = 3/100
   ratio = 1/2
 
-layoutNoMirror :: Choose ResizableTall (XLL.ModifiedLayout WithBorder Full) Window
-layoutNoMirror = ResizableTall 0 (3/100) (1/2) [] ||| noBorders Full
+l_layoutNoMirror :: Choose ResizableTall (XLL.ModifiedLayout WithBorder Full) Window
+l_layoutNoMirror = ResizableTall 0 (3/100) (1/2) [] ||| noBorders Full
 
 -- ManageHook: Execute arbitrary actions and WindowSet manipulations when
 -- managing a new window. You can use this to, for example, always float a
@@ -434,16 +785,18 @@ layoutNoMirror = ResizableTall 0 (3/100) (1/2) [] ||| noBorders Full
 --   WM_CLASS(STRING) = "Qt-subapplication", "VirtualBox"
 --
 -- then Qt-subapplication is resource, and VirtualBox is className.
-myManageHook :: ScreenId  -> ManageHook
-myManageHook nScreens = composeOne $
+l_managementHook :: Int -> ManageHook
+l_managementHook xineramaCount = composeOne $
   [ className =? "Gimp"               -?> doFloat
   , className =? "Agave"              -?> doCenterFloat
   , resource  =? "desktop_window"     -?> doIgnore
   , resource  =? "kdesktop"           -?> doIgnore
   , resource  =? "floatme"            -?> doCenterFloat
-  , className =? "qutebrowser"        -?> doShift =<< liftX (tryVWofGroup Net)
-  , className =? "Google-chrome"      -?> doShift =<< liftX (tryVWofGroup Net)
-  , resource  =? "Navigator"          -?> doShift =<< liftX (tryVWofGroup Net)
+  -- Move browsers to the ZGNet ZGroup. If all ZCoords in ZGNet are full,
+  , className =? "qutebrowser"        -?> doShift =<< toZGNet
+  , className =? "Google-chrome"      -?> doShift =<< toZGNet
+  , className =? "Chromium-browser"   -?> doShift =<< toZGNet
+  , resource  =? "Navigator"          -?> doShift =<< toZGNet
   , className =? "Blender:Render"     -?> doFloat
   , resource  =? "Browser"            -?> doFloat
   , className =? "Xsane"              -?> doFloat
@@ -457,8 +810,8 @@ myManageHook nScreens = composeOne $
   -- This is useful for auto-moving a terminal screen we spawn elsewhere in
   -- this config file to a particular workspace.
   map
-    (\pvw -> resource =? ("atWorkspace_" ++ pvw) -?> doShift pvw)
-    allWorkspaces
+    (\xzy -> resource =? ("atWorkspace_" ++ xzy) -?> doShift xzy)
+    (l_XZYs xineramaCount)
   ++
   -- Force new windows down (i.e., if a screen has 1 window (master) and we
   -- spawn a new window, don't become the new master window). See "Make new
@@ -467,43 +820,45 @@ myManageHook nScreens = composeOne $
   [ return True -?> doF W.swapDown
   ]
   where
-  allWorkspaces =
-    [ pw ++ "_" ++ vw
-    | pw <- map show ([0..(fromIntegral nScreens - 1)]::[Int])
-    , vw <- map (:[]) ['a'..'t']
-    ]
+  toZGNet = liftX $ l_searchZPreferZGroup ZGNet
 
-myStartupHook :: String -> ScreenId -> X ()
-myStartupHook hostname nScreens = do
+l_startupHook :: String -> X ()
+l_startupHook hostname = do
+  windowSet <- gets windowset
   spawn "qutebrowser"
-  -- Spawn one terminal in every window.
+  return ()
+  y <- gets (l_YFromWindowSet . windowset)
+  let
+    xineramaCount = length $ W.screens windowSet
+    -- Spawn rtorrent on the rightmost screen (XCoord index of -1; we use -1
+    -- because we don't know how many screens there will actually be).
+    rtorrent = spawn $ l_term2
+      ++ " -name atWorkspace_"
+      ++ l_XZYFrom (-1) xineramaCount ZGSys y
+      ++ " -e rtorrent"
+  -- Spawn one terminal in every screen at the "Work" ZGroup at the current
+  -- YCoord (but only if that screen is empty). We have to feed in `(take 1)' in
+  -- order to spawn terminals in a single ZCoord.
   mapM_
-    (\pvw -> spawn $ term1 ++ " -name atWorkspace_" ++ pvw)
-    . getGroupSlice Work
-    $ fromIntegral nScreens'
-  spawn $ term1
+    (\xzy -> l_if (l_workspaceIsEmpty xzy) (spawn $ l_term1 ++ " -name atWorkspace_" ++ xzy))
+    $ l_XZYsFrom xineramaCount ZGWork (take 1) y
+  -- Spawn htop on the rightmost screen.
+  spawn $ l_term1
     ++ " -name atWorkspace_"
-    ++ getVWToward PRight Sys nScreens'
+    ++ l_XZYFrom (-1) xineramaCount ZGSys y
     ++ " -e htop"
   spawn "emacs --daemon"
   when (elem hostname ["k0"]) rtorrent
-  where
-  -- Subtract 1 from nScreens because physical screens are indexed from 0.
-  nScreens' = nScreens - 1
-  rtorrent = spawn $ term2
-    ++ " -name atWorkspace_"
-    ++ getVWToward PRight Sys nScreens'
-    ++ " -e rtorrent"
 
 main :: IO ()
 main = do
-  nScreens <- countScreens
+  xineramaCount <- countScreens
   hostname <- fmap nodeName getSystemID
-  if isPortraitMonitorLayout hostname
-    then xmonad (myconf hostname nScreens) {layoutHook = layoutNoMirror}
-    else xmonad $ myconf hostname nScreens
+  if l_isPortraitMonitorLayout hostname
+    then xmonad (myconf hostname xineramaCount) {layoutHook = l_layoutNoMirror}
+    else xmonad $ myconf hostname xineramaCount
   where
-  myconf hostname nScreens = def
+  myconf hostname xineramaCount = def
     { terminal           = "urxvt"
     , focusFollowsMouse  = True
     , clickJustFocuses   = True
@@ -516,14 +871,14 @@ main = do
     -- configuration file under the
     -- `services.xserver.displayManager.sessionCommands` option.
     , modMask            = mod3Mask
-    , workspaces         = withScreens nScreens $ map fst myWorkspaceGroups
+    , workspaces         = withScreens (fromIntegral xineramaCount) $ map fst l_ZYGroups
     , normalBorderColor  = "#000000"
     , focusedBorderColor = "#ffffff"
-    , keys               = myKeys hostname
-    , mouseBindings      = myMouseBindings
-    , layoutHook         = defaultLayout
-    , manageHook         = myManageHook nScreens
+    , keys               = l_keyBindings hostname
+    , mouseBindings      = l_mouseBindings
+    , layoutHook         = l_layoutHook
+    , manageHook         = l_managementHook xineramaCount
     , handleEventHook    = mempty
     , logHook            = mempty
-    , startupHook        = myStartupHook hostname nScreens
+    , startupHook        = l_startupHook hostname
     }

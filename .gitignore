@@ -38,6 +38,7 @@ xmonad/cabal.sandbox.config
 xmonad/dist
 xmonad/shell.nix
 xmonad/.stack-work
+xmonad/xmonad
 xmonad/xmonad-x86_64-linux
 xmonad/xmonad.errors
 xmonad/xmonad.state
