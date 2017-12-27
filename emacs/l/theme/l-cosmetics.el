@@ -117,7 +117,16 @@
                 "gray0")
               "gray16"))
           (setq evil-insert-state-cursor '("#ffffff" box))
-          (setq evil-normal-state-cursor '("#00ff00" box)))))))
+          (setq evil-normal-state-cursor '("#00ff00" box)))))
+  ; Colorize custom TODO-like keywords for org-mode.
+  (setq org-todo-keyword-faces '(
+    ("GOAL" . (:foreground "firebrick" :background "pink" :weight bold))
+    ("TODO" . org-warning)
+    ("TASK" . org-warning)
+    ("WAITING" . "purple")
+    ("STARTED" . "yellow")
+    ("DONE" . org-done)
+    ("CANCELED" . (:foreground "orange" :weight bold))))))
 
 (defun l/arjen-hook ()
   (interactive)
