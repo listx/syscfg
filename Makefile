@@ -79,7 +79,7 @@ sage:
 	ln -fns ${C}/sage                                   ${H}/.sage
 ssh:
 	ln -fns ${C}/ssh                                    ${H}/.ssh
-ifeq ('${T}','Darwin')
+ifeq ('${S}','Darwin')
 	ln -fs ${C}/ssh/config.google.conf                  ${H}/.ssh/config
 else ifneq (,$(findstring enif,${T}))
 	ln -fs ${C}/ssh/config.google.conf                  ${H}/.ssh/config
