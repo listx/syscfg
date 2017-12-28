@@ -78,7 +78,9 @@ rtorrent:
 sage:
 	ln -fns ${C}/sage                                   ${H}/.sage
 ssh:
+ifeq ($(wildcard ~/.ssh/.),)
 	ln -fns ${C}/ssh                                    ${H}/.ssh
+endif
 ifeq ('${S}','Darwin')
 	ln -fs ${C}/ssh/config.google.conf                  ${H}/.ssh/config
 else ifneq (,$(findstring enif,${T}))
