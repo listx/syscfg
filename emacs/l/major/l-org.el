@@ -6,7 +6,7 @@
   (setq org-log-done t)
   ; Mark a TODO item as DONE.
   (evil-define-key 'normal org-mode-map "T" 'org-todo)
-  (setq org-agenda-files (list "~/org"))
+  (setq org-agenda-files '("~/life" "~/k/notes-google"))
   ; Org-babel settings (for evaluating code blocks).
   (org-babel-do-load-languages
     'org-babel-load-languages
