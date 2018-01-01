@@ -31,7 +31,7 @@ endif
 gtk:
 	ln -fs ${C}/gtk/cfg                                 ${H}/.gtkrc-2.0.mine
 launch-my-browser:
-	ln -fs ${C}/script/sys/launch-my-browser            ${H}/.local/bin
+	ln -fs ${C}/script/sys/launch-my-browser            ${H}/bin
 launchctl:
 	${C}/launchctl/setup.sh
 lesskey:
@@ -114,8 +114,11 @@ xdefaults:
 xmonad:
 	ln -fns ${C}/xmonad                                 ${H}/.xmonad
 ifneq (,$(findstring enif,${T}))
-	ln -fs ${H}/.local/bin/xmonad                       ${C}/xmonad/xmonad-x86_64-linux
 	sudo cp -f ${C}/xmonad/xmonad.desktop               /usr/share/xsessions
+else
+	# xsession is relied on by NixOS hosts that use xmonad (basically the
+	# default) to start xmonad.
+	ln -fs ${C}/xmonad/.xsession                        ${H}/.xsession
 endif
 xorg:
 ifneq (,$(findstring enif,${T}))
