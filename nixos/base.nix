@@ -69,6 +69,7 @@
     displayManager.slim = {
       autoLogin = true;
       defaultUser = "l";
+      enable = true;
     };
     # We rely on ~/.xsession to start XMonad, instead of NixOS automagically
     # doing it for us. This way, we can use our xmonad binary compiled by Stack.
