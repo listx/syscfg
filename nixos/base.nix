@@ -67,6 +67,7 @@
       ${pkgs.xlibs.xsetroot}/bin/xsetroot -cursor_name circle
     '';
     displayManager.slim.defaultUser = "l";
+    displayManager.slim.autoLogin = true;
     # We rely on ~/.xsession to start XMonad, instead of NixOS automagically
     # doing it for us. This way, we can use our xmonad binary compiled by Stack.
     windowManager.xmonad.enable = false;
