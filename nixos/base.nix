@@ -66,8 +66,10 @@
       # use circle, not "X" symbol, for default mouse pointer
       ${pkgs.xlibs.xsetroot}/bin/xsetroot -cursor_name circle
     '';
-    displayManager.slim.defaultUser = "l";
-    displayManager.slim.autoLogin = true;
+    displayManager.slim = {
+      autoLogin = true;
+      defaultUser = "l";
+    };
     # We rely on ~/.xsession to start XMonad, instead of NixOS automagically
     # doing it for us. This way, we can use our xmonad binary compiled by Stack.
     windowManager.xmonad.enable = false;
