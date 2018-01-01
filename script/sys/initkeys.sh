@@ -1,13 +1,29 @@
 #!/usr/bin/env zsh
-# Set up keyboard in a sane manner.
-
+#
+# Set up keyboard and X environment.
+#
+# The most importnat thing we do here is that we disable Caps_Lock from behaving
+# like a "Lock" key, convert it to behave as a Hyper_L key, and then add Hyper_L
+# to its own unique modifer group, mod3 (mod3 is unused by default). We use mod3
+# as our XMonad key as "mod3Mask" in xmonad.hs.
+#
 # We don't background any of these X API calls to ensure a deterministic manner
 # of execution.
 
-# set keyboard layout to us-intl (altgr variant)
-setxkbmap -rules evdev -model evdev -layout us -variant altgr-intl -option "terminate:ctrl_alt_bksp"
+# Set keyboard layout to us-intl (altgr variant). This way we can type letters
+# like "é" easily.
+setxkbmap \
+	-rules evdev \
+	-model evdev \
+	-layout us \
+	-variant altgr-intl \
+	-option "terminate:ctrl_alt_bksp"
 
-# Convert Caps_Lock into Hyper_L key, and also map it to "mod3" modifier group.
+# Convert Caps_Lock into Hyper_L key, and also map it to "mod3" modifier group
+# (used exclusively by XMonad, because virtually no userspace programs make use
+# of it). The nice side effect is that the Caps Lock key becomes impossible to
+# press from our keyboard.
+#
 # Default xmodmap output (vanilla state):
 #
 #   xmodmap:  up to 4 keys per modifier, (keycodes in parentheses):
@@ -33,20 +49,22 @@ xmodmap -e "keysym Caps_Lock = Hyper_L"
 # At this point, pressing Caps_Lock will be treated exactly the same as a
 # Hyper_L keypress. You can test it by running 'xev' and pressing Caps_Lock.
 
-# Now the goal is to move Hyper_L from mod4 to mod3. First remove Hyper_L from
-# mod4.
+# Now the goal is to move Hyper_L from mod4 to mod3. This way, Hyper_L does not
+# share the same modifier namespace as the Super_L (Windows) key. First remove
+# Hyper_L from mod4.
 xmodmap -e "remove mod4 = Hyper_L"
 # Hyper_L is now "free", so add it to mod3.
 xmodmap -e "add mod3 = Hyper_L"
 
-# On w1 (Ubuntu VM), we actually run it as a guest VM from Mac, and on the Mac,
-# we set Caps_Lock to behave as Scroll_Lock (because it is supported by the
-# "Seil" program. Hyper_L does not exist on OSX, it seems. But scroll lock
-# does, and that's what we use (since MacBook Air keyboard does not come with
-# scroll lock, we can use it.
-#if [[ $HOST == "w1" ]]; then
-#    xmodmap -e "keysym Scroll_Lock = Hyper_L"
-#fi
-
-# set keystroke repeat speed (delay, speed)
+# Set keystroke repeat speed (delay, speed).
 xset r rate 250 80
+
+# We are done with setting up the keyboard. Below are misc non-keyboard
+# X-related settings.
+
+# Disable mouse acceleration.
+xset m 0 0
+
+# Use circle, not "X" icon, for the mouse cursor on empty workspaces (an area
+# without windows).
+xsetroot -cursor_name circle
