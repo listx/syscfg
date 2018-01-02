@@ -276,9 +276,6 @@ l_viewY dir = do
     yPrev = l_YFromWindowSet windowSet
     -- Make note of all XZYs at the current YCoord.
     xzys = map (\screen -> W.tag $ W.workspace screen) $ W.screens windowSet
-    recordXZYs (Seen hashmap)
-      = Seen
-      $ H.insert (l_YFromWindowSet windowSet) xzys hashmap
     -- (2) Calculate next YCoord (wrap back around if we're already at an edge
     -- level).
     yNext = l_YIncrementedBy dir yPrev
@@ -290,7 +287,60 @@ l_viewY dir = do
 
   -- (4) Save xzys of yPrev, so that if and when we switch back to it, we get
   -- back the same workspaces (and not just some random default set of XZYs).
-  XS.modify recordXZYs
+  recordXZYs yPrev xzys
+
+-- Like l_viewY, but first search in the given direction if there are any
+-- non-empty XZYs, and if so, view that YCoord. If all other YCoords are empty,
+-- do nothing. Note that a YCoord could be non-empty, but that it currently is
+-- viewing only empty workspaces; such a YCoord is still considered non-empty.
+l_viewYNonEmpty :: Direction1D -> X ()
+l_viewYNonEmpty dir = do
+  (Seen hashmap) <- XS.get :: X Seen
+  windowSet <- gets windowset
+  let
+    yPrev = l_YFromWindowSet windowSet
+    xzys = map (\screen -> W.tag $ W.workspace screen) $ W.screens windowSet
+    searchDirection = if dir == Next then id else reverse
+    -- We say "were" instead of "are", because we use the history stored in Seen
+    -- (it is, technically, old information). It could be incorrect (such as
+    -- when XMonad is restarted and Seen state is lost --- even though windows
+    -- remain populated at various Workspaces).
+    xzysWerePopulatedAtY y = (,) y $ case H.lookup y hashmap of
+      Just xzys' -> not $ null
+        [ xzy
+        | ww <- W.workspaces windowSet
+        , xzy <- xzys'
+        , isJust $ W.stack ww
+        , W.tag ww == xzy
+        ]
+      Nothing -> False
+    yNexts
+      = map fst
+      . dropWhile ((==False) . snd)
+      . map xzysWerePopulatedAtY
+      . searchDirection
+      $ l_wrapWithoutItem yPrev l_YCoords
+  when (not $ null yNexts) $ do
+    l_activateY $ head yNexts
+    recordXZYs yPrev xzys
+
+recordXZYs :: YCoord -> [XZY] -> X ()
+recordXZYs y xzys = XS.modify
+  (\(Seen hashmap) -> Seen $ H.insert y xzys hashmap)
+
+-- Make the list cyclic so that we start with the given item as the first item;
+-- then remove this item.
+--
+-- Examples:
+--
+--  l_wrapWithoutItem 3 [0..5] => [4, 5, 0, 1, 2]
+--  l_wrapWithoutItem 4 [0..5] => [5, 0, 1, 2, 3]
+l_wrapWithoutItem :: (Eq a) => a -> [a] -> [a]
+l_wrapWithoutItem x xs
+  | null xs = xs
+  | otherwise = drop 1 after ++ before
+  where
+  (before, after) = break (==x) xs
 
 -- Make the given YCoord "active" by viewing its XZYs on all Xinerama screen(s).
 -- If we viewed the YCoord before, present its XZYs that we recorded when we
@@ -646,6 +696,8 @@ l_keyBindings hostname conf@XConfig {XMonad.modMask = hypr} = M.fromList $
   , ((hyprAS, xK_k            ), l_if
                                   (l_windowCountInCurrentWorkspaceExceeds 0)
                                   (l_shiftY Prev))
+  , ((hyprA,  xK_n            ), l_viewYNonEmpty Next)
+  , ((hyprA,  xK_p            ), l_viewYNonEmpty Prev)
   ]
   ++
   -- Launch apps.
