@@ -638,12 +638,12 @@ l_keyBindings hostname conf@XConfig {XMonad.modMask = hypr} = M.fromList $
   | (key, sc) <- [(xK_h, screenBy (-1)), (xK_l, screenBy 1)]
   ]
   ++
-  [ ((hya,    xK_j            ), l_viewY Next)
-  , ((hyaS,   xK_j            ), l_if
+  [ ((hyprA,  xK_j            ), l_viewY Next)
+  , ((hyprAS, xK_j            ), l_if
                                   (l_windowCountInCurrentWorkspaceExceeds 0)
                                   (l_shiftY Next))
-  , ((hya,    xK_k            ), l_viewY Prev)
-  , ((hyaS,   xK_k            ), l_if
+  , ((hyprA,  xK_k            ), l_viewY Prev)
+  , ((hyprAS, xK_k            ), l_if
                                   (l_windowCountInCurrentWorkspaceExceeds 0)
                                   (l_shiftY Prev))
   ]
@@ -680,8 +680,8 @@ l_keyBindings hostname conf@XConfig {XMonad.modMask = hypr} = M.fromList $
   -- Alias "altMask" for left alt key.
   altMask = mod1Mask
   altS = altMask .|. shiftMask
-  hya = hypr .|. altMask
-  hyaS = hypr .|. altMask .|. shiftMask
+  hyprA = hypr .|. altMask
+  hyprAS = hypr .|. altMask .|. shiftMask
   relativeDimenions
     = W.RationalRect marginLeft marginTop windowWidth windowHeight
     where
