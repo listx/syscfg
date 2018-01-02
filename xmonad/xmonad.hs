@@ -541,7 +541,7 @@ l_inGroup :: ZGroup -> WindowSpace -> Bool
 l_inGroup zGroup ww = (l_ZCoordToGroup . l_ZFrom $ W.tag ww) == zGroup
 
 -- If shifting was unsuccessful, don't try to view it. I.e., either we can shift
--- a window to anther workspace and view it, or there is no window to shift to
+-- a window to another workspace and view it, or there is no window to shift to
 -- begin with (and we do nothing).
 l_shiftAndView :: XZY -> WindowSet -> WindowSet
 l_shiftAndView xzy windowSet = W.view xzy (W.shift xzy windowSet)
