@@ -16,6 +16,8 @@
   ; (for the non-customized states, such as visual mode). This is required because
   ; we change the color _after_ enabling evil.
   (setq evil-default-cursor t)
+  ; Hide the cursor for inactive windows.
+  (setq cursor-in-non-selected-windows nil)
 
   ; In vanilla Vim, pressing "o" on an indented line will insert leading
   ; indentation, and pressing ESC immediately will cancel the insertion of
