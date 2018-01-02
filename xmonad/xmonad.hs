@@ -217,7 +217,7 @@ l_XZYs xineramaCount =
 -- store the entire XZY string (which is also the full, unique WorkspaceId). We
 -- use XMonad.Util.ExtensibleState to store this state. See
 -- https://stackoverflow.com/questions/40270793/user-state-in-xmonad
-data Seen = Seen (H.Map YCoord [XZY]) (Maybe YCoord)
+data Seen = Seen (H.Map YCoord (XZY, [XZY])) (Maybe YCoord)
 instance ExtensionClass Seen where
   initialValue = Seen H.empty Nothing
 
@@ -225,13 +225,22 @@ l_YFromWindowSet :: WindowSet -> YCoord
 l_YFromWindowSet = l_YFrom . W.tag . W.workspace . W.current
 
 l_CoordsFromWindowSet :: WindowSet -> (XCoord, ZCoord, YCoord)
-l_CoordsFromWindowSet windowSet =
+l_CoordsFromWindowSet windowSet
+  = l_CoordsFromXZY
+  . W.tag . W.workspace $ W.current windowSet
+
+l_XZYFromWindowSet :: WindowSet -> XZY
+l_XZYFromWindowSet = W.tag . W.workspace . W.current
+
+l_CoordsFromXZY :: XZY -> (XCoord, ZCoord, YCoord)
+l_CoordsFromXZY xzy =
   ( l_XFrom xzy
   , l_ZFrom xzy
   , l_YFrom xzy
   )
-  where
-  xzy = W.tag . W.workspace $ W.current windowSet
+
+l_XZYFromCoords :: (XCoord, ZCoord, YCoord) -> XZY
+l_XZYFromCoords (x, z, y) = x ++ "_" ++ z ++ ":" ++ y
 
 l_YIncrementedBy :: Direction1D -> YCoord -> YCoord
 l_YIncrementedBy dir y = show $ mod (op (read y) 1) (length l_YCoords)
@@ -275,29 +284,23 @@ type ZGroupMemberships = [(ZGroup, Bool)]
 -- It involves less work for the user than XMonad.Actions.DynamicWorkspaceGroups
 -- because we don't have to manually name workspace groups (basically for us,
 -- every YCoord in l_YCoords is a "WorkspaceGroup").
-l_viewY :: YCoord -> X ()
-l_viewY yNext = do
-  windowSet <- gets windowset
-  let
-    -- (1) Get current (soon to be previous) YCoord.
-    yPrev = l_YFromWindowSet windowSet
-    -- Make note of all XZYs at the current YCoord.
-    xzys = map (\screen -> W.tag $ W.workspace screen) $ W.screens windowSet
-  -- (2) Activate next YCoord's workspaces. After this operation, visually all
+l_viewY :: YCoord -> Bool -> X ()
+l_viewY yNext keepXCoord = do
+  -- Save xzys of yPrev, so that if and when we switch back to it, we get back
+  -- the same workspaces (and not just some random default set of XZYs).
+  l_recordXZYs
+  -- Activate next YCoord's workspaces. After this operation, visually all
   -- screens will have switched their XZY coordinate to reflect yNext, not
   -- yPrev.
-  l_activateY yNext
-  -- (3) Save xzys of yPrev, so that if and when we switch back to it, we get
-  -- back the same workspaces (and not just some random default set of XZYs).
-  recordXZYs yPrev xzys
+  l_activateY yNext keepXCoord
 
-l_viewYDir :: Direction1D -> X ()
-l_viewYDir dir = do
+l_viewYDir :: Direction1D -> Bool -> X ()
+l_viewYDir dir keepXCoord = do
   windowSet <- gets windowset
   let
-    yPrev = l_YFromWindowSet windowSet
+    (_, _, yPrev) = l_CoordsFromWindowSet windowSet
     yNext = l_YIncrementedBy dir yPrev
-  l_viewY yNext
+  l_viewY yNext keepXCoord
 
 -- Like l_viewYDir, but first search in the given direction if there are any
 -- non-empty XZYs, and if so, view that YCoord. If all other YCoords are empty,
@@ -308,15 +311,15 @@ l_viewYNonEmpty dir = do
   (Seen hashmap _) <- XS.get :: X Seen
   windowSet <- gets windowset
   let
-    yPrev = l_YFromWindowSet windowSet
-    xzys = map (\screen -> W.tag $ W.workspace screen) $ W.screens windowSet
+    xzyPrev = l_XZYFromWindowSet windowSet
+    yPrev = l_YFrom xzyPrev
     searchDirection = if dir == Next then id else reverse
     -- We say "were" instead of "are", because we use the history stored in Seen
     -- (it is, technically, old information). It could be incorrect (such as
     -- when XMonad is restarted and Seen state is lost --- even though windows
     -- remain populated at various Workspaces).
     xzysWerePopulatedAtY y = (,) y $ case H.lookup y hashmap of
-      Just xzys' -> not $ null
+      Just (_, xzys') -> not $ null
         [ xzy
         | ww <- W.workspaces windowSet
         , xzy <- xzys'
@@ -331,19 +334,37 @@ l_viewYNonEmpty dir = do
       . searchDirection
       $ l_wrapWithoutItem yPrev l_YCoords
   when (not $ null yNexts) $ do
-    l_activateY $ head yNexts
-    recordXZYs yPrev xzys
+    l_recordXZYs
+    l_activateY (head yNexts) False
 
-l_viewLastY :: X ()
-l_viewLastY = do
-  (Seen _ lastY) <- XS.get :: X Seen
-  case lastY of
-    Just y -> l_viewY y
-    Nothing -> return ()
+l_viewLastY :: Bool -> X ()
+l_viewLastY keepXCoord = do
+  (Seen _ xzy) <- XS.get :: X Seen
+  whenJust xzy (flip l_viewY keepXCoord)
 
-recordXZYs :: YCoord -> [XZY] -> X ()
-recordXZYs y xzys = XS.modify
-  (\(Seen hashmap _) -> Seen (H.insert y xzys hashmap) (Just y))
+l_recordXZYs :: X ()
+l_recordXZYs = do
+  windowSet <- gets windowset
+  let
+    -- Get current (soon to be previous) YCoord.
+    y = l_YFrom xzy
+    xzy = l_XZYFromWindowSet windowSet
+    -- Make note of all XZYs at the current YCoord.
+    xzys = map (\screen -> W.tag $ W.workspace screen) $ W.screens windowSet
+    f xzy' = do
+      isEmpty <- l_workspaceIsEmpty xzy'
+      return (not isEmpty, xzy')
+  xzyCurrentIsEmpty <- l_workspaceIsEmpty xzy
+  xzyCandidates <- mapM f xzys
+  let
+    xzyCs = map snd . sortBy (comparing snd) $ filter fst xzyCandidates
+    xzyC
+      | xzyCurrentIsEmpty && not (null xzyCs) = head xzyCs
+      | otherwise = xzy
+  XS.modify
+    (\(Seen hashmap _) -> Seen
+      (H.insert y (xzyC, xzys) hashmap)
+      (Just y))
 
 -- Make the list cyclic so that we start with the given item as the first item;
 -- then remove this item.
@@ -363,16 +384,19 @@ l_wrapWithoutItem x xs
 -- If we viewed the YCoord before, present its XZYs that we recorded when we
 -- switched away from it the last time around. Otherwise, show the default XZYs
 -- for the YCoord.
-l_activateY :: YCoord -> X ()
-l_activateY y = do
+l_activateY :: YCoord -> Bool -> X ()
+l_activateY y keepXCoord = do
   windowSet <- gets windowset
   (Seen hashmap _) <- XS.get :: X Seen
   let
     xineramaCount = length $ W.screens windowSet
-    xzys = case H.lookup y hashmap of
-      Just xzys' -> xzys'
-      Nothing -> l_defaultXZYsForY y xineramaCount
+    (xzy, xzys) = case H.lookup y hashmap of
+      Just found -> found
+      Nothing -> ("0", l_defaultXZYsForY y xineramaCount)
+  -- First update all screens.
   windows $ l_viewXZYs xzys
+  when (not keepXCoord)
+    (windows $ W.view xzy)
 
 -- Given a list of XZYs to view, convert each XZY to a "Workspace i l a" type
 -- (this is the type that XMonad cares about). In this conversion process, we
@@ -460,12 +484,11 @@ l_shiftY dir = do
     -- target xzy.
     xzys = case H.lookup yNext hashmap of
       -- Grab the xzy with the same XCoord as the current screen.
-      Just xzys' -> xzys'
+      Just (_, xzys') -> xzys'
       Nothing -> l_defaultXZYsForY yNext xineramaCount
-  flip
-    whenJust
-    (\xzy -> (windows $ W.shift xzy) >> l_viewYDir dir)
+  whenJust
     (find ((==x) . l_XFrom) xzys)
+    (\xzy -> (windows $ W.shift xzy) >> l_viewYDir dir True)
 
 -- Show all windows at the current YCoord; if selected, then view that window
 -- and switch focus to it.
@@ -746,17 +769,17 @@ l_keyBindings hostname conf@XConfig {XMonad.modMask = hypr} = M.fromList $
   | (key, sc) <- [(xK_h, screenBy (-1)), (xK_l, screenBy 1)]
   ]
   ++
-  [ ((hyprA,  xK_j            ), l_viewYDir Next)
+  [ ((hyprA,  xK_j            ), l_viewYDir Next False)
   , ((hyprAS, xK_j            ), l_if
                                   (l_windowCountInCurrentWorkspaceExceeds 0)
                                   (l_shiftY Next))
-  , ((hyprA,  xK_k            ), l_viewYDir Prev)
+  , ((hyprA,  xK_k            ), l_viewYDir Prev False)
   , ((hyprAS, xK_k            ), l_if
                                   (l_windowCountInCurrentWorkspaceExceeds 0)
                                   (l_shiftY Prev))
   , ((hyprA,  xK_n            ), l_viewYNonEmpty Next)
   , ((hyprA,  xK_p            ), l_viewYNonEmpty Prev)
-  , ((hypr,   xK_t            ), l_viewLastY)
+  , ((hypr,   xK_t            ), l_viewLastY False)
   ]
   ++
   -- Launch apps.
