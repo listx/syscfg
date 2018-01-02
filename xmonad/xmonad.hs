@@ -214,7 +214,7 @@ l_XZYs xineramaCount =
 
 -- Each time we change the Y coordinate, we record the ZCoord on each XCoord.
 -- For simplicity, instead of storing the ZCoord and XCoord pair, we instead
--- store the entire XZY triplet (which is also the full, unique WorkspaceId). We
+-- store the entire XZY string (which is also the full, unique WorkspaceId). We
 -- use XMonad.Util.ExtensibleState to store this state. See
 -- https://stackoverflow.com/questions/40270793/user-state-in-xmonad
 data Seen = Seen (H.Map YCoord [XZY]) (Maybe YCoord)
