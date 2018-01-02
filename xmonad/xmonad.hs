@@ -39,9 +39,13 @@ import XMonad.Actions.CycleWS
   )
 import XMonad.Actions.GridSelect
   ( def
-  , goToSelected
+  , gridselect
   , runSelectedAction
   , spawnSelected
+  , stringColorizer
+  , buildDefaultGSConfig
+  , gs_cellheight
+  , gs_cellwidth
   )
 import XMonad.Actions.NoBorders
   ( toggleBorder )
@@ -64,6 +68,8 @@ import XMonad.Layout.ResizableTile
     )
   , ResizableTall(..)
   )
+import XMonad.Util.NamedWindows
+  ( getName )
 import XMonad.Util.WorkspaceCompare
   ( getSortByIndex )
 import qualified Data.Map as M
@@ -461,6 +467,47 @@ l_shiftY dir = do
     (\xzy -> (windows $ W.shift xzy) >> l_viewYDir dir)
     (find ((==x) . l_XFrom) xzys)
 
+-- Show all windows at the current YCoord; if selected, then view that window
+-- and switch focus to it.
+l_gridSelectWithinY :: X ()
+l_gridSelectWithinY = do
+  windowSet <- gets windowset
+  let
+    y = l_YFromWindowSet windowSet
+    xineramaCount = length $ W.screens windowSet
+    attachName (ww, a) = do
+      b <- fmap show $ getName a
+      return (b, (ww, a))
+  windowsAtY <- sequence
+    . map attachName
+    $ concat
+      [ map ((,) ww) $ W.integrate' $ W.stack ww
+      | ww <- W.workspaces windowSet
+      , xzy <- l_XZYs xineramaCount
+      , W.tag ww == xzy
+      , l_YFrom xzy == y
+      ]
+  selected <- gridselect (gsconfig2 colorizeByXCoord) windowsAtY
+  whenJust selected
+    (windows . l_viewGently)
+  where
+  colorizeByXCoord (ww, _) = stringColorizer . l_XFrom $ W.tag ww
+  gsconfig2 colorizer = (buildDefaultGSConfig colorizer)
+    { gs_cellheight = 30
+    , gs_cellwidth = 100
+    }
+
+l_viewGently :: (WindowSpace, Window) -> WindowSet -> WindowSet
+l_viewGently (ww, a) windowSet
+  | isHidden a = W.focusWindow a $ l_promoteFromHidden windowSet ww
+  | otherwise = W.focusWindow a windowSet
+  where
+  isHidden window
+    = not
+    . or
+    . map (elem window . W.integrate' . W.stack . W.workspace)
+    $ W.screens windowSet
+
 -- Try to find a workspace based on the given WorkspaceQuery, but inside the
 -- current XCoord and YCoord. In other words, flip through the ZCoords available
 -- on the current Xinerama screen (X and Y coordinates stay constant).
@@ -624,8 +671,7 @@ l_keyBindings hostname conf@XConfig {XMonad.modMask = hypr} = M.fromList $
   , ((hypr,   xK_m            ), sendMessage (IncMasterN 1))
   , ((hyprS,  xK_m            ), sendMessage (IncMasterN (-1)))
 
-  -- View all windows as a grid.
-  , ((hypr,   xK_g            ), goToSelected def)
+  , ((hypr,   xK_g            ), l_gridSelectWithinY)
 
   -- Lock screen (Ubuntu only) or quit.
   , ((hypr,   xK_Escape       ), lockOrQuit)
