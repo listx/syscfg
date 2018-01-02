@@ -172,8 +172,6 @@ alias aex='~/syscfg/script/sys/aex.sh'
 alias x='~/syscfg/script/sys/terms/wb.sh D'
 alias fop='~/prog/fop/dist/build/fop/fop'
 alias cascade='~/syscfg/script/sys/cascade.sh'
-alias initkeys="~/syscfg/script/sys/initkeys.sh"
-alias INITKEYS="~/syscfg/script/sys/initkeys.sh" # for cases when capslock can't be turned off
 alias private=' HISTFILE=/tmp/zsh-history'
 alias unprivate=' HISTFILE=~/.zsh-untracked/history'
 
