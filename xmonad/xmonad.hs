@@ -31,6 +31,7 @@ import XMonad.Actions.CycleWS
     , Prev
     )
   , WSType (WSIs)
+  , doTo
   , findWorkspace
   , moveTo
   , screenBy
@@ -657,8 +658,9 @@ l_keyBindings hostname conf@XConfig {XMonad.modMask = hypr} = M.fromList $
   , (modifier, action) <-
     [ (hypr, moveTo dir $ l_searchZ (WQ NonEmpty []))
     , (hyprS, l_if
-        (l_windowCountInCurrentWorkspaceExceeds 1)
-        (shiftTo dir =<< l_searchZPreferNonEmpty))
+        (l_windowCountInCurrentWorkspaceExceeds 0)
+        ((\wst -> doTo dir wst getSortByIndex (windows . l_shiftAndView))
+          =<< l_searchZPreferNonEmpty))
     ]
   ]
   ++
