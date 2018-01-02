@@ -1,7 +1,7 @@
 #!/usr/bin/env zsh
 
-# initialize keyboard in a sane manner
-~/syscfg/script/sys/initkeys.sh
+# initialize X keyboard/mouse settings
+~/syscfg/xmonad/xenv.sh
 
 # Start ssh-agent.
 if [[ -z "$SSH_AUTH_SOCK" ]]; then

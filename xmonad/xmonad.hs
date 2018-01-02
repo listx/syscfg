@@ -825,7 +825,7 @@ l_managementHook xineramaCount = composeOne $
 l_startupHook :: String -> X ()
 l_startupHook hostname = do
   -- Setup keyboard.
-  spawn "~/syscfg/script/sys/initkeys.sh"
+  spawn "~/syscfg/xmonad/xenv.sh"
   windowSet <- gets windowset
   spawn "qutebrowser"
   return ()
