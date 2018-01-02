@@ -279,12 +279,10 @@ l_viewY dir = do
     -- (2) Calculate next YCoord (wrap back around if we're already at an edge
     -- level).
     yNext = l_YIncrementedBy dir yPrev
-
   -- (3) Activate next YCoord's workspaces. After this operation, visually all
   -- screens will have switched their XZY coordinate to reflect yNext, not
   -- yPrev.
   l_activateY yNext
-
   -- (4) Save xzys of yPrev, so that if and when we switch back to it, we get
   -- back the same workspaces (and not just some random default set of XZYs).
   recordXZYs yPrev xzys
