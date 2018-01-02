@@ -2,6 +2,8 @@
   :config
   ; Git diff +/- marks.
   (global-git-gutter-mode +1)
+  ; Update git-gutter every time we lose/regain focus to the frame.
+  (add-hook 'focus-in-hook 'git-gutter:update-all-windows)
   (setq git-gutter:modified-sign " ")
   (setq git-gutter:added-sign " ")
   (setq git-gutter:deleted-sign " ")
