@@ -1,10 +1,13 @@
 module Main where
 
+import Control.Arrow
+  ( (***) )
 import Control.Monad
   ( when )
 import Data.List
   ( find
   , foldl'
+  , intercalate
   , isPrefixOf
   , nub
   , sortBy
@@ -86,23 +89,26 @@ import qualified XMonad.Util.ExtensibleState as XS
 -- are prefixed with "l_", in the style of my Emacs configuration (where all
 -- custom functions are prefixed with "l/").
 
-type XCoord = String
-type YCoord = String
-type ZCoord = String
+data XCoord = X Int
+  deriving (Eq, Ord)
+data ZCoord = Z Int
+  deriving (Eq, Ord)
+data YCoord = Y Int
+  deriving (Eq, Ord)
 
--- Remind ourselves of our "<X>_<Z>:<Y>" naming scheme of WorkspaceIds. The
--- "<Z>:<Y>" suffix of each WorkspaceId is called "VirtualWorkspace" by
--- IndependentScreens. See discussion below.
-type ZY = VirtualWorkspace
 -- Each WorkspaceId, aka Workspace name, is the unique cross-section of the X,
--- Z, and Y axes.
-type XZY = WorkspaceId
+-- Z, and Y axes. The WorkspaceId is a String, and we can convert a XZY to a
+-- String with a basic "Show" instance.
+data XZY = XZY (XCoord, ZCoord, YCoord)
+  deriving (Eq, Ord)
+instance Show XZY where
+  show (XZY (X x, Z z, Y y)) = intercalate "_" $ map show [x, z, y]
 
 -- Each Workspace has a name associated; internally by XMonad it is called a
 -- "tag" and it is just a string (type synonym of "WorkspaceId"). We use a
 -- combination of X, Y, and Z-axis coordinates to get a 3-dimensional view of
 -- Workspaces. We do this by breaking up WorkspaceId into the following format:
--- "<XCoord>_<ZCoord>:<YCoord>". Thankfully, we get "<XCoord>_<ZCoord>" for free
+-- "<XCoord>_<ZCoord>_<YCoord>". Thankfully, we get "<XCoord>_<ZCoord>" for free
 -- by just using XMonad.Layout.IndependentScreens; that extension's
 -- "withScreens" adds the "<XCoord>_" prefix for us for all <ZCoord> names we
 -- define. (For reference, IndependentScreens calls the "<ZCoord>" part a
@@ -121,7 +127,7 @@ type XZY = WorkspaceId
 -- with XMonad, each "playing card" here is its own "Desktop" with multiple GUI
 -- windows of applications.
 --
--- Now we add in our final layer, the Y dimension, by appending ":<YCoord>" to
+-- Now we add in our final layer, the Y dimension, by appending "_<YCoord>" to
 -- the PhysicalWorkspace names. The H-M-j/H-M-k bindings move up and down the Y
 -- axis. Continuing with our playing card analogy, it's as if each <YCoord> in
 -- the Y axis has its own independent array of decks. The most interesting thing
@@ -146,7 +152,7 @@ type XZY = WorkspaceId
 -- We have 22 ZCoords. The number 22 is important because we have 22 keybindings
 -- (H-[0-9] and H-[F1-F12]) that can in total work with 22 locations.
 l_ZCoords :: [ZCoord]
-l_ZCoords = take 22 $ map (:[]) ['a'..]
+l_ZCoords = take 22 $ map Z [0..]
 
 -- The number of connected Xinerama screens can vary across OS boots (e.g., when
 -- we disconnect or connect an external monitor to a laptop). So we rely on
@@ -155,19 +161,32 @@ l_ZCoords = take 22 $ map (:[]) ['a'..]
 -- do use countScreens multiple times, and it is unclear what will happen if we
 -- change the number of Xinerama screens within a single X Session.)
 l_XCoords :: Int -> [XCoord]
-l_XCoords xineramaCount = map show $ take xineramaCount [(0::Int)..]
+l_XCoords xineramaCount = map X $ take xineramaCount [0..]
 
 -- We have 10 Y coordinates; we can add more as necessary in the future.
 l_YCoords :: [YCoord]
-l_YCoords = map show $ take 10 [(0::Int)..]
+l_YCoords = map Y $ take 10 [0..]
 
--- Again, for reference our format for WorkspaceIds are "<x>_<z>:<y>".
+-- Again, for reference our format for WorkspaceIds are "<x>_<z>_<y>".
 l_XFrom :: XZY -> XCoord
-l_XFrom = fst . break (=='_')
-l_ZFrom :: XZY -> XCoord
-l_ZFrom = drop 1 . fst . break (==':') . snd . break (=='_')
+l_XFrom (XZY (xc, _, _))= xc
+l_ZFrom :: XZY -> ZCoord
+l_ZFrom (XZY (_, zc, _))= zc
 l_YFrom :: XZY -> YCoord
-l_YFrom = drop 1 . dropWhile (/=':')
+l_YFrom (XZY (_, _, yc))= yc
+
+l_XFromWid :: WorkspaceId -> XCoord
+l_XFromWid wid = X $ read xString
+  where
+  xString = fst $ break (=='_') wid
+l_ZFromWid :: WorkspaceId -> ZCoord
+l_ZFromWid wid = Z $ read zString
+  where
+  zString = fst . break (=='_') . drop 1 . snd $ break (=='_') wid
+l_YFromWid :: WorkspaceId -> YCoord
+l_YFromWid wid = Y $ read yString
+  where
+  yString = drop 1 $ dropWhile (/='_') $ drop 1 $ dropWhile (/='_') wid
 
 -- Group ZCoords by type. Usinge our playing card analogy, these groups are like
 -- the "suits" of cards.
@@ -178,18 +197,11 @@ data ZGroup
   | ZGSys
   deriving (Eq, Ord, Enum, Show)
 
-l_ZYGroups :: [(ZY, ZGroup)]
-l_ZYGroups =
-  [ (z ++ ":" ++ y, zGroup)
-  | (z, zGroup) <- l_ZCoordGroups
-  , y <- l_YCoords
-  ]
-
 l_ZCoordToGroup :: ZCoord -> ZGroup
-l_ZCoordToGroup z
-  | elem z $ map (:[]) ['a'..'f'] = ZGWork
-  | elem z $ map (:[]) ['g'..'i'] = ZGNet
-  | elem z $ map (:[]) ['j'..'j'] = ZGSys
+l_ZCoordToGroup (Z z)
+  | elem z [0..5] = ZGWork
+  | elem z [6..8] = ZGNet
+  | elem z [9..9] = ZGSys
   | otherwise = ZGMisc
 
 l_ZGroupToZCoords :: ZGroup -> [ZCoord]
@@ -203,13 +215,19 @@ l_ZCoordGroups =
   | z <- l_ZCoords
   ]
 
--- Generate fully qualified WorkspaceIds from u
+-- Generate all possible XZYs. Sort by the Y, X, and Z coordinates, in that
+-- order. This is important because, for instance, XMonad assigns each Xinerama
+-- screen to each WorkspaceId in this list when we use it in assigning
+-- workspaces.
 l_XZYs :: Int -> [XZY]
-l_XZYs xineramaCount =
-  [ x ++ "_" ++ z ++ ":" ++ y
+l_XZYs xineramaCount = l_multiSort
+  [ XZY (x, z, y)
   | x <- l_XCoords xineramaCount
   , z <- l_ZCoords
   , y <- l_YCoords
+  ]
+  [ comparing l_ZFrom
+  , comparing l_YFrom
   ]
 
 -- Each time we change the Y coordinate, we record the ZCoord on each XCoord.
@@ -222,35 +240,33 @@ instance ExtensionClass Seen where
   initialValue = Seen H.empty Nothing
 
 l_YFromWindowSet :: WindowSet -> YCoord
-l_YFromWindowSet = l_YFrom . W.tag . W.workspace . W.current
-
-l_CoordsFromWindowSet :: WindowSet -> (XCoord, ZCoord, YCoord)
-l_CoordsFromWindowSet windowSet
-  = l_CoordsFromXZY
-  . W.tag . W.workspace $ W.current windowSet
+l_YFromWindowSet = l_YFromWid . W.tag . W.workspace . W.current
 
 l_XZYFromWindowSet :: WindowSet -> XZY
-l_XZYFromWindowSet = W.tag . W.workspace . W.current
+l_XZYFromWindowSet windowSet
+  = XZY
+  . l_CoordsFromWid
+  . W.tag . W.workspace $ W.current windowSet
 
-l_CoordsFromXZY :: XZY -> (XCoord, ZCoord, YCoord)
-l_CoordsFromXZY xzy =
-  ( l_XFrom xzy
-  , l_ZFrom xzy
-  , l_YFrom xzy
+l_XZYFromWid :: WorkspaceId -> XZY
+l_XZYFromWid = XZY . l_CoordsFromWid
+
+l_CoordsFromWid :: WorkspaceId -> (XCoord, ZCoord, YCoord)
+l_CoordsFromWid xzy =
+  ( l_XFromWid xzy
+  , l_ZFromWid xzy
+  , l_YFromWid xzy
   )
 
-l_XZYFromCoords :: (XCoord, ZCoord, YCoord) -> XZY
-l_XZYFromCoords (x, z, y) = x ++ "_" ++ z ++ ":" ++ y
-
 l_YIncrementedBy :: Direction1D -> YCoord -> YCoord
-l_YIncrementedBy dir y = show $ mod (op (read y) 1) (length l_YCoords)
+l_YIncrementedBy dir (Y y) = Y $ mod (op y 1) (length l_YCoords)
   where
   op = if dir == Next then (+) else (-)
 
 -- Given the X, Y, and ZGroup constraints, generate the full XZY coordinate
 -- WorkspaceId by deciding on the ZCoord.
-l_XZYFrom :: Int -> Int -> ZGroup -> YCoord -> XZY
-l_XZYFrom xCoord xineramaCount zGroup y = x ++ "_" ++ z ++ ":" ++ y
+l_XZYFrom :: XCoord -> Int -> ZGroup -> YCoord -> XZY
+l_XZYFrom (X xCoord) xineramaCount zGroup y = XZY (x, z, y)
   where
   -- Wrap xCoord if it is out of bounds.
   x = l_XCoords xineramaCount !! mod xCoord xineramaCount
@@ -262,7 +278,7 @@ l_XZYFrom xCoord xineramaCount zGroup y = x ++ "_" ++ z ++ ":" ++ y
 -- transformZCoords.
 l_XZYsFrom :: Int -> ZGroup -> ([ZCoord] -> [ZCoord]) -> YCoord -> [XZY]
 l_XZYsFrom xineramaCount zGroup transformZCoords y =
-  [ x ++ "_" ++ z ++ ":" ++ y
+  [ XZY (x, z, y)
   | x <- l_XCoords xineramaCount
   , z <- transformZCoords $ l_ZGroupToZCoords zGroup
   ]
@@ -298,7 +314,7 @@ l_viewYDir :: Direction1D -> Bool -> X ()
 l_viewYDir dir keepXCoord = do
   windowSet <- gets windowset
   let
-    (_, _, yPrev) = l_CoordsFromWindowSet windowSet
+    (XZY (_, _, yPrev)) = l_XZYFromWindowSet windowSet
     yNext = l_YIncrementedBy dir yPrev
   l_viewY yNext keepXCoord
 
@@ -324,7 +340,7 @@ l_viewYNonEmpty dir = do
         | ww <- W.workspaces windowSet
         , xzy <- xzys'
         , isJust $ W.stack ww
-        , W.tag ww == xzy
+        , W.tag ww == show xzy
         ]
       Nothing -> False
     yNexts
@@ -350,7 +366,8 @@ l_recordXZYs = do
     y = l_YFrom xzy
     xzy = l_XZYFromWindowSet windowSet
     -- Make note of all XZYs at the current YCoord.
-    xzys = map (\screen -> W.tag $ W.workspace screen) $ W.screens windowSet
+    xzys = map (l_XZYFromWid . W.tag . W.workspace)
+      $ W.screens windowSet
     f xzy' = do
       isEmpty <- l_workspaceIsEmpty xzy'
       return (not isEmpty, xzy')
@@ -390,13 +407,13 @@ l_activateY y keepXCoord = do
   (Seen hashmap _) <- XS.get :: X Seen
   let
     xineramaCount = length $ W.screens windowSet
-    (xzy, xzys) = case H.lookup y hashmap of
-      Just found -> found
+    (wid, xzys) = case H.lookup y hashmap of
+      Just found -> (show *** id) found
       Nothing -> ("0", l_defaultXZYsForY y xineramaCount)
   -- First update all screens.
   windows $ l_viewXZYs xzys
   when (not keepXCoord)
-    (windows $ W.view xzy)
+    (windows $ W.view wid)
 
 -- Given a list of XZYs to view, convert each XZY to a "Workspace i l a" type
 -- (this is the type that XMonad cares about). In this conversion process, we
@@ -421,7 +438,7 @@ l_viewXZYs xzyCandidates windowSet
   xzyToWorkspace xzy hiddenWorkspaces =
     [ hiddenWorkspace
     | hiddenWorkspace@(W.Workspace xzy' _ _) <- hiddenWorkspaces
-    , xzy' == xzy
+    , xzy' == show xzy
     ]
 
 -- As a reminder, XMonad.Core (confusingly) uses the type synonym WindowSpace to
@@ -448,7 +465,7 @@ l_promoteFromHidden windowSet ww
     }
   | otherwise = windowSet
   where
-  matchesXCoordFromWW (S s) = show s == (l_XFrom $ W.tag ww)
+  matchesXCoordFromWW (S s) = s == ((\(X x) -> x) . l_XFromWid $ W.tag ww)
   otherHidden = filter ((/= W.tag ww) . W.tag) $ W.hidden windowSet
 
 -- Pick out a default set of workspaces at a particular level. We make sure to
@@ -459,7 +476,7 @@ l_defaultXZYsForY y xineramaCount
   . filter xzyIsOnYCoord
   $ l_XZYs xineramaCount
   where
-  xzyIsOnYCoord xzy = (drop 1 . snd $ break (==':') xzy) == y
+  xzyIsOnYCoord (XZY (_, _, y')) = y' == y
   selectForEachXCoord xCoords xzys =
     [ xzy
     | xzy <- xzys
@@ -479,7 +496,7 @@ l_shiftY dir = do
     xineramaCount = length $ W.screens windowSet
     yPrev = l_YFromWindowSet windowSet
     yNext = l_YIncrementedBy dir yPrev
-    x = l_XFrom . W.tag . W.workspace $ W.current windowSet
+    x = l_XFromWid . W.tag . W.workspace $ W.current windowSet
     -- Like in l_viewYDir, try to grab the XZY of the last used Workspace at the
     -- target xzy.
     xzys = case H.lookup yNext hashmap of
@@ -488,7 +505,7 @@ l_shiftY dir = do
       Nothing -> l_defaultXZYsForY yNext xineramaCount
   whenJust
     (find ((==x) . l_XFrom) xzys)
-    (\xzy -> (windows $ W.shift xzy) >> l_viewYDir dir True)
+    (\xzy -> (windows . W.shift $ show xzy) >> l_viewYDir dir True)
 
 -- Show all windows at the current YCoord; if selected, then view that window
 -- and switch focus to it.
@@ -507,14 +524,18 @@ l_gridSelectWithinY = do
       [ map ((,) ww) $ W.integrate' $ W.stack ww
       | ww <- W.workspaces windowSet
       , xzy <- l_XZYs xineramaCount
-      , W.tag ww == xzy
+      , W.tag ww == show xzy
       , l_YFrom xzy == y
       ]
   selected <- gridselect (gsconfig2 colorizeByXCoord) windowsAtY
   whenJust selected
     (windows . l_viewGently)
   where
-  colorizeByXCoord (ww, _) = stringColorizer . l_XFrom $ W.tag ww
+  colorizeByXCoord (ww, _)
+    = stringColorizer
+    . (\(X x) -> show x)
+    . l_XFromWid
+    $ W.tag ww
   gsconfig2 colorizer = (buildDefaultGSConfig colorizer)
     { gs_cellheight = 30
     , gs_cellwidth = 100
@@ -538,12 +559,10 @@ l_searchZ :: WorkspaceQuery -> WSType
 l_searchZ q = WSIs $ do
   windowSet <- gets windowset
   let
-    xzy = W.tag . W.workspace $ W.current windowSet
-    y = l_YFrom xzy
-    x = l_XFrom xzy
+    (x, _, y) = l_CoordsFromWid . W.tag . W.workspace $ W.current windowSet
     predicate ww = l_resolveQuery q ww
-      && l_XFrom (W.tag ww) == x
-      && l_YFrom (W.tag ww) == y
+      && l_XFromWid (W.tag ww) == x
+      && l_YFromWid (W.tag ww) == y
   return predicate
 
 -- Like l_searchZ, but instead of only searching for the one workspace that
@@ -561,30 +580,43 @@ l_searchZPreferNonEmpty = do
 
 -- Like l_searchZ, but always return a XZY in a given ZGroup. When choosing
 -- among XZYs in the ZGroup, choose the one with the fewest number of windows.
-l_searchZPreferZGroup :: ZGroup -> X XZY
+l_searchZPreferZGroup :: ZGroup -> X WorkspaceId
 l_searchZPreferZGroup zGroup = do
   windowSet <- gets windowset
   let
     xineramaCount = length $ W.screens windowSet
-    xzyCurrent = W.tag $ W.workspace $ W.current windowSet
-    (x, _, y) = l_CoordsFromWindowSet windowSet
+    xzyCurrent = l_XZYFromWid . W.tag $ W.workspace $ W.current windowSet
+    (XZY (x, _, y)) = l_XZYFromWindowSet windowSet
     -- Get all XZYs at the current XCoord/YCoord combination that belong to
     -- zGroup.
     xzys = filter ((==x) . l_XFrom) $ l_XZYsFrom xineramaCount zGroup id y
     xzysOfGroup =
-      [ (xzy, length $ W.integrate' stack)
-      | (W.Workspace xzy _ stack) <- W.workspaces windowSet
-      , elem xzy xzys
+      [ (l_XZYFromWid wid, length $ W.integrate' stack)
+      | (W.Workspace wid _ stack) <- W.workspaces windowSet
+      , elem wid $ map show xzys
       ]
     xzyPicked
       | null xzysOfGroup = xzyCurrent
-      | otherwise = fst . head $ customSort xzysOfGroup
-    customSort = sortBy $ l_compareDimensions
-      [ comparing snd
-      , comparing fst
-      ]
-  return xzyPicked
+      | otherwise = fst . head $ l_multiSort xzysOfGroup
+        [ comparing snd
+        , comparing fst
+        ]
+  return $ show xzyPicked
 
+l_multiSort :: [a] -> [a -> a -> Ordering] -> [a]
+l_multiSort sortMe dimensions = sortBy (l_compareDimensions dimensions) sortMe
+
+-- The reason why the type signature is not "[a -> a -> Ordering]" for the
+-- predicates is that we are comparing a single list of things, but are using
+-- arbitrary predicates "ps" that can change to type of "a" to be anything, as
+-- long as that resulting type is an Orderable thing. So, if we are sorting
+-- "[a]" in l_multiSort and are using different orderable attributes of "a",
+-- there must come point in time when the different attributes of "a" get
+-- compared by their underlying Ordering conversion.
+--
+-- Put another way, if we do have [a -> a -> Ordering] here for ps, then
+-- obviously we are only sorting in 1 dimension (the "a" dimension), which is
+-- not what we want.
 l_compareDimensions :: [a -> b -> Ordering] -> a -> b -> Ordering
 l_compareDimensions ps x y
   = headDef EQ
@@ -609,13 +641,13 @@ l_queryZGroupMemberships zGroupMemberships ww = and $ map
   zGroupMemberships
 
 l_inGroup :: ZGroup -> WindowSpace -> Bool
-l_inGroup zGroup ww = (l_ZCoordToGroup . l_ZFrom $ W.tag ww) == zGroup
+l_inGroup zGroup ww = (l_ZCoordToGroup . l_ZFromWid $ W.tag ww) == zGroup
 
 -- If shifting was unsuccessful, don't try to view it. I.e., either we can shift
 -- a window to another workspace and view it, or there is no window to shift to
 -- begin with (and we do nothing).
-l_shiftAndView :: XZY -> WindowSet -> WindowSet
-l_shiftAndView xzy windowSet = W.view xzy (W.shift xzy windowSet)
+l_shiftAndView :: WorkspaceId -> WindowSet -> WindowSet
+l_shiftAndView wid = W.view wid . W.shift wid
 
 -- Only perform the given action if the given test pases.
 l_if :: X Bool -> X () -> X ()
@@ -636,7 +668,7 @@ l_workspaceIsEmpty xzy = do
   return . isJust $ listToMaybe
     [ ww
     | ww <- W.workspaces windowSet
-    , W.tag ww == xzy
+    , W.tag ww == show xzy
     , isNothing $ W.stack ww
     ]
 
@@ -944,7 +976,7 @@ l_managementHook xineramaCount = composeOne $
   -- This is useful for auto-moving a terminal screen we spawn elsewhere in
   -- this config file to a particular workspace.
   map
-    (\xzy -> resource =? ("atWorkspace_" ++ xzy) -?> doShift xzy)
+    (\xzy -> resource =? ("atWorkspace_" ++ show xzy) -?> doShift (show xzy))
     (l_XZYs xineramaCount)
   ++
   -- Force new windows down (i.e., if a screen has 1 window (master) and we
@@ -970,18 +1002,19 @@ l_startupHook hostname = do
     -- because we don't know how many screens there will actually be).
     rtorrent = spawn $ l_term2
       ++ " -name atWorkspace_"
-      ++ l_XZYFrom (-1) xineramaCount ZGSys y
+      ++ show (l_XZYFrom (X (-1)) xineramaCount ZGSys y)
       ++ " -e rtorrent"
   -- Spawn one terminal in every screen at the "Work" ZGroup at the current
   -- YCoord (but only if that screen is empty). We have to feed in `(take 1)' in
   -- order to spawn terminals in a single ZCoord.
   mapM_
-    (\xzy -> l_if (l_workspaceIsEmpty xzy) (spawn $ l_term1 ++ " -name atWorkspace_" ++ xzy))
+    (\xzy -> l_if (l_workspaceIsEmpty xzy)
+      (spawn $ l_term1 ++ " -name atWorkspace_" ++ show xzy))
     $ l_XZYsFrom xineramaCount ZGWork (take 1) y
   -- Spawn htop on the rightmost screen.
   spawn $ l_term1
     ++ " -name atWorkspace_"
-    ++ l_XZYFrom (-1) xineramaCount ZGSys y
+    ++ show (l_XZYFrom (X (-1)) xineramaCount ZGSys y)
     ++ " -e htop"
   spawn "emacs --daemon"
   when (elem hostname ["k0"]) rtorrent
@@ -1007,7 +1040,7 @@ main = do
     -- configuration file under the
     -- `services.xserver.displayManager.sessionCommands` option.
     , modMask            = mod3Mask
-    , workspaces         = withScreens (fromIntegral xineramaCount) $ map fst l_ZYGroups
+    , workspaces         = map show $ l_XZYs xineramaCount
     , normalBorderColor  = "#000000"
     , focusedBorderColor = "#ffffff"
     , keys               = l_keyBindings hostname
