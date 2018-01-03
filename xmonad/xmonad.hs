@@ -808,7 +808,7 @@ l_keyBindings hostname conf@XConfig {XMonad.modMask = hypr} = M.fromList $
                                   (l_shiftY Prev))
   , ((hyprA,  xK_n            ), l_viewYNonEmpty Next)
   , ((hyprA,  xK_p            ), l_viewYNonEmpty Prev)
-  , ((hypr,   xK_t            ), l_viewLastY False)
+  , ((hypr,   xK_y            ), l_viewLastY False)
   ]
   ++
   -- Launch apps.
