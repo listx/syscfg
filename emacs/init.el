@@ -100,6 +100,7 @@
 (require 'l-text-mode)
 (require 'l-uim)
 (require 'l-vdiff)
+(require 'l-zoom-frm)
 
 ;; Load major-mode packages.
 (require 'l-c)
