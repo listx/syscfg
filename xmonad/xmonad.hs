@@ -60,6 +60,7 @@ import XMonad.Hooks.ManageHelpers
   , composeOne
   )
 import XMonad.Layout.IndependentScreens
+  ( countScreens )
 import XMonad.Layout.NoBorders
   ( WithBorder
   , noBorders
@@ -104,19 +105,14 @@ data XZY = XZY (XCoord, ZCoord, YCoord)
 instance Show XZY where
   show (XZY (X x, Z z, Y y)) = intercalate "_" $ map show [x, z, y]
 
--- Each Workspace has a name associated; internally by XMonad it is called a
--- "tag" and it is just a string (type synonym of "WorkspaceId"). We use a
--- combination of X, Y, and Z-axis coordinates to get a 3-dimensional view of
--- Workspaces. We do this by breaking up WorkspaceId into the following format:
--- "<XCoord>_<ZCoord>_<YCoord>". Thankfully, we get "<XCoord>_<ZCoord>" for free
--- by just using XMonad.Layout.IndependentScreens; that extension's
--- "withScreens" adds the "<XCoord>_" prefix for us for all <ZCoord> names we
--- define. (For reference, IndependentScreens calls the "<ZCoord>" part a
--- VirtualWorkspace, and the full "<XCoord>_<ZCoord>" part a PhysicalWorkspace.)
+-- XMonad internally calls the WorkspaceId a "tag" as it is just a String
+-- (WorkspaceId is type-synonymed to it). We use a combination of X, Y, and
+-- Z-axis coordinates to get a 3-dimensional view of Workspaces. We do this by
+-- breaking up WorkspaceId into the following format:
+-- "<XCoord>_<ZCoord>_<YCoord>".
 --
--- So far in our discussion we are using just the X and Z coordinates. The
--- H-h/H-l bindings move the active workspace (or window) focus across Xinerama
--- screens in the X-axis direction (the vanilla XMonad bindings are
+-- The H-h/H-l bindings move the active workspace (or window) focus across
+-- Xinerama screens in the X-axis direction (the vanilla XMonad bindings are
 -- Modkey-{Q,W,E}). We chose the name X-axis for this direction because on most
 -- multihead Xinerama setups, the monitors are placed horizontally in a
 -- left-to-right fashion. To move into our Z axis, we use H-n; this binding
@@ -124,48 +120,49 @@ instance Show XZY where
 -- other screens as-is. Intuitively, we can imagine this 2-dimensional scheme as
 -- if each XMonad worspace is a playing card in a deck of cards. Each Xinerama
 -- screen has its own unique deck. Not to be pedantic, but for those unfamiliar
--- with XMonad, each "playing card" here is its own "Desktop" with multiple GUI
--- windows of applications.
+-- with XMonad, each "playing card" here is its own "Desktop" with multiple
+-- tiled GUI windows of applications.
 --
--- Now we add in our final layer, the Y dimension, by appending "_<YCoord>" to
--- the PhysicalWorkspace names. The H-M-j/H-M-k bindings move up and down the Y
--- axis. Continuing with our playing card analogy, it's as if each <YCoord> in
--- the Y axis has its own independent array of decks. The most interesting thing
--- here is that moving up and down the Y axis changes *all* screens (every deck
--- must change!). The effect is quite dramatic (and refreshing on my 4-monitor
--- setup) and really shows off the power of Xinerama. This simulates the
--- workflow demonstrated in https://youtu.be/w5_36BBGoU0?t=3m30s, where multiple
--- screens all change content at once. The cool part about our setup is that we
--- have the added Z dimension (for each unique X and Y coordinate pair), giving
--- us much more room to place windows around. An important thing to keep in mind
--- here is that even though we change by the Y coordinate with H-M-j/H-M-k, we
--- actually change the Z coordinate as well if necessary on a per-screen basis
--- (for each Xinerama screen (XCoord)). This is because whenever we move up/down
--- the Y axis, we move to the *last used set of XZY workspaces at that YCoord*;
--- using our playing card example, each Y coordinate (array of decks) remembers
--- what ZCoord (playing card) each X screen (deck) was showing before focus
--- changed to a different Y coordinate. This "last seen" concept is made
--- possible with the "Seen" data type.
+-- Now we add in our final dimension, the Y dimension. The H-M-j/H-M-k bindings
+-- move up and down the Y axis. Continuing with our playing card analogy, it's
+-- as if each <YCoord> in the Y axis has its own independent array of decks. The
+-- most interesting thing here is that moving up and down the Y axis changes
+-- _all_ screens (every deck must change!). The effect is quite dramatic (and
+-- refreshing on my 4-monitor setup) and really shows off the power of Xinerama.
+-- This simulates the workflow demonstrated in
+-- https://youtu.be/w5_36BBGoU0?t=3m30s, where multiple screens all change
+-- content at once. The cool part about our setup is that we have the added Z
+-- dimension (for each unique X and Y coordinate pair), giving us much more room
+-- to place windows around. An important thing to keep in mind here is that even
+-- though we change by the Y coordinate with H-M-j/H-M-k, we actually change the
+-- Z coordinate as well if necessary on a per-screen basis (for each Xinerama
+-- screen (XCoord)). This is because whenever we move up/down the Y axis, we
+-- move to the *last used set of XZY workspaces at that YCoord*; using our
+-- playing card example, each Y coordinate (array of decks) remembers what
+-- ZCoord (playing card) each X screen (deck) was showing before focus changed
+-- to a different Y coordinate. This "last seen" concept is made possible with
+-- the "Seen" data type. We also save which screen had focus, which comes in
+-- handy when switching rapidly between Y coordinates.
 --
 -- That's about it. Maybe one day this will become an XMonad extension...
-
--- We have 22 ZCoords. The number 22 is important because we have 22 keybindings
--- (H-[0-9] and H-[F1-F12]) that can in total work with 22 locations.
-l_ZCoords :: [ZCoord]
-l_ZCoords = take 22 $ map Z [0..]
 
 -- The number of connected Xinerama screens can vary across OS boots (e.g., when
 -- we disconnect or connect an external monitor to a laptop). So we rely on
 -- XMonad.Layout.IndependentScreens to give us the correct number of X
--- coordinates (see countScreens), and use it here as xineramaCount. (NOTE: we
--- do use countScreens multiple times, and it is unclear what will happen if we
--- change the number of Xinerama screens within a single X Session.)
+-- coordinates (see countScreens), and use it here as xineramaCount. (NOTE: it
+-- is unclear what will happen if we change the number of Xinerama screens
+-- within a single X Session.)
 l_XCoords :: Int -> [XCoord]
 l_XCoords xineramaCount = map X $ take xineramaCount [0..]
 
--- We have 10 Y coordinates; we can add more as necessary in the future.
+-- We have 7 of each Z and Y coordinate. It's probably common knowledge by now
+-- that most people can handle about 7 things at once. And so it is 7 for now.
+-- Even so, on a 1 (non-Xinerama) screen situation, that's still 49 unique
+-- workspaces, which is more than enough, one would think, for most work.
+l_ZCoords :: [ZCoord]
+l_ZCoords = map Z $ take 7 [0..]
 l_YCoords :: [YCoord]
-l_YCoords = map Y $ take 10 [0..]
+l_YCoords = map Y $ take 7 [0..]
 
 -- Again, for reference our format for WorkspaceIds are "<x>_<z>_<y>".
 l_XFrom :: XZY -> XCoord
