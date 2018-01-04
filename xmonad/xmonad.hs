@@ -999,6 +999,10 @@ l_managementHook xineramaCount = composeOne $
 
 l_startupHook :: String -> X ()
 l_startupHook hostname = do
+  -- Kill ~/.xmonad/xmonad.state (this file makes sense when you have 5 or 10
+  -- workspaces, but its utility breaks down quickly when you have as many
+  -- workspaces as we do).
+  spawn "rm -f ~/syscfg/xmonad/xmonad.state"
   -- Setup keyboard.
   spawn "~/syscfg/xmonad/xenv.sh"
   windowSet <- gets windowset
