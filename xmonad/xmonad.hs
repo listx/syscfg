@@ -345,7 +345,7 @@ l_viewYNonEmpty dir = do
       . dropWhile ((==False) . snd)
       . map xzysWerePopulatedAtY
       . searchDirection
-      $ l_wrapWithoutItem yPrev l_YCoords
+      $ l_wrapWithout (==yPrev) l_YCoords
   when (not $ null yNexts) $ do
     l_recordXZYs
     l_activateY (head yNexts) False
@@ -380,19 +380,19 @@ l_recordXZYs = do
       (H.insert y (xzyC, xzys) hashmap)
       (Just y))
 
--- Make the list cyclic so that we start with the given item as the first item;
+-- Make the list cyclic so that we start first with the item that satisifies p,
 -- then remove this item.
 --
 -- Examples:
 --
---  l_wrapWithoutItem 3 [0..5] => [4, 5, 0, 1, 2]
---  l_wrapWithoutItem 4 [0..5] => [5, 0, 1, 2, 3]
-l_wrapWithoutItem :: (Eq a) => a -> [a] -> [a]
-l_wrapWithoutItem x xs
+--  l_wrapWithout (==3) [0..5] => [4, 5, 0, 1, 2]
+--  l_wrapWithout (==4) [0..5] => [5, 0, 1, 2, 3]
+l_wrapWithout :: (a -> Bool) -> [a] -> [a]
+l_wrapWithout p xs
   | null xs = xs
   | otherwise = drop 1 after ++ before
   where
-  (before, after) = break (==x) xs
+  (before, after) = break p xs
 
 -- Make the given YCoord "active" by viewing its XZYs on all Xinerama screen(s).
 -- If we viewed the YCoord before, present its XZYs that we recorded when we
@@ -537,6 +537,78 @@ l_gridSelectWithinY = do
     { gs_cellheight = 30
     , gs_cellwidth = 100
     }
+
+-- Move focus to next/prev visible window. If we're at the edge of the current
+-- workspace, then hop over to the next workspace (if any).
+l_viewWindow :: Direction1D -> X ()
+l_viewWindow dir = do
+  windowSet <- gets windowset
+  let
+    currentX = l_XFromWid . W.tag . W.workspace $ W.current windowSet
+    visibles = (if dir == Next then id else reverse)
+      . filter (isJust . W.stack)
+      . map snd
+      . l_wrapWithout (\(x, _) -> x == currentX)
+      . map (\ww -> (l_XFromWid $ W.tag ww, ww))
+      . sortBy (comparing (l_XFromWid . W.tag))
+      . map W.workspace
+      $ W.screens windowSet
+    nextVisible = head visibles
+    currentStack = W.stack $ W.workspace $ W.current windowSet
+    moveFocus = windows $ if dir == Next
+        then W.focusDown
+        else W.focusUp
+    moveFocusWithHop = do
+      focusTowardOppositeEdge $ nextVisible
+      windows . W.view . W.tag $ nextVisible
+    focusTowardOppositeEdge ww = case W.stack ww of
+      Just _ -> resetFocus ww
+      Nothing -> return ()
+    resetFocus = windows . l_modifyVisible (if dir == Next then focusTop else focusBottom)
+    focusTop s@(W.Stack t ls rs)
+      | null ls && null rs = s
+      | null ls = s
+      | null rs = W.focusDown' s
+      | otherwise = W.Stack (last ls) [] (reverse (init ls) ++ [t] ++ rs)
+    focusBottom s@(W.Stack t ls rs)
+      | null ls && null rs = s
+      | null rs = s
+      | null ls = W.focusUp' s
+      | otherwise = W.Stack (last rs) (reverse (init rs) ++ [t] ++ ls) []
+    focusedOnEdge = case currentStack of
+      Just s -> null ((if dir == Next then W.down else W.up) s)
+      Nothing -> True
+    action
+      | isNothing currentStack && null visibles = return ()
+      | isNothing currentStack && not (null visibles) = moveFocusWithHop
+      | isJust currentStack && null visibles = moveFocus
+      | otherwise = if focusedOnEdge
+        then moveFocusWithHop
+        else moveFocus
+  action
+
+-- Like XMonad.StackSet.modify, but act on the Stack found in the given
+-- workspace, if it is currently visible to the user.
+l_modifyVisible :: Eq i =>
+  (W.Stack a -> W.Stack a)
+  -> W.Workspace i l s
+  -> W.StackSet i l a sid sd
+  -> W.StackSet i l a sid sd
+l_modifyVisible editStack ww windowSet
+  | wwIsCurrent = W.modify Nothing (Just . editStack) windowSet
+  | otherwise = maybe windowSet replaceIfFound (find ((==(W.tag ww)) . W.tag . W.workspace) $ W.visible windowSet)
+  where
+  wwIsCurrent = (==(W.tag ww)) $ W.currentTag windowSet
+  -- No need to bind the first thing here, because we reference windowSet from
+  -- the outer scope. Closures!
+  replaceIfFound _ = windowSet
+    { W.visible = l_replaceIf (\s -> (W.tag $ W.workspace s) == W.tag ww) editStackOfScreen $ W.visible windowSet }
+  editStackOfScreen s = s
+    { W.workspace = (W.workspace s)
+      { W.stack = maybe Nothing (Just . editStack) . W.stack $ W.workspace s }}
+
+l_replaceIf :: (a -> Bool) -> (a -> a) -> [a] -> [a]
+l_replaceIf p f = map (\a -> if p a then f a else a)
 
 l_viewGently :: (WindowSpace, Window) -> WindowSet -> WindowSet
 l_viewGently (ww, a) windowSet
@@ -693,14 +765,15 @@ l_keyBindings hostname conf@XConfig {XMonad.modMask = hypr} = M.fromList $
   -- better ergonomics for the ZQ layout (for the Esrille Nisse keyboard; see
   -- https://github.com/listx/new-keyboard).
   , ((hypr,   xK_space        ), sendMessage NextLayout)
-  , ((hypr,   xK_Tab          ), sendMessage NextLayout)
+  , ((hypr,   xK_t            ), sendMessage NextLayout)
 
   -- Reset the layouts on the current workspace to default.
   , ((hypr,   xK_q            ), setLayout $ XMonad.layoutHook conf)
 
-  -- Move focus to the next/prev window.
-  , ((hypr,   xK_j            ), windows W.focusDown)
-  , ((hypr,   xK_k            ), windows W.focusUp)
+  -- Move focus to the next/prev window, on the current set of current + visible
+  -- screens.
+  , ((hypr,   xK_j            ), l_viewWindow Next)
+  , ((hypr,   xK_k            ), l_viewWindow Prev)
 
   -- Swap the focused window with the next/prev window.
   , ((hyprS,  xK_j            ), windows W.swapDown)
@@ -761,23 +834,6 @@ l_keyBindings hostname conf@XConfig {XMonad.modMask = hypr} = M.fromList $
           =<< l_searchZPreferNonEmpty))
     ]
   ]
-  ++
-  -- NOTE: These bindings are rarely used any more, if at all. Consider
-  -- deprecating them.
-  -- hypr-[1..9, 0, F1-F10]: Switch to workspace N.
-  -- hyprS-[1..9, 0, F1-F10]: Move focused window to workspace N.
-  -- NOTE: Depending on the machine, we change the order of keys to optimize
-  -- for the keyboard layout used on the machine. The order in
-  -- `forQwertyKeyboard' is coincidentally optimized for that layout, because
-  -- the "1", "2", "3" keys etc. are nearest the left side of the keyboard
-  -- where we have our XMonad mod key (CapsLock remapped to Hyper key). In
-  -- `forZQKeyboard', the middle finger of the numeric home row gets priority
-  -- as the first VW because it is more ergonomic than the "1" key.
-  [((hypr .|. mask, k         ), windows $ onCurrentScreen f i)
-    | (i, k) <- zip (workspaces' conf) $ if l_isPortraitMonitorLayout hostname
-      then forZQKeyboard
-      else forQwertyKeyboard
-    , (f, mask) <- [(W.greedyView, 0), (W.shift, shiftMask)]]
   ++
   -- H-{h,l}: Switch focus across X-axis (prev/next Xinerama screen).
   [((hypr, key), flip whenJust (windows . W.view) =<< screenWorkspace =<< sc)
@@ -852,50 +908,6 @@ l_keyBindings hostname conf@XConfig {XMonad.modMask = hypr} = M.fromList $
     marginTop = 1/6
     windowWidth = 2/3
     windowHeight = 2/3
-  forZQKeyboard =
-    [ xK_5
-    , xK_6
-    , xK_4
-    , xK_2
-    , xK_3
-    , xK_1
-    , xK_8
-    , xK_7
-    , xK_9
-    , xK_0
-    , xK_F1
-    , xK_F2
-    , xK_F3
-    , xK_F4
-    , xK_F5
-    , xK_F6
-    , xK_F7
-    , xK_F8
-    , xK_F9
-    , xK_F10
-    ]
-  forQwertyKeyboard =
-    [ xK_1
-    , xK_2
-    , xK_3
-    , xK_4
-    , xK_5
-    , xK_6
-    , xK_7
-    , xK_8
-    , xK_9
-    , xK_0
-    , xK_F1
-    , xK_F2
-    , xK_F3
-    , xK_F4
-    , xK_F5
-    , xK_F6
-    , xK_F7
-    , xK_F8
-    , xK_F9
-    , xK_F10
-    ]
 
 l_mouseBindings :: XConfig t -> M.Map (KeyMask, Button) (Window -> X ())
 l_mouseBindings XConfig {XMonad.modMask = hypr} = M.fromList
