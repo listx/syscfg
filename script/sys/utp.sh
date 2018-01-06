@@ -4,7 +4,7 @@ zmodload zsh/pcre
 
 # usage: utp.sh [name] or just utp.sh (will select a random theme)
 
-root_dir="/home/$USER/syscfg/script/sys/terms/"
+root_dir="$HOME/syscfg/script/sys/terms/"
 
 pcre_compile "^c_(.+)=\"(#[0-9a-f]+)"
 
