@@ -62,7 +62,8 @@
   '(
     arjen-grey
     alect-light
-    alect-dark)
+    alect-dark
+    zenburn)
   "Default themes")
 
 (defvar l/theme-idx 0)
