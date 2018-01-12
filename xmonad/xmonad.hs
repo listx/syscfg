@@ -482,11 +482,29 @@ l_defaultXZYsForY y xineramaCount
     , l_ZFrom xzy == head l_ZCoords
     ]
 
+-- Move currently selected window to the given YCoord, preserving its XCoord.
+l_shiftY :: YCoord -> X ()
+l_shiftY yNext = do
+  windowSet <- gets windowset
+  (Seen hashmap _) <- XS.get :: X Seen
+  let
+    xineramaCount = length $ W.screens windowSet
+    x = l_XFromWid . W.tag . W.workspace $ W.current windowSet
+    -- Like in l_viewYDir, try to grab the XZY of the last used Workspace at the
+    -- target xzy.
+    xzys = case H.lookup yNext hashmap of
+      -- Grab the xzy with the same XCoord as the current screen.
+      Just (_, xzys') -> xzys'
+      Nothing -> l_defaultXZYsForY yNext xineramaCount
+  whenJust
+    (find ((==x) . l_XFrom) xzys)
+    (\xzy -> (windows . W.shift $ show xzy) >> l_viewY yNext True)
+
 -- Move currently focused window over to the next YCoord. Then view that YCoord.
 -- If there is no currently focused window, don't do anything. This is the
 -- Y-axis analogue of the H-S-{h,l} bindings powered by l_shiftAndView.
-l_shiftY :: Direction1D -> X ()
-l_shiftY dir = do
+l_shiftYDir :: Direction1D -> X ()
+l_shiftYDir dir = do
   windowSet <- gets windowset
   (Seen hashmap _) <- XS.get :: X Seen
   let
@@ -857,14 +875,32 @@ l_keyBindings hostname conf@XConfig {XMonad.modMask = hypr} = M.fromList $
   [ ((hyprA,  xK_j            ), l_viewYDir Next False)
   , ((hyprAS, xK_j            ), l_if
                                   (l_windowCountInCurrentWorkspaceExceeds 0)
-                                  (l_shiftY Next))
+                                  (l_shiftYDir Next))
   , ((hyprA,  xK_k            ), l_viewYDir Prev False)
   , ((hyprAS, xK_k            ), l_if
                                   (l_windowCountInCurrentWorkspaceExceeds 0)
-                                  (l_shiftY Prev))
+                                  (l_shiftYDir Prev))
   , ((hyprA,  xK_n            ), l_viewYNonEmpty Next)
   , ((hyprA,  xK_p            ), l_viewYNonEmpty Prev)
   , ((hypr,   xK_y            ), l_viewLastY False)
+  ]
+  ++
+  -- hypr-[0..6]: Switch to YCoord N.
+  -- hyprS-[0..6]: Move focused window to YCoord N, preserving its XCoord.
+  -- NOTE: Depending on the machine, we change the order of keys to optimize
+  -- for the keyboard layout used on the machine. The order in
+  -- `forQwertyKeyboard' is coincidentally optimized for that layout, because
+  -- the "1", "2", "3" keys etc. are nearest the left side of the keyboard
+  -- where we have our XMonad mod key (CapsLock remapped to Hyper key). In
+  -- `forZQKeyboard', the numpad home row gets priority.
+  [((hypr .|. mask, k         ), f y)
+    | (y, k) <- zip l_YCoords $ if l_isPortraitMonitorLayout hostname
+      then forZQKeyboard
+      else forQwertyKeyboard
+    , (f, mask) <-
+      [ (flip l_viewY False, 0)
+      , (l_if (l_windowCountInCurrentWorkspaceExceeds 0) . l_shiftY, shiftMask)
+      ]
   ]
   ++
   -- Launch apps.
@@ -908,6 +944,24 @@ l_keyBindings hostname conf@XConfig {XMonad.modMask = hypr} = M.fromList $
     marginTop = 1/6
     windowWidth = 2/3
     windowHeight = 2/3
+  forZQKeyboard =
+    [ xK_6
+    , xK_5
+    , xK_4
+    , xK_0
+    , xK_9
+    , xK_8
+    , xK_7
+    ]
+  forQwertyKeyboard =
+    [ xK_1
+    , xK_2
+    , xK_3
+    , xK_4
+    , xK_5
+    , xK_6
+    , xK_7
+    ]
 
 l_mouseBindings :: XConfig t -> M.Map (KeyMask, Button) (Window -> X ())
 l_mouseBindings XConfig {XMonad.modMask = hypr} = M.fromList
