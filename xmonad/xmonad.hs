@@ -292,7 +292,7 @@ data HasWindows
 -- does not belong).
 type ZGroupMemberships = [(ZGroup, Bool)]
 
--- This function was written to implemet the idea expressed in
+-- This function was written to implement the idea expressed in
 -- https://www.reddit.com/r/xmonad/comments/7mawso/switch_workspaces_on_multiple_monitors_with_1/.
 -- It involves less work for the user than XMonad.Actions.DynamicWorkspaceGroups
 -- because we don't have to manually name workspace groups (basically for us,
