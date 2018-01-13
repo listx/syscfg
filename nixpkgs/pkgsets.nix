@@ -111,6 +111,9 @@ with super; rec {
 
       # nix itself (nix-env and other nix-* CLI tools)
       nix
+
+      # other
+      xscreensaver
     ];
   });
 
