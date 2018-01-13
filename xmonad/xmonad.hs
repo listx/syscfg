@@ -22,7 +22,6 @@ import Data.Ord
   )
 import Safe
   ( headDef )
-import System.Exit
 import System.Posix.Unistd
   ( nodeName
   , getSystemID
@@ -43,7 +42,6 @@ import XMonad.Actions.CycleWS
 import XMonad.Actions.GridSelect
   ( def
   , gridselect
-  , runSelectedAction
   , spawnSelected
   , stringColorizer
   , buildDefaultGSConfig
@@ -816,8 +814,8 @@ l_keyBindings hostname conf@XConfig {XMonad.modMask = hypr} = M.fromList $
 
   , ((hypr,   xK_g            ), l_gridSelectWithinY)
 
-  -- Lock screen (Ubuntu only) or quit.
-  , ((hypr,   xK_Escape       ), lockOrQuit)
+  -- Lock screen.
+  , ((hypr,   xK_Escape       ), spawn "xscreensaver-command -lock")
 
   -- Toggle window borders.
   , ((hypr,   xK_b            ), withFocused toggleBorder)
@@ -918,13 +916,6 @@ l_keyBindings hostname conf@XConfig {XMonad.modMask = hypr} = M.fromList $
   , ((hypr,   xK_u            ), spawn "emacs")
   ]
   where
-  lockOrQuit
-    | l_isUbuntu hostname = spawn "xscreensaver-command -lock"
-    | otherwise = runSelectedAction def sessionActions
-  sessionActions =
-    [ ("Recompile/restart XMonad", spawn "xmonad --recompile && xmonad --restart")
-    , ("Quit XMonad", io exitSuccess)
-    ]
   shrinkExpand master slave = if l_isPortraitMonitorLayout hostname
     then sendMessage slave
     else sendMessage master

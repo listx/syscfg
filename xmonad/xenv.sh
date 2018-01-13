@@ -68,3 +68,10 @@ xset m 0 0
 # Use circle, not "X" icon, for the mouse cursor on empty workspaces (an area
 # without windows).
 xsetroot -cursor_name circle
+
+# For NixOS machines, manually start up xscreensaver in the background, if it is
+# not running already.
+if < /etc/issue | grep NixOS -q \
+    && ! ps acx | grep xscreensaver -q; then
+    xscreensaver -nosplash & disown
+fi
