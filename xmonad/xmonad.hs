@@ -964,24 +964,26 @@ l_keyBindings hostname conf@XConfig {XMonad.modMask = hypr} = M.fromList $
     ]
 
 l_mouseBindings :: XConfig t -> M.Map (KeyMask, Button) (Window -> X ())
-l_mouseBindings XConfig {XMonad.modMask = hypr} = M.fromList
+l_mouseBindings _ = M.fromList
   -- hypr-button1 (left-click): Set the window to floating mode and move by
   -- dragging.
-  [ ( (hypr, button1)
+  [ ( (altGr, button1)
   , \w -> focus w >> mouseMoveWindow w >> windows W.shiftMaster
   )
   -- hypr-button2 (middle-click): Raise the window to the top of the stack.
   -- This binding is almost never used, but we keep it here for instructive
   -- purposes.
-  , ((hypr, button2), \w -> focus w >> windows W.shiftMaster)
+  , ((altGr, button2), \w -> focus w >> windows W.shiftMaster)
   ,
   -- hypr-button3 (right-click): Set the window to floating mode and resize by
   -- dragging.
-  ( (hypr, button3)
+  ( (altGr, button3)
   , \w -> focus w >> mouseResizeWindow w >> windows W.shiftMaster
   )
   -- You may also bind events to the mouse scroll wheel (button4 and button5).
   ]
+  where
+  altGr = mod5Mask
 
 -- Tall is the default tiling algorithm, which partitions the screen into two
 -- panes. It takes three arguments x y z, where x is the default number of
