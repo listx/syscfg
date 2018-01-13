@@ -734,12 +734,6 @@ l_inGroup zGroup ww = (l_ZCoordToGroup . l_ZFromWid $ W.tag ww) == zGroup
 l_shiftAndView :: WorkspaceId -> WindowSet -> WindowSet
 l_shiftAndView wid = W.view wid . W.shift wid
 
--- Only perform the given action if the given test pases.
-l_if :: X Bool -> X () -> X ()
-l_if test action = do
-  ok <- test
-  when ok action
-
 l_windowCountInCurrentWorkspaceExceeds :: Int -> X Bool
 l_windowCountInCurrentWorkspaceExceeds n = do
   windowSet <- gets windowset
@@ -828,7 +822,7 @@ l_keyBindings hostname conf@XConfig {XMonad.modMask = hypr} = M.fromList $
   -- if there is indeed a window to work with in the current Workspace (i.e., if
   -- all ZCoords at this X/Y-coordinate pair is full, do nothing).
   , ((hypr,   xK_o            ), moveTo Next $ l_searchZ (WQ Empty []))
-  , ((hyprS,  xK_o            ), l_if
+  , ((hyprS,  xK_o            ), whenX
       (l_windowCountInCurrentWorkspaceExceeds 0)
       (shiftTo Next $ l_searchZ (WQ Empty [])))
   ]
@@ -844,7 +838,7 @@ l_keyBindings hostname conf@XConfig {XMonad.modMask = hypr} = M.fromList $
     ]
   , (modifier, action) <-
     [ (hypr, moveTo dir $ l_searchZ (WQ NonEmpty []))
-    , (hyprS, l_if
+    , (hyprS, whenX
         (l_windowCountInCurrentWorkspaceExceeds 0)
         ((\wst -> doTo dir wst getSortByIndex (windows . l_shiftAndView))
           =<< l_searchZPreferNonEmpty))
@@ -864,18 +858,18 @@ l_keyBindings hostname conf@XConfig {XMonad.modMask = hypr} = M.fromList $
   --
   -- It is worth noting that this binding does nothing if there is no window in
   -- the current workspace to move.
-  [((hyprS, key), l_if
+  [((hyprS, key), whenX
     (l_windowCountInCurrentWorkspaceExceeds 0)
     (flip whenJust (windows . l_shiftAndView) =<< screenWorkspace =<< sc))
   | (key, sc) <- [(xK_h, screenBy (-1)), (xK_l, screenBy 1)]
   ]
   ++
   [ ((hyprA,  xK_j            ), l_viewYDir Next False)
-  , ((hyprAS, xK_j            ), l_if
+  , ((hyprAS, xK_j            ), whenX
                                   (l_windowCountInCurrentWorkspaceExceeds 0)
                                   (l_shiftYDir Next))
   , ((hyprA,  xK_k            ), l_viewYDir Prev False)
-  , ((hyprAS, xK_k            ), l_if
+  , ((hyprAS, xK_k            ), whenX
                                   (l_windowCountInCurrentWorkspaceExceeds 0)
                                   (l_shiftYDir Prev))
   , ((hyprA,  xK_n            ), l_viewYNonEmpty Next)
@@ -897,7 +891,7 @@ l_keyBindings hostname conf@XConfig {XMonad.modMask = hypr} = M.fromList $
       else forQwertyKeyboard
     , (f, mask) <-
       [ (flip l_viewY False, 0)
-      , (l_if (l_windowCountInCurrentWorkspaceExceeds 0) . l_shiftY, shiftMask)
+      , (whenX (l_windowCountInCurrentWorkspaceExceeds 0) . l_shiftY, shiftMask)
       ]
   ]
   ++
@@ -1068,7 +1062,7 @@ l_startupHook hostname = do
   -- YCoord (but only if that screen is empty). We have to feed in `(take 1)' in
   -- order to spawn terminals in a single ZCoord.
   mapM_
-    (\xzy -> l_if (l_workspaceIsEmpty xzy)
+    (\xzy -> whenX (l_workspaceIsEmpty xzy)
       (spawn $ l_term1 ++ " -name atWorkspace_" ++ show xzy))
     $ l_XZYsFrom xineramaCount ZGWork (take 1) y
   -- Spawn htop on the rightmost screen.
