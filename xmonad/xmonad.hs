@@ -769,16 +769,13 @@ l_isPortraitMonitorLayout givenHost = any (\portraitHost -> isPrefixOf portraitH
 l_keyBindings :: String -> XConfig Layout -> M.Map (KeyMask, KeySym) (X ())
 l_keyBindings hostname conf@XConfig {XMonad.modMask = hypr} = M.fromList $
   -- Close focused window.
-  [ ((hypr,   xK_d            ), kill)
+  [ ((hypr,   xK_q            ), kill)
 
-  -- Rotate through the available layout algorithms. The TAB key is bound for
-  -- better ergonomics for the ZQ layout (for the Esrille Nisse keyboard; see
-  -- https://github.com/listx/new-keyboard).
-  , ((hypr,   xK_space        ), sendMessage NextLayout)
+  -- Rotate through the available layout styles.
   , ((hypr,   xK_t            ), sendMessage NextLayout)
 
   -- Reset the layouts on the current workspace to default.
-  , ((hypr,   xK_q            ), setLayout $ XMonad.layoutHook conf)
+  , ((hypr,   xK_equal        ), setLayout $ XMonad.layoutHook conf)
 
   -- Move focus to the next/prev window, on the current set of current + visible
   -- screens.
