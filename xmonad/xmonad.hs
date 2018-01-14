@@ -789,9 +789,6 @@ l_keyBindings hostname conf@XConfig {XMonad.modMask = hypr} = M.fromList $
   , ((hyprS,  xK_j            ), windows W.swapDown)
   , ((hyprS,  xK_k            ), windows W.swapUp)
 
-  -- Swap the focused window and the master window.
-  , ((hypr,   xK_Return       ), windows W.swapMaster)
-
   -- Unfloat/float window.
   , ((hypr,   xK_f            ), withFocused $ windows . W.sink)
   , ((hyprS,  xK_f            ), withFocused $ windows . flip W.float relativeDimenions)
