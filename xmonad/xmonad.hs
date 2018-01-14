@@ -3,7 +3,8 @@ module Main where
 import Control.Arrow
   ( (***) )
 import Control.Monad
-  ( foldM
+  ( (<=<)
+  , foldM
   , when
   )
 import Data.List
@@ -19,6 +20,8 @@ import Data.Maybe
   , isNothing
   , listToMaybe
   )
+import Data.Monoid
+  ( appEndo )
 import Data.Ord
   ( comparing
   )
@@ -769,8 +772,11 @@ l_isPortraitMonitorLayout givenHost = any (\portraitHost -> isPrefixOf portraitH
   where
   portraitHosts = ["k0", "enif"]
 
-l_keyBindings :: String -> XConfig Layout -> M.Map (KeyMask, KeySym) (X ())
-l_keyBindings hostname conf@XConfig {XMonad.modMask = hypr} = M.fromList $
+l_keyBindings :: String
+  -> Int
+  -> XConfig Layout
+  -> M.Map (KeyMask, KeySym) (X ())
+l_keyBindings hostname xineramaCount conf@XConfig {XMonad.modMask = hypr} = M.fromList $
   -- Close focused window.
   [ ((hyprS,  xK_q            ), kill)
 
@@ -810,6 +816,9 @@ l_keyBindings hostname conf@XConfig {XMonad.modMask = hypr} = M.fromList $
 
   -- Toggle window borders.
   , ((hypr,   xK_b            ), withFocused toggleBorder)
+
+  -- Reapply l_manageHook against the focused window.
+  , ((hypr,   xK_Return       ), l_resetWindow xineramaCount)
 
   -- Go to empty Workspace, on the current YCoord, in the current Xinerama
   -- screen. For shifting an existing window to an empty Workspace, only do so
@@ -997,8 +1006,8 @@ l_layoutNoMirror = ResizableTall 0 (3/100) (1/2) [] ||| noBorders Full
 --   WM_CLASS(STRING) = "Qt-subapplication", "VirtualBox"
 --
 -- then Qt-subapplication is resource, and VirtualBox is className.
-l_managementHook :: Int -> ManageHook
-l_managementHook xineramaCount = composeOne $
+l_manageHook :: Int -> ManageHook
+l_manageHook xineramaCount = composeOne $
   [ className =? "Gimp"               -?> doFloat
   , className =? "Agave"              -?> doCenterFloat
   , resource  =? "desktop_window"     -?> doIgnore
@@ -1075,7 +1084,7 @@ l_resetMouse :: X ()
 l_resetMouse = do
   windowSet <- gets windowset
   let
-    currentStack = W.stack $ W.workspace $ W.current windowSet
+    currentStack = W.stack . W.workspace $ W.current windowSet
     f stack
       = banish
       . snd
@@ -1095,6 +1104,18 @@ l_resetMouse = do
     , (ClassName "Chromium-browser", UpperLeft)
     , (ClassName "Navigator", UpperLeft)
     ]
+
+-- Reset the focused window by running l_manageHook against it. This way, we can
+-- move a window back to its correct ZCoord. The fancy appEndo/<=< stuff is from
+-- `XMonad.Actions.WindowGo.ifWindow'.
+l_resetWindow :: Int -> X ()
+l_resetWindow xineramaCount = do
+  windowSet <- gets windowset
+  let
+    currentStack = W.stack . W.workspace $ W.current windowSet
+  whenJust
+    currentStack
+    (windows . appEndo <=< runQuery (l_manageHook xineramaCount) . W.focus)
 
 main :: IO ()
 main = do
@@ -1120,10 +1141,10 @@ main = do
     , workspaces         = map show $ l_XZYs xineramaCount
     , normalBorderColor  = "#000000"
     , focusedBorderColor = "#ffffff"
-    , keys               = l_keyBindings hostname
+    , keys               = l_keyBindings hostname xineramaCount
     , mouseBindings      = l_mouseBindings
     , layoutHook         = l_layoutHook
-    , manageHook         = l_managementHook xineramaCount
+    , manageHook         = l_manageHook xineramaCount
     , handleEventHook    = mempty
     , logHook            = mempty
     , startupHook        = l_startupHook hostname
