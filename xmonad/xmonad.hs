@@ -769,7 +769,7 @@ l_isPortraitMonitorLayout givenHost = any (\portraitHost -> isPrefixOf portraitH
 l_keyBindings :: String -> XConfig Layout -> M.Map (KeyMask, KeySym) (X ())
 l_keyBindings hostname conf@XConfig {XMonad.modMask = hypr} = M.fromList $
   -- Close focused window.
-  [ ((hypr,   xK_q            ), kill)
+  [ ((hyprS,  xK_q            ), kill)
 
   -- Rotate through the available layout styles.
   , ((hypr,   xK_t            ), sendMessage NextLayout)
