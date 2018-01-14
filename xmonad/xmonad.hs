@@ -3,7 +3,9 @@ module Main where
 import Control.Arrow
   ( (***) )
 import Control.Monad
-  ( when )
+  ( foldM
+  , when
+  )
 import Data.List
   ( find
   , foldl'
@@ -51,7 +53,8 @@ import XMonad.Actions.GridSelect
 import XMonad.Actions.NoBorders
   ( toggleBorder )
 import XMonad.Actions.Warp
-  ( warpToWindow )
+  ( banish
+  , Corner(..))
 import XMonad.Hooks.ManageHelpers
   ( (-?>)
   , doCenterFloat
@@ -72,6 +75,7 @@ import XMonad.Layout.ResizableTile
   )
 import XMonad.Util.NamedWindows
   ( getName )
+import XMonad.Util.WindowProperties
 import XMonad.Util.WorkspaceCompare
   ( getSortByIndex )
 import qualified Data.Map as M
@@ -779,12 +783,12 @@ l_keyBindings hostname conf@XConfig {XMonad.modMask = hypr} = M.fromList $
 
   -- Move focus to the next/prev window, on the current set of current + visible
   -- screens.
-  , ((hypr,   xK_j            ), l_viewWindow Next)
-  , ((hypr,   xK_k            ), l_viewWindow Prev)
+  , ((hypr,   xK_j            ), mm $ l_viewWindow Next)
+  , ((hypr,   xK_k            ), mm $ l_viewWindow Prev)
 
   -- Swap the focused window with the next/prev window.
-  , ((hyprS,  xK_j            ), windows W.swapDown)
-  , ((hyprS,  xK_k            ), windows W.swapUp)
+  , ((hyprS,  xK_j            ), mm $ windows W.swapDown)
+  , ((hyprS,  xK_k            ), mm $ windows W.swapUp)
 
   -- Unfloat/float window.
   , ((hypr,   xK_f            ), withFocused $ windows . W.sink)
@@ -808,9 +812,6 @@ l_keyBindings hostname conf@XConfig {XMonad.modMask = hypr} = M.fromList $
   -- Toggle window borders.
   , ((hypr,   xK_b            ), withFocused toggleBorder)
 
-  -- Move mouse away to bottom-right of currently focused window.
-  , ((hypr,   xK_BackSpace    ), warpToWindow 1 1)
-
   -- Go to empty Workspace, on the current YCoord, in the current Xinerama
   -- screen. For shifting an existing window to an empty Workspace, only do so
   -- if there is indeed a window to work with in the current Workspace (i.e., if
@@ -825,7 +826,7 @@ l_keyBindings hostname conf@XConfig {XMonad.modMask = hypr} = M.fromList $
   -- untouched) The Z-axis direction is either Next or Prev (depending on the
   -- key). If we use the Shift key, move the current window to that direction,
   -- unless there is only 1 window.
-  [ ((modifier, key), action)
+  [ ((modifier, key), mm $ action)
   | (key, dir) <-
     [ (xK_n, Next)
     , (xK_p, Prev)
@@ -840,7 +841,7 @@ l_keyBindings hostname conf@XConfig {XMonad.modMask = hypr} = M.fromList $
   ]
   ++
   -- H-{h,l}: Switch focus across X-axis (prev/next Xinerama screen).
-  [((hypr, key), flip whenJust (windows . W.view) =<< screenWorkspace =<< sc)
+  [((hypr, key), mm $ flip whenJust (windows . W.view) =<< screenWorkspace =<< sc)
   | (key, sc) <- [(xK_h, screenBy (-1)), (xK_l, screenBy 1)]
   ]
   ++
@@ -852,23 +853,23 @@ l_keyBindings hostname conf@XConfig {XMonad.modMask = hypr} = M.fromList $
   --
   -- It is worth noting that this binding does nothing if there is no window in
   -- the current workspace to move.
-  [((hyprS, key), whenX
+  [((hyprS, key), mm $ whenX
     (l_windowCountInCurrentWorkspaceExceeds 0)
     (flip whenJust (windows . l_shiftAndView) =<< screenWorkspace =<< sc))
   | (key, sc) <- [(xK_h, screenBy (-1)), (xK_l, screenBy 1)]
   ]
   ++
-  [ ((hyprA,  xK_j            ), l_viewYDir Next False)
-  , ((hyprAS, xK_j            ), whenX
+  [ ((hyprA,  xK_j            ), mm $ l_viewYDir Next False)
+  , ((hyprAS, xK_j            ), mm $ whenX
                                   (l_windowCountInCurrentWorkspaceExceeds 0)
                                   (l_shiftYDir Next))
-  , ((hyprA,  xK_k            ), l_viewYDir Prev False)
-  , ((hyprAS, xK_k            ), whenX
+  , ((hyprA,  xK_k            ), mm $ l_viewYDir Prev False)
+  , ((hyprAS, xK_k            ), mm $ whenX
                                   (l_windowCountInCurrentWorkspaceExceeds 0)
                                   (l_shiftYDir Prev))
-  , ((hyprA,  xK_n            ), l_viewYNonEmpty Next)
-  , ((hyprA,  xK_p            ), l_viewYNonEmpty Prev)
-  , ((hypr,   xK_y            ), l_viewLastY False)
+  , ((hyprA,  xK_n            ), mm $ l_viewYNonEmpty Next)
+  , ((hyprA,  xK_p            ), mm $ l_viewYNonEmpty Prev)
+  , ((hypr,   xK_y            ), mm $ l_viewLastY False)
   ]
   ++
   -- hypr-[0..6]: Switch to YCoord N.
@@ -879,7 +880,7 @@ l_keyBindings hostname conf@XConfig {XMonad.modMask = hypr} = M.fromList $
   -- the "1", "2", "3" keys etc. are nearest the left side of the keyboard
   -- where we have our XMonad mod key (CapsLock remapped to Hyper key). In
   -- `forZQKeyboard', the numpad home row gets priority.
-  [((hypr .|. mask, k         ), f y)
+  [((hypr .|. mask, k         ), mm $ f y)
     | (y, k) <- zip l_YCoords $ if l_isPortraitMonitorLayout hostname
       then forZQKeyboard
       else forQwertyKeyboard
@@ -941,6 +942,8 @@ l_keyBindings hostname conf@XConfig {XMonad.modMask = hypr} = M.fromList $
     , xK_6
     , xK_7
     ]
+  -- "mm" stands for "move mouse".
+  mm f = f >> l_resetMouse
 
 l_mouseBindings :: XConfig t -> M.Map (KeyMask, Button) (Window -> X ())
 l_mouseBindings _ = M.fromList
@@ -1066,6 +1069,33 @@ l_startupHook hostname = do
     ++ " -e htop"
   spawn "emacs --daemon"
   when (elem hostname ["k0"]) rtorrent
+
+-- Reset the location of the mouse pointer, with the destination depending on
+-- the type of window that is currently focused.
+l_resetMouse :: X ()
+l_resetMouse = do
+  windowSet <- gets windowset
+  let
+    currentStack = W.stack $ W.workspace $ W.current windowSet
+    f stack
+      = banish
+      . snd
+      =<< foldM step (W.focus stack, LowerRight) windowPropToDest
+  whenJust currentStack f
+  where
+  step s@(w, _) (p, destNew) = do
+    b <- hasProperty p w
+    if b
+      then return (w, destNew)
+      else return s
+  windowPropToDest =
+    [ (ClassName "URxvt", LowerLeft)
+    , (ClassName "Emacs", LowerLeft)
+    , (ClassName "qutebrowser", UpperLeft)
+    , (ClassName "Google-chrome", UpperLeft)
+    , (ClassName "Chromium-browser", UpperLeft)
+    , (ClassName "Navigator", UpperLeft)
+    ]
 
 main :: IO ()
 main = do
