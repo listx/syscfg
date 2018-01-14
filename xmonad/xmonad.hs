@@ -39,7 +39,6 @@ import XMonad.Actions.CycleWS
   , findWorkspace
   , moveTo
   , screenBy
-  , shiftTo
   )
 import XMonad.Actions.GridSelect
   ( def
@@ -819,7 +818,7 @@ l_keyBindings hostname conf@XConfig {XMonad.modMask = hypr} = M.fromList $
   , ((hypr,   xK_o            ), moveTo Next $ l_searchZ (WQ Empty []))
   , ((hyprS,  xK_o            ), whenX
       (l_windowCountInCurrentWorkspaceExceeds 0)
-      (shiftTo Next $ l_searchZ (WQ Empty [])))
+      (doTo Next (l_searchZ (WQ Empty [])) getSortByIndex (windows . l_shiftAndView)))
   ]
   ++
   -- Go to any non-empty Workspace only within the Z-Axis (X and Y remain
