@@ -303,13 +303,15 @@ type ZGroupMemberships = [(ZGroup, Bool)]
 -- every YCoord in l_YCoords is a "WorkspaceGroup").
 l_viewY :: YCoord -> Bool -> X ()
 l_viewY yNext keepXCoord = do
-  -- Save xzys of yPrev, so that if and when we switch back to it, we get back
-  -- the same workspaces (and not just some random default set of XZYs).
-  l_recordXZYs
-  -- Activate next YCoord's workspaces. After this operation, visually all
-  -- screens will have switched their XZY coordinate to reflect yNext, not
-  -- yPrev.
-  l_activateY yNext keepXCoord
+  windowSet <- gets windowset
+  when (yNext /= (l_YFromWid $ W.currentTag windowSet)) $ do
+    -- Save xzys of yPrev, so that if and when we switch back to it, we get back
+    -- the same workspaces (and not just some random default set of XZYs).
+    l_recordXZYs
+    -- Activate next YCoord's workspaces. After this operation, visually all
+    -- screens will have switched their XZY coordinate to reflect yNext, not
+    -- yPrev.
+    l_activateY yNext keepXCoord
 
 l_viewYDir :: Direction1D -> Bool -> X ()
 l_viewYDir dir keepXCoord = do
