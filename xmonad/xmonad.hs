@@ -442,10 +442,11 @@ l_viewXZYs xzyCandidates windowSet
     , xzy' == show xzy
     ]
 
--- As a reminder, XMonad.Core (confusingly) uses the type synonym WindowSpace to
--- mean "Workspace i l a". We call a WindowSpace "ww" to make the code a little
--- easier to read (better than using "workspace", considering how we already use
--- XMonad.StackSet.workspace as W.workspace).
+-- Promote a hidden workspace to be visible. As a reminder, XMonad.Core
+-- (confusingly) uses the type synonym WindowSpace to mean "Workspace i l a". We
+-- call a WindowSpace "ww" to make the code a little easier to read (better than
+-- using "workspace", considering how we already use XMonad.StackSet.workspace
+-- as W.workspace).
 l_promoteFromHidden :: WindowSet -> WindowSpace -> WindowSet
 l_promoteFromHidden windowSet ww
   -- If the given XCoord matches the XCoord of the current (focused) screen, we
@@ -548,7 +549,7 @@ l_gridSelectWithinY = do
       ]
   selected <- gridselect (gsconfig2 colorizeByXCoord) windowsAtY
   whenJust selected
-    (windows . l_viewGently)
+    (windows . l_viewGently . snd)
   where
   colorizeByXCoord (ww, _)
     = stringColorizer
@@ -632,9 +633,15 @@ l_modifyVisible editStack ww windowSet
 l_replaceIf :: (a -> Bool) -> (a -> a) -> [a] -> [a]
 l_replaceIf p f = map (\a -> if p a then f a else a)
 
-l_viewGently :: (WindowSpace, Window) -> WindowSet -> WindowSet
-l_viewGently (ww, a) windowSet
-  | isHidden a = W.focusWindow a $ l_promoteFromHidden windowSet ww
+-- Given a Window somewhere in the current YCoord, focus on it gently (if
+-- hidden, make it visible first and then move focus to it). If for whatever
+-- reason we are given a Window outside of our current YCoord, don't do
+-- anything. The idea is to first make visible the Workspace that the Window
+-- belongs to (if necessary), and then to focus on it.
+l_viewGently :: Window -> WindowSet -> WindowSet
+l_viewGently a windowSet
+  | null wws = windowSet
+  | isHidden a = W.focusWindow a . l_promoteFromHidden windowSet $ head wws
   | otherwise = W.focusWindow a windowSet
   where
   isHidden window
@@ -642,6 +649,32 @@ l_viewGently (ww, a) windowSet
     . or
     . map (elem window . W.integrate' . W.stack . W.workspace)
     $ W.screens windowSet
+  wws =
+    [ b
+    | b <- W.workspaces windowSet
+    , (l_YFromWid $ W.tag b) == l_YFromWindowSet windowSet
+    , elem a . W.integrate' $ W.stack b
+    ]
+
+-- This is like l_viewGently, but is Workspace-based. NOTE: this is a bit
+-- redundant and should be merged with l_viewGently, but it appears tricky to do
+-- without introducing a regression in (l_gridSelectWithinY).
+l_focusWorkspace :: WorkspaceId -> WindowSet -> WindowSet
+l_focusWorkspace wid windowSet
+  | null wws = windowSet
+  | isHidden wid = l_shiftAndView wid . l_promoteFromHidden windowSet $ head wws
+  | otherwise = l_shiftAndView wid windowSet
+  where
+  wws =
+    [ b
+    | b <- W.workspaces windowSet
+    , (l_YFromWid $ W.tag b) == l_YFromWindowSet windowSet
+    , W.tag b == wid
+    ]
+  isHidden b
+    = elem b
+    . map W.tag
+    $ W.hidden windowSet
 
 -- Try to find a workspace based on the given WorkspaceQuery, but inside the
 -- current XCoord and YCoord. In other words, flip through the ZCoords available
@@ -734,11 +767,19 @@ l_queryZGroupMemberships zGroupMemberships ww = and $ map
 l_inGroup :: ZGroup -> WindowSpace -> Bool
 l_inGroup zGroup ww = (l_ZCoordToGroup . l_ZFromWid $ W.tag ww) == zGroup
 
--- If shifting was unsuccessful, don't try to view it. I.e., either we can shift
--- a window to another workspace and view it, or there is no window to shift to
--- begin with (and we do nothing).
+-- Move the focused window to the given Workspace, and then view that Workspace.
 l_shiftAndView :: WorkspaceId -> WindowSet -> WindowSet
 l_shiftAndView wid = W.view wid . W.shift wid
+
+-- Like XMonad.ManageHook.doShift, but follow the moved window to its new home.
+-- We use l_viewY just in case the destination WorkspaceId is not in the current
+-- YCoord.
+l_shiftAndViewAsHook :: WorkspaceId -> ManageHook
+l_shiftAndViewAsHook wid = composeAll
+  [ doF =<< liftX (l_viewY (l_YFromWid wid) False >> return id)
+  , doShift wid
+  , doF $ l_focusWorkspace wid
+  ]
 
 l_windowCountInCurrentWorkspaceExceeds :: Int -> X Bool
 l_windowCountInCurrentWorkspaceExceeds n = do
@@ -863,8 +904,7 @@ l_keyBindings hostname xineramaCount conf@XConfig {XMonad.modMask = hypr} = M.fr
   -- the current workspace to move.
   [((hyprS, key), mm $ whenX
     (l_windowCountInCurrentWorkspaceExceeds 0)
-    (flip whenJust (windows . l_shiftAndView) =<< screenWorkspace =<< sc))
-  | (key, sc) <- [(xK_h, screenBy (-1)), (xK_l, screenBy 1)]
+    (flip whenJust (windows . l_shiftAndView) =<< screenWorkspace =<< sc)) | (key, sc) <- [(xK_h, screenBy (-1)), (xK_l, screenBy 1)]
   ]
   ++
   [ ((hyprA,  xK_j            ), mm $ l_viewYDir Next False)
@@ -1014,10 +1054,10 @@ l_manageHook xineramaCount = composeOne $
   , resource  =? "kdesktop"           -?> doIgnore
   , resource  =? "floatme"            -?> doCenterFloat
   -- Move browsers to the ZGNet ZGroup. If all ZCoords in ZGNet are full,
-  , className =? "qutebrowser"        -?> doShift =<< toZGNet
-  , className =? "Google-chrome"      -?> doShift =<< toZGNet
-  , className =? "Chromium-browser"   -?> doShift =<< toZGNet
-  , resource  =? "Navigator"          -?> doShift =<< toZGNet
+  , className =? "qutebrowser"        -?> l_shiftAndViewAsHook =<< toZGNet
+  , className =? "Google-chrome"      -?> l_shiftAndViewAsHook =<< toZGNet
+  , className =? "Chromium-browser"   -?> l_shiftAndViewAsHook =<< toZGNet
+  , resource  =? "Navigator"          -?> l_shiftAndViewAsHook =<< toZGNet
   , className =? "Blender:Render"     -?> doFloat
   , resource  =? "Browser"            -?> doFloat
   , className =? "Xsane"              -?> doFloat
@@ -1031,7 +1071,8 @@ l_manageHook xineramaCount = composeOne $
   -- This is useful for auto-moving a terminal screen we spawn elsewhere in
   -- this config file to a particular workspace.
   map
-    (\xzy -> resource =? ("atWorkspace_" ++ show xzy) -?> doShift (show xzy))
+    (\xzy ->
+      resource =? ("atWorkspace_" ++ show xzy) -?> l_shiftAndViewAsHook (show xzy))
     (l_XZYs xineramaCount)
   ++
   -- Force new windows down (i.e., if a screen has 1 window (master) and we
