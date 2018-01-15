@@ -549,7 +549,7 @@ l_gridSelectWithinY = do
       ]
   selected <- gridselect (gsconfig2 colorizeByXCoord) windowsAtY
   whenJust selected
-    (windows . l_viewGently . snd)
+    (windows . l_viewByGoing . (W.tag *** id))
   where
   colorizeByXCoord (ww, _)
     = stringColorizer
@@ -659,48 +659,39 @@ l_modifyVisible editStack ww windowSet
 l_replaceIf :: (a -> Bool) -> (a -> a) -> [a] -> [a]
 l_replaceIf p f = map (\a -> if p a then f a else a)
 
--- Given a Window somewhere in the current YCoord, focus on it gently (if
--- hidden, make it visible first and then move focus to it). If for whatever
--- reason we are given a Window outside of our current YCoord, don't do
--- anything. The idea is to first make visible the Workspace that the Window
--- belongs to (if necessary), and then to focus on it.
-l_viewGently :: Window -> WindowSet -> WindowSet
-l_viewGently a windowSet
-  | null wws = windowSet
-  | isHidden a = W.focusWindow a . l_promoteFromHidden windowSet $ head wws
-  | otherwise = W.focusWindow a windowSet
+-- Focus on the given Window `a', but instead of forcing the Workspace to show
+-- up in the current Xine screen, _go_ to that Window. If the Window is already
+-- located in the given WorkspaceId `wid', just view that Workspace. If it
+-- doesn't reside in `wid', move it there first.
+--
+-- We assume that wid is in the current YCoord (otherwise, it's a NOP).
+l_viewByGoing :: (WorkspaceId, Window) -> WindowSet -> WindowSet
+l_viewByGoing (wid, a) windowSet
+  | null (wws windowSet) || invalidWindow = windowSet
+  | l_YFromWid wid /= (l_YFromWid $ W.currentTag windowSet) = windowSet
+  | l_windowIsInWid wid a windowSet = f windowSet
+  | otherwise = f $ W.shiftWin wid a windowSet
   where
-  isHidden window
-    = not
-    . or
-    . map (elem window . W.integrate' . W.stack . W.workspace)
-    $ W.screens windowSet
-  wws =
-    [ b
-    | b <- W.workspaces windowSet
-    , (l_YFromWid $ W.tag b) == l_YFromWindowSet windowSet
-    , elem a . W.integrate' $ W.stack b
-    ]
-
--- This is like l_viewGently, but is Workspace-based. NOTE: this is a bit
--- redundant and should be merged with l_viewGently, but it appears tricky to do
--- without introducing a regression in (l_gridSelectWithinY).
-l_focusWorkspace :: WorkspaceId -> WindowSet -> WindowSet
-l_focusWorkspace wid windowSet
-  | null wws = windowSet
-  | isHidden wid = l_shiftAndView wid . l_promoteFromHidden windowSet $ head wws
-  | otherwise = l_shiftAndView wid windowSet
-  where
-  wws =
-    [ b
-    | b <- W.workspaces windowSet
-    , (l_YFromWid $ W.tag b) == l_YFromWindowSet windowSet
-    , W.tag b == wid
-    ]
-  isHidden b
+  invalidWindow = notElem a $ W.allWindows windowSet
+  f wx
+    | isHidden wid wx = W.focusWindow a . l_promoteFromHidden wx . head $ wws wx
+    | otherwise = W.focusWindow a wx
+  isHidden b wx
     = elem b
     . map W.tag
-    $ W.hidden windowSet
+    $ W.hidden wx
+  wws wx =
+    [ b
+    | b <- W.workspaces wx
+    , W.tag b == wid
+    ]
+
+l_windowIsInWid :: WorkspaceId -> Window -> WindowSet -> Bool
+l_windowIsInWid wid a windowSet = maybe False (==wid) $ lookup a
+  [ (a', W.tag ww)
+  | ww <- W.workspaces windowSet
+  , a' <- W.integrate' $ W.stack ww
+  ]
 
 -- Try to find a workspace based on the given WorkspaceQuery, but inside the
 -- current XCoord and YCoord. In other words, flip through the ZCoords available
@@ -801,11 +792,12 @@ l_shiftAndView wid = W.view wid . W.shift wid
 -- We use l_viewY just in case the destination WorkspaceId is not in the current
 -- YCoord.
 l_shiftAndViewAsHook :: WorkspaceId -> ManageHook
-l_shiftAndViewAsHook wid = composeAll
-  [ doF =<< liftX (l_viewY (l_YFromWid wid) False >> return id)
-  , doShift wid
-  , doF $ l_focusWorkspace wid
-  ]
+l_shiftAndViewAsHook wid = do
+  a <- ask
+  composeAll
+    [ doF =<< liftX (l_viewY (l_YFromWid wid) False >> return id)
+    , doF $ l_viewByGoing (wid, a)
+    ]
 
 l_windowCountInCurrentWorkspaceExceeds :: Int -> X Bool
 l_windowCountInCurrentWorkspaceExceeds n = do
