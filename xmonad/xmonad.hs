@@ -561,6 +561,32 @@ l_gridSelectWithinY = do
     , gs_cellwidth = 100
     }
 
+-- Show debug info, such as WorkspaceId (XZY).
+l_gridShowDebugInfo :: X ()
+l_gridShowDebugInfo = do
+  windowSet <- gets windowset
+  let
+    xzy = l_XZYFromWindowSet windowSet
+    (X x) = l_XFrom xzy
+    wid = show xzy
+    zGrp = show . l_ZCoordToGroup $ l_ZFrom xzy
+    focusedWindow = case W.stack . W.workspace $ W.current windowSet of
+      Just s -> show $ W.focus s
+      Nothing -> "None"
+    -- stringColorizer uses the _snd_ part of the pairs in debugInfo, not fst.
+    debugInfo =
+      [ ("Focused Window XID: " ++ focusedWindow, "XID")
+      , ("XZY: " ++ wid, show x)
+      , ("ZGroup: " ++ zGrp, zGrp)
+      ]
+  _ <- gridselect (gsconfig2 stringColorizer) debugInfo
+  return ()
+  where
+  gsconfig2 colorizer = (buildDefaultGSConfig colorizer)
+    { gs_cellheight = 30
+    , gs_cellwidth = 200
+    }
+
 -- Move focus to next/prev visible window. If we're at the edge of the current
 -- workspace, then hop over to the next workspace (if any).
 l_viewWindow :: Direction1D -> X ()
@@ -851,6 +877,7 @@ l_keyBindings hostname xineramaCount conf@XConfig {XMonad.modMask = hypr} = M.fr
   , ((hyprS,  xK_m            ), sendMessage (IncMasterN (-1)))
 
   , ((hypr,   xK_g            ), l_gridSelectWithinY)
+  , ((hypr,   xK_s            ), l_gridShowDebugInfo)
 
   -- Lock screen.
   , ((hypr,   xK_Escape       ), spawn "xscreensaver-command -lock")
