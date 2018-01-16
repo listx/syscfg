@@ -43,15 +43,6 @@ import XMonad.Actions.CycleWS
   , moveTo
   , screenBy
   )
-import XMonad.Actions.GridSelect
-  ( def
-  , gridselect
-  , spawnSelected
-  , stringColorizer
-  , buildDefaultGSConfig
-  , gs_cellheight
-  , gs_cellwidth
-  )
 import XMonad.Actions.NoBorders
   ( toggleBorder )
 import XMonad.Actions.Warp
@@ -75,6 +66,7 @@ import XMonad.Layout.ResizableTile
     )
   , ResizableTall(..)
   )
+
 import XMonad.Util.NamedWindows
   ( getName )
 import XMonad.Util.WindowProperties
@@ -85,6 +77,8 @@ import qualified Data.Map.Strict as H
 import qualified XMonad.Layout.LayoutModifier as XLL
 import qualified XMonad.StackSet as W
 import qualified XMonad.Util.ExtensibleState as XS
+
+import LGridSelect hiding (liftX)
 
 -- The main concept behind this configuration is the 3-dimensional navigation of
 -- Workspaces. To my knowledge it is unique in the XMonad world. It builds on a
@@ -588,6 +582,52 @@ l_gridShowDebugInfo = do
     { gs_cellheight = 30
     , gs_cellwidth = 200
     }
+
+-- Like XMonad.Actions.GridSelect.gridselect, but does not use a diamond shape.
+l_gridselect :: GSConfig a -> [(String,a)] -> X (Maybe a)
+l_gridselect _ [] = return Nothing
+l_gridselect gsconfig elements =
+ withDisplay $ \dpy -> do
+    rootw <- asks theRoot
+    scr <- gets $ screenRect . W.screenDetail . W.current . windowset
+    win <- liftIO $ mkUnmanagedWindow dpy (defaultScreenOfDisplay dpy) rootw
+                    (rect_x scr) (rect_y scr) (rect_width scr) (rect_height scr)
+    liftIO $ mapWindow dpy win
+    liftIO $ selectInput dpy win (exposureMask .|. keyPressMask .|. buttonReleaseMask)
+    status <- io $ grabKeyboard dpy win True grabModeAsync grabModeAsync currentTime
+    io $ grabPointer dpy win True buttonReleaseMask grabModeAsync grabModeAsync none none currentTime
+    font <- initXMF (gs_font gsconfig)
+    let screenWidth = toInteger $ rect_width scr
+        screenHeight = toInteger $ rect_height scr
+    selectedElement <- if (status == grabSuccess) then do
+                            let restriction ss cs = (fromInteger ss/fromInteger (cs gsconfig)-1)/2 :: Double
+                                restrictX = floor $ restriction screenWidth gs_cellwidth
+                                restrictY = floor $ restriction screenHeight gs_cellheight
+                                originPosX = floor $ ((gs_originFractX gsconfig) - (1/2)) * 2 * fromIntegral restrictX
+                                originPosY = floor $ ((gs_originFractY gsconfig) - (1/2)) * 2 * fromIntegral restrictY
+                                coords = diamondRestrict restrictX restrictY originPosX originPosY
+                                s = TwoDState { td_curpos = (head coords),
+                                                td_availSlots = coords,
+                                                td_elements = elements,
+                                                td_gsconfig = gsconfig,
+                                                td_font = font,
+                                                td_paneX = screenWidth,
+                                                td_paneY = screenHeight,
+                                                td_drawingWin = win,
+                                                td_searchString = "",
+                                                td_elementmap = [] }
+                            m <- generateElementmap s
+                            evalTwoD (updateAllElements >> (gs_navigate gsconfig))
+                                     (s { td_elementmap = m })
+                      else
+                          return Nothing
+    liftIO $ do
+      unmapWindow dpy win
+      destroyWindow dpy win
+      ungrabPointer dpy currentTime
+      sync dpy False
+    releaseXMF font
+    return selectedElement
 
 -- Move focus to next/prev visible window. If we're at the edge of the current
 -- workspace, then hop over to the next workspace (if any).
