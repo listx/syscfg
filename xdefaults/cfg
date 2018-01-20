@@ -1,6 +1,3 @@
-/* disable XIM input for emacs (use SCIM-bridge instead) */
-Emacs.useXIM: false
-
 /* xterm */
 XTerm.background: #000000
 XTerm.foreground: #ffffff
