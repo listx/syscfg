@@ -125,11 +125,15 @@ URxvt.keysym.M-u: perl:url-select:select_next
 URxvt.url-select.underline: true
 URxvt.url-select.launcher: launch-my-browser
 
-/* some navigation commands */
+/*
+ * Some quick navigation commands: j/k move down/up a line, h/l are like
+ * PgUp/PgDown. For things like copying and pasting stuff in urxvt's buffer,
+ * use M-s above.
+ */
 URxvt.keysym.Control-j: command:\033]721;1\007
 URxvt.keysym.Control-k: command:\033]720;1\007
-URxvt.keysym.Control-h: command:\033]720;10\007
 URxvt.keysym.Control-l: command:\033]721;10\007
+URxvt.keysym.Control-h: command:\033]720;10\007
 
 /*
  * Some shell programs deserve their own hotkey, because we use them so
