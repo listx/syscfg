@@ -5,6 +5,13 @@
   (setq helm-locate-fuzzy-match t)
   (setq helm-ff-skip-boring-files t)
 
+  ; Use frames (like a popup) instead of windows. This way, helm doesn't steal
+  ; an existing window.
+  (setq
+    helm-display-function 'helm-display-buffer-in-own-frame
+    helm-display-buffer-reuse-frame t
+    helm-use-undecorated-frame-option t)
+
   ; Disable help string. See http://stackoverflow.com/a/19954900/437583.
   (defadvice helm-display-mode-line (after undisplay-header activate)
     (setq header-line-format nil))
