@@ -1161,6 +1161,7 @@ l_resetMouse = do
   windowPropToDest =
     [ (ClassName "URxvt", LowerLeft)
     , (ClassName "Emacs", LowerLeft)
+    , (ClassName "GoogleEmacs", LowerLeft)
     , (ClassName "qutebrowser", UpperLeft)
     , (ClassName "Google-chrome", UpperLeft)
     , (ClassName "Chromium-browser", UpperLeft)
