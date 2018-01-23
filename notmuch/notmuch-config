@@ -31,6 +31,7 @@
 [user]
 name=Linus Arver
 primary_email=linusarver@gmail.com
+other_email=linus@ucla.edu;linusa@google.com
 
 # Configuration for "notmuch new"
 #

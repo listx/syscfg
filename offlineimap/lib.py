@@ -29,16 +29,16 @@ def decrypt_secret(secret_type):
     secret = subprocess.check_output(cmd).rstrip()
     return secret
 
-def decrypt_notmuch_tags():
+def decrypt_notmuch_tags(fname):
     """ Decrypt the notmuch tags file. """
-    output_path = HOME + "/tmp/notmuch-tags"
+    output_path = HOME + "/tmp/" + fname
     cmd = [ \
         "gpg2",
         "--quiet",
         "--output",
         output_path,
         "--decrypt",
-        HOME + "/secure/notmuch-tags.gpg"]
+        HOME + "/secure/" + fname + ".gpg"]
     try:
         os.remove(output_path)
     except OSError:
@@ -49,4 +49,5 @@ def decrypt_notmuch_tags():
     os.chmod(output_path, 0o600)
 
 if __name__ == "__main__":
-    decrypt_notmuch_tags()
+    decrypt_notmuch_tags("notmuch-tags-main")
+    decrypt_notmuch_tags("notmuch-tags-work")
