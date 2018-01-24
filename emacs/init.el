@@ -12,6 +12,7 @@
     ((HOME (getenv "HOME"))
      (PATH (getenv "PATH"))
      (paths `(
+      ,(concat HOME "/syscfg/script/sys")
       ,(concat HOME "/bin")
       ,(concat HOME "/homebrew/bin"))))
     (setenv "PATH" (concat (mapconcat 'identity paths ":") ":" PATH))

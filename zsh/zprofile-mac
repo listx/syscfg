@@ -1,5 +1,5 @@
 # Global stuff
-export PATH=$HOME/bin:$PATH
+export PATH=$HOME/syscfg/script/sys:$HOME/bin:$PATH
 export EDITOR=vi
 
 # Homebrew stuff
