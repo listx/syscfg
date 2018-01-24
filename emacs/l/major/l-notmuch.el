@@ -89,7 +89,7 @@
         (         :name "work.unread" :query "tag:work and tag:unread and (not (tag:ml or tag:nl))")
         (         :name "work.flagged" :query "tag:work and tag:flagged")
         (         :name "work.sent" :query "folder:work/sent")
-        (         :name "work.newsletters" :query "tag:nl")
+        (         :name "work.newsletters" :query "tag:work and tag:nl")
         (         :name "work.cloud-releng" :query "tag:cloud-releng")
         (         :name "work.cloud-releng-alerts" :query "tag:cloud-releng-alerts")
         (         :name "work.cloud-releng-reviews" :query "tag:cloud-releng-reviews")
