@@ -20,9 +20,11 @@
 ; https://stackoverflow.com/a/4506458.
 (setq
   browse-url-browser-function 'browse-url-generic
-  browse-url-generic-program (if (string-match "^enif" system-name)
-    "google-chrome"
-    "chromium-browser"))
+  browse-url-generic-program
+    (cond
+      ((string-match "^enif" system-name) "google-chrome")
+      ((string-match "macbookpro" system-name) "google-chrome-mac.sh")
+      (t "chromium-browser")))
 
 ; Scroll more like Vim (no jumping around).
 (setq
