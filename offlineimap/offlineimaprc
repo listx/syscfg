@@ -11,14 +11,14 @@ pythonfile = ~/syscfg/offlineimap/lib.py
 localrepository = main-local
 remoterepository = main-remote
 autorefresh = 1
-presynchook = ~/syscfg/offlineimap/lib.py
+presynchook = ~/syscfg/offlineimap/lib.py notmuch-tags-main
 postsynchook = ~/syscfg/offlineimap/postsync notmuch-tags-main
 
 [Account work]
 localrepository = work-local
 remoterepository = work-remote
 autorefresh = 1
-presynchook = ~/syscfg/offlineimap/lib.py
+presynchook = ~/syscfg/offlineimap/lib.py notmuch-tags-work
 postsynchook = ~/syscfg/offlineimap/postsync notmuch-tags-work
 
 [Repository main-local]

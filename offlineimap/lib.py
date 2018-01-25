@@ -3,6 +3,7 @@
 
 import os
 import subprocess
+import sys
 
 
 HOME = os.getenv("HOME")
@@ -49,5 +50,5 @@ def decrypt_notmuch_tags(fname):
     os.chmod(output_path, 0o600)
 
 if __name__ == "__main__":
-    decrypt_notmuch_tags("notmuch-tags-main")
-    decrypt_notmuch_tags("notmuch-tags-work")
+    if len(sys.argv) == 2:
+        decrypt_notmuch_tags(sys.argv[1])
