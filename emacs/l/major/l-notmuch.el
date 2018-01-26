@@ -27,10 +27,11 @@
       notmuch-show-mode-map
       notmuch-tree-mode-map)
     '(
-      (:key "d" :func (lambda () (interactive) (l/toggle-tag "trash")))
-      (:key "f" :func (lambda () (interactive) (l/toggle-tag "flagged")))
-      (:key "u" :func (lambda () (interactive) (l/toggle-tag "unread")))
-      (:key "s" :func (lambda () (interactive) (l/toggle-tag "spam")))
+      (:key "a" :func (lambda () (interactive) (l/toggle-tag-list '("-inbox" "+archived"))))
+      (:key "d" :func (lambda () (interactive) (l/toggle-tag-list '("+trash"))))
+      (:key "f" :func (lambda () (interactive) (l/toggle-tag-list '("+flagged"))))
+      (:key "u" :func (lambda () (interactive) (l/toggle-tag-list '("+unread"))))
+      (:key "s" :func (lambda () (interactive) (l/toggle-tag-list '("+spam"))))
     ))
 
   (l/bind-keys
@@ -52,9 +53,10 @@
       (:key "g" :func notmuch-refresh-this-buffer)
     ))
 
-  (evil-define-key 'normal notmuch-tree-mode-map "D" (lambda () (interactive) (l/toggle-tag "trash" t)))
-  (evil-define-key 'normal notmuch-tree-mode-map "F" (lambda () (interactive) (l/toggle-tag "flagged" t)))
-  (evil-define-key 'normal notmuch-tree-mode-map "U" (lambda () (interactive) (l/toggle-tag "unread" t)))
+  (evil-define-key 'normal notmuch-tree-mode-map "A" (lambda () (interactive) (l/toggle-tag-list '("-inbox" "+archived") t)))
+  (evil-define-key 'normal notmuch-tree-mode-map "D" (lambda () (interactive) (l/toggle-tag-list '("+trash") t)))
+  (evil-define-key 'normal notmuch-tree-mode-map "F" (lambda () (interactive) (l/toggle-tag-list '("+flagged") t)))
+  (evil-define-key 'normal notmuch-tree-mode-map "U" (lambda () (interactive) (l/toggle-tag-list '("+unread") t)))
 
   (evil-define-key 'normal notmuch-show-mode-map "o" 'hydra-notmuch-show/body)
   (evil-define-key 'normal notmuch-show-mode-map "r" 'notmuch-show-reply)
@@ -256,18 +258,57 @@ the CLI and emacs interface."))
       (indent-rigidly start (point) notmuch-hello-indent))
     nil))
 
-(defun l/toggle-tag (tag &optional thread)
-  "toggle a tag for message"
+(defun l/strip-tags (tag-list)
+  "Given a list of tags with + or - prefixes, return only those ones with +, but
+without the leading +."
+  (let*
+    (
+      (tag-is-plus (lambda (tag) (string-prefix-p "+" tag)))
+      (tag-list-plus-only (seq-filter tag-is-plus tag-list))
+      (tag-list-stripped (mapcar (lambda (str) (seq-drop str 1)) tag-list-plus-only))
+    )
+    tag-list-stripped))
+
+(defun l/is-tag-member (tag-list)
+  "Given a tag-list, determine if any of the tags with a leading '+' are a
+member of (notmuch-show-get-tags)."
+  (let*
+    (
+      (tag-list-stripped (l/strip-tags tag-list))
+      (tag-list-checked
+        (mapcar
+          (lambda (tag) (member tag (notmuch-show-get-tags)))
+          tag-list-stripped))
+    )
+    ; We reduce the list of booleans in tag-list-checked to see if any of them
+    ; are `t'. This would be as trivial as
+    ;
+    ;   (apply 'or tag-list-checked)
+    ;
+    ; if `or' was a function, but sadly it is not (it is a macro).
+    ; Surprisingly, there is no easy way to reduce a list of booleans in native
+    ; Emacs Lisp. We have to borrow "some" from cl-extra.el.
+    ;
+    ; References:
+    ; https://stackoverflow.com/questions/5902847/how-do-i-apply-or-to-a-list-in-elisp
+    ; http://www.faqs.org/faqs/lisp-faq/part3/section-3.html.
+    (some 'identity tag-list-checked)))
+
+(defun l/toggle-tag-list (tag-list-orig &optional thread)
+  "Toggle tags. This is like `notmuch-tree-archive-message', but is generalized
+across any list of tags (and is not tied to `notmuch-archive-tags')."
   (let
-    ((f
-      (if (string= major-mode "notmuch-tree-mode")
-        (if thread
-          'notmuch-tree-tag-thread
-          'notmuch-tree-tag)
-        'notmuch-show-tag)))
-    (if (member tag (notmuch-show-get-tags))
-      (funcall f `( ,(concat "-" tag) ))
-      (funcall f `( ,(concat "+" tag) )))))
+    (
+      (f
+        (if (string= major-mode "notmuch-tree-mode")
+          (if thread
+            'notmuch-tree-tag-thread
+            'notmuch-tree-tag)
+          'notmuch-show-tag))
+      (tag-list         (notmuch-tag-change-list tag-list-orig nil))
+      (tag-list-negated (notmuch-tag-change-list tag-list-orig t))
+      )
+    (funcall f (if (l/is-tag-member tag-list-orig) tag-list-negated tag-list))))
 
 (defun l/message-signature-setup ()
   "Add signature."
@@ -297,8 +338,8 @@ the message."
 
 (defhydra hydra-notmuch-show (:foreign-keys warn)
   "notmuch-show"
-  ("d" (lambda () (interactive) (l/toggle-tag "trash")) "(un)delete")
-  ("f" (lambda () (interactive) (l/toggle-tag "flagged")) "(un)flag")
+  ("d" (lambda () (interactive) (l/toggle-tag-list '("+trash"))) "(un)delete")
+  ("f" (lambda () (interactive) (l/toggle-tag-list '("+flagged"))) "(un)flag")
   ("q" nil "exit" :exit t))
 
 (provide 'l-notmuch)
