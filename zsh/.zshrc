@@ -54,9 +54,9 @@ export LESS_TERMCAP_me=$'\E[0m'         # end bold/blinking
 export LESS_TERMCAP_se=$'\E[0m'         # end standout-mode
 export LESS_TERMCAP_ue=$'\E[0m'         # end underline
 
-# default text editor--set it to vim, not vi
-export VISUAL=vim
-export EDITOR=vim
+# Default text editor--set it to emacsclient.
+export VISUAL=~/syscfg/script/sys/emacsclient-tty.sh
+export EDITOR=~/syscfg/script/sys/emacsclient-tty.sh
 
 # default ledger file (to avoid using -f option every time)
 export LEDGER_FILE=~/org/master.hledger
