@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
-if [[ $(hostname) =~ "enif" ]]; then
-    google-chrome $@
-elif [[ $(uname) == "Linux" ]]; then
+if [[ $(uname) == "Linux" ]]; then
     chromium $@
 elif [[ $(uname) == "Darwin" ]]; then
     "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" $@

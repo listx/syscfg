@@ -22,7 +22,6 @@
   browse-url-browser-function 'browse-url-generic
   browse-url-generic-program
     (cond
-      ((string-match "^enif" system-name) "google-chrome")
       ((string-match "macbookpro" system-name) "google-chrome-mac.sh")
       (t "chromium-browser")))
 

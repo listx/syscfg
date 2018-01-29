@@ -1,9 +1,4 @@
 [general]
-# For now, it looks like offlineimap does not support syncing multiple accounts
-# at the same time (some of the docs say that it is supported (option
-# `maxsyncaccounts'), but it actually does not work). For syncing "work"
-# account, we have to manually call a separate instance of offlineimap with `-a
-# work' flag.
 accounts = main
 pythonfile = ~/syscfg/offlineimap/lib.py
 
@@ -14,21 +9,9 @@ autorefresh = 1
 presynchook = ~/syscfg/offlineimap/lib.py notmuch-tags-main
 postsynchook = ~/syscfg/offlineimap/postsync notmuch-tags-main
 
-[Account work]
-localrepository = work-local
-remoterepository = work-remote
-autorefresh = 1
-presynchook = ~/syscfg/offlineimap/lib.py notmuch-tags-work
-postsynchook = ~/syscfg/offlineimap/postsync notmuch-tags-work
-
 [Repository main-local]
 type = Maildir
 localfolders = ~/mail/main
-nametrans = nametrans_local
-
-[Repository work-local]
-type = Maildir
-localfolders = ~/mail/work
 nametrans = nametrans_local
 
 [Repository main-remote]
@@ -38,11 +21,3 @@ remoteuser = linusarver@gmail.com
 nametrans = nametrans_remote
 sslcacertfile = /etc/ssl/certs/ca-certificates.crt
 remotepasseval = decrypt_secret("linusarver@gmail.com")
-
-[Repository work-remote]
-type = Gmail
-maxconnections = 1
-remoteuser = linusa@google.com
-nametrans = nametrans_remote
-sslcacertfile = /etc/ssl/certs/ca-certificates.crt
-remotepasseval = decrypt_secret("linusa@google.com")
