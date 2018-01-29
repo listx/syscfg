@@ -2,12 +2,8 @@
   :defer t
   :config
 
-  ; It's easier to make notmuch-hello-mode's Emacs state behave more sanely than
-  ; to make it use Normal state.
-  (evil-set-initial-state 'notmuch-hello-mode 'emacs)
-
   ; Bindings.
-  (evil-define-key 'emacs notmuch-hello-mode-map
+  (evil-define-key 'normal notmuch-hello-mode-map
     "h" 'widget-backward
     "j" 'widget-forward
     "k" 'widget-backward
@@ -17,7 +13,8 @@
     "H" 'evil-next-buffer
     "L" 'evil-prev-buffer
     "e" 'notmuch-jump-search
-    "g" 'notmuch-poll-and-refresh-this-buffer
+    "q" 'notmuch-bury-or-kill-this-buffer
+    "r" 'notmuch-poll-and-refresh-this-buffer
     "/" 'notmuch-search)
 
   ; Use consistent keybindings across multiple notmuch modes.
@@ -50,7 +47,7 @@
      notmuch-tree-mode-map
      notmuch-search-mode-map)
    '(
-      (:key "g" :func notmuch-refresh-this-buffer)
+      (:key "r" :func notmuch-refresh-this-buffer)
     ))
 
   (evil-define-key 'normal notmuch-tree-mode-map "A" (lambda () (interactive) (l/toggle-tag-list '("-inbox" "+archived") t)))
@@ -62,10 +59,10 @@
   (evil-define-key 'normal notmuch-show-mode-map "r" 'notmuch-show-reply)
   (evil-define-key 'normal notmuch-show-mode-map "R" 'notmuch-show-reply-sender)
 
-  (evil-define-key 'normal notmuch-tree-mode-map (kbd "j") 'notmuch-tree-next-message)
-  (evil-define-key 'normal notmuch-tree-mode-map (kbd "k") 'notmuch-tree-prev-message)
-  (evil-define-key 'normal notmuch-tree-mode-map (kbd ")") 'notmuch-tree-next-thread)
-  (evil-define-key 'normal notmuch-tree-mode-map (kbd "(") 'notmuch-tree-prev-thread)
+  (evil-define-key 'normal notmuch-tree-mode-map (kbd "<down>") 'notmuch-tree-next-message)
+  (evil-define-key 'normal notmuch-tree-mode-map (kbd "<up>") 'notmuch-tree-prev-message)
+  (evil-define-key 'normal notmuch-tree-mode-map (kbd "S-<down>") (lambda () (interactive) (notmuch-tree-next-thread) (notmuch-tree-show-message-in)))
+  (evil-define-key 'normal notmuch-tree-mode-map (kbd "S-<up>") (lambda () (interactive) (notmuch-tree-prev-thread) (notmuch-tree-show-message-in)))
 
   (evil-define-key 'normal notmuch-search-mode-map (kbd "RET") 'notmuch-search-show-thread)
   (evil-define-key 'normal notmuch-tree-mode-map   (kbd "RET") 'notmuch-tree-show-message)
