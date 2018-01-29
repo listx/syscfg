@@ -10,24 +10,12 @@ emacs:
 	ln -fns ${C}/emacs                                  ${H}/.emacs.d
 	touch                                               ${H}/.emacs.d/custom.el
 git:
-ifeq ('${S}','Darwin')
-	ln -fs ${C}/git/cfg.google.conf                     ${H}/.gitconfig
-else ifneq (,$(findstring enif,${T}))
-	ln -fs ${C}/git/cfg.google.conf                     ${H}/.gitconfig
-else
 	ln -fs ${C}/git/cfg.personal.conf                   ${H}/.gitconfig
-endif
 	ln -fns ${C}/git/template                           ${H}/.git-templates
 	ln -fs ${C}/git/sendemail-aliases                   ${H}/.git-sendemail-aliases
 gpg:
 	ln -fns ${C}/gpg                                    ${H}/.gnupg
-ifeq ('${S}','Darwin')
-	ln -fs ${C}/gpg/gpg-agent.google.conf               ${H}/.gnupg/gpg-agent.conf
-else ifneq (,$(findstring enif,${T}))
-	ln -fs ${C}/gpg/gpg-agent.google.conf               ${H}/.gnupg/gpg-agent.conf
-else
 	ln -fs ${C}/gpg/gpg-agent.nixos.conf                ${H}/.gnupg/gpg-agent.conf
-endif
 gtk:
 	ln -fs ${C}/gtk/cfg                                 ${H}/.gtkrc-2.0.mine
 launch-my-browser:
@@ -81,13 +69,7 @@ ssh:
 ifeq ($(wildcard ~/.ssh/.),)
 	ln -fns ${C}/ssh                                    ${H}/.ssh
 endif
-ifeq ('${S}','Darwin')
-	ln -fs ${C}/ssh/config.google.conf                  ${H}/.ssh/config
-else ifneq (,$(findstring enif,${T}))
-	ln -fs ${C}/ssh/config.google.conf                  ${H}/.ssh/config
-else
 	ln -fs ${C}/ssh/config.home.conf                    ${H}/.ssh/config
-endif
 tig:
 	ln -fs ${C}/tig/.tigrc                              ${H}
 uim:
@@ -113,17 +95,9 @@ xdefaults:
 	ln -fs ${C}/xdefaults/cfg                           ${H}/.Xdefaults
 xmonad:
 	ln -fns ${C}/xmonad                                 ${H}/.xmonad
-ifneq (,$(findstring enif,${T}))
-	sudo cp -f ${C}/xmonad/xmonad.desktop               /usr/share/xsessions
-else
 	# xsession is relied on by NixOS hosts that use xmonad (basically the
 	# default) to start xmonad.
 	ln -fs ${C}/xmonad/.xsession                        ${H}/.xsession
-endif
-xorg:
-ifneq (,$(findstring enif,${T}))
-	cp -f /etc/X11/xorg.conf                            ${C}/xorg/xorg.enif.conf
-endif
 xquartz:
 	ln -fs ${C}/xquartz/.xinitrc.d                      ${H}
 	${C}/xquartz/setup.sh
@@ -131,10 +105,3 @@ zsh:
 	ln -fns ${C}/zsh                                    ${H}/.zsh
 	ln -fs ${C}/zsh/.zshrc                              ${H}
 	mkdir -p ${H}/.zsh-untracked
-ifeq ('${S}','Darwin')
-	ln -fs ${C}/zsh/zprofile-mac                        ${H}/.zprofile
-endif
-ifneq (,$(findstring enif,${T}))
-	ln -fs ${C}/zsh/zprofile-enif                       ${H}/.zprofile
-	ln -fs ${C}/zsh/zlogin-enif                         ${H}/.zlogin
-endif

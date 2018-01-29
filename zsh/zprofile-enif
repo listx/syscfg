@@ -1,2 +1,0 @@
-export PATH=$HOME/.xmonad:$HOME/syscfg/script/sys:$HOME/bin:$PATH
-export P4DIFF=vimdiff

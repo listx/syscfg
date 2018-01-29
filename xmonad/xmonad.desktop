@@ -1,8 +1,0 @@
-[Desktop Entry]
-Name=XMonad
-Comment=xmonad
-Exec=/usr/local/google/home/linusa/syscfg/xmonad/init.sh
-TryExec=/usr/bin/cinnamon-session
-Icon=
-Type=Application
-

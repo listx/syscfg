@@ -823,15 +823,10 @@ l_term1, l_term2 :: String
 l_term1 = "~/syscfg/script/sys/terms/wb.sh"
 l_term2 = "~/syscfg/script/sys/terms/wblue.sh"
 
-l_isUbuntu :: String -> Bool
-l_isUbuntu givenHost = any (\ubuntuHost -> isPrefixOf ubuntuHost givenHost) ubuntuHosts
-  where
-  ubuntuHosts = ["enif"]
-
 l_isPortraitMonitorLayout :: String -> Bool
 l_isPortraitMonitorLayout givenHost = any (\portraitHost -> isPrefixOf portraitHost givenHost) portraitHosts
   where
-  portraitHosts = ["k0", "enif"]
+  portraitHosts = ["k0"]
 
 l_keyBindings :: String
   -> Int
@@ -978,7 +973,6 @@ l_keyBindings hostname xineramaCount conf@XConfig {XMonad.modMask = hypr} = M.fr
     then sendMessage slave
     else sendMessage master
   chromium
-    | l_isUbuntu hostname = "google-chrome"
     | otherwise = "chromium"
   hyprS = hypr .|. shiftMask
   -- Alias "altMask" for left alt key.
@@ -1076,7 +1070,6 @@ l_manageHook xineramaCount = composeOne $
   , resource  =? "floatme"            -?> doCenterFloat
   -- Move browsers to the ZGNet ZGroup. If all ZCoords in ZGNet are full,
   , className =? "qutebrowser"        -?> l_shiftAndViewAsHook =<< toZGNet
-  , className =? "Google-chrome"      -?> l_shiftAndViewAsHook =<< toZGNet
   , className =? "Chromium-browser"   -?> l_shiftAndViewAsHook =<< toZGNet
   , resource  =? "Navigator"          -?> l_shiftAndViewAsHook =<< toZGNet
   , className =? "Blender:Render"     -?> doFloat
@@ -1161,9 +1154,7 @@ l_resetMouse = do
   windowPropToDest =
     [ (ClassName "URxvt", LowerLeft)
     , (ClassName "Emacs", LowerLeft)
-    , (ClassName "GoogleEmacs", LowerLeft)
     , (ClassName "qutebrowser", UpperLeft)
-    , (ClassName "Google-chrome", UpperLeft)
     , (ClassName "Chromium-browser", UpperLeft)
     , (ClassName "Navigator", UpperLeft)
     ]
