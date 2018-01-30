@@ -57,7 +57,10 @@
   (evil-define-key 'normal notmuch-search-mode-map (kbd "RET") 'notmuch-search-show-thread)
   (evil-define-key 'normal notmuch-tree-mode-map   (kbd "RET") 'l/open-message)
 
-  (add-hook 'focus-in-hook 'notmuch-refresh-this-buffer)
+  ; Refresh notmuch-hello buffer upon regaining focus. We only do it in
+  ; notmuch-hello-mode, because in notmuch-tree-mode, calling this hook results
+  ; in reordering the search results (perhaps an upstream bug).
+  (add-hook 'focus-in-hook (lambda () (interactive) (when (string= major-mode "notmuch-hello-mode") (notmuch-refresh-this-buffer))))
 
   ; Change how the notmuch-hello page looks. Inspired by
   ; http://www.holgerschurig.de/en/emacs-notmuch-hello/.
