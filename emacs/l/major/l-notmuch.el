@@ -23,12 +23,16 @@
     '(
       notmuch-show-mode-map
       notmuch-tree-mode-map)
-    '(
+    `(
       (:key "a" :func (lambda () (interactive) (l/toggle-tag-list '("-inbox" "+archived"))))
       (:key "d" :func (lambda () (interactive) (l/toggle-tag-list '("+trash"))))
       (:key "f" :func (lambda () (interactive) (l/toggle-tag-list '("+flagged"))))
       (:key "u" :func (lambda () (interactive) (l/toggle-tag-list '("+unread"))))
       (:key "s" :func (lambda () (interactive) (l/toggle-tag-list '("+spam"))))
+      (:key ,(kbd "<down>") :func (lambda () (interactive) (l/show-message t)))
+      (:key ,(kbd "<up>") :func (lambda () (interactive) (l/show-message nil)))
+      (:key ,(kbd "S-<down>") :func (lambda () (interactive) (l/show-thread t)))
+      (:key ,(kbd "S-<up>") :func (lambda () (interactive) (l/show-thread nil)))
     ))
 
   (l/bind-keys
@@ -59,13 +63,8 @@
   (evil-define-key 'normal notmuch-show-mode-map "r" 'notmuch-show-reply)
   (evil-define-key 'normal notmuch-show-mode-map "R" 'notmuch-show-reply-sender)
 
-  (evil-define-key 'normal notmuch-tree-mode-map (kbd "<down>") 'notmuch-tree-next-message)
-  (evil-define-key 'normal notmuch-tree-mode-map (kbd "<up>") 'notmuch-tree-prev-message)
-  (evil-define-key 'normal notmuch-tree-mode-map (kbd "S-<down>") (lambda () (interactive) (notmuch-tree-next-thread) (notmuch-tree-show-message-in)))
-  (evil-define-key 'normal notmuch-tree-mode-map (kbd "S-<up>") (lambda () (interactive) (notmuch-tree-prev-thread) (notmuch-tree-show-message-in)))
-
   (evil-define-key 'normal notmuch-search-mode-map (kbd "RET") 'notmuch-search-show-thread)
-  (evil-define-key 'normal notmuch-tree-mode-map   (kbd "RET") 'notmuch-tree-show-message)
+  (evil-define-key 'normal notmuch-tree-mode-map   (kbd "RET") 'l/open-message)
 
   ; Change how the notmuch-hello page looks. Inspired by
   ; http://www.holgerschurig.de/en/emacs-notmuch-hello/.
@@ -285,6 +284,53 @@ across any list of tags (and is not tied to `notmuch-archive-tags')."
       (tag-list-negated (notmuch-tag-change-list tag-list-orig t))
       )
     (funcall f (if (l/is-tag-member tag-list-orig) tag-list-negated tag-list))))
+
+(defun l/open-message ()
+  "Open the message under the cursor. Unlike vanilla Notmuch, where RET just
+shows the message buffer in a separate window but retains focus in the
+notmuch-tree buffer, we switch focus with `other-window'. This way, when we move
+up/down with j/k in Normal state, we can scroll through the message buffer. This
+behavior mimics the bindings in tig, where pressing RET shows the commit message
+and switches focus to that message buffer).
+
+The related functions `l/show-message' and `l/show-thread', also make use of
+`other-window'. The use of `other-window' will surely be buggy if we have more
+than one window from a notmuch-tree-mode buffer. For now, we are too lazy to fix
+this issue."
+  (interactive)
+  (notmuch-tree-show-message-in)
+  (other-window 1))
+
+(defun l/show-message (next)
+  "Call appropriate function to see the next/prev message, depending on which
+mode is active."
+  (interactive)
+  (let
+    ((f
+        (if next 'notmuch-tree-next-message 'notmuch-tree-prev-message)))
+    (if (string= major-mode "notmuch-tree-mode")
+      (funcall f)
+      (progn
+        (other-window 1)
+        (funcall f)
+        (other-window 1)))))
+
+(defun l/show-thread (next)
+  "Call appropriate function to see the next/prev thread, depending on which
+mode is active."
+  (interactive)
+  (let
+    ((f
+        (if next 'notmuch-tree-next-thread 'notmuch-tree-prev-thread)))
+    (if (string= major-mode "notmuch-tree-mode")
+      (progn
+        (funcall f)
+        (notmuch-tree-show-message-in))
+      (progn
+        (other-window 1)
+        (funcall f)
+        (notmuch-tree-show-message-in)
+        (other-window 1)))))
 
 (defun l/message-signature-setup ()
   "Add signature."
