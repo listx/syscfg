@@ -57,6 +57,8 @@
   (evil-define-key 'normal notmuch-search-mode-map (kbd "RET") 'notmuch-search-show-thread)
   (evil-define-key 'normal notmuch-tree-mode-map   (kbd "RET") 'l/open-message)
 
+  (add-hook 'focus-in-hook 'notmuch-refresh-this-buffer)
+
   ; Change how the notmuch-hello page looks. Inspired by
   ; http://www.holgerschurig.de/en/emacs-notmuch-hello/.
   (setq notmuch-saved-searches
