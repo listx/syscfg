@@ -13,8 +13,6 @@
     "H" 'evil-next-buffer
     "L" 'evil-prev-buffer
     "e" 'notmuch-jump-search
-    "q" 'notmuch-bury-or-kill-this-buffer
-    "r" 'notmuch-poll-and-refresh-this-buffer
     "/" 'notmuch-search)
 
   ; Use consistent keybindings across multiple notmuch modes.
@@ -38,20 +36,13 @@
   (l/bind-keys
     'normal
     '(
+      notmuch-hello-mode-map
       notmuch-show-mode-map
       notmuch-tree-mode-map
       notmuch-search-mode-map)
     '(
       (:key "q" :func notmuch-bury-or-kill-this-buffer)
-    ))
-
-  (l/bind-keys
-   'normal
-   '(
-     notmuch-tree-mode-map
-     notmuch-search-mode-map)
-   '(
-      (:key "r" :func notmuch-refresh-this-buffer)
+      (:key "=" :func notmuch-refresh-this-buffer)
     ))
 
   (evil-define-key 'normal notmuch-tree-mode-map "A" (lambda () (interactive) (l/toggle-tag-list '("-inbox" "+archived") t)))
