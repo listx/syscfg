@@ -59,7 +59,11 @@
 
   ; Refresh notmuch-hello buffer upon regaining focus. We only do it in
   ; notmuch-hello-mode, because in notmuch-tree-mode, calling this hook results
-  ; in reordering the search results (perhaps an upstream bug).
+  ; in reordering the search results (perhaps an upstream bug). Note that
+  ; visiting the notmuch-hello-mode buffer (e.g., from exiting
+  ; notmuch-tree-mode) already calls notmuch-refresh-this-buffer; the added
+  ; benefit here is that we call this function when re-visiting an out-of-focus
+  ; Emacs frame that is already showing notmuch-hello-mode.
   (add-hook 'focus-in-hook (lambda () (interactive) (when (string= major-mode "notmuch-hello-mode") (notmuch-refresh-this-buffer))))
 
   ; Change how the notmuch-hello page looks. Inspired by
