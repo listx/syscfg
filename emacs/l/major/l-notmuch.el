@@ -50,6 +50,9 @@
   (evil-define-key 'normal notmuch-tree-mode-map "F" (lambda () (interactive) (l/toggle-tag-list '("+flagged") t)))
   (evil-define-key 'normal notmuch-tree-mode-map "U" (lambda () (interactive) (l/toggle-tag-list '("+unread") t)))
 
+  (evil-define-key 'normal notmuch-tree-mode-map "J" 'notmuch-tree-next-thread)
+  (evil-define-key 'normal notmuch-tree-mode-map "K" 'notmuch-tree-prev-thread)
+
   (evil-define-key 'normal notmuch-show-mode-map "o" 'hydra-notmuch-show/body)
   (evil-define-key 'normal notmuch-show-mode-map "r" 'notmuch-show-reply)
   (evil-define-key 'normal notmuch-show-mode-map "R" 'notmuch-show-reply-sender)
