@@ -16,6 +16,14 @@
 # The last category (trailing blank lines of a file) is the only category
 # treated aggressively. Adding a trailing blank line to the staging area
 # triggers the deletion of *all* such blank lines in the file.
+#
+# NOTE: This script contains a bug where if there is a leading semicolon
+# somewhere, that gets piped somewhere erroneously to either sed or perl. It
+# was observed a long time ago, and it is unknown exactly what the buggy
+# behavior was. This script should be rewritten in Python or some other
+# language, with actual tests to test each case. In the alternative, we could
+# make it POSIX-compliant and use shell-based testing (sharness) to do actual
+# e2e tests with fake commits.
 
 # We define "newline" as the traditional UNIX line feed character (0x0a).
 
