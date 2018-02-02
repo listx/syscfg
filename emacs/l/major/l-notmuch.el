@@ -29,8 +29,8 @@
       (:key "s" :func (lambda () (interactive) (l/toggle-tag-list '("+spam"))))
       (:key ,(kbd "<down>") :func (lambda () (interactive) (l/show-message t)))
       (:key ,(kbd "<up>") :func (lambda () (interactive) (l/show-message nil)))
-      (:key ,(kbd "S-<down>") :func (lambda () (interactive) (l/show-thread t)))
-      (:key ,(kbd "S-<up>") :func (lambda () (interactive) (l/show-thread nil)))
+      (:key "J" :func (lambda () (interactive) (l/show-thread t)))
+      (:key "K" :func (lambda () (interactive) (l/show-thread nil)))
     ))
 
   (l/bind-keys
@@ -49,9 +49,6 @@
   (evil-define-key 'normal notmuch-tree-mode-map "D" (lambda () (interactive) (l/toggle-tag-list '("+trash") t)))
   (evil-define-key 'normal notmuch-tree-mode-map "F" (lambda () (interactive) (l/toggle-tag-list '("+flagged") t)))
   (evil-define-key 'normal notmuch-tree-mode-map "U" (lambda () (interactive) (l/toggle-tag-list '("+unread") t)))
-
-  (evil-define-key 'normal notmuch-tree-mode-map "J" 'notmuch-tree-next-thread)
-  (evil-define-key 'normal notmuch-tree-mode-map "K" 'notmuch-tree-prev-thread)
 
   (evil-define-key 'normal notmuch-show-mode-map "o" 'hydra-notmuch-show/body)
   (evil-define-key 'normal notmuch-show-mode-map "r" 'notmuch-show-reply)
