@@ -41,17 +41,17 @@ gd()
 			msg_diff_c+="\n$tag"
 		fi
 
-        if [[ -n "$git_diff" ]] && [[ -n "$git_diff_c" ]]; then
-            # If we have two buffers to show, force less to pause before
-            # showing the next one. We do this by unsetting the -F flag set in
-            # ~/.lesskey.
-            printf $msg_diff | less -+F
-            printf $msg_diff_c | less
-        elif [[ -n "$git_diff" ]]; then
-            printf $msg_diff | less
-        elif [[ -n "$git_diff_c" ]]; then
-            printf $msg_diff_c | less
-        fi
+		if [[ -n "$git_diff" ]] && [[ -n "$git_diff_c" ]]; then
+			# If we have two buffers to show, force less to pause before
+			# showing the next one. We do this by unsetting the -F flag set in
+			# ~/.lesskey.
+			printf $msg_diff | less -+F
+			printf $msg_diff_c | less
+		elif [[ -n "$git_diff" ]]; then
+			printf $msg_diff | less
+		elif [[ -n "$git_diff_c" ]]; then
+			printf $msg_diff_c | less
+		fi
 
 		gst
 	fi

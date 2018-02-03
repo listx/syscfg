@@ -5,18 +5,18 @@
 export TERM_COLOR_SCHEME_CURRENT='bw'
 
 case $HOST in
-    k1)
-        geom="100x50"
-        fonts="xft:Terminus:pixelsize=14,xft:IPAGothic,xft:Baekmuk Gulim"
-    ;;
-    ocean)
-        geom="80x20"
-        fonts="xft:dejavu sans mono:pixelsize=36,xft:IPAGothic,xft:Baekmuk Gulim"
-    ;;
-    *)
-        geom="100x70"
-        fonts="xft:Terminus:pixelsize=14,xft:IPAGothic,xft:Baekmuk Gulim"
-    ;;
+	k1)
+		geom="100x50"
+		fonts="xft:Terminus:pixelsize=14,xft:IPAGothic,xft:Baekmuk Gulim"
+	;;
+	ocean)
+		geom="80x20"
+		fonts="xft:dejavu sans mono:pixelsize=36,xft:IPAGothic,xft:Baekmuk Gulim"
+	;;
+	*)
+		geom="100x70"
+		fonts="xft:Terminus:pixelsize=14,xft:IPAGothic,xft:Baekmuk Gulim"
+	;;
 esac
 
 c_cursor="#202020"    # cursor color

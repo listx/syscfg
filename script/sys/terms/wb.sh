@@ -6,24 +6,24 @@ export TERM_COLOR_SCHEME_CURRENT='wb'
 
 case $(uname) in
 Linux)
-    case $HOST in
-    k1)
-        geom="100x50"
-        fonts="xft:Terminus:pixelsize=14,xft:IPAGothic,xft:Baekmuk Gulim"
-    ;;
-    ocean)
-        geom="80x20"
-        fonts="xft:dejavu sans mono:pixelsize=36,xft:IPAGothic,xft:Baekmuk Gulim"
-    ;;
-    *)
-        geom="100x70"
-        fonts="xft:Terminus:pixelsize=14,xft:IPAGothic,xft:Baekmuk Gulim"
-    ;;
-    esac
+	case $HOST in
+	k1)
+		geom="100x50"
+		fonts="xft:Terminus:pixelsize=14,xft:IPAGothic,xft:Baekmuk Gulim"
+	;;
+	ocean)
+		geom="80x20"
+		fonts="xft:dejavu sans mono:pixelsize=36,xft:IPAGothic,xft:Baekmuk Gulim"
+	;;
+	*)
+		geom="100x70"
+		fonts="xft:Terminus:pixelsize=14,xft:IPAGothic,xft:Baekmuk Gulim"
+	;;
+	esac
 ;;
 Darwin)
-    geom="80x55"
-    fonts="xft:Input Mono Condensed:pixelsize=16,xft:IPAGothic,xft:Baekmuk Gulim"
+	geom="80x55"
+	fonts="xft:Input Mono Condensed:pixelsize=16,xft:IPAGothic,xft:Baekmuk Gulim"
 ;;
 esac
 

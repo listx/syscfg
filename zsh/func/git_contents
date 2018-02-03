@@ -2,10 +2,10 @@
 
 git_contents()
 {
-    # git-status: Is this a git repo?
-    # git-log: If so, does it actually have any commits? (I.e., it may be the case
-    # that this is a fresh repo without any commits yet, but where there are
-    # still staged files such that git-ls-files is non-empty.
-    git status &> /dev/null && # (1)
-        git log --max-count 1 &> /dev/null # (2)
+	# git-status: Is this a git repo?
+	# git-log: If so, does it actually have any commits? (I.e., it may be the case
+	# that this is a fresh repo without any commits yet, but where there are
+	# still staged files such that git-ls-files is non-empty.
+	git status &> /dev/null && # (1)
+		git log --max-count 1 &> /dev/null # (2)
 }

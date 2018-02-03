@@ -10,8 +10,8 @@ program_name=$1
 version_number=$2
 
 if [[ -z $program_name || -z $version_number ]]; then
-    echo "usage: gtag.sh <PROGRAM_NAME> <VERSION_NUMBER>"
-    exit 1
+	echo "usage: gtag.sh <PROGRAM_NAME> <VERSION_NUMBER>"
+	exit 1
 fi
 
 git commit -am "$program_name $version_number"
