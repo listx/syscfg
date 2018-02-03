@@ -11,68 +11,67 @@ c6="\x1b[1;31m" # bright red
 ce="\x1b[0m"
 
 msg () {
-    case $1 in
-        "help")
-echo "\
+	case $1 in
+		"help")
+			cat <<EOF
 Usage: copy_plist_files FILE FOLDER
 
 EXAMPLES:
-
-  copy_plist_files playlist ~/music
-    Moves all files in playlist into ~/music.
-"
-            exit 0
-            ;;
-        "version")
-            echo "copy_plist_files version 1.0"
-            exit 0
-            ;;
-        *)
-            echo "copy_plist_files: $1"
-            exit 1
-            ;;
-    esac
+	Moves all files in playlist into ~/music.
+		$ copy_plist_files playlist ~/music
+EOF
+			exit 0
+		;;
+		"version")
+			echo "copy_plist_files version 1.0"
+			exit 0
+		;;
+		*)
+			echo "copy_plist_files: $1"
+			exit 1
+		;;
+	esac
 }
 
 # check for help and version arguments
 while getopts "hv" opt; do
-    case "$opt" in
-    h)  msg "help" ;;
-    v)  msg "version" ;;
-    *)  ;;
-    esac
+	case "$opt" in
+	h)  msg "help" ;;
+	v)  msg "version" ;;
+	*)  ;;
+	esac
 done
 
 # re-parse from beginning
 OPTIND=1
 while getopts "hv" opt; do
-    case "$opt" in
-    h)  msg "help" ;;
-    v)  msg "version" ;;
-    *)  exit 1
-        ;;
-    esac
+	case "$opt" in
+	h)  msg "help" ;;
+	v)  msg "version" ;;
+	*)  exit 1
+		;;
+	esac
 done
 
 plist=$1
 folder=$2
 
 if [[ ! -e "$plist" ]]; then
-    echo "File \`$plist' does not exist."
-    exit 1
+	echo "File \`$plist' does not exist."
+	exit 1
 elif [[ ! -d "$folder" ]]; then
-    echo "Folder \`$folder' does not exist."
-    exit 1
+	echo "Folder \`$folder' does not exist."
+	exit 1
 else
-    files=()
-    while read l
-    do
-        if [[ $l[1] != '#' ]]; then
-            files+=($l)
-        fi
-    done < $plist
+	files=()
+	while read l
+	do
+		if [[ $l[1] != '#' ]]; then
+			files+=($l)
+		fi
+	done < $plist
 
-    rsync -ahP --no-whole-file --inplace $files $folder
+	rsync -ahP --no-whole-file --inplace $files $folder
 fi
 
 # vim:syntax=zsh

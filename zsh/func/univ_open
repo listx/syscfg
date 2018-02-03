@@ -79,7 +79,7 @@ univ_open() {
 				# http://superuser.com/questions/358037/emacsclient-create-a-frame-if-a-frame-does-not-exist
 				emacsclient -n --eval "(if (> (length (frame-list)) 1) 't)" | grep t >/dev/null
 				if (( $? == 1 )); then
-                    emacsclient -n -a "" -c --eval "(find-file \"$@\")"
+					emacsclient -n -a "" -c --eval "(find-file \"$@\")"
 				else
 					emacsclient -n -a "" --eval "(find-file \"$@\")"
 				fi

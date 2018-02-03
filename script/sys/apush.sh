@@ -10,14 +10,14 @@
 argc=0
 OPTIND=1
 while getopts ":p:" opt; do
-    case "$opt" in
-    p)
-        dest_suffix="$OPTARG"
-        ((argc+=2))
-        ;;
-    *)  exit 1
-        ;;
-    esac
+	case "$opt" in
+	p)
+		dest_suffix="$OPTARG"
+		((argc+=2))
+		;;
+	*)  exit 1
+		;;
+	esac
 done
 
 # Set default location.

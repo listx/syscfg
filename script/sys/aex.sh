@@ -35,57 +35,57 @@ ce="\x1b[0m"
 
 # Error messages
 aex_msg() {
-    case $1 in
-        0)
-            echo "aex: operation aborted (no change)"
-            exit 1
-            ;;
-        1)
-            echo "aex: directory \`$2' was created by someone since this script was initially called"
-            echo "aex: operation aborted"
-            exit 1
-            ;;
-        2)
-            echo "aex: extraction of file \`$c1$2$ce' failed (file format/extension mismatch, or damaged archive)"
-            exit 1
-            ;;
-        8)
-            echo "aex: extracting file \`$c1$2$ce' into current directory with \`"$c3$3$ce"'...\n"
-            ;;
-        9)
-            echo "aex: extracting file \`$c1$2$ce' into \`$c2$3$ce' with \`"$c3$4$ce"'...\n"
-            ;;
-        99)
-            echo "aex: unexpected fatal error while working with file \`$c1$2$ce'"
-            echo "aex: operation aborted"
-            exit 1
-            ;;
-        *) # this will only happen if we have a typo in our code when calling aex_msg()!
-            echo "aex: unrecognized error"
-            ;;
-    esac
+	case $1 in
+		0)
+			echo "aex: operation aborted (no change)"
+			exit 1
+			;;
+		1)
+			echo "aex: directory \`$2' was created by someone since this script was initially called"
+			echo "aex: operation aborted"
+			exit 1
+			;;
+		2)
+			echo "aex: extraction of file \`$c1$2$ce' failed (file format/extension mismatch, or damaged archive)"
+			exit 1
+			;;
+		8)
+			echo "aex: extracting file \`$c1$2$ce' into current directory with \`"$c3$3$ce"'...\n"
+			;;
+		9)
+			echo "aex: extracting file \`$c1$2$ce' into \`$c2$3$ce' with \`"$c3$4$ce"'...\n"
+			;;
+		99)
+			echo "aex: unexpected fatal error while working with file \`$c1$2$ce'"
+			echo "aex: operation aborted"
+			exit 1
+			;;
+		*) # this will only happen if we have a typo in our code when calling aex_msg()!
+			echo "aex: unrecognized error"
+			;;
+	esac
 }
 
 # A function to get the basename of an archive
 aex_fb() {
-    fb=""
-    # get basename of archive file
-    case $1 in
-        *.tar.bz2)
-            fb=$(basename $1 .tar.bz2)
-            ;;
-        *.tar.gz)
-            fb=$(basename $1 .tar.gz)
-            ;;
-        *.tar.xz)
-            fb=$(basename $1 .tar.xz)
-            ;;
-        *)
-            # use zsh's built-in ':r' extension-remover
-            fb=$1:r
-            ;;
-    esac
-    echo $fb
+	fb=""
+	# get basename of archive file
+	case $1 in
+		*.tar.bz2)
+			fb=$(basename $1 .tar.bz2)
+			;;
+		*.tar.gz)
+			fb=$(basename $1 .tar.gz)
+			;;
+		*.tar.xz)
+			fb=$(basename $1 .tar.xz)
+			;;
+		*)
+			# use zsh's built-in ':r' extension-remover
+			fb=$1:r
+			;;
+	esac
+	echo $fb
 }
 
 #----------------#
@@ -102,27 +102,27 @@ aex_fb() {
 fb=""
 # various error checking before we do anything
 for f in $@; do
-    if [[ ! -f $f ]]; then
-        echo "aex: invalid file \`$f'"
-        aex_msg 0
-    fi
-    # ensure that we recognize all arguments' archive types
-    case $f in
-        *.tar|*.tar.bz2|*.tbz2|*.bz2|*.tar.gz|*.tgz|*.gz|*.tar.xz|*.txz|*.xz|*.zip|*.rar|*.7z)
-            # ensure that the given file(s) actually exist (as a regular file, not a
-            # special file or directory)
-            # ensure that a directory with the same basename does not already exist
-            fb=$(aex_fb $f) # can safely do this because $f is a valid and recognized file type
-            if [[ -d $fb ]]; then
-                echo "aex: destination directory \`$fb' already exists"
-                aex_msg 0
-            fi
-            ;;
-        *)
-            echo "aex: $f: \`$f:e' is not a recognized archive file format"
-            aex_msg 0
-            ;;
-    esac
+	if [[ ! -f $f ]]; then
+		echo "aex: invalid file \`$f'"
+		aex_msg 0
+	fi
+	# ensure that we recognize all arguments' archive types
+	case $f in
+		*.tar|*.tar.bz2|*.tbz2|*.bz2|*.tar.gz|*.tgz|*.gz|*.tar.xz|*.txz|*.xz|*.zip|*.rar|*.7z)
+			# ensure that the given file(s) actually exist (as a regular file, not a
+			# special file or directory)
+			# ensure that a directory with the same basename does not already exist
+			fb=$(aex_fb $f) # can safely do this because $f is a valid and recognized file type
+			if [[ -d $fb ]]; then
+				echo "aex: destination directory \`$fb' already exists"
+				aex_msg 0
+			fi
+			;;
+		*)
+			echo "aex: $f: \`$f:e' is not a recognized archive file format"
+			aex_msg 0
+			;;
+	esac
 done
 
 #-------------------#
@@ -133,171 +133,171 @@ fbs=() # array to be filled by basename directory names ($fb below)
 dir0=$PWD
 current=1
 for f in $@; do
-    fb=$(aex_fb $f)
-    fbs+=($fb) # append $fb as an element into the $fbs array
-    echo "\naex: ($current/$#): processing \`$c1$f$ce'..."
+	fb=$(aex_fb $f)
+	fbs+=($fb) # append $fb as an element into the $fbs array
+	echo "\naex: ($current/$#): processing \`$c1$f$ce'..."
 
-    # For the tar archives (since they are easy to work with uniformly), first
-    # into the archive, and see if (1) the archive holds a SINGLE DIRECTORY
-    # that contains all files and (2) this directory has the SAME NAME as the
-    # archive's basename ($fb) -- if so, we can skip the creation of a
-    # directory named ($fb) (thus avoiding the waste of detecting 1 single
-    # "nested directory") for most archive types
-    dir_create=true
-    com_info=""
-    case $f in
-        *.tar|*.tar.gz|*.tgz|*.tar.bz|*.tar.bz2|*.tbz|*.tbz2|*.tar.xz|*.txz)
-            com_info="tar tf"
-            ;;
-        *.rar)
-            com_info="unrar vb"
-            ;;
-        *.zip)
-            com_info="zipinfo -1"
-            ;;
-        *.7z)
-            com_info="" # 7z does not support bare listing of archived contents yet (June 2010)
-            ;;
-    esac
-    # find the root dir in this archive -- sometimes the root dir is displayed
-    # on its own line, but sometimes not (even though it exists!) so we have to
-    # manually check ourselves
-    if [[ -n $com_info ]]; then
-        top=$(eval $com_info ${(q)f} | sort | head -n 1 | sed 's/\/.*//')
-        if [[ $(eval $com_info ${(q)f} | sed "s/^$top$/\//" | sed "s/^$top\//\//g" | sed 's/^\/.*//g' | sed '/^$/d' | wc -l) -eq 0 && $top == $fb ]]; then
-            dir_create=false
-            echo "aex: root directory in archive matches suggested destination directory name"
-            echo "aex: skipping directory creation"
-        fi
-    fi
+	# For the tar archives (since they are easy to work with uniformly), first
+	# into the archive, and see if (1) the archive holds a SINGLE DIRECTORY
+	# that contains all files and (2) this directory has the SAME NAME as the
+	# archive's basename ($fb) -- if so, we can skip the creation of a
+	# directory named ($fb) (thus avoiding the waste of detecting 1 single
+	# "nested directory") for most archive types
+	dir_create=true
+	com_info=""
+	case $f in
+		*.tar|*.tar.gz|*.tgz|*.tar.bz|*.tar.bz2|*.tbz|*.tbz2|*.tar.xz|*.txz)
+			com_info="tar tf"
+			;;
+		*.rar)
+			com_info="unrar vb"
+			;;
+		*.zip)
+			com_info="zipinfo -1"
+			;;
+		*.7z)
+			com_info="" # 7z does not support bare listing of archived contents yet (June 2010)
+			;;
+	esac
+	# find the root dir in this archive -- sometimes the root dir is displayed
+	# on its own line, but sometimes not (even though it exists!) so we have to
+	# manually check ourselves
+	if [[ -n $com_info ]]; then
+		top=$(eval $com_info ${(q)f} | sort | head -n 1 | sed 's/\/.*//')
+		if [[ $(eval $com_info ${(q)f} | sed "s/^$top$/\//" | sed "s/^$top\//\//g" | sed 's/^\/.*//g' | sed '/^$/d' | wc -l) -eq 0 && $top == $fb ]]; then
+			dir_create=false
+			echo "aex: root directory in archive matches suggested destination directory name"
+			echo "aex: skipping directory creation"
+		fi
+	fi
 
-    if $dir_create; then
-        echo -n "aex: creating destination directory \`$c2$fb$ce'... "
-        # raise error and exit if between the starting of this script, and
-        # until it finishes, someone manually created a directory with the same
-        # name that we are about to extract into (thus making the "mkdir $fb"
-        # command fail)
-        mkdir $fb 1>&- 2>&- || aex_msg 1 $fb
-        # (FYI: the "1>&- 2>&-" syntax manually suppresses stdout and stderr, without using /dev/null)
-        echo "done"
-    fi
+	if $dir_create; then
+		echo -n "aex: creating destination directory \`$c2$fb$ce'... "
+		# raise error and exit if between the starting of this script, and
+		# until it finishes, someone manually created a directory with the same
+		# name that we are about to extract into (thus making the "mkdir $fb"
+		# command fail)
+		mkdir $fb 1>&- 2>&- || aex_msg 1 $fb
+		# (FYI: the "1>&- 2>&-" syntax manually suppresses stdout and stderr, without using /dev/null)
+		echo "done"
+	fi
 
-    case $f in
-        *.tar|*.tar.gz|*.tgz|*.tar.bz|*.tar.bz2|*.tbz|*.tbz2|*.tar.xz|*.txz)
-            # two -v's for more verbosity than just a single -v
-            # extract the file with given info, but if the extracting program fails, then inform user of this (in case the program's own error messages aren't clear enough)
-            # the '2>&1' makes stderr print to stdout (so that sed can catch it)
-            if $dir_create; then
-                aex_msg 9 $f $fb "tar xvf $f -C $fb"
-                tar xvf $f -C $fb 2>&1 | sed "s/^/  $c1>$ce /" || aex_msg 2 $f
-            else
-                aex_msg 8 $f "tar xvf $f"
-                tar xvf $f 2>&1 | sed "s/^/  $c1>$ce /" || aex_msg 2 $f
-            fi
-            ;;
-        *.gz)
-            cd $fb
-            aex_msg 9 $f $fb "gzip -dv ../$f"
-            gzip -dv ../$f 2>&1 | sed "s/^/  $c1>$ce /" || aex_msg 2 $f
-            cd ..
-            ;;
-        *.bz|*.bz2)
-            cd $fb
-            aex_msg 9 $f $fb "bzip2 -dv ../$f"
-            bzip2 -dv ../$f 2>&1 | sed "s/^/  $c1>$ce /" || aex_msg 2 $f
-            cd ..
-            ;;
-        *.xz)
-            cd $fb
-            aex_msg 9 $f $fb "xz -dv ../$f"
-            xz -dv ../$f 2>&1 | sed "s/^/  $c1>$ce /" || aex_msg 2 $f
-            cd ..
-            ;;
-        *.zip)
-            if $dir_create; then
-                aex_msg 9 $f $fb "unzip $f -d $fb"
-                unzip $f -d $fb 2>&1 | sed "s/^/  $c1>$ce /" || aex_msg 2 $f
-            else
-                aex_msg 8 $f "unzip $f"
-                unzip $f 2>&1 | sed "s/^/  $c1>$ce /" || aex_msg 2 $f
-            fi
-            ;;
-        *.rar)
-            if $dir_create; then
-                aex_msg 9 $f $fb "urar x $f $fb"
-                unrar x $f $fb 2>&1 | sed "s/^/  $c1>$ce /" || aex_msg 2 $f
-            else
-                aex_msg 8 $f "unrar x $f"
-                unrar x $f 2>&1 | sed "s/^/  $c1>$ce /" || aex_msg 2 $f
-            fi
-            ;;
-        *.7z)
-            aex_msg 9 $f $fb "7z x -o$fb $f"
-            7z x -o$fb $f 2>&1 | sed "s/^/  $c1>$ce /" || aex_msg 2 $f
-            ;;
-        *)
-            # NOTE: this should never happen (I've tried to make message 99 happen, by starting the extraction on a file, then renaming it before the extraction program is called, but still it does not reach this area!)
-            aex_msg 99 $f # should never occur -- it's just in here for the sake of completeness
-            ;;
-    esac
+	case $f in
+		*.tar|*.tar.gz|*.tgz|*.tar.bz|*.tar.bz2|*.tbz|*.tbz2|*.tar.xz|*.txz)
+			# two -v's for more verbosity than just a single -v
+			# extract the file with given info, but if the extracting program fails, then inform user of this (in case the program's own error messages aren't clear enough)
+			# the '2>&1' makes stderr print to stdout (so that sed can catch it)
+			if $dir_create; then
+				aex_msg 9 $f $fb "tar xvf $f -C $fb"
+				tar xvf $f -C $fb 2>&1 | sed "s/^/  $c1>$ce /" || aex_msg 2 $f
+			else
+				aex_msg 8 $f "tar xvf $f"
+				tar xvf $f 2>&1 | sed "s/^/  $c1>$ce /" || aex_msg 2 $f
+			fi
+			;;
+		*.gz)
+			cd $fb
+			aex_msg 9 $f $fb "gzip -dv ../$f"
+			gzip -dv ../$f 2>&1 | sed "s/^/  $c1>$ce /" || aex_msg 2 $f
+			cd ..
+			;;
+		*.bz|*.bz2)
+			cd $fb
+			aex_msg 9 $f $fb "bzip2 -dv ../$f"
+			bzip2 -dv ../$f 2>&1 | sed "s/^/  $c1>$ce /" || aex_msg 2 $f
+			cd ..
+			;;
+		*.xz)
+			cd $fb
+			aex_msg 9 $f $fb "xz -dv ../$f"
+			xz -dv ../$f 2>&1 | sed "s/^/  $c1>$ce /" || aex_msg 2 $f
+			cd ..
+			;;
+		*.zip)
+			if $dir_create; then
+				aex_msg 9 $f $fb "unzip $f -d $fb"
+				unzip $f -d $fb 2>&1 | sed "s/^/  $c1>$ce /" || aex_msg 2 $f
+			else
+				aex_msg 8 $f "unzip $f"
+				unzip $f 2>&1 | sed "s/^/  $c1>$ce /" || aex_msg 2 $f
+			fi
+			;;
+		*.rar)
+			if $dir_create; then
+				aex_msg 9 $f $fb "urar x $f $fb"
+				unrar x $f $fb 2>&1 | sed "s/^/  $c1>$ce /" || aex_msg 2 $f
+			else
+				aex_msg 8 $f "unrar x $f"
+				unrar x $f 2>&1 | sed "s/^/  $c1>$ce /" || aex_msg 2 $f
+			fi
+			;;
+		*.7z)
+			aex_msg 9 $f $fb "7z x -o$fb $f"
+			7z x -o$fb $f 2>&1 | sed "s/^/  $c1>$ce /" || aex_msg 2 $f
+			;;
+		*)
+			# NOTE: this should never happen (I've tried to make message 99 happen, by starting the extraction on a file, then renaming it before the extraction program is called, but still it does not reach this area!)
+			aex_msg 99 $f # should never occur -- it's just in here for the sake of completeness
+			;;
+	esac
 
-    # remove nested directories (directories that only contain 1 child directory) in
-    # the extracted-to directory above (we call such directories "eggs")
-    cd $fb
-    dir1=$PWD # $dir1 is same as $fb, but is nicer b/c it is the full directory path
-    dir2=""
+	# remove nested directories (directories that only contain 1 child directory) in
+	# the extracted-to directory above (we call such directories "eggs")
+	cd $fb
+	dir1=$PWD # $dir1 is same as $fb, but is nicer b/c it is the full directory path
+	dir2=""
 
-    eggs=0
-    echo -n "\naex: nested directories detected inside \`$c2$fb$ce': "
-    if [[ $(ls -A1 | wc -l) -eq 1 && -d $(ls -A) ]]; then
-        echo -n "$c4$(ls -A)$ce "
-        cd "$(ls -A)"
-        let eggs=eggs+1
-        [[ eggs -eq 1 ]] && dir2=$PWD # name the very first egg "dir2"
-        while [[ $(ls -A1 | wc -l) -eq 1 && -d $(ls -A) ]]; do
-            echo -n $c2"->"$ce $c4$(ls -A)$ce" "
-            cd "$(ls -A)"
-            let eggs=eggs+1
-        done
-        echo
-    else
-        echo "none"
-    fi
+	eggs=0
+	echo -n "\naex: nested directories detected inside \`$c2$fb$ce': "
+	if [[ $(ls -A1 | wc -l) -eq 1 && -d $(ls -A) ]]; then
+		echo -n "$c4$(ls -A)$ce "
+		cd "$(ls -A)"
+		let eggs=eggs+1
+		[[ eggs -eq 1 ]] && dir2=$PWD # name the very first egg "dir2"
+		while [[ $(ls -A1 | wc -l) -eq 1 && -d $(ls -A) ]]; do
+			echo -n $c2"->"$ce $c4$(ls -A)$ce" "
+			cd "$(ls -A)"
+			let eggs=eggs+1
+		done
+		echo
+	else
+		echo "none"
+	fi
 
-    # if there were any eggs, move the children up to $fb's level
-    if [[ $eggs -gt 0 ]]; then
-        echo "aex: moving contents of non-nested directory \`$c4$(echo $PWD:t)$ce' to \`$c2$dir1:t$ce'\n"
-        # the *(D) simply means the same as '*', but will also match dotfiles ('D' does this)
-        mv -v *(D) $dir1 2>&1 | sed "s/^/  $c4>$ce /"
+	# if there were any eggs, move the children up to $fb's level
+	if [[ $eggs -gt 0 ]]; then
+		echo "aex: moving contents of non-nested directory \`$c4$(echo $PWD:t)$ce' to \`$c2$dir1:t$ce'\n"
+		# the *(D) simply means the same as '*', but will also match dotfiles ('D' does this)
+		mv -v *(D) $dir1 2>&1 | sed "s/^/  $c4>$ce /"
 
-        # move back to root of destination directory, to remove the lineage of eggs (everything
-        # below $dir2 contains a single lineage of nested directories -- so we remove them all with
-        # the 'find' command below)
-        cd $dir1
-        echo "\naex: removing nested empty directories\n"
-        find $dir2 -depth -type d -empty -exec rmdir -v {} \; 2>&1 | sed "s/^/  $c5>$ce /"
-    fi
+		# move back to root of destination directory, to remove the lineage of eggs (everything
+		# below $dir2 contains a single lineage of nested directories -- so we remove them all with
+		# the 'find' command below)
+		cd $dir1
+		echo "\naex: removing nested empty directories\n"
+		find $dir2 -depth -type d -empty -exec rmdir -v {} \; 2>&1 | sed "s/^/  $c5>$ce /"
+	fi
 
-    echo "\naex: ($current/$#): \`$c1$f$ce' processed\n"
-    # move back to our original working directory to process the next archive
-    cd $dir0
+	echo "\naex: ($current/$#): \`$c1$f$ce' processed\n"
+	# move back to our original working directory to process the next archive
+	cd $dir0
 
-    echo "$c6----------------------------------------$ce"
-    let current=current+1 # use "let" to tell shell that we're working with integers, not strings
+	echo "$c6----------------------------------------$ce"
+	let current=current+1 # use "let" to tell shell that we're working with integers, not strings
 done
 
 fs=""; ds=""
 if [[ $# -eq 1 ]]; then
-    fs="\`$c1$1$ce'"
-    ds="directory"
+	fs="\`$c1$1$ce'"
+	ds="directory"
 else
-    fs="all files $c1$@$ce"
-    ds="directories"
+	fs="all files $c1$@$ce"
+	ds="directories"
 fi
 echo "\naex: $fs extracted successfully"
 echo "aex: new extracted-to $ds:"
 for dir_new in $fbs; do
-    echo "  $c5$dir_new$ce"
+	echo "  $c5$dir_new$ce"
 done
 echo
 
