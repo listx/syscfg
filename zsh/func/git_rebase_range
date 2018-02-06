@@ -1,0 +1,134 @@
+#!/usr/bin/env zsh
+
+# Rebase COMMIT_RANGE of commits back into the history just after the given
+# REVISION_ANCHOR. This is like running `git rebase -i REVISION_ANCHOR` and moving
+# the desired COMMIT_RANGE of commits up to the top (oldest), so that they
+# directly follow REVISION_ANCHOR.
+#
+# This is function is designed for the case where you are on a branch
+# ("offshoot") but want to hack on commits for upstream "master". E.g., maybe
+# you have customizations on offshoot that only you care about, but which should
+# not themselves be upstreamed, ever. Normally you would have to:
+#
+#   git checkout master
+#   ...make new commits on master... (COMMIT_RANGE)
+#   git checkout offshoot
+#   git rebase master
+#
+# which seems quite elegant(!) but still requires you to checkout "master". You
+# could get fancy and use git-worktree to checkout a separate copy of "master"
+# so as to leave your existing worktree intact, but that requires checking out
+# an extra worktree (sure, it may be hardlinked to have minimal space usage
+# impact, but there's still mental overhead).
+#
+# Instead you can just work on top of "offshoot" (rebase as many times as you
+# want) and afterwards invoke git_rebase_range. This is much simpler,
+# and avoids checking out "master". If the repo is a DOTFILES repo where its
+# contents are "live" in the sense that other processes could be depending on
+# them, we really want to avoid disrupting the worktree.
+#
+# This script only works where there are no merge commits involved.
+
+git_rebase_range_usage()
+{
+	cat <<EOF
+usage: git_rebase_range REVISION_ANCHOR COMMIT_RANGE_START [COMMIT_RANGE_END]
+EOF
+}
+
+git_rebase_range_prompt_continue()
+{
+    local resp
+	while true; do
+		vared -p "Continue? " resp
+		case $resp in
+			[Yy]*) return 0 ;;
+			[Nn]*) return 1 ;;
+			*) echo "Please answer [y]es or [n]o" ;;
+		esac
+        resp=""
+	done
+}
+
+git_rebase_range()
+{
+	if ! git_contents; then
+		echo "Not a git repo; aborting."
+		return 1
+	fi
+
+	# If the tree is dirty, abort.
+	if [[ -n "$(git diff)" || -n "$(git diff --cached)" ]]; then
+		echo "Dirty tree; aborting."
+		return 1
+	fi
+
+	case $# in
+	2)
+		if [[ -z ${1:-} ]] ||
+			[[ -z ${2:-} ]]; then
+			git_rebase_range_usage
+			return 1
+		fi
+		typeset -r commit_range_start=$2
+		typeset -r commit_range_end=$2
+		;;
+	3)
+		if [[ -z ${1:-} ]] ||
+			[[ -z ${2:-} ]] ||
+			[[ -z ${3:-} ]]; then
+			git_rebase_range_usage
+			return 1
+		fi
+		typeset -r commit_range_start=$2
+		typeset -r commit_range_end=$3
+		;;
+	*)
+		git_rebase_range_usage
+		return 1
+		;;
+	esac
+
+	typeset -r revision_anchor=$1
+	typeset -r commit_range=$commit_range_start^..$commit_range_end
+
+	# Convert revision_anchor into its commit hash.
+	typeset -r commit_anchor=$(git rev-parse $revision_anchor)
+	if [[ -z $commit_anchor ]]; then
+		echo "Cannot find commit for REVISION_ANCHOR ${revision_anchor}."
+		return 1
+	fi
+
+    # Ensure we are only dealing with non-merge, non-branching commits. If we
+    # try to call `git_rebase_range' against the same $commit_anchor a second
+    # time, by that time $commit_anchor will have more than 1 child, so
+    # `git_check_linearity' will fail. Here allow the user to continue anyway
+    # at their option.
+	git_check_linearity $commit_anchor HEAD || git_rebase_range_prompt_continue || return 1
+
+	# Ensure ordering of commits (anchor first, then range).
+	git merge-base --is-ancestor $commit_anchor $commit_range_start || return 1
+	git merge-base --is-ancestor $commit_range_start $commit_range_end || return 1
+
+	# Convert commit range into a list of commits, from newest to oldest.
+	commits=($(git rev-list $commit_range))
+	if ! (( $#commits )); then
+		echo "Invalid commit range; aborting."
+		return 1
+	fi
+
+	# If commit_anchor is already the parent of the oldest commit in
+	# commit_range, NOP. In Zsh, the first index is 1, not 0.
+	oldest=${commits[-1]}
+	parent_of_oldest=$(git rev-parse $oldest^)
+	if [[ $parent_of_oldest == $commit_anchor ]]; then
+		echo "Parent of oldest commit in COMMIT_RANGE is the same as REVISION_ANCHOR; nothing to do."
+		return 0
+	fi
+
+	# `git_mv_range.py ... <rebase buffer file>' is called
+	GIT_SEQUENCE_EDITOR="git-mv-range.py $oldest ${commits[1]} " \
+		git rebase -i $commit_anchor
+}
+
+git_rebase_range $@

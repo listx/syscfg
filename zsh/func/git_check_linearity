@@ -1,0 +1,111 @@
+#!/usr/bin/env zsh
+
+# Check if given range of commits all have just 1 parent and at most 1 child (0
+# children if commit is at HEAD).
+
+git_check_linearity_usage()
+{
+	cat <<EOF
+usage: git_check_linearity COMMIT_RANGE_START [COMMIT_RANGE_END]
+EOF
+}
+
+git_check_linearity()
+{
+	if ! git_contents; then
+		echo "Not a git repo; aborting."
+		return 1
+	fi
+
+	case $# in
+		1)
+			if [[ -z ${1:-} ]]; then
+				git_check_linearity_usage
+				return 1
+			fi
+			typeset -r commit_range_start=$1
+			typeset -r commit_range_end=$1
+			;;
+		2)
+			if [[ -z ${1:-} ]] ||
+				[[ -z ${2:-} ]]; then
+				git_check_linearity_usage
+				return 1
+			fi
+			typeset -r commit_range_start=$1
+			typeset -r commit_range_end=$2
+			;;
+		*)
+			git_check_linearity_usage
+			return 1
+			;;
+	esac
+
+	typeset -r commit_range=$commit_range_start^..$commit_range_end
+
+	# Convert commit range into a list of commits, from newest to oldest.
+	typeset -r commits=($(git rev-list $commit_range))
+	if ! (( $#commits )); then
+		echo "Invalid commit range; aborting."
+		return 1
+	fi
+
+	# Check that all commits in COMMIT_RANGE have only 1 parent, and at most 1
+	# child (there will be no children if COMMIT_RANGE ends at a branch tip).
+	# Just check if each line exceeds 81 characters (excluding newline). There
+	# will be 81 characters if there is just 1 parent (current commit's 40-char
+	# hash, space character, and 40-char hash of parent). We do the same thing
+	# for checking the number of children.
+	git rev-list --parents $commit_range \
+		| while read -Ar hashes; do
+		if (( $#hashes > 2 )); then
+			echo "More than 1 parent detected for $hashes[1]:"
+			echo "$(git log --oneline --no-walk $hashes[1])"
+			for hash in ${hashes[@]:1}; do
+				echo "  $(git log --oneline --no-walk $hash)"
+			done
+			return 1
+		fi
+	done
+
+	git rev-list --children $commit_range \
+		| while read -Ar hashes; do
+		if (( $#hashes > 2 )); then
+			echo "More than 1 child detected for $hashes[1]:"
+			echo "$(git log --oneline --no-walk $hashes[1])"
+			for hash in ${hashes[@]:1}; do
+				echo "  $(git log --oneline --no-walk $hash)"
+			done
+			return 1
+		fi
+	done
+	# For children, we have to check the newest and oldest commit's children.
+	# This is because the newest commit in the commit range is not covered by
+	# `git rev-list --children $commit_range'. For the oldest commit, consider
+	# the following case:
+	#
+	#     B
+	#    /
+	#   A-C
+	#
+	# where A is the oldest and B and C are child commits. If we specify a range
+	# A^..B, then C is *not* shown by `git rev-list --children A^..B', because
+	# the "..B" acts as a short-circuit, preventing C from being shown. For
+	# these reasons, we have to use the trick with `--all' and `grep' below.
+	git rev-list --all --children \
+		| grep "^${commits[1]}\|^${commits[-1]}" \
+		| while read -Ar hashes; do
+		if (( $#hashes > 2 )); then
+			echo "More than 1 child detected for $hashes[1]:"
+			echo "$(git log --oneline --no-walk $hashes[1])"
+			for hash in ${hashes[@]:1}; do
+				echo "  $(git log --oneline --no-walk $hash)"
+			done
+			return 1
+		fi
+	done
+
+	return 0
+}
+
+git_check_linearity $@
