@@ -21,5 +21,6 @@ executable xmonad
     , unix >= 2.7.1.0
     , random >= 1.1
     , safe >= 0.3.15
+    , X11 >= 1.8
     , xmonad >= 0.11.1
     , xmonad-contrib >= 0.11.4

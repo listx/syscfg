@@ -7,6 +7,8 @@ import Control.Monad
   , foldM
   , when
   )
+import Data.Bits
+  ( (.&.) )
 import Data.List
   ( find
   , foldl'
@@ -25,6 +27,7 @@ import Data.Monoid
 import Data.Ord
   ( comparing
   )
+import Graphics.X11.Types
 import Safe
   ( headDef )
 import System.Posix.Unistd
@@ -832,7 +835,9 @@ l_keyBindings :: String
   -> Int
   -> XConfig Layout
   -> M.Map (KeyMask, KeySym) (X ())
-l_keyBindings hostname xineramaCount conf@XConfig {XMonad.modMask = hypr} = M.fromList $
+l_keyBindings hostname xineramaCount conf@XConfig {XMonad.modMask = hypr}
+  = M.fromList
+  . map (id *** (\f -> f >> l_resetMouse True)) $
   -- Close focused window.
   [ ((hyprS,  xK_q            ), kill)
 
@@ -844,12 +849,12 @@ l_keyBindings hostname xineramaCount conf@XConfig {XMonad.modMask = hypr} = M.fr
 
   -- Move focus to the next/prev window, on the current set of current + visible
   -- screens.
-  , ((hypr,   xK_j            ), mm $ l_viewWindow Next)
-  , ((hypr,   xK_k            ), mm $ l_viewWindow Prev)
+  , ((hypr,   xK_j            ), l_viewWindow Next)
+  , ((hypr,   xK_k            ), l_viewWindow Prev)
 
   -- Swap the focused window with the next/prev window.
-  , ((hyprS,  xK_j            ), mm $ windows W.swapDown)
-  , ((hyprS,  xK_k            ), mm $ windows W.swapUp)
+  , ((hyprS,  xK_j            ), windows W.swapDown)
+  , ((hyprS,  xK_k            ), windows W.swapUp)
 
   -- Unfloat/float window.
   , ((hypr,   xK_f            ), withFocused $ windows . W.sink)
@@ -891,7 +896,7 @@ l_keyBindings hostname xineramaCount conf@XConfig {XMonad.modMask = hypr} = M.fr
   -- untouched) The Z-axis direction is either Next or Prev (depending on the
   -- key). If we use the Shift key, move the current window to that direction,
   -- unless there is only 1 window.
-  [ ((modifier, key), mm $ action)
+  [ ((modifier, key), action)
   | (key, dir) <-
     [ (xK_n, Next)
     , (xK_p, Prev)
@@ -906,7 +911,7 @@ l_keyBindings hostname xineramaCount conf@XConfig {XMonad.modMask = hypr} = M.fr
   ]
   ++
   -- H-{h,l}: Switch focus across X-axis (prev/next Xinerama screen).
-  [((hypr, key), mm $ flip whenJust (windows . W.view) =<< screenWorkspace =<< sc)
+  [((hypr, key), flip whenJust (windows . W.view) =<< screenWorkspace =<< sc)
   | (key, sc) <- [(xK_h, screenBy (-1)), (xK_l, screenBy 1)]
   ]
   ++
@@ -918,22 +923,22 @@ l_keyBindings hostname xineramaCount conf@XConfig {XMonad.modMask = hypr} = M.fr
   --
   -- It is worth noting that this binding does nothing if there is no window in
   -- the current workspace to move.
-  [((hyprS, key), mm $ whenX
+  [((hyprS, key), whenX
     (l_windowCountInCurrentWorkspaceExceeds 0)
     (flip whenJust (windows . l_shiftAndView) =<< screenWorkspace =<< sc)) | (key, sc) <- [(xK_h, screenBy (-1)), (xK_l, screenBy 1)]
   ]
   ++
-  [ ((hyprA,  xK_j            ), mm $ l_viewYDir Next False)
-  , ((hyprAS, xK_j            ), mm $ whenX
+  [ ((hyprA,  xK_j            ), l_viewYDir Next False)
+  , ((hyprAS, xK_j            ), whenX
                                   (l_windowCountInCurrentWorkspaceExceeds 0)
                                   (l_shiftYDir Next))
-  , ((hyprA,  xK_k            ), mm $ l_viewYDir Prev False)
-  , ((hyprAS, xK_k            ), mm $ whenX
+  , ((hyprA,  xK_k            ), l_viewYDir Prev False)
+  , ((hyprAS, xK_k            ), whenX
                                   (l_windowCountInCurrentWorkspaceExceeds 0)
                                   (l_shiftYDir Prev))
-  , ((hyprA,  xK_n            ), mm $ l_viewYNonEmpty Next)
-  , ((hyprA,  xK_p            ), mm $ l_viewYNonEmpty Prev)
-  , ((hypr,   xK_y            ), mm $ l_viewLastY False)
+  , ((hyprA,  xK_n            ), l_viewYNonEmpty Next)
+  , ((hyprA,  xK_p            ), l_viewYNonEmpty Prev)
+  , ((hypr,   xK_y            ), l_viewLastY False)
   ]
   ++
   -- hypr-[0..6]: Switch to YCoord N.
@@ -944,7 +949,7 @@ l_keyBindings hostname xineramaCount conf@XConfig {XMonad.modMask = hypr} = M.fr
   -- the "1", "2", "3" keys etc. are nearest the left side of the keyboard
   -- where we have our XMonad mod key (CapsLock remapped to Hyper key). In
   -- `forZQKeyboard', the numpad home row gets priority.
-  [((hypr .|. mask, k         ), mm $ f y)
+  [((hypr .|. mask, k         ), f y)
     | (y, k) <- zip l_YCoords $ if l_isPortraitMonitorLayout hostname
       then forZQKeyboard
       else forQwertyKeyboard
@@ -1005,8 +1010,6 @@ l_keyBindings hostname xineramaCount conf@XConfig {XMonad.modMask = hypr} = M.fr
     , xK_6
     , xK_7
     ]
-  -- "mm" stands for "move mouse".
-  mm f = f >> l_resetMouse
 
 l_mouseBindings :: XConfig t -> M.Map (KeyMask, Button) (Window -> X ())
 l_mouseBindings _ = M.fromList
@@ -1135,15 +1138,56 @@ l_startupHook hostname = do
 
 -- Reset the location of the mouse pointer, with the destination depending on
 -- the type of window that is currently focused.
-l_resetMouse :: X ()
-l_resetMouse = do
+l_resetMouse :: Bool -> X ()
+l_resetMouse alwaysReset = do
   windowSet <- gets windowset
+  dpy <- asks display
+  root <- asks theRoot
+  (_,_,_,_,_,_,_,inputMask) <- io $ queryPointer dpy root
   let
     currentStack = W.stack . W.workspace $ W.current windowSet
-    f stack
-      = banish
+    moveMouse stack = banish
       . snd
       =<< foldM step (W.focus stack, LowerRight) windowPropToDest
+    maybeMoveMouse stack = do
+      mouseIsMoving <- asks mouseFocused
+      drag <- gets dragging
+      let
+        mouseBeingUsed = or
+          [ mouseIsMoving
+          , isJust drag
+          -- Detect if we are pressing down the 1st mouse button (traditionally
+          -- called "Left Click" for right-handed mice). This catches the use
+          -- case where a Chromium tab is being clicked, then dragged onto
+          -- another Chromium window's tab bar area. In this case, we don't want
+          -- to reset the mouse position. Granted, the window will still jump
+          -- around, because XMonad will try to tile it and untile it as it
+          -- creates/destroys windows, but this is the vanilla XMonad behavior
+          -- anyway without l_resetMouse. Without this boolean check, we end up
+          -- repeatedly resetting the mouse coordinates (in a way that
+          -- interferes with Chromium's vision of where the pointer is), making
+          -- it basically impossible to move a tab back onto another tab bar
+          -- area (a workaround is to first float the window and then drag the
+          -- tag, but this is too much work).
+          --
+          -- We explicitly choose button1Mask, because that's the only button we
+          -- use to drag Chromium tabs around.
+          --
+          -- NOTE: Firefox does not have this issue of windows jumping around
+          -- when we move tabs across windows.
+          , (inputMask .&. button1Mask /= 0)
+          ]
+      when (not mouseBeingUsed) $ moveMouse stack
+    f stack
+      | alwaysReset = moveMouse stack
+      | otherwise = do
+        ev <- asks currentEvent
+        whenJust ev $ \e -> case e of
+          -- MapRequestEvent is triggered when new windows are created.
+          -- Conversely, UnmapEvent is triggered when windows are deleted.
+          MapRequestEvent {} -> maybeMoveMouse stack
+          UnmapEvent {} -> maybeMoveMouse stack
+          _ -> pure ()
   whenJust currentStack f
   where
   step s@(w, _) (p, destNew) = do
@@ -1156,7 +1200,7 @@ l_resetMouse = do
     , (ClassName "Emacs", LowerLeft)
     , (ClassName "qutebrowser", UpperLeft)
     , (ClassName "Chromium-browser", UpperLeft)
-    , (ClassName "Navigator", UpperLeft)
+    , (ClassName "Firefox", UpperLeft)
     ]
 
 -- Reset the focused window by running l_manageHook against it. This way, we can
@@ -1200,6 +1244,6 @@ main = do
     , layoutHook         = l_layoutHook
     , manageHook         = l_manageHook xineramaCount
     , handleEventHook    = mempty
-    , logHook            = mempty
+    , logHook            = l_resetMouse False
     , startupHook        = l_startupHook hostname
     }
