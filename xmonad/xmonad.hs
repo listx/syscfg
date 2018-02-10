@@ -203,9 +203,9 @@ data ZGroup
 
 l_ZCoordToGroup :: ZCoord -> ZGroup
 l_ZCoordToGroup (Z z)
-  | elem z [0..5] = ZGWork
-  | elem z [6..8] = ZGNet
-  | elem z [9..9] = ZGSys
+  | elem z [0..2] = ZGWork
+  | elem z [3..4] = ZGNet
+  | elem z [5] = ZGSys
   | otherwise = ZGMisc
 
 l_ZGroupToZCoords :: ZGroup -> [ZCoord]
