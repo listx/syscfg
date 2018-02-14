@@ -12,6 +12,7 @@
     [escape] 'evil-force-normal-state
     "H" 'evil-next-buffer
     "L" 'evil-prev-buffer
+    "m" 'l/compose-message-main
     "e" 'notmuch-jump-search
     "/" 'notmuch-search)
 
@@ -31,6 +32,7 @@
       (:key ,(kbd "<up>") :func (lambda () (interactive) (l/show-message nil)))
       (:key "J" :func (lambda () (interactive) (l/show-thread t)))
       (:key "K" :func (lambda () (interactive) (l/show-thread nil)))
+      (:key "m" :func l/compose-message-main)
     ))
 
   (l/bind-keys
@@ -331,6 +333,17 @@ mode is active."
         (funcall f)
         (notmuch-tree-show-message-in)
         (other-window 1)))))
+
+(defun l/compose-message-main ()
+  (interactive)
+  (l/compose-message "linusarver@gmail.com"))
+
+(defun l/compose-message (addr)
+  (interactive)
+  (setq
+    user-mail-address addr
+    smtpmail-smtp-user addr)
+  (notmuch-mua-mail nil nil `((From . ,(message-make-from (notmuch-user-name) addr))) nil (notmuch-mua-get-switch-function)))
 
 (defun l/message-signature-setup ()
   "Add signature."
