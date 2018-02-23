@@ -105,3 +105,32 @@ zsh:
 	ln -fns ${C}/zsh                                    ${H}/.zsh
 	ln -fs ${C}/zsh/.zshrc                              ${H}
 	mkdir -p ${H}/.zsh-untracked
+
+.PHONY: \
+	bash \
+	emacs \
+	git \
+	gpg \
+	gtk \
+	launchctl \
+	lesskey \
+	mpv \
+	mupen \
+	nixos \
+	nixpkgs \
+	notmuch \
+	offlineimap \
+	pulse \
+	qutebrowser \
+	rtorrent \
+	sage \
+	ssh \
+	tig \
+	uim \
+	urxvt \
+	vim \
+	xdefaults \
+	xmonad \
+	xorg \
+	xquartz \
+	zsh

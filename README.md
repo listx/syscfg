@@ -11,10 +11,9 @@ Each subdirectory is responsible for one component, and is also the name of a bu
 E.g., to set up Emacs and Vim configurations, do:
 
 ```
-make -B emacs vim
+make emacs vim
 ```
 
 # Known Issues
 
-- Using GNU Make with the `-B` flag is a bit clunky; a shell script would be better.
 - The default repository name, `syscfg`, is hardcoded in some places.
