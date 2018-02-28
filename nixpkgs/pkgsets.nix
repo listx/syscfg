@@ -143,9 +143,6 @@ with super; rec {
       clisp
       sbcl
 
-      # android development
-      androidsdk_4_4
-      android-udev-rules
       # linters
       cppcheck
       dos2unix
