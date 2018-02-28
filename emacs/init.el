@@ -110,6 +110,7 @@
 (require 'l-factor)
 (require 'l-generic-x)
 (require 'l-git-rebase)
+(require 'l-go)
 (require 'l-groovy)
 (require 'l-haskell-mode)
 (require 'l-html)
