@@ -126,6 +126,8 @@ with super; rec {
       tig
       clang
       gcc
+      go
+      golint
       gdb
       valgrind
       gnumake
