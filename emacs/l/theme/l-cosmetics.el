@@ -149,7 +149,6 @@
   (set-face-attribute 'org-level-6 nil :foreground "RosyBrown2" :weight 'bold)
   (set-face-attribute 'org-level-7 nil :weight 'bold)
   (set-face-attribute 'org-level-8 nil :weight 'bold)
-;  (set-face-attribute 'font-lock-builtin-face nil :foreground "pink")
   )
 
 ; Select theme based on GUI or ncurses mode.
