@@ -149,6 +149,9 @@
   (set-face-attribute 'org-level-6 nil :foreground "RosyBrown2" :weight 'bold)
   (set-face-attribute 'org-level-7 nil :weight 'bold)
   (set-face-attribute 'org-level-8 nil :weight 'bold)
+  (set-face-attribute 'git-gutter:added nil :foreground "lime green")
+  (set-face-attribute 'git-gutter:modified nil :foreground "purple")
+  (set-face-attribute 'git-gutter:deleted nil :foreground "red")
   )
 
 ; Select theme based on GUI or ncurses mode.
