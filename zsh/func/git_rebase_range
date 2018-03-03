@@ -127,8 +127,8 @@ git_rebase_range()
 	fi
 
 	# `git_mv_range.py ... <rebase buffer file>' is called
-	GIT_SEQUENCE_EDITOR="git-mv-range.py $oldest ${commits[1]} " \
-		git rebase -i $commit_anchor
+	GIT_SEQUENCE_EDITOR="git_mv_range.py $oldest ${commits[1]} " \
+		git rebase -iv $commit_anchor
 }
 
 git_rebase_range $@
