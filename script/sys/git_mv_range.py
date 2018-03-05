@@ -10,13 +10,12 @@ class IndeterminateCommitRange(Exception):
     pass
 
 
-def populate_cherries(commit_range_start, commit_range_end, fpath):
+def populate_cherries(commit_range_start, commit_range_end, commits):
     """ Break up the long list of cherry-picks into the bridge, range, and
     tail. The bridge comprises of all commits that come ancestrally prior (if
     any) to the range, wheras the tail comes afterwards (the range's
     descendants). """
 
-    fobj = open(fpath, 'r')
     commits_bridge = []
     commits_range = []
     commits_tail = []
@@ -27,7 +26,7 @@ def populate_cherries(commit_range_start, commit_range_end, fpath):
     on_range = False
     range_start_detected = False
     range_end_detected = False
-    for line in fobj.readlines():
+    for line in commits:
         if line.startswith("pick"):
             commits_total += 1
             short_sha = line.split(" ")[1]
@@ -50,7 +49,6 @@ def populate_cherries(commit_range_start, commit_range_end, fpath):
                 commits_range.append(short_sha)
             else:
                 commits_tail.append(short_sha)
-    fobj.close()
 
     if not range_start_detected:
         print("Could not detect commit range start")
@@ -65,34 +63,50 @@ def populate_cherries(commit_range_start, commit_range_end, fpath):
     return (commits_bridge, commits_range, commits_tail)
 
 
-def reorder(commit_range_start, commit_range_end, fpath):
+def reorder(commit_range_start, commit_range_end, commits):
     """ Reorder commits from `bridge + range + tail' to `range + bridge +
     tail'. """
 
     try:
-        res = populate_cherries(commit_range_start, commit_range_end, fpath)
+        res = populate_cherries(commit_range_start, commit_range_end, commits)
     except IndeterminateCommitRange:
         # Abort rebase if we could not populate cherries.
         return
 
-    fobj = open(fpath, 'w')
     commits_bridge = res[0]
     commits_range = res[1]
     commits_tail = res[2]
-    reordered = commits_range + commits_bridge + commits_tail
-    output_buffer = ""
-    for commit in reordered:
-        output_buffer += "pick " + commit + "\n"
-    fobj.write(output_buffer)
-    fobj.close()
+    return commits_range, commits_bridge, commits_tail
+
+
+def write_reordered(reordered, fpath):
+    with open(fpath, 'w') as f:
+        output_buffer = ""
+        for commit in reordered:
+            output_buffer += "pick " + commit + "\n"
+        f.write(output_buffer)
+
+
+def range_tip_distance(commits_bridge, commits_tail):
+    return len(commits_bridge) + len(commits_tail)
 
 
 if __name__ == "__main__":
-    if len(sys.argv) == 4:
+    if len(sys.argv) == 5:
         # Usage: git_mv_range.py COMMIT_RANGE_START COMMIT_RANGE_END REBASE_BUFFER_FILEPATH # noqa
         # Both the COMMIT_RANGE_START and COMMIT_RANGE_END arguments must be
         # the long 40-character commit SHAs.
-        reorder(sys.argv[1], sys.argv[2], sys.argv[3])
+        tmpfile_path = sys.argv[3]
+        fpath = sys.argv[4]
+        commits = []
+        with open(fpath) as f:
+            commits = [line.rstrip() for line in f]
+        commits_range, commits_bridge, commits_tail = reorder(sys.argv[1], sys.argv[2], commits)
+        reordered = commits_range + commits_bridge + commits_tail
+        write_reordered(reordered, fpath)
+        range_tip_distance_from_HEAD = range_tip_distance(commits_bridge, commits_tail)
+        with open(tmpfile_path, 'w') as f:
+            f.write(str(range_tip_distance_from_HEAD))
     else:
         # Last argument will always be the filename from GIT_SEQUENCE_EDITOR.
         # Anyway, truncate the file (abort the rebase) if we are not given
