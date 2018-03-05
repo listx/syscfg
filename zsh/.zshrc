@@ -67,6 +67,9 @@ export GCC_COLORS=1
 # path to local nixpkgs git repo
 export NIXPKGS=~/prog/foreign/nixpkgs
 
+# Add system scripts to the PATH.
+export PATH=~/syscfg/script/sys:$PATH
+
 # stop zsh from eating space before pipe symbol
 export ZLE_REMOVE_SUFFIX_CHARS=""
 
