@@ -42,9 +42,10 @@
 ; http://www.lunaryorn.com/posts/my-emacs-configuration-with-use-package.html.
 (require 'package)
 (setq package-enable-at-startup nil)
-(add-to-list 'package-archives
-  '("melpa" . "https://melpa.org/packages/")
-  '("org" . "http://orgmode.org/elpa/"))
+(setq package-archives (append '(
+  ("melpa" . "https://melpa.org/packages/")
+  ("org" . "https://orgmode.org/elpa/")) package-archives))
+
 (package-initialize)
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
