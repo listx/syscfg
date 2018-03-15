@@ -148,7 +148,7 @@ git_rebase_range()
 			return 0
 		fi
 		local_commit=$(git rev-parse ${local_branch})
-		remote_branch=$(git rev-parse ${revision_anchor})
+		upstream_commit=$(git rev-parse ${revision_anchor})
 		if [[ $upstream_commit == $local_commit ]]; then
 			range_end_hash=$(git rev-parse HEAD~${range_end_depth})
 			echo "To feed range end to ${match[1]}, do:"
