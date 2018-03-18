@@ -1,30 +1,25 @@
 (use-package kakapo-mode)
 
 (defun l/add-hook (hook tmode twidth &optional func)
-  (lexical-let
-    (
-      (tmode tmode)
-      (twidth twidth)
-      (func func))
-    (add-hook hook (lambda ()
-      (when (not l/kakapo-settings-applied)
-        (kakapo-mode)
-        (electric-indent-mode -1)
-        (setq indent-tabs-mode tmode)
-        (setq tab-width twidth)
-        (setq evil-shift-width twidth)
-        (setq l/kakapo-settings-applied t)
-        (eval func)
-        (message (concat
-          (if (boundp 'l/kakapo-project-id)
-            (concat "kakapo project `" l/kakapo-project-id "'")
-            "kakapo defaults") ": "
-          "indent-tabs-mode=%s "
-          "tab-width=%s "
-          "evil-shift-width=%s ")
-          indent-tabs-mode
-          tab-width
-          evil-shift-width))))))
+  (add-hook hook `(lambda ()
+    (when (not l/kakapo-settings-applied)
+      (kakapo-mode)
+      (electric-indent-mode -1)
+      (setq indent-tabs-mode ,tmode)
+      (setq tab-width ,twidth)
+      (setq evil-shift-width ,twidth)
+      (setq l/kakapo-settings-applied t)
+      (eval ,func)
+      (message (concat
+        (if (boundp 'l/kakapo-project-id)
+          (concat "kakapo project `" l/kakapo-project-id "'")
+          "kakapo defaults") ": "
+        "indent-tabs-mode=%s "
+        "tab-width=%s "
+        "evil-shift-width=%s ")
+        indent-tabs-mode
+        tab-width
+        evil-shift-width)))))
 
 ; Check if a buffer's name matches the a project's path (regex). If it does,
 ; then also set the project-id.
