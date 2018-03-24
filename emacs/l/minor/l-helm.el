@@ -10,7 +10,9 @@
   (setq
     helm-display-function 'helm-display-buffer-in-own-frame
     helm-display-buffer-reuse-frame t
-    helm-use-undecorated-frame-option t)
+    helm-use-undecorated-frame-option t
+    helm-display-buffer-width 80
+    helm-display-buffer-height 60)
 
   ; Disable help string. See http://stackoverflow.com/a/19954900/437583.
   (defadvice helm-display-mode-line (after undisplay-header activate)
