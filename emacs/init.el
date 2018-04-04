@@ -49,7 +49,8 @@
 (package-initialize)
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
-  (package-install 'use-package))
+  (package-install 'use-package)
+  (eval-when-compile (require 'use-package)))
 
 ; Ensure that all packages handled by use-package are always installed if not
 ; present.
