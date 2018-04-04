@@ -5,9 +5,9 @@
 
   (defhydra hydra-zoom ()
     "zoom"
-    ("j" zoom-in "in")
+    ("j" (text-scale-adjust 1) "in")
     ("J" (global-text-scale-adjust 1) "in")
-    ("k" zoom-out "out")
+    ("k" (text-scale-adjust -1) "out")
     ("K" (global-text-scale-adjust -1) "out")
     ("q" nil "exit" :exit t))
   (defhydra hydra-window ()
