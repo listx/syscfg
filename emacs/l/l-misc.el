@@ -284,7 +284,6 @@ pasting. If no region is selected, copy just the buffer's filename."
         ('latex-mode "%")
         ('plain-tex-mode "%")
         ('sass-mode "//")
-        ('groovy-mode "//")
         (t "\\#"))) ; default to shell syntax
     ; output buffer
     (current-buffer)
