@@ -54,9 +54,9 @@
           href=\"css/style.css\"
           type=\"text/css\"/>"
       )
-      ("babbage"
-        :base-directory "~/prog/babbage/"
-        :publishing-directory "~/prog/babbage/public_html"
+      ("gv"
+        :base-directory "~/prog/gv/doc/"
+        :publishing-directory "~/prog/gv/doc/public_html"
         :publishing-function org-html-publish-to-html
         :section-numbers t
         :with-toc t
