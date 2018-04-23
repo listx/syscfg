@@ -121,9 +121,15 @@
             '(progn
               (setq python-indent 4)))
           (h 'sh-mode-hook t 4)))
-
-        (if (l/kakapo-set-project-id "gv" "prog/gv/" b)
-          (h 'sh-mode-hook nil 2)))))
+      (if (l/kakapo-set-project-id "2-space" "2-space" b)
+        (progn
+          (h 'sh-mode-hook nil 2)
+          (h 'python-mode-hook nil 2
+            '(progn
+              (setq python-indent 2)))
+          ))
+      (if (l/kakapo-set-project-id "gv" "prog/gv/" b)
+        (h 'sh-mode-hook nil 2)))))
 
 ; Per-project indentation rules.
 (add-hook 'prog-mode-hook 'l/kakapo-indents)
