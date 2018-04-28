@@ -181,8 +181,8 @@ with super; rec {
     name = "l-set-web";
     ignoreCollisions = true;
     paths = [
-      HEAD.firefox
-      HEAD.chromium
+      firefox
+      chromium
       HEAD.qutebrowser
       HEAD.offlineimap
       HEAD.notmuch
