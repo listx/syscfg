@@ -91,7 +91,6 @@ with super; rec {
       wireshark-cli # tshark
 
       # Docs
-      bgnet
       man-pages
       posix_man_pages
       stdman
