@@ -72,6 +72,8 @@ endif
 	ln -fs ${C}/ssh/config.home.conf                    ${H}/.ssh/config
 tig:
 	ln -fs ${C}/tig/.tigrc                              ${H}
+tmux:
+	ln -fs ${C}/tmux/.tmux.conf                         ${H}
 uim:
 	ln -fns ${C}/uim/.uim                               ${H}/.uim
 	ln -fns ${C}/uim                                    ${H}/.uim.d
@@ -126,6 +128,7 @@ zsh:
 	sage \
 	ssh \
 	tig \
+	tmux \
 	uim \
 	urxvt \
 	vim \
