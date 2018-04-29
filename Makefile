@@ -72,6 +72,8 @@ mpv:
 	ln -fns ${C}/mpv                                    ${H}/.config/mpv
 ifeq ('${T}','k0')
 	ln -fs ${C}/mpv/mpv.${T}.conf                       ${H}/.config/mpv/mpv.conf
+else ifeq ('${S}','Darwin')
+	ln -fs ${C}/mpv/mpv.osx.conf                        ${H}/.config/mpv/mpv.conf
 else
 	ln -fs ${C}/mpv/mpv.linux.conf                      ${H}/.config/mpv/mpv.conf
 endif
