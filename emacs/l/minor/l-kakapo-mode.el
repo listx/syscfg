@@ -73,6 +73,8 @@
       (h 'idris-mode-hook nil 2)
       ; Latex
       (h 'latex-mode-hook nil 2)
+      ; Lua
+      (h 'lua-mode-hook nil 2)
       ; Markdown
       (h 'markdown-mode-hook t 4
         '(progn
