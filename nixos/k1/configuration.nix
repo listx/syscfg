@@ -46,7 +46,7 @@
     # is to tell the Motorola router to start its DHCP lease assignment address
     # from 192.168.0.10+, and then use the addresses 192.168.0.2-192.168.0.9
     # statically (192.168.0.1 is reserved for the router itself).
-    interfaces.wlp24s0.ip4 = [ { address = "192.168.0.5"; prefixLength = 24; } ];
+    interfaces.wlp24s0.ipv4.addresses = [ { address = "192.168.0.5"; prefixLength = 24; } ];
     defaultGateway = "192.168.0.1";
     nameservers = [ "8.8.8.8" ];
   };
