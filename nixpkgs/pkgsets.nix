@@ -153,7 +153,6 @@ with super; rec {
       pcg_c
 
       # Database
-      mysql
       postgresql
 
       # analysis
@@ -244,7 +243,6 @@ with super; rec {
     ignoreCollisions = true;
     paths = [
       docker
-      HEAD.python36Packages.docker_compose
       vagrant
       linuxPackages.virtualbox
       linuxPackages.virtualboxGuestAdditions
