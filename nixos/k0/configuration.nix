@@ -30,7 +30,7 @@
     '';
 
     # Static IP.
-    interfaces.eno1.ip4 = [ { address = "192.168.0.4"; prefixLength = 24; } ];
+    interfaces.eno1.ipv4.addresses = [ { address = "192.168.0.4"; prefixLength = 24; } ];
     defaultGateway = "192.168.0.1";
     nameservers = [ "8.8.8.8" ];
   };
