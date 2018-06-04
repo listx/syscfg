@@ -41,10 +41,4 @@
     exportConfiguration = true;
     config = pkgs.lib.mkOverride 50 (builtins.readFile ./quadmon.conf);
   };
-
-  services.mysql = {
-    enable = true;
-    dataDir = "/var/db/mysql";
-    package = pkgs.mysql;
-  };
 }
