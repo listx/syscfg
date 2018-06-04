@@ -66,6 +66,7 @@ with super; rec {
       tmux
       emacs
       xsel
+      ed
       vim
       ripgrep
       colordiff
