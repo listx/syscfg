@@ -25,11 +25,6 @@
 
   i18n.consoleFont = "lat9w-16";
 
-
-  nixpkgs.config.firefox = {
-    enableAdobeFlash = true;
-  };
-
   services.openvpn.servers = {
     # Unless `autoStart = false;', all entries here start automatically as a
     # systemd service. To stop the `home' OpenVPN client service, run `sudo
