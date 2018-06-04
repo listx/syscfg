@@ -178,9 +178,9 @@ with super; rec {
     paths = [
       firefox
       chromium
-      HEAD.qutebrowser
-      HEAD.offlineimap
-      HEAD.notmuch
+      qutebrowser
+      offlineimap
+      notmuch
       links
       aria2
       rtorrent
