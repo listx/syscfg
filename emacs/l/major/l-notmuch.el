@@ -90,6 +90,12 @@
     l/notmuch-hello-insert-searches
     l/notmuch-hello-insert-recent-searches))
 
+  ; Set the face of notmuch-tree-mode's matched/unmatched text to be the same as
+  ; the default (for some reason it changes to a different font otherwise when
+  ; displaying some unicode box characters for the thread ASCII art).
+  (set-face-attribute 'notmuch-tree-no-match-tree-face nil :family (nth l/font-choice l/font-collection))
+  (set-face-attribute 'notmuch-tree-match-tree-face nil :family (nth l/font-choice l/font-collection))
+
   (defface l/notmuch-hello-header-face
     '((t :weight bold))
     "Font for the header in `l/notmuch-hello-insert-searches`."
