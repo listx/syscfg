@@ -126,6 +126,7 @@ with super; rec {
       go
       golint
       gdb
+      binutils
       valgrind
       gnumake
       python # 'python' is python2
