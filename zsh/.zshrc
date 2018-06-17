@@ -265,6 +265,7 @@ alias fl='find_long_lines '
 alias ssh='TERM=xterm ssh'
 # These hostnames depend on either /etc/hosts or ~/.ssh/config.
 alias sk0='ssh l@k0'
+alias sk1='ssh l@k1'
 alias sm0='ssh l@m0'
 
 # GLOBAL, position-independent aliases for detaching a process from the shell
