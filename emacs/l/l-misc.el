@@ -275,6 +275,7 @@ pasting. If no region is selected, copy just the buffer's filename."
       (case (with-current-buffer (current-buffer) major-mode)
         ('c-mode "//")
         ('emacs-lisp-mode "\\;")
+        ('go-mode "//")
         ('haml-mode "-# --after-lw")
         ('haskell-mode "--")
         ('haskell-cabal-mode "--")
