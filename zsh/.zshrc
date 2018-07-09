@@ -245,6 +245,7 @@ alias gri='git rebase -i'
 alias gsp='git reset --patch'
 alias gee='git rerere'
 alias gp='git push'
+alias grv='git remote -v'
 alias gtag='~/syscfg/script/sys/gtag.sh'
 
 alias gg='git5'
