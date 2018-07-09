@@ -218,7 +218,7 @@ alias rsaa="rand_open recurse 'mpv -vo null -playlist' '' $ft_snd"
 alias rsp="rand_open norecurse 'feh --auto-zoom --fullscreen --draw-filename --filelist' '' $ft_pic"
 alias rspp="rand_open recurse 'feh --auto-zoom --fullscreen --draw-filename --filelist' '' $ft_pic"
 alias rsm="rand_open norecurse mpv m3u $ft_mov"
-alias rsmm="rand_open recurse mpv\ --loop-file\ inf\ \ --playlist m3u $ft_mov"
+alias rsmm="rand_open recurse mpv\ --loop-file=inf\ \ --playlist m3u $ft_mov"
 
 alias g='git'
 alias gbr='git branch'
