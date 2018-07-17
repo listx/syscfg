@@ -78,6 +78,7 @@
 
 ; Load minor-mode packages.
 (require 'l-ace-window)
+(require 'l-auto-dim-other-buffers)
 (require 'l-column-enforce-mode)
 (require 'l-conf-mode)
 (require 'l-delight)
