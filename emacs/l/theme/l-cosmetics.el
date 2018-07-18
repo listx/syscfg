@@ -95,6 +95,8 @@
           (set-face-background 'hiwin-face
             ; set default to alect-light
             (if (display-graphic-p) "#ded6c5" "gray16"))
+          (set-face-background 'auto-dim-other-buffers-face
+            (if (display-graphic-p) "#ded6c5" "gray16"))
           (setq evil-insert-state-cursor '("#000000" box))
           (setq evil-normal-state-cursor '("DodgerBlue1" box))))
       ((or
@@ -107,15 +109,23 @@
                 "#0d0d0f"
                 "gray0")
               "gray16"))
+          (set-face-background 'auto-dim-other-buffers-face
+            (if (display-graphic-p)
+              (if (string= "alect-dark" theme)
+                "#0d0d0f"
+                "gray0")
+              "gray16"))
           (setq evil-insert-state-cursor '("#ffffff" box))
           (setq evil-normal-state-cursor '("#00ff00" box))))
       ((string= "arjen-grey" theme)
         (progn
           (set-face-background 'hiwin-face
             (if (display-graphic-p)
-              (if (string= "arjen-grey" theme)
-                "#0d0d0f"
-                "gray0")
+              "#0d0d0f"
+              "gray16"))
+          (set-face-background 'auto-dim-other-buffers-face
+            (if (display-graphic-p)
+              "#0d0d0f"
               "gray16"))
           (setq evil-insert-state-cursor '("#ffffff" box))
           (setq evil-normal-state-cursor '("#00ff00" box)))))
