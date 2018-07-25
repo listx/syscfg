@@ -102,6 +102,12 @@ prompt_kody_precmd()
 		fi
 	fi
 
+	# Python VirtualEnv info.
+	local venv=""
+	if test -n "${VIRTUAL_ENV}"; then
+        venv=" ($(basename "${VIRTUAL_ENV}"))"
+	fi
+
 	day=""
 	case $(date +%a) in
 		Mon) day="%B%F{$prompt_color2}月%b%f" ;;
@@ -113,7 +119,7 @@ prompt_kody_precmd()
 		Sun) day="%B%F{$prompt_color6}日%b%f" ;;
 	esac
 
-	prompt_kody_time_a="%B%F{$prompt_color4}[%b%f$day %D{%d} %*%B%F{$prompt_color4}]%b%f$(maybe_show_exit_status)${ginfo_short}"
+	prompt_kody_time_a="%B%F{$prompt_color4}[%b%f$day %D{%d} %*%B%F{$prompt_color4}]%b%f$(maybe_show_exit_status)${ginfo_short}${venv}"
 	prompt_kody_time_b="%B%F{$prompt_color4}[%b%f$day %D{%d} %*%B%F{$prompt_color4}]%b%f$(maybe_show_exit_status)"
 	prompt_kody_time_c="%B%F{$prompt_color4}[%b%f$day %D{%d} %*%B%F{$prompt_color4}]%b%f"
 	prompt_kody_time_d="%D{%d} %*"
