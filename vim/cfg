@@ -1,6 +1,5 @@
 set nocp " take the Vi straitjacket off
 set ffs=unix,dos " prefer unix newlines whenever possible, but let dos be dos
-set cm=blowfish " if encrypting a new file, use blowfish cipher
 set nobackup
 " default tabstop and shiftwidths
 set tabstop=4
@@ -17,10 +16,6 @@ set backspace=2
 " lines from the bottom (i.e., keep the cursor with at least 3 lines of
 " context)
 set scrolloff=3
-
-" gvim: Automatically read a file that has changed on disk (useful when
-" changing branches in git)
-set autoread
 
 " place help page on its own tab
 cabbrev help tab h
@@ -121,42 +116,6 @@ if !exists("autocommands_loaded")
     au BufEnter *.hs vmap <localleader>c1 !nox -l hs<cr>
     au BufEnter *.hs nmap <localleader>CC !!nox -l hs -u<cr>
     au BufEnter *.hs vmap <localleader>CC !nox -l hs -u<cr>
-    au BufEnter *.html vmap <localleader>bb iwoiw"zs<strong><C-R>z</strong><esc>
-    au BufEnter *.html vmap <localleader>ii iwoiw"zs<em><C-R>z</em><esc>
-    au BufEnter *.html vmap <localleader>bi iwoiw"zs<em><strong><C-R>z</strong></em><esc>
-    au BufEnter *.html vmap <localleader>tt iwoiw"zs<pre><C-R>z</pre><esc>
-    au BufEnter *.html vmap <localleader>mbb "zs<strong><C-R>z</strong><esc>
-    au BufEnter *.html vmap <localleader>mii "zs<em><C-R>z</em><esc>
-    au BufEnter *.html vmap <localleader>mbi "zs<em><strong><C-R>z</strong></em><esc>
-    au BufEnter *.html vmap <localleader>mtt "zs<pre><C-R>z</pre><esc>
-    au BufEnter *.html nmap <localleader>bb viw"zs<strong><C-R>z</strong><esc>
-    au BufEnter *.html nmap <localleader>ii viw"zs<em><C-R>z</em><esc>
-    au BufEnter *.html nmap <localleader>bi viw"zs<em><strong><C-R>z</strong></em><esc>
-    au BufEnter *.html nmap <localleader>tt viw"zs<pre><C-R>z</pre><esc>
-    au BufEnter *.tex vmap <localleader>bb iwoiw"zs\textbf{<C-R>z}<esc>
-    au BufEnter *.tex vmap <localleader>ii iwoiw"zs\textit{<C-R>z}<esc>
-    au BufEnter *.tex vmap <localleader>bi iwoiw"zs\textbf{\textit{<C-R>z}}<esc>
-    au BufEnter *.tex vmap <localleader>bu iwoiw"zs\textbf{\uline{<C-R>z}}<esc>
-    au BufEnter *.tex vmap <localleader>u  iwoiw"zs\uline{<C-R>z}<esc>
-    au BufEnter *.tex vmap <localleader>sc iwoiw"zs\textsc{<C-R>z}<esc>
-    au BufEnter *.tex vmap <localleader>sf iwoiw"zs\textsf{<C-R>z}<esc>
-    au BufEnter *.tex vmap <localleader>tt iwoiw"zs\texttt{<C-R>z}<esc>
-    au BufEnter *.tex vmap <localleader>mbb "zs\textbf{<C-R>z}<esc>
-    au BufEnter *.tex vmap <localleader>mii "zs\textit{<C-R>z}<esc>
-    au BufEnter *.tex vmap <localleader>mbi "zs\textbf{\textit{<C-R>z}}<esc>
-    au BufEnter *.tex vmap <localleader>mbu "zs\textbf{\uline{<C-R>z}}<esc>
-    au BufEnter *.tex vmap <localleader>mu  "zs\uline{<C-R>z}<esc>
-    au BufEnter *.tex vmap <localleader>msc "zs\textsc{<C-R>z}<esc>
-    au BufEnter *.tex vmap <localleader>msf "zs\textsf{<C-R>z}<esc>
-    au BufEnter *.tex vmap <localleader>mtt "zs\texttt{<C-R>z}<esc>
-    au BufEnter *.tex nmap <localleader>bb viw"zs\textbf{<C-R>z}<esc>
-    au BufEnter *.tex nmap <localleader>ii viw"zs\textit{<C-R>z}<esc>
-    au BufEnter *.tex nmap <localleader>bi viw"zs\textbf{\textit{<C-R>z}}<esc>
-    au BufEnter *.tex nmap <localleader>bu viw"zs\textbf{\uline{<C-R>z}}<esc>
-    au BufEnter *.tex nmap <localleader>u  viw"zs\uline{<C-R>z}<esc>
-    au BufEnter *.tex nmap <localleader>sc viw"zs\textsc{<C-R>z}<esc>
-    au BufEnter *.tex nmap <localleader>sf viw"zs\textsf{<C-R>z}<esc>
-    au BufEnter *.tex nmap <localleader>tt viw"zs\texttt{<C-R>z}<esc>
 
     " highlight red any trailing whitespace
     highlight ExtraWhitespace ctermbg=red guibg=red
@@ -217,10 +176,6 @@ nmap <localleader>Q :q!<cr>
 
 " save and exit (equivalent to "ZZ")
 nmap <localleader>x :x<cr>
-
-" >> and << in visual mode
-vmap <tab> >gv
-vmap <s-tab> <gv
 
 " toggle search highlighting
 map <F2> <esc>:noh<cr>
@@ -291,13 +246,5 @@ nmap <localleader>h :sp<cr>
 nmap <localleader>H :sp<space>.<cr>
 nmap <localleader>v :vsp<cr>
 nmap <localleader>V :vsp<space>.<cr>
-
-" Per-file linting commit message macro.
-nnoremap <localleader>r 5j2Wy$ggilint:<space><space><esc>P:x<cr>
-
-" make <s-insert> input the X selection in gvim, just like in regular vim (under urxvt)
-if has ("gui_running")
-    imap <s-insert> <middlemouse>
-endif
 
 " vim: syntax=vim
