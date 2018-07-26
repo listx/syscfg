@@ -599,6 +599,8 @@ l_viewWindow dir = do
   windowSet <- gets windowset
   let
     currentX = l_XFromWid . W.tag . W.workspace $ W.current windowSet
+    -- "visibles" has all visible stacks from other screens in the current Y
+    -- cordinate (excluding the current stack in the X coordinate).
     visibles = (if dir == Next then id else reverse)
       . filter (isJust . W.stack)
       . map snd
