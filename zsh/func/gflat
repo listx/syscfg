@@ -5,13 +5,12 @@
 # buffer) commit.
 gflat()
 {
-	# The odd-looking "<->" pattern is a zsh-ism tht checks to see that the
-	# string only has digits [1].
-	# [1]: https://www.zsh.org/mla/users/2007/msg00084.html
 	if (( $# != 1 )); then
 		printf "gflat: Need exactly 1 argument.\n"
 		return 1
-	# The argument may be a commit-ish.
+	# The odd-looking "<->" pattern is a zsh-ism tht checks to see that the
+	# string only has digits [1].
+	# [1]: https://www.zsh.org/mla/users/2007/msg00084.html
 	elif [[ "$1" == <-> ]]; then
 		# Strip any leading zeroes [1].
 		# [1]: https://groups.google.com/d/msg/comp.unix.shell/VI8nIp1plWc/WOhfzd16ug8J
@@ -23,10 +22,10 @@ gflat()
 		fi
 
 		arg=HEAD~"${n}"
+	# The argument may be a commit-ish.
 	else
 		arg="$1"
 	fi
-
 
 	GIT_SEQUENCE_EDITOR="sed -i -e '2,\$s/^pick/f/'" git rebase -i "${arg}"
 }
