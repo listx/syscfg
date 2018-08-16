@@ -12,7 +12,7 @@ gst()
 	local gshow=$(git show --pretty=format:'%h %D | %s' --no-patch \
 		| sed 's/HEAD -> //')
 	printf "$gshow\n"
-	git status --short
+	git -c color.status=always status --short
 	local gstash=$(git stash list)
 	if [[ -n "$gstash" ]]; then
 		printf "\n${c}-- STASH --${ce}\n$gstash\n"
