@@ -7,14 +7,17 @@
       ./hardware-configuration.nix
     ];
 
-  boot.loader.grub.enable = true;
-  boot.loader.grub.version = 2;
-  boot.loader.grub.device = "/dev/disk/by-id/ata-Samsung_SSD_840_EVO_250GB_S1DBNSAF368573R";
+  boot.loader.systemd-boot.enable = true;
+  boot.loader.efi.canTouchEfiVariables = true;
+
+  # See https://askubuntu.com/a/863301 (this fixes flooding of the kernel logs
+  # with "printk messages dropped".
+  boot.kernelParams = ["pcie_aspm=off"];
 
   boot.initrd.luks.devices = [
     {
       name = "luksroot";
-      device = "/dev/disk/by-id/ata-Samsung_SSD_840_EVO_250GB_S1DBNSAF368573R-part2";
+      device = "/dev/disk/by-id/nvme-SAMSUNG_MZVKW512HMJP-000H1_S34CNA0J100907-part2";
       preLVM = true;
     }
   ];
@@ -30,7 +33,6 @@
     '';
 
     # Static IP.
-    interfaces.eno1.ipv4.addresses = [ { address = "192.168.0.4"; prefixLength = 24; } ];
     defaultGateway = "192.168.0.1";
     nameservers = [ "8.8.8.8" ];
   };
@@ -41,4 +43,6 @@
     exportConfiguration = true;
     config = pkgs.lib.mkOverride 50 (builtins.readFile ./quadmon.conf);
   };
+
+  system.stateVersion = "18.03";
 }

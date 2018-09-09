@@ -174,7 +174,7 @@ with super; rec {
     ];
   });
 
-  l_set_web = setPrio "8" (buildEnv {
+  l_set_web = setPrio "7" (buildEnv {
     name = "l-set-web";
     ignoreCollisions = true;
     paths = [
