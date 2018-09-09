@@ -8,28 +8,29 @@
     [ <nixpkgs/nixos/modules/installer/scan/not-detected.nix>
     ];
 
-  boot.initrd.availableKernelModules = [ "ehci_pci" "ahci" "usb_storage" "usbhid" ];
+  boot.initrd.availableKernelModules = [ "ahci" "xhci_pci" "ehci_pci" "nvme" "usbhid" "usb_storage" "sd_mod" ];
   boot.kernelModules = [ "kvm-intel" ];
   boot.extraModulePackages = [ ];
 
   fileSystems."/" =
-    { device = "/dev/disk/by-uuid/f115df89-c748-4305-838a-079a2fb01ec5";
+    { device = "/dev/disk/by-id/dm-name-vg0-root";
       fsType = "ext4";
     };
 
   fileSystems."/boot" =
-    { device = "/dev/disk/by-uuid/618aa690-dc3f-491c-933d-b37691af8cf9";
-      fsType = "ext2";
+    { device = "/dev/disk/by-id/nvme-SAMSUNG_MZVKW512HMJP-000H1_S34CNA0J100907-part1";
+      fsType = "vfat";
     };
 
   fileSystems."/home" =
-    { device = "/dev/disk/by-uuid/ee760335-7498-46e9-8e9b-7f3236aca294";
+    { device = "/dev/disk/by-id/dm-name-vg0-home";
       fsType = "ext4";
     };
 
   swapDevices =
-    [ { device = "/dev/disk/by-uuid/b13c86a1-5a70-44da-aa6f-e8c56b1da833"; }
+    [ { device = "/dev/disk/by-id/dm-name-vg0-swap"; }
     ];
 
-  nix.maxJobs = 8;
+  nix.maxJobs = lib.mkDefault 12;
+  powerManagement.cpuFreqGovernor = lib.mkDefault "powersave";
 }
