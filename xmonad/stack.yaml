@@ -17,6 +17,10 @@
 #  location: "./custom-snapshot.yaml"
 resolver: lts-11.11
 
+nix:
+  enable: true
+  shell-file: shell.nix
+
 # User packages to be built.
 # Various formats can be used as shown in the example below.
 #
