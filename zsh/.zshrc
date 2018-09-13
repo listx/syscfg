@@ -128,6 +128,8 @@ setopt GLOB_DOTS
 # vi-like "normal mode" with CTRL+X, CTRL+V for some more advanced operations.
 
 bindkey -v # use vim bindings!
+# Remove timeout for going into VI mode with ESC key.
+KEYTIMEOUT=1
 # use CTRL-R for history search (^R is bound to the 'redisplay' command by default, which is never used anyway)
 bindkey     '' history-incremental-search-backward
 # fix backspace key breakage on remote server
