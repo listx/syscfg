@@ -1,0 +1,7 @@
+#!/usr/bin/env zsh
+
+# Shortcut for "kubectl" but with a built-in pager.
+K()
+{
+    kubectl "$@" | less
+}
