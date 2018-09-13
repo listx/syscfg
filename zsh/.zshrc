@@ -392,6 +392,6 @@ zplug load
 # makes it go away.
 if [ $commands[kubectl] ]; then
     source <(kubectl completion zsh)
-    # Pass through the default kubectl completions to K.
-    compdef K=kubectl
+    # Pass through the default kubectl completions to kl (zsh/func/kl).
+    compdef kl=kubectl
 fi
