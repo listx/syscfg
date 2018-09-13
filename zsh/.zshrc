@@ -382,3 +382,16 @@ if ! zplug check --verbose; then
 fi
 
 zplug load
+
+# For some reason loading it from ~/.zprofile-enif leads to a cryptic
+#
+#   complete:13: command not found: compdef
+#
+# error. Loading completion code last, as in
+# https://github.com/robbyrussell/oh-my-zsh/issues/6163#issuecomment-315836297,
+# makes it go away.
+if [ $commands[kubectl] ]; then
+    source <(kubectl completion zsh)
+    # Pass through the default kubectl completions to K.
+    compdef K=kubectl
+fi
