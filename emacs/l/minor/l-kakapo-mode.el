@@ -92,6 +92,8 @@
       (h 'ruby-mode-hook nil 2
         '(progn
           (setq ruby-indent-level 2)))
+      ; Rust
+      (h 'rust-mode-hook nil 4)
       ; Shell
       (h 'sh-mode-hook t 4)
       ; Shen
