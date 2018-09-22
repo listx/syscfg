@@ -130,6 +130,7 @@
 (require 'l-org)
 (require 'l-php)
 (require 'l-python)
+(require 'l-rust)
 (require 'l-sass)
 (require 'l-sh)
 (require 'l-shell)
