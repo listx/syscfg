@@ -1,0 +1,13 @@
+#!/usr/bin/env zsh
+
+git_copy_sha()
+{
+	! git_contents && return
+    # Copy to both X primary buffer and clipboard. We copy the SHA without a
+    # trailing newline, but display it to STDOUT with a newline in order to
+    # avoid printing the "%" symbol at the end.
+    git rev-parse HEAD \
+        | tr -d '\n' \
+        | tee >(xsel -ip) >(xsel -ib) \
+        && printf '\n'
+}

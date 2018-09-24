@@ -128,8 +128,6 @@ setopt GLOB_DOTS
 # vi-like "normal mode" with CTRL+X, CTRL+V for some more advanced operations.
 
 bindkey -v # use vim bindings!
-# Remove timeout for going into VI mode with ESC key.
-KEYTIMEOUT=1
 # use CTRL-R for history search (^R is bound to the 'redisplay' command by default, which is never used anyway)
 bindkey     '' history-incremental-search-backward
 # fix backspace key breakage on remote server
@@ -141,6 +139,16 @@ bindkey     '^[[7~'         beginning-of-line   # HOME key
 bindkey     '^[[8~'         end-of-line         # END key
 bindkey -M menuselect '' .accept-line # just execute the command when selecting from a menu and pressing <enter>
 #bindkey     '\t' menu-expand-or-complete   # press <tab> just ONCE to bring up menu *AND* select the first item
+
+# Reclaim "^s" (C-s) from terminal to Zsh. Traditionally, terminals pause
+# output with C-s and resume output with C-q, but these hotkeys are rarely
+# used.
+stty stop undef
+stty start undef
+
+# Grab Git commit hash (full hash) of HEAD. Leave a space up front so that we
+# don't save this in the shell history.
+bindkey -s '^g^s' ' git_copy_sha\n'
 
 # make 'ds' prompt the user to select a dir from the dir stack, instead of just listing the dir stick
 # with a plain 'dirs -v'
