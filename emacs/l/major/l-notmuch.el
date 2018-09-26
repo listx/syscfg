@@ -67,6 +67,7 @@
   ; benefit here is that we call this function when re-visiting an out-of-focus
   ; Emacs frame that is already showing notmuch-hello-mode.
   (add-hook 'focus-in-hook (lambda () (interactive) (when (string= major-mode "notmuch-hello-mode") (notmuch-refresh-this-buffer))))
+  (add-hook 'message-send-hook #'l/confirm-sending-without-subject-or-body)
 
   ; Change how the notmuch-hello page looks. Inspired by
   ; http://www.holgerschurig.de/en/emacs-notmuch-hello/.
@@ -85,6 +86,20 @@
         (:key "d" :name "trash" :query "folder:main/trash")
         (         :name "spam" :query "folder:main/spam")
         ))
+
+  (defun l/confirm-sending-without-subject-or-body ()
+    "Popup confirmation dialog if trying to send an email with an empty subject and/or body."
+    (let*
+      ( (message-text (buffer-substring-no-properties (point-min) (point-max)))
+        (empty-message-body (string-match "--text follows this line--[[:space:]]+\\(--[[:space:]]+Best,[[:space:]]+\\)?Linus[[:space:]]+$" message-text))
+        (empty-subject (eq nil (message-field-value "Subject")))
+        (skip-this-check (not (or
+          empty-message-body
+          empty-subject))))
+      (or
+        skip-this-check
+        (yes-or-no-p "Really send with a blank subject/body? ")
+        (keyboard-quit))))
 
   (setq notmuch-hello-sections '(
     l/notmuch-hello-insert-searches
