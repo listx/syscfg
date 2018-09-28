@@ -123,6 +123,9 @@ LISTMAX=9999 # don't ask 'do you wish to see all N possibilities' unless N > 999
 
 # make '*' expand to catch dotfiles as well
 setopt GLOB_DOTS
+# Among other things, allow use of things like "ls ^(foo)*" to match all files
+# that do not start with "foo".
+setopt extendedglob
 
 # Custom binds for some common operations. Note, however, that you can enter
 # vi-like "normal mode" with CTRL+X, CTRL+V for some more advanced operations.
