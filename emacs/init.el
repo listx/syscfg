@@ -110,6 +110,7 @@
 (require 'l-dired)
 (require 'l-docker)
 (require 'l-elisp)
+(require 'l-erlang)
 (require 'l-factor)
 (require 'l-generic-x)
 (require 'l-git-rebase)
