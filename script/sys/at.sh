@@ -83,4 +83,4 @@ done
 
 echo "Executing command: $cPrp$@$cx"
 echo "-----------------"
-eval "$@"
+$@
