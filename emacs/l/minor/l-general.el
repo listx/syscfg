@@ -58,6 +58,8 @@
     "n" 'elscreen-create
     ; New tab, but clone the current tab's window-split layout (if any).
     "N" 'elscreen-clone
+    ; Ranger
+    "o" 'ranger
     "q" 'l/quit-buffer
     ; Close current window, _even if modified_.
     "Q" (lambda () (interactive) (evil-quit t))
