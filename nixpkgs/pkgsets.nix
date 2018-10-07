@@ -218,6 +218,7 @@ with super; rec {
     paths = [
       evince
       mupdf
+      zathura
     ];
   });
 
