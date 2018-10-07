@@ -108,9 +108,13 @@ with super; rec {
       fuse
       gparted
       ntfs3g
+      gptfdisk
+      ranger
 
       # other
       xscreensaver
+      pavucontrol
+      woeusb
     ];
   });
 
@@ -137,6 +141,7 @@ with super; rec {
       cloc
       cwebbin
       noweb
+      erlang
 
       # Lisps
       ccl # clozure
