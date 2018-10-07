@@ -131,6 +131,7 @@
 (require 'l-org)
 (require 'l-php)
 (require 'l-python)
+(require 'l-ranger)
 (require 'l-rust)
 (require 'l-sass)
 (require 'l-sh)
