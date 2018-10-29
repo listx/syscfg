@@ -43,5 +43,5 @@
     config = pkgs.lib.mkOverride 50 (builtins.readFile ./quadmon.conf);
   };
 
-  system.stateVersion = "18.03";
+  system.stateVersion = "18.09";
 }
