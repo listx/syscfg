@@ -12,7 +12,7 @@ c.editor.command = ["emacs", "{}"]
 c.content.default_encoding = "utf-8"
 
 # Only autocomplete the most recent 1000 items.
-c.completion.web_history_max_items = 1000
+c.completion.web_history.max_items = 1000
 
 # Allow partial-completion binding menu to display indefinitely (press <escape>
 # to exit).
