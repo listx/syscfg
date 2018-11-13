@@ -1,7 +1,11 @@
+{-# LANGUAGE LambdaCase #-}
+
 module Main where
 
 import Control.Arrow
-  ( (***) )
+  ( first
+  , second
+  )
 import Control.Monad
   ( (<=<)
   , foldM
@@ -16,6 +20,7 @@ import Data.List
   , isPrefixOf
   , nub
   , sortBy
+  , sortOn
   )
 import Data.Maybe
   ( isJust
@@ -97,17 +102,17 @@ import qualified XMonad.Util.ExtensibleState as XS
 -- are prefixed with "l_", in the style of my Emacs configuration (where all
 -- custom functions are prefixed with "l/").
 
-data XCoord = X Int
+newtype XCoord = X Int
   deriving (Eq, Ord)
-data ZCoord = Z Int
+newtype ZCoord = Z Int
   deriving (Eq, Ord)
-data YCoord = Y Int
+newtype YCoord = Y Int
   deriving (Eq, Ord)
 
 -- Each WorkspaceId, aka Workspace name, is the unique cross-section of the X,
 -- Z, and Y axes. The WorkspaceId is a String, and we can convert a XZY to a
 -- String with a basic "Show" instance.
-data XZY = XZY (XCoord, ZCoord, YCoord)
+newtype XZY = XZY (XCoord, ZCoord, YCoord)
   deriving (Eq, Ord)
 instance Show XZY where
   show (XZY (X x, Z z, Y y)) = intercalate "_" $ map show [x, z, y]
@@ -182,11 +187,11 @@ l_YFrom (XZY (_, _, yc))= yc
 l_XFromWid :: WorkspaceId -> XCoord
 l_XFromWid wid = X $ read xString
   where
-  xString = fst $ break (=='_') wid
+  xString = takeWhile (/='_') wid
 l_ZFromWid :: WorkspaceId -> ZCoord
 l_ZFromWid wid = Z $ read zString
   where
-  zString = fst . break (=='_') . drop 1 . snd $ break (=='_') wid
+  zString = takeWhile (/='_') . drop 1 . snd $ break (=='_') wid
 l_YFromWid :: WorkspaceId -> YCoord
 l_YFromWid wid = Y $ read yString
   where
@@ -205,7 +210,7 @@ l_ZCoordToGroup :: ZCoord -> ZGroup
 l_ZCoordToGroup (Z z)
   | elem z [0..2] = ZGWork
   | elem z [3..4] = ZGNet
-  | elem z [5] = ZGSys
+  | z == 5 = ZGSys
   | otherwise = ZGMisc
 
 l_ZGroupToZCoords :: ZGroup -> [ZCoord]
@@ -307,7 +312,7 @@ type ZGroupMemberships = [(ZGroup, Bool)]
 l_viewY :: YCoord -> Bool -> X ()
 l_viewY yNext keepXCoord = do
   windowSet <- gets windowset
-  when (yNext /= (l_YFromWid $ W.currentTag windowSet)) $ do
+  when (yNext /= l_YFromWid (W.currentTag windowSet)) $ do
     -- Save xzys of yPrev, so that if and when we switch back to it, we get back
     -- the same workspaces (and not just some random default set of XZYs).
     l_recordXZYs
@@ -380,7 +385,7 @@ l_recordXZYs = do
   xzyCurrentIsEmpty <- l_workspaceIsEmpty xzy
   xzyCandidates <- mapM f xzys
   let
-    xzyCs = map snd . sortBy (comparing snd) $ filter fst xzyCandidates
+    xzyCs = map snd . sortOn snd $ filter fst xzyCandidates
     xzyC
       | xzyCurrentIsEmpty && not (null xzyCs) = head xzyCs
       | otherwise = xzy
@@ -414,7 +419,7 @@ l_activateY y keepXCoord = do
   let
     xineramaCount = length $ W.screens windowSet
     (wid, xzys) = case H.lookup y hashmap of
-      Just found -> (show *** id) found
+      Just found -> first show found
       Nothing -> ("0", l_defaultXZYsForY y xineramaCount)
   -- First update all screens.
   windows $ l_viewXZYs xzys
@@ -459,7 +464,7 @@ l_promoteFromHidden windowSet ww
   -- to be hidden.
   | matchesXCoordFromWW . W.screen $ W.current windowSet = windowSet
     { W.current = (W.current windowSet) { W.workspace = ww }
-    , W.hidden = (W.workspace $ W.current windowSet) : otherHidden
+    , W.hidden = W.workspace (W.current windowSet) : otherHidden
     }
   -- If the workspace we want to see is for a visible screen (not focused), we
   -- have to promote ww to be inside W.visible and demote the existing matching
@@ -541,10 +546,9 @@ l_gridSelectWithinY = do
     y = l_YFromWindowSet windowSet
     xineramaCount = length $ W.screens windowSet
     attachName (ww, a) = do
-      b <- fmap show $ getName a
+      b <- show <$> getName a
       return (b, (ww, a))
-  windowsAtY <- sequence
-    . map attachName
+  windowsAtY <- mapM attachName
     $ concat
       [ map ((,) ww) $ W.integrate' $ W.stack ww
       | ww <- W.workspaces windowSet
@@ -554,7 +558,7 @@ l_gridSelectWithinY = do
       ]
   selected <- gridselect (gsconfig2 colorizeByXCoord) windowsAtY
   whenJust selected
-    (windows . l_viewByGoing . (W.tag *** id))
+    (windows . l_viewByGoing . first W.tag)
   where
   colorizeByXCoord (ww, _)
     = stringColorizer
@@ -606,7 +610,7 @@ l_viewWindow dir = do
       . map snd
       . l_wrapWithout (\(x, _) -> x == currentX)
       . map (\ww -> (l_XFromWid $ W.tag ww, ww))
-      . sortBy (comparing (l_XFromWid . W.tag))
+      . sortOn (l_XFromWid . W.tag)
       . map W.workspace
       $ W.screens windowSet
     nextVisible = head visibles
@@ -615,7 +619,7 @@ l_viewWindow dir = do
         then W.focusDown
         else W.focusUp
     moveFocusWithHop = do
-      focusTowardOppositeEdge $ nextVisible
+      focusTowardOppositeEdge nextVisible
       windows . W.view . W.tag $ nextVisible
     focusTowardOppositeEdge ww = case W.stack ww of
       Just _ -> resetFocus ww
@@ -652,16 +656,16 @@ l_modifyVisible :: Eq i =>
   -> W.StackSet i l a sid sd
 l_modifyVisible editStack ww windowSet
   | wwIsCurrent = W.modify Nothing (Just . editStack) windowSet
-  | otherwise = maybe windowSet replaceIfFound (find ((==(W.tag ww)) . W.tag . W.workspace) $ W.visible windowSet)
+  | otherwise = maybe windowSet replaceIfFound (find ((==W.tag ww) . W.tag . W.workspace) $ W.visible windowSet)
   where
-  wwIsCurrent = (==(W.tag ww)) $ W.currentTag windowSet
+  wwIsCurrent = (==W.tag ww) $ W.currentTag windowSet
   -- No need to bind the first thing here, because we reference windowSet from
   -- the outer scope. Closures!
   replaceIfFound _ = windowSet
-    { W.visible = l_replaceIf (\s -> (W.tag $ W.workspace s) == W.tag ww) editStackOfScreen $ W.visible windowSet }
+    { W.visible = l_replaceIf (\s -> W.tag (W.workspace s) == W.tag ww) editStackOfScreen $ W.visible windowSet }
   editStackOfScreen s = s
     { W.workspace = (W.workspace s)
-      { W.stack = maybe Nothing (Just . editStack) . W.stack $ W.workspace s }}
+      { W.stack = fmap editStack . W.stack $ W.workspace s }}
 
 l_replaceIf :: (a -> Bool) -> (a -> a) -> [a] -> [a]
 l_replaceIf p f = map (\a -> if p a then f a else a)
@@ -675,7 +679,7 @@ l_replaceIf p f = map (\a -> if p a then f a else a)
 l_viewByGoing :: (WorkspaceId, Window) -> WindowSet -> WindowSet
 l_viewByGoing (wid, a) windowSet
   | null (wws windowSet) || invalidWindow = windowSet
-  | l_YFromWid wid /= (l_YFromWid $ W.currentTag windowSet) = windowSet
+  | l_YFromWid wid /= l_YFromWid (W.currentTag windowSet) = windowSet
   | l_windowIsInWid wid a windowSet = f windowSet
   | otherwise = f $ W.shiftWin wid a windowSet
   where
@@ -694,7 +698,7 @@ l_viewByGoing (wid, a) windowSet
     ]
 
 l_windowIsInWid :: WorkspaceId -> Window -> WindowSet -> Bool
-l_windowIsInWid wid a windowSet = maybe False (==wid) $ lookup a
+l_windowIsInWid wid a windowSet = (== Just wid) $ lookup a
   [ (a', W.tag ww)
   | ww <- W.workspaces windowSet
   , a' <- W.integrate' $ W.stack ww
@@ -784,7 +788,7 @@ l_queryEmptiness hasWindows ww = case hasWindows of
   NonEmpty -> isJust $ W.stack ww
 
 l_queryZGroupMemberships :: ZGroupMemberships -> WindowSpace -> Bool
-l_queryZGroupMemberships zGroupMemberships ww = and $ map
+l_queryZGroupMemberships zGroupMemberships ww = all
   (\(zGroup, expectedResult) -> expectedResult == l_inGroup zGroup ww)
   zGroupMemberships
 
@@ -829,7 +833,7 @@ l_term1 = "~/syscfg/script/sys/terms/wb.sh"
 l_term2 = "~/syscfg/script/sys/terms/wblue.sh"
 
 l_isPortraitMonitorLayout :: String -> Bool
-l_isPortraitMonitorLayout givenHost = any (\portraitHost -> isPrefixOf portraitHost givenHost) portraitHosts
+l_isPortraitMonitorLayout givenHost = any (`isPrefixOf` givenHost) portraitHosts
   where
   portraitHosts = ["k0"]
 
@@ -839,7 +843,7 @@ l_keyBindings :: String
   -> M.Map (KeyMask, KeySym) (X ())
 l_keyBindings hostname xineramaCount conf@XConfig {XMonad.modMask = hypr}
   = M.fromList
-  . map (id *** (\f -> f >> l_resetMouse True)) $
+  . map (second (\f -> f >> l_resetMouse True)) $
   -- Close focused window.
   [ ((hyprS,  xK_q            ), kill)
 
@@ -1113,7 +1117,6 @@ l_startupHook hostname = do
   spawn "~/syscfg/xmonad/xenv.sh"
   windowSet <- gets windowset
   spawn "qutebrowser"
-  return ()
   y <- gets (l_YFromWindowSet . windowset)
   let
     xineramaCount = length $ W.screens windowSet
@@ -1136,7 +1139,7 @@ l_startupHook hostname = do
     ++ show (l_XZYFrom (X (-1)) xineramaCount ZGSys y)
     ++ " -e htop"
   spawn "emacs --daemon"
-  when (elem hostname ["k0"]) rtorrent
+  when (hostname == "k0") rtorrent
 
 -- Reset the location of the mouse pointer, with the destination depending on
 -- the type of window that is currently focused.
@@ -1155,9 +1158,9 @@ l_resetMouse alwaysReset = do
       mouseIsMoving <- asks mouseFocused
       drag <- gets dragging
       let
-        mouseBeingUsed = or
-          [ mouseIsMoving
-          , isJust drag
+        mouseBeingUsed
+          = mouseIsMoving
+          || isJust drag
           -- Detect if we are pressing down the 1st mouse button (traditionally
           -- called "Left Click" for right-handed mice). This catches the use
           -- case where a Chromium tab is being clicked, then dragged onto
@@ -1177,14 +1180,13 @@ l_resetMouse alwaysReset = do
           --
           -- NOTE: Firefox does not have this issue of windows jumping around
           -- when we move tabs across windows.
-          , (inputMask .&. button1Mask /= 0)
-          ]
+          || inputMask .&. button1Mask /= 0
       when (not mouseBeingUsed) $ moveMouse stack
     f stack
       | alwaysReset = moveMouse stack
       | otherwise = do
         ev <- asks currentEvent
-        whenJust ev $ \e -> case e of
+        whenJust ev $ \case
           -- MapRequestEvent is triggered when new windows are created.
           -- Conversely, UnmapEvent is triggered when windows are deleted.
           MapRequestEvent {} -> maybeMoveMouse stack
