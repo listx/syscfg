@@ -25,6 +25,19 @@
         (split-string (getenv "PATH") ":")
         (list exec-directory)))))
 
+(if (l/os "gnu/linux")
+  (let*
+    ((HOME (getenv "HOME"))
+     (PATH (getenv "PATH"))
+     (paths `(
+      ,(concat HOME "/syscfg/script/sys")
+      ,(concat HOME "/.local/bin"))))
+    (setenv "PATH" (concat (mapconcat 'identity paths ":") ":" PATH))
+    (setq exec-path
+      (append
+        (split-string (getenv "PATH") ":")
+        (list exec-directory)))))
+
 ; Increase garbage collection threshhold during startup to inhibit its
 ; activation. This way, startup can be a little bit faster. See
 ; https://github.com/nilcons/emacs-use-package-fast.

@@ -16,9 +16,12 @@
   (evil-define-key 'insert haskell-cabal-mode-map (kbd "<tab>") 'kakapo-tab)
   (evil-define-key 'insert haskell-cabal-mode-map (kbd "DEL") 'kakapo-backspace)
   (add-hook 'haskell-cabal-mode-hook 'l/haskell-cabal-setup)
-
-  (use-package intero)
-  (use-package hlint-refactor))
+  (add-hook 'haskell-mode-hook 'l/haskell-intero-setup))
+  (use-package intero
+    :config
+    (intero-global-mode 1))
+  (use-package hlint-refactor
+    :after (flycheck intero))
 
 (defun l/haskell-cabal-setup ()
   (kakapo-mode)
@@ -27,13 +30,13 @@
   (setq evil-shift-width 2))
 
 (defun l/haskell-intero-setup ()
-  ; Enable intero mode for Haskell.
-  (intero-mode)
-  ; Enable automated HLint suggestion application.
-  (hlint-refactor-mode)
-  ; Make intero mode also use hlint warnings. See
-  ; https://stackoverflow.com/questions/40400547/using-hlint-with-intero-on-emacs.
-  (flycheck-add-next-checker 'intero '(t . haskell-hlint)))
+  (interactive)
+  (progn
+    ; Enable automated HLint suggestion application.
+    (hlint-refactor-mode)
+    ; Make intero mode also use hlint warnings. See
+    ; https://stackoverflow.com/questions/40400547/using-hlint-with-intero-on-emacs.
+    (flycheck-add-next-checker 'intero '(t . haskell-hlint))))
 
 (defun l/hs-literate-begend ()
   (interactive)
