@@ -4,7 +4,7 @@
   "filterLinkHints": false,
   "waitForEnterForFilteredHints": true,
   "hideHud": false,
-  "keyMappings": "# Insert your preferred key mappings here.\n\nunmap h\nunmap l\nunmap x\nunmap X\nunmap f\nunmap F\nunmap p\nunmap P\nmap h previousTab\nmap l nextTab\nmap d removeTab\nmap u restoreTab\nmap f LinkHints.activateModeToOpenInNewTab\nmap F LinkHints.activateMode\nmap p openCopiedUrlInNewTab\nmap P openCopiedUrlInCurrentTab",
+  "keyMappings": "# Insert your preferred key mappings here.\n\nunmap h\nunmap l\nunmap x\nunmap X\nunmap f\nunmap F\nunmap o\nunmap O\nunmap p\nunmap P\nmap h previousTab\nmap l nextTab\nmap d removeTab\nmap u restoreTab\nmap f LinkHints.activateModeToOpenInNewTab\nmap F LinkHints.activateMode\nmap o Vomnibar.activateInNewTab\nmap O Vomnibar.activate\nmap p openCopiedUrlInNewTab\nmap P openCopiedUrlInCurrentTab",
   "linkHintCharacters": "aieuwhjkln",
   "linkHintNumbers": "0123456789",
   "newTabUrl": "about:newtab",
