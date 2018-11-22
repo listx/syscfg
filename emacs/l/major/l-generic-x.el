@@ -13,4 +13,9 @@
   nil ; other functions to call
   "A mode for ~/.Xdefaults and ~/.Xresources files")
 
+; Disable ansible-inventory-generic-mode defined in generic-x.el because it is
+; auto-applied to any file with the word "inventory" in it (it is an overly
+; aggressive regex).
+(rassq-delete-all 'ansible-inventory-generic-mode auto-mode-alist)
+
 (provide 'l-generic-x)
