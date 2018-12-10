@@ -53,7 +53,7 @@ univ_open() {
 				gimp $@ &>/dev/null & disown
 			;;
 			(aac|flac|mp3|ogg|wav|wma)
-				mpv --loop inf $( [[ $file:e:l == flac ]] && echo "--vo null" ) $@
+				mpv $( [[ $file:e:l == flac ]] && echo "--vo null" ) $@
 			;;
 			(mid|midi)
 				timidity $@
