@@ -201,6 +201,8 @@ alias enc='gpg2 -e -r linusarver'
 alias dec='~/syscfg/script/sys/decrypt.sh outfile'
 alias decless='~/syscfg/script/sys/decrypt.sh viewfile'
 
+alias rot13='tr 'A-Za-z' 'N-ZA-Mn-za-m''
+
 # easy find command (see find_quick() function)
 alias fa='find_quick a '
 alias fA='find_quick aa '
