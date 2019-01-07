@@ -3,6 +3,16 @@
   :config
   (add-hook 'go-mode-hook 'l/go-setup))
 
+(use-package flycheck-gometalinter
+  :ensure t
+  :config
+  (flycheck-gometalinter-setup)
+  (setq
+    ;; skips 'vendor' directories and sets GO15VENDOREXPERIMENT=1
+    flycheck-gometalinter-vendor t
+    ;; use in tests files
+    flycheck-gometalinter-test t))
+
 (defun l/go-setup ()
   (advice-add 'evil-fill :around #'l/fill-region)
   ; FlyCheck will automatically pick up the "golint" tool if it is installed.
