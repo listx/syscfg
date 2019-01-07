@@ -3,15 +3,9 @@
   :config
   (add-hook 'go-mode-hook 'l/go-setup))
 
-(use-package flycheck-gometalinter
+(use-package flycheck-golangci-lint
   :ensure t
-  :config
-  (flycheck-gometalinter-setup)
-  (setq
-    ;; skips 'vendor' directories and sets GO15VENDOREXPERIMENT=1
-    flycheck-gometalinter-vendor t
-    ;; use in tests files
-    flycheck-gometalinter-test t))
+  :hook (go-mode . flycheck-golangci-lint-setup))
 
 (defun l/go-setup ()
   (advice-add 'evil-fill :around #'l/fill-region)
