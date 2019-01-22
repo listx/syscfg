@@ -880,7 +880,9 @@ l_keyBindings hostname xineramaCount conf@XConfig {XMonad.modMask = hypr}
   , ((hypr,   xK_s            ), l_gridShowDebugInfo)
 
   -- Lock screen.
-  , ((hypr,   xK_Escape       ), spawn "xscreensaver-command -lock")
+  , ((hypr,   xK_Escape       ), spawnSelected def
+    [ "~/syscfg/script/sys/susp.sh"
+    , "xscreensaver-command -lock"])
 
   -- Toggle window borders.
   , ((hypr,   xK_b            ), withFocused toggleBorder)
