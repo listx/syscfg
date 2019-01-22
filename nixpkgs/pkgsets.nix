@@ -324,7 +324,7 @@ with super; rec {
       hledger
       hlint
       shellcheck
-      stack
+      HEAD.stack
       pandoc
       gitAndTools.git-annex
     ];
