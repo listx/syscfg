@@ -969,7 +969,7 @@ l_keyBindings hostname xineramaCount conf@XConfig {XMonad.modMask = hypr}
   ++
   -- Launch apps.
   [ ((hypr,   xK_i            ), spawn "qutebrowser")
-  , ((hyprS,  xK_i            ), spawnSelected def [chromium, "firefox"])
+  , ((hyprS,  xK_i            ), spawnSelected def ["chromium", "firefox"])
   , ((hypr,   xK_e            ), spawn l_term1)
   -- Backup binding to launch a terminal in case our Hyper key (hypr) is
   -- unavailable. This happens whenever we unplug/replug our keyboard, and a
@@ -985,8 +985,6 @@ l_keyBindings hostname xineramaCount conf@XConfig {XMonad.modMask = hypr}
   shrinkExpand master slave = if l_isPortraitMonitorLayout hostname
     then sendMessage slave
     else sendMessage master
-  chromium
-    | otherwise = "chromium"
   hyprS = hypr .|. shiftMask
   -- Alias "altMask" for left alt key.
   altMask = mod1Mask
