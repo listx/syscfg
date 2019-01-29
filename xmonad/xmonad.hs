@@ -28,7 +28,9 @@ import Data.Maybe
   , listToMaybe
   )
 import Data.Monoid
-  ( appEndo )
+  ( All(..)
+  , appEndo
+  )
 import Data.Ord
   ( comparing
   )
@@ -83,11 +85,30 @@ import XMonad.Layout.ResizableTile
     )
   , ResizableTall(..)
   )
+import XMonad.Util.Font
+  ( Align(..)
+  , fi
+  , initXMF
+  , releaseXMF
+  , textExtentsXMF
+  , textWidthXMF
+  )
 import XMonad.Util.NamedWindows
   ( getName )
+import XMonad.Util.Timer
+  ( TimerId
+  , handleTimer
+  , startTimer
+  )
 import XMonad.Util.WindowProperties
 import XMonad.Util.WorkspaceCompare
   ( getSortByIndex )
+import XMonad.Util.XUtils
+  ( createNewWindow
+  , deleteWindow
+  , paintAndWrite
+  , showWindow
+  )
 import qualified Data.Map as M
 import qualified Data.Map.Strict as H
 import qualified XMonad.Layout.LayoutModifier as XLL
@@ -309,6 +330,57 @@ type ZGroupMemberships = [(ZGroup, Bool)]
 l_if :: X Bool -> X () -> X () -> X ()
 l_if p a b = p >>= \pb -> if pb then a else b
 
+newtype FadingPrompts = FadingPrompts [(TimerId, Window)] deriving (Eq, Typeable)
+instance ExtensionClass FadingPrompts where
+  initialValue = FadingPrompts []
+
+l_showYCoord :: X ()
+l_showYCoord = do
+  (Y y) <- gets (l_YFromWindowSet . windowset)
+  scr <- gets $ screenRect . W.screenDetail . W.current . windowset
+  let
+    n = show y
+  dpy <- asks display
+  f <- initXMF "xft:dejavu sans mono:pixelsize=80"
+  width <- (\w -> w + w `div` length n) <$> textWidthXMF dpy f n
+  (ascent, descent) <- textExtentsXMF f n
+  let
+    height = ascent + descent + 10
+    y' = fi (rect_y scr) + (fi (rect_height scr) - height)
+    x  = fi (rect_x scr) + (fi (rect_width scr) - width)
+  w <- createNewWindow
+    (Rectangle (fi x) (fi y') (fi width) (fi height)) Nothing "" True
+  showWindow w
+  paintAndWrite
+    w f (fi width) (fi height) 0 "black" "" "white" "black" [AlignCenter] [n]
+  releaseXMF f
+  -- Show the window for 0.5 seconds.
+  tid <- startTimer 0.5
+  (FadingPrompts tws) <- XS.get :: X FadingPrompts
+  XS.put . FadingPrompts $ (tid, w):tws
+
+l_eventHook :: Event -> X All
+l_eventHook e = do
+  (FadingPrompts tws) <- XS.get :: X FadingPrompts
+  when (not $ null tws) $ do
+    let
+      f (tid, w) = handleTimer tid e $ do
+        deleteWindow w
+        return Nothing
+    -- We need to process the window deletion across *all* outstanding
+    -- FadingPrompts because it may be the case that we receive the events out
+    -- of order (that is, although we always build up the events by cons-ing it,
+    -- this hook uses XS (global statet) to retrieve all known tid values and
+    -- runs the window deletion routine against all of them). This brute force
+    -- approach is not too terrible, because the deletion will fail if the tid
+    -- does not line up with the one in the actual event.
+    --
+    -- The naive way (which works, but is not guaranteed to work), simply treats
+    -- FadingPrompts as a queue and retrieves the last item of the list, then
+    -- deletes it from the list after processing.
+    mapM_ f tws
+  return $ All True
+
 -- This function was written to implement the idea expressed in
 -- https://www.reddit.com/r/xmonad/comments/7mawso/switch_workspaces_on_multiple_monitors_with_1/.
 -- It involves less work for the user than XMonad.Actions.DynamicWorkspaceGroups
@@ -333,6 +405,7 @@ l_viewYDir dir keepXCoord = do
     (XZY (_, _, yPrev)) = l_XZYFromWindowSet windowSet
     yNext = l_YIncrementedBy dir True yPrev
   l_viewY yNext keepXCoord
+  l_showYCoord
 
 l_atYEdge :: Direction1D -> X Bool
 l_atYEdge dir = do
@@ -378,6 +451,7 @@ l_viewYNonEmpty dir = do
   when (not $ null yNexts) $ do
     l_recordXZYs
     l_activateY (head yNexts) False
+  l_showYCoord
 
 l_viewLastY :: Bool -> X ()
 l_viewLastY keepXCoord = do
@@ -1266,7 +1340,7 @@ main = do
     , mouseBindings      = l_mouseBindings
     , layoutHook         = l_layoutHook
     , manageHook         = l_manageHook xineramaCount
-    , handleEventHook    = mempty
+    , handleEventHook    = l_eventHook
     , logHook            = l_resetMouse False
     , startupHook        = l_startupHook hostname
     }
