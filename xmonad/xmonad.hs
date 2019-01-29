@@ -267,8 +267,10 @@ l_CoordsFromWid xzy =
   , l_YFromWid xzy
   )
 
-l_YIncrementedBy :: Direction1D -> YCoord -> YCoord
-l_YIncrementedBy dir (Y y) = Y $ mod (op y 1) (length l_YCoords)
+l_YIncrementedBy :: Direction1D -> Bool -> YCoord -> YCoord
+l_YIncrementedBy dir safe (Y y) = if safe
+  then Y $ mod (op y 1) (length l_YCoords)
+  else Y $ op y 1
   where
   op = if dir == Next then (+) else (-)
 
@@ -304,6 +306,9 @@ data HasWindows
 -- does not belong).
 type ZGroupMemberships = [(ZGroup, Bool)]
 
+l_if :: X Bool -> X () -> X () -> X ()
+l_if p a b = p >>= \pb -> if pb then a else b
+
 -- This function was written to implement the idea expressed in
 -- https://www.reddit.com/r/xmonad/comments/7mawso/switch_workspaces_on_multiple_monitors_with_1/.
 -- It involves less work for the user than XMonad.Actions.DynamicWorkspaceGroups
@@ -326,8 +331,16 @@ l_viewYDir dir keepXCoord = do
   windowSet <- gets windowset
   let
     (XZY (_, _, yPrev)) = l_XZYFromWindowSet windowSet
-    yNext = l_YIncrementedBy dir yPrev
+    yNext = l_YIncrementedBy dir True yPrev
   l_viewY yNext keepXCoord
+
+l_atYEdge :: Direction1D -> X Bool
+l_atYEdge dir = do
+  windowSet <- gets windowset
+  let
+    (XZY (_, _, yPrev)) = l_XZYFromWindowSet windowSet
+    yNext = l_YIncrementedBy dir False yPrev
+  return $ notElem yNext l_YCoords
 
 -- Like l_viewYDir, but first search in the given direction if there are any
 -- non-empty XZYs, and if so, view that YCoord. If all other YCoords are empty,
@@ -354,10 +367,12 @@ l_viewYNonEmpty dir = do
         , W.tag ww == show xzy
         ]
       Nothing -> False
+    rejectWraparound = takeWhile (if dir == Next then (>yPrev) else (<yPrev))
     yNexts
       = map fst
       . dropWhile ((==False) . snd)
       . map xzysWerePopulatedAtY
+      . rejectWraparound
       . searchDirection
       $ l_wrapWithout (==yPrev) l_YCoords
   when (not $ null yNexts) $ do
@@ -525,7 +540,7 @@ l_shiftYDir dir = do
   let
     xineramaCount = length $ W.screens windowSet
     yPrev = l_YFromWindowSet windowSet
-    yNext = l_YIncrementedBy dir yPrev
+    yNext = l_YIncrementedBy dir True yPrev
     x = l_XFromWid . W.tag . W.workspace $ W.current windowSet
     -- Like in l_viewYDir, try to grab the XZY of the last used Workspace at the
     -- target xzy.
@@ -936,16 +951,19 @@ l_keyBindings hostname xineramaCount conf@XConfig {XMonad.modMask = hypr}
     (flip whenJust (windows . l_shiftAndView) =<< screenWorkspace =<< sc)) | (key, sc) <- [(xK_h, screenBy (-1)), (xK_l, screenBy 1)]
   ]
   ++
-  [ ((hyprA,  xK_j            ), l_viewYDir Next False)
+  -- Show the next set of workspaces by moving in the Y direction. If at the
+  -- edge, do NOT cycle; instead, popup a message saying that we're at the edge
+  -- of the Y coordinate.
+  [ ((hyprA,  xK_j            ), l_viewYNonEmpty Next)
   , ((hyprAS, xK_j            ), whenX
                                   (l_windowCountInCurrentWorkspaceExceeds 0)
-                                  (l_shiftYDir Next))
-  , ((hyprA,  xK_k            ), l_viewYDir Prev False)
+                                  (yEdgeGuard Next $ l_shiftYDir Next))
+  , ((hyprA,  xK_k            ), l_viewYNonEmpty Prev)
   , ((hyprAS, xK_k            ), whenX
                                   (l_windowCountInCurrentWorkspaceExceeds 0)
-                                  (l_shiftYDir Prev))
-  , ((hyprA,  xK_n            ), l_viewYNonEmpty Next)
-  , ((hyprA,  xK_p            ), l_viewYNonEmpty Prev)
+                                  (yEdgeGuard Prev $ l_shiftYDir Prev))
+  , ((hyprA,  xK_Return       ), yEdgeGuard Next $ l_viewYDir Next False)
+  , ((hyprA,  xK_BackSpace    ), yEdgeGuard Prev $ l_viewYDir Prev False)
   , ((hypr,   xK_y            ), l_viewLastY False)
   ]
   ++
@@ -982,6 +1000,7 @@ l_keyBindings hostname xineramaCount conf@XConfig {XMonad.modMask = hypr}
   , ((hypr,   xK_u            ), spawn "emacs")
   ]
   where
+  yEdgeGuard dir = l_if (l_atYEdge dir) (return ())
   shrinkExpand master slave = if l_isPortraitMonitorLayout hostname
     then sendMessage slave
     else sendMessage master
