@@ -398,6 +398,7 @@ l_viewY yNext keepXCoord = do
     -- screens will have switched their XZY coordinate to reflect yNext, not
     -- yPrev.
     l_activateY yNext keepXCoord
+    l_showYCoord
 
 l_viewYDir :: Direction1D -> Bool -> X ()
 l_viewYDir dir keepXCoord = do
@@ -406,7 +407,6 @@ l_viewYDir dir keepXCoord = do
     (XZY (_, _, yPrev)) = l_XZYFromWindowSet windowSet
     yNext = l_YIncrementedBy dir True yPrev
   l_viewY yNext keepXCoord
-  l_showYCoord
 
 l_atYEdge :: Direction1D -> X Bool
 l_atYEdge dir = do
