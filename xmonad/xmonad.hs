@@ -14,7 +14,8 @@ import Control.Monad
 import Data.Bits
   ( (.&.) )
 import Data.List
-  ( find
+  ( elemIndex
+  , find
   , foldl'
   , intercalate
   , isPrefixOf
@@ -265,9 +266,9 @@ l_XZYs xineramaCount = l_multiSort
 -- store the entire XZY string (which is also the full, unique WorkspaceId). We
 -- use XMonad.Util.ExtensibleState to store this state. See
 -- https://stackoverflow.com/questions/40270793/user-state-in-xmonad
-data Seen = Seen (H.Map YCoord (XZY, [XZY])) (Maybe YCoord)
+data Seen = Seen (H.Map YCoord (XZY, [XZY])) [YCoord]
 instance ExtensionClass Seen where
-  initialValue = Seen H.empty Nothing
+  initialValue = Seen H.empty []
 
 l_YFromWindowSet :: WindowSet -> YCoord
 l_YFromWindowSet = l_YFromWid . W.tag . W.workspace . W.current
@@ -453,10 +454,13 @@ l_viewYNonEmpty dir = do
     l_activateY (head yNexts) False
   l_showYCoord
 
-l_viewLastY :: Bool -> X ()
-l_viewLastY keepXCoord = do
-  (Seen _ xzy) <- XS.get :: X Seen
-  whenJust xzy (flip l_viewY keepXCoord)
+l_viewNthY :: Int -> Bool -> X ()
+l_viewNthY n keepXCoord = do
+  (Seen _ ys) <- XS.get :: X Seen
+  when (n < length ys) $ do
+    let
+      y = ys!!n
+    l_viewY y keepXCoord
   l_showYCoord
 
 l_recordXZYs :: X ()
@@ -480,9 +484,28 @@ l_recordXZYs = do
       | xzyCurrentIsEmpty && not (null xzyCs) = head xzyCs
       | otherwise = xzy
   XS.modify
-    (\(Seen hashmap _) -> Seen
+    (\(Seen hashmap ys) -> Seen
       (H.insert y (xzyC, xzys) hashmap)
-      (Just y))
+      ys)
+
+l_updateYHist :: X ()
+l_updateYHist = do
+  windowSet <- gets windowset
+  let
+    y = l_YFrom xzy
+    xzy = l_XZYFromWindowSet windowSet
+  XS.modify
+    (\(Seen hm ys) -> Seen
+      hm
+      (case elemIndex y ys of
+        Just i -> l_bubbleUp i ys
+        Nothing -> y:ys))
+
+-- Bring the element at the i-th index to the head of the list.
+l_bubbleUp :: Int -> [a] -> [a]
+l_bubbleUp i xs
+  | i < length xs = (xs!!i):(take i xs ++ drop (i + 1) xs)
+  | otherwise = xs
 
 -- Make the list cyclic so that we start first with the item that satisifies p,
 -- then remove this item.
@@ -515,6 +538,7 @@ l_activateY y keepXCoord = do
   windows $ l_viewXZYs xzys
   when (not keepXCoord)
     (windows $ W.view wid)
+  l_updateYHist
 
 -- Given a list of XZYs to view, convert each XZY to a "Workspace i l a" type
 -- (this is the type that XMonad cares about). In this conversion process, we
@@ -1039,7 +1063,8 @@ l_keyBindings hostname xineramaCount conf@XConfig {XMonad.modMask = hypr}
                                   (yEdgeGuard Prev $ l_shiftYDir Prev))
   , ((hyprA,  xK_Return       ), yEdgeGuard Next $ l_viewYDir Next False)
   , ((hyprA,  xK_BackSpace    ), yEdgeGuard Prev $ l_viewYDir Prev False)
-  , ((hypr,   xK_y            ), l_viewLastY False)
+  , ((hypr,   xK_y            ), l_viewNthY 1 False)
+  , ((hypr,   xK_w            ), l_viewNthY 2 False)
   ]
   ++
   -- hypr-[0..6]: Switch to YCoord N.
@@ -1203,6 +1228,8 @@ l_manageHook xineramaCount = composeOne $
 
 l_startupHook :: String -> X ()
 l_startupHook hostname = do
+  -- When we start up, we visit the default (starting) Y Coord. Record it.
+  l_updateYHist
   -- Kill ~/.xmonad/xmonad.state (this file makes sense when you have 5 or 10
   -- workspaces, but its utility breaks down quickly when you have as many
   -- workspaces as we do).
