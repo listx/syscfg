@@ -457,6 +457,7 @@ l_viewLastY :: Bool -> X ()
 l_viewLastY keepXCoord = do
   (Seen _ xzy) <- XS.get :: X Seen
   whenJust xzy (flip l_viewY keepXCoord)
+  l_showYCoord
 
 l_recordXZYs :: X ()
 l_recordXZYs = do
