@@ -133,6 +133,7 @@ setopt extendedglob
 bindkey -v # use vim bindings!
 # use CTRL-R for history search (^R is bound to the 'redisplay' command by default, which is never used anyway)
 bindkey     '' history-incremental-search-backward
+bindkey     '' history-incremental-search-forward
 # fix backspace key breakage on remote server
 if [[ "$HOSTNAME" == "l0" ]]; then
     TERM=xterm
