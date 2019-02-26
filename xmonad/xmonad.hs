@@ -342,21 +342,31 @@ l_showYCoord = do
   let
     n = show y
   dpy <- asks display
-  f <- initXMF "xft:dejavu sans mono:pixelsize=80"
+  f <- initXMF "xft:dejavu sans mono:pixelsize=160"
   width <- (\w -> w + w `div` length n) <$> textWidthXMF dpy f n
   (ascent, descent) <- textExtentsXMF f n
   let
     height = ascent + descent + 10
-    y' = fi (rect_y scr) + (fi (rect_height scr) - height)
+    y' = fi (rect_y scr) + (fi (rect_height scr) - height) `div` 2
     x  = fi (rect_x scr) + (fi (rect_width scr) - width)
+    colors =
+      [ "green"
+      , "yellow"
+      , "blue"
+      , "red"
+      , "white"
+      , "magenta"
+      , "cyan"
+      ]
+    c n' = colors !! mod n' (length colors)
   w <- createNewWindow
     (Rectangle (fi x) (fi y') (fi width) (fi height)) Nothing "" True
   showWindow w
   paintAndWrite
-    w f (fi width) (fi height) 0 "black" "" "white" "black" [AlignCenter] [n]
+    w f (fi width) (fi height) 4 (c y) "white" "black" (c y) [AlignCenter] [n]
   releaseXMF f
-  -- Show the window for 0.5 seconds.
-  tid <- startTimer 0.5
+  -- Show the window for 0.4 seconds.
+  tid <- startTimer 0.4
   (FadingPrompts tws) <- XS.get :: X FadingPrompts
   XS.put . FadingPrompts $ (tid, w):tws
 
