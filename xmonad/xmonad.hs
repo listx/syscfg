@@ -347,8 +347,8 @@ l_showYCoord = do
   (ascent, descent) <- textExtentsXMF f n
   let
     height = ascent + descent + 10
-    y' = fi (rect_y scr) + (fi (rect_height scr) - height) `div` 2
-    x  = fi (rect_x scr) + (fi (rect_width scr) - width)
+    y' = fi (rect_y scr) + div (fi (rect_height scr) - height) 2
+    x  = fi (rect_x scr) + div (fi (rect_width scr) - width) 2
     colors =
       [ "green"
       , "yellow"
@@ -359,8 +359,17 @@ l_showYCoord = do
       , "cyan"
       ]
     c n' = colors !! mod n' (length colors)
+  maybeFocusedWindow <- gets $ W.stack . W.workspace . W.current . windowset
+  (xFinal, yFinal) <- case maybeFocusedWindow of
+    Just s -> do
+      (_, x2, y2, w2, h2, _, _) <- liftIO . getGeometry dpy $ W.focus s
+      return
+        ( x2 + (div (fi w2) 2 - div (fi width) 2)
+        , y2 + (div (fi h2) 2 - div height 2)
+        )
+    Nothing -> return (fi x, y')
   w <- createNewWindow
-    (Rectangle (fi x) (fi y') (fi width) (fi height)) Nothing "" True
+    (Rectangle (fi xFinal) (fi yFinal) (fi width) (fi height)) Nothing "" True
   showWindow w
   paintAndWrite
     w f (fi width) (fi height) 4 (c y) "white" "black" (c y) [AlignCenter] [n]
