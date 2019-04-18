@@ -8,7 +8,6 @@ super:
   };
   chromium = {
     enablePepperFlash = true; # Chromium's non-NSAPI alternative to Adobe Flash
-    enablePepperPDF = true;
   };
 
   # Nix evaluates this file and will call the `packageOverrides` attribute as a
