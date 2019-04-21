@@ -132,6 +132,10 @@
             '(progn
               (setq python-indent 2)))
           ))
+      (if
+          (l/kakapo-set-project-id "_git" "COMMIT_EDITMSG" b)
+        (progn
+          (setq indent-tabs-mode nil)))
       (if (l/kakapo-set-project-id "gv" "prog/gv/" b)
         (h 'sh-mode-hook nil 2)))))
 
