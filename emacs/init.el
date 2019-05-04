@@ -120,6 +120,7 @@
 (require 'l-c)
 (require 'l-c++)
 (require 'l-clojure)
+(require 'l-dhall)
 (require 'l-dired)
 (require 'l-docker)
 (require 'l-elisp)
