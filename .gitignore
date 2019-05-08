@@ -18,6 +18,7 @@ emacs/projectile-bookmarks.eld
 emacs/projectile.cache
 emacs/recentf
 emacs/tramp
+emacs/transient
 gpg
 mplayer/mplayerplug-in.conf
 ncmpcpp/config
