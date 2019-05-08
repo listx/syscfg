@@ -117,6 +117,7 @@
 (require 'l-vdiff)
 
 ;; Load major-mode packages.
+(require 'l-bazel)
 (require 'l-c)
 (require 'l-c++)
 (require 'l-clojure)
