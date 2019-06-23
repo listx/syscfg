@@ -116,7 +116,7 @@
           (l/kakapo-set-project-id "miro" "prog/miro/" b)
           (l/kakapo-set-project-id "lovelace" "prog/lovelace/" b))
         (progn
-          (add-hook 'haskell-mode-hook 'l/haskell-intero-setup)
+          (add-hook 'haskell-mode-hook 'l/haskell-setup)
           (h 'haskell-mode-hook nil 2)
           (h 'c-mode-hook t 8
             '(progn
