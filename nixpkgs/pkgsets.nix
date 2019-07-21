@@ -134,9 +134,9 @@ with super; rec {
       valgrind
       gnumake
       python # 'python' is python2
-      python36
-      python36Packages.pylint
-      python36Packages.flake8
+      python37
+      python37Packages.pylint
+      python37Packages.flake8
       ruby
       cloc
       cwebbin
