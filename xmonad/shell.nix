@@ -13,5 +13,6 @@ haskell.lib.buildStackProject {
       libffi
       pkgconfig
       x11
+      xorg.libXinerama
       xorg.libXScrnSaver
       xorg.libXrandr ]; }
