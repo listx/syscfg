@@ -19,7 +19,7 @@ resolver: lts-13.29
 
 nix:
   enable: true
-  pure: false
+  pure: true
   shell-file: shell.nix
 
 # User packages to be built.
