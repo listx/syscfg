@@ -164,6 +164,9 @@ with super; rec {
 
       # analysis
       gnuplot
+
+      # build toolchains
+      bazel
     ];
   });
 
