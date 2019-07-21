@@ -1,5 +1,14 @@
 let
-  HEAD = import /home/l/prog/foreign/nixpkgs {};
+  HEAD = import (builtins.fetchGit {
+    # Unfortunately, we can't check out arbitrary GitHub commit SHAs, so we
+    # have to refer to a local clone of
+    # https://github.com/NixOS/nixpkgs-channels (which itself just follows
+    # https://github.com/NixOS/nixpkgs.git with a verification delay, as per
+    # https://nixos.wiki/wiki/Nix_channels).
+    url = "/home/l/prog/foreign/nixpkgs";
+    # Known good commit for moving branch "nixpkgs-unstable".
+    ref = "104f8a0e1a17a894b320f86add409d9aebb36fe4";
+  }) {};
 in
 {super}:
 # The `with` keyword in `with X; Y` adds the attributes of X to the scope
@@ -185,8 +194,8 @@ with super; rec {
     name = "l-set-web";
     ignoreCollisions = true;
     paths = [
-      firefox
-      chromium
+      HEAD.firefox
+      HEAD.chromium
       qutebrowser
       offlineimap
       notmuch
