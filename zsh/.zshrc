@@ -67,6 +67,9 @@ export GCC_COLORS=1
 # path to local nixpkgs git repo
 export NIXPKGS=~/prog/foreign/nixpkgs
 
+# Stack (https://www.haskellstack.org/) needs this.
+export PATH=~/.local/bin:$PATH
+
 # Add system scripts to the PATH.
 export PATH=~/syscfg/script/sys:$PATH
 
