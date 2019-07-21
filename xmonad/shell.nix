@@ -8,7 +8,9 @@ with import (builtins.fetchGit {
 haskell.lib.buildStackProject {
     name = "my-project";
     buildInputs = [
+      gmp
       haskell.compiler.ghc865
+      libffi
       pkgconfig
       x11
       xorg.libXScrnSaver
