@@ -34,10 +34,6 @@ else
 endif
 mupen:
 	ln -fs ${C}/mupen/InputAutoCfg.ini                  /usr/share/mupen64plus
-mutt:
-	ln -fns ${C}/mutt                                   ${H}/.mutt
-	ln -fs ${C}/mutt/cfg                                ${H}/.muttrc
-	ln -fs ${C}/mutt/mailcap                            ${H}/.mailcap
 nixos:
 	ln -fs ${C}/nixos/${T}/configuration.nix            /etc/nixos
 	ln -fs ${C}/nixos/${T}/hardware-configuration.nix   /etc/nixos
