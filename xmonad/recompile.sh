@@ -1,8 +1,6 @@
-#!/usr/bin/env zsh
+#!/bin/sh
 
-setopt ERR_EXIT
-setopt NO_UNSET
-setopt PIPE_FAIL
+set -ex
 
 # Compile our xmonad.hs.
 stack build

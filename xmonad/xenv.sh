@@ -1,4 +1,4 @@
-#!/usr/bin/env zsh
+#!/bin/sh
 #
 # Set up keyboard and X environment.
 #

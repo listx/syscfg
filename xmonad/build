@@ -1,10 +1,8 @@
-#!/usr/bin/env zsh
+#!/bin/sh
 
 # Adapted from https://github.com/xmonad/xmonad-testing/blob/master/build-scripts/build-with-stack.sh.
 
-setopt ERR_EXIT
-setopt NO_UNSET
-setopt PIPE_FAIL
+set -ex
 
 output_file=$1
 SRC_DIR=~/.xmonad
@@ -13,6 +11,6 @@ EXE_NAME=xmonad
 cd $SRC_DIR
 stack build
 stack_exe=$(stack path --dist-dir)/build/$EXE_NAME/$EXE_NAME
-if [[ -f $stack_exe ]]; then
+if test -f $stack_exe; then
     mv -u $stack_exe $output_file
 fi
