@@ -1,16 +1,1 @@
-#!/bin/sh
-
-# Adapted from https://github.com/xmonad/xmonad-testing/blob/master/build-scripts/build-with-stack.sh.
-
-set -ex
-
-output_file=$1
-SRC_DIR=~/.xmonad
-EXE_NAME=xmonad
-
-cd $SRC_DIR
-stack build
-stack_exe=$(stack path --dist-dir)/build/$EXE_NAME/$EXE_NAME
-if test -f $stack_exe; then
-    mv -u $stack_exe $output_file
-fi
+recompile.sh
