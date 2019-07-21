@@ -318,7 +318,7 @@ with super; rec {
 
       # We need GHC because it provides the useful 'ghci' REPL; useful for quick
       # calculator math, etc.
-      ghc
+      haskell.compiler.ghc865
 
       # Misc userland packages.
       auca
