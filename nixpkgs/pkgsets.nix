@@ -22,13 +22,12 @@ with super; rec {
   # https://github.com/jagajaga/my_configs/blob/master/.nixpkgs/common.nix.
   setPrio = prio: drv: lib.addMetaAttrs { priority = prio; } drv;
 
-  l_set_home = setPrio "10" (buildEnv {
-    name = "l-set-home";
+  l_set_basic = setPrio "10" (buildEnv {
+    name = "l-set-basic";
     ignoreCollisions = true;
     paths = [
       l_set_base
       l_set_dev
-      l_set_media
       l_set_haskell
       l_set_vm
     ];
