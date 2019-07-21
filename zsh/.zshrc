@@ -332,9 +332,7 @@ alias clean_tree='clean_dirs; clean_files'
 alias of=' poweroff & disown; exit' # power off
 alias ofo=' reboot & disown; exit' # reboot
 
-alias n='nix-env'
 alias nl='nix-env --list-generations'
-alias np='ls -l --color=always ~/.nix-profile'
 alias nq='nix-env -qaP'
 alias nls='sudo nix-env -p /nix/var/nix/profiles/system --list-generations'
 
