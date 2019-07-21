@@ -45,8 +45,7 @@ super:
     # . Read more at http://nixos.org/nix/manual/#chap-writing-nix-expressions.
 
     inherit (self.pkgsets)
-      l_set_home
-      l_set_work
+      l_set_basic
       l_set_base
       l_set_dev
       l_set_media
