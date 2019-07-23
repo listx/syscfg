@@ -67,6 +67,9 @@ export GCC_COLORS=1
 # path to local nixpkgs git repo
 export NIXPKGS=~/prog/foreign/nixpkgs
 
+# Add Golang binaries to the PATH.
+export PATH=~/go/bin:$PATH
+
 # Stack (https://www.haskellstack.org/) needs this.
 export PATH=~/.local/bin:$PATH
 
