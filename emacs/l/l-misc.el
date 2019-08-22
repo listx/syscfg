@@ -280,6 +280,7 @@ pasting. If no region is selected, copy just the buffer's filename."
         ('haml-mode "-# --after-lw")
         ('haskell-mode "--")
         ('haskell-cabal-mode "--")
+        ('java-mode "//")
         ('js-mode "//")
         ('literate-haskell-mode "--")
         ('LilyPond-mode "%")
