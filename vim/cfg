@@ -64,8 +64,8 @@ set tabpagemax=50
 "
 set timeoutlen=1000
 
-" we use a custom, local-to-buffer mod-key so that we don't conflict with any possible bindings provided by a plugin
-let maplocalleader = ","
+" leader key (works with Intellij IDEA's Vim plugin)
+let mapleader = ","
 
 " we only want to load autocommands ONCE (esp. for gvim, which sources the
 " vimrc
@@ -100,22 +100,22 @@ if !exists("autocommands_loaded")
     au BufRead,BufNewFile *.ly setlocal filetype=lilypond
 
     " Integration with my "nox" program.
-    au BufEnter * nmap <localleader>c !!nox<cr>
-    au BufEnter * vmap <localleader>c !nox<cr>
-    au BufEnter * nmap <localleader>C !!nox -u<cr>
-    au BufEnter * vmap <localleader>C !nox -u<cr>
-    au BufEnter *.c,*.cpp,*.h,*.hpp nmap <localleader>c1 !!nox -l c<cr>
-    au BufEnter *.c,*.cpp,*.h,*.hpp vmap <localleader>c1 !nox -l c<cr>
-    au BufEnter *.c,*.cpp,*.h,*.hpp nmap <localleader>CC !!nox -l c -u<cr>
-    au BufEnter *.c,*.cpp,*.h,*.hpp vmap <localleader>CC !nox -l c -u<cr>
-    au BufEnter *.ly,*.tex nmap <localleader>c1 !!nox -l tex<cr>
-    au BufEnter *.ly,*.tex vmap <localleader>c1 !nox -l tex<cr>
-    au BufEnter *.ly,*.tex nmap <localleader>CC !!nox -l tex -u<cr>
-    au BufEnter *.ly,*.tex vmap <localleader>CC !nox -l tex -u<cr>
-    au BufEnter *.hs nmap <localleader>c1 !!nox -l hs<cr>
-    au BufEnter *.hs vmap <localleader>c1 !nox -l hs<cr>
-    au BufEnter *.hs nmap <localleader>CC !!nox -l hs -u<cr>
-    au BufEnter *.hs vmap <localleader>CC !nox -l hs -u<cr>
+    au BufEnter * nmap <leader>c !!nox<cr>
+    au BufEnter * vmap <leader>c !nox<cr>
+    au BufEnter * nmap <leader>C !!nox -u<cr>
+    au BufEnter * vmap <leader>C !nox -u<cr>
+    au BufEnter *.c,*.cpp,*.h,*.hpp nmap <leader>c1 !!nox -l c<cr>
+    au BufEnter *.c,*.cpp,*.h,*.hpp vmap <leader>c1 !nox -l c<cr>
+    au BufEnter *.c,*.cpp,*.h,*.hpp nmap <leader>CC !!nox -l c -u<cr>
+    au BufEnter *.c,*.cpp,*.h,*.hpp vmap <leader>CC !nox -l c -u<cr>
+    au BufEnter *.ly,*.tex nmap <leader>c1 !!nox -l tex<cr>
+    au BufEnter *.ly,*.tex vmap <leader>c1 !nox -l tex<cr>
+    au BufEnter *.ly,*.tex nmap <leader>CC !!nox -l tex -u<cr>
+    au BufEnter *.ly,*.tex vmap <leader>CC !nox -l tex -u<cr>
+    au BufEnter *.hs nmap <leader>c1 !!nox -l hs<cr>
+    au BufEnter *.hs vmap <leader>c1 !nox -l hs<cr>
+    au BufEnter *.hs nmap <leader>CC !!nox -l hs -u<cr>
+    au BufEnter *.hs vmap <leader>CC !nox -l hs -u<cr>
 
     " highlight red any trailing whitespace
     highlight ExtraWhitespace ctermbg=red guibg=red
@@ -155,9 +155,9 @@ if !exists("autocommands_loaded")
 endif
 
 " quick copy and paste from CLIPBOARD ("+y and "+p)
-vmap <localleader>y "+y
-nmap <localleader>p "+p
-nmap <localleader>P "+P
+vmap <leader>y "+y
+nmap <leader>p "+p
+nmap <leader>P "+P
 
 " Change K from being mapped to interactive man pages to being used as the
 " vanilla comma ',' key's functionality (intra-line backwards search repeat for
@@ -166,16 +166,16 @@ nnoremap K ,
 vnoremap K ,
 
 " quicksave files
-nmap <localleader>w :up<cr>
+nmap <leader>w :up<cr>
 " force save
-nmap <localleader>W :w<cr>
+nmap <leader>W :w<cr>
 
 " exit
-nmap <localleader>q :q<cr>
-nmap <localleader>Q :q!<cr>
+nmap <leader>q :q<cr>
+nmap <leader>Q :q!<cr>
 
 " save and exit (equivalent to "ZZ")
-nmap <localleader>x :x<cr>
+nmap <leader>x :x<cr>
 
 " toggle search highlighting
 map <F2> <esc>:noh<cr>
@@ -184,13 +184,13 @@ map <F2> <esc>:noh<cr>
 map <F3> <esc>:match ErrorMsg '\%>80v.\+'<cr>
 
 " find lines longer than 80 characters
-nmap <localleader>fl /\%>80v.\+<cr>
+nmap <leader>fl /\%>80v.\+<cr>
 
 " remove all trailing whitespace
-nmap <silent> <localleader>e :call KillWhiteSpace()<cr>
+nmap <silent> <leader>e :call KillWhiteSpace()<cr>
 
 " replace all /r/n () with /n
-nmap <silent> <localleader>E :call KillWinNL()<cr>
+nmap <silent> <leader>E :call KillWinNL()<cr>
 
 " Use <F10> to toggle between 'paste' and 'nopaste'
 set pastetoggle=<F10>
@@ -234,17 +234,17 @@ vnoremap <space> 10jzz
 vnoremap <backspace> 10kzz
 
 " open buffer to current directory's contents
-nmap <localleader>D :e<space>.<cr>
+nmap <leader>D :e<space>.<cr>
 
 " create a new blank tab
-nmap <localleader>n :tabe<cr>
+nmap <leader>n :tabe<cr>
 " create a new tab showing the contents of the current directory
-nmap <localleader>N :tabe<space>.<cr>
+nmap <leader>N :tabe<space>.<cr>
 
 " horizontally/vertically split current window
-nmap <localleader>h :sp<cr>
-nmap <localleader>H :sp<space>.<cr>
-nmap <localleader>v :vsp<cr>
-nmap <localleader>V :vsp<space>.<cr>
+nmap <leader>h :sp<cr>
+nmap <leader>H :sp<space>.<cr>
+nmap <leader>v :vsp<cr>
+nmap <leader>V :vsp<space>.<cr>
 
 " vim: syntax=vim
