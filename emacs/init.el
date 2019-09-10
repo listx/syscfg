@@ -125,6 +125,7 @@
 (require 'l-dired)
 (require 'l-docker)
 (require 'l-elisp)
+(require 'l-elixir)
 (require 'l-erlang)
 (require 'l-factor)
 (require 'l-generic-x)
