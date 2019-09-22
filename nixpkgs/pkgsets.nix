@@ -150,6 +150,8 @@ with super; rec {
       cwebbin
       noweb
       erlang
+      rustc
+      rustfmt
 
       # Lisps
       ccl # clozure
