@@ -101,6 +101,7 @@
   :keymaps 'org-mode-map
   :states '(normal)
   "\"" 'hydra-org/body
+  "j" 'org-insert-heading-after-current
   ; Cycle section visibility level.
   "l" 'org-cycle
   "L" 'org-global-cycle
