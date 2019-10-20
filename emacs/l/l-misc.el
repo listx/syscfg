@@ -286,6 +286,7 @@ pasting. If no region is selected, copy just the buffer's filename."
         ('LilyPond-mode "%")
         ('latex-mode "%")
         ('plain-tex-mode "%")
+        ('rust-mode "//")
         ('sass-mode "//")
         (t "\\#"))) ; default to shell syntax
     ; output buffer
