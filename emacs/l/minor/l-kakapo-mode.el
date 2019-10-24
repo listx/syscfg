@@ -51,6 +51,8 @@
       (h 'c++-mode-hook t 8
         '(progn
           (setq default-tab-width 8)))
+      ; Clojure
+      (h 'clojure-mode-hook nil 2)
       ; CSS
       (h 'css-mode-hook nil 2
         '(progn
