@@ -274,6 +274,7 @@ pasting. If no region is selected, copy just the buffer's filename."
         "nox --uncomment --sline ")
       (case (with-current-buffer (current-buffer) major-mode)
         ('c-mode "//")
+        ('clojure-mode "\\;")
         ('dhall-mode "--")
         ('emacs-lisp-mode "\\;")
         ('go-mode "//")
