@@ -57,6 +57,8 @@
       (h 'css-mode-hook nil 2
         '(progn
           (setq css-indent-offset 2)))
+      ; Elixir
+      (h 'elixir-mode-hook nil 2)
       ; Emacs lisp
       (h 'emacs-lisp-mode-hook nil 2)
       ; Haskell
