@@ -4,9 +4,36 @@
   (add-hook 'after-save-hook 'l/org-mode-save-hook)
   ; Write timestamp when a TODO changes to DONE.
   (setq org-log-done t)
+  ; Write additional timestamp each time a task is re-DEADLINE-d. Useful for
+  ; seeing which tasks are incurring time cost overruns.
+  (setq org-log-redeadline (quote time))
+  ; Write additional timestamp each time a task is re-SCHEDULED-d.
+  (setq org-log-reschedule (quote time))
+  ; Make agenda show 2 weeks instead of 1.
+  (setq org-agenda-span 'fortnight)
   ; Mark a TODO item as DONE.
   (evil-define-key 'normal org-mode-map "T" 'org-todo)
   (setq org-agenda-files '("~/life"))
+
+  ; Disable visual line mode for agenda view because otherwise, tags get shown on
+  ; the next line because line length calculations are thrown off.
+  ; https://superuser.com/a/531670
+  (add-hook 'org-agenda-mode-hook
+    (lambda ()
+      (visual-line-mode -1)
+      (toggle-truncate-lines 1)))
+
+  ; org-agenda: Add weekly review view.
+  ; https://emacs.stackexchange.com/a/8163/13006
+  (setq org-agenda-custom-commands
+    '(("w" "Weekly review"
+      agenda ""
+      (
+        (org-agenda-span 'week)
+        (org-agenda-start-with-log-mode t)
+        (org-agenda-skip-function
+          '(org-agenda-skip-entry-if 'nottodo 'done))))))
+
   ; Org-babel settings (for evaluating code blocks).
   (org-babel-do-load-languages
     'org-babel-load-languages
@@ -88,6 +115,7 @@
 
 (defhydra hydra-org (:foreign-keys warn)
   "org"
+  ("a" org-agenda "org-agenda" :exit t)
   ("b" org-cycle-list-bullet "org-cycle-bullet-type")
   ("l" org-toggle-link-display "org-toggle-link-display")
   ("M" mmm-parse-buffer "turn on mmm-mode")
@@ -107,6 +135,11 @@
   "L" 'org-global-cycle
   ; Evaluate source code block.
   "z" 'org-ctrl-c-ctrl-c)
+
+(evil-define-key 'normal org-agenda-mode-map (kbd "n") 'org-agenda-later)
+(evil-define-key 'normal org-agenda-mode-map (kbd "p") 'org-agenda-earlier)
+(evil-define-key 'normal org-agenda-mode-map (kbd "t") 'org-agenda-todo)
+(evil-define-key 'normal org-agenda-mode-map (kbd "s") 'org-save-all-org-buffers)
 
 (evil-define-key 'normal org-mode-map (kbd "M-i") 'org-insert-link)
 (evil-define-key 'insert org-mode-map (kbd "M-i") 'org-insert-link)
