@@ -13,7 +13,7 @@
   (setq org-agenda-span 'fortnight)
   ; Mark a TODO item as DONE.
   (evil-define-key 'normal org-mode-map "T" 'org-todo)
-  (setq org-agenda-files '("~/life"))
+  (setq org-agenda-files '("~/lo/plan.org"))
 
   ; Disable visual line mode for agenda view because otherwise, tags get shown on
   ; the next line because line length calculations are thrown off.
