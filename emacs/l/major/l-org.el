@@ -30,7 +30,7 @@
       agenda ""
       (
         (org-agenda-span 'week)
-        (org-agenda-start-with-log-mode t)
+        (org-agenda-start-with-log-mode '(closed clock state))
         (org-agenda-skip-function
           '(org-agenda-skip-entry-if 'nottodo 'done))))))
 
