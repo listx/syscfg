@@ -136,6 +136,7 @@
   ; Evaluate source code block.
   "z" 'org-ctrl-c-ctrl-c)
 
+(evil-define-key 'normal org-agenda-mode-map (kbd "g") 'org-agenda-redo-all)
 (evil-define-key 'normal org-agenda-mode-map (kbd "n") 'org-agenda-later)
 (evil-define-key 'normal org-agenda-mode-map (kbd "p") 'org-agenda-earlier)
 (evil-define-key 'normal org-agenda-mode-map (kbd "t") 'org-agenda-todo)
