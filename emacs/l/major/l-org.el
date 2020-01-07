@@ -13,6 +13,8 @@
   (setq org-agenda-span 'fortnight)
   ; Mark a TODO item as DONE.
   (evil-define-key 'normal org-mode-map "T" 'org-todo)
+  ; Prefer Emacs mode for agenda view, because it has so many keybindings.
+  (evil-set-initial-state 'org-agenda-mode 'emacs)
   (setq org-agenda-files '("~/lo/plan.org"))
 
   ; Disable visual line mode for agenda view because otherwise, tags get shown on
@@ -135,12 +137,6 @@
   "L" 'org-global-cycle
   ; Evaluate source code block.
   "z" 'org-ctrl-c-ctrl-c)
-
-(evil-define-key 'normal org-agenda-mode-map (kbd "g") 'org-agenda-redo-all)
-(evil-define-key 'normal org-agenda-mode-map (kbd "n") 'org-agenda-later)
-(evil-define-key 'normal org-agenda-mode-map (kbd "p") 'org-agenda-earlier)
-(evil-define-key 'normal org-agenda-mode-map (kbd "t") 'org-agenda-todo)
-(evil-define-key 'normal org-agenda-mode-map (kbd "s") 'org-save-all-org-buffers)
 
 (evil-define-key 'normal org-mode-map (kbd "M-i") 'org-insert-link)
 (evil-define-key 'insert org-mode-map (kbd "M-i") 'org-insert-link)
