@@ -1,6 +1,7 @@
 (use-package org
   :config
   (add-hook 'org-mode-hook 'l/org-mode-hook)
+  (add-hook 'org-agenda-mode-hook 'l/org-agenda-mode-hook)
   (add-hook 'after-save-hook 'l/org-mode-save-hook)
   ; Write timestamp when a TODO changes to DONE.
   (setq org-log-done t)
@@ -114,6 +115,13 @@
   (define-key org-mode-map [(tab)] nil)
   (define-key org-mode-map (kbd "<S-iso-lefttab>") nil)
   (define-key org-mode-map (kbd "<backtab>") nil))
+
+(defun l/org-agenda-mode-hook ()
+  ; Remap some hotkeys.
+  (define-key org-agenda-mode-map "H" 'evil-next-buffer)
+  (define-key org-agenda-mode-map "L" 'evil-prev-buffer)
+  (define-key org-agenda-mode-map (kbd "RET") 'org-agenda-goto)
+  (define-key org-agenda-mode-map [(tab)] 'other-window))
 
 (defhydra hydra-org (:foreign-keys warn)
   "org"
