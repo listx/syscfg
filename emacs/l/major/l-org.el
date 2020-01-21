@@ -121,6 +121,7 @@
   (define-key org-agenda-mode-map "H" 'evil-next-buffer)
   (define-key org-agenda-mode-map "L" 'evil-prev-buffer)
   (define-key org-agenda-mode-map (kbd "RET") 'org-agenda-goto)
+  (define-key org-agenda-mode-map (kbd "<S-iso-lefttab>") (lambda () (interactive) (other-window -1)))
   (define-key org-agenda-mode-map [(tab)] 'other-window))
 
 (defhydra hydra-org (:foreign-keys warn)
