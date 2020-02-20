@@ -77,12 +77,46 @@ univ_open() {
 				# Use emacsclient, but create a new frame only if there isn't
 				# one already. See
 				# http://superuser.com/questions/358037/emacsclient-create-a-frame-if-a-frame-does-not-exist
-				emacsclient -n --eval "(if (> (length (frame-list)) 1) 't)" | grep t >/dev/null
-				if (( $? == 1 )); then
-					emacsclient -n -a "" -c --eval "(find-file \"$@\")"
+				#
+				# However, always spawn a new frame if connecting over SSH.
+				emacsclient_cmd="emacsclient -a \"\" --eval '(find-file \"$@\")'"
+				if [[ -n "${SSH_TTY}" ]]; then
+					emacsclient_cmd+=" -t"
 				else
-					emacsclient -n -a "" --eval "(find-file \"$@\")"
+					# Add "-n" so that the shell session from which we are
+					# invoking this does not have to wait for Emacs to close
+					# before returning. It's practically the same as
+					# backgrounding the task.
+					emacsclient_cmd+=" -n"
+					# Check for an existing open frame. We have to filter out
+					# the frame named "initial_terminal" because it is a special
+					# invisible frame that is created by default by the Emacs
+					# daemon on startup.
+					read -r -d '' elisp << EOF
+(let
+  (
+    ; Filter out frames that are invisible frames that are meant to keep
+    ; the emacs daemon running (alive).
+    (visible-frames
+      (seq-filter
+        (lambda (x) (not (string-equal x "initial_terminal")))
+          (mapcar 'terminal-name (frame-list))))
+  )
+  (if (> (length visible-frames) 0)
+    (progn
+      (invert-face 'mode-line)
+      (run-with-timer 0.1 nil #'invert-face 'mode-line)
+      ; Print a message for the caller to digest.
+      (identity 'visible-frame-found))))
+EOF
+					if [[ "$(emacsclient --eval "${elisp}")" == "visible-frame-found" ]]; then
+						echo "found open frame; reusing..."
+					else
+						echo "no open frames found; creating..."
+						emacsclient_cmd+=" -c"
+					fi
 				fi
+				eval "${emacsclient_cmd}"
 			;;
 		esac
 	elif [[ -d $1 ]]; then
