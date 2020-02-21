@@ -123,7 +123,16 @@ otherwise, close current tab (elscreen)."
       ; if there is only one elscreen, just try to quit (calling
       ; elscreen-kill will not work, because elscreen-kill fails if there
       ; is only one elscreen)
-      (one-elscreen (evil-quit) nil))))
+      (one-elscreen
+        (progn
+          ; Minibuffers can create their own frames --- but they can linger
+          ; around as an invisible frame even after they are deleted. Delete all
+          ; other frames whenever we exit from a single visible daemon frame,
+          ; because there is no point in keeping them around. If anything they
+          ; can hinder detection of "is there a visible frame?" logic from the
+          ; shell.
+          (delete-other-frames)
+          (evil-quit)) nil))))
 
 (defun l/kill-this-buffer! ()
   "Kill current buffer even if it is modified."
