@@ -97,20 +97,28 @@ univ_open() {
   (
     ; Filter out frames that are invisible frames that are meant to keep
     ; the emacs daemon running (alive).
-    (visible-frames
+    (visible-graphical-frames
       (seq-filter
-        (lambda (x) (not (string-equal x "initial_terminal")))
+        (lambda (x)
+          (and
+            ; Discard any frames that are bound to an existing terminal (e.g.,
+            ; git commit editing sessions in another terminal window).
+            (not (string-prefix-p "/dev/" x))
+            ; Discard default invisible frame that starts up with the daemon.
+            (not (string-equal x "initial_terminal"))))
           (mapcar 'terminal-name (frame-list))))
   )
-  (if (> (length visible-frames) 0)
+  (if (> (length visible-graphical-frames) 0)
     (progn
       (invert-face 'mode-line)
       (run-with-timer 0.1 nil #'invert-face 'mode-line)
       ; Print a message for the caller to digest.
-      (identity 'visible-frame-found))))
+      (car visible-graphical-frames))))
 EOF
-					if [[ "$(emacsclient --eval "${elisp}")" == "visible-frame-found" ]]; then
+					graphical_display="$(emacsclient --eval "${elisp}")"
+					if [[ -n "${graphical_display}" ]] && [[ "${graphical_display}" != nil ]]; then
 						echo "found open frame; reusing..."
+						emacsclient_cmd+=" -d ${graphical_display}"
 					else
 						echo "no open frames found; creating..."
 						emacsclient_cmd+=" -c"
