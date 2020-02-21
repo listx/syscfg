@@ -125,13 +125,31 @@ otherwise, close current tab (elscreen)."
       ; is only one elscreen)
       (one-elscreen
         (progn
-          ; Minibuffers can create their own frames --- but they can linger
-          ; around as an invisible frame even after they are deleted. Delete all
-          ; other frames whenever we exit from a single visible daemon frame,
-          ; because there is no point in keeping them around. If anything they
-          ; can hinder detection of "is there a visible frame?" logic from the
-          ; shell.
-          (delete-other-frames)
+          ; When closing the last frame of a graphic client, close everything we
+          ; can. This is to catch graphical emacsclients that do not clean up
+          ; after themselves.
+          (if (display-graphic-p)
+            (progn
+              ; Minibuffers can create their own frames --- but they can linger
+              ; around as an invisible frame even after they are deleted. Delete all
+              ; other frames whenever we exit from a single visible daemon frame,
+              ; because there is no point in keeping them around. If anything they
+              ; can hinder detection of "is there a visible frame?" logic from the
+              ; shell.
+              (delete-other-frames)
+              ; While we're at it, also close all buffers, because it's annoying to
+              ; have things like Helm minibuffers and the like sitting around.
+              (mapc
+                'kill-buffer
+                (seq-filter
+                  (lambda (x)
+                    (not (member x '(
+                      "*Messages*"
+                      ; Do not delete buffers that may be open which are for git
+                      ; rebasing and committing.
+                      "git-rebase-todo"
+                      "COMMIT_EDITMSG"))))
+                  (mapcar 'buffer-name (buffer-list))))))
           (evil-quit)) nil))))
 
 (defun l/kill-this-buffer! ()
