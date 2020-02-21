@@ -75,6 +75,16 @@
 ; Set default major mode to text-mode.
 (setq-default major-mode 'text-mode)
 
+; For Mac, make 'get-device-terminal' always return DISPLAY. This fixes a bug
+; where a graphical emacsclient will fail with a "Display ns does not exist"
+; from this function whenever we try to open a new frame for a minibuffer, when
+; we are invoking this from a graphical emacsclient. For reference the "ns"
+; string is from (terminal-live-p nil), which denotes a Mac Cocoa graphical
+; terminal.
+(when (l/os "darwin")
+  (defun get-device-terminal (device)
+    (getenv "DISPLAY")))
+
 ; Disable alarm bell sound on Mac. For some reason, Emacs on Mac likes to sound
 ; the alarm a lot for small things, and what's worse, this alarm gets converted
 ; into a visual bell; but this visual alarm is horrible because Emacs has a GUI
