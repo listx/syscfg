@@ -345,6 +345,9 @@ alias acs="apt_cache_search"
 
 alias cal='cal -y'
 
+# Use python3 by default (python2 is EOL as of 2020)
+alias python=python3
+
 # memory management
 alias reset_cache='free && sync && echo 3 >/proc/sys/vm/drop_caches && free'
 alias reset_swap='free && swapoff -a && swapon -a && free'
