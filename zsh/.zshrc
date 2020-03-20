@@ -365,6 +365,9 @@ alias usbonn='~/syscfg/script/sys/usbmnt -a'
 alias usbof='~/syscfg/script/sys/usbmnt -u'
 alias usboff='~/syscfg/script/sys/usbmnt -U'
 
+# Add commonly-used paths as aliases.
+. ~/.zsh/path-aliases
+
 case $HOST in
 	k0)
 		alias iftop='sudo iftop -B -i eno1'
