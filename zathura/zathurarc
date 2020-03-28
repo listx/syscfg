@@ -1,0 +1,7 @@
+map [normal] = zoom in
+map [normal] + zoom default
+map [normal] r reload
+map [normal] R rotate
+map [normal] h navigate previous
+map [normal] l navigate next
+map [normal] <BackSpace> scroll full-up

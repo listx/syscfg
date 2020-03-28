@@ -99,6 +99,8 @@ xmonad:
 xquartz:
 	ln -fs ${C}/xquartz/.xinitrc.d                      ${H}
 	${C}/xquartz/setup.sh
+zathura:
+	ln -fns ${C}/zathura                                ${H}/.config/zathura
 zsh:
 	ln -fns ${C}/zsh                                    ${H}/.zsh
 	ln -fs ${C}/zsh/.zshrc                              ${H}
@@ -132,4 +134,5 @@ zsh:
 	xmonad \
 	xorg \
 	xquartz \
+	zathura \
 	zsh
