@@ -21,7 +21,7 @@
     "C" (lambda () (interactive) (l/addrem-comment nil))
 
     ; Kill buffer.
-    "d" 'kill-this-buffer
+    "d" 'l/kill-this-buffer
     ; Kill current buffer without confirmation, even if modified.
     "D" 'l/kill-this-buffer!
     ; buffers list
@@ -151,6 +151,13 @@ otherwise, close current tab (elscreen)."
                       "COMMIT_EDITMSG"))))
                   (mapcar 'buffer-name (buffer-list))))))
           (evil-quit)) nil))))
+
+(defun l/kill-this-buffer ()
+  "Kill current buffer."
+  (interactive)
+  (if (member (buffer-name) '("COMMIT_EDITMSG"))
+    (with-editor-cancel t)
+    (kill-this-buffer)))
 
 (defun l/kill-this-buffer! ()
   "Kill current buffer even if it is modified."
