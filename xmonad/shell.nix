@@ -8,14 +8,14 @@ with import (builtins.fetchGit {
     # https://nixos.wiki/wiki/Nix_channels).
     url = "~/prog/foreign/nixpkgs";
     # Known good commit for moving branch "nixpkgs-unstable".
-    ref = "104f8a0e1a17a894b320f86add409d9aebb36fe4";
+    ref = "eb24f9efb98c32f2b3ce073573162399814e7167";
 }) {};
 
 haskell.lib.buildStackProject {
     name = "my-project";
     buildInputs = [
       gmp
-      haskell.compiler.ghc865
+      haskell.compiler.ghc883
       libffi
       pkgconfig
       x11

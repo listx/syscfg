@@ -55,8 +55,7 @@ import XMonad.Actions.CycleWS
   , screenBy
   )
 import XMonad.Actions.GridSelect
-  ( def
-  , gridselect
+  ( gridselect
   , spawnSelected
   , stringColorizer
   , buildDefaultGSConfig
