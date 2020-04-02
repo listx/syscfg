@@ -7,7 +7,7 @@ let
     # https://nixos.wiki/wiki/Nix_channels).
     url = "/home/l/prog/foreign/nixpkgs";
     # Known good commit for moving branch "nixpkgs-unstable".
-    ref = "a21c2fa3ea2b88e698db6fc151d9c7259ae14d96";
+    ref = "05f0934825c2a0750d4888c4735f9420c906b388";
   }) {};
 in
 {super}:
@@ -328,7 +328,7 @@ with super; rec {
 
       # We need GHC because it provides the useful 'ghci' REPL; useful for quick
       # calculator math, etc.
-      haskell.compiler.ghc865
+      HEAD.haskell.compiler.ghc8101
 
       # Misc userland packages.
       auca
