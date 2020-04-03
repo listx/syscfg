@@ -98,6 +98,7 @@ with super; rec {
       sysstat
       tcpdump
       wireshark-cli # tshark
+      parallel
 
       # Docs
       man-pages
@@ -134,6 +135,8 @@ with super; rec {
       git
       tig
       clang
+      clojure
+      elixir
       gcc
       go
       golint
@@ -167,6 +170,7 @@ with super; rec {
       glfw
       glxinfo
       pcg_c
+      ncurses
 
       # Database
       postgresql
@@ -176,6 +180,9 @@ with super; rec {
 
       # build toolchains
       bazel
+
+      # cloud
+      google-cloud-sdk
     ];
   });
 
@@ -197,7 +204,7 @@ with super; rec {
     paths = [
       HEAD.firefox
       HEAD.chromium
-      qutebrowser
+      HEAD.qutebrowser
       offlineimap
       notmuch
       links
@@ -233,8 +240,6 @@ with super; rec {
     name = "l-set-office";
     ignoreCollisions = true;
     paths = [
-      evince
-      mupdf
       zathura
     ];
   });
@@ -325,6 +330,8 @@ with super; rec {
       # 'haskellPackages.cabalInstall' has been renamed to
       # 'haskellPackages.cabal-install'.
       cabal-install
+
+      stack
 
       # We need GHC because it provides the useful 'ghci' REPL; useful for quick
       # calculator math, etc.
