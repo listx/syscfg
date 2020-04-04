@@ -27,20 +27,26 @@ c.content.cache.size = 52428800
 # Hint chars when pressing `f' or `F'; use home row of ZQ layout (my custom layout).
 c.hints.chars = "aieuwhjkln"
 
-# Fonts; prefer 10pt monospace everywhere; the "monospace" here is defined by `c.fonts.monospace'.
-c.fonts.completion.category = "10pt monospace"
-c.fonts.completion.entry = "10pt monospace"
-c.fonts.debug_console = "10pt monospace"
-c.fonts.downloads = "10pt monospace"
-c.fonts.hints = "bold 10pt monospace"
-c.fonts.keyhint = "10pt monospace"
-c.fonts.messages.error = "10pt monospace"
-c.fonts.messages.info = "10pt monospace"
-c.fonts.messages.warning = "10pt monospace"
-c.fonts.monospace = "Terminus, Input Mono, Monospace, DejaVu Sans Mono, Liberation Mono"
-c.fonts.prompts = "10pt monospace"
-c.fonts.statusbar = "10pt monospace"
-c.fonts.tabs = "10pt monospace"
+# Fonts; prefer 10pt monospace everywhere; the "default_family" here is defined
+# by `c.fonts.default_family'.
+c.fonts.completion.category = "10pt default_family"
+c.fonts.completion.entry = "10pt default_family"
+c.fonts.debug_console = "10pt default_family"
+c.fonts.default_family = [
+    "Terminus",
+    "Input Mono",
+    "Monospace",
+    "DejaVu Sans Mono",
+    "Liberation Mono"]
+c.fonts.downloads = "10pt default_family"
+c.fonts.hints = "bold 10pt default_family"
+c.fonts.keyhint = "10pt default_family"
+c.fonts.messages.error = "10pt default_family"
+c.fonts.messages.info = "10pt default_family"
+c.fonts.messages.warning = "10pt default_family"
+c.fonts.prompts = "10pt default_family"
+c.fonts.statusbar = "10pt default_family"
+c.fonts.tabs = "10pt default_family"
 c.fonts.web.family.fixed = "Liberation Mono"
 c.fonts.web.family.serif = "Source Serif Pro"
 c.fonts.web.family.standard = "Source Serif Pro"
