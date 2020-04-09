@@ -57,7 +57,7 @@ c.url.searchengines = {
     "d": "https://duckduckgo.com/?q={}",
     "w": "https://en.wikipedia.org/w/index.php?search={}",
     "h": "http://hackage.haskell.org/packages/search?terms={}",
-    "hh": "https://hayoo.fh-wedel.de/?query={}",
+    "hh": "https://hoogle.haskell.org/?hoogle={}",
     "de": "http://www.dictionary.com/browse/{}"}
 
 # GUI - Tab navigation.
