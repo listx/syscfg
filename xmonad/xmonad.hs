@@ -188,14 +188,15 @@ instance Show XZY where
 l_XCoords :: Int -> [XCoord]
 l_XCoords xineramaCount = map X $ take xineramaCount [0..]
 
--- We have 7 of each Z and Y coordinate. It's probably common knowledge by now
--- that most people can handle about 7 things at once. And so it is 7 for now.
--- Even so, on a 1 (non-Xinerama) screen situation, that's still 49 unique
--- workspaces, which is more than enough, one would think, for most work.
+-- We have 10 Z coordinates and 10 Y coordinates. That means there are 100
+-- unique workspaces, which is more than enough, one would think, for most work.
+--
+-- The X coordinate is composed of the number of monitor screens available in
+-- the real world.
 l_ZCoords :: [ZCoord]
-l_ZCoords = map Z $ take 7 [0..]
+l_ZCoords = map Z $ take 10 [0..]
 l_YCoords :: [YCoord]
-l_YCoords = map Y $ take 7 [0..]
+l_YCoords = map Y $ take 10 [0..]
 
 -- Again, for reference our format for WorkspaceIds are "<x>_<z>_<y>".
 l_XFrom :: XZY -> XCoord
@@ -1085,8 +1086,8 @@ l_keyBindings hostname xineramaCount conf@XConfig {XMonad.modMask = hypr}
   , ((hypr,   xK_w            ), l_viewNthY 2 False)
   ]
   ++
-  -- hypr-[0..6]: Switch to YCoord N.
-  -- hyprS-[0..6]: Move focused window to YCoord N, preserving its XCoord.
+  -- hypr-[0..9]: Switch to YCoord N.
+  -- hyprS-[0..9]: Move focused window to YCoord N, preserving its XCoord.
   -- NOTE: Depending on the machine, we change the order of keys to optimize
   -- for the keyboard layout used on the machine. The order in
   -- `forQwertyKeyboard' is coincidentally optimized for that layout, because
@@ -1094,7 +1095,7 @@ l_keyBindings hostname xineramaCount conf@XConfig {XMonad.modMask = hypr}
   -- where we have our XMonad mod key (CapsLock remapped to Hyper key). In
   -- `forZQKeyboard', the numpad home row gets priority.
   [((hypr .|. mask, k         ), f y)
-    | (y, k) <- zip l_YCoords $ if l_isPortraitMonitorLayout hostname
+    | (y, k) <- zip l_YCoords' $ if l_isPortraitMonitorLayout hostname
       then forZQKeyboard
       else forQwertyKeyboard
     , (f, mask) <-
@@ -1136,13 +1137,16 @@ l_keyBindings hostname xineramaCount conf@XConfig {XMonad.modMask = hypr}
     windowWidth = 2/3
     windowHeight = 2/3
   forZQKeyboard =
-    [ xK_6
-    , xK_5
+    [ xK_0
     , xK_4
-    , xK_0
-    , xK_9
-    , xK_8
+    , xK_5
+    , xK_6
     , xK_7
+    , xK_8
+    , xK_9
+    , xK_1
+    , xK_2
+    , xK_3
     ]
   forQwertyKeyboard =
     [ xK_1
@@ -1152,7 +1156,18 @@ l_keyBindings hostname xineramaCount conf@XConfig {XMonad.modMask = hypr}
     , xK_5
     , xK_6
     , xK_7
+    , xK_8
+    , xK_9
+    , xK_0
     ]
+  l_YCoords' = map Y (if l_isPortraitMonitorLayout hostname
+    -- For Zq, we just use the plain ordering. In practice this doesn't even
+    -- matter that much because we just use the H-M-j/k bindings for navigating
+    -- across Y coordinates.
+    then [0,1,2,3,4,5,6,7,8,9]
+    -- For Qwerty, we want 0 to be last, because it's printed last in the number
+    -- row.
+    else [1,2,3,4,5,6,7,8,9,0])
 
 l_mouseBindings :: XConfig t -> M.Map (KeyMask, Button) (Window -> X ())
 l_mouseBindings _ = M.fromList
