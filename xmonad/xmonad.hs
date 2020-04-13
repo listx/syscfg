@@ -354,9 +354,12 @@ l_showYCoord = do
       , "yellow"
       , "blue"
       , "red"
-      , "white"
       , "magenta"
       , "cyan"
+      , "olive"
+      , "light slate gray"
+      , "light pink"
+      , "white"
       ]
     c n' = colors !! mod n' (length colors)
   maybeFocusedWindow <- gets $ W.stack . W.workspace . W.current . windowset
