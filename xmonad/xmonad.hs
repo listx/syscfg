@@ -373,6 +373,44 @@ l_showYCoord = do
     ]
   c n' = colors !! mod n' (length colors)
 
+-- Show the number of hidden *and* nonempty workspaces in the current Z
+-- coordinate. This reminds the user that even if they think they have deleted
+-- all windows, that there are still some workspaces with pending work in them.
+l_showHiddenNonEmptyZCount :: X ()
+l_showHiddenNonEmptyZCount = do
+  windowSet <- gets windowset
+  numHidden <- l_countHiddenNonEmptyZ
+  let
+    currentStackEmpty = isNothing . W.stack . W.workspace $ W.current windowSet
+    showHidden = l_displayString $ RichText
+      { rtString = show numHidden
+      , rtFont = "dejavu sans mono"
+      , rtSize = 160
+      , rtForeground = "white"
+      , rtBackground = "blue"
+      , rtBorder = "white"
+      , rtBorderWidth = 4
+      }
+  when (currentStackEmpty || (numHidden > 0)) showHidden
+
+l_countHiddenNonEmptyZ :: X Int
+l_countHiddenNonEmptyZ = do
+  windowSet <- gets windowset
+  let
+    xzy = l_XZYFromWindowSet windowSet
+    x = l_XFrom xzy
+    y = l_YFrom xzy
+  pure $ length
+    [ ww
+    | ww <- W.workspaces windowSet
+    -- Don't count current workspace.
+    , W.tag ww /= show xzy
+    , atXY x y . l_XZYFromWid $ W.tag ww
+    , isJust $ W.stack ww
+    ]
+  where
+  atXY x y (XZY (x', _, y')) = x == x' && y == y'
+
 l_displayString :: RichText -> X ()
 l_displayString RichText{..} = do
   scr <- gets $ screenRect . W.screenDetail . W.current . windowset
@@ -789,6 +827,7 @@ l_viewWindow dir = do
     moveFocusWithHop = do
       focusTowardOppositeEdge nextVisible
       windows . W.view . W.tag $ nextVisible
+      l_showHiddenNonEmptyZCount
     focusTowardOppositeEdge ww = case W.stack ww of
       Just _ -> resetFocus ww
       Nothing -> return ()
@@ -1062,7 +1101,9 @@ l_keyBindings hostname xineramaCount conf@XConfig {XMonad.modMask = hypr}
   -- screen. For shifting an existing window to an empty Workspace, only do so
   -- if there is indeed a window to work with in the current Workspace (i.e., if
   -- all ZCoords at this X/Y-coordinate pair is full, do nothing).
-  , ((hypr,   xK_o            ), moveTo Next $ l_searchZ (WQ Empty []))
+  , ((hypr,   xK_o            ), do
+      moveTo Next $ l_searchZ (WQ Empty [])
+      l_showHiddenNonEmptyZCount)
   , ((hyprS,  xK_o            ), whenX
       (l_windowCountInCurrentWorkspaceExceeds 0)
       (doTo Next (l_searchZ (WQ Empty [])) getSortByIndex (windows . l_shiftAndView)))
@@ -1072,7 +1113,7 @@ l_keyBindings hostname xineramaCount conf@XConfig {XMonad.modMask = hypr}
   -- untouched) The Z-axis direction is either Next or Prev (depending on the
   -- key). If we use the Shift key, move the current window to that direction,
   -- unless there is only 1 window.
-  [ ((modifier, key), action)
+  [ ((modifier, key), action >> l_showHiddenNonEmptyZCount)
   | (key, dir) <-
     [ (xK_n, Next)
     , (xK_p, Prev)
@@ -1087,7 +1128,10 @@ l_keyBindings hostname xineramaCount conf@XConfig {XMonad.modMask = hypr}
   ]
   ++
   -- H-{h,l}: Switch focus across X-axis (prev/next Xinerama screen).
-  [((hypr, key), flip whenJust (windows . W.view) =<< screenWorkspace =<< sc)
+  [((hypr, key),
+    do
+      flip whenJust (windows . W.view) =<< screenWorkspace =<< sc
+      l_showHiddenNonEmptyZCount)
   | (key, sc) <- [(xK_h, screenBy (-1)), (xK_l, screenBy 1)]
   ]
   ++
