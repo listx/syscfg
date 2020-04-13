@@ -463,7 +463,7 @@ l_eventHook e = do
     -- We need to process the window deletion across *all* outstanding
     -- FadingPrompts because it may be the case that we receive the events out
     -- of order (that is, although we always build up the events by cons-ing it,
-    -- this hook uses XS (global statet) to retrieve all known tid values and
+    -- this hook uses XS (global state) to retrieve all known tid values and
     -- runs the window deletion routine against all of them). This brute force
     -- approach is not too terrible, because the deletion will fail if the tid
     -- does not line up with the one in the actual event.
