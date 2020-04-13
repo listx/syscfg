@@ -1,4 +1,5 @@
 {-# LANGUAGE LambdaCase #-}
+{-# LANGUAGE RecordWildCards #-}
 
 module Main where
 
@@ -335,33 +336,54 @@ newtype FadingPrompts = FadingPrompts [(TimerId, Window)] deriving (Eq, Typeable
 instance ExtensionClass FadingPrompts where
   initialValue = FadingPrompts []
 
+data RichText = RichText
+  { rtString :: String
+  , rtFont :: String
+  , rtSize :: Int
+  , rtForeground :: String
+  , rtBackground :: String
+  , rtBorder :: String
+  , rtBorderWidth :: Int
+  }
+
 l_showYCoord :: X ()
 l_showYCoord = do
   (Y y) <- gets (l_YFromWindowSet . windowset)
+  l_displayString $ RichText
+    { rtString = show y
+    , rtFont = "dejavu sans mono"
+    , rtSize = 160
+    , rtForeground = "black"
+    , rtBackground = c y
+    , rtBorder = "white"
+    , rtBorderWidth = 4
+    }
+  where
+  colors =
+    [ "green"
+    , "yellow"
+    , "blue"
+    , "red"
+    , "magenta"
+    , "cyan"
+    , "olive"
+    , "light slate gray"
+    , "light pink"
+    , "white"
+    ]
+  c n' = colors !! mod n' (length colors)
+
+l_displayString :: RichText -> X ()
+l_displayString RichText{..} = do
   scr <- gets $ screenRect . W.screenDetail . W.current . windowset
-  let
-    n = show y
   dpy <- asks display
-  f <- initXMF "xft:dejavu sans mono:pixelsize=160"
-  width <- (\w -> w + w `div` length n) <$> textWidthXMF dpy f n
-  (ascent, descent) <- textExtentsXMF f n
+  f <- initXMF ("xft:" <> rtFont <> ":pixelsize=" <> show rtSize)
+  width <- (\w -> w + w `div` length rtString) <$> textWidthXMF dpy f rtString
+  (ascent, descent) <- textExtentsXMF f rtString
   let
     height = ascent + descent + 10
     y' = fi (rect_y scr) + div (fi (rect_height scr) - height) 2
     x  = fi (rect_x scr) + div (fi (rect_width scr) - width) 2
-    colors =
-      [ "green"
-      , "yellow"
-      , "blue"
-      , "red"
-      , "magenta"
-      , "cyan"
-      , "olive"
-      , "light slate gray"
-      , "light pink"
-      , "white"
-      ]
-    c n' = colors !! mod n' (length colors)
   maybeFocusedWindow <- gets $ W.stack . W.workspace . W.current . windowset
   (xFinal, yFinal) <- case maybeFocusedWindow of
     Just s -> do
@@ -375,7 +397,17 @@ l_showYCoord = do
     (Rectangle (fi xFinal) (fi yFinal) (fi width) (fi height)) Nothing "" True
   showWindow w
   paintAndWrite
-    w f (fi width) (fi height) 4 (c y) "white" "black" (c y) [AlignCenter] [n]
+    w
+    f
+    (fi width)
+    (fi height)
+    (fromIntegral rtBorderWidth)
+    rtBackground
+    rtBorder
+    rtForeground
+    rtBackground
+    [AlignCenter]
+    [rtString]
   releaseXMF f
   -- Show the window for 0.4 seconds.
   tid <- startTimer 0.4
