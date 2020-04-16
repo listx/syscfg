@@ -346,17 +346,25 @@ data RichText = RichText
   , rtBorderWidth :: Int
   }
 
+richTextDef :: RichText
+richTextDef = RichText
+  { rtString = " "
+  , rtFont = "dejavu sans mono"
+  , rtSize = 160
+  , rtForeground = "white"
+  , rtBackground = "blue"
+  , rtBorder = "white"
+  , rtBorderWidth = 4
+  }
+
 l_showYCoord :: X ()
 l_showYCoord = do
   (Y y) <- gets (l_YFromWindowSet . windowset)
-  l_displayString $ RichText
+  l_displayString $ richTextDef
     { rtString = show y
-    , rtFont = "dejavu sans mono"
-    , rtSize = 160
     , rtForeground = "black"
     , rtBackground = c y
     , rtBorder = "white"
-    , rtBorderWidth = 4
     }
   where
   colors =
@@ -382,14 +390,8 @@ l_showHiddenNonEmptyZCount = do
   numHidden <- l_countHiddenNonEmptyZ
   let
     xzy = l_XZYFromWindowSet windowSet
-    showHidden = l_displayString $ RichText
+    showHidden = l_displayString $ richTextDef
       { rtString = show numHidden
-      , rtFont = "dejavu sans mono"
-      , rtSize = 160
-      , rtForeground = "white"
-      , rtBackground = "blue"
-      , rtBorder = "white"
-      , rtBorderWidth = 4
       }
   noWindows <- l_workspaceIsEmpty xzy
   when (noWindows || (numHidden > 0)) showHidden
@@ -1028,14 +1030,8 @@ l_windowCountInCurrentWorkspaceExceeds n = do
 l_showPrevZIfCurrentlyEmpty :: X ()
 l_showPrevZIfCurrentlyEmpty = whenX l_currentWorkspaceIsEmpty $ do
   moveTo Prev $ l_searchZ (WQ NonEmpty [])
-  l_displayString $ RichText
+  l_displayString $ richTextDef
     { rtString = "↑"
-    , rtFont = "dejavu sans mono"
-    , rtSize = 160
-    , rtForeground = "white"
-    , rtBackground = "blue"
-    , rtBorder = "white"
-    , rtBorderWidth = 4
     }
 
 l_currentWorkspaceIsEmpty :: X Bool
