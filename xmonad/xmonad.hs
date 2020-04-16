@@ -1025,6 +1025,24 @@ l_windowCountInCurrentWorkspaceExceeds n = do
     windowCount = length . W.integrate' . W.stack . W.workspace $ W.current windowSet
   return $ windowCount > n
 
+l_showPrevZIfCurrentlyEmpty :: X ()
+l_showPrevZIfCurrentlyEmpty = whenX l_currentWorkspaceIsEmpty $ do
+  moveTo Prev $ l_searchZ (WQ NonEmpty [])
+  l_displayString $ RichText
+    { rtString = "↑"
+    , rtFont = "dejavu sans mono"
+    , rtSize = 160
+    , rtForeground = "white"
+    , rtBackground = "blue"
+    , rtBorder = "white"
+    , rtBorderWidth = 4
+    }
+
+l_currentWorkspaceIsEmpty :: X Bool
+l_currentWorkspaceIsEmpty
+  = (l_workspaceIsEmpty . l_XZYFromWindowSet)
+  =<< gets windowset
+
 l_workspaceIsEmpty :: XZY -> X Bool
 l_workspaceIsEmpty xzy = do
   windowSet <- gets windowset
@@ -1131,6 +1149,7 @@ l_keyBindings hostname xineramaCount conf@XConfig {XMonad.modMask = hypr}
   -- H-{h,l}: Switch focus across X-axis (prev/next Xinerama screen).
   [((hypr, key),
     do
+      l_showPrevZIfCurrentlyEmpty
       flip whenJust (windows . W.view) =<< screenWorkspace =<< sc
       l_showHiddenNonEmptyZCount)
   | (key, sc) <- [(xK_h, screenBy (-1)), (xK_l, screenBy 1)]
