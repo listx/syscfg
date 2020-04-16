@@ -381,7 +381,7 @@ l_showHiddenNonEmptyZCount = do
   windowSet <- gets windowset
   numHidden <- l_countHiddenNonEmptyZ
   let
-    currentStackEmpty = isNothing . W.stack . W.workspace $ W.current windowSet
+    xzy = l_XZYFromWindowSet windowSet
     showHidden = l_displayString $ RichText
       { rtString = show numHidden
       , rtFont = "dejavu sans mono"
@@ -391,7 +391,8 @@ l_showHiddenNonEmptyZCount = do
       , rtBorder = "white"
       , rtBorderWidth = 4
       }
-  when (currentStackEmpty || (numHidden > 0)) showHidden
+  noWindows <- l_workspaceIsEmpty xzy
+  when (noWindows || (numHidden > 0)) showHidden
 
 l_countHiddenNonEmptyZ :: X Int
 l_countHiddenNonEmptyZ = do
