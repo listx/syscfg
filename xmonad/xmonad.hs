@@ -318,8 +318,8 @@ l_XZYsFrom xineramaCount zGroup transformZCoords y =
   ]
 
 -- Abstraction to help us search for a Workspace. See l_searchZ for more info.
-data WorkspaceQuery = WQ HasWindows ZGroupMemberships
-data HasWindows
+data WorkspaceQuery = WQ WindowPopulation ZGroupMemberships
+data WindowPopulation
   = Empty
   | NonEmpty
   deriving (Eq)
@@ -989,7 +989,7 @@ l_resolveQuery (WQ hasWindows zGroupMemberships) ww
   = l_queryEmptiness hasWindows ww
   && l_queryZGroupMemberships zGroupMemberships ww
 
-l_queryEmptiness :: HasWindows -> WindowSpace -> Bool
+l_queryEmptiness :: WindowPopulation -> WindowSpace -> Bool
 l_queryEmptiness hasWindows ww = case hasWindows of
   Empty -> isNothing $ W.stack ww
   NonEmpty -> isJust $ W.stack ww
