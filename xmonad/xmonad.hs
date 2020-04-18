@@ -25,7 +25,8 @@ import Data.List
   , sortOn
   )
 import Data.Maybe
-  ( isJust
+  ( fromJust
+  , isJust
   , isNothing
   , listToMaybe
   )
@@ -390,11 +391,8 @@ l_showHiddenNonEmptyZCount = do
   numHidden <- l_countHiddenNonEmptyZ
   let
     xzy = l_XZYFromWindowSet windowSet
-    showHidden = l_displayString $ richTextDef
-      { rtString = show numHidden
-      }
   noWindows <- l_workspaceIsEmpty xzy
-  when (noWindows || (numHidden > 0)) showHidden
+  when (noWindows || (numHidden > 0)) $ l_displayStringDef $ show numHidden
 
 l_countHiddenNonEmptyZ :: X Int
 l_countHiddenNonEmptyZ = do
@@ -454,6 +452,60 @@ l_displayString RichText{..} = do
   tid <- startTimer 0.4
   (FadingPrompts tws) <- XS.get :: X FadingPrompts
   XS.put . FadingPrompts $ (tid, w):tws
+
+l_displayStringOn :: RichText -> WorkspaceId -> X ()
+l_displayStringOn RichText{..} wid = do
+  windowSet <- gets windowset
+  let
+    xzy = l_XZYFromWid wid
+    scn = head
+      [ ss
+      | ss <- W.screens $ windowSet
+      , (W.tag $ W.workspace ss) == show xzy
+      ]
+    scr = screenRect $ W.screenDetail scn
+  dpy <- asks display
+  f <- initXMF ("xft:" <> rtFont <> ":pixelsize=" <> show rtSize)
+  width <- (\w -> w + w `div` length rtString) <$> textWidthXMF dpy f rtString
+  (ascent, descent) <- textExtentsXMF f rtString
+  let
+    height = ascent + descent + 10
+    y' = fi (rect_y scr) + div (fi (rect_height scr) - height) 2
+    x  = fi (rect_x scr) + div (fi (rect_width scr) - width) 2
+    maybeFocusedWindow = W.stack $ W.workspace scn
+  (xFinal, yFinal) <- case maybeFocusedWindow of
+    Just s -> do
+      (_, x2, y2, w2, h2, _, _) <- liftIO . getGeometry dpy $ W.focus s
+      return
+        ( x2 + (div (fi w2) 2 - div (fi width) 2)
+        , y2 + (div (fi h2) 2 - div height 2)
+        )
+    Nothing -> return (fi x, y')
+  w <- createNewWindow
+    (Rectangle (fi xFinal) (fi yFinal) (fi width) (fi height)) Nothing "" True
+  showWindow w
+  paintAndWrite
+    w
+    f
+    (fi width)
+    (fi height)
+    (fromIntegral rtBorderWidth)
+    rtBackground
+    rtBorder
+    rtForeground
+    rtBackground
+    [AlignCenter]
+    [rtString]
+  releaseXMF f
+  -- Show the window for 0.4 seconds.
+  tid <- startTimer 0.4
+  (FadingPrompts tws) <- XS.get :: X FadingPrompts
+  XS.put . FadingPrompts $ (tid, w):tws
+
+l_displayStringDef :: String -> X ()
+l_displayStringDef s = l_displayString $ richTextDef
+  { rtString = s
+  }
 
 l_eventHook :: Event -> X All
 l_eventHook e = do
@@ -1020,24 +1072,24 @@ l_shiftAndViewAsHook wid = do
     , doF $ l_viewByGoing (wid, a)
     ]
 
-l_windowCountInCurrentWorkspaceExceeds :: Int -> X Bool
-l_windowCountInCurrentWorkspaceExceeds n = do
+l_currentWindowCountIs :: (Int -> Bool) -> X Bool
+l_currentWindowCountIs predicate = do
   windowSet <- gets windowset
   let
     windowCount = length . W.integrate' . W.stack . W.workspace $ W.current windowSet
-  return $ windowCount > n
+  pure $ predicate windowCount
 
-l_showPrevZIfCurrentlyEmpty :: X ()
-l_showPrevZIfCurrentlyEmpty = whenX l_currentWorkspaceIsEmpty $ do
-  moveTo Prev $ l_searchZ (WQ NonEmpty [])
-  l_displayString $ richTextDef
-    { rtString = "↑"
-    }
-
-l_currentWorkspaceIsEmpty :: X Bool
-l_currentWorkspaceIsEmpty
-  = (l_workspaceIsEmpty . l_XZYFromWindowSet)
-  =<< gets windowset
+l_windowCountIs :: (Int -> Bool) -> WorkspaceId -> X Bool
+l_windowCountIs predicate wid = do
+  windowSet <- gets windowset
+  let
+    xzy = l_XZYFromWid wid
+    windowCount = head
+      [ length . W.integrate' $ W.stack ww
+      | ww <- W.workspaces windowSet
+      , W.tag ww == show xzy
+      ]
+  pure $ predicate windowCount
 
 l_workspaceIsEmpty :: XZY -> X Bool
 l_workspaceIsEmpty xzy = do
@@ -1120,7 +1172,7 @@ l_keyBindings hostname xineramaCount conf@XConfig {XMonad.modMask = hypr}
       moveTo Next $ l_searchZ (WQ Empty [])
       l_showHiddenNonEmptyZCount)
   , ((hyprS,  xK_o            ), whenX
-      (l_windowCountInCurrentWorkspaceExceeds 0)
+      (l_currentWindowCountIs (>0))
       (doTo Next (l_searchZ (WQ Empty [])) getSortByIndex (windows . l_shiftAndView)))
   ]
   ++
@@ -1136,7 +1188,7 @@ l_keyBindings hostname xineramaCount conf@XConfig {XMonad.modMask = hypr}
   , (modifier, action) <-
     [ (hypr, moveTo dir $ l_searchZ (WQ NonEmpty []))
     , (hyprS, whenX
-        (l_windowCountInCurrentWorkspaceExceeds 0)
+        (l_currentWindowCountIs (>0))
         ((\wst -> doTo dir wst getSortByIndex (windows . l_shiftAndView))
           =<< l_searchZPreferNonEmpty))
     ]
@@ -1145,8 +1197,12 @@ l_keyBindings hostname xineramaCount conf@XConfig {XMonad.modMask = hypr}
   -- H-{h,l}: Switch focus across X-axis (prev/next Xinerama screen).
   [((hypr, key),
     do
-      l_showPrevZIfCurrentlyEmpty
+      whenX (l_currentWindowCountIs (==0)) $ do
+        moveTo Prev $ l_searchZ (WQ NonEmpty [])
+      l_showHiddenNonEmptyZCount
       flip whenJust (windows . W.view) =<< screenWorkspace =<< sc
+      whenX (l_currentWindowCountIs (==0)) $ do
+        moveTo Prev $ l_searchZ (WQ NonEmpty [])
       l_showHiddenNonEmptyZCount)
   | (key, sc) <- [(xK_h, screenBy (-1)), (xK_l, screenBy 1)]
   ]
@@ -1160,8 +1216,30 @@ l_keyBindings hostname xineramaCount conf@XConfig {XMonad.modMask = hypr}
   -- It is worth noting that this binding does nothing if there is no window in
   -- the current workspace to move.
   [((hyprS, key), whenX
-    (l_windowCountInCurrentWorkspaceExceeds 0)
-    (flip whenJust (windows . l_shiftAndView) =<< screenWorkspace =<< sc)) | (key, sc) <- [(xK_h, screenBy (-1)), (xK_l, screenBy 1)]
+    (l_currentWindowCountIs (>0))
+    (do
+      windowSet <- gets windowset
+      let
+        widCur = W.tag . W.workspace $ W.current windowSet
+      wst <- l_searchZPreferNonEmpty
+
+      -- Move focused window to next workspace.
+      widNext <- fromJust <$> (screenWorkspace =<< screenBy dir)
+      windows $ W.shift widNext
+
+      -- On the old workspace, try to promote hidden nonempty workspace if we're
+      -- staring at an empty one.
+      whenX (l_windowCountIs (==0) widCur) $ do
+        doTo Prev wst getSortByIndex (windows . l_shiftAndView)
+        l_displayStringDef . show =<< l_countHiddenNonEmptyZ
+
+      -- Shift focus to workspace.
+      windows $ W.view widNext
+
+      -- Show hidden workspace count, if any.
+      numHidden <- l_countHiddenNonEmptyZ
+      when (numHidden > 0) $ l_displayStringDef $ show numHidden))
+      | (key, dir) <- [(xK_h, -1), (xK_l, 1)]
   ]
   ++
   -- Show the next set of workspaces by moving in the Y direction. If at the
@@ -1169,11 +1247,11 @@ l_keyBindings hostname xineramaCount conf@XConfig {XMonad.modMask = hypr}
   -- of the Y coordinate.
   [ ((hyprA,  xK_j            ), l_viewYNonEmpty Next)
   , ((hyprAS, xK_j            ), whenX
-                                  (l_windowCountInCurrentWorkspaceExceeds 0)
+                                  (l_currentWindowCountIs (>0))
                                   (yEdgeGuard Next $ l_shiftYDir Next))
   , ((hyprA,  xK_k            ), l_viewYNonEmpty Prev)
   , ((hyprAS, xK_k            ), whenX
-                                  (l_windowCountInCurrentWorkspaceExceeds 0)
+                                  (l_currentWindowCountIs (>0))
                                   (yEdgeGuard Prev $ l_shiftYDir Prev))
   , ((hyprA,  xK_Return       ), yEdgeGuard Next $ l_viewYDir Next False)
   , ((hyprA,  xK_BackSpace    ), yEdgeGuard Prev $ l_viewYDir Prev False)
@@ -1195,7 +1273,7 @@ l_keyBindings hostname xineramaCount conf@XConfig {XMonad.modMask = hypr}
       else forQwertyKeyboard
     , (f, mask) <-
       [ (flip l_viewY False, 0)
-      , (whenX (l_windowCountInCurrentWorkspaceExceeds 0) . l_shiftY, shiftMask)
+      , (whenX (l_currentWindowCountIs (>0)) . l_shiftY, shiftMask)
       ]
   ]
   ++
