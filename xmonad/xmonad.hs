@@ -1234,7 +1234,7 @@ l_keyBindings hostname xineramaCount conf@XConfig {XMonad.modMask = hypr}
       -- staring at an empty one.
       whenX (l_windowCountIs (==0) widCur) $ do
         doTo Prev wst getSortByIndex (windows . l_shiftAndView)
-        l_maybeShowHiddenNonEmptyZCount
+      l_maybeShowHiddenNonEmptyZCount
 
       -- Shift focus to workspace.
       windows $ W.view widNext
