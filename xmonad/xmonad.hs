@@ -383,10 +383,11 @@ l_showYCoord = do
   c n' = colors !! mod n' (length colors)
 
 -- Show the number of hidden *and* nonempty workspaces in the current Z
--- coordinate. This reminds the user that even if they think they have deleted
--- all windows, that there are still some workspaces with pending work in them.
-l_showHiddenNonEmptyZCount :: X ()
-l_showHiddenNonEmptyZCount = do
+-- coordinate, if there are any. This reminds the user that even if they think
+-- they have deleted all windows, that there are still some workspaces with
+-- pending work in them.
+l_maybeShowHiddenNonEmptyZCount :: X ()
+l_maybeShowHiddenNonEmptyZCount = do
   windowSet <- gets windowset
   numHidden <- l_countHiddenNonEmptyZ
   let
@@ -857,24 +858,23 @@ l_gridShowDebugInfo = do
     , gs_cellwidth = 200
     }
 
--- Move focus to next/prev visible window. If we're at the edge of the current
--- workspace, then hop over to the next workspace (if any).
-l_viewWindow :: Direction1D -> X ()
-l_viewWindow dir = do
+-- If the current workspace has windows, move focus within the current worpace.
+-- If the current workspace is empty, this analagous to H-{h,l}).
+l_viewWindowOrWorkspace :: Direction1D -> X ()
+l_viewWindowOrWorkspace dir = do
   windowSet <- gets windowset
   let
     currentX = l_XFromWid . W.tag . W.workspace $ W.current windowSet
-    -- "visibles" has all visible stacks from other screens in the current Y
+    -- "wsAcrossX" has all visible stacks from other screens in the current Y
     -- cordinate (excluding the current stack in the X coordinate).
-    visibles = (if dir == Next then id else reverse)
-      . filter (isJust . W.stack)
+    wsAcrossX = (if dir == Next then id else reverse)
       . map snd
       . l_wrapWithout (\(x, _) -> x == currentX)
       . map (\ww -> (l_XFromWid $ W.tag ww, ww))
       . sortOn (l_XFromWid . W.tag)
       . map W.workspace
       $ W.screens windowSet
-    nextVisible = head visibles
+    nextVisible = head wsAcrossX
     currentStack = W.stack $ W.workspace $ W.current windowSet
     moveFocus = windows $ if dir == Next
         then W.focusDown
@@ -882,7 +882,7 @@ l_viewWindow dir = do
     moveFocusWithHop = do
       focusTowardOppositeEdge nextVisible
       windows . W.view . W.tag $ nextVisible
-      l_showHiddenNonEmptyZCount
+      l_maybeShowHiddenNonEmptyZCount
     focusTowardOppositeEdge ww = case W.stack ww of
       Just _ -> resetFocus ww
       Nothing -> return ()
@@ -901,13 +901,24 @@ l_viewWindow dir = do
       Just s -> null ((if dir == Next then W.down else W.up) s)
       Nothing -> True
     action
-      | isNothing currentStack && null visibles = return ()
-      | isNothing currentStack && not (null visibles) = moveFocusWithHop
-      | isJust currentStack && null visibles = moveFocus
-      | otherwise = if focusedOnEdge
-        then moveFocusWithHop
-        else moveFocus
+      | isNothing currentStack || focusedOnEdge = do
+          l_promoteHidden
+          moveFocusWithHop
+          l_maybeShowHiddenNonEmptyZCount
+      | otherwise = moveFocus
   action
+
+l_viewAcrossX :: ScreenId -> X ()
+l_viewAcrossX sc = do
+  l_promoteHidden
+  flip whenJust (windows . W.view) =<< screenWorkspace sc
+  l_promoteHidden
+
+l_promoteHidden :: X ()
+l_promoteHidden = do
+  whenX (l_currentWindowCountIs (==0)) $ do
+    moveTo Prev $ l_searchZ (WQ NonEmpty [])
+  l_maybeShowHiddenNonEmptyZCount
 
 -- Like XMonad.StackSet.modify, but act on the Stack found in the given
 -- workspace, if it is currently visible to the user.
@@ -1129,8 +1140,8 @@ l_keyBindings hostname xineramaCount conf@XConfig {XMonad.modMask = hypr}
 
   -- Move focus to the next/prev window, on the current set of current + visible
   -- screens.
-  , ((hypr,   xK_j            ), l_viewWindow Next)
-  , ((hypr,   xK_k            ), l_viewWindow Prev)
+  , ((hypr,   xK_j            ), l_viewWindowOrWorkspace Next)
+  , ((hypr,   xK_k            ), l_viewWindowOrWorkspace Prev)
 
   -- Swap the focused window with the next/prev window.
   , ((hyprS,  xK_j            ), windows W.swapDown)
@@ -1170,7 +1181,7 @@ l_keyBindings hostname xineramaCount conf@XConfig {XMonad.modMask = hypr}
   -- all ZCoords at this X/Y-coordinate pair is full, do nothing).
   , ((hypr,   xK_o            ), do
       moveTo Next $ l_searchZ (WQ Empty [])
-      l_showHiddenNonEmptyZCount)
+      l_maybeShowHiddenNonEmptyZCount)
   , ((hyprS,  xK_o            ), whenX
       (l_currentWindowCountIs (>0))
       (doTo Next (l_searchZ (WQ Empty [])) getSortByIndex (windows . l_shiftAndView)))
@@ -1180,7 +1191,7 @@ l_keyBindings hostname xineramaCount conf@XConfig {XMonad.modMask = hypr}
   -- untouched) The Z-axis direction is either Next or Prev (depending on the
   -- key). If we use the Shift key, move the current window to that direction,
   -- unless there is only 1 window.
-  [ ((modifier, key), action >> l_showHiddenNonEmptyZCount)
+  [ ((modifier, key), action >> l_maybeShowHiddenNonEmptyZCount)
   | (key, dir) <-
     [ (xK_n, Next)
     , (xK_p, Prev)
@@ -1195,15 +1206,7 @@ l_keyBindings hostname xineramaCount conf@XConfig {XMonad.modMask = hypr}
   ]
   ++
   -- H-{h,l}: Switch focus across X-axis (prev/next Xinerama screen).
-  [((hypr, key),
-    do
-      whenX (l_currentWindowCountIs (==0)) $ do
-        moveTo Prev $ l_searchZ (WQ NonEmpty [])
-      l_showHiddenNonEmptyZCount
-      flip whenJust (windows . W.view) =<< screenWorkspace =<< sc
-      whenX (l_currentWindowCountIs (==0)) $ do
-        moveTo Prev $ l_searchZ (WQ NonEmpty [])
-      l_showHiddenNonEmptyZCount)
+  [((hypr, key), l_viewAcrossX =<< sc)
   | (key, sc) <- [(xK_h, screenBy (-1)), (xK_l, screenBy 1)]
   ]
   ++
@@ -1231,14 +1234,13 @@ l_keyBindings hostname xineramaCount conf@XConfig {XMonad.modMask = hypr}
       -- staring at an empty one.
       whenX (l_windowCountIs (==0) widCur) $ do
         doTo Prev wst getSortByIndex (windows . l_shiftAndView)
-        l_displayStringDef . show =<< l_countHiddenNonEmptyZ
+        l_maybeShowHiddenNonEmptyZCount
 
       -- Shift focus to workspace.
       windows $ W.view widNext
 
       -- Show hidden workspace count, if any.
-      numHidden <- l_countHiddenNonEmptyZ
-      when (numHidden > 0) $ l_displayStringDef $ show numHidden))
+      l_maybeShowHiddenNonEmptyZCount))
       | (key, dir) <- [(xK_h, -1), (xK_l, 1)]
   ]
   ++
