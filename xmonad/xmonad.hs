@@ -1182,9 +1182,9 @@ l_keyBindings hostname xineramaCount conf@XConfig {XMonad.modMask = hypr}
   , ((hypr,   xK_o            ), do
       moveTo Next $ l_searchZ (WQ Empty [])
       l_maybeShowHiddenNonEmptyZCount)
-  , ((hyprS,  xK_o            ), whenX
-      (l_currentWindowCountIs (>0))
-      (doTo Next (l_searchZ (WQ Empty [])) getSortByIndex (windows . l_shiftAndView)))
+  , ((hyprS,  xK_o            ), whenX (l_currentWindowCountIs (>0)) $ do
+      doTo Next (l_searchZ (WQ Empty [])) getSortByIndex (windows . l_shiftAndView)
+      l_maybeShowHiddenNonEmptyZCount)
   ]
   ++
   -- Go to any non-empty Workspace only within the Z-Axis (X and Y remain
