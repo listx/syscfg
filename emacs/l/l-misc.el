@@ -16,6 +16,10 @@
 (setq auto-save-file-name-transforms
   `((".*" ,temporary-file-directory t)))
 
+; Save minibuffer history across sessions, limited to 1000 entries.
+(savehist-mode 1)
+(setq history-length 1000)
+
 ; Use chromium-browser for opening URLs. See
 ; https://stackoverflow.com/a/4506458.
 (setq
