@@ -132,6 +132,7 @@
   ("E" org-roam "org-roam")
   ("i" org-download-screenshot "org-download-screenshot")
   ("I" org-download-yank "org-download-yank")
+  ("j" org-roam-jump-to-index "org-roam-jump-to-index")
   ("l" org-toggle-link-display "org-toggle-link-display")
   ("M" mmm-parse-buffer "turn on mmm-mode")
   ("m" mmm-mode "turn on mmm-mode")

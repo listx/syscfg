@@ -17,6 +17,7 @@
           org-roam-server-network-label-wrap-length 20))
   :custom
   (org-roam-directory "~/lo/note")
+  (org-roam-index-file "~/lo/note/index.org")
   (org-roam-capture-templates
     '(("d" "default" plain (function org-roam--capture-get-point)
         "%?"
