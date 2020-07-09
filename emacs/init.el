@@ -110,6 +110,7 @@
 (require 'l-htmlize)
 (require 'l-hydra)
 (require 'l-kakapo-mode)
+(require 'l-org-roam)
 (require 'l-page-break-lines)
 (require 'l-prog-mode)
 (require 'l-text-mode)
