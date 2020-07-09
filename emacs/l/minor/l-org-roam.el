@@ -3,6 +3,7 @@
   :hook
   (after-init . org-roam-mode)
   :config
+  (require 'org-roam-protocol)
   (use-package org-roam-server
     :ensure t
     :config
