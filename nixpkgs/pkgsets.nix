@@ -77,6 +77,7 @@ with super; rec {
       ed
       vim
       ripgrep
+      fd
       colordiff
       gnupg
       openssl
