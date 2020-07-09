@@ -72,7 +72,11 @@ with super; rec {
       urxvt_font_size
       urxvt_perls
       tmux
+
       emacs
+      sqlite # for org-roam in emacs
+      graphviz # for org-roam-graph in emacs
+
       xsel
       ed
       vim

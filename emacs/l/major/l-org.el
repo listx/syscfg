@@ -128,6 +128,8 @@
   "org"
   ("a" org-agenda "org-agenda" :exit t)
   ("b" org-cycle-list-bullet "org-cycle-bullet-type")
+  ("i" org-download-screenshot "org-download-screenshot")
+  ("I" org-download-yank "org-download-yank")
   ("l" org-toggle-link-display "org-toggle-link-display")
   ("M" mmm-parse-buffer "turn on mmm-mode")
   ("m" mmm-mode "turn on mmm-mode")
@@ -212,5 +214,27 @@
         ; Re-indent the buffer (buffer is not re-indented automatically by
         ; org-mode).
         (org-indent-indent-buffer)))))
+
+(use-package org-download
+  :after org
+  :config
+  (setq org-download-screenshot-method "scrot -os %s")
+  (defun l/org-download-method (link)
+    (let*
+      (
+        (filename
+          (file-name-nondirectory
+            (car (url-path-and-query (url-generic-parse-url link)))))
+        ;; Create folder name with current buffer name, and place in root dir
+        (dirname (concat "./image/"
+          (replace-regexp-in-string " " "_"
+          (downcase (file-name-base buffer-file-name)))))
+        (filename-with-timestamp (format "%s-%s.%s"
+          (file-name-sans-extension filename)
+          (format-time-string org-download-timestamp)
+          (file-name-extension filename))))
+      (make-directory dirname t)
+      (expand-file-name filename-with-timestamp dirname)))
+  (setq org-download-method 'l/org-download-method))
 
 (provide 'l-org)

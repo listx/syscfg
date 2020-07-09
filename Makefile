@@ -9,6 +9,8 @@ bash:
 emacs:
 	ln -fns ${C}/emacs                                  ${H}/.emacs.d
 	touch                                               ${H}/.emacs.d/custom.el
+	xdg-mime default org-protocol.desktop x-scheme-handler/org-protocol
+	ln -fs ${C}/emacs/org-protocol.desktop              ${H}/.local/share/applications
 git:
 	ln -fs ${C}/git/cfg.personal.conf                   ${H}/.gitconfig
 	ln -fns ${C}/git/template                           ${H}/.git-templates
