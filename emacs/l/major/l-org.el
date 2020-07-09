@@ -128,6 +128,8 @@
   "org"
   ("a" org-agenda "org-agenda" :exit t)
   ("b" org-cycle-list-bullet "org-cycle-bullet-type")
+  ("e" org-roam-find-file "org-roam-find-file")
+  ("E" org-roam "org-roam")
   ("i" org-download-screenshot "org-download-screenshot")
   ("I" org-download-yank "org-download-yank")
   ("l" org-toggle-link-display "org-toggle-link-display")
@@ -136,6 +138,7 @@
   ("o" l/sort-done-closed "sort DONE/CLOSED headings" :exit t)
   ("s" org-beamer-export-to-pdf "save beamer to pdf")
   ("w" org-publish-current-project "publish current project")
+  ("u" org-roam-insert "org-roam-insert")
   ("q" nil "exit" :exit t))
 
 (general-define-key
