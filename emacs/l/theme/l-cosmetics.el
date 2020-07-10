@@ -44,7 +44,7 @@
 (defvar l/font-collection
   (cond
     ((l/os "darwin")
-      '("Input Mono Condensed" "PT Mono"))
+      '("Input Mono Condensed"))
     (t '("Terminus" "Input Mono Narrow" "Input Mono Compressed Book"))))
 (setq l/font-choice 0)
 (defun l/toggle-font ()
