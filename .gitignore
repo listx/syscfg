@@ -9,6 +9,7 @@
 cblrepo/haskell-*
 emacs/.org-id-locations
 emacs/auto-save-list
+emacs/bookmarks
 emacs/custom.el
 emacs/elpa
 emacs/eshell
