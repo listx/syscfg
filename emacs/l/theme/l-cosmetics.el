@@ -51,12 +51,13 @@
   "Cycle through font collection."
   (interactive)
   (setq l/font-choice (mod (+ 1 l/font-choice) (length l/font-collection)))
-  (set-face-attribute
-    'default
-    nil
-    :font
-    (nth l/font-choice l/font-collection))
-  (redraw-display))
+  (if (> 0 (length l/font-collection))
+    (set-face-attribute
+      'default
+      nil
+      :font
+      (nth l/font-choice l/font-collection))
+    (redraw-display)))
 
 (defvar l/themes
   '(
