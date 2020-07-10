@@ -47,7 +47,7 @@
       '("Input Mono Condensed"))
     (t '("Terminus" "Input Mono Narrow" "Input Mono Compressed Book"))))
 (setq l/font-choice 0)
-(defun l/toggle-font ()
+(defun l/cycle-font ()
   "Cycle through font collection."
   (interactive)
   (setq l/font-choice (mod (+ 1 l/font-choice) (length l/font-collection)))
