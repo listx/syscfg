@@ -16,6 +16,12 @@
 (setq auto-save-file-name-transforms
   `((".*" ,temporary-file-directory t)))
 
+; Disable backups when on Mac. It really messes up org-mode's inter-file links
+; for some reason, where a link to a file is replaced with a link to that file's
+; backup when that file is edited. Gross.
+(if (l/os "darwin")
+  (setq make-backup-files nil))
+
 ; Save minibuffer history across sessions, limited to 1000 entries.
 (savehist-mode 1)
 (setq history-length 1000)
