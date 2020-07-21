@@ -7,6 +7,7 @@
 *.DS_Store
 *~
 cblrepo/haskell-*
+cmus/*
 emacs/.org-id-locations
 emacs/auto-save-list
 emacs/bookmarks
