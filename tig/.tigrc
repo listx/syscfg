@@ -13,4 +13,5 @@ bind generic ( previous
 bind generic } parent
 
 color cursor black green bold
+color title-blur black blue bold
 color title-focus black blue bold
