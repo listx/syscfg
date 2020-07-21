@@ -1,5 +1,10 @@
 set main-view = date author id:width=10 commit-title:yes,graph,refs
 set blame-options = -w
+
+# Only show commits in the main view (don't show spurious, non-committed
+# changes).
+set show-changes = no
+
 bind generic ) next
 bind generic ( previous
 bind generic } parent
