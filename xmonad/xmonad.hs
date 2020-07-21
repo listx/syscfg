@@ -1114,7 +1114,7 @@ l_workspaceIsEmpty xzy = do
 
 -- Terminals (using various different color themes).
 l_term1, l_term2 :: String
-l_term1 = "~/syscfg/script/sys/terms/wb.sh"
+l_term1 = "~/syscfg/script/sys/terms/pastel_dark.sh"
 l_term2 = "~/syscfg/script/sys/terms/wblue.sh"
 
 l_isPortraitMonitorLayout :: String -> Bool
@@ -1286,7 +1286,7 @@ l_keyBindings hostname xineramaCount conf@XConfig {XMonad.modMask = hypr}
   -- Backup binding to launch a terminal in case our Hyper key (hypr) is
   -- unavailable. This happens whenever we unplug/replug our keyboard, and a
   -- terminal isn't already showing in a window somewhere to be able to call
-  -- ~/syscfg/script/sys/initkeys.sh to re-initialize the Hyper key. Because the
+  -- ~/syscfg/xmonad/xenv.sh to re-initialize the Hyper key. Because the
   -- Hyper key is used exclusively to maneuver around Xmonad, we need a
   -- non-Hyper-key binding to launch a terminal to bootstrap ourselves back in
   -- with initkeys.sh.
