@@ -11,3 +11,6 @@ set show-changes = no
 bind generic ) next
 bind generic ( previous
 bind generic } parent
+
+color cursor black green bold
+color title-focus black blue bold
