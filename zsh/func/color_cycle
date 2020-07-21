@@ -11,7 +11,7 @@ color_cycle()
 	local len
 	local next_theme
 
-	root_dir="$HOME/syscfg/script/sys/terms"
+	root_dir="$HOME/syscfg/script/terms"
 	direction=$1
 
 	# Cycle through to the next theme in the list.

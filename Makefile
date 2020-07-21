@@ -23,7 +23,7 @@ gpg:
 gtk:
 	ln -fs ${C}/gtk/cfg                                 ${H}/.gtkrc-2.0.mine
 launch-my-browser:
-	ln -fs ${C}/script/sys/launch-my-browser            ${H}/bin
+	ln -fs ${C}/script/launch-my-browser                ${H}/bin
 launchctl:
 	${C}/launchctl/setup.sh
 lesskey:

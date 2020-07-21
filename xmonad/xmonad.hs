@@ -1114,8 +1114,8 @@ l_workspaceIsEmpty xzy = do
 
 -- Terminals (using various different color themes).
 l_term1, l_term2 :: String
-l_term1 = "~/syscfg/script/sys/terms/pastel_dark.sh"
-l_term2 = "~/syscfg/script/sys/terms/wblue.sh"
+l_term1 = "~/syscfg/script/terms/pastel_dark.sh"
+l_term2 = "~/syscfg/script/terms/wblue.sh"
 
 l_isPortraitMonitorLayout :: String -> Bool
 l_isPortraitMonitorLayout givenHost = any (`isPrefixOf` givenHost) portraitHosts
@@ -1166,7 +1166,7 @@ l_keyBindings hostname xineramaCount conf@XConfig {XMonad.modMask = hypr}
 
   -- Lock screen.
   , ((hypr,   xK_Escape       ), spawnSelected def
-    [ "~/syscfg/script/sys/susp.sh"
+    [ "~/syscfg/script/susp.sh"
     , "xscreensaver-command -lock"])
 
   -- Toggle window borders.
