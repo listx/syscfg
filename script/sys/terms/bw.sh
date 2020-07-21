@@ -2,7 +2,7 @@
 
 # black on white (off-white)
 
-export TERM_COLOR_SCHEME_CURRENT='bw'
+export TERM_COLOR_THEME="bw.sh"
 
 case $HOST in
 	k1)

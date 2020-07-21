@@ -2,7 +2,7 @@
 
 # WHITE ON BLACK (more or less) theme; very zenburn-ish
 
-export TERM_COLOR_SCHEME_CURRENT='wb'
+export TERM_COLOR_THEME="wb.sh"
 
 case $(uname) in
 Linux)

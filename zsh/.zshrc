@@ -188,7 +188,8 @@ alias kkkkkkkkkkkkk=" cd ../../../../../../../../../../../../../;ll"
 alias kkkkkkkkkkkkkk=" cd ../../../../../../../../../../../../../../;ll"
 
 alias apush="~/syscfg/script/sys/apush.sh"
-alias c="~/syscfg/script/sys/utp.sh"
+alias c="color_cycle next"
+alias C="color_cycle prev"
 alias cls="echo -ne '\x1bc'" # clear the screen buffer (don't just hide it like CTRL-L)
 alias fiv='~/syscfg/script/sys/fiv.sh'
 alias aex='~/syscfg/script/sys/aex.sh'

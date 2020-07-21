@@ -1,0 +1,35 @@
+#!/usr/bin/env zsh
+
+set_theme() {
+	local line
+	local match
+	echo Setting theme to $1
+	zmodload zsh/pcre
+	pcre_compile "^c_(.+)=\"(#[0-9a-f]+)"
+	<"$1" while read line; do
+		if [[ -n $line ]]; then
+			pcre_match "$line"
+			if [[ $#match -gt 1 ]]; then
+				case $match[1] in
+					00|01|02|03|04|05|06|07|08|09|10|11|12|13|14|15)
+						echo >&2 -en "\x1b]4;$match[1];$match[2]\007"
+						;;
+					fg)
+						echo >&2 -en "\x1b]10;$match[2]\007"
+						;;
+					bg)
+						echo >&2 -en "\x1b]11;$match[2]\007"
+						echo >&2 -en "\x1b]708;$match[2]\007"
+						;;
+					cursor)
+						echo >&2 -en "\x1b]12;$match[2]\007"
+						;;
+					*)
+						echo >&2 "utp: invalid color format in $1.sh"
+						;;
+				esac
+			fi
+		fi
+	done
+	TERM_COLOR_THEME=$(basename $1)
+}
