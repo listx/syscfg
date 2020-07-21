@@ -4,6 +4,8 @@ S := $(shell uname)
 T := $(shell hostname)
 # Add the -n flag for directories, as otherwise, stray symlinks will be created
 # inside the C (config) directory itself.
+alacritty:
+	ln -fns ${C}/alacritty                              ${H}/.config/alacritty
 bash:
 	ln -fs ${C}/bash/.bashrc                            ${H}
 cmus:
@@ -111,6 +113,7 @@ zsh:
 	mkdir -p ${H}/.zsh-untracked
 
 .PHONY: \
+	alacritty \
 	bash \
 	cmus \
 	emacs \
