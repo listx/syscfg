@@ -1,6 +1,6 @@
 #!/usr/bin/env zsh
 
-export TERM_COLOR_SCHEME_CURRENT='wb'
+export TERM_COLOR_THEME="pastel_dark.sh"
 
 case $(uname) in
 Linux)

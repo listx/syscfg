@@ -2,7 +2,7 @@
 
 # WHITE ON BLUE theme (late 80's-ish, almost videogame-like look)
 
-export TERM_COLOR_SCHEME_CURRENT='wB'
+export TERM_COLOR_THEME="wblue.sh"
 
 case $HOST in
 	k1)
