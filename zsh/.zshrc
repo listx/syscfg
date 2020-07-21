@@ -262,6 +262,9 @@ alias gm='git merge'
 alias gmf='git merge --ff-only'
 alias ga='git add --patch'
 alias gau='git add --update'
+# gcp = Git "commit and push". Useful for saving work immediately in
+# note-taking repos.
+alias gu='gau && gcu && gp'
 alias gr='git rebase'
 alias grc='git rebase --continue'
 alias gri='git rebase -i'
