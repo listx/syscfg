@@ -39,7 +39,7 @@ c_bg="#11111a" # background
 c_00="#11111a" # black
 ;;
 esac
-c_08="#709080" # black bright
+c_08="#000000" # black bright
 
 case $(uname) in
 Linux)
