@@ -6,6 +6,8 @@ T := $(shell hostname)
 # inside the C (config) directory itself.
 bash:
 	ln -fs ${C}/bash/.bashrc                            ${H}
+cmus:
+	ln -fns ${C}/cmus                                   ${H}/.cmus
 emacs:
 	ln -fns ${C}/emacs                                  ${H}/.emacs.d
 	touch                                               ${H}/.emacs.d/custom.el
@@ -110,6 +112,7 @@ zsh:
 
 .PHONY: \
 	bash \
+	cmus \
 	emacs \
 	git \
 	gpg \
