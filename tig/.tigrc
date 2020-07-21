@@ -1,4 +1,8 @@
-set main-view = date:relative-compact author:abbreviated id:width=40 commit-title:yes,graph,refs
+set blame-view = date:relative-compact author:abbreviated,maxwidth=5 id:width=40,color line-number:yes,interval=1 text
+set main-view  = date:relative-compact author:abbreviated,maxwidth=5 id:width=40 commit-title:yes,graph,refs
+set tree-view  = date:relative-compact author:abbreviated,maxwidth=5 id:width=40 file-name
+set refs-view  = date:relative-compact author:abbreviated,maxwidth=5 id:width=40 ref commit-title
+
 set line-graphics = utf-8
 set blame-options = -w
 
