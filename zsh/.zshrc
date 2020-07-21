@@ -278,8 +278,6 @@ alias gg='git5'
 
 alias rgi='rg -i'
 
-alias tig='tig -n1000'
-
 alias ocm="cd ~/org; gcm -am \"$HOST\"; gpl && gps"
 
 alias e='emacs_open'
