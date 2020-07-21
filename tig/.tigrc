@@ -1,4 +1,5 @@
-set main-view = date author id:width=10 commit-title:yes,graph,refs
+set main-view = date:relative-compact author:abbreviated id:width=40 commit-title:yes,graph,refs
+set line-graphics = utf-8
 set blame-options = -w
 
 # Only show the top 500 commits.
