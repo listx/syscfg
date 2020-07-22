@@ -45,6 +45,7 @@ set guioptions-=R
 set lbr "for word wrapping to be based on words, not characters
 set gfn=Terminus\ 9
 set cursorline " highlight cursor horizontally
+set background=dark
 " so zenburn's background is properly loaded ... 2008/12/23
 set t_Co=256
 
