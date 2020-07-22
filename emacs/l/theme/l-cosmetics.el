@@ -172,12 +172,21 @@
     (l/theme-hook)
     (l/arjen-hook))
   (progn
-    (load-theme 'misterioso t)
-    (set-face-attribute
-      'hl-line
-      nil
-      :background
-      "dim gray")))
+    (set-face-attribute 'auto-dim-other-buffers-face nil :foreground "white" :background "black")
+    (set-face-attribute 'lazy-highlight nil :foreground "pink" :background "dark red" :weight 'normal)
+    (set-face-attribute 'isearch nil :foreground "dark red" :background "pink" :weight 'bold)
+    (set-face-attribute 'region nil :foreground "dark red" :background "pink" :weight 'bold)
+    ; Fix ugly colors for diffs. Prevalent because of git comit message buffers
+    ; (COMMIT_EDITMSG).
+    (set-face-attribute 'default nil :foreground "brightwhite" :background "gray25")
+    (set-face-attribute 'font-lock-comment-face nil :foreground "brightgreen" :background "gray25")
+    (set-face-attribute 'diff-added nil :foreground "green" :background "dark green")
+    (set-face-attribute 'diff-removed nil :foreground "red" :background "dark red")
+    (set-face-attribute 'diff-context nil :foreground "brightwhite" :background "gray25")
+    (set-face-attribute 'diff-file-header nil :foreground "yellow" :background "gray25" :weight 'bold)
+    (set-face-attribute 'diff-header      nil :foreground "yellow" :background "gray25" :weight 'bold)
+    (set-face-attribute 'diff-hunk-header nil :foreground "cyan"   :background "gray25")
+    (set-face-attribute 'hl-line nil :background "dim gray")))
 
 ; If we're on our laptop, make the text slightly bigger to match my desktop's
 ; behavior.
