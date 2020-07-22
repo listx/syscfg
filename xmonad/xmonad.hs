@@ -1449,11 +1449,19 @@ l_startupHook hostname = do
   y <- gets (l_YFromWindowSet . windowset)
   let
     xineramaCount = length $ W.screens windowSet
+    farRightScreen = if hostname == "k0"
+      -- For k0, spawn at workspace 1 instead of 3 (workspaces are 0, 1, 2, 3)
+      -- because the actual layout of the screens (from the human user's
+      -- perspective) is:
+      --    2 3 0 1
+      -- so "1" is the rightmost screen.
+      then show (l_XZYFrom (X 1) xineramaCount ZGSys y)
+      else show (l_XZYFrom (X (-1)) xineramaCount ZGSys y)
     -- Spawn rtorrent on the rightmost screen (XCoord index of -1; we use -1
     -- because we don't know how many screens there will actually be).
     rtorrent = spawn $ l_term2
       ++ " -name atWorkspace_"
-      ++ show (l_XZYFrom (X (-1)) xineramaCount ZGSys y)
+      ++ farRightScreen
       ++ " -e rtorrent"
   -- Spawn one terminal in every screen at the "Work" ZGroup at the current
   -- YCoord (but only if that screen is empty). We have to feed in `(take 1)' in
@@ -1465,7 +1473,7 @@ l_startupHook hostname = do
   -- Spawn htop on the rightmost screen.
   spawn $ l_term1
     ++ " -name atWorkspace_"
-    ++ show (l_XZYFrom (X (-1)) xineramaCount ZGSys y)
+    ++ farRightScreen
     ++ " -e htop"
   spawn "emacs --daemon"
   when (hostname == "k0") rtorrent
