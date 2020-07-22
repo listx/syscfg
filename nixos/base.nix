@@ -23,7 +23,7 @@
 
   hardware.pulseaudio.enable = true;
 
-  i18n.consoleFont = "lat9w-16";
+  console.font = "lat9w-16";
 
   services.openvpn.servers = {
     # Unless `autoStart = false;', all entries here start automatically as a
@@ -41,19 +41,19 @@
     layout = "us";
     xkbVariant = "altgr-intl";
     xkbOptions = "terminate:ctrl_alt_bksp";
-    desktopManager.default = "none";
-    # workaround for disabling xterm
-    # see https://github.com/NixOS/nixpkgs/issues/4300
-    desktopManager.xterm.enable = false;
-    displayManager.slim = {
-      autoLogin = true;
-      defaultUser = "l";
+    displayManager.defaultSession = "l_xmonad";
+    # See https://unix.stackexchange.com/questions/597358/nixos-how-to-configure-custom-desktop-session/597359#597359.
+    displayManager.session = [
+      {
+        manage = "desktop";
+        name = "l_xmonad";
+        start = ''exec $HOME/.xsession'';
+      }
+    ];
+    displayManager.lightdm = {
       enable = true;
-      # Use a black background.
-      theme = pkgs.fetchurl {
-        url = "https://github.com/listx/nixos-black-theme/archive/v1.0.tar.gz";
-        sha256 = "13bm7k3p6k7yq47nba08bn48cfv536k4ipnwwp1q1l2ydlp85r9d";
-      };
+      autoLogin.enable = true;
+      autoLogin.user = "l";
     };
     # We rely on ~/.xsession to start XMonad, instead of NixOS automagically
     # doing it for us. This way, we can use our xmonad binary compiled by Stack.

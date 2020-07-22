@@ -14,13 +14,12 @@
   # with "printk messages dropped".
   boot.kernelParams = ["pcie_aspm=off"];
 
-  boot.initrd.luks.devices = [
-    {
-      name = "luksroot";
+  boot.initrd.luks.devices = {
+    luksroot = {
       device = "/dev/disk/by-id/nvme-SAMSUNG_MZVKW512HMJP-000H1_S34CNA0J100907-part2";
       preLVM = true;
-    }
-  ];
+    };
+  };
 
   boot.kernel.sysctl = {
     # Make the kernel reluctant to use swap.
