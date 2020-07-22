@@ -178,11 +178,11 @@
     (set-face-attribute 'region nil :foreground "dark red" :background "pink" :weight 'bold)
     ; Fix ugly colors for diffs. Prevalent because of git comit message buffers
     ; (COMMIT_EDITMSG).
-    (set-face-attribute 'default nil :foreground "brightwhite" :background "gray25")
+    (set-face-attribute 'default nil :foreground "#ffffff" :background "gray25")
     (set-face-attribute 'font-lock-comment-face nil :foreground "brightgreen" :background "gray25")
     (set-face-attribute 'diff-added nil :foreground "green" :background "dark green")
     (set-face-attribute 'diff-removed nil :foreground "red" :background "dark red")
-    (set-face-attribute 'diff-context nil :foreground "brightwhite" :background "gray25")
+    (set-face-attribute 'diff-context nil :foreground "#ffffff" :background "gray25")
     (set-face-attribute 'diff-file-header nil :foreground "yellow" :background "gray25" :weight 'bold)
     (set-face-attribute 'diff-header      nil :foreground "yellow" :background "gray25" :weight 'bold)
     (set-face-attribute 'diff-hunk-header nil :foreground "cyan"   :background "gray25")
