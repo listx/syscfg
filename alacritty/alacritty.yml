@@ -102,18 +102,18 @@ font:
     family: "Input Mono Condensed"
 
     # The `style` can be specified to pick a specific face.
-    style: Regular
+    style: "Extra Light"
 
   # Bold font face
-  #bold:
+  bold:
     # Font family
     #
     # If the bold family is not specified, it will fall back to the
     # value specified for the normal font.
-    #family: monospace
+    family: "Input Mono Condensed"
 
     # The `style` can be specified to pick a specific face.
-    #style: Bold
+    style: "Medium"
 
   # Italic font face
   #italic:
