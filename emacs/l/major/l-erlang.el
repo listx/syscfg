@@ -1,4 +1,5 @@
 (use-package erlang
+  :mode "\\.erl\\'"
   :config
   (add-hook 'erlang-mode-hook 'l/erlang-setup))
 
