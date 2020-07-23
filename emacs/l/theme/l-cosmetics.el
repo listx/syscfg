@@ -180,6 +180,8 @@
     ; (COMMIT_EDITMSG).
     (set-face-attribute 'default nil :foreground "#ffffff" :background "gray25")
     (set-face-attribute 'font-lock-comment-face nil :foreground "light green" :background "gray25")
+    (use-package git-commit
+      :config (set-face-attribute 'git-commit-summary nil :foreground "cyan1" :background "gray25"))
     (set-face-attribute 'diff-added nil :foreground "green" :background "dark green")
     (set-face-attribute 'diff-removed nil :foreground "red" :background "dark red")
     (set-face-attribute 'diff-context nil :foreground "#ffffff" :background "gray25")
