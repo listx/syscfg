@@ -55,8 +55,8 @@ export LESS_TERMCAP_se=$'\E[0m'         # end standout-mode
 export LESS_TERMCAP_ue=$'\E[0m'         # end underline
 
 # Default text editor--set it to emacsclient.
-export VISUAL=~/syscfg/script/sys/emacsclient-tty.sh
-export EDITOR=~/syscfg/script/sys/emacsclient-tty.sh
+export VISUAL=~/syscfg/script/emacsclient-tty.sh
+export EDITOR=~/syscfg/script/emacsclient-tty.sh
 
 # default ledger file (to avoid using -f option every time)
 export LEDGER_FILE=~/org/master.hledger
@@ -74,7 +74,7 @@ export PATH=~/go/bin:$PATH
 export PATH=~/.local/bin:$PATH
 
 # Add system scripts to the PATH.
-export PATH=~/syscfg/script/sys:$PATH
+export PATH=~/syscfg/script:$PATH
 
 # stop zsh from eating space before pipe symbol
 export ZLE_REMOVE_SUFFIX_CHARS=""
@@ -187,15 +187,15 @@ alias kkkkkkkkkkkk=" cd ../../../../../../../../../../../../;ll"
 alias kkkkkkkkkkkkk=" cd ../../../../../../../../../../../../../;ll"
 alias kkkkkkkkkkkkkk=" cd ../../../../../../../../../../../../../../;ll"
 
-alias apush="~/syscfg/script/sys/apush.sh"
+alias apush="~/syscfg/script/apush.sh"
 alias c="color_cycle next"
 alias C="color_cycle prev"
 alias cls="echo -ne '\x1bc'" # clear the screen buffer (don't just hide it like CTRL-L)
-alias fiv='~/syscfg/script/sys/fiv.sh'
-alias aex='~/syscfg/script/sys/aex.sh'
-alias x='~/syscfg/script/sys/terms/wb.sh D'
+alias fiv='~/syscfg/script/fiv.sh'
+alias aex='~/syscfg/script/aex.sh'
+alias x='~/syscfg/script/terms/wb.sh D'
 alias fop='~/prog/fop/dist/build/fop/fop'
-alias cascade='~/syscfg/script/sys/cascade.sh'
+alias cascade='~/syscfg/script/cascade.sh'
 alias private=' HISTFILE=/tmp/zsh-history'
 alias unprivate=' HISTFILE=~/.zsh-untracked/history'
 
@@ -206,8 +206,8 @@ alias du='du -h'
 alias dus='du -ah --max-depth 1 | sort -h'
 
 alias enc='gpg2 -e -r linusarver'
-alias dec='~/syscfg/script/sys/decrypt.sh outfile'
-alias decless='~/syscfg/script/sys/decrypt.sh viewfile'
+alias dec='~/syscfg/script/decrypt.sh outfile'
+alias decless='~/syscfg/script/decrypt.sh viewfile'
 
 alias rot13='tr 'A-Za-z' 'N-ZA-Mn-za-m''
 
@@ -273,7 +273,7 @@ alias gsp='git reset --patch'
 alias gee='git rerere'
 alias gp='git push'
 alias grv='git remote -v'
-alias gtag='~/syscfg/script/sys/gtag.sh'
+alias gtag='~/syscfg/script/gtag.sh'
 
 alias gg='git5'
 
@@ -361,11 +361,11 @@ alias rgmp3='~/syscfg/script/audio/replaygain/mp3/tmwrg.sh'
 alias rgflac='~/syscfg/script/audio/replaygain/flac/tfwrg.sh'
 
 # mount/unmount USB drives
-alias usb='~/syscfg/script/sys/usbmnt -d'
-alias usbon='~/syscfg/script/sys/usbmnt'
-alias usbonn='~/syscfg/script/sys/usbmnt -a'
-alias usbof='~/syscfg/script/sys/usbmnt -u'
-alias usboff='~/syscfg/script/sys/usbmnt -U'
+alias usb='~/syscfg/script/usbmnt -d'
+alias usbon='~/syscfg/script/usbmnt'
+alias usbonn='~/syscfg/script/usbmnt -a'
+alias usbof='~/syscfg/scriptusbmnt -u'
+alias usboff='~/syscfg/script/usbmnt -U'
 
 # Add commonly-used paths as aliases.
 . ~/.zsh/path-aliases
