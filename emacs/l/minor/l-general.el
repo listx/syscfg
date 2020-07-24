@@ -67,7 +67,7 @@
     ; Place selected region (or word-area under point in Normal mode) into
     ; buffer-wise search-and-replace interactive prompt.
     "s" 'l/replace-in-buffer
-    "t" 'l/cyclee-font
+    "t" 'l/cycle-font
     ; Cycle through various themes.
     "T" 'l/cycle-theme
 
