@@ -45,18 +45,20 @@
   (cond
     ((l/os "darwin")
       '("Input Mono Condensed"))
-    (t '("Terminus" "Input Mono Narrow" "Input Mono Compressed Book"))))
+    (t '("Terminus" "Input Mono Compressed"))))
 (setq l/font-choice 0)
 (defun l/cycle-font ()
   "Cycle through font collection."
   (interactive)
   (setq l/font-choice (mod (+ 1 l/font-choice) (length l/font-collection)))
-  (if (> 0 (length l/font-collection))
+  ; Only cycle if there is more than 1 font to cycle through.
+  (if (> (length l/font-collection) 1)
     (set-face-attribute
       'default
       nil
       :font
-      (nth l/font-choice l/font-collection))
+      (nth l/font-choice l/font-collection)
+      :weight 'light)
     (redraw-display)))
 
 (defvar l/themes
