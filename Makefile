@@ -26,8 +26,6 @@ gtk:
 	ln -fs ${C}/gtk/cfg                                 ${H}/.gtkrc-2.0.mine
 launch-my-browser:
 	ln -fs ${C}/script/launch-my-browser                ${H}/bin
-launchctl:
-	${C}/launchctl/setup.sh
 lesskey:
 	ln -fs ${C}/lesskey/cfg                             ${H}/.lesskey
 	lesskey
@@ -65,8 +63,6 @@ qutebrowser:
 	ln -fns ${C}/qutebrowser                            ${H}/.config
 rtorrent:
 	ln -fs ${C}/rtorrent/cfg                            ${H}/.rtorrent.rc
-sage:
-	ln -fns ${C}/sage                                   ${H}/.sage
 ssh:
 ifeq ($(wildcard ~/.ssh/.),)
 	ln -fns ${C}/ssh                                    ${H}/.ssh
@@ -102,9 +98,6 @@ xmonad:
 	# xsession is relied on by NixOS hosts that use xmonad (basically the
 	# default) to start xmonad.
 	ln -fs ${C}/xmonad/.xsession                        ${H}/.xsession
-xquartz:
-	ln -fs ${C}/xquartz/.xinitrc.d                      ${H}
-	${C}/xquartz/setup.sh
 zathura:
 	ln -fns ${C}/zathura                                ${H}/.config/zathura
 zsh:
@@ -120,7 +113,6 @@ zsh:
 	git \
 	gpg \
 	gtk \
-	launchctl \
 	lesskey \
 	mpv \
 	mupen \
@@ -131,7 +123,6 @@ zsh:
 	pulse \
 	qutebrowser \
 	rtorrent \
-	sage \
 	ssh \
 	tig \
 	tmux \
@@ -141,6 +132,5 @@ zsh:
 	xdefaults \
 	xmonad \
 	xorg \
-	xquartz \
 	zathura \
 	zsh
