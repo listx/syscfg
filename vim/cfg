@@ -20,10 +20,7 @@ set scrolloff=3
 " place help page on its own tab
 cabbrev help tab h
 
-" see ":help statusline" for more information about status lines, as well as
-" the default "standard" one
-"
-set statusline=%<%F\ %h%m%r%=%-14.(%l,%c%V%)\ %P\ %L
+" Always display status line.
 set laststatus=2
 syntax enable "enable syntax highlighting
 set hlsearch "turn on search highlighting
@@ -72,34 +69,6 @@ let mapleader = ","
 " vimrc
 if !exists("autocommands_loaded")
     let autocommands_loaded = 1
-
-    " tabstop is how wide the <TAB> character is, whether it's an actual <TAB>
-    " character or converted into space characters with expandtab
-    au BufRead,BufNewFile *.rb,*.py setlocal tabstop=4
-    " shiftwidth is how many characters are used when auto-indenting, and also
-    " when typing '>>' and '<<' in normal mode
-    au BufRead,BufNewFile *.rb,*.py setlocal shiftwidth=4
-" Note that vim's 'textwidth' only really works for COMMENT lines, as doing so otherwise would break whitespace-sensitive code (like Python)
-    au BufRead,BufNewFile *.rb,*.py setlocal textwidth=80
-    au BufRead,BufNewFile *.sh setlocal textwidth=80
-    au BufRead,BufNewFile *.c,*.cpp,*.h,*.hpp setlocal textwidth=80
-	" use Linux Kernel tab style for C/C++
-    au BufRead,BufNewFile *.c,*.cpp,*.h,*.hpp setlocal tabstop=8
-    au BufRead,BufNewFile *.c,*.cpp,*.h,*.hpp setlocal softtabstop=8
-    au BufRead,BufNewFile *.c,*.cpp,*.h,*.hpp setlocal shiftwidth=8
-    au BufRead,BufNewFile *.c,*.cpp,*.h,*.hpp setlocal noexpandtab
-    " try to mimic Linux Kernel Coding Style's indentation style
-    au BufRead,BufNewFile *.c,*.cpp,*.h,*.hpp setlocal cinoptions=:0,l1,t0,g0,(0
-
-    au BufRead,BufNewFile *.hs setlocal textwidth=80
-    au BufRead,BufNewFile *.hs setlocal tabstop=4
-    au BufRead,BufNewFile *.hs setlocal softtabstop=4
-    au BufRead,BufNewFile *.hs setlocal shiftwidth=4
-    au BufRead,BufNewFile *.hs setlocal noexpandtab
-
-    " load lilypond-specific stuff
-    au BufRead,BufNewFile *.ly setlocal filetype=lilypond
-
     " Integration with my "nox" program.
     au BufEnter * nmap <leader>c !!nox<cr>
     au BufEnter * vmap <leader>c !nox<cr>
@@ -127,32 +96,7 @@ if !exists("autocommands_loaded")
 
     " always run highlighting regex from the beginning of the file, not just
     " what is displayed on-screen (useful for multiline highlighting patterns)
-    au BufEnter *.toucan :syntax sync fromstart
-    au BufEnter *.cog :syntax sync fromstart
     au BufEnter *.hs :syntax sync fromstart
-
-    " function Insert_newline_smartly()
-    "     if col(".") != 1
-    "         normal o
-    "     endif
-    " endfunction
-    function Toggle_status_bar()
-        if &laststatus < 2
-            let &laststatus = 2
-        else
-            let &laststatus = 1 " set it back to Vim's default
-        endif
-    endfunction
-
-    " kill trailing whitespace
-    function KillWhiteSpace()
-      %s/\s\+$//
-    endfunction
-
-    " replace all /r/n () with /n
-    function KillWinNL()
-      %s///
-    endfunction
 endif
 
 " quick copy and paste from CLIPBOARD ("+y and "+p)
@@ -178,39 +122,8 @@ nmap <leader>Q :q!<cr>
 " save and exit (equivalent to "ZZ")
 nmap <leader>x :x<cr>
 
-" toggle search highlighting
-map <F2> <esc>:noh<cr>
-
-" highlight lines longer than 80 characters
-map <F3> <esc>:match ErrorMsg '\%>80v.\+'<cr>
-
-" find lines longer than 80 characters
-nmap <leader>fl /\%>80v.\+<cr>
-
-" remove all trailing whitespace
-nmap <silent> <leader>e :call KillWhiteSpace()<cr>
-
-" replace all /r/n () with /n
-nmap <silent> <leader>E :call KillWinNL()<cr>
-
 " Use <F10> to toggle between 'paste' and 'nopaste'
 set pastetoggle=<F10>
-
-" toggle status bar
-nmap <silent> <F11> :call Toggle_status_bar()<cr>
-imap <silent> <F11> <esc>:call Toggle_status_bar()<cr>
-
-" toggle line numbers
-nmap <F12> :if exists("g:syntax_on") <Bar>
-    \   syntax off <Bar>
-    \ else <Bar>
-    \   syntax enable <Bar>
-    \ endif <cr>
-imap <F12> <esc>:if exists("g:syntax_on") <Bar>
-    \   syntax off <Bar>
-    \ else <Bar>
-    \   syntax enable <Bar>
-    \ endif <cr>
 
 " move across tabs
 nnoremap <C-l> :tabnext<cr>
@@ -220,7 +133,6 @@ inoremap <C-h> <esc>:tabprevious<cr>
 
 " window movement (i.e., moving around INSIDE a tab)
 nmap <Tab> <C-w><C-w>
-"inoremap <S-Tab> <esc><C-w><C-w>
 
 " buffer movement (i.e., moving around INSIDE a window)
 nmap <S-h> :bn<cr>
@@ -233,9 +145,6 @@ nnoremap <space> 10jzz
 nnoremap <backspace> 10kzz
 vnoremap <space> 10jzz
 vnoremap <backspace> 10kzz
-
-" open buffer to current directory's contents
-nmap <leader>D :e<space>.<cr>
 
 " create a new blank tab
 nmap <leader>n :tabe<cr>
