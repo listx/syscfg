@@ -1,10 +1,19 @@
-set nocp " take the Vi straitjacket off
-set ffs=unix,dos " prefer unix newlines whenever possible, but let dos be dos
+" Remove Vi compatibility. No one cares about this.
+set nocp
+
+" Prefer unix newlines whenever possible, but leave DOS files be DOS
+" (don't change their line endings).
+set ffs=unix,dos
+
+" Disable backups, because we don't do any serious work in Vim. Plus we save
+" incessantly.
 set nobackup
-" default tabstop and shiftwidths
+
+" Default tabstop and shiftwidths.
 set tabstop=4
 set shiftwidth=4
 set expandtab
+
 " Backspace works in Insert mode (e.g. not inserting a ^?), but won't delete
 " over line breaks, or automatically-inserted indentation, or the place where
 " insert mode started. Use backspace=2 to solve this from
@@ -17,56 +26,67 @@ set backspace=2
 " context)
 set scrolloff=3
 
-" place help page on its own tab
+" Place help page on its own tab.
 cabbrev help tab h
 
 " Always display status line.
 set laststatus=2
-syntax enable "enable syntax highlighting
-set hlsearch "turn on search highlighting
-filetype indent on "turn on automatic indenting based on filetype recognition
-filetype plugin on "automatically load the corresponding filetype plugin if we've detected a filetype
 
-set incsearch " search any match IMMEDIATELY
+" Turn on automatic indenting based on filetype recognition.
+filetype indent on
 
-set mousehide " hide the mouse cursor when typing (only for GVIM)
+" Automatically load the corresponding filetype plugin if we've detected a filetype.
+filetype plugin on
 
-set guioptions-=T  "remove toolbar
-set guioptions-=m  "remove menu
- "remove scrollbars
+" Hide the mouse cursor when typing (only for GVIM).
+set mousehide
+
+" Remove mouse-friendly options from GUI, because we simply don't use the mouse when
+" in Vim.
+set guioptions-=T
+set guioptions-=m
 set guioptions-=l
 set guioptions-=r
- "remove scrollbars when there is a vertically split window
 set guioptions-=L
 set guioptions-=R
-set lbr "for word wrapping to be based on words, not characters
+
+" Enable syntax highlighting.
+syntax enable
+
+" Turn on search highlighting.
+set hlsearch
+
+" Search any match IMMEDIATELY.
+set incsearch
+
+" Set GUI font.
 set gfn=Terminus\ 9
-set cursorline " highlight cursor horizontally
+
+" Highlight cursor horizontally.
+set cursorline
 set background=dark
-" so zenburn's background is properly loaded ... 2008/12/23
+" Force 256 colors.
 set t_Co=256
 
-" Turn off blinking for the n, v, & c states:
-"let &guicursor = substitute(&guicursor, "n-v-c:", "n-v-c:blinkon0-", "")
-" NOTE: To stop all blinking:
-" let &guicursor = &guicursor . ",a:blinkon0"
-set guicursor+=a:block-blinkon0 "make cursor look square, and prevent cursor blinking
+" Word-wrap based on words, not characters (would anyone on Earth want it the other
+" way?
+set lbr
 
-" Set maximum number of tabs on startup to 50, instead of the default 10
-"
-" If you exceed the number of tabs allowed by tabpagemax Vim will simply open the maximum number of tabs, and the other files will be open but not displayed. You can edit the remaining files by using the :next or :last command to move to the files that are not displayed in a tab. Note that this setting only applies to the maximum number of tabs Vim will open on startup -- you can still open more tabs during your Vim session.
+" Make cursor look square, and prevent cursor blinking.
+set guicursor+=a:block-blinkon0
+
+" Set maximum number of tabs on startup to 50, instead of the default 10.
 set tabpagemax=50
 
-" wait 1 second instead of 0.5 seconds before erasing any "half-finished"
-" commands in normal/visual mode
-"
+" Wait 1 second instead of 0.5 seconds before erasing any "half-finished"
+" commands in normal/visual mode.
 set timeoutlen=1000
 
-" leader key (works with Intellij IDEA's Vim plugin)
+" Leader key (works with Intellij IDEA's Vim plugin).
 let mapleader = ","
 
-" we only want to load autocommands ONCE (esp. for gvim, which sources the
-" vimrc
+" We only want to load autocommands ONCE (esp. for GVim, which sources the
+" Vimrc.
 if !exists("autocommands_loaded")
     let autocommands_loaded = 1
     " Integration with my "nox" program.
@@ -99,7 +119,7 @@ if !exists("autocommands_loaded")
     au BufEnter *.hs :syntax sync fromstart
 endif
 
-" quick copy and paste from CLIPBOARD ("+y and "+p)
+" Quick copy and paste from CLIPBOARD ("+y and "+p).
 vmap <leader>y "+y
 nmap <leader>p "+p
 nmap <leader>P "+P
@@ -110,48 +130,47 @@ nmap <leader>P "+P
 nnoremap K ,
 vnoremap K ,
 
-" quicksave files
+" Quicksave files.
 nmap <leader>w :up<cr>
-" force save
+" Force save.
 nmap <leader>W :w<cr>
 
-" exit
+" Exit.
 nmap <leader>q :q<cr>
 nmap <leader>Q :q!<cr>
 
-" save and exit (equivalent to "ZZ")
+" Save and exit (equivalent to "ZZ").
 nmap <leader>x :x<cr>
 
-" Use <F10> to toggle between 'paste' and 'nopaste'
+" Use <F10> to toggle between 'paste' and 'nopaste'.
 set pastetoggle=<F10>
 
-" move across tabs
+" Move across tabs.
 nnoremap <C-l> :tabnext<cr>
 nnoremap <C-h> :tabprevious<cr>
 inoremap <C-l> <esc>:tabnext<cr>
 inoremap <C-h> <esc>:tabprevious<cr>
 
-" window movement (i.e., moving around INSIDE a tab)
+" Window movement (i.e., moving around INSIDE a tab).
 nmap <Tab> <C-w><C-w>
 
-" buffer movement (i.e., moving around INSIDE a window)
+" Buffer movement (i.e., moving around INSIDE a window).
 nmap <S-h> :bn<cr>
 nmap <S-l> :bp<cr>
 
-" faster access to normal mode
+" Faster access to normal mode.
 imap kj <esc>
 
+" Faster vertical buffer navigation.
 nnoremap <space> 10jzz
 nnoremap <backspace> 10kzz
 vnoremap <space> 10jzz
 vnoremap <backspace> 10kzz
 
-" create a new blank tab
+" Create a new blank tab.
 nmap <leader>n :tabe<cr>
-" create a new tab showing the contents of the current directory
-nmap <leader>N :tabe<space>.<cr>
 
-" horizontally/vertically split current window
+" Horizontally/vertically split current window.
 nmap <leader>h :sp<cr>
 nmap <leader>H :sp<space>.<cr>
 nmap <leader>v :vsp<cr>
