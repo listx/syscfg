@@ -102,6 +102,7 @@ zathura:
 	ln -fns ${C}/zathura                                ${H}/.config/zathura
 zsh:
 	ln -fns ${C}/zsh                                    ${H}/.zsh
+	ln -fs ${C}/zsh/.zshenv                             ${H}
 	ln -fs ${C}/zsh/.zshrc                              ${H}
 	mkdir -p ${H}/.zsh-untracked
 

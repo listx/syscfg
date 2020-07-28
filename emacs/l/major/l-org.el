@@ -16,7 +16,23 @@
   (evil-define-key 'normal org-mode-map "T" 'org-todo)
   ; Prefer Emacs mode for agenda view, because it has so many keybindings.
   (evil-set-initial-state 'org-agenda-mode 'emacs)
-  (setq org-agenda-files '("~/lo/plan.org"))
+  ; List of directories to use for agenda files. Each directory is searched
+  ; recursively.
+  (let*
+    ((files (mapcan
+      (lambda (dir) (directory-files-recursively dir "\\.org$"))
+      (split-string (getenv "L_ORG_AGENDA_DIRS"))))
+     (exclude-patterns (split-string (getenv "L_ORG_AGENDA_EXCLUDE_PATTERNS")))
+     (reduced
+       (seq-reduce
+         (lambda (fs exclude-pattern)
+           (seq-filter
+             (lambda (f)
+               (not (string-match-p (regexp-quote exclude-pattern) f)))
+             fs))
+         exclude-patterns
+         files)))
+    (setq org-agenda-files reduced))
 
   ; Disable visual line mode for agenda view because otherwise, tags get shown on
   ; the next line because line length calculations are thrown off.
