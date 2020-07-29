@@ -128,7 +128,6 @@ prompt_kody_precmd()
 	prompt_charcolor=""
 	case $HOST in
 		k0)     prompt_hostcolor=$prompt_color3 ;;
-		w0)     prompt_hostcolor=$prompt_color6 ;;
 		k1)     prompt_hostcolor=$prompt_color1 ;;
 		k3)     prompt_hostcolor=$prompt_color4 ;;
 		ocean)  prompt_hostcolor=$prompt_color8 ;;

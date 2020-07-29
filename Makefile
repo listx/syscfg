@@ -56,7 +56,6 @@ ifeq ('${T}','k0')
 	cp ${C}/pulse/daemon.conf.k0                        ${H}/.config/pulse/daemon.conf
 	cp ${C}/pulse/default.pa.k0                         ${H}/.pulse/default.pa
 else
-	cp ${C}/pulse/daemon.conf.w0                        ${H}/.config/pulse/daemon.conf
 	cp ${C}/pulse/default.pa                            ${H}/.pulse/default.pa
 endif
 qutebrowser:
