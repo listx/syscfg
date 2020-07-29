@@ -11,13 +11,12 @@
   boot.loader.grub.enable = true;
   boot.loader.grub.version = 2;
   boot.loader.grub.device = "/dev/disk/by-id/ata-FUJITSU_MHZ2320BH_G2_K623T922A38A";
-  boot.initrd.luks.devices = [
-    {
-      name = "root";
+  boot.initrd.luks.devices = {
+    root = {
       device = "/dev/disk/by-id/ata-FUJITSU_MHZ2320BH_G2_K623T922A38A-part3";
       preLVM = true;
-    }
-  ];
+    };
+  };
 
   # List packages installed in system profile. To search by name, run:
   # $ nix-env -qaP | grep wget
