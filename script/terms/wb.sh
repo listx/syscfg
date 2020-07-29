@@ -11,10 +11,6 @@ Linux)
 		geom="100x50"
 		fonts="xft:Terminus:pixelsize=14,xft:IPAGothic,xft:Baekmuk Gulim"
 	;;
-	ocean)
-		geom="80x20"
-		fonts="xft:dejavu sans mono:pixelsize=36,xft:IPAGothic,xft:Baekmuk Gulim"
-	;;
 	*)
 		geom="100x70"
 		fonts="xft:Terminus:pixelsize=14,xft:IPAGothic,xft:Baekmuk Gulim"
