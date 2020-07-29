@@ -11,13 +11,12 @@
   boot.loader.grub.version = 2;
   boot.loader.grub.device = "/dev/disk/by-id/ata-KINGSTON_SVP100S296G_X0NA40R9K0KK";
 
-  boot.initrd.luks.devices = [
-    {
-      name = "luksroot";
+  boot.initrd.luks.devices = {
+    luksroot = {
       device = "/dev/disk/by-id/ata-KINGSTON_SVP100S296G_X0NA40R9K0KK-part2";
       preLVM = true;
-    }
-  ];
+    };
+  };
 
   # Mount our secondary luks (RAID1) device. Actual path is just
   # "/root/keyfile", but we are in "stage 1" where the root filesystem is
