@@ -40,7 +40,7 @@
   ; Make "kj" behave as ESC key, adapted from
   ; http://article.gmane.org/gmane.emacs.vim-emulation/980.
   (define-key evil-insert-state-map "k" #'l/maybe-exit)
-  (define-key evil-motion-state-map (kbd "<tab>") 'other-window)
+  (define-key evil-motion-state-map (kbd "TAB") 'other-window)
   (l/define-key-args evil-motion-state-map (kbd "<backtab>") other-window -1)
   (l/define-key-args evil-motion-state-map (kbd "SPC") l/scroll-jump 10)
   (l/define-key-args evil-motion-state-map (kbd "DEL") l/scroll-jump -10)
