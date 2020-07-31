@@ -23,7 +23,12 @@
 
   hardware.pulseaudio.enable = true;
 
-  console.font = "lat9w-16";
+  # Prettify the virtual console font early on with Terminus.
+  console = {
+    font = "ter-114n";
+    packages = with pkgs; [ terminus_font ];
+    earlySetup = true;
+  };
 
   services.openvpn.servers = {
     # Unless `autoStart = false;', all entries here start automatically as a
