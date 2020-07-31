@@ -107,6 +107,7 @@
 (require 'l-evil-surround)
 (require 'l-evil-visualstar)
 (require 'l-evil-matchit)
+(require 'l-flycheck)
 (require 'l-general)
 (require 'l-git-gutter)
 (require 'l-helm)
