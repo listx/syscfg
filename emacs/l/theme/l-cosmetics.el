@@ -131,16 +131,7 @@
               "#0d0d0f"
               "gray16"))
           (setq evil-insert-state-cursor '("#ffffff" box))
-          (setq evil-normal-state-cursor '("#00ff00" box)))))
-  ; Colorize custom TODO-like keywords for org-mode.
-  (setq org-todo-keyword-faces '(
-    ("GOAL" . (:foreground "firebrick" :background "pink" :weight bold))
-    ("TODO" . org-warning)
-    ("TASK" . org-warning)
-    ("WAITING" . "purple")
-    ("STARTED" . "yellow")
-    ("DONE" . org-done)
-    ("CANCELED" . (:foreground "orange" :weight bold))))))
+          (setq evil-normal-state-cursor '("#00ff00" box)))))))
 
 (defun l/arjen-hook ()
   (interactive)
@@ -153,15 +144,6 @@
   (set-face-attribute 'lazy-highlight nil :foreground "pink" :background "#7a1717" :weight 'normal)
   (set-face-attribute 'isearch nil :foreground "#7a1717" :background "pink" :weight 'bold)
   (set-face-attribute 'helm-candidate-number nil :foreground "#7a1717" :background "pink" :weight 'bold)
-  (set-face-attribute 'org-todo nil :foreground "indian red" :weight 'bold)
-  (set-face-attribute 'org-level-1 nil :foreground "pink" :weight 'bold)
-  (set-face-attribute 'org-level-2 nil :foreground "aquamarine" :weight 'bold)
-  (set-face-attribute 'org-level-3 nil :weight 'bold)
-  (set-face-attribute 'org-level-4 nil :inherit 'org-level-7 :weight 'bold)
-  (set-face-attribute 'org-level-5 nil :foreground "light cyan" :weight 'bold)
-  (set-face-attribute 'org-level-6 nil :foreground "RosyBrown2" :weight 'bold)
-  (set-face-attribute 'org-level-7 nil :weight 'bold)
-  (set-face-attribute 'org-level-8 nil :weight 'bold)
   (set-face-attribute 'git-gutter:added nil :foreground "lime green")
   (set-face-attribute 'git-gutter:modified nil :foreground "purple")
   (set-face-attribute 'git-gutter:deleted nil :foreground "red")

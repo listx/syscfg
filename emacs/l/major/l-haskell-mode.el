@@ -1,4 +1,7 @@
 (use-package haskell-mode
+  :mode (
+    ("\\.hs\\'" . haskell-mode)
+    ("\\.lhs\\'" . haskell-mode))
   :config
   ; Adopted from http://sequence.complete.org/node/365.
   (remove-hook 'haskell-mode-hook 'turn-on-haskell-indent)
@@ -16,39 +19,40 @@
   (evil-define-key 'insert haskell-cabal-mode-map (kbd "<tab>") 'kakapo-tab)
   (evil-define-key 'insert haskell-cabal-mode-map (kbd "DEL") 'kakapo-backspace)
   (add-hook 'haskell-cabal-mode-hook 'l/haskell-cabal-setup)
-  (add-hook 'haskell-mode-hook 'l/haskell-setup))
+  (add-hook 'haskell-mode-hook 'l/haskell-setup)
+
+  (defun l/haskell-cabal-setup ()
+    (kakapo-mode)
+    (setq indent-tabs-mode nil)
+    (setq tab-width 2)
+    (setq evil-shift-width 2))
+
+  (defun l/haskell-setup ()
+    (interactive)
+    (progn
+      (flycheck-mode)
+      ; Enable automated HLint suggestion application.
+      (hlint-refactor-mode)))
+
+  (defun l/hs-literate-begend ()
+    (interactive)
+    (end-of-line)
+    (insert "\n")
+    (delete-blank-lines)
+    (insert "\n\\begin{code}\n\n\\end{code}\n")
+    (forward-line -2)
+    (evil-append nil))
+
+  (defun l/hs-literate-endbeg ()
+    (interactive)
+    (end-of-line)
+    (insert "\n")
+    (delete-blank-lines)
+    (insert "\\end{code}\n\n\n\n\\begin{code}\n")
+    (forward-line -3)
+    (evil-append nil))
+
   (use-package hlint-refactor
-    :after (flycheck haskell))
-
-(defun l/haskell-cabal-setup ()
-  (kakapo-mode)
-  (setq indent-tabs-mode nil)
-  (setq tab-width 2)
-  (setq evil-shift-width 2))
-
-(defun l/haskell-setup ()
-  (interactive)
-  (progn
-    (flycheck-mode)
-    ; Enable automated HLint suggestion application.
-    (hlint-refactor-mode)))
-
-(defun l/hs-literate-begend ()
-  (interactive)
-  (end-of-line)
-  (insert "\n")
-  (delete-blank-lines)
-  (insert "\n\\begin{code}\n\n\\end{code}\n")
-  (forward-line -2)
-  (evil-append nil))
-
-(defun l/hs-literate-endbeg ()
-  (interactive)
-  (end-of-line)
-  (insert "\n")
-  (delete-blank-lines)
-  (insert "\\end{code}\n\n\n\n\\begin{code}\n")
-  (forward-line -3)
-  (evil-append nil))
+    :after (flycheck haskell)))
 
 (provide 'l-haskell-mode)

@@ -1,4 +1,5 @@
 (use-package elixir-mode
+  :mode "\\.ex\\'"
   :config
   (use-package flycheck-credo)
   (use-package flycheck-elixir)
