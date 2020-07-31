@@ -1,3 +1,6 @@
+; Call the debugger when an error is signaled and not handled.
+(setq debug-on-error t)
+(require 'cl)
 ; Helper function for determining system type.
 (defun l/os (system)
   (interactive)
