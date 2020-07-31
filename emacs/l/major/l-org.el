@@ -1,4 +1,5 @@
 (use-package org
+  :mode ("\\.org\\'" . org-mode)
   :config
   (add-hook 'org-mode-hook 'l/org-mode-hook)
   (add-hook 'org-agenda-mode-hook 'l/org-agenda-mode-hook)
@@ -122,7 +123,50 @@
         :html-postamble nil
         :html-head "<link rel=\"stylesheet\"
           href=\"css/style.css\"
-          type=\"text/css\"/>"))))
+          type=\"text/css\"/>")))
+
+  (use-package org-download
+    :after org
+    :config
+    (if (string= (l/theme-name) "arjen-grey")
+      ; Customizations for arjen-grey theme and org-mode.
+      (progn
+        ; Colorize custom TODO-like keywords for org-mode.
+        (setq org-todo-keyword-faces '(
+          ("GOAL" . (:foreground "firebrick" :background "pink" :weight bold))
+          ("TODO" . org-warning)
+          ("TASK" . org-warning)
+          ("WAITING" . "purple")
+          ("STARTED" . "yellow")
+          ("DONE" . org-done)
+          ("CANCELED" . (:foreground "orange" :weight bold))))
+        (set-face-attribute 'org-todo nil :foreground "indian red" :weight 'bold)
+        (set-face-attribute 'org-level-1 nil :foreground "pink" :weight 'bold)
+        (set-face-attribute 'org-level-2 nil :foreground "aquamarine" :weight 'bold)
+        (set-face-attribute 'org-level-3 nil :weight 'bold)
+        (set-face-attribute 'org-level-4 nil :inherit 'org-level-7 :weight 'bold)
+        (set-face-attribute 'org-level-5 nil :foreground "light cyan" :weight 'bold)
+        (set-face-attribute 'org-level-6 nil :foreground "RosyBrown2" :weight 'bold)
+        (set-face-attribute 'org-level-7 nil :weight 'bold)
+        (set-face-attribute 'org-level-8 nil :weight 'bold)))
+    (setq org-download-screenshot-method "scrot -os %s")
+    (defun l/org-download-method (link)
+      (let*
+        (
+          (filename
+            (file-name-nondirectory
+              (car (url-path-and-query (url-generic-parse-url link)))))
+          ;; Create folder name with current buffer name, and place in root dir
+          (dirname (concat "./image/"
+            (replace-regexp-in-string " " "_"
+            (downcase (file-name-base buffer-file-name)))))
+          (filename-with-timestamp (format "%s-%s.%s"
+            (file-name-sans-extension filename)
+            (format-time-string org-download-timestamp)
+            (file-name-extension filename))))
+        (make-directory dirname t)
+        (expand-file-name filename-with-timestamp dirname)))
+    (setq org-download-method 'l/org-download-method)))
 
 (defun l/org-mode-hook ()
   (modify-syntax-entry ?_ "w")
@@ -234,27 +278,5 @@
         ; Re-indent the buffer (buffer is not re-indented automatically by
         ; org-mode).
         (org-indent-indent-buffer)))))
-
-(use-package org-download
-  :after org
-  :config
-  (setq org-download-screenshot-method "scrot -os %s")
-  (defun l/org-download-method (link)
-    (let*
-      (
-        (filename
-          (file-name-nondirectory
-            (car (url-path-and-query (url-generic-parse-url link)))))
-        ;; Create folder name with current buffer name, and place in root dir
-        (dirname (concat "./image/"
-          (replace-regexp-in-string " " "_"
-          (downcase (file-name-base buffer-file-name)))))
-        (filename-with-timestamp (format "%s-%s.%s"
-          (file-name-sans-extension filename)
-          (format-time-string org-download-timestamp)
-          (file-name-extension filename))))
-      (make-directory dirname t)
-      (expand-file-name filename-with-timestamp dirname)))
-  (setq org-download-method 'l/org-download-method))
 
 (provide 'l-org)

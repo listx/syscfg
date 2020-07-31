@@ -1,6 +1,9 @@
 ; Call the debugger when an error is signaled and not handled.
 (setq debug-on-error t)
-(require 'cl)
+; Work around a bug where esup tries to step into the byte-compiled version of
+; `cl-lib', and fails horribly.
+; See https://github.com/jschaf/esup/issues/54#issuecomment-651247749.
+(setq esup-depth 0)
 ; Helper function for determining system type.
 (defun l/os (system)
   (interactive)

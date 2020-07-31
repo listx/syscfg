@@ -1,5 +1,6 @@
 (use-package dockerfile-mode
-  :config
-  (add-to-list 'auto-mode-alist '("Dockertemplate$" . dockerfile-mode)))
+  :mode (
+    ("Dockerfile\\'" . dockerfile-mode)
+    ("Dockertemplate$" . dockerfile-mode)))
 
 (provide 'l-docker)

@@ -1,4 +1,6 @@
-(use-package shen-elisp)
-(use-package shen-mode)
+(use-package shen-elisp
+  :mode "\\.shen\\'")
+(use-package shen-mode
+  :mode "\\.shen\\'")
 
 (provide 'l-shen)
