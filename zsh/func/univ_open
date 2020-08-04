@@ -46,7 +46,7 @@ univ_open() {
 			(djvu|dvi|eps|pdf|ps)
 				zathura $@ &>/dev/null & disown
 			;;
-			(bmp|gif|jpg|jpeg|pcx|png|svg|tga|tif|tiff)
+			(bmp|gif|jpg|jpeg|pcx|png|raf|svg|tga|tif|tiff)
 				geeqie -f $@ &>/dev/null & disown
 			;;
 			(psd|xcf)
