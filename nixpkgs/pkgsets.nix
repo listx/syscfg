@@ -245,6 +245,8 @@ with super; rec {
     name = "l-set-office";
     ignoreCollisions = true;
     paths = [
+      # For pdftotext
+      poppler-utils
       zathura
     ];
   });
