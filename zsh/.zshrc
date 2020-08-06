@@ -70,6 +70,9 @@ export NIXPKGS=~/prog/foreign/nixpkgs
 # Add Golang binaries to the PATH.
 export PATH=~/go/bin:$PATH
 
+# Add Rust binaries (installed with "cargo install" to the PATH.
+export PATH=~/.cargo/bin:$PATH
+
 # Stack (https://www.haskellstack.org/) needs this.
 export PATH=~/.local/bin:$PATH
 
