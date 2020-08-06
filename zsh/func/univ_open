@@ -14,15 +14,7 @@
 
 univ_open() {
 	if [[ -z $@ ]]; then
-		if [[ -d /mnt/u0/h ]]; then
-			if [[ $PWD == "/mnt/u0/h" ]]; then
-				cd && dir_info # ("cd" w/o any arguments goes to the home directory)
-			else
-				cd /mnt/u0/h && dir_info
-			fi
-		else
-			cd && dir_info
-		fi
+		cd && dir_info # ("cd" w/o any arguments goes to the home directory)
 	elif [[ -f $1 || -f ${=@[-1]} ]]; then
 		# if we're here, it means that the user either (1) provided a single valid file name, or (2) a number of
 		# commandline arguments PLUS a single valid file name; use of the $@ variable ensures that we preserve all the
