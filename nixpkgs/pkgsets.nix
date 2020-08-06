@@ -164,6 +164,7 @@ with super; rec {
       ccl # clozure
       clisp
       sbcl
+      leiningen
 
       # linters
       cppcheck
