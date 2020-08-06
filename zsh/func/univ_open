@@ -66,12 +66,19 @@ univ_open() {
 				xchm $@ &>/dev/null & disown
 			;;
 			*)
+                elisp0=$(cat <<-EOF
+					(progn
+						(elscreen-find-file "$(readlink -e "$1")")
+					)
+					EOF
+				)
 				# Use emacsclient, but create a new frame only if there isn't
 				# one already. See
 				# http://superuser.com/questions/358037/emacsclient-create-a-frame-if-a-frame-does-not-exist
 				#
 				# However, always spawn a new frame if connecting over SSH.
-				emacsclient_cmd="emacsclient -a \"\" --eval '(find-file \"$@\")'"
+                echo $elisp0
+				emacsclient_cmd="emacsclient -a \"\" --eval '$elisp0'"
 				if [[ -n "${SSH_TTY}" ]]; then
 					emacsclient_cmd+=" -t"
 				else
