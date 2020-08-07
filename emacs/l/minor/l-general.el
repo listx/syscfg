@@ -155,7 +155,9 @@ otherwise, close current tab (elscreen)."
 (defun l/kill-this-buffer ()
   "Kill current buffer."
   (interactive)
-  (if (member (buffer-name) '("COMMIT_EDITMSG"))
+  (if (or (mapcan (lambda (rgx) (string-match rgx (buffer-name)))
+      ; List of regexes for buffer names that are "owned" by with-editor.
+      '("^COMMIT_EDITMSG")))
     (with-editor-cancel t)
     (kill-this-buffer)))
 
