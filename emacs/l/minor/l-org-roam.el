@@ -7,6 +7,8 @@
   (use-package org-roam-server
     :ensure t
     :config
+    (add-hook 'emacs-startup-hook '(lambda ()
+      (if (daemonp) (org-roam-server-mode))))
     (setq org-roam-server-host "127.0.0.1"
           org-roam-server-port 8090
           org-roam-server-export-inline-images t
