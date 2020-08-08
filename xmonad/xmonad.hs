@@ -147,13 +147,13 @@ instance Show XZY where
 -- "<XCoord>_<ZCoord>_<YCoord>".
 --
 -- The H-h/H-l bindings move the active workspace (or window) focus across
--- Xinerama screens in the X-axis direction (the vanilla XMonad bindings are
+-- physical screens in the X-axis direction (the vanilla XMonad bindings are
 -- Modkey-{Q,W,E}). We chose the name X-axis for this direction because on most
--- multihead Xinerama setups, the monitors are placed horizontally in a
+-- multihead setups, the monitors are placed horizontally in a
 -- left-to-right fashion. To move into our Z axis, we use H-n; this binding
--- switches the workspace on the current Xinerama screen only and leaves all
+-- switches the workspace on the current physical screen only and leaves all
 -- other screens as-is. Intuitively, we can imagine this 2-dimensional scheme as
--- if each XMonad worspace is a playing card in a deck of cards. Each Xinerama
+-- if each XMonad worspace is a playing card in a deck of cards. Each physical
 -- screen has its own unique deck. Not to be pedantic, but for those unfamiliar
 -- with XMonad, each "playing card" here is its own "Desktop" with multiple
 -- tiled GUI windows of applications.
@@ -163,14 +163,14 @@ instance Show XZY where
 -- as if each <YCoord> in the Y axis has its own independent array of decks. The
 -- most interesting thing here is that moving up and down the Y axis changes
 -- _all_ screens (every deck must change!). The effect is quite dramatic (and
--- refreshing on my 4-monitor setup) and really shows off the power of Xinerama.
--- This simulates the workflow demonstrated in
+-- refreshing on my 4-monitor setup) and really shows off the power of
+-- multi-head setups. This simulates the workflow demonstrated in
 -- https://youtu.be/w5_36BBGoU0?t=3m30s, where multiple screens all change
 -- content at once. The cool part about our setup is that we have the added Z
 -- dimension (for each unique X and Y coordinate pair), giving us much more room
 -- to place windows around. An important thing to keep in mind here is that even
 -- though we change by the Y coordinate with H-M-j/H-M-k, we actually change the
--- Z coordinate as well if necessary on a per-screen basis (for each Xinerama
+-- Z coordinate as well if necessary on a per-screen basis (for each physical
 -- screen (XCoord)). This is because whenever we move up/down the Y axis, we
 -- move to the *last used set of XZY workspaces at that YCoord*; using our
 -- playing card example, each Y coordinate (array of decks) remembers what
@@ -181,14 +181,14 @@ instance Show XZY where
 --
 -- That's about it. Maybe one day this will become an XMonad extension...
 
--- The number of connected Xinerama screens can vary across OS boots (e.g., when
+-- The number of connected physical screens can vary across OS boots (e.g., when
 -- we disconnect or connect an external monitor to a laptop). So we rely on
 -- XMonad.Layout.IndependentScreens to give us the correct number of X
--- coordinates (see countScreens), and use it here as xineramaCount. (NOTE: it
--- is unclear what will happen if we change the number of Xinerama screens
+-- coordinates (see countScreens), and use it here as numScreens. (NOTE: it
+-- is unclear what will happen if we change the number of physical screens
 -- within a single X Session.)
 l_XCoords :: Int -> [XCoord]
-l_XCoords xineramaCount = map X $ take xineramaCount [0..]
+l_XCoords numScreens = map X $ take numScreens [0..]
 
 -- We have 10 Z coordinates and 10 Y coordinates. That means there are 100
 -- unique workspaces, which is more than enough, one would think, for most work.
@@ -249,13 +249,13 @@ l_ZCoordGroups =
   ]
 
 -- Generate all possible XZYs. Sort by the Y, X, and Z coordinates, in that
--- order. This is important because, for instance, XMonad assigns each Xinerama
+-- order. This is important because, for instance, XMonad assigns each physical
 -- screen to each WorkspaceId in this list when we use it in assigning
 -- workspaces.
 l_XZYs :: Int -> [XZY]
-l_XZYs xineramaCount = l_multiSort
+l_XZYs numScreens = l_multiSort
   [ XZY (x, z, y)
-  | x <- l_XCoords xineramaCount
+  | x <- l_XCoords numScreens
   , z <- l_ZCoords
   , y <- l_YCoords
   ]
@@ -301,10 +301,10 @@ l_YIncrementedBy dir safe (Y y) = if safe
 -- Given the X, Y, and ZGroup constraints, generate the full XZY coordinate
 -- WorkspaceId by deciding on the ZCoord.
 l_XZYFrom :: XCoord -> Int -> ZGroup -> YCoord -> XZY
-l_XZYFrom (X xCoord) xineramaCount zGroup y = XZY (x, z, y)
+l_XZYFrom (X xCoord) numScreens zGroup y = XZY (x, z, y)
   where
   -- Wrap xCoord if it is out of bounds.
-  x = l_XCoords xineramaCount !! mod xCoord xineramaCount
+  x = l_XCoords numScreens !! mod xCoord numScreens
   -- We just grab the very first ZCoord in the ZGroup.
   z = head $ l_ZGroupToZCoords zGroup
 
@@ -312,9 +312,9 @@ l_XZYFrom (X xCoord) xineramaCount zGroup y = XZY (x, z, y)
 -- for every XCoord. The pool of available ZCoords is modified once by
 -- transformZCoords.
 l_XZYsFrom :: Int -> ZGroup -> ([ZCoord] -> [ZCoord]) -> YCoord -> [XZY]
-l_XZYsFrom xineramaCount zGroup transformZCoords y =
+l_XZYsFrom numScreens zGroup transformZCoords y =
   [ XZY (x, z, y)
-  | x <- l_XCoords xineramaCount
+  | x <- l_XCoords numScreens
   , z <- transformZCoords $ l_ZGroupToZCoords zGroup
   ]
 
@@ -669,7 +669,7 @@ l_wrapWithout p xs
   where
   (before, after) = break p xs
 
--- Make the given YCoord "active" by viewing its XZYs on all Xinerama screen(s).
+-- Make the given YCoord "active" by viewing its XZYs on all physical screen(s).
 -- If we viewed the YCoord before, present its XZYs that we recorded when we
 -- switched away from it the last time around. Otherwise, show the default XZYs
 -- for the YCoord.
@@ -678,10 +678,10 @@ l_activateY y keepXCoord = do
   windowSet <- gets windowset
   (Seen hashmap _) <- XS.get :: X Seen
   let
-    xineramaCount = length $ W.screens windowSet
+    numScreens = length $ W.screens windowSet
     (wid, xzys) = case H.lookup y hashmap of
       Just found -> first show found
-      Nothing -> ("0", l_defaultXZYsForY y xineramaCount)
+      Nothing -> ("0", l_defaultXZYsForY y numScreens)
   -- First update all screens.
   windows $ l_viewXZYs xzys
   when (not keepXCoord)
@@ -743,12 +743,12 @@ l_promoteFromHidden windowSet ww
   otherHidden = filter ((/= W.tag ww) . W.tag) $ W.hidden windowSet
 
 -- Pick out a default set of workspaces at a particular level. We make sure to
--- pick 1 workspace for each physical screen (given by xineramaCount).
+-- pick 1 workspace for each physical screen (given by numScreens).
 l_defaultXZYsForY :: YCoord -> Int -> [XZY]
-l_defaultXZYsForY y xineramaCount
-  = selectForEachXCoord (l_XCoords xineramaCount)
+l_defaultXZYsForY y numScreens
+  = selectForEachXCoord (l_XCoords numScreens)
   . filter xzyIsOnYCoord
-  $ l_XZYs xineramaCount
+  $ l_XZYs numScreens
   where
   xzyIsOnYCoord (XZY (_, _, y')) = y' == y
   selectForEachXCoord xCoords xzys =
@@ -765,14 +765,14 @@ l_shiftY yNext = do
   windowSet <- gets windowset
   (Seen hashmap _) <- XS.get :: X Seen
   let
-    xineramaCount = length $ W.screens windowSet
+    numScreens = length $ W.screens windowSet
     x = l_XFromWid . W.tag . W.workspace $ W.current windowSet
     -- Like in l_viewYDir, try to grab the XZY of the last used Workspace at the
     -- target xzy.
     xzys = case H.lookup yNext hashmap of
       -- Grab the xzy with the same XCoord as the current screen.
       Just (_, xzys') -> xzys'
-      Nothing -> l_defaultXZYsForY yNext xineramaCount
+      Nothing -> l_defaultXZYsForY yNext numScreens
   whenJust
     (find ((==x) . l_XFrom) xzys)
     (\xzy -> (windows . W.shift $ show xzy) >> l_viewY yNext True)
@@ -785,7 +785,7 @@ l_shiftYDir dir = do
   windowSet <- gets windowset
   (Seen hashmap _) <- XS.get :: X Seen
   let
-    xineramaCount = length $ W.screens windowSet
+    numScreens = length $ W.screens windowSet
     yPrev = l_YFromWindowSet windowSet
     yNext = l_YIncrementedBy dir True yPrev
     x = l_XFromWid . W.tag . W.workspace $ W.current windowSet
@@ -794,7 +794,7 @@ l_shiftYDir dir = do
     xzys = case H.lookup yNext hashmap of
       -- Grab the xzy with the same XCoord as the current screen.
       Just (_, xzys') -> xzys'
-      Nothing -> l_defaultXZYsForY yNext xineramaCount
+      Nothing -> l_defaultXZYsForY yNext numScreens
   whenJust
     (find ((==x) . l_XFrom) xzys)
     (\xzy -> (windows . W.shift $ show xzy) >> l_viewYDir dir True)
@@ -806,7 +806,7 @@ l_gridSelectWithinY = do
   windowSet <- gets windowset
   let
     y = l_YFromWindowSet windowSet
-    xineramaCount = length $ W.screens windowSet
+    numScreens = length $ W.screens windowSet
     attachName (ww, a) = do
       b <- show <$> getName a
       return (b, (ww, a))
@@ -814,7 +814,7 @@ l_gridSelectWithinY = do
     $ concat
       [ map ((,) ww) $ W.integrate' $ W.stack ww
       | ww <- W.workspaces windowSet
-      , xzy <- l_XZYs xineramaCount
+      , xzy <- l_XZYs numScreens
       , W.tag ww == show xzy
       , l_YFrom xzy == y
       ]
@@ -979,7 +979,7 @@ l_windowIsInWid wid a windowSet = (== Just wid) $ lookup a
 
 -- Try to find a workspace based on the given WorkspaceQuery, but inside the
 -- current XCoord and YCoord. In other words, flip through the ZCoords available
--- on the current Xinerama screen (X and Y coordinates stay constant).
+-- on the current physical screen (X and Y coordinates stay constant).
 l_searchZ :: WorkspaceQuery -> WSType
 l_searchZ q = WSIs $ do
   windowSet <- gets windowset
@@ -1009,12 +1009,12 @@ l_searchZPreferZGroup :: ZGroup -> X WorkspaceId
 l_searchZPreferZGroup zGroup = do
   windowSet <- gets windowset
   let
-    xineramaCount = length $ W.screens windowSet
+    numScreens = length $ W.screens windowSet
     xzyCurrent = l_XZYFromWid . W.tag $ W.workspace $ W.current windowSet
     (XZY (x, _, y)) = l_XZYFromWindowSet windowSet
     -- Get all XZYs at the current XCoord/YCoord combination that belong to
     -- zGroup.
-    xzys = filter ((==x) . l_XFrom) $ l_XZYsFrom xineramaCount zGroup id y
+    xzys = filter ((==x) . l_XFrom) $ l_XZYsFrom numScreens zGroup id y
     xzysOfGroup =
       [ (l_XZYFromWid wid, length $ W.integrate' stack)
       | (W.Workspace wid _ stack) <- W.workspaces windowSet
@@ -1126,7 +1126,7 @@ l_keyBindings :: String
   -> Int
   -> XConfig Layout
   -> M.Map (KeyMask, KeySym) (X ())
-l_keyBindings hostname xineramaCount conf@XConfig {XMonad.modMask = hypr}
+l_keyBindings hostname numScreens conf@XConfig {XMonad.modMask = hypr}
   = M.fromList
   . map (second (\f -> f >> l_resetMouse True)) $
   -- Close focused window.
@@ -1173,9 +1173,9 @@ l_keyBindings hostname xineramaCount conf@XConfig {XMonad.modMask = hypr}
   , ((hypr,   xK_b            ), withFocused toggleBorder)
 
   -- Reapply l_manageHook against the focused window.
-  , ((hypr,   xK_Return       ), l_resetWindow xineramaCount)
+  , ((hypr,   xK_Return       ), l_resetWindow numScreens)
 
-  -- Go to empty Workspace, on the current YCoord, in the current Xinerama
+  -- Go to empty Workspace, on the current YCoord, in the current physical
   -- screen. For shifting an existing window to an empty Workspace, only do so
   -- if there is indeed a window to work with in the current Workspace (i.e., if
   -- all ZCoords at this X/Y-coordinate pair is full, do nothing).
@@ -1205,7 +1205,7 @@ l_keyBindings hostname xineramaCount conf@XConfig {XMonad.modMask = hypr}
     ]
   ]
   ++
-  -- H-{h,l}: Switch focus across X-axis (prev/next Xinerama screen).
+  -- H-{h,l}: Switch focus across X-axis (prev/next physical screen).
   [((hypr, key), l_viewAcrossX =<< sc)
   | (key, sc) <- [(xK_h, screenBy (-1)), (xK_l, screenBy 1)]
   ]
@@ -1398,7 +1398,7 @@ l_layoutNoMirror = ResizableTall 0 (3/100) (1/2) [] ||| noBorders Full
 --
 -- then Qt-subapplication is resource, and VirtualBox is className.
 l_manageHook :: Int -> ManageHook
-l_manageHook xineramaCount = composeOne $
+l_manageHook numScreens = composeOne $
   [ className =? "Gimp"               -?> doFloat
   , className =? "Agave"              -?> doCenterFloat
   , resource  =? "desktop_window"     -?> doIgnore
@@ -1423,7 +1423,7 @@ l_manageHook xineramaCount = composeOne $
   map
     (\xzy ->
       resource =? ("atWorkspace_" ++ show xzy) -?> l_shiftAndViewAsHook (show xzy))
-    (l_XZYs xineramaCount)
+    (l_XZYs numScreens)
   ++
   -- Force new windows down (i.e., if a screen has 1 window (master) and we
   -- spawn a new window, don't become the new master window). See "Make new
@@ -1448,15 +1448,15 @@ l_startupHook hostname = do
   spawn "qutebrowser"
   y <- gets (l_YFromWindowSet . windowset)
   let
-    xineramaCount = length $ W.screens windowSet
+    numScreens = length $ W.screens windowSet
     farRightScreen = if hostname == "k0"
       -- For k0, spawn at workspace 1 instead of 3 (workspaces are 0, 1, 2, 3)
       -- because the actual layout of the screens (from the human user's
       -- perspective) is:
       --    2 3 0 1
       -- so "1" is the rightmost screen.
-      then show (l_XZYFrom (X 1) xineramaCount ZGSys y)
-      else show (l_XZYFrom (X (-1)) xineramaCount ZGSys y)
+      then show (l_XZYFrom (X 1) numScreens ZGSys y)
+      else show (l_XZYFrom (X (-1)) numScreens ZGSys y)
     -- Spawn rtorrent on the rightmost screen (XCoord index of -1; we use -1
     -- because we don't know how many screens there will actually be).
     rtorrent = spawn $ l_term2
@@ -1469,7 +1469,7 @@ l_startupHook hostname = do
   mapM_
     (\xzy -> whenX (l_workspaceIsEmpty xzy)
       (spawn $ l_term1 ++ " -name atWorkspace_" ++ show xzy))
-    $ l_XZYsFrom xineramaCount ZGWork (take 1) y
+    $ l_XZYsFrom numScreens ZGWork (take 1) y
   -- Spawn htop on the rightmost screen.
   spawn $ l_term1
     ++ " -name atWorkspace_"
@@ -1548,23 +1548,23 @@ l_resetMouse alwaysReset = do
 -- move a window back to its correct ZCoord. The fancy appEndo/<=< stuff is from
 -- `XMonad.Actions.WindowGo.ifWindow'.
 l_resetWindow :: Int -> X ()
-l_resetWindow xineramaCount = do
+l_resetWindow numScreens = do
   windowSet <- gets windowset
   let
     currentStack = W.stack . W.workspace $ W.current windowSet
   whenJust
     currentStack
-    (windows . appEndo <=< runQuery (l_manageHook xineramaCount) . W.focus)
+    (windows . appEndo <=< runQuery (l_manageHook numScreens) . W.focus)
 
 main :: IO ()
 main = do
-  xineramaCount <- countScreens
+  numScreens <- countScreens
   hostname <- fmap nodeName getSystemID
   if l_isPortraitMonitorLayout hostname
-    then xmonad (myconf hostname xineramaCount) {layoutHook = l_layoutNoMirror}
-    else xmonad $ myconf hostname xineramaCount
+    then xmonad (myconf hostname numScreens) {layoutHook = l_layoutNoMirror}
+    else xmonad $ myconf hostname numScreens
   where
-  myconf hostname xineramaCount = def
+  myconf hostname numScreens = def
     { terminal           = "urxvt"
     , focusFollowsMouse  = True
     , clickJustFocuses   = True
@@ -1577,13 +1577,13 @@ main = do
     -- configuration file under the
     -- `services.xserver.displayManager.sessionCommands` option.
     , modMask            = mod3Mask
-    , workspaces         = map show $ l_XZYs xineramaCount
+    , workspaces         = map show $ l_XZYs numScreens
     , normalBorderColor  = "#000000"
     , focusedBorderColor = "#ffffff"
-    , keys               = l_keyBindings hostname xineramaCount
+    , keys               = l_keyBindings hostname numScreens
     , mouseBindings      = l_mouseBindings
     , layoutHook         = l_layoutHook
-    , manageHook         = l_manageHook xineramaCount
+    , manageHook         = l_manageHook numScreens
     , handleEventHook    = l_eventHook
     , logHook            = l_resetMouse False
     , startupHook        = l_startupHook hostname
