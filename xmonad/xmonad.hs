@@ -838,7 +838,6 @@ l_gridShowDebugInfo = do
   windowSet <- gets windowset
   let
     xzy = l_XZYFromWindowSet windowSet
-    (X x) = l_XFrom xzy
     wid = show xzy
     zGrp = show . l_ZCoordToGroup $ l_ZFrom xzy
     focusedWindow = case W.stack . W.workspace $ W.current windowSet of
@@ -846,9 +845,9 @@ l_gridShowDebugInfo = do
       Nothing -> "None"
     -- stringColorizer uses the _snd_ part of the pairs in debugInfo, not fst.
     debugInfo =
-      [ ("Focused Window XID: " ++ focusedWindow, "XID")
-      , ("XZY: " ++ wid, show x)
-      , ("ZGroup: " ++ zGrp, zGrp)
+      [ ("WINDOWID: " ++ focusedWindow, "XID")
+      , ("XZY: " ++ wid, "XZY")
+      , ("ZGroup: " ++ zGrp, "ZGroup")
       ]
   _ <- gridselect (gsconfig2 stringColorizer) debugInfo
   return ()
