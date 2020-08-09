@@ -59,7 +59,7 @@ export VISUAL=~/syscfg/script/emacsclient-tty.sh
 export EDITOR=~/syscfg/script/emacsclient-tty.sh
 
 # default ledger file (to avoid using -f option every time)
-export LEDGER_FILE=~/org/master.hledger
+export LEDGER_FILE=~/lo/finance/index.ledger
 
 # make GCC print errors in color
 export GCC_COLORS=1
