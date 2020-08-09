@@ -4,6 +4,10 @@
 # Space-delimited list of directories to use for setting org-agenda-files. All
 # *.org files in these directories are included, recursively.
 export L_ORG_AGENDA_DIRS="$HOME/lo"
-# Spaced-delimited list of exclusion patterns to remove files from
+# Space-delimited list of exclusion patterns to remove files from
 # org-agenda-files.
-export L_ORG_AGENDA_EXCLUDE_PATTERNS="$HOME/lo/archived/"
+export L_ORG_AGENDA_EXCLUDE_PATTERNS="
+	$HOME/lo/archived/
+	$HOME/lo/plan.org
+	$HOME/lo/note.org
+"
