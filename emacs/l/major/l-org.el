@@ -4,6 +4,8 @@
   (add-hook 'org-mode-hook 'l/org-mode-hook)
   (add-hook 'org-agenda-mode-hook 'l/org-agenda-mode-hook)
   (add-hook 'after-save-hook 'l/org-mode-save-hook)
+  (setq org-todo-keywords
+    '((sequence "TODO" "IN-PROGRESS" "WAITING" "|" "DONE" "CANCELLED")))
   ; Write timestamp when a TODO changes to DONE.
   (setq org-log-done t)
   ; Write additional timestamp each time a task is re-DEADLINE-d. Useful for
@@ -133,11 +135,9 @@
       (progn
         ; Colorize custom TODO-like keywords for org-mode.
         (setq org-todo-keyword-faces '(
-          ("GOAL" . (:foreground "firebrick" :background "pink" :weight bold))
           ("TODO" . org-warning)
-          ("TASK" . org-warning)
+          ("IN-PROGRESS" . "yellow")
           ("WAITING" . "purple")
-          ("STARTED" . "yellow")
           ("DONE" . org-done)
           ("CANCELED" . (:foreground "orange" :weight bold))))
         (set-face-attribute 'org-todo nil :foreground "indian red" :weight 'bold)
