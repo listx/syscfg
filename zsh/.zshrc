@@ -278,8 +278,6 @@ alias gp='git push'
 alias grv='git remote -v'
 alias gtag='~/syscfg/script/gtag.sh'
 
-alias gg='git5'
-
 alias rgi='rg -i'
 
 alias ocm="cd ~/org; gcm -am \"$HOST\"; gpl && gps"
