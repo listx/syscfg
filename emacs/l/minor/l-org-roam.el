@@ -25,8 +25,7 @@
     '(("d" "default" plain (function org-roam--capture-get-point)
         "%?"
         :file-name "${slug}"
-        :head "#+STARTUP: indent showall
-#+TITLE: ${title}\n"
+        :head "#+TITLE: ${title}\n"
         :unnarrowed t)))
   (org-roam-capture-ref-templates
     '(("r" "ref" plain (function org-roam-capture--get-point)
@@ -34,7 +33,6 @@
         :file-name "ref/${slug}"
         :head "#+roam_key: ${ref}
 #+roam_tags: website
-#+STARTUP: indent showall
 #+TITLE: ${title}
 - source :: ${ref}"
         :unnarrowed t))))
