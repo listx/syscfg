@@ -6,6 +6,10 @@
   (add-hook 'after-save-hook 'l/org-mode-save-hook)
   (setq org-todo-keywords
     '((sequence "TODO" "IN-PROGRESS" "WAITING" "|" "DONE" "CANCELLED")))
+  ; Indent headings and items.
+  (setq org-startup-indented t)
+  ; Show *everything* by default (no folding).
+  (setq org-startup-folded 'showeverything)
   ; Write timestamp when a TODO changes to DONE.
   (setq org-log-done t)
   ; Write additional timestamp each time a task is re-DEADLINE-d. Useful for
