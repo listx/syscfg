@@ -82,6 +82,7 @@ with super; rec {
       vim
       ripgrep
       fd
+      fzf
       colordiff
       gnupg
       openssl
