@@ -431,4 +431,7 @@ if [[ -n "${commands[fzf-share]}" ]]; then
 	source "$(fzf-share)/completion.zsh"
 	source "$(fzf-share)/key-bindings.zsh"
 	bindkey '\ed' fzf-cd-widget
+	export FZF_DEFAULT_COMMAND='rg --files --hidden --glob "!.git"'
+	export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+	export FZF_ALT_C_COMMAND="$FZF_DEFAULT_COMMAND"
 fi
