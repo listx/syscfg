@@ -425,3 +425,10 @@ if [ $commands[kubectl] ]; then
     # Pass through the default kubectl completions to kl (zsh/func/kl).
     compdef kl=kubectl
 fi
+
+# Load fzf bindings (upstream) to ZSH.
+if [[ -n "${commands[fzf-share]}" ]]; then
+	source "$(fzf-share)/completion.zsh"
+	source "$(fzf-share)/key-bindings.zsh"
+	bindkey '\ed' fzf-cd-widget
+fi
