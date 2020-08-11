@@ -77,7 +77,6 @@ univ_open() {
 				# http://superuser.com/questions/358037/emacsclient-create-a-frame-if-a-frame-does-not-exist
 				#
 				# However, always spawn a new frame if connecting over SSH.
-                echo $elisp0
 				emacsclient_cmd="emacsclient -a \"\" --eval '$elisp0'"
 				if [[ -n "${SSH_TTY}" ]]; then
 					emacsclient_cmd+=" -t"
