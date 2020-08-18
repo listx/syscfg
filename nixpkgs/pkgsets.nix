@@ -67,10 +67,7 @@ with super; rec {
       xlibs.xmodmap
       xlibs.xev
       xdotool
-      rxvt_unicode
-      rxvt_unicode.terminfo
-      urxvt_font_size
-      urxvt_perls
+      alacritty
       tmux
 
       emacs
