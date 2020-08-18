@@ -6,6 +6,7 @@
 *.swp
 *.DS_Store
 *~
+alacritty/alacritty.yml
 cblrepo/haskell-*
 cmus/*
 emacs/.org-id-locations
