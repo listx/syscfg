@@ -139,6 +139,7 @@ with super; rec {
       tig
       clang
       clojure
+      openjdk
       elixir
       gcc
       go
@@ -347,6 +348,8 @@ with super; rec {
       auca
       nox
       hledger
+      hledger-ui
+      hledger-web
       hlint
       shellcheck
       pandoc
