@@ -1,5 +1,6 @@
 {-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE RecordWildCards #-}
+{-# LANGUAGE TupleSections #-}
 
 module Main where
 
@@ -464,8 +465,8 @@ l_displayStringOn RichText{..} wid = do
     xzy = l_XZYFromWid wid
     scn = head
       [ ss
-      | ss <- W.screens $ windowSet
-      , (W.tag $ W.workspace ss) == show xzy
+      | ss <- W.screens windowSet
+      , W.tag (W.workspace ss) == show xzy
       ]
     scr = screenRect $ W.screenDetail scn
   dpy <- asks display
@@ -587,8 +588,8 @@ l_viewYNonEmpty dir = do
       Just (_, xzys') -> not $ null
         [ xzy
         | ww <- W.workspaces windowSet
-        , xzy <- xzys'
         , isJust $ W.stack ww
+        , xzy <- xzys'
         , W.tag ww == show xzy
         ]
       Nothing -> False
@@ -815,7 +816,7 @@ l_gridSelectWithinY = do
       return (b, (ww, a))
   windowsAtY <- mapM attachName
     $ concat
-      [ map ((,) ww) $ W.integrate' $ W.stack ww
+      [ map (ww,) $ W.integrate' $ W.stack ww
       | ww <- W.workspaces windowSet
       , xzy <- l_XZYs numScreens
       , W.tag ww == show xzy
@@ -918,7 +919,7 @@ l_viewAcrossX sc = do
 
 l_promoteHidden :: X ()
 l_promoteHidden = do
-  whenX (l_currentWindowCountIs (==0)) $ do
+  whenX (l_currentWindowCountIs (==0)) $
     moveTo Prev $ l_searchZ (WQ NonEmpty [])
   l_maybeShowHiddenNonEmptyZCount
 
@@ -1238,7 +1239,7 @@ l_keyBindings hostname numScreens conf@XConfig {XMonad.modMask = hypr}
 
       -- On the old workspace, try to promote hidden nonempty workspace if we're
       -- staring at an empty one.
-      whenX (l_windowCountIs (==0) widCur) $ do
+      whenX (l_windowCountIs (==0) widCur) $
         doTo Prev wst getSortByIndex (windows . l_shiftAndView)
       l_maybeShowHiddenNonEmptyZCount
 
@@ -1378,7 +1379,7 @@ l_mouseBindings _ = M.fromList
 -- when resizing panes, and z is the default proportion of the screen occupied
 -- by the master pane.
 l_layoutHook :: Choose (Mirror Tall) (Choose Tall (XLL.ModifiedLayout WithBorder Full)) Window
-l_layoutHook = (Mirror $ tiled 1) ||| tiled 1 ||| noBorders Full
+l_layoutHook = Mirror (tiled 1) ||| tiled 1 ||| noBorders Full
   where
   tiled nmaster = Tall nmaster delta ratio
   delta = 3/100
