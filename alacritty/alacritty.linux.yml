@@ -611,9 +611,9 @@ key_bindings:
 
   # Vi Mode
   # Custom Vi mode bindings.
-  - { key: S,         mode: ~Vi, mods: Alt,    action: ToggleViMode                }
+  - { key: S,         mode: ~Vi, mods: Super,    action: ToggleViMode              }
   # Paste.
-  - { key: P,                   mods: Alt,     action: Paste                       }
+  - { key: P,                    mods: Super,    action: Paste                     }
   # When exiting Vi mode, scroll to the very bottom first to restore
   # pre-Vi-mode context.
   - { key: Q,         mode: Vi,                action: ScrollToBottom              }
@@ -719,14 +719,10 @@ key_bindings:
   - { key: M,         mods: Alt,       chars: "\x1bm"                       }
   - { key: N,         mods: Alt,       chars: "\x1bn"                       }
   - { key: O,         mods: Alt,       chars: "\x1bo"                       }
- # Disable Alt-P, because it is the paste binding.
- #- { key: P,         mods: Alt,       chars: "\x1bp"                       }
+  - { key: P,         mods: Alt,       chars: "\x1bp"                       }
   - { key: Q,         mods: Alt,       chars: "\x1bq"                       }
   - { key: R,         mods: Alt,       chars: "\x1br"                       }
-  # Disable sending of the escape key, because this interferes with Vi mode.
-  # Otherwise, when we exit Vi mode, we enter "Normal" Vi-mode from Zsh,
-  # because of the sending of the Escape key here.
-  #- { key: S,         mods: Alt,       chars: "\x1bs"                       }
+  - { key: S,         mods: Alt,       chars: "\x1bs"                       }
   - { key: T,         mods: Alt,       chars: "\x1bt"                       }
   - { key: U,         mods: Alt,       chars: "\x1bu"                       }
   - { key: V,         mods: Alt,       chars: "\x1bv"                       }
