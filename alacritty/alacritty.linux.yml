@@ -595,6 +595,20 @@ key_bindings:
   #- { key: Home,      mods: Shift,   mode: ~Alt, action: ScrollToTop,   }
   #- { key: End,       mods: Shift,   mode: ~Alt, action: ScrollToBottom }
 
+  # Some directory history navigation. 'h' goes backward in history, and 'l' goes
+  # "forward". Essentially this amounts to simulating a doubly-linked-list
+  # traversal, forwards and backwards. 'k' is for moving up a directory; the
+  # advantage of using the plain 'k' alias is that we don't have to repeatedly
+  # press "ENTER" between each invocation.
+  #
+  # At least for our Zsh configuration, we set HIST_IGNORE_SPACE which skips
+  # recording of a command into the shell history if the command begins with a
+  # space character.
+  - { key: K,         mode: ~Vi, mods: Super,         chars: " k\n" }
+  - { key: H,         mode: ~Vi, mods: Super,         chars: " dirs $(dirs -lp | awk 'NR==1{store=$0;next}1;END{print store}') && popd && ll\n" }
+  - { key: L,         mode: ~Vi, mods: Super,         chars: " cd -0 && ll\n" }
+  - { key: T,         mode: ~Vi, mods: Super,         chars: " tig\n" }
+
   # Vi Mode
   # Custom Vi mode bindings.
   - { key: S,         mode: ~Vi, mods: Alt,    action: ToggleViMode                }
