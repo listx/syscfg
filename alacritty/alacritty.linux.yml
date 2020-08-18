@@ -614,6 +614,7 @@ key_bindings:
   - { key: S,         mode: ~Vi, mods: Super,    action: ToggleViMode              }
   # Paste.
   - { key: P,                    mods: Super,    action: Paste                     }
+  - { key: P,         mode: Vi,                  action: Paste                     }
   # When exiting Vi mode, scroll to the very bottom first to restore
   # pre-Vi-mode context.
   - { key: Q,         mode: Vi,                action: ScrollToBottom              }
