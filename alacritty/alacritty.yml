@@ -706,7 +706,10 @@ key_bindings:
   - { key: P,         mods: Alt,       chars: "\x1bp"                       }
   - { key: Q,         mods: Alt,       chars: "\x1bq"                       }
   - { key: R,         mods: Alt,       chars: "\x1br"                       }
-  - { key: S,         mods: Alt,       chars: "\x1bs"                       }
+  # Disable sending of the escape key, because this interferes with Vi mode.
+  # Otherwise, when we exit Vi mode, we enter "Normal" Vi-mode from Zsh,
+  # because of the sending of the Escape key here.
+  #- { key: S,         mods: Alt,       chars: "\x1bs"                       }
   - { key: T,         mods: Alt,       chars: "\x1bt"                       }
   - { key: U,         mods: Alt,       chars: "\x1bu"                       }
   - { key: V,         mods: Alt,       chars: "\x1bv"                       }
