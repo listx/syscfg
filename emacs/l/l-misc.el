@@ -1,5 +1,8 @@
 ; Call the debugger when an error is signaled and not handled.
 (setq debug-on-error t)
+; Disable 'Package cl is deprecated' message.
+; https://github.com/kiwanami/emacs-epc/issues/35#issuecomment-660639327
+(setq byte-compile-warnings '(cl-functions))
 ; Work around a bug where esup tries to step into the byte-compiled version of
 ; `cl-lib', and fails horribly.
 ; See https://github.com/jschaf/esup/issues/54#issuecomment-651247749.
