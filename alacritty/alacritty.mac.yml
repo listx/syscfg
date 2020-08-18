@@ -595,11 +595,26 @@ key_bindings:
   #- { key: Home,      mods: Shift,   mode: ~Alt, action: ScrollToTop,   }
   #- { key: End,       mods: Shift,   mode: ~Alt, action: ScrollToBottom }
 
+  # Some directory history navigation. 'h' goes backward in history, and 'l' goes
+  # "forward". Essentially this amounts to simulating a doubly-linked-list
+  # traversal, forwards and backwards. 'k' is for moving up a directory; the
+  # advantage of using the plain 'k' alias is that we don't have to repeatedly
+  # press "ENTER" between each invocation.
+  #
+  # At least for our Zsh configuration, we set HIST_IGNORE_SPACE which skips
+  # recording of a command into the shell history if the command begins with a
+  # space character.
+  - { key: K,         mode: ~Vi, mods: Super,         chars: " k\n" }
+  - { key: H,         mode: ~Vi, mods: Command,         chars: " dirs $(dirs -lp | awk 'NR==1{store=$0;next}1;END{print store}') && popd && ll\n" }
+  - { key: L,         mode: ~Vi, mods: Command,         chars: " cd -0 && ll\n" }
+  - { key: T,         mode: ~Vi, mods: Command,         chars: " tig\n" }
+
   # Vi Mode
   # Custom Vi mode bindings.
-  - { key: S,         mode: ~Vi, mods: Alt,    action: ToggleViMode                }
+  - { key: S,         mode: ~Vi, mods: Command,    action: ToggleViMode              }
   # Paste.
-  - { key: P,                   mods: Alt,     action: Paste                       }
+  - { key: P,                    mods: Command,    action: Paste                     }
+  - { key: P,         mode: Vi,                  action: Paste                     }
   # When exiting Vi mode, scroll to the very bottom first to restore
   # pre-Vi-mode context.
   - { key: Q,         mode: Vi,                action: ScrollToBottom              }
@@ -705,14 +720,10 @@ key_bindings:
   - { key: M,         mods: Alt,       chars: "\x1bm"                       }
   - { key: N,         mods: Alt,       chars: "\x1bn"                       }
   - { key: O,         mods: Alt,       chars: "\x1bo"                       }
- # Disable Alt-P, because it is the paste binding.
- #- { key: P,         mods: Alt,       chars: "\x1bp"                       }
+  - { key: P,         mods: Alt,       chars: "\x1bp"                       }
   - { key: Q,         mods: Alt,       chars: "\x1bq"                       }
   - { key: R,         mods: Alt,       chars: "\x1br"                       }
-  # Disable sending of the escape key, because this interferes with Vi mode.
-  # Otherwise, when we exit Vi mode, we enter "Normal" Vi-mode from Zsh,
-  # because of the sending of the Escape key here.
-  #- { key: S,         mods: Alt,       chars: "\x1bs"                       }
+  - { key: S,         mods: Alt,       chars: "\x1bs"                       }
   - { key: T,         mods: Alt,       chars: "\x1bt"                       }
   - { key: U,         mods: Alt,       chars: "\x1bu"                       }
   - { key: V,         mods: Alt,       chars: "\x1bv"                       }
