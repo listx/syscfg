@@ -1112,9 +1112,8 @@ l_workspaceIsEmpty xzy = do
     ]
 
 -- Terminals (using various different color themes).
-l_term1, l_term2 :: String
-l_term1 = "~/syscfg/script/terms/pastel_dark.sh"
-l_term2 = "~/syscfg/script/terms/wblue.sh"
+l_term :: String
+l_term = "alacritty"
 
 l_isPortraitMonitorLayout :: String -> Bool
 l_isPortraitMonitorLayout givenHost = any (`isPrefixOf` givenHost) portraitHosts
@@ -1281,7 +1280,7 @@ l_keyBindings hostname numScreens conf@XConfig {XMonad.modMask = hypr}
   -- Launch apps.
   [ ((hypr,   xK_i            ), spawn "qutebrowser")
   , ((hyprS,  xK_i            ), spawnSelected def ["chromium", "firefox"])
-  , ((hypr,   xK_e            ), spawn l_term1)
+  , ((hypr,   xK_e            ), spawn l_term)
   -- Backup binding to launch a terminal in case our Hyper key (hypr) is
   -- unavailable. This happens whenever we unplug/replug our keyboard, and a
   -- terminal isn't already showing in a window somewhere to be able to call
@@ -1289,7 +1288,7 @@ l_keyBindings hostname numScreens conf@XConfig {XMonad.modMask = hypr}
   -- Hyper key is used exclusively to maneuver around Xmonad, we need a
   -- non-Hyper-key binding to launch a terminal to bootstrap ourselves back in
   -- with initkeys.sh.
-  , ((altS,   xK_e            ), spawn l_term1)
+  , ((altS,   xK_e            ), spawn l_term)
   , ((hypr,   xK_u            ), spawn "emacs")
   ]
   where
@@ -1458,22 +1457,22 @@ l_startupHook hostname = do
       else show (l_XZYFrom (X (-1)) numScreens ZGSys y)
     -- Spawn rtorrent on the rightmost screen (XCoord index of -1; we use -1
     -- because we don't know how many screens there will actually be).
-    rtorrent = spawn $ l_term2
-      ++ " -name atWorkspace_"
+    rtorrent = spawn $ l_term
+      ++ " --class atWorkspace_"
       ++ farRightScreen
-      ++ " -e rtorrent"
+      ++ " --command rtorrent"
   -- Spawn one terminal in every screen at the "Work" ZGroup at the current
   -- YCoord (but only if that screen is empty). We have to feed in `(take 1)' in
   -- order to spawn terminals in a single ZCoord.
   mapM_
     (\xzy -> whenX (l_workspaceIsEmpty xzy)
-      (spawn $ l_term1 ++ " -name atWorkspace_" ++ show xzy))
+      (spawn $ l_term ++ " --class atWorkspace_" ++ show xzy))
     $ l_XZYsFrom numScreens ZGWork (take 1) y
   -- Spawn htop on the rightmost screen.
-  spawn $ l_term1
-    ++ " -name atWorkspace_"
+  spawn $ l_term
+    ++ " --class atWorkspace_"
     ++ farRightScreen
-    ++ " -e htop"
+    ++ " --command htop"
   spawn "emacs --daemon"
   when (hostname == "k0") rtorrent
 
@@ -1536,7 +1535,7 @@ l_resetMouse alwaysReset = do
       then return (w, destNew)
       else return s
   windowPropToDest =
-    [ (ClassName "URxvt", LowerLeft)
+    [ (ClassName "Alacritty", LowerLeft)
     , (ClassName "Emacs", LowerLeft)
     , (ClassName "qutebrowser", UpperLeft)
     , (ClassName "Chromium-browser", UpperLeft)
@@ -1564,7 +1563,7 @@ main = do
     else xmonad $ myconf hostname numScreens
   where
   myconf hostname numScreens = def
-    { terminal           = "urxvt"
+    { terminal           = "alacritty"
     , focusFollowsMouse  = True
     , clickJustFocuses   = True
     , borderWidth        = 1
