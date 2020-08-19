@@ -11,3 +11,5 @@ export L_ORG_AGENDA_EXCLUDE_PATTERNS="
 	$HOME/lo/plan.org
 	$HOME/lo/note.org
 "
+
+export TERM=xterm-256color
