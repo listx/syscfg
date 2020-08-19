@@ -23,8 +23,12 @@
   (defun l/python-setup ()
     ; Disable Python <backspace> binding.
     (define-key python-mode-map (kbd "<backspace>") nil)
-    ; Check with flake8, pylint, and mypy.
-    (flycheck-add-next-checker 'python-flake8 'python-pylint 'python-mypy)
+    ; Check with flake8, pylint, and mypy. python-mypy already runs
+    ; python-flake8, so there's no need to mention it here. However, we still
+    ; need to mention python-pylint to run after python-flake8. This is a
+    ; so-called "checker chain", as per
+    ; https://www.flycheck.org/en/latest/user/syntax-checkers.html#configuring-checker-chains.
+    (flycheck-add-next-checker 'python-flake8 'python-pylint)
     (add-hook 'flycheck-before-syntax-check-hook #'set-flychecker-executables
       'local)
     ; Start Flycheck.
