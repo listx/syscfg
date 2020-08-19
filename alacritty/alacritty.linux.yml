@@ -604,6 +604,10 @@ key_bindings:
   # At least for our Zsh configuration, we set HIST_IGNORE_SPACE which skips
   # recording of a command into the shell history if the command begins with a
   # space character.
+  #
+  # NOTE: These keybindings for C-h and C-l interfere with terminal emacs'
+  # next/prev tab. However we don't use terminal emacs enough to justify using a
+  # different set of bindings.
   - { key: H,         mode: ~Vi, mods: Control,         chars: " dirs $(dirs -lp | awk 'NR==1{store=$0;next}1;END{print store}') && popd && ll\n" }
   - { key: L,         mode: ~Vi, mods: Control,         chars: " cd -0 && ll\n"    }
   - { key: T,         mode: ~Vi, mods: Control,         chars: " tig\n"            }
