@@ -4,10 +4,9 @@ read -r -d '' elisp << EOF
 (let
   (
   )
-  (find-file "$1")
+  (find-file-other-tab "$1")
   (setq fill-column 72)
   (beginning-of-buffer)
-  (load "elscreen" "ELScreen" t)
 )
 EOF
 
