@@ -619,9 +619,14 @@ key_bindings:
   # pre-Vi-mode context.
   - { key: Q,         mode: Vi,                action: ScrollToBottom              }
   - { key: Q,         mode: Vi,                action: ToggleViMode                }
-  # Quick navigation with space/backspace.
-  - { key: Space,     mode: Vi,                action: ScrollHalfPageDown          }
-  - { key: Back,      mode: Vi,                action: ScrollHalfPageUp            }
+  # Quick navigation. This makes it easy to just enter Vi mode (if not in it
+  # already) and do the navigation in one keybinding.
+  - { key: J,         mode: ~Vi, mods: Control,       action: ToggleViMode         }
+  - { key: J,         mode:  Vi, mods: Control,       action: Middle               }
+  - { key: J,         mode:  Vi, mods: Control,       action: ScrollHalfPageDown   }
+  - { key: K,         mode: ~Vi, mods: Control,       action: ToggleViMode         }
+  - { key: K,         mode:  Vi, mods: Control,       action: Middle               }
+  - { key: K,         mode:  Vi, mods: Control,       action: ScrollHalfPageUp     }
   #- { key: Space,  mods: Shift|Control, mode: Vi, action: ScrollToBottom          }
   #- { key: Space,  mods: Shift|Control,           action: ToggleViMode            }
   #- { key: Escape,                      mode: Vi, action: ClearSelection          }
