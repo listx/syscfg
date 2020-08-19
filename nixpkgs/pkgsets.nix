@@ -348,6 +348,8 @@ with super; rec {
       auca
       nox
       hledger
+      # "ledger" is required for "ledger-mode" in emacs.
+      ledger
       hledger-ui
       hledger-web
       hlint
