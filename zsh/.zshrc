@@ -433,5 +433,5 @@ if [[ -n "${commands[fzf-share]}" ]]; then
 	bindkey '\ed' fzf-cd-widget
 	export FZF_DEFAULT_COMMAND='rg --files --hidden --glob "!.git"'
 	export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
-	export FZF_ALT_C_COMMAND="$FZF_DEFAULT_COMMAND"
+	export FZF_ALT_C_COMMAND='rg --files --hidden --glob "!.git" --null | xargs -0 dirname | uniq'
 fi

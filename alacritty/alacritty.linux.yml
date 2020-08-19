@@ -610,7 +610,7 @@ key_bindings:
   # different set of bindings.
   - { key: H,         mode: ~Vi, mods: Control,         chars: " dirs $(dirs -lp | awk 'NR==1{store=$0;next}1;END{print store}') && popd && ll\n" }
   - { key: L,         mode: ~Vi, mods: Control,         chars: " cd -0 && ll\n"    }
-  - { key: T,         mode: ~Vi, mods: Control,         chars: " tig\n"            }
+  - { key: G,         mode: ~Vi, mods: Control,         chars: " tig\n"            }
 
   # Vi Mode
   # Custom Vi mode bindings.
