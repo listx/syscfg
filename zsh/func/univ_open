@@ -68,7 +68,7 @@ univ_open() {
 			*)
                 elisp0=$(cat <<-EOF
 					(progn
-						(elscreen-find-file "$(readlink -e "$1")")
+						(find-file-other-tab "$(readlink -e "$1")")
 					)
 					EOF
 				)
