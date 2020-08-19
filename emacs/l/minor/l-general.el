@@ -55,9 +55,7 @@
 
     "m" 'hydra-magit/body
     ; New tab.
-    "n" 'elscreen-create
-    ; New tab, but clone the current tab's window-split layout (if any).
-    "N" 'elscreen-clone
+    "n" 'tab-new
     ; Ranger
     "o" 'ranger
     "q" 'l/quit-buffer
@@ -106,24 +104,24 @@
       (kill-new filename)
       (message "Clipboard: '%s'" filename))))
 
-; Either close the current elscreen, or if only one screen, use the ":q" Evil
+; Either close the current window, or if only one windw, use the ":q" Evil
 ; command; this simulates the ":q" behavior of Vim when used with tabs.
 (defun l/quit-buffer ()
   "Vimlike ':q' behavior: close current window if there are split windows;
-otherwise, close current tab (elscreen)."
+otherwise, close current tab."
   (interactive)
   (let
-    ((one-elscreen (elscreen-one-screen-p)) (one-window (one-window-p)))
+    ( (one-tab (= 1 (length (tab-bar-tabs))))
+      (one-window (one-window-p)))
     (cond
-      ; if current tab has split windows in it, close the current live
-      ; window
+      ; If current tab has split windows in it, close the current live
+      ; window.
       ((not one-window) (delete-window) (balance-windows) nil)
-      ; if there are multiple elscreens (tabs), close the current elscreen
-      ((not one-elscreen) (elscreen-kill) nil)
-      ; if there is only one elscreen, just try to quit (calling
-      ; elscreen-kill will not work, because elscreen-kill fails if there
-      ; is only one elscreen)
-      (one-elscreen
+      ; If there are multiple tabs, close the current one.
+      ((not one-tab) (tab-bar-close-tab) nil)
+      ; If there is only one tab, just try to quit (calling tab-bar-close-tab
+      ; will not work, because if fails if there is only one tab).
+      (one-tab
         (progn
           ; When closing the last frame of a graphic client, close everything we
           ; can. This is to catch graphical emacsclients that do not clean up
