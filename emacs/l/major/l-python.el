@@ -15,13 +15,16 @@
                                   (executable-find "flake8")))
     (when (executable-find "pylint")
     (flycheck-set-checker-executable (quote python-pylint)
-                                  (executable-find "pylint"))))
+                                  (executable-find "pylint")))
+    (when (executable-find "mypy")
+    (flycheck-set-checker-executable (quote python-mypy)
+                                  (executable-find "mypy"))))
 
   (defun l/python-setup ()
     ; Disable Python <backspace> binding.
     (define-key python-mode-map (kbd "<backspace>") nil)
-    ; Check with both flake8 and pylint.
-    (flycheck-add-next-checker 'python-flake8 'python-pylint)
+    ; Check with flake8, pylint, and mypy.
+    (flycheck-add-next-checker 'python-flake8 'python-pylint 'python-mypy)
     (add-hook 'flycheck-before-syntax-check-hook #'set-flychecker-executables
       'local)
     ; Start Flycheck.
