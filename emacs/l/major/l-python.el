@@ -13,7 +13,7 @@
     (when (executable-find "flake8")
     (flycheck-set-checker-executable (quote python-flake8)
                                   (executable-find "flake8")))
-    (when (executable-find "flake8")
+    (when (executable-find "pylint")
     (flycheck-set-checker-executable (quote python-pylint)
                                   (executable-find "pylint"))))
 
