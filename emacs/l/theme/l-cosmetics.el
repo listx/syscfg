@@ -10,6 +10,12 @@
 ; Disable buffer scrollbars.
 (scroll-bar-mode 0)
 
+; Enable native tabs.
+(setq tab-bar-show t)
+(setq tab-bar-new-button-show nil)
+(setq tab-bar-close-button-show nil)
+(setq tab-bar-separator "  ")
+
 ; Enable only left-side fringe.
 (set-fringe-mode '(10 . 0))
 
@@ -29,14 +35,7 @@
 (setq-default indicate-empty-lines t)
 
 ; Show trailing whitespace.
-; NOTE: doing
-;
-;   (setq-default show-trailing-whitespace t)
-;
-; interferes with scrolling with elscreen on, where scrolling up requires moving
-; point up twice. To get around this, we enable global-whitespace-mode instead.
-(setq whitespace-style '(face trailing))
-(global-whitespace-mode 1)
+(setq-default show-trailing-whitespace t)
 
 ; Highlight matching parentheses.
 (show-paren-mode 1)
@@ -52,14 +51,27 @@
   (interactive)
   (setq l/font-choice (mod (+ 1 l/font-choice) (length l/font-collection)))
   ; Only cycle if there is more than 1 font to cycle through.
-  (if (> (length l/font-collection) 1)
-    (set-face-attribute
-      'default
-      nil
-      :font
-      (nth l/font-choice l/font-collection)
-      :weight 'light)
-    (redraw-display)))
+  (when (> (length l/font-collection) 1)
+    (progn
+      (set-face-attribute
+        'default
+        nil
+        :font
+        (nth l/font-choice l/font-collection)
+        :weight 'light)
+      (set-face-attribute
+        'tab-bar
+        nil
+        :font (nth l/font-choice l/font-collection))
+      (set-face-attribute
+        'tab-bar-tab
+        nil
+        :font (nth l/font-choice l/font-collection))
+      (set-face-attribute
+        'tab-bar-tab-inactive
+        nil
+        :font (nth l/font-choice l/font-collection))
+      (redraw-display))))
 
 (defvar l/themes
   '(
@@ -147,6 +159,9 @@
   (set-face-attribute 'git-gutter:added nil :foreground "lime green")
   (set-face-attribute 'git-gutter:modified nil :foreground "purple")
   (set-face-attribute 'git-gutter:deleted nil :foreground "red")
+  (set-face-attribute 'tab-bar nil :font (nth l/font-choice l/font-collection) :height 100 :background "grey32")
+  (set-face-attribute 'tab-bar-tab nil :font (nth l/font-choice l/font-collection) :height 100 :weight 'bold :box nil :background "pink")
+  (set-face-attribute 'tab-bar-tab-inactive nil :font (nth l/font-choice l/font-collection) :height 100 :weight 'bold :box nil :background "grey32")
   )
 
 ; Select theme based on GUI or ncurses mode.
@@ -160,6 +175,12 @@
     (set-face-attribute 'lazy-highlight nil :foreground "pink" :background "dark red" :weight 'normal)
     (set-face-attribute 'isearch nil :foreground "dark red" :background "pink" :weight 'bold)
     (set-face-attribute 'region nil :foreground "dark red" :background "pink" :weight 'bold)
+
+    ; Tab bar colors. These are for arjen but I'm too lazy to fix it up.
+    (set-face-attribute 'tab-bar nil :font (nth l/font-choice l/font-collection) :height 100 :background "grey32")
+    (set-face-attribute 'tab-bar-tab nil :font (nth l/font-choice l/font-collection) :height 100 :weight 'bold :box nil :background "pink")
+    (set-face-attribute 'tab-bar-tab-inactive nil :font (nth l/font-choice l/font-collection) :height 100 :weight 'bold :box nil :background "grey32")
+
     ; Fix ugly colors for diffs. Prevalent because of git comit message buffers
     ; (COMMIT_EDITMSG).
     (set-face-attribute 'default nil :foreground "#ffffff" :background "gray25")

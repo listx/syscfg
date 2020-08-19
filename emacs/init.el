@@ -18,7 +18,6 @@
 (require 'l-column-enforce-mode)
 (require 'l-conf-mode)
 (require 'l-delight)
-(require 'l-elscreen)
 (require 'l-evil)
 (require 'l-evil-magit)
 (require 'l-evil-surround)
