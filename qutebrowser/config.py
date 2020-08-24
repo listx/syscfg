@@ -24,6 +24,9 @@ c.tabs.last_close = "blank"
 # Use 50 MiB for caching.
 c.content.cache.size = 52428800
 
+# Clear downloads after 10 seconds.
+c.downloads.remove_finished = 10 * 1000
+
 # Hint chars when pressing `f' or `F'; use home row of ZQ layout (my custom layout).
 c.hints.chars = "aieuwhjkln"
 
