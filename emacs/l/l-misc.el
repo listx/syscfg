@@ -392,6 +392,7 @@ pasting. If no region is selected, copy just the buffer's filename."
         ('haskell-cabal-mode "--")
         ('java-mode "//")
         ('js-mode "//")
+        ('ledger-mode "\\;")
         ('literate-haskell-mode "--")
         ('LilyPond-mode "%")
         ('latex-mode "%")
