@@ -233,7 +233,7 @@ colors:
     blue:    '#7cacd3'
     magenta: '#df9494'
     cyan:    '#8cdbd8'
-    white:   '#c1cad0'
+    white:   '#ffffff'
 
   # Bright colors
   bright:
@@ -244,7 +244,7 @@ colors:
     blue:    '#95add1'
     magenta: '#f2b0b0'
     cyan:    '#b4f0f0'
-    white:   '#e5e7ea'
+    white:   '#ffffff'
 
   # Dim colors
   #
