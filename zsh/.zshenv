@@ -10,6 +10,7 @@ export L_ORG_AGENDA_EXCLUDE_PATTERNS="
 	$HOME/lo/archived/
 	$HOME/lo/plan.org
 	$HOME/lo/note.org
+	$HOME/lo/note/snippets.org
 "
 
 export TERM=xterm-256color
