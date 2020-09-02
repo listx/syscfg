@@ -1289,7 +1289,7 @@ l_keyBindings hostname numScreens conf@XConfig {XMonad.modMask = hypr}
   -- Launch apps.
   [ ((hypr,   xK_i            ), spawn "qutebrowser")
   , ((hyprS,  xK_i            ), spawnSelected def ["chromium", "firefox"])
-  , ((hypr,   xK_e            ), spawn l_term)
+  , ((hypr,   xK_e            ), spawn l_termCustom)
   -- Backup binding to launch a terminal in case our Hyper key (hypr) is
   -- unavailable. This happens whenever we unplug/replug our keyboard, and a
   -- terminal isn't already showing in a window somewhere to be able to call
@@ -1297,10 +1297,13 @@ l_keyBindings hostname numScreens conf@XConfig {XMonad.modMask = hypr}
   -- Hyper key is used exclusively to maneuver around Xmonad, we need a
   -- non-Hyper-key binding to launch a terminal to bootstrap ourselves back in
   -- with initkeys.sh.
-  , ((altS,   xK_e            ), spawn l_term)
+  , ((altS,   xK_e            ), spawn l_termCustom)
   , ((hypr,   xK_u            ), spawn "emacs")
   ]
   where
+  l_termCustom = case hostname of
+    "k1" -> "LIBGL_ALWAYS_SOFTWARE=1 " <> l_term
+    _ -> l_term
   yEdgeGuard dir = l_if (l_atYEdge dir) (return ())
   shrinkExpand master slave = if l_isPortraitMonitorLayout hostname
     then sendMessage slave
@@ -1466,7 +1469,7 @@ l_startupHook hostname = do
       else show (l_XZYFrom (X (-1)) numScreens ZGSys y)
     -- Spawn rtorrent on the rightmost screen (XCoord index of -1; we use -1
     -- because we don't know how many screens there will actually be).
-    rtorrent = spawn $ l_term
+    rtorrent = spawn $ l_termCustom
       ++ " --class atWorkspace_"
       ++ farRightScreen
       ++ " --command rtorrent"
@@ -1475,15 +1478,19 @@ l_startupHook hostname = do
   -- order to spawn terminals in a single ZCoord.
   mapM_
     (\xzy -> whenX (l_workspaceIsEmpty xzy)
-      (spawn $ l_term ++ " --class atWorkspace_" ++ show xzy))
+      (spawn $ l_termCustom ++ " --class atWorkspace_" ++ show xzy))
     $ l_XZYsFrom numScreens ZGWork (take 1) y
   -- Spawn htop on the rightmost screen.
-  spawn $ l_term
+  spawn $ l_termCustom
     ++ " --class atWorkspace_"
     ++ farRightScreen
     ++ " --command htop"
   spawn "emacs --daemon"
   when (hostname == "k0") rtorrent
+  where
+  l_termCustom = case hostname of
+    "k1" -> "LIBGL_ALWAYS_SOFTWARE=1 " <> l_term
+    _ -> l_term
 
 -- Reset the location of the mouse pointer, with the destination depending on
 -- the type of window that is currently focused.

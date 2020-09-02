@@ -6,7 +6,9 @@ T := $(shell hostname)
 # inside the C (config) directory itself.
 alacritty:
 	ln -fns ${C}/alacritty                              ${H}/.config/alacritty
-ifeq ('${S}','Linux')
+ifeq ('${T}','k1')
+	ln -fs ${C}/alacritty/alacritty.${T}.yml            ${H}/.config/alacritty/alacritty.yml
+else ifeq ('${S}','Linux')
 	ln -fs ${C}/alacritty/alacritty.linux.yml           ${H}/.config/alacritty/alacritty.yml
 else
 	ln -fs ${C}/alacritty/alacritty.mac.yml             ${H}/.config/alacritty/alacritty.yml
