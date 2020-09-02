@@ -5,9 +5,10 @@ let
     # https://github.com/NixOS/nixpkgs-channels (which itself just follows
     # https://github.com/NixOS/nixpkgs.git with a verification delay, as per
     # https://nixos.wiki/wiki/Nix_channels).
-    url = "/home/l/prog/foreign/nixpkgs";
+    url = "/home/l/prog/foreign/nixpkgs-channels";
+    ref = "refs/heads/nixpkgs-unstable";
     # Known good commit for moving branch "nixpkgs-unstable".
-    ref = "05f0934825c2a0750d4888c4735f9420c906b388";
+    rev = "c59ea8b8a0e7f927e7291c14ea6cd1bd3a16ff38";
   }) {};
 in
 {super}:
