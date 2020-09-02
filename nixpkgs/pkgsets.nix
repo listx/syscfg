@@ -68,10 +68,15 @@ with super; rec {
       xlibs.xmodmap
       xlibs.xev
       xdotool
-      alacritty
+      xorg.xdpyinfo
+      xorg.xkill
+      xcompmgr
+      # TODO: Remove from HEAD when nixos.alacritty is >= 0.5.0.
+      HEAD.alacritty
       tmux
 
-      emacs
+      # TODO: Remove from HEAD when nixos.emacs is >= 27.1.
+      HEAD.emacs
       sqlite # for org-roam in emacs
       graphviz # for org-roam-graph in emacs
 
@@ -128,6 +133,7 @@ with super; rec {
       xscreensaver
       pavucontrol
       woeusb
+      feh
     ];
   });
 
@@ -356,6 +362,7 @@ with super; rec {
       hlint
       shellcheck
       pandoc
+      dhall
       gitAndTools.git-annex
     ];
   });
