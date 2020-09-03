@@ -1,23 +1,27 @@
 #!/usr/bin/env bash
 
+# Usage: nix-pull.sh <HOST>
+#
+# This clones all "nix-env" packages in the host into the current system.
+
 set -o errexit
 set -o nounset
 set -o pipefail
 
 nix_pull()
 {
-    local from_host
+    local remote
     local closure
-    from_host="${1}"
+    remote="${1}"
     closure="${2}"
-    nix-copy-closure --from "${from_host}" "${closure}"
+    nix-copy-closure --from "${remote}" "${closure}"
     nix-env --install "${closure}"
 }
 
-from_host="${1}"
+remote="${1}"
 shift
 
-for arg; do
-    nix_pull "${from_host}" "${arg}"
+for closure in $(ssh ${USER}@${remote} nix-env -q --out-path | awk '{print $2}'); do
+    nix_pull "${remote}" "${closure}"
 done
 
