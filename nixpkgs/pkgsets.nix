@@ -43,19 +43,6 @@ with super; rec {
     ];
   });
 
-  l_set_work = setPrio "10" (buildEnv {
-    name = "l-set-work";
-    ignoreCollisions = true;
-    paths = [
-      l_set_base
-      l_set_dev
-      l_set_haskell
-      l_set_web
-      l_set_av
-      l_set_office
-    ];
-  });
-
   l_set_base = setPrio "7" (buildEnv {
     name = "l-set-base";
     ignoreCollisions = true;
@@ -329,12 +316,6 @@ with super; rec {
   l_set_haskell = setPrio "8" (buildEnv {
     name = "l-set-haskell";
     paths = with haskellPackages; [
-      # For haskell development via `nix-shell`; run `sudo nix-channel --add
-      # <nixpkgs-unstable>`, then do `sudo nix-channel --update`.
-      # <nixpkgs-unstable> is located at
-      # https://nixos.org/channels/nixpkgs-unstable. The `haskellPackages` set
-      # is only in nixpkgs-unstable as of 2015-02-06.
-      #
       # It's OK to have multple NixOS channels at the same time. Nix takes care
       # of dependencies without issue.
       cabal2nix
