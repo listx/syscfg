@@ -2,7 +2,8 @@
 
 # Usage: nix-pull.sh <HOST>
 #
-# This clones all "nix-env" packages in the host into the current system.
+# This clones all "nix-env" packages in the remote host into the current
+# system.
 
 set -o errexit
 set -o nounset
