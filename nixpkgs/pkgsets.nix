@@ -43,6 +43,29 @@ with super; rec {
     ];
   });
 
+  # Meant for headless backup boxes.
+  l_set_backup = setPrio "10" (buildEnv {
+    name = "l-set-basic";
+    ignoreCollisions = true;
+    paths = [
+      bmon
+      HEAD.emacs
+      fd
+      fzf
+      gcc
+      git
+      gitAndTools.git-annex
+      gnumake
+      gnupg
+      htop
+      ripgrep
+      tig
+      tmux
+      tree
+      vim
+    ];
+  });
+
   l_set_base = setPrio "7" (buildEnv {
     name = "l-set-base";
     ignoreCollisions = true;
