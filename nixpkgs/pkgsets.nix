@@ -238,9 +238,9 @@ with super; rec {
     name = "l-set-web";
     ignoreCollisions = true;
     paths = [
-      HEAD.firefox
-      HEAD.chromium
-      HEAD.qutebrowser
+      firefox
+      chromium
+      qutebrowser
       offlineimap
       notmuch
       links
