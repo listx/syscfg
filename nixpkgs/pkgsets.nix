@@ -277,7 +277,7 @@ with super; rec {
     ignoreCollisions = true;
     paths = [
       # For pdftotext
-      poppler-utils
+      poppler_utils
       zathura
     ];
   });

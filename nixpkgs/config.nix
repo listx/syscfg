@@ -3,7 +3,6 @@ super:
   # Get proprietary programs too, such as Adobe Flash.
   allowUnfree = true;
   firefox = {
-    enableGoogleTalkPlugin = true;
     enableAdobeFlash = true;
   };
   chromium = {
