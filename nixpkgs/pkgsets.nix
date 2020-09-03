@@ -1,3 +1,19 @@
+# This file defines sets of packages that belong together, to make it easier to
+# install identical packages in different machines.
+#
+# You can install the "l_set_basic" set of packages this way:
+#
+#   nix-env -iA nixpkgs.l_set_basic
+#
+# where 'nixpkgs' is the channel defined in 'nix-channel --list'. With this,
+# the packages defined here actually refer to nixpkgs.PACKAGE_NAME. If you have
+# other channels, assuming those channels also have the packages defined here,
+# you can substitute 'nixpkgs' with that channel name. E.g.:
+#
+#   nix-env -iA nixos.l_set_basic
+#
+# if you have a channel named 'nixos'.
+
 let
   HEAD = import (builtins.fetchGit {
     # Unfortunately, we can't check out arbitrary GitHub commit SHAs, so we
@@ -49,7 +65,7 @@ with super; rec {
     ignoreCollisions = true;
     paths = [
       bmon
-      HEAD.emacs
+      emacs
       fd
       fzf
       gcc
@@ -81,12 +97,10 @@ with super; rec {
       xorg.xdpyinfo
       xorg.xkill
       xcompmgr
-      # TODO: Remove from HEAD when nixos.alacritty is >= 0.5.0.
-      HEAD.alacritty
+      alacritty
       tmux
 
-      # TODO: Remove from HEAD when nixos.emacs is >= 27.1.
-      HEAD.emacs
+      emacs
       sqlite # for org-roam in emacs
       graphviz # for org-roam-graph in emacs
 
@@ -336,6 +350,9 @@ with super; rec {
     };
   };
 
+  # Haskell packages can be discovered with:
+  #
+  #   nix-env -f "<nixpkgs>" -qaP -A haskellPackages
   l_set_haskell = setPrio "8" (buildEnv {
     name = "l-set-haskell";
     paths = with haskellPackages; [
@@ -353,7 +370,11 @@ with super; rec {
 
       # We need GHC because it provides the useful 'ghci' REPL; useful for quick
       # calculator math, etc.
-      HEAD.haskell.compiler.ghc8101
+      #
+      # Compiler versions can be discovered with:
+      #
+      #   nix-env -f "<nixpkgs>" -qaP -A haskell.compiler
+      haskell.compiler.ghc8102
 
       # Misc userland packages.
       auca
