@@ -46,6 +46,7 @@ super:
     inherit (self.pkgsets)
       l_set_basic
       l_set_base
+      l_set_backup
       l_set_dev
       l_set_media
       l_set_web

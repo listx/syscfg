@@ -61,7 +61,7 @@ with super; rec {
 
   # Meant for headless backup boxes.
   l_set_backup = setPrio "10" (buildEnv {
-    name = "l-set-basic";
+    name = "l-set-backup";
     ignoreCollisions = true;
     paths = [
       bmon
