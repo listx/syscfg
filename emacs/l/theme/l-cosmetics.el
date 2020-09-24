@@ -207,6 +207,14 @@
     )
     (t 91)))
 
+(defun l/text-weight ()
+  (cond
+    ((l/os "darwin")
+       ; Use lightest setting on Mac, because for some reason it's just a little bit "bolder" than usual.
+      'ultra-light
+    )
+    (t 'normal)))
+
 ; auto-generated stuff by emacs itself...
 
 (custom-set-faces
@@ -214,7 +222,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- `(default ((t (:inherit nil :stipple nil :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height ,(l/text-height) :width normal :foundry "xos4" :family ,(nth 0 l/font-collection))))))
+ `(default ((t (:inherit nil :stipple nil :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight ,(l/text-weight) :height ,(l/text-height) :width normal :foundry "xos4" :family ,(nth 0 l/font-collection))))))
 
 
 ; If we give emacs an argument (e.g., file or directory) when we invoke it,
