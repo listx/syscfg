@@ -66,20 +66,6 @@
     windowManager.xmonad.enableContribAndExtras = false;
   };
 
-  services.udev.extraRules = ''
-    # For Yubikey, enable 'ykinfo -v' and 'gpg2 --card-status' commands as normal (non-root) user.
-    # From http://stafwag.github.io/blog/blog/2015/06/16/using-yubikey-neo-as-gpg-smartcard-for-ssh-authentication/
-    ACTION!="add|change", GOTO="yubico_end"
-
-    # Udev rules for letting the console user access the Yubikey USB
-    # device node, needed for challenge/response to work correctly.
-
-    # Yubico Yubikey II
-    ATTRS{idVendor}=="1050", ATTRS{idProduct}=="0010|0110|0111|0114|0116|0401|0403|0405|0407|0410", OWNER="l", MODE="0600"
-
-    LABEL="yubico_end"
-  '';
-
   virtualisation.virtualbox.host.enable = true;
 
   virtualisation.docker.enable = true;
