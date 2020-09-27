@@ -70,9 +70,6 @@ import XMonad.Actions.NoBorders
 import XMonad.Actions.Warp
   ( banish
   , Corner(..))
-import XMonad.Hooks.FadeInactive
-  ( fadeInactiveLogHook
-  )
 import XMonad.Hooks.ManageHelpers
   ( (-?>)
   , doCenterFloat
@@ -1124,11 +1121,6 @@ l_isPortraitMonitorLayout givenHost = any (`isPrefixOf` givenHost) portraitHosts
   where
   portraitHosts = ["k0"]
 
-l_logHook :: X ()
-l_logHook = do
-  fadeInactiveLogHook 0.8
-  l_resetMouse False
-
 l_keyBindings :: String
   -> Int
   -> XConfig Layout
@@ -1599,6 +1591,6 @@ main = do
     , layoutHook         = l_layoutHook
     , manageHook         = l_manageHook numScreens
     , handleEventHook    = l_eventHook
-    , logHook            = l_logHook
+    , logHook            = l_resetMouse False
     , startupHook        = l_startupHook hostname
     }
