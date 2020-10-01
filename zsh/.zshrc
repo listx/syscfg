@@ -411,7 +411,16 @@ if ! zplug check --verbose; then
     fi
 fi
 
+# This has to happen *before* loading custom completions.
 zplug load
+
+# Load in completions for Google Cloud SDK. For some reason, this has to be
+# done *after* the call to 'zplug load'.
+google_cloud_sdk_path=$(dirname $(readlink $(which gcloud)))/../google-cloud-sdk
+sdk_zsh_files=(path.zsh.inc completion.zsh.inc)
+for sdk_zsh_file in "${sdk_zsh_files[@]}"; do
+    source "${google_cloud_sdk_path}/${sdk_zsh_file}" || echo "could not source ${google_cloud_sdk_path}/${sdk_zsh_file}"
+done
 
 # For some reason loading it from ~/.zprofile-enif leads to a cryptic
 #
