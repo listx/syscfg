@@ -5,7 +5,7 @@
   (add-hook 'org-agenda-mode-hook 'l/org-agenda-mode-hook)
   (add-hook 'after-save-hook 'l/org-mode-save-hook)
   (setq org-todo-keywords
-    '((sequence "TODO" "IN-PROGRESS" "WAITING" "|" "DONE" "CANCELLED")))
+    '((sequence "TODO" "IN-PROGRESS" "WAITING" "|" "DONE" "CANCELED" "OBSOLETE")))
   ; Indent headings and items.
   (setq org-startup-indented t)
   ; Show *everything* by default (no folding).
@@ -143,7 +143,8 @@
           ("IN-PROGRESS" . "yellow")
           ("WAITING" . "purple")
           ("DONE" . org-done)
-          ("CANCELED" . (:foreground "orange" :weight bold))))
+          ("CANCELED" . (:foreground "orange" :weight bold))
+          ("OBSOLETE" . (:foreground "grey" :weight bold))))
         (set-face-attribute 'org-todo nil :foreground "indian red" :weight 'bold)
         (set-face-attribute 'org-level-1 nil :foreground "pink" :weight 'bold)
         (set-face-attribute 'org-level-2 nil :foreground "aquamarine" :weight 'bold)
