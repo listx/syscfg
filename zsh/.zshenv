@@ -14,4 +14,7 @@ export L_ORG_AGENDA_EXCLUDE_PATTERNS="
 	$HOME/lo/note/snippets.org
 "
 
+# Default path to look for the SDK installed via nixpkgs.
+export L_GOOGLE_CLOUD_SDK_PATH=$(dirname $(readlink $(which gcloud)))/../google-cloud-sdk
+
 export TERM=xterm-256color
