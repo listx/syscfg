@@ -418,10 +418,8 @@ zplug load
 # done *after* the call to 'zplug load'.
 google_cloud_sdk_path="${L_GOOGLE_CLOUD_SDK_PATH:-}"
 if [[ -n "${google_cloud_sdk_path}" ]]; then
-    sdk_zsh_files=(path.zsh.inc completion.zsh.inc)
-    for sdk_zsh_file in "${sdk_zsh_files[@]}"; do
-        source "${google_cloud_sdk_path}/${sdk_zsh_file}" || echo "could not source ${google_cloud_sdk_path}/${sdk_zsh_file}"
-    done
+    f="${google_cloud_sdk_path}/completion.zsh.inc"
+    source "${f}" || echo "could not source ${f}"
 fi
 
 # For some reason loading it from ~/.zprofile-enif leads to a cryptic
