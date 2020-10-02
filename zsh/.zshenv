@@ -15,6 +15,9 @@ export L_ORG_AGENDA_EXCLUDE_PATTERNS="
 "
 
 # Default path to look for the SDK installed via nixpkgs.
-export L_GOOGLE_CLOUD_SDK_PATH=$(dirname $(readlink $(which gcloud)))/../google-cloud-sdk
+# Don't bother with Google Cloud SDK on Windows Subsystem for Linux.
+if [[ -z "${WSL_DISTRO_NAME:-}" ]]; then
+    export L_GOOGLE_CLOUD_SDK_PATH=$(dirname $(readlink $(which gcloud)))/../google-cloud-sdk
+fi
 
 export TERM=xterm-256color
