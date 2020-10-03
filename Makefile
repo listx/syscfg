@@ -100,6 +100,8 @@ zsh:
 	ln -fs ${C}/zsh/.zshrc                              ${H}
 	test -f ${C}/zsh/zprofile-${T} \
 		&& ln -fs ${C}/zsh/zprofile-${T}                ${H}/.zprofile
+	test -f ${C}/zsh/zlogin-${T} \
+		&& ln -fs ${C}/zsh/zplogin-${T}                 ${H}/.zlogin
 	mkdir -p ${H}/.zsh-untracked
 
 .PHONY: \
