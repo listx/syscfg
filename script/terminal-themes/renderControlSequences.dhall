@@ -1,16 +1,32 @@
 let Enumerated = { index : Natural, value : Text }
 
-in  λ(theme : ./Theme) →
+let controlSequence =
+      λ(forTmux : Bool) →
+        if    forTmux
+        then  { start = "\\x1bPtmux;\\x1b\\x1b]", end = "\\x07\\x1b\\\\" }
+        else  { start = "\\x1b]", end = "\\x07" }
+
+let setColor =
+      λ(forTmux : Bool) →
+      λ(code : Natural) →
+      λ(color : Text) →
+        ''
+        printf '${    (controlSequence forTmux).start
+                  ++  Natural/show code
+                  ++  ";"
+                  ++  color
+                  ++  (controlSequence forTmux).end}'
+        ''
+
+in  λ(forTmux : Bool) →
+    λ(theme : ./Theme) →
           ''
           # Foreground color. (Default text color).
-          printf '\x1b]10;${theme.foreground}\x07'
-
+          ${setColor forTmux 10 theme.foreground}
           # Background color.
-          printf '\x1b]11;${theme.background}\x07'
-
+          ${setColor forTmux 11 theme.background}
           # Cursor color.
-          printf '\x1b]12;${theme.cursor}\x07'
-
+          ${setColor forTmux 12 theme.cursor}
           # Remaining 16 colors.
           ''
       ++  List/fold
@@ -19,9 +35,6 @@ in  λ(theme : ./Theme) →
             Text
             ( λ(a : Enumerated) →
               λ(b : Text) →
-                    b
-                ++  ''
-                    printf '\x1b]4;${Natural/show a.index};${a.value}\x07'
-                    ''
+                b ++ setColor forTmux 4 "${Natural/show a.index};${a.value}"
             )
             ""
