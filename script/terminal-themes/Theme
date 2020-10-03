@@ -1,0 +1,6 @@
+{ name : Text
+, cursor : Text
+, background : Text
+, foreground : Text
+, palette16 : List Text
+}
