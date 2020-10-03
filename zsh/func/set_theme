@@ -1,14 +1,19 @@
 #!/usr/bin/env zsh
 
 set_theme() {
-    local renderer_path
-    local root_dir
+	local for_tmux
+	local renderer_path
+	local root_dir
 
-    root_dir="${HOME}/syscfg/script/terminal-themes"
-    renderer_path="${root_dir}/renderControlSequences.dhall"
+	root_dir="${HOME}/syscfg/script/terminal-themes"
+	renderer_path="${root_dir}/renderControlSequences.dhall"
 
-    # Evaluate control sequences.
-    source <(dhall text <<< "${renderer_path} ${1}")
+	# Evaluate control sequences.
+	for_tmux="False"
+	if [[ -n "${TMUX:-}" ]]; then
+		for_tmux="True"
+	fi
+	source <(dhall text <<< "${renderer_path} ${for_tmux} ${1}")
 
-    TERM_COLOR_THEME=$(basename $1)
+	TERM_COLOR_THEME=$(basename $1)
 }
