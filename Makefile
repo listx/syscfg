@@ -101,7 +101,7 @@ zsh:
 	test -f ${C}/zsh/zprofile-${T} \
 		&& ln -fs ${C}/zsh/zprofile-${T}                ${H}/.zprofile
 	test -f ${C}/zsh/zlogin-${T} \
-		&& ln -fs ${C}/zsh/zplogin-${T}                 ${H}/.zlogin
+		&& ln -fs ${C}/zsh/zlogin-${T}                  ${H}/.zlogin
 	mkdir -p ${H}/.zsh-untracked
 
 .PHONY: \
