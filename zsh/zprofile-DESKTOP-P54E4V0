@@ -1,0 +1,2 @@
+# Pull in necessary env vars into the shell (also enable 'nix-env').
+. $HOME/.nix-profile/etc/profile.d/nix.sh

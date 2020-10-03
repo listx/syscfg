@@ -98,6 +98,8 @@ zsh:
 	ln -fns ${C}/zsh                                    ${H}/.zsh
 	ln -fs ${C}/zsh/.zshenv                             ${H}
 	ln -fs ${C}/zsh/.zshrc                              ${H}
+	test -f ${C}/zsh/zprofile-${T} \
+		&& ln -fs ${C}/zsh/zprofile-${T}                ${H}/.zprofile
 	mkdir -p ${H}/.zsh-untracked
 
 .PHONY: \
