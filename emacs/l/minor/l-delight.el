@@ -10,6 +10,7 @@
       (helm-mode nil helm-mode)
       (org-indent-mode nil org-indent)
       (page-break-lines-mode nil page-break-lines)
+      (rainbow-mode nil rainbow-mode)
       (undo-tree-mode nil undo-tree)
       (visual-line-mode nil simple))))
 
