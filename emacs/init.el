@@ -36,6 +36,7 @@
 (require 'l-org-roam)
 (require 'l-page-break-lines)
 (require 'l-prog-mode)
+(require 'l-rainbow-mode)
 (require 'l-text-mode)
 (require 'l-uim)
 (require 'l-vdiff)
