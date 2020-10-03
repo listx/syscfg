@@ -1,7 +1,7 @@
 C := $(shell pwd)
 H := ${HOME}
 S := $(shell uname)
-T := $(shell hostname)
+T := $(shell hostname | cut -d. -f1)
 # Add the -n flag for directories, as otherwise, stray symlinks will be created
 # inside the C (config) directory itself.
 alacritty:
