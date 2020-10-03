@@ -1,0 +1,23 @@
+{ name = "Light"
+, cursor = "#00ff00"
+, background = "#22222a"
+, foreground = "#cccccf"
+, palette16 =
+  [ "#22222a"
+  , "#d78787"
+  , "#53ae80"
+  , "#d7d7af"
+  , "#2a80e7"
+  , "#dc8cc3"
+  , "#8cd0d3"
+  , "#cccccf"
+  , "#000000"
+  , "#d70000"
+  , "#87ff87"
+  , "#ffd7af"
+  , "#94bff3"
+  , "#d787af"
+  , "#afffff"
+  , "#ffffff"
+  ]
+}
