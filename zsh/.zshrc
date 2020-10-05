@@ -294,6 +294,7 @@ alias ssh='TERM=xterm ssh'
 alias sk0='ssh l@k0'
 alias sk1='ssh l@k1'
 alias sm0='ssh l@m0'
+alias sw0='ssh ingra@w0'
 
 # GLOBAL, position-independent aliases for detaching a process from the shell
 # (useful for starting GUI apps as standalones, without arguments).
