@@ -98,6 +98,19 @@ autoload -U zmv
 # This will set the default prompt to the kody theme
 prompt kody
 
+# Make the prompt re-evaluate itself every second. Among other things, this
+# makes the clock tick every second. See https://askubuntu.com/a/360172.
+setopt PROMPT_SUBST
+TMOUT=1
+TRAPALRM() {
+    # "BUFFER" is defined in ZSHZLE(1) and is the entire contents of the edit
+    # buffer (where the user types in the shell before pressing "ENTER" to
+    # execute the command or function).
+    if (( $#BUFFER == 0 )); then
+        zle reset-prompt
+    fi
+}
+
 # history settings
 HISTSIZE=20000
 SAVEHIST=40000
