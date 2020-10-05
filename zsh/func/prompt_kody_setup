@@ -124,17 +124,8 @@ prompt_kody_precmd()
 	prompt_kody_time_c="%B%F{$prompt_color3}[%b%f$day %D{%d} %*%B%F{$prompt_color3}]%b%f"
 	prompt_kody_time_d="%D{%d} %*"
 
-	prompt_hostcolor=""
-	prompt_charcolor=""
-	case $HOST in
-		k0)     prompt_hostcolor=$prompt_color3 ;;
-		k1)     prompt_hostcolor=$prompt_color1 ;;
-		*)      prompt_hostcolor=$prompt_color5 ;;
-	esac
-	case $USERNAME in
-		root)       prompt_charcolor=$prompt_color5 ;;
-		*)          [[ -n "$SSH_CLIENT" ]] && prompt_charcolor=$prompt_color2 || prompt_charcolor=$prompt_color3 ;;
-	esac
+	prompt_hostcolor=$prompt_color3
+	prompt_charcolor=$prompt_color3
 	prompt_username="%F{$prompt_charcolor}%n%f"
 	prompt_at_sign="%F{$prompt_color3}_%f"
 	prompt_hostname="%F{$prompt_hostcolor}%m%f"
