@@ -68,6 +68,9 @@ set background=dark
 " Force 256 colors.
 set t_Co=256
 
+" Explicitly set default colorscheme.
+colorscheme default
+
 " Word-wrap based on words, not characters (would anyone on Earth want it the other
 " way?
 set lbr
