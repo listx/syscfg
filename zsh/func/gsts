@@ -39,7 +39,7 @@ gsts_upstream_divergence() {
 			gsts_print "%B%F{red}\u25bc%b%f"
 		fi
 	else
-		gsts_print "%B%F{white}\u25cf%b%f"
+		gsts_print "%B%F{default}\u25cf%b%f"
 	fi
 }
 

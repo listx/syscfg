@@ -48,7 +48,7 @@ prompt_kody_setup()
 	prompt_color1=${1-'cyan'}     # present directory
 	prompt_color2=${2-'blue'}
 	prompt_color3=${3-'default'}  # user@host (also color of all regular text from commands like ls, cat, etc)
-	prompt_color4=${4-'white'}    # user input
+	prompt_color4=${4-'white'}
 	prompt_color5=${5-'red'}
 	prompt_color6=${6-'green'}
 	prompt_color7=${7-'yellow'}
@@ -119,9 +119,9 @@ prompt_kody_precmd()
 		Sun) day="%B%F{$prompt_color6}日%b%f" ;;
 	esac
 
-	prompt_kody_time_a="%B%F{$prompt_color4}[%b%f$day %D{%d} %*%B%F{$prompt_color4}]%b%f$(maybe_show_exit_status)${ginfo_short}${venv}"
-	prompt_kody_time_b="%B%F{$prompt_color4}[%b%f$day %D{%d} %*%B%F{$prompt_color4}]%b%f$(maybe_show_exit_status)"
-	prompt_kody_time_c="%B%F{$prompt_color4}[%b%f$day %D{%d} %*%B%F{$prompt_color4}]%b%f"
+	prompt_kody_time_a="%B%F{$prompt_color3}[%b%f$day %D{%d} %*%B%F{$prompt_color3}]%b%f$(maybe_show_exit_status)${ginfo_short}${venv}"
+	prompt_kody_time_b="%B%F{$prompt_color3}[%b%f$day %D{%d} %*%B%F{$prompt_color3}]%b%f$(maybe_show_exit_status)"
+	prompt_kody_time_c="%B%F{$prompt_color3}[%b%f$day %D{%d} %*%B%F{$prompt_color3}]%b%f"
 	prompt_kody_time_d="%D{%d} %*"
 
 	prompt_hostcolor=""
@@ -129,15 +129,14 @@ prompt_kody_precmd()
 	case $HOST in
 		k0)     prompt_hostcolor=$prompt_color3 ;;
 		k1)     prompt_hostcolor=$prompt_color1 ;;
-		k3)     prompt_hostcolor=$prompt_color4 ;;
 		*)      prompt_hostcolor=$prompt_color5 ;;
 	esac
 	case $USERNAME in
 		root)       prompt_charcolor=$prompt_color5 ;;
-		*)          [[ -n "$SSH_CLIENT" ]] && prompt_charcolor=$prompt_color2 || prompt_charcolor=$prompt_color4 ;;
+		*)          [[ -n "$SSH_CLIENT" ]] && prompt_charcolor=$prompt_color2 || prompt_charcolor=$prompt_color3 ;;
 	esac
 	prompt_username="%F{$prompt_charcolor}%n%f"
-	prompt_at_sign="%F{$prompt_color4}_%f"
+	prompt_at_sign="%F{$prompt_color3}_%f"
 	prompt_hostname="%F{$prompt_hostcolor}%m%f"
 	# set user@host
 	prompt_userhost="$prompt_username$prompt_at_sign$prompt_hostname"
@@ -152,7 +151,7 @@ prompt_kody_precmd()
 	prompt_line_1d="$prompt_kody_time_d $prompt_userhost $prompt_kody_pwd"
 	prompt_line_1e="$prompt_userhost $prompt_kody_pwd"
 	prompt_line_1f="$prompt_kody_pwd"
-	prompt_line_2="%B%F{$prompt_color4} "
+	prompt_line_2="%B%F{$prompt_color3} "
 	prompt_char="%(!.# .$"
 
 	# choose the correct prompt, depending on screen length
