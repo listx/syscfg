@@ -127,7 +127,7 @@ prompt_kody_precmd()
 	prompt_hostcolor=$prompt_color3
 	prompt_charcolor=$prompt_color3
 	prompt_username="%F{$prompt_charcolor}%n%f"
-	prompt_at_sign="%F{$prompt_color3}_%f"
+	prompt_at_sign="%F{$prompt_color3}@%f"
 	prompt_hostname="%F{$prompt_hostcolor}%m%f"
 	# set user@host
 	prompt_userhost="$prompt_username$prompt_at_sign$prompt_hostname"
