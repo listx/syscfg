@@ -213,12 +213,12 @@ alias dec='~/syscfg/script/decrypt.sh outfile'
 alias rot13='tr 'A-Za-z' 'N-ZA-Mn-za-m''
 
 # Find files, directories, and text strings.
-alias ff='rg          --files | rg '
-alias fF='rg --hidden --files | rg '
-alias fd='rg          --files --null | xargs -0 dirname | sort -u | rg '
-alias fD='rg --hidden --files --null | xargs -0 dirname | sort -u | rg '
+alias ff='rg                         --files | rg '
+alias fF='rg --hidden --glob "!.git" --files | rg '
+alias fd='rg                         --files --null | xargs -0 dirname | sort -u | rg '
+alias fD='rg --hidden --glob "!.git" --files --null | xargs -0 dirname | sort -u | rg '
 alias ft='rg '
-alias fT='rg --hidden '
+alias fT='rg --hidden --glob "!.git" '
 
 # TODO: deprecate dir_info().
 alias  ll=' dir_info 0'
