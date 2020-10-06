@@ -453,6 +453,28 @@ fi
 if [[ -n "${commands[fzf-share]}" ]]; then
 	source "$(fzf-share)/completion.zsh"
 	source "$(fzf-share)/key-bindings.zsh"
+
+    # Add decorator around the upstream 'fzf-history-widget'. This is required
+    # because the use of TRAPALRM which resets the prompt above every second.
+    # We prevent that from re-drawing the prompt by using its rule that the
+    # buffer must be empty for the clock to tick (for the prompt to be redrawn
+    # with `reset-prompt`). This decorator ads a blank space prefix and removes
+    # it after the widget is done executing. This empty space character ensures
+    # that the $BUFFER variable is non-empty, which prevents the prompt from
+    # being redrawn. If we don't do this, the prompt getting redrawn for the
+    # clock tick messes up the completion provided by fzf.
+    l-fzf-ctrl-r() {
+        if (( $#BUFFER == 0 )); then
+            LBUFFER=" ${LBUFFER}"
+        fi
+        fzf-history-widget
+        if [[ "${LBUFFER[1]}" == " " ]]; then
+            LBUFFER="${LBUFFER:1}"
+        fi
+    }
+    zle -N l-fzf-ctrl-r
+    bindkey '^R' l-fzf-ctrl-r
+
 	bindkey '\ed' fzf-cd-widget
 	export FZF_DEFAULT_COMMAND='rg --files --hidden --glob "!.git"'
 	export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
