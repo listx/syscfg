@@ -156,10 +156,6 @@ bindkey -v # use vim bindings!
 # use CTRL-R for history search (^R is bound to the 'redisplay' command by default, which is never used anyway)
 bindkey     '' history-incremental-search-backward
 bindkey     '' history-incremental-search-forward
-# fix backspace key breakage on remote server
-if [[ "$HOSTNAME" == "l0" ]]; then
-    TERM=xterm
-fi
 bindkey     '^[[3~'         delete-char         # DELETE key
 bindkey     '^[[7~'         beginning-of-line   # HOME key
 bindkey     '^[[8~'         end-of-line         # END key
