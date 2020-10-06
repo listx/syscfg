@@ -194,10 +194,6 @@ bindkey -M menuselect '' .accept-line # just execute the command when selecting
 stty stop undef
 stty start undef
 
-# Grab Git commit hash (full hash) of HEAD. Leave a space up front so that we
-# don't save this in the shell history.
-bindkey -s '^g^s' ' git_copy_sha\n'
-
 # make 'ds' prompt the user to select a dir from the dir stack, instead of just listing the dir stick
 # with a plain 'dirs -v'
 # NOTE: 'cd +$n' makes it go to the number listed, whereas 'cd -$n' reverses it... don't know why
