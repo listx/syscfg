@@ -405,20 +405,31 @@ if [[ -n "${commands[fzf-share]}" ]]; then
     # that the $BUFFER variable is non-empty, which prevents the prompt from
     # being redrawn. If we don't do this, the prompt getting redrawn for the
     # clock tick messes up the completion provided by fzf.
-    l-fzf-ctrl-r() {
+    l-fzf-decorator() {
         if (( $#BUFFER == 0 )); then
             LBUFFER=" ${LBUFFER}"
         fi
-        fzf-history-widget
+        $1
         if [[ "${LBUFFER[1]}" == " " ]]; then
             LBUFFER="${LBUFFER:1}"
         fi
     }
+    l-fzf-ctrl-r() {
+        l-fzf-decorator fzf-history-widget
+    }
+    l-fzf-ctrl-t() {
+        l-fzf-decorator fzf-file-widget
+    }
+    l-fzf-alt-c() {
+        l-fzf-decorator fzf-cd-widget
+    }
     zle -N l-fzf-ctrl-r
+    zle -N l-fzf-ctrl-t
+    zle -N l-fzf-alt-c
     bindkey '^R' l-fzf-ctrl-r
-
-	bindkey '\ed' fzf-cd-widget
-	export FZF_DEFAULT_COMMAND='rg --files --hidden --glob "!.git"'
-	export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
-	export FZF_ALT_C_COMMAND='rg --files --hidden --glob "!.git" --null | xargs -0 dirname | uniq'
+    bindkey '^T' l-fzf-ctrl-t
+    bindkey '\ed' l-fzf-alt-c
+    export FZF_DEFAULT_COMMAND='rg --files --hidden --glob "!.git"'
+    export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+    export FZF_ALT_C_COMMAND='rg --files --hidden --glob "!.git" --null | xargs -0 dirname | sort -u'
 fi
