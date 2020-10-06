@@ -712,8 +712,9 @@ key_bindings:
   # https://github.com/alacritty/alacritty/issues/62#issuecomment-347552058
 #  - { key: A,         mods: Alt,       chars: "\x1ba"                       }
 #  - { key: B,         mods: Alt,       chars: "\x1bb"                       }
-  - { key: C,         mods: Alt,       chars: "\x1bc"                       }
-#  - { key: D,         mods: Alt,       chars: "\x1bd"                       }
+#  - { key: C,         mods: Alt,       chars: "\x1bc"                       }
+  # For ALT-D binding of fzf-cd-widget.
+  - { key: D,         mods: Alt,       chars: "\x1bd"                       }
 #  - { key: E,         mods: Alt,       chars: "\x1be"                       }
 #  - { key: F,         mods: Alt,       chars: "\x1bf"                       }
 #  - { key: G,         mods: Alt,       chars: "\x1bg"                       }
