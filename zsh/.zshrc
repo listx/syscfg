@@ -149,13 +149,9 @@ setopt GLOB_DOTS
 # that do not start with "foo".
 setopt extendedglob
 
-# Custom binds for some common operations. Note, however, that you can enter
-# vi-like "normal mode" with CTRL+X, CTRL+V for some more advanced operations.
+# Key bindings.
 
 bindkey -v # use vim bindings!
-# use CTRL-R for history search (^R is bound to the 'redisplay' command by default, which is never used anyway)
-bindkey     '' history-incremental-search-backward
-bindkey     '' history-incremental-search-forward
 bindkey     '^[[3~'         delete-char         # DELETE key
 bindkey     '^[[7~'         beginning-of-line   # HOME key
 bindkey     '^[[8~'         end-of-line         # END key
@@ -177,8 +173,6 @@ bindkey -s '^g^s' ' git_copy_sha\n'
 # NOTE: 'cd +$n' makes it go to the number listed, whereas 'cd -$n' reverses it... don't know why
 # you'd ever want to use 'cd -$n'
 alias ds=' dirs -v ; echo -n "\nSelect directory: " ; read n ; cd +$n && ll'
-# just show a list of dir stack without choose prompt
-alias dl=' dirs -v'
 
 # Useful change dirs (first change to the directory, and then list the contents
 # within; notice how you can use aliases within aliases! (the "l" is an alias
@@ -199,14 +193,11 @@ alias kkkkkkkkkkkk=" cd ../../../../../../../../../../../../;ll"
 alias kkkkkkkkkkkkk=" cd ../../../../../../../../../../../../../;ll"
 alias kkkkkkkkkkkkkk=" cd ../../../../../../../../../../../../../../;ll"
 
-alias apush="~/syscfg/script/apush.sh"
 alias c="color_cycle next"
 alias C="color_cycle prev"
 alias cls="echo -ne '\x1bc'" # clear the screen buffer (don't just hide it like CTRL-L)
 alias fiv='~/syscfg/script/fiv.sh'
 alias aex='~/syscfg/script/aex.sh'
-alias x='~/syscfg/script/terms/wb.sh D'
-alias fop='~/prog/fop/dist/build/fop/fop'
 alias cascade='~/syscfg/script/cascade.sh'
 alias private=' HISTFILE=/tmp/zsh-history'
 alias unprivate=' HISTFILE=~/.zsh-untracked/history'
@@ -215,32 +206,27 @@ alias d='univ_open'
 alias df=' df -h'
 alias dmesg='dmesg --color=always L'
 alias du='du -h'
-alias dus='du -ah --max-depth 1 | sort -h'
 
 alias enc='gpg2 -e -r linusarver'
 alias dec='~/syscfg/script/decrypt.sh outfile'
-alias decless='~/syscfg/script/decrypt.sh viewfile'
 
 alias rot13='tr 'A-Za-z' 'N-ZA-Mn-za-m''
 
-# easy find command (see find_quick() function)
-alias fa='find_quick a '
-alias fA='find_quick aa '
-alias ff='find_quick f '
-alias fF='find_quick ff ' # can't use 'find_quick F ' because the F is globally aliased itself (down below)
-alias fd='find_quick d '
-alias fD='find_quick dd '
-alias ft='find_quick t '
-alias fT='find_quick tt '
+# Find files, directories, and text strings.
+alias ff='rg          --files | rg '
+alias fF='rg --hidden --files | rg '
+alias fd='rg          --files --null | xargs -0 dirname | sort -u | rg '
+alias fD='rg --hidden --files --null | xargs -0 dirname | sort -u | rg '
+alias ft='rg '
+alias fT='rg --hidden '
 
+# TODO: deprecate dir_info().
 alias  ll=' dir_info 0'
 alias   l=' dir_info 1'
 alias llj=' dir_info 2'
 alias  lj=' dir_info 3' # sort by size, and reverse it (bigger files @ bottom)
 alias llk=' dir_info 4' # sort by time, and reverse it (latest files @ bottom)
 alias  lk=' dir_info 5'
-alias lli=' dir_info 6' # sort by extension
-alias  li=' dir_info 7'
 
 alias q=' exit'
 
@@ -275,9 +261,7 @@ alias gm='git merge'
 alias gmf='git merge --ff-only'
 alias ga='git add --patch'
 alias gau='git add --update'
-# gcp = Git "commit and push". Useful for saving work immediately in
-# note-taking repos.
-alias gu='gau && gcu && gp'
+alias gu='gau && gcu && gp' # Useful for saving work immediately in note-taking repos.
 alias gr='git rebase'
 alias grc='git rebase --continue'
 alias gri='git rebase -i'
@@ -287,10 +271,6 @@ alias gp='git push'
 alias grv='git remote -v'
 alias gtag='~/syscfg/script/gtag.sh'
 
-alias rgi='rg -i'
-
-alias ocm="cd ~/org; gcm -am \"$HOST\"; gpl && gps"
-
 alias e='emacs_open'
 alias v='vim -p'
 
@@ -298,7 +278,7 @@ alias fl='find_long_lines '
 
 # Make ssh pretend we are using xterm, because some machines do not recognize
 # our usual terminal emulator (rxvt-unicode-256coler).
-alias ssh='TERM=xterm ssh'
+alias ssh='TERM=xterm-256color ssh'
 # These hostnames depend on either /etc/hosts or ~/.ssh/config.
 alias sk0='ssh l@k0'
 alias sk1='ssh l@k1'
@@ -308,49 +288,36 @@ alias sw0='ssh ingra@w0'
 # GLOBAL, position-independent aliases for detaching a process from the shell
 # (useful for starting GUI apps as standalones, without arguments).
 alias -g D='& disown'
-alias -g Z='> /dev/null 2>&1'
 alias -g L='| less'
-alias -g S='| sort | less'
 
 # scp alternative, with a progress bar
 alias rsy='rsync -ahP --no-whole-file --inplace'
-#'rscp' means 'cp' with 'rsync'. The '-a' (archive) option ensures that all
-#file properties (date, permissions, owner, etc.) are copied, too, recursively.
-#'-P' enables the progress bar. The next two options are a matter of taste but
-#are useful if you copy files to a USB stick: '--inplace' writes updated data
-#directly into the target file if it exists (instead of creating a temp copy,
-#deleting the target, and renaming the temp into the target). '--no-whole-file'
-#forces rsync to always use the incremental rsync algorithm.
-alias cp2='rsync -ahP'
+# The '-a' (archive) option ensures that all file properties (date,
+# permissions, owner, etc.) are copied, too, recursively.  '-P' enables the
+# progress bar. The next two options are a matter of taste but are useful if
+# you copy files to a USB stick: '--inplace' writes updated data directly into
+# the target file if it exists (instead of creating a temp copy, deleting the
+# target, and renaming the temp into the target). '--no-whole-file' forces
+# rsync to always use the incremental rsync algorithm.
 
-# play safe! warn before overwrites, display verbose output, and also enable
-# recursive option by default (useful when using only directory names)
+# Warn before overwrites, display verbose output, and also enable recursive
+# option by default (useful when using only directory names).
 alias cp='cp -ivr'
 alias mv='mv -iv'
 alias rm='rm -Iv'
 
-# clean up botched permissions
+# Clean up botched permissions.
 alias clean_dirs='find -type d -exec chmod 755 {} \;'
 alias clean_files='find -type f -exec chmod 644 {} \;'
 alias clean_tree='clean_dirs; clean_files'
 
-# sync the following with visudo to disable passwords!
-#
-# Template (in visudo):
-#
-# user  hostname=NOPASSWD:  path-to-command
-#
-# E.g.:
-#
-# l k2=NOPASSWD: /usr/sbin/iftop
-
-# turn off power or reboot gracefully
-alias of=' poweroff & disown; exit' # power off
-alias ofo=' reboot & disown; exit' # reboot
+# Turn off power or reboot gracefully.
+alias of=' poweroff & disown; exit'
+alias ofo=' reboot & disown; exit'
 
 alias nl='nix-env --list-generations'
-alias nq='nix-env -qaP'
 alias nls='sudo nix-env -p /nix/var/nix/profiles/system --list-generations'
+alias nq='nix-env -qaP'
 
 alias agi="sudo apt-get install"
 alias agr="sudo apt-get remove"
@@ -361,7 +328,7 @@ alias cal='cal -y'
 # Use python3 by default (python2 is EOL as of 2020)
 alias python=python3
 
-# memory management
+# Manual memory management.
 alias reset_cache='free && sync && echo 3 >/proc/sys/vm/drop_caches && free'
 alias reset_swap='free && swapoff -a && swapon -a && free'
 
@@ -371,29 +338,8 @@ alias reset_swap='free && swapoff -a && swapon -a && free'
 alias rgmp3='~/syscfg/script/audio/replaygain/mp3/tmwrg.sh'
 alias rgflac='~/syscfg/script/audio/replaygain/flac/tfwrg.sh'
 
-# mount/unmount USB drives
-alias usb='~/syscfg/script/usbmnt -d'
-alias usbon='~/syscfg/script/usbmnt'
-alias usbonn='~/syscfg/script/usbmnt -a'
-alias usbof='~/syscfg/scriptusbmnt -u'
-alias usboff='~/syscfg/script/usbmnt -U'
-
 # Add commonly-used paths as aliases.
 . ~/.zsh/path-aliases
-
-case $HOST in
-	k0)
-		alias iftop='sudo iftop -B -i eno1'
-		alias discon='sudo mount /dev/disk/by-id/ata-PIONEER_DVD-RW_DVR-215D'
-		alias discof='sudo umount /dev/disk/by-id/ata-PIONEER_DVD-RW_DVR-215D'
-		alias disc2on='sudo mount /dev/disk/by-id/ata-LITE-ON_DVDRW_SHW-160P6S'
-		alias disc2of='sudo umount /dev/disk/by-id/ata-LITE-ON_DVDRW_SHW-160P6S'
-	;;
-	*)
-		alias discon='sudo mount /dev/sr0'
-		alias discof='sudo umount /dev/sr0'
-	;;
-esac
 
 # Get rid of odd ^[[2004h characters from Emacs' `M-x shell'. The problem has to
 # do with ZSH trying to set bracketed paste mode which came out in ZSH 5.1.1,
