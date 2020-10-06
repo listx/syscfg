@@ -734,6 +734,7 @@ key_bindings:
 #  - { key: U,         mods: Alt,       chars: "\x1bu"                       }
 #  - { key: V,         mods: Alt,       chars: "\x1bv"                       }
 #  - { key: W,         mods: Alt,       chars: "\x1bw"                       }
+  # For emacs M-x.
   - { key: X,         mods: Alt,       chars: "\x1bx"                       }
 #  - { key: Y,         mods: Alt,       chars: "\x1by"                       }
 #  - { key: Z,         mods: Alt,       chars: "\x1bz"                       }
@@ -763,6 +764,7 @@ key_bindings:
 #  - { key: X,         mods: Alt|Shift, chars: "\x1bX"                       }
 #  - { key: Y,         mods: Alt|Shift, chars: "\x1bY"                       }
 #  - { key: Z,         mods: Alt|Shift, chars: "\x1bZ"                       }
+  # For eamcs M-:.
   - { key: Semicolon, mods: Alt|Shift, chars: "\x1b:"                       }
 #  - { key: Key1,      mods: Alt,       chars: "\x1b1"                       }
 #  - { key: Key2,      mods: Alt,       chars: "\x1b2"                       }
