@@ -196,15 +196,26 @@ stty start undef
 
 # Some directory history navigation. 'h' goes backward in history, and 'l' goes
 # "forward". Essentially this amounts to simulating a doubly-linked-list
-# traversal, forwards and backwards. 'k' is for moving up a directory; the
-# advantage of using the plain 'k' alias is that we don't have to repeatedly
-# press "ENTER" between each invocation.
+# traversal, forwards and backwards.
 #
-# At least for our Zsh configuration, we set HIST_IGNORE_SPACE which skips
-# recording of a command into the shell history if the command begins with a
-# space character.
-bindkey -s '^h' " \dirs $(dirs -lp | awk 'NR==1{store=$0;next}1;END{print store}') && popd && ll\n"
-bindkey -s '^l' " cd -0 && ll\n"
+# We prepend these commands with a space to block them from being saved into
+# the shell history (because of HIST_IGNORE_SPACE).
+#
+# Anonymous function to execute. This makes the variables here locally bound
+# only.
+() {
+  local ctrl_h
+
+  # Binding this way makes it easy to ignore quoting gotchas. The \EOF with the
+  # leading backslash disables parameter substitution (variable string
+  # itnerpolation).
+  ctrl_h=$(cat <<\EOF
+ \dirs $(dirs -lp | awk 'NR==1{store=$0;next}1;END{print store}') && popd && ll\n
+EOF
+)
+  bindkey -s '^h' "${ctrl_h}"
+}
+bindkey -s '^l' ' cd -0 && ll\n'
 
 # make 'ds' prompt the user to select a dir from the dir stack, instead of just listing the dir stick
 # with a plain 'dirs -v'
