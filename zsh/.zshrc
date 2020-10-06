@@ -117,13 +117,28 @@ prompt kody
 # makes the clock tick every second. See https://askubuntu.com/a/360172.
 setopt PROMPT_SUBST
 TMOUT=1
+
+# Don't redraw the prompt if we are in the middle of a completion widget. See
+# https://stackoverflow.com/a/30456173/437583.
+__l_prompt_tick ()
+{
+    case "$WIDGET" in
+        # Don't call reset-prompt if we are using fzf widgets. This checks 4
+        # known cases:
+        #   fzf-cd-widget (ALT-D)
+        #   fzf-history-widget (CTRL-R)
+        #   fzf-file-widget (CTRL-T)
+        #   fzf-completion (TAB-completion)
+        fzf-*) return ;;
+        # Multi-line input with "\" character at the end.
+        accept-line) return ;;
+    esac
+
+    zle reset-prompt
+}
+
 TRAPALRM() {
-    # "BUFFER" is defined in ZSHZLE(1) and is the entire contents of the edit
-    # buffer (where the user types in the shell before pressing "ENTER" to
-    # execute the command or function).
-    if (( $#BUFFER == 0 )); then
-        zle reset-prompt
-    fi
+    __l_prompt_tick
 }
 
 # history settings
@@ -411,39 +426,8 @@ if [[ -n "${commands[fzf-share]}" ]]; then
 	source "$(fzf-share)/completion.zsh"
 	source "$(fzf-share)/key-bindings.zsh"
 
-    # Add decorator around the upstream 'fzf-history-widget'. This is required
-    # because the use of TRAPALRM which resets the prompt above every second.
-    # We prevent that from re-drawing the prompt by using its rule that the
-    # buffer must be empty for the clock to tick (for the prompt to be redrawn
-    # with `reset-prompt`). This decorator ads a blank space prefix and removes
-    # it after the widget is done executing. This empty space character ensures
-    # that the $BUFFER variable is non-empty, which prevents the prompt from
-    # being redrawn. If we don't do this, the prompt getting redrawn for the
-    # clock tick messes up the completion provided by fzf.
-    l-fzf-decorator() {
-        if (( $#BUFFER == 0 )); then
-            LBUFFER=" ${LBUFFER}"
-        fi
-        $1
-        if [[ "${LBUFFER[1]}" == " " ]]; then
-            LBUFFER="${LBUFFER:1}"
-        fi
-    }
-    l-fzf-ctrl-r() {
-        l-fzf-decorator fzf-history-widget
-    }
-    l-fzf-ctrl-t() {
-        l-fzf-decorator fzf-file-widget
-    }
-    l-fzf-alt-c() {
-        l-fzf-decorator fzf-cd-widget
-    }
-    zle -N l-fzf-ctrl-r
-    zle -N l-fzf-ctrl-t
-    zle -N l-fzf-alt-c
-    bindkey '^R' l-fzf-ctrl-r
-    bindkey '^T' l-fzf-ctrl-t
-    bindkey '\ed' l-fzf-alt-c
+    # Use ALT-D binding instead of the default ALT-C.
+    bindkey '\ed' fzf-cd-widget
     export FZF_DEFAULT_COMMAND='rg --files --hidden --glob "!.git"'
     export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
     export FZF_ALT_C_COMMAND='rg --files --hidden --glob "!.git" --null | xargs -0 dirname | sort -u'
