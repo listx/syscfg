@@ -1,4 +1,19 @@
-# Environment variables
+# ZSH configuration.
+#
+# For reference, ZSH configuration load order is:
+#
+# 1. /etc/zshenv.
+# 2.   ~/.zshenv
+# 3. (if login shell) /etc/zprofile
+# 4. (if login shell)   ~/.zprofile
+# 5. (if interactive) /etc/zshrc
+# 6. (if interactive)   ~/.zshrc
+# 7. (if login shell) /etc/zlogin
+# 8. (if login shell)   ~/.zlogin
+#
+# /etc/zlogout and ~/.zlogout are also read, but only if the shell is a login
+# shell and also only after the shell exits. As such they are not that useful
+# in practice.
 
 # Set 'ls' command's color theme
 # See "dircolors -p" for more info
