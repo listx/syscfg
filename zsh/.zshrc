@@ -194,6 +194,18 @@ bindkey -M menuselect '' .accept-line # just execute the command when selecting
 stty stop undef
 stty start undef
 
+# Some directory history navigation. 'h' goes backward in history, and 'l' goes
+# "forward". Essentially this amounts to simulating a doubly-linked-list
+# traversal, forwards and backwards. 'k' is for moving up a directory; the
+# advantage of using the plain 'k' alias is that we don't have to repeatedly
+# press "ENTER" between each invocation.
+#
+# At least for our Zsh configuration, we set HIST_IGNORE_SPACE which skips
+# recording of a command into the shell history if the command begins with a
+# space character.
+bindkey -s '^h' " \dirs $(dirs -lp | awk 'NR==1{store=$0;next}1;END{print store}') && popd && ll\n"
+bindkey -s '^l' " cd -0 && ll\n"
+
 # make 'ds' prompt the user to select a dir from the dir stack, instead of just listing the dir stick
 # with a plain 'dirs -v'
 # NOTE: 'cd +$n' makes it go to the number listed, whereas 'cd -$n' reverses it... don't know why
