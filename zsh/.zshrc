@@ -131,7 +131,7 @@ __l_prompt_tick ()
         #   fzf-completion (TAB-completion)
         fzf-*) return ;;
         # Multi-line input with "\" character at the end.
-        accept-line) return ;;
+        accept-line) (( $#BUFFER > 0 )) && return ;;
     esac
 
     zle reset-prompt
