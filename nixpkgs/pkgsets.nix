@@ -327,9 +327,9 @@ with super; rec {
       #
       # . E.g., like this:
       #
-      #   cabal2nix ~/prog/ztile > ztile.nix
+      #   cabal2nix ~/prog/auca > auca.nix
       #
-      # . The `~/prog/ztile` folder contains the `ztile.cabal` file, which
+      # . The `~/prog/auca` folder contains the `auca.cabal` file, which
       # will be looked up automatically by cabal2nix. Then, it's simply a
       # matter of moving the generated file to a folder inside ~/.nixpkgs,
       # and calling that file with `callPackage`.
@@ -345,8 +345,6 @@ with super; rec {
       # through nix-env.
       auca = self.callPackage ./haskell/auca.nix {};
       nox = self.callPackage ./haskell/nox.nix {};
-      ztile = self.callPackage ./haskell/ztile.nix {};
-      ox = self.callPackage ./haskell/ox.nix {};
     };
   };
 
@@ -389,15 +387,6 @@ with super; rec {
       pandoc
       dhall
       gitAndTools.git-annex
-    ];
-  });
-
-  l_set_haskell_custom = setPrio "8" (buildEnv {
-    name = "l-set-haskell-custom";
-    paths = with haskellPackages; [
-      auca
-      ztile
-      ox
     ];
   });
 }
