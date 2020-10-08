@@ -1,5 +1,5 @@
 { mkDerivation, base, colour, criterion, dhall, either, hpack
-, megaparsec, optparse-generic, stdenv, tasty, tasty-hspec, text
+, megaparsec, optparse-generic_1_4_3, stdenv, tasty, tasty-hspec, text
 }:
 mkDerivation {
   pname = "inky";
@@ -8,7 +8,7 @@ mkDerivation {
   isLibrary = true;
   isExecutable = true;
   libraryHaskellDepends = [
-    base colour dhall either megaparsec optparse-generic text
+    base colour dhall either megaparsec optparse-generic_1_4_3 text
   ];
   libraryToolDepends = [ hpack ];
   executableHaskellDepends = [ base ];
