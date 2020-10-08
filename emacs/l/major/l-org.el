@@ -88,6 +88,10 @@
   ; Do not convert TAB characters in source code blocks into spaces.
   (setq org-src-preserve-indentation t)
 
+  ; Follow org links in the same window (do not open up a new split window). See
+  ; https://www.reddit.com/r/emacs/comments/3m3on0/question_following_links_to_orgfiles_in_same
+  (setq org-link-frame-setup '((file . find-file)))
+
   ; Use Unicode bullet character for bullets and lists.
   (font-lock-add-keywords 'org-mode
     '(("^ *\\([-]\\) "
