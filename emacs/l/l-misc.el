@@ -12,6 +12,10 @@
   (interactive)
   (string-equal system-type system))
 
+; Try very hard to not split existing windows to open up links and other new
+; buffers. https://stackoverflow.com/a/1856069/437583
+(setq same-window-regexps '("."))
+
 ; If on Mac, make Emacs aware of special paths, esp. Homebrew (for `exec-path').
 ; Unfortunately, setting "PATH" does not automatically set `exec-path'. So, we
 ; do both for consistency. See
