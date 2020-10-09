@@ -69,6 +69,11 @@ export LESS_TERMCAP_me=$'\E[0m'         # end bold/blinking
 export LESS_TERMCAP_se=$'\E[0m'         # end standout-mode
 export LESS_TERMCAP_ue=$'\E[0m'         # end underline
 
+# Set PAGER. This is not set on Mac, which results in /usr/bin/less (hardcoded
+# path) being executed. This hardcoded behavior appears to be by design, as it
+# is stated as such in the manpage.
+export PAGER=less
+
 # Default text editor--set it to emacsclient.
 export VISUAL=~/syscfg/script/emacsclient-tty.sh
 export EDITOR=~/syscfg/script/emacsclient-tty.sh
