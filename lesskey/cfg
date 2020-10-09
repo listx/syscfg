@@ -5,12 +5,14 @@
 
 #env
 
+# -F: exit less if everything can be displayed in one screen
+#
 # -i: make lower-case-only searches case insensitive (mixed-case searches are
 # automatically case-sensitive!)
 #
-# -F: exit less if everything can be displayed in one screen
+# -M: verbose status bar to show location information
 #
 # -R: make 'git diff' more compliant with highly customized LESS_TERMCAP options
 #
 # -X: try not to clear the screen
-LESS = -FiRX
+LESS = -FiMRX
