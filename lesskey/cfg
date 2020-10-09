@@ -3,6 +3,9 @@
 # map backspace to back-screen
       back-screen
 
+#line-edit
+\e[3~          delete
+
 #env
 
 # -F: exit less if everything can be displayed in one screen
