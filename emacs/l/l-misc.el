@@ -27,7 +27,7 @@
      (paths `(
       ,(concat HOME "/syscfg/script")
       ,(concat HOME "/bin")
-      ,(concat HOME "/homebrew/bin"))))
+      ,(concat HOME "/.nix-profile/bin"))))
     (setenv "PATH" (concat (mapconcat 'identity paths ":") ":" PATH))
     ; The way in which `exec-path' is set here is hacky. It appears that
     ; exec-directory has little bearing to $PATH, so we just prepend $PATH to
