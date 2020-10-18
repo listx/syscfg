@@ -397,8 +397,7 @@ fi
 
 # ZSH Plugins with ZPlug. To install ZPlug, see https://github.com/zplug/zplug.
 if [[ $HOST =~ macbook ]]; then
-    export ZPLUG_HOME=$HOME/homebrew/opt/zplug
-    source $ZPLUG_HOME/init.zsh
+    source $HOME/.nix-profile/init.zsh
 else
     source ~/.zplug/init.zsh
 fi
