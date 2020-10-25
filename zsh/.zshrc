@@ -321,6 +321,8 @@ alias e='emacs_open'
 alias v='vim -p'
 
 alias fl='find_long_lines '
+alias ft='f t'
+alias ff='f f'
 
 # Make ssh pretend we are using xterm, because some machines do not recognize
 # our usual terminal emulator (rxvt-unicode-256coler).
