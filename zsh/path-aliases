@@ -1,4 +1,5 @@
 alias "d.cip"="d ~/go/src/sigs.k8s.io/k8s-container-image-promoter"
 alias "d.ki"="d ~/go/src/github.com/kubernetes/k8s.io"
 alias "d.kk"="d ~/go/src/k8s.io/kubernetes"
+alias "d.kr"="d ~/go/src/k8s.io/release"
 alias "d.kt"="d ~/go/src/k8s.io/test-infra"
