@@ -33,7 +33,7 @@ dir_info() {
 				| tail -n +2 | sed -e 's|^|  |'
 			;;
 		*)
-			ls -C -w $(( COLUMNS - 2 )) --color \
+			ls -AC -w $(( COLUMNS - 2 )) --color \
 				| sed 's|^|  |'
 			;;
 	esac
