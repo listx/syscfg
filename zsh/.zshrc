@@ -266,13 +266,10 @@ alias dec='~/syscfg/script/decrypt.sh outfile'
 
 alias rot13='tr 'A-Za-z' 'N-ZA-Mn-za-m''
 
-# TODO: deprecate dir_info().
-alias  ll=' dir_info 0'
-alias   l=' dir_info 1'
-alias llj=' dir_info 2'
-alias  lj=' dir_info 3' # sort by size, and reverse it (bigger files @ bottom)
-alias llk=' dir_info 4' # sort by time, and reverse it (latest files @ bottom)
-alias  lk=' dir_info 5'
+alias  ll=' dir_info brief'
+alias   l=' dir_info verbose-by-name'
+alias  lj=' dir_info verbose-by-size'
+alias  lk=' dir_info verbose-by-date'
 
 alias q=' exit'
 
