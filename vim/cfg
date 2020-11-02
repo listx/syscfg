@@ -59,6 +59,11 @@ set hlsearch
 " Search any match IMMEDIATELY.
 set incsearch
 
+" Disable incremental search highlighting after `updatetime` seconds. By
+" default this is set to 4 seconds.
+" https://stackoverflow.com/questions/22798473/vim-how-to-turn-off-search-highlight-after-timeout-x-seconds
+autocmd CursorHold,CursorHoldI * let v:hlsearch = 0 | redraw
+
 " Set GUI font.
 set gfn=Terminus\ 9
 
