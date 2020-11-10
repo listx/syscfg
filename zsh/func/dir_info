@@ -15,25 +15,26 @@ dir_info() {
 	fi
 
 	mode="${1:-}"
+	shift
 
 	# Add a blank line for legibility.
 	echo
 
 	case "${mode}" in
 		verbose-by-name)
-			ls -Aho --time-style=long-iso --color \
+			ls -Aho --time-style=long-iso --color $@ \
 				| tail -n +2 | sed -e 's|^|  |'
 			;;
 		verbose-by-size)
-			ls -AhoSr --time-style=long-iso --color \
+			ls -AhoSr --time-style=long-iso --color $@ \
 				| tail -n +2 | sed -e 's|^|  |'
 			;;
 		verbose-by-date)
-			ls -Ahotr --time-style=long-iso --color \
+			ls -Ahotr --time-style=long-iso --color $@ \
 				| tail -n +2 | sed -e 's|^|  |'
 			;;
 		*)
-			ls -AC -w $(( COLUMNS - 2 )) --color \
+			ls -AC -w $(( COLUMNS - 2 )) --color $@ \
 				| sed 's|^|  |'
 			;;
 	esac
