@@ -6,6 +6,8 @@
 dir_info() {
 	local file_count
 	local mode
+	local deref
+	local thing
 
 	# NOP if there is nothing to show.
 	file_count=$(ls -A1 | wc -l)
@@ -20,23 +22,39 @@ dir_info() {
 	# Add a blank line for legibility.
 	echo
 
+	# If we are given a specific thing to list, make sure to dereference any
+	# symlinks.
+	thing="${1:-}"
+	if [[ -n "${thing}" ]]; then
+		# Resolve symlinks.
+		if [[ -L "${thing}" ]]; then
+			echo  "  ${thing} -> $(readlink -f "${thing}")"
+			echo "  ---"
+			thing="$(readlink -f "${thing}")"
+		fi
+	fi
+
 	case "${mode}" in
 		verbose-by-name)
-			ls -Aho --time-style=long-iso --color $@ \
-				| tail -n +2 | sed -e 's|^|  |'
+			ls -Aho --time-style=long-iso --color ${thing} \
+				| sed -e 's|^|  |'
 			;;
 		verbose-by-size)
-			ls -AhoSr --time-style=long-iso --color $@ \
-				| tail -n +2 | sed -e 's|^|  |'
+			ls -AhoSr --time-style=long-iso --color ${thing} \
+				| sed -e 's|^|  |'
 			;;
 		verbose-by-date)
-			ls -Ahotr --time-style=long-iso --color $@ \
-				| tail -n +2 | sed -e 's|^|  |'
+			ls -Ahotr --time-style=long-iso --color ${thing} \
+				| sed -e 's|^|  |'
 			;;
-		*)
-			ls -AC -w $(( COLUMNS - 2 )) --color $@ \
+		brief)
+			ls -AC -w $(( COLUMNS - 2 )) --color ${thing} \
 				| sed 's|^|  |'
 			;;
+		*)
+            echo >&2 "unrecognized mode \`${mode}'"
+            return 1
+            ;;
 	esac
 
 	# Add a blank line between us and the shell prompt for legibility.
