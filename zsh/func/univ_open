@@ -14,7 +14,7 @@
 
 univ_open() {
 	if [[ -z $@ ]]; then
-		cd && dir_info # ("cd" w/o any arguments goes to the home directory)
+		cd && dir_info brief # ("cd" w/o any arguments goes to the home directory)
 	elif [[ -f $1 || -f ${=@[-1]} ]]; then
 		# if we're here, it means that the user either (1) provided a single valid file name, or (2) a number of
 		# commandline arguments PLUS a single valid file name; use of the $@ variable ensures that we preserve all the
@@ -130,7 +130,7 @@ EOF
 		# any trailing arguments (in zsh, '#' is the same as ARGC, and denotes the number of arguments passed to the
 		# script (so '$#' is the same as $ARGC)
 		if [[ $# -eq 1 ]]; then
-			cd $@ && dir_info
+			cd $@ && dir_info brief
 			# If this is a git root directory, then show a list of all remotes.
 			if [[ -d .git ]]; then
 				git remote -v
@@ -138,7 +138,7 @@ EOF
 		else
 			# if the first argument was a valid directory, but there was more than 1 argument, then we ignore these
 			# trailing args but still cd into the first given directory
-			cd $1 && dir_info
+			cd $1 && dir_info brief
 			# i.e., show arguments 2 ... all the way to the last one (last one has an index of -1 argument array)
 			echo "\nuniv_open: argument(s) ignored: \`${=@[2,-1]}\`"
 			echo "univ_open: went to \`$1'\n"
@@ -150,7 +150,7 @@ EOF
 		# find the closest valid directory, just in case the user gave a
 		# butchered-up path
 		while [[ ! -d $head ]]; do head=$head:h; done
-		cd $head && dir_info
+		cd $head && dir_info brief
 		echo "\nuniv_open: path \`$@' does not exist"
 		[[ $head == "." ]] && echo "univ_open: stayed in same directory\n" || echo "univ_open: relocated to nearest parent directory \`$head'\n"
 	else
