@@ -9,22 +9,15 @@ dir_info() {
 	local deref
 	local thing
 
-	# NOP if there is nothing to show.
-	file_count=$(ls -A1 | wc -l)
-	if (( file_count == 0 )); then
-		echo "($PWD is empty)"
-		return
-	fi
-
 	mode="${1:-}"
-	shift
 
 	# Add a blank line for legibility.
 	echo
 
-	# If we are given a specific thing to list, make sure to dereference any
-	# symlinks.
-	thing="${1:-}"
+	# List the contents of the given argument, but use "." (current directory)
+	# if this argument is blank. If we are given a specific thing to list, make
+	# sure to dereference any symlinks.
+	thing="${2:-.}"
 	if [[ -n "${thing}" ]]; then
 		# Resolve symlinks.
 		if [[ -L "${thing}" ]]; then
@@ -32,6 +25,14 @@ dir_info() {
 			echo "  ---"
 			thing="$(readlink -f "${thing}")"
 		fi
+	fi
+
+	# NOP if there is nothing to show.
+	file_count=$(ls -A1 "${thing}" | wc -l)
+	if (( file_count == 0 )); then
+		echo "($PWD is empty)"
+		echo
+		return
 	fi
 
 	case "${mode}" in
@@ -52,9 +53,9 @@ dir_info() {
 				| sed 's|^|  |'
 			;;
 		*)
-            echo >&2 "unrecognized mode \`${mode}'"
-            return 1
-            ;;
+			echo >&2 "unrecognized mode \`${mode}'"
+			return 1
+			;;
 	esac
 
 	# Add a blank line between us and the shell prompt for legibility.
