@@ -55,8 +55,7 @@
         start = ''exec $HOME/.xsession'';
       }
     ];
-    displayManager.lightdm = {
-      enable = true;
+    displayManager = {
       autoLogin.enable = true;
       autoLogin.user = "l";
     };
