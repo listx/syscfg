@@ -18,5 +18,5 @@ get_ip_addr()
 	esac
 }
 
-2>&1 >/dev/null hledger -R web -- --serve --host=$(get_ip_addr) --port=8000 & disown
-2>&1 >/dev/null hledger    web -- --serve --host=$(get_ip_addr) --port=8001 & disown
+2>&1 >/dev/null hledger -R web -- --serve --host=$(get_ip_addr) --port=8000 --base-url=http://$(hostname):8000 & disown
+2>&1 >/dev/null hledger    web -- --serve --host=$(get_ip_addr) --port=8001 --base-url=http://$(hostname):8001 & disown
