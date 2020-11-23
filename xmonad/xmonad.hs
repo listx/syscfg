@@ -1447,7 +1447,6 @@ l_startupHook hostname = do
   -- Setup keyboard.
   spawn "~/syscfg/xmonad/xenv.sh"
   windowSet <- gets windowset
-  spawn "qutebrowser"
   y <- gets (l_YFromWindowSet . windowset)
   let
     numScreens = length $ W.screens windowSet
@@ -1477,8 +1476,14 @@ l_startupHook hostname = do
     ++ " --class atWorkspace_"
     ++ farRightScreen
     ++ " --command htop"
+  -- The emacs daemon also starts up org-roam-server-mode, which turns on an
+  -- HTTP server to serve org-roam files over port 8010.
   spawn "emacs --daemon"
-  when (hostname == "k0") rtorrent
+  when (hostname == "k0") $ do
+    spawn "qutebrowser"
+    rtorrent
+    -- Start up `hledger web` instances over ports 8000 and 8001.
+    spawn "~/syscfg/script/hledger.sh"
   where
   l_termCustom = case hostname of
     "k1" -> "LIBGL_ALWAYS_SOFTWARE=1 " <> l_term
