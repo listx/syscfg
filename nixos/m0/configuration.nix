@@ -3,7 +3,7 @@
 {
   imports =
     [
-      ../bare.nix
+      ../minimal.nix
       ./hardware-configuration.nix
     ];
 

@@ -2,7 +2,7 @@
 
 {
   imports = [
-    ./bare.nix
+    ./minimal.nix
   ];
 
   # Fonts
