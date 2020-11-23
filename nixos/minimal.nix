@@ -12,8 +12,11 @@
       192.168.0.7 linusa-macbookpro
     '';
     # Port 22 is opened automatically if SSH daemon is enabled (no need to specify it here).
-    # 8001 is for the nix-serve HTTP daemon.
-    firewall.allowedTCPPorts = [ 8001 ];
+    firewall.allowedTCPPorts = [
+      8000 # hledger -R web -- --serve --host=192.168.0.4 --port=8000
+      8001 # hledger    web -- --serve --host=192.168.0.4 --port=8001
+      8010 # org-roam-server-mode
+    ];
   };
 
   # allow installation of 'ati_unfree' video driver and also Firefox with Flash

@@ -9,8 +9,13 @@
     :config
     (add-hook 'emacs-startup-hook '(lambda ()
       (if (daemonp) (org-roam-server-mode))))
-    (setq org-roam-server-host "127.0.0.1"
-          org-roam-server-port 8090
+    (setq org-roam-server-host
+            (cond
+              ; If we are on k0, set local static IP as the address, so that
+              ; other computers on the network can access it.
+              ((string-match "^k0" (system-name)) "192.168.0.4")
+              (t "127.0.0.1"))
+          org-roam-server-port 8010
           org-roam-server-export-inline-images t
           org-roam-server-authenticate nil
           org-roam-server-network-poll t
