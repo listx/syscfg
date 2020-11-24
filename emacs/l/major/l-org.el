@@ -182,7 +182,10 @@
   ; Disable default orgmode hotkeys that interfere with our global hotkeys
   ; defined elsewhere.
   (define-key org-mode-map [(tab)] nil)
+  ; S-tab for X11.
   (define-key org-mode-map (kbd "<S-iso-lefttab>") nil)
+  ; S-tab for Mac.
+  (define-key org-mode-map (kbd "<S-tab>") nil)
   (define-key org-mode-map (kbd "<backtab>") nil))
 
 (defun l/org-agenda-mode-hook ()
@@ -190,7 +193,10 @@
   (define-key org-agenda-mode-map "H" 'evil-next-buffer)
   (define-key org-agenda-mode-map "L" 'evil-prev-buffer)
   (define-key org-agenda-mode-map (kbd "RET") 'org-agenda-goto)
+  ; S-tab for X11.
   (define-key org-agenda-mode-map (kbd "<S-iso-lefttab>") (lambda () (interactive) (other-window -1)))
+  ; S-tab for Mac.
+  (define-key org-agenda-mode-map (kbd "<S-tab>") (lambda () (interactive) (other-window -1)))
   (define-key org-agenda-mode-map [(tab)] 'other-window))
 
 (defhydra hydra-org (:foreign-keys warn)
