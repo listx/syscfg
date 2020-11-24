@@ -197,30 +197,27 @@
   "org"
   ("a" org-agenda "org-agenda" :exit t)
   ("b" org-cycle-list-bullet "org-cycle-bullet-type")
+  ("d" org-deadline "org-deadline" :exit t)
   ("e" org-roam-find-file "org-roam-find-file" :exit t)
   ("E" org-roam "org-roam" :exit t)
   ("i" org-download-screenshot "org-download-screenshot" :exit t)
   ("I" org-download-yank "org-download-yank" :exit t)
   ("j" org-roam-jump-to-index "org-roam-jump-to-index" :exit t)
-  ("l" org-toggle-link-display "org-toggle-link-display")
-  ("M" mmm-parse-buffer "turn on mmm-mode")
-  ("m" mmm-mode "turn on mmm-mode")
-  ("o" l/sort-done-closed "sort DONE/CLOSED headings" :exit t)
-  ("s" org-beamer-export-to-pdf "save beamer to pdf")
-  ("w" org-publish-current-project "publish current project")
+  ; Cycle section visibility level.
+  ("l" org-cycle "org-cycle")
+  ("L" org-global-cycle "org-global-cycle")
+  ("o" org-insert-heading-after-current "org-insert-heading-after-current" :exit t)
+  ("s" org-schedule "org-schedule" :exit t)
   ("u" org-roam-insert "org-roam-insert" :exit t)
-  ("q" nil "exit" :exit t))
+  ("q" nil "exit" :exit t)
+  ; Evaluate source code block.
+  ("x" org-ctrl-c-ctrl-c "org-ctrl-c-ctrl-c" :exit t)
+  ("z" org-toggle-link-display "org-toggle-link-display"))
 
 (general-define-key
   :keymaps 'org-mode-map
   :states '(normal)
-  "\"" 'hydra-org/body
-  "j" 'org-insert-heading-after-current
-  ; Cycle section visibility level.
-  "l" 'org-cycle
-  "L" 'org-global-cycle
-  ; Evaluate source code block.
-  "z" 'org-ctrl-c-ctrl-c)
+  "," 'hydra-org/body)
 
 (evil-define-key 'normal org-mode-map (kbd "M-i") 'org-insert-link)
 (evil-define-key 'insert org-mode-map (kbd "M-i") 'org-insert-link)
@@ -269,23 +266,5 @@
     (save-excursion
       (while (re-search-forward "^#\\+end_src\n\\([^\n]\\)" nil t)
         (replace-match "\n\\1" nil nil nil 1)))))
-
-(defun l/sort-done-closed ()
-  "Replace entire buffer with output from morg.py."
-  (interactive)
-  (let
-    (
-      (output (shell-command-to-string
-        (concat
-          "~/life/torg.sh sort_done_closed --input-file "
-          (buffer-name))))
-    )
-    (if (string= output (buffer-string))
-      (message "NOP (torg output matches buffer)")
-      (progn
-        (setf (buffer-string) output)
-        ; Re-indent the buffer (buffer is not re-indented automatically by
-        ; org-mode).
-        (org-indent-indent-buffer)))))
 
 (provide 'l-org)
