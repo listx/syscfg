@@ -1,7 +1,7 @@
 " Remove Vi compatibility. No one cares about this.
 set nocp
 
-" Prefer unix newlines whenever possible, but leave DOS files be DOS
+" Prefer unix newlines whenever possible, but leave DOS files as DOS
 " (don't change their line endings).
 set ffs=unix,dos
 
@@ -38,18 +38,6 @@ filetype indent on
 " Automatically load the corresponding filetype plugin if we've detected a filetype.
 filetype plugin on
 
-" Hide the mouse cursor when typing (only for GVIM).
-set mousehide
-
-" Remove mouse-friendly options from GUI, because we simply don't use the mouse when
-" in Vim.
-set guioptions-=T
-set guioptions-=m
-set guioptions-=l
-set guioptions-=r
-set guioptions-=L
-set guioptions-=R
-
 " Enable syntax highlighting.
 syntax enable
 
@@ -64,9 +52,6 @@ set incsearch
 " https://stackoverflow.com/questions/22798473/vim-how-to-turn-off-search-highlight-after-timeout-x-seconds
 autocmd CursorHold,CursorHoldI * let v:hlsearch = 0 | redraw
 
-" Set GUI font.
-set gfn=Terminus\ 9
-
 " Highlight cursor horizontally.
 set cursorline
 set background=dark
@@ -77,7 +62,7 @@ set t_Co=256
 colorscheme default
 
 " Word-wrap based on words, not characters (would anyone on Earth want it the other
-" way?
+" way?).
 set lbr
 
 " Make cursor look square, and prevent cursor blinking.
@@ -93,8 +78,8 @@ set timeoutlen=1000
 " Leader key (works with Intellij IDEA's Vim plugin).
 let mapleader = ","
 
-" We only want to load autocommands ONCE (esp. for GVim, which sources the
-" Vimrc.
+" We only want to load autocommands ONCE (esp. for GVim, which sources
+" ~/.vimrc).
 if !exists("autocommands_loaded")
     let autocommands_loaded = 1
     " Integration with my "nox" program.
@@ -115,15 +100,15 @@ if !exists("autocommands_loaded")
     au BufEnter *.hs nmap <leader>CC !!nox -l hs -u<cr>
     au BufEnter *.hs vmap <leader>CC !nox -l hs -u<cr>
 
-    " highlight red any trailing whitespace
+    " Highlight red any trailing whitespace.
     highlight ExtraWhitespace ctermbg=red guibg=red
     au ColorScheme * highlight ExtraWhitespace guibg=red
     au BufEnter * match ExtraWhitespace /\s\+$/
     au InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
     au InsertLeave * match ExtraWhiteSpace /\s\+$/
 
-    " always run highlighting regex from the beginning of the file, not just
-    " what is displayed on-screen (useful for multiline highlighting patterns)
+    " Always run highlighting regex from the beginning of the file, not just
+    " what is displayed on-screen (useful for multiline highlighting patterns).
     au BufEnter *.hs :syntax sync fromstart
 endif
 
@@ -183,5 +168,24 @@ nmap <leader>h :sp<cr>
 nmap <leader>H :sp<space>.<cr>
 nmap <leader>v :vsp<cr>
 nmap <leader>V :vsp<space>.<cr>
+
+" ------------
+" GUI settings
+" ------------
+
+" Hide the mouse cursor when typing (only for GVIM).
+set mousehide
+
+" Set GUI font.
+set gfn=Terminus\ 9
+
+" Remove mouse-friendly options from GUI, because we simply don't use the mouse when
+" in Vim.
+set guioptions-=T
+set guioptions-=m
+set guioptions-=l
+set guioptions-=r
+set guioptions-=L
+set guioptions-=R
 
 " vim: syntax=vim
