@@ -16,6 +16,7 @@
       8000 # hledger -R web -- --serve --host=192.168.0.4 --port=8000
       8001 # hledger    web -- --serve --host=192.168.0.4 --port=8001
       8010 # org-roam-server-mode
+      8020 # stack exec -- blog watch --host=192.168.0.4 --port=8020
     ];
   };
 
