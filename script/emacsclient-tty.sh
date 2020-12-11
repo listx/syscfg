@@ -1,9 +1,7 @@
 #!/usr/bin/env bash
 
 read -r -d '' elisp << EOF
-(let
-  (
-  )
+(progn
   (find-file-other-tab "$1")
   (setq fill-column 72)
   (beginning-of-buffer)
