@@ -66,63 +66,7 @@ univ_open() {
 				xchm $@ &>/dev/null & disown
 			;;
 			*)
-                elisp0=$(cat <<-EOF
-					(progn
-						(find-file-other-tab "$(readlink -e "$1")")
-					)
-					EOF
-				)
-				# Use emacsclient, but create a new frame only if there isn't
-				# one already. See
-				# http://superuser.com/questions/358037/emacsclient-create-a-frame-if-a-frame-does-not-exist
-				#
-				# However, always spawn a new frame if connecting over SSH.
-				emacsclient_cmd="emacsclient -a \"\" --eval '$elisp0'"
-				if [[ -n "${SSH_TTY}" ]]; then
-					emacsclient_cmd+=" -t"
-				else
-					# Add "-n" so that the shell session from which we are
-					# invoking this does not have to wait for Emacs to close
-					# before returning. It's practically the same as
-					# backgrounding the task.
-					emacsclient_cmd+=" -n"
-					# Check for an existing open frame. We have to filter out
-					# the frame named "initial_terminal" because it is a special
-					# invisible frame that is created by default by the Emacs
-					# daemon on startup.
-					read -r -d '' elisp << EOF
-(let
-  (
-    ; Filter out frames that are invisible frames that are meant to keep
-    ; the emacs daemon running (alive).
-    (visible-graphical-frames
-      (seq-filter
-        (lambda (x)
-          (and
-            ; Discard any frames that are bound to an existing terminal (e.g.,
-            ; git commit editing sessions in another terminal window).
-            (not (string-prefix-p "/dev/" x))
-            ; Discard default invisible frame that starts up with the daemon.
-            (not (string-equal x "initial_terminal"))))
-          (mapcar 'terminal-name (frame-list))))
-  )
-  (if (> (length visible-graphical-frames) 0)
-    (progn
-      (invert-face 'mode-line)
-      (run-with-timer 0.1 nil #'invert-face 'mode-line)
-      ; Print a message for the caller to digest.
-      (car visible-graphical-frames))))
-EOF
-					graphical_display="$(emacsclient --eval "${elisp}")"
-					if [[ -n "${graphical_display}" ]] && [[ "${graphical_display}" != nil ]]; then
-						echo "found open frame; reusing..."
-						emacsclient_cmd+=" -d ${graphical_display}"
-					else
-						echo "no open frames found; creating..."
-						emacsclient_cmd+=" -c"
-					fi
-				fi
-				eval "${emacsclient_cmd}"
+				~/syscfg/script/emacsclient-tty.sh "${1}"
 			;;
 		esac
 	elif [[ -d $1 ]]; then
