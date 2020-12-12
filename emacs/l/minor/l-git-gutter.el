@@ -10,7 +10,7 @@
   ; above because there is literally no frame.
   (advice-add 'select-window :around #'l/git-gutter-refresh)
   (defun l/git-gutter-refresh (orig-fun &rest args)
-    (progn
+    (prog1
       (apply orig-fun args)
       (git-gutter:update-all-windows)))
   (setq git-gutter:modified-sign " ")
