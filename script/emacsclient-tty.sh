@@ -5,7 +5,7 @@ set -euo pipefail
 elisp=$(cat << EOF
 (progn
   ; Open up the git buffer.
-  (find-file-other-tab "$(readlink -e "${1}")")
+  (find-file "$(readlink -e "${1}")")
   ; Set line length to 72, because commit message hygiene matters.
   (setq fill-column 72)
   ; Go to the top of the buffer.
