@@ -1,11 +1,11 @@
 #!/usr/bin/env zsh
 
-# p() is a shorcut for "ps aux | ag PATTERN".
+# Usage: `p PATTERN' to search for processes named PATTERN.
 
 p()
 {
-	pattern=$1
-	if [[ -z "$pattern" ]]; then
+	pattern="${1}"
+	if [[ -z "${pattern}" ]]; then
 		echo "Need pattern argument"
 		return 1
 	fi
@@ -14,5 +14,7 @@ p()
 		echo "\`rg' is not installed"
 		return 1
 	fi
-	ps aux | rg $pattern
+	# The process substitution with the `=(...)' syntax prevents the `rg
+	# -i ...' process itself from showing up in the results.
+	rg -i "${pattern}" =(ps aux)
 }
