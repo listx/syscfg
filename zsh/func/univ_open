@@ -78,6 +78,7 @@ univ_open() {
 			# If this is a git root directory, then show a list of all remotes.
 			if [[ -d .git ]]; then
 				git remote -v
+				echo
 			fi
 		else
 			# if the first argument was a valid directory, but there was more than 1 argument, then we ignore these
