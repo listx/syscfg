@@ -22,6 +22,7 @@ emacs/network-security.data
 emacs/projectile-bookmarks.eld
 emacs/projectile.cache
 emacs/recentf
+emacs/org-roam.db
 emacs/tramp
 emacs/transient
 emacs/url
