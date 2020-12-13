@@ -271,7 +271,6 @@ with super; rec {
       lilypond
       darktable
       rawtherapee
-      ufraw
       xsane
     ];
   });
