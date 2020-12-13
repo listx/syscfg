@@ -52,6 +52,8 @@ nixpkgs:
 	ln -fns ${C}/nixpkgs                                ${H}/.nixpkgs
 notmuch:
 	ln -fs ${C}/notmuch/notmuch-config                  ${H}/.notmuch-config
+nvim:
+	ln -fns ${C}/nvim                                   ${H}/.config/nvim
 offlineimap:
 	ln -fs ${C}/offlineimap/offlineimaprc               ${H}/.offlineimaprc
 pulse:
@@ -118,6 +120,7 @@ zsh:
 	nixos \
 	nixpkgs \
 	notmuch \
+	nvim \
 	offlineimap \
 	pulse \
 	qutebrowser \

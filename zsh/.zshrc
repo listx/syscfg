@@ -328,7 +328,7 @@ alias grv='git remote -v'
 alias gtag='~/syscfg/script/gtag.sh'
 
 alias e='emacs_open'
-alias v='vim -p'
+alias v='nvim -p'
 
 alias fl='find_long_lines '
 alias ft='f t'
