@@ -74,11 +74,11 @@ with super; rec {
       gnumake
       gnupg
       htop
+      neovim
       ripgrep
       tig
       tmux
       tree
-      vim
     ];
   });
 

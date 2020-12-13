@@ -33,7 +33,7 @@ super:
     # Nixpkgs' `default.nix` which in turn pulls in
     # `pkgs/top-level/all-packages.nix`. So we have to pass into it the master
     # list of packages, which is `self`. Then from within that file, we can say
-    # things like "vim" and Nix will know what "vim" means.
+    # things like "neovim" and Nix will know what "neovim" means.
     pkgsets = import ./pkgsets.nix { super = super; };
     # `inherit` is a shorter syntax that basically does mass assignment of
     # attributes for us. Otherwise, we'd have to write, e.g.,
