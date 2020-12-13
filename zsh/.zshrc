@@ -61,13 +61,15 @@ for t in $ft_snd; do LS_COLORS+="*.$t=34:"; done
 export LS_COLORS
 
 # colors for the 'less' pager
-export LESS_TERMCAP_md=$'\x1b[1;34m'      # begin bold (blue)
-export LESS_TERMCAP_us=$'\x1b[1;35m'      # begin underline (magenta)
-export LESS_TERMCAP_so=$'\x1b[1;34;5;43m' # begin standout-mode - (search highlight) (blue on yellow)
-export LESS_TERMCAP_mb=$'\x1b[1;5;31m'    # begin blinking (the last "5" actually makes it blink) (red)
+export LESS_TERMCAP_md=$'\x1b[1;34m'      # begin bold
+export LESS_TERMCAP_mb=$'\x1b[1;31m'      # begin blinking
 export LESS_TERMCAP_me=$'\x1b[0m'         # end bold/blinking
-export LESS_TERMCAP_se=$'\x1b[0m'         # end standout-mode
+
+export LESS_TERMCAP_us=$'\x1b[1;35m'      # begin underline
 export LESS_TERMCAP_ue=$'\x1b[0m'         # end underline
+
+export LESS_TERMCAP_so=$'\x1b[1;30;42m'   # begin standout-mode - (interactive search highlight)
+export LESS_TERMCAP_se=$'\x1b[0m'         # end standout-mode
 
 # Set PAGER. This is not set on Mac, which results in /usr/bin/less (hardcoded
 # path) being executed. This hardcoded behavior appears to be by design, as it
