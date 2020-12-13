@@ -169,6 +169,11 @@ nmap <leader>H :sp<space>.<cr>
 nmap <leader>v :vsp<cr>
 nmap <leader>V :vsp<space>.<cr>
 
+" Set terminal search highlight colors to a higher contrast combination. The
+" default use of a yellow background makes it hard to read if the text is white
+" (which is typically the case in dark terminals color themes independent of Vim).
+highlight Search cterm=bold ctermfg=black ctermbg=green
+
 " ------------
 " GUI settings
 " ------------
