@@ -158,6 +158,7 @@ with super; rec {
       pavucontrol
       woeusb
       feh
+      tokei # for counting source code lines
     ];
   });
 
@@ -180,15 +181,18 @@ with super; rec {
       valgrind
       gnumake
       python # 'python' is python2
-      python37
-      python37Packages.pylint
-      python37Packages.flake8
+      python38
+      python38Packages.pylint
+      python38Packages.flake8
       ruby
       cloc
       cwebbin
       noweb
       erlang
       rustup
+      # Some node stuff.
+      nodejs
+      wasm-pack
 
       # Lisps
       ccl # clozure
