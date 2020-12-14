@@ -18,10 +18,8 @@ let
   HEAD = import (builtins.fetchGit {
     # Unfortunately, we can't check out arbitrary GitHub commit SHAs, so we
     # have to refer to a local clone of
-    # https://github.com/NixOS/nixpkgs-channels (which itself just follows
-    # https://github.com/NixOS/nixpkgs.git with a verification delay, as per
-    # https://nixos.wiki/wiki/Nix_channels).
-    url = "/home/l/prog/foreign/nixpkgs-channels";
+    # https://github.com/NixOS/nixpkgs.
+    url = "/home/l/prog/foreign/nixpkgs";
     ref = "refs/heads/nixpkgs-unstable";
     # Known good commit for moving branch "nixpkgs-unstable".
     rev = "c59ea8b8a0e7f927e7291c14ea6cd1bd3a16ff38";
