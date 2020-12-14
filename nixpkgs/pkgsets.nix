@@ -345,7 +345,7 @@ with super; rec {
       # `haskellPackages.cabal-install` installed either on your system, or
       # through nix-env.
       auca = self.callPackage ./haskell/auca.nix {};
-      inky = self.callPackage ./haskell/inky.nix {};
+      #inky = self.callPackage ./haskell/inky.nix {};
       nox = self.callPackage ./haskell/nox.nix {};
     };
   };
@@ -378,7 +378,7 @@ with super; rec {
 
       # Misc userland packages.
       auca
-      inky
+      #inky
       nox
       hledger
       # "ledger" is required for "ledger-mode" in emacs.
