@@ -98,6 +98,9 @@ export PATH=~/.cargo/bin:$PATH
 # Stack (https://www.haskellstack.org/) needs this.
 export PATH=~/.local/bin:$PATH
 
+# Load executables for "cabal v2-install".
+export PATH=~/.cabal/bin:$PATH
+
 # Add system scripts to the PATH.
 export PATH=~/syscfg/script:$PATH
 
