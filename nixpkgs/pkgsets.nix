@@ -22,7 +22,7 @@ let
     url = "/home/l/prog/foreign/nixpkgs";
     ref = "refs/heads/nixpkgs-unstable";
     # Known good commit for moving branch "nixpkgs-unstable".
-    rev = "c59ea8b8a0e7f927e7291c14ea6cd1bd3a16ff38";
+    rev = "2c0f6135aab77ff942b615228882c7dd996e0882";
   }) {};
 in
 {super}:
@@ -95,7 +95,7 @@ with super; rec {
       xorg.xdpyinfo
       xorg.xkill
       xcompmgr
-      alacritty
+      HEAD.alacritty
       tmux
 
       emacs
