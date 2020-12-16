@@ -1,3 +1,8 @@
+# Appearance.
+color cursor black green bold
+color title-blur black blue bold
+color title-focus black blue bold
+
 set blame-view = date:relative-compact author:abbreviated,maxwidth=5 id:width=40,color line-number:yes,interval=1 text
 set main-view  = date:relative-compact author:abbreviated,maxwidth=5 id:width=40 commit-title:yes,graph,refs
 set tree-view  = date:relative-compact author:abbreviated,maxwidth=5 id:width=40 file-name
@@ -13,14 +18,10 @@ set main-options = -n500
 # changes).
 set show-changes = no
 
+# Keybindings.
 bind generic ) next
 bind generic ( previous
 bind generic } parent
-
-color cursor black green bold
-color title-blur black blue bold
-color title-focus black blue bold
-
 bind generic y !@bash -c "git rev-parse %(commit) \
 	| head -c -1 \
 	| ~/syscfg/script/copy-clipboard.sh"
