@@ -603,10 +603,10 @@ key_bindings:
   - { key: H,         mods: Control|Shift,        chars: "\x02\x70" } # C-b p (tmux: previous-window)
   - { key: L,         mods: Control|Shift,        chars: "\x02\x6e" } # C-b n (tmux: next-window)
   - { key: N,         mods: Control|Shift,        chars: "\x02\x63" } # C-b c (tmux: new-window)
-  - { key: S,         mods: Control|Shift,        chars: "\x02\x5b" } # C-b [ (tmux: copy-mode)
+  - { key: K,         mods: Control|Shift,        chars: "\x02\x5b" } # C-b [ (tmux: copy-mode)
   # Vi Mode
   # Custom Vi mode bindings.
-  - { key: S,         mode: ~Vi, mods: Control,       action: ToggleViMode         }
+  - { key: K,         mode: ~Vi, mods: Control,       action: ToggleViMode         }
   # Paste.
   - { key: P,         mode: ~Vi, mods: Control,       action: Paste                }
   - { key: P,         mode:  Vi,                      action: Paste                }
@@ -614,14 +614,28 @@ key_bindings:
   # pre-Vi-mode context.
   - { key: Q,         mode:  Vi,                      action: ScrollToBottom       }
   - { key: Q,         mode:  Vi,                      action: ToggleViMode         }
-  # Quick navigation. This makes it easy to just enter Vi mode (if not in it
-  # already) and do the navigation in one keybinding.
-  - { key: J,         mode: ~Vi, mods: Control,       action: ToggleViMode         }
-  - { key: J,         mode:  Vi, mods: Control,       action: Middle               }
-  - { key: J,         mode:  Vi, mods: Control,       action: ScrollHalfPageDown   }
-  - { key: K,         mode: ~Vi, mods: Control,       action: ToggleViMode         }
-  - { key: K,         mode:  Vi, mods: Control,       action: Middle               }
-  - { key: K,         mode:  Vi, mods: Control,       action: ScrollHalfPageUp     }
+  # Quick navigation. This is like 10j or 10k in Vim's normal mode, but with one
+  # keystroke.
+  - { key: Back,      mode:  Vi,                      action: Up   }
+  - { key: Back,      mode:  Vi,                      action: Up   }
+  - { key: Back,      mode:  Vi,                      action: Up   }
+  - { key: Back,      mode:  Vi,                      action: Up   }
+  - { key: Back,      mode:  Vi,                      action: Up   }
+  - { key: Back,      mode:  Vi,                      action: Up   }
+  - { key: Back,      mode:  Vi,                      action: Up   }
+  - { key: Back,      mode:  Vi,                      action: Up   }
+  - { key: Back,      mode:  Vi,                      action: Up   }
+  - { key: Back,      mode:  Vi,                      action: Up   }
+  - { key: Space,     mode:  Vi,                      action: Down   }
+  - { key: Space,     mode:  Vi,                      action: Down   }
+  - { key: Space,     mode:  Vi,                      action: Down   }
+  - { key: Space,     mode:  Vi,                      action: Down   }
+  - { key: Space,     mode:  Vi,                      action: Down   }
+  - { key: Space,     mode:  Vi,                      action: Down   }
+  - { key: Space,     mode:  Vi,                      action: Down   }
+  - { key: Space,     mode:  Vi,                      action: Down   }
+  - { key: Space,     mode:  Vi,                      action: Down   }
+  - { key: Space,     mode:  Vi,                      action: Down   }
   #- { key: Space,  mods: Shift|Control, mode: Vi, action: ScrollToBottom          }
   #- { key: Space,  mods: Shift|Control,           action: ToggleViMode            }
   #- { key: Escape,                      mode: Vi, action: ClearSelection          }
