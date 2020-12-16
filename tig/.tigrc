@@ -20,3 +20,7 @@ bind generic } parent
 color cursor black green bold
 color title-blur black blue bold
 color title-focus black blue bold
+
+bind generic y !@bash -c "git rev-parse %(commit) \
+	| head -c -1 \
+	| ~/syscfg/script/copy-clipboard.sh"
