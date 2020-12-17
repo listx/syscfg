@@ -53,6 +53,9 @@ key_bindings:
   - { key: L,         mods: Control|Alt,        chars: "\x02\x6e" } # C-b n (tmux: next-window)
   - { key: N,         mods: Control|Alt,        chars: "\x02\x63" } # C-b c (tmux: new-window)
   - { key: K,         mods: Control|Alt,        chars: "\x02\x5b" } # C-b [ (tmux: copy-mode)
+  # 'dirs -v' stack navigation.
+  - { key: Space,     mods: Control,            chars: " dirs_navigate next\x0a"}
+  - { key: Back,      mods: Control,            chars: " dirs_navigate prev\x0a"}
   # Vi Mode
   # Custom Vi mode bindings.
   - { key: K,         mode: ~Vi, mods: Control,       action: ToggleViMode         }
