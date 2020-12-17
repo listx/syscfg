@@ -193,7 +193,7 @@ setopt pushdsilent
 setopt pushdignoredups
 
 zstyle ':completion:*' menu select=1 _complete _ignored _approximate
-zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS} # use the LS_COLORS variable to colorize the completion list
+zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}" # use the LS_COLORS variable to colorize the completion list
 LISTMAX=9999 # don't ask 'do you wish to see all N possibilities' unless N > 9999
 
 # make '*' expand to catch dotfiles as well
@@ -418,7 +418,7 @@ fi
 
 # ZSH Plugins with ZPlug. To install ZPlug, see https://github.com/zplug/zplug.
 if [[ $HOST =~ macbook ]]; then
-    source $HOME/.nix-profile/init.zsh
+    source "$HOME"/.nix-profile/init.zsh
 else
     source ~/.zplug/init.zsh
 fi
@@ -451,7 +451,7 @@ fi
 # error. Loading completion code last, as in
 # https://github.com/robbyrussell/oh-my-zsh/issues/6163#issuecomment-315836297,
 # makes it go away.
-if [ $commands[kubectl] ]; then
+if [ "${commands[kubectl]}" ]; then
     source <(kubectl completion zsh)
     # Pass through the default kubectl completions to kl (zsh/func/kl).
     compdef kl=kubectl
