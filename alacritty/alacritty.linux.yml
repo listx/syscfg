@@ -49,10 +49,10 @@ key_bindings:
   # parts are discoverable by running `xxd -psd` and pressing the keys followed
   # by ENTER, as described in
   # https://arslan.io/2018/02/05/gpu-accelerated-terminal-alacritty/.
-  - { key: H,         mods: Control|Shift,        chars: "\x02\x70" } # C-b p (tmux: previous-window)
-  - { key: L,         mods: Control|Shift,        chars: "\x02\x6e" } # C-b n (tmux: next-window)
-  - { key: N,         mods: Control|Shift,        chars: "\x02\x63" } # C-b c (tmux: new-window)
-  - { key: K,         mods: Control|Shift,        chars: "\x02\x5b" } # C-b [ (tmux: copy-mode)
+  - { key: H,         mods: Control|Alt,        chars: "\x02\x70" } # C-b p (tmux: previous-window)
+  - { key: L,         mods: Control|Alt,        chars: "\x02\x6e" } # C-b n (tmux: next-window)
+  - { key: N,         mods: Control|Alt,        chars: "\x02\x63" } # C-b c (tmux: new-window)
+  - { key: K,         mods: Control|Alt,        chars: "\x02\x5b" } # C-b [ (tmux: copy-mode)
   # Vi Mode
   # Custom Vi mode bindings.
   - { key: K,         mode: ~Vi, mods: Control,       action: ToggleViMode         }
