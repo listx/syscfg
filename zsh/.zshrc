@@ -107,6 +107,9 @@ export PATH=~/syscfg/script:$PATH
 # stop zsh from eating space before pipe symbol
 export ZLE_REMOVE_SUFFIX_CHARS=""
 
+# 10ms for ESC key vs ALT+... disambiguation.
+export KEYTIMEOUT=1
+
 autoload -U compinit
 compinit
 
