@@ -201,6 +201,8 @@
   (define-key org-agenda-mode-map "L" 'evil-prev-buffer)
   (define-key org-agenda-mode-map "j" 'org-agenda-next-line)
   (define-key org-agenda-mode-map "k" 'org-agenda-previous-line)
+  (define-key org-agenda-mode-map (kbd "C-l") 'tab-next)
+  (define-key org-agenda-mode-map (kbd "C-h") 'tab-previous)
   (define-key org-agenda-mode-map (kbd "RET") 'org-agenda-goto)
   ; S-tab for X11.
   (define-key org-agenda-mode-map (kbd "<S-iso-lefttab>") (lambda () (interactive) (other-window -1)))
