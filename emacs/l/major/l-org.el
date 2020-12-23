@@ -181,7 +181,7 @@
   (modify-syntax-entry ?_ "w")
   ; Disable default orgmode hotkeys that interfere with our global hotkeys
   ; defined elsewhere.
-  (define-key org-mode-map [(tab)] nil)
+  (define-key org-mode-map (kbd "<tab>") nil)
   ; S-tab for X11.
   (define-key org-mode-map (kbd "<S-iso-lefttab>") nil)
   ; S-tab for Mac.
@@ -206,7 +206,7 @@
   (define-key org-agenda-mode-map (kbd "TAB") 'other-window)
   ; S-tab in terminal emacs.
   (define-key org-agenda-mode-map (kbd "<backtab>") (lambda () (interactive) (other-window -1)))
-  (define-key org-agenda-mode-map [(tab)] 'other-window))
+  (define-key org-agenda-mode-map (kbd "<tab>") 'other-window))
 
 (defhydra hydra-org (:foreign-keys warn)
   "org"
