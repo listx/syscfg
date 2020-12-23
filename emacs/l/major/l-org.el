@@ -49,6 +49,10 @@
       (visual-line-mode -1)
       (toggle-truncate-lines 1)))
 
+  ; Show completed tasks in the agenda view as well by default (default
+  ; requirement is to press "l" to toggle).
+  (setq org-agenda-start-with-log-mode '(closed clock state))
+
   ; org-agenda: Add weekly review view.
   ; https://emacs.stackexchange.com/a/8163/13006
   (setq org-agenda-custom-commands
@@ -189,6 +193,9 @@
   (define-key org-mode-map (kbd "<backtab>") nil))
 
 (defun l/org-agenda-mode-hook ()
+  ; Make other buffer follow point to show where the TODO/task item is from.
+  ; This is like pressing RET each time we move up/down the agenda buffer.
+  (org-agenda-follow-mode)
   ; Remap some hotkeys.
   (define-key org-agenda-mode-map "H" 'evil-next-buffer)
   (define-key org-agenda-mode-map "L" 'evil-prev-buffer)
