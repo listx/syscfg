@@ -197,6 +197,15 @@
   (define-key org-agenda-mode-map (kbd "<S-iso-lefttab>") (lambda () (interactive) (other-window -1)))
   ; S-tab for Mac.
   (define-key org-agenda-mode-map (kbd "<S-tab>") (lambda () (interactive) (other-window -1)))
+  ; TAB in terminal emacs. The reason why there are 2 TAB keys (TAB for
+  ; terminal, <tab> (or `[(tab)]`) for GUI) is because TAB and C-i are the same
+  ; in the terminal. So to distinguish between TAB and C-i in the GUI, the GUI
+  ; needs `<tab>` (as otherwise a TAB could actually be C-i, or vice versa).
+  ; See
+  ; https://github.com/syl20bnr/spacemacs/issues/4024#issuecomment-161122099.
+  (define-key org-agenda-mode-map (kbd "TAB") 'other-window)
+  ; S-tab in terminal emacs.
+  (define-key org-agenda-mode-map (kbd "<backtab>") (lambda () (interactive) (other-window -1)))
   (define-key org-agenda-mode-map [(tab)] 'other-window))
 
 (defhydra hydra-org (:foreign-keys warn)
