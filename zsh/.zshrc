@@ -220,6 +220,12 @@ bindkey -M menuselect '' .accept-line # just execute the command when selecting
 stty stop undef
 stty start undef
 
+# Quick-access functions to invoke standardized tmux sessions. The
+# ${funcstack[1]} in Zsh holds the calling function's name.
+admin() {
+  run_with_theme Red.dhall tmux new-session -A -s "${funcstack[1]}"
+}
+
 # make 'ds' prompt the user to select a dir from the dir stack, instead of just listing the dir stick
 # with a plain 'dirs -v'
 # NOTE: 'cd +$n' makes it go to the number listed, whereas 'cd -$n' reverses it... don't know why
