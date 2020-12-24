@@ -1,10 +1,12 @@
 (use-package general
   :config
-  (setq general-default-keymaps '(evil-normal-state-map evil-visual-state-map))
-  (setq general-default-prefix ",")
+
+  (general-create-definer l/leader-def
+    :prefix ",")
 
   ; Global bindings.
-  (general-define-key
+  (l/leader-def
+    :keymaps '(evil-normal-state-map evil-visual-state-map emacs)
     "-" 'hydra-zoom/body
     "<tab>" 'hydra-window/body
     "<SPC>" 'magit-status
