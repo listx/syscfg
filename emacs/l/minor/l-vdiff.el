@@ -3,7 +3,7 @@
   (add-hook 'vdiff-mode-hook 'l/vdiff-setup))
 
 (defun l/vdiff-setup ()
-  (general-define-key
+  (l/leader-def
     :keymaps 'vdiff-mode-map
     :states '(normal)
     "0" 'vdiff-hydra/body))

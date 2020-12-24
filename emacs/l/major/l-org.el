@@ -240,7 +240,7 @@
   ("x" org-ctrl-c-ctrl-c "org-ctrl-c-ctrl-c" :exit t)
   ("z" org-toggle-link-display "org-toggle-link-display"))
 
-(general-define-key
+(l/leader-def
   :keymaps 'org-mode-map
   :states '(normal)
   "," 'hydra-org/body)
