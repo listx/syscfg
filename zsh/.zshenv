@@ -21,3 +21,17 @@ if [[ -z "${WSL_DISTRO_NAME:-}" ]]; then
 fi
 
 export TERM=xterm-256color
+
+# Run a command, but wrap it around with set_theme() calls so as to run the
+# command as a particular color theme.
+run_with_theme() {
+	local new_theme
+	local old_theme="${TERM_COLOR_THEME:-PastelDark.dhall}"
+	new_theme="${1}"
+	shift
+	if [[ "${old_theme}" != "${new_theme}" ]]; then
+		set_theme "${new_theme}"
+	fi
+	"$@"
+	set_theme "${old_theme}"
+}
