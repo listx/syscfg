@@ -13,7 +13,7 @@ set_theme() {
 	if [[ -n "${TMUX:-}" ]]; then
 		for_tmux="True"
 	fi
-	source <(dhall text <<< "${renderer_path} ${for_tmux} ${1}")
+	source <(dhall text <<< "${renderer_path} ${for_tmux} ${root_dir}/themes/${1}")
 
 	TERM_COLOR_THEME=$(basename $1)
 }

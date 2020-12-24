@@ -32,5 +32,5 @@ color_cycle()
 		((j+=len - 1))
 	fi
 	next_theme=${themes[$((j%len))]}
-	set_theme "${root_dir}/${next_theme}"
+	set_theme "${next_theme}"
 }
