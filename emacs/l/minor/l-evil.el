@@ -1,6 +1,10 @@
 (use-package evil
   :config
   (evil-mode 1)
+  (use-package undo-tree
+    :config
+    (global-undo-tree-mode))
+  (evil-set-undo-system 'undo-tree)
   ; Prefer normal mode for all new buffers.
   (setq evil-emacs-state-modes nil)
   (setq evil-insert-state-modes nil)
