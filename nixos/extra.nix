@@ -36,8 +36,6 @@
     # systemctl stop openvpn-home'.
     home = {
       config = builtins.readFile ../openvpn/home.ovpn;
-      up = "echo nameserver $nameserver | ${pkgs.openresolv}/sbin/resolvconf -m 0 -a $dev";
-      down = "${pkgs.openresolv}/sbin/resolvconf -d $dev";
     };
   };
 
