@@ -18,6 +18,9 @@ font:
   use_thin_strokes: true
 # Colors (syscfg/script/terms/pastel_dark.sh)
 colors:
+  cursor:
+    text:   '#000000'
+    cursor: '#ffffff'
   primary:
     background: '#343c48'
     foreground: '#e5e7ea'
