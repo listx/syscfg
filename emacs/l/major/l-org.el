@@ -70,6 +70,7 @@
     '(
       (C . t)
       (clojure . t)
+      (dot . t)
       (haskell . t)
       (java . t)
       (python . t)
