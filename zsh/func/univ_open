@@ -44,8 +44,8 @@ univ_open() {
 			(psd|xcf)
 				gimp $@ &>/dev/null & disown
 			;;
-			(aac|flac|mp3|ogg|wav|wma)
-				mpv $( [[ $file:e:l == flac ]] && echo "--vo null" ) $@
+			(aac|flac|m4a|mp3|ogg|opus|wav|wma)
+				mpv --vo=null $@
 			;;
 			(mid|midi)
 				timidity $@
