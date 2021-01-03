@@ -41,4 +41,18 @@
     exportConfiguration = true;
     config = pkgs.lib.mkOverride 50 (builtins.readFile ./quadmon.conf);
   };
+
+  # Steps to add printer: Go to localhost:631 to access the CUPS admin page.
+  # Then add a printer by specifying http://<PRINTER_IP_ADDRESS>:631/ipp.
+  # Specify the correct driver for the make and model. As of 2020-01-03 the
+  # settings are:
+  #
+  # Driver:       HP LaserJet Pro MFP m125nw, hpcups 3.20.5 (color)
+  # Connection:   http://192.168.0.2:631/ipp
+  #
+  # Use the sudo username and password for adding the printer (last step).
+  services.printing = {
+    enable = true;
+    drivers = [ pkgs.hplipWithPlugin ];
+  };
 }
