@@ -1,0 +1,14 @@
+#compdef emacs_kill_buffer
+
+# Adapted from https://unix.stackexchange.com/questions/239528/dynamic-zsh-autocomplete-for-custom-commands.
+_emacs_kill_buffer() {
+	local state
+
+	_arguments '1: :->buffer'
+	case $state in
+		(buffer) _arguments '1:buffers:(${(f)"$(emacs_list_buffers)"})' ;;
+        *) ;;
+	esac
+}
+
+_emacs_kill_buffer "$@"

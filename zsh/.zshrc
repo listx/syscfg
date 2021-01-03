@@ -319,6 +319,8 @@ alias grv='git remote -v'
 alias gtag='~/syscfg/script/gtag.sh'
 
 alias e='emacs_open'
+alias ekb='emacs_kill_buffer'
+alias elb='emacs_list_buffers'
 alias v='nvim -p'
 
 alias fl='find_long_lines '

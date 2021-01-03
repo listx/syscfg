@@ -1,0 +1,27 @@
+#!/usr/bin/env zsh
+
+emacs_list_buffers()
+{
+	local buffers
+	elisp=$(cat << EOF
+	(let*
+		(
+			(buffers (mapcar 'buffer-name (buffer-list)))
+			(sorted-buffers (cl-sort buffers 'string-lessp :key 'downcase))
+			(output (mapconcat (function identity) sorted-buffers "\n")))
+		output
+	)
+EOF
+	)
+
+	# Get list of all buffers.
+	buffers=$(emacsclient -e "${elisp}")
+	# Remove leading and trailing quotations.
+	buffers="${buffers:1:-1}"
+	# Change into an array.
+	buffers=(${(f)"$(echo $buffers)"})
+
+	for buffer in "${buffers[@]}"; do
+		echo "$buffer"
+	done
+}

@@ -1,0 +1,31 @@
+#!/usr/bin/env zsh
+
+# Used to revive emacsclient whenever it starts hanging due to some buffer
+# waiting on input (which will never come, because it is hanging).
+emacs_kill_buffer()
+{
+	if (( $# != 1 )); then
+		echo >&2 "usage: $0 <EMACS_BUFFER>"
+		return 1
+	fi
+
+	local buffer
+	local elisp
+	buffer="${1}"
+	elisp=$(cat << EOF
+	(let*
+		(
+			(kill-me "${buffer}"))
+		(switch-to-buffer kill-me)
+
+		; (with-editor-cancel) is dangerous because it also silently deletes the
+		; file on disk! Only invoke it if (kill-this-buffer) fails (typically
+		; due to the function having been made useless by magit's with-editor
+		; mode).
+		(or (kill-this-buffer) (with-editor-cancel t))
+	)
+EOF
+	)
+
+	emacsclient -e "${elisp}"
+}
