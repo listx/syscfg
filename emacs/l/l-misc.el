@@ -119,14 +119,14 @@
 (savehist-mode 1)
 (setq history-length 1000)
 
-; Use chromium-browser for opening URLs. See
+; Use different browsers for opening URLs, depending on the hostname. See
 ; https://stackoverflow.com/a/4506458.
 (setq
   browse-url-browser-function 'browse-url-generic
   browse-url-generic-program
     (cond
       ((string-match "macbookpro" system-name) "google-chrome-mac.sh")
-      (t "chromium-browser")))
+      (t "qutebrowser")))
 
 ; Scroll more like Vim (no jumping around).
 (setq
