@@ -83,7 +83,7 @@ while getopts ":ap:hv" opt; do
 	esac
 done
 
-com="find $search_flag -type f -iregex \".+\\.\\(aac\\|flac\\|m4a\\|mp3\\|ogg\\|wav\\)\""
+com="find $search_flag -type f -iregex \".+\\.\\(aac\\|flac\\|m4a\\|mp3\\|ogg\|opus\\|wav\\)\""
 
 if [[ ! -e "$pname" ]]; then
 	echo -n "Creating file \`$pname'..."
