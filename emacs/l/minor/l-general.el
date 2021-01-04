@@ -106,9 +106,32 @@
       (kill-new filename)
       (message "Clipboard: '%s'" filename))))
 
-; Either close the current window, or if only one windw, use the ":q" Evil
-; command; this simulates the ":q" behavior of Vim when used with tabs.
 (defun l/quit-buffer ()
+  "Tries to escape the current buffer by closing it. Calls `l/gc-views' to
+handle any sort of window management issues."
+  (interactive)
+  (let
+    ()
+    ; If we're on a magit-controlled buffer, do what magit expects and simulate
+    ; pressing C-c C-c (with-editor-finish).
+    (catch 'my-catch
+      (progn
+        (if (bound-and-true-p with-editor-mode)
+          (if (buffer-modified-p)
+            ; If there are any unsaved changes, either discard those changes or do
+            ; nothing. user.
+            (if (y-or-n-p "Invoke (with-editor-cancel) to cancel the editing of this buffer?")
+              (with-editor-cancel t)
+              ; Use catch/throw to stop execution.
+              (throw 'my-catch (message "Aborting l/quit-buffer (doing nothing).")))
+            (with-editor-finish t)))
+        ; Close the current view (or exit the editor entirely).
+        (l/gc-views)))))
+
+; Either close the current window, or if only one windw, use the ":q" Evil
+; command; this simulates the ":q" behavior of Vim when used with tabs to
+; garbage-collect the current "view".
+(defun l/gc-views ()
   "Vimlike ':q' behavior: close current window if there are split windows;
 otherwise, close current tab."
   (interactive)
@@ -142,22 +165,30 @@ otherwise, close current tab."
               (mapc
                 'kill-buffer
                 (seq-filter
-                  (lambda (x)
-                    (not (member x '(
-                      "*Messages*"
+                  (lambda (bufname)
+                    (not (l/buffer-looks-like bufname
+                      '(
+                      ; Don't delete system buffers buffers.
+                      "^\*Messages\*"
+                      "^COMMIT_EDITMSG"
                       ; Do not delete buffers that may be open which are for git
-                      ; rebasing and committing.
-                      "git-rebase-todo"
-                      "COMMIT_EDITMSG"))))
+                      ; rebasing and committing. This is in case these buffers
+                      ; are open in other clients which may still be working on
+                      ; these buffers.
+                      "^git-rebase-todo"))))
                   (mapcar 'buffer-name (buffer-list))))))
           (evil-quit)) nil))))
+
+(defun l/buffer-looks-like (bufname regexes)
+  "Return t if the buffer name looks like any of the given regexes."
+  (interactive)
+  (or (mapcan
+    (lambda (rgx) (string-match rgx bufname)) regexes)))
 
 (defun l/kill-this-buffer ()
   "Kill current buffer."
   (interactive)
-  (if (or (mapcan (lambda (rgx) (string-match rgx (buffer-name)))
-      ; List of regexes for buffer names that are "owned" by with-editor.
-      '("^COMMIT_EDITMSG")))
+  (if (bound-and-true-p with-editor-mode)
     (with-editor-cancel t)
     (kill-this-buffer)))
 
@@ -165,7 +196,7 @@ otherwise, close current tab."
   "Kill current buffer even if it is modified."
   (interactive)
   (set-buffer-modified-p nil)
-  (kill-this-buffer))
+  (l/kill-this-buffer))
 
 ; Window-splitting functions.
 (defun l/split-vertically ()

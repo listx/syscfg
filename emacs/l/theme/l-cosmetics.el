@@ -182,7 +182,7 @@
     (set-face-attribute 'tab-bar-tab-inactive nil :font (nth l/font-choice l/font-collection) :height 100 :weight 'bold :box nil :background "grey32")
 
     ; Fix ugly colors for diffs. Prevalent because of git comit message buffers
-    ; (COMMIT_EDITMSG).
+    ; like COMMIT_EDITMSG.
     (set-face-attribute 'default nil :foreground "#ffffff" :background "gray25")
     (set-face-attribute 'font-lock-comment-face nil :foreground "#9fc59f" :background "gray25")
     (use-package git-commit
