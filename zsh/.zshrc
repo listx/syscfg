@@ -279,7 +279,6 @@ alias q=' exit'
 
 alias ma='mpv --vo=null'
 alias mp='mpv -playlist'
-alias make_plist="~/syscfg/script/audio/make_plist.sh"
 
 alias rsa="rand_open norecurse 'mpv -vo null -playlist' '' $ft_snd"
 alias rsaa="rand_open recurse 'mpv -vo null -playlist' '' $ft_snd"
