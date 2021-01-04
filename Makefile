@@ -36,6 +36,8 @@ launch-my-browser:
 lesskey:
 	ln -fs ${C}/lesskey/cfg                             ${H}/.lesskey
 	lesskey
+mpd:
+	ln -fns ${C}/mpd                                    ${H}/.config/mpd
 mpv:
 	ln -fns ${C}/mpv                                    ${H}/.config/mpv
 ifeq ('${T}','k0')
@@ -115,6 +117,7 @@ zsh:
 	gpg \
 	gtk \
 	lesskey \
+	mpd \
 	mpv \
 	mupen \
 	nixos \
