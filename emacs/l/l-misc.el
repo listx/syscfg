@@ -424,6 +424,15 @@ pasting. If no region is selected, copy just the buffer's filename."
       (line-beginning-position 2)
       f)))
 
+; Make xterm-paste turn on l/nonblank-inserted. This is so that when we go back
+; into normal mode right after a paste, we don't undo the paste (as a result of
+; invoking l/check-for-nonblank-insertion).
+(advice-add 'xterm-paste :around #'l/mark-as-modified)
+(defun l/mark-as-modified (orig-fun &rest args)
+(prog1
+  (apply orig-fun args)
+  (setq l/nonblank-inserted t)))
+
 ; Fix "<dead-grave> is undefined" error.
 (require 'iso-transl)
 
