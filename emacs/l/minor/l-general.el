@@ -113,8 +113,9 @@ window management issues."
   (interactive)
   (let*
     (
-      (aux-buffer-rgx "^\*.+\*$")
-      (is-aux-buffer (l/buffer-looks-like (buffer-name) `(,aux-buffer-rgx)))
+      (original-bufname (buffer-name))
+      (aux-buffer-rgx "^ *\*.+\*$")
+      (is-aux-buffer (l/buffer-looks-like original-bufname `(,aux-buffer-rgx)))
       (buffers (mapcar 'buffer-name (buffer-list)))
       (primary-buffers-count
         (length
@@ -132,10 +133,10 @@ window management issues."
           (if (buffer-modified-p)
             ; If there are any unsaved changes, either discard those changes or do
             ; nothing.
-            (if (y-or-n-p "Invoke (with-editor-cancel) to cancel the editing of this buffer?")
+            (if (y-or-n-p "l/quit-buffer: Invoke (with-editor-cancel) to cancel the editing of this buffer?")
               (with-editor-cancel t)
               ; Use catch/throw to stop execution.
-              (throw 'my-catch (message "Aborting l/quit-buffer (doing nothing).")))
+              (throw 'my-catch (message "l/quit-buffer: Aborting (doing nothing).")))
             (with-editor-finish t)))
         ; Close the current view (or exit the editor entirely), but only if we
         ; originally tried to close a non-"auxiliary" buffer. An "auxiliary"
@@ -150,8 +151,20 @@ window management issues."
         (if (and is-aux-buffer primary-buffer-exists)
           ; Cycle through previous buffers until we hit a primary
           ; (non-auxiliary) buffer.
-          (while (string-match aux-buffer-rgx (buffer-name))
-            (previous-buffer))
+          (progn
+            (catch 'buffer-cycle-detected
+              (while
+                (string-match aux-buffer-rgx (buffer-name))
+                ; Break loop if somehow our aux-buffer-rgx failed to account for all
+                ; hidden/aux buffers and we are just looping over and over among the
+                ; same list of actual auxiliary buffers.
+                (if (string= original-bufname (buffer-name))
+                  (throw 'buffer-cycle-detected
+                    (message "l/quit-buffer: Buffer cycle detected among auxiliary buffers; invoking `l/gc-views'."))
+                  (previous-buffer))))
+              ; If we've broken the loop (due to a cycle), run (l/gc-views) as
+              ; it is better than doing nothing.
+              (l/gc-views))
           (l/gc-views))))))
 
 ; Either close the current window, or if only one windw, use the ":q" Evil
