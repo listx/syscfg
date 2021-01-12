@@ -107,11 +107,23 @@
       (message "Clipboard: '%s'" filename))))
 
 (defun l/quit-buffer ()
-  "Tries to escape the current buffer by closing it. Calls `l/gc-views' to
-handle any sort of window management issues."
+  "Tries to escape the current buffer by closing it (or moving to a
+non-auxiliary buffer if possible). Calls `l/gc-views' to handle any sort of
+window management issues."
   (interactive)
-  (let
-    ()
+  (let*
+    (
+      (aux-buffer-rgx "^\*.+\*$")
+      (is-aux-buffer (l/buffer-looks-like (buffer-name) `(,aux-buffer-rgx)))
+      (buffers (mapcar 'buffer-name (buffer-list)))
+      (primary-buffers-count
+        (length
+          (seq-filter
+            '(lambda (bufname) (not (string-match aux-buffer-rgx bufname)))
+            buffers)))
+      (primary-buffer-exists (> primary-buffers-count 0))
+    )
+
     ; If we're on a magit-controlled buffer, do what magit expects and simulate
     ; pressing C-c C-c (with-editor-finish).
     (catch 'my-catch
@@ -119,14 +131,28 @@ handle any sort of window management issues."
         (if (bound-and-true-p with-editor-mode)
           (if (buffer-modified-p)
             ; If there are any unsaved changes, either discard those changes or do
-            ; nothing. user.
+            ; nothing.
             (if (y-or-n-p "Invoke (with-editor-cancel) to cancel the editing of this buffer?")
               (with-editor-cancel t)
               ; Use catch/throw to stop execution.
               (throw 'my-catch (message "Aborting l/quit-buffer (doing nothing).")))
             (with-editor-finish t)))
-        ; Close the current view (or exit the editor entirely).
-        (l/gc-views)))))
+        ; Close the current view (or exit the editor entirely), but only if we
+        ; originally tried to close a non-"auxiliary" buffer. An "auxiliary"
+        ; buffer is any buffer that is created in support of another major
+        ; buffer. For example, if we open buffer "A", but then run `M-x
+        ; describe-function' so that we're on a "*Help*" buffer, do NOT close
+        ; the view (and exit emacs). In other words, such "auxiliary" buffers,
+        ; when we want to quit from them, we merely want to just switch over to
+        ; a primary (non-auxiliary) buffer.
+        ;
+        ; If we *only* have auxiliary buffers, then of course just quit.
+        (if (and is-aux-buffer primary-buffer-exists)
+          ; Cycle through previous buffers until we hit a primary
+          ; (non-auxiliary) buffer.
+          (while (string-match aux-buffer-rgx (buffer-name))
+            (previous-buffer))
+          (l/gc-views))))))
 
 ; Either close the current window, or if only one windw, use the ":q" Evil
 ; command; this simulates the ":q" behavior of Vim when used with tabs to
