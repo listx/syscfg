@@ -182,8 +182,8 @@ otherwise, close current tab."
 (defun l/buffer-looks-like (bufname regexes)
   "Return t if the buffer name looks like any of the given regexes."
   (interactive)
-  (or (mapcar
-    (lambda (rgx) (string-match rgx bufname)) regexes)))
+  (eval (cons 'or (mapcar
+    (lambda (rgx) (string-match rgx bufname)) regexes))))
 
 (defun l/kill-this-buffer ()
   "Kill current buffer."
