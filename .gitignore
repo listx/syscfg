@@ -32,6 +32,7 @@ ncmpcpp/config
 ncmpcpp/keys
 mpv/mpv.conf
 mutt/hcache
+nvim/.netrwhist
 openvpn/*.ovpn
 qutebrowser/bookmarks
 qutebrowser/quickmarks
