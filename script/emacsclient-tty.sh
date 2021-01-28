@@ -4,10 +4,11 @@ set -euo pipefail
 
 set_elisp()
 {
+    local file="${1}"
     local buffer_filename
     local maybe_fill_72=""
 
-    buffer_filename="$(readlink -e "${1}")"
+    buffer_filename="$(readlink -e "${file}")"
 
     # If Git is invoking this editor (for `git commit'), then manually set the line
     # length to 72.
