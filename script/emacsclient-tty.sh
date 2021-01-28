@@ -26,7 +26,7 @@ set_elisp()
 
     __elisp=$(cat << EOF
     (prog1
-      ; Open up the git buffer.
+      ; Open the file.
       (find-file "${buffer_filename}")
       ${maybe_fill_72}
       ; Disable menu (for some reason the menu is enabled on the frame
