@@ -30,6 +30,9 @@ set_elisp()
     )
 EOF
     )
+
+    # Strip comments.
+    __elisp="$(echo -e "${__elisp}" | sed '/^\s\+\?;/d;s/;.\+//')"
 }
 
 main()
@@ -41,7 +44,6 @@ main()
     emacsclient \
         --alternate-editor "" \
         --tty \
-        --suppress-output \
         --eval "${__elisp}"
 }
 
