@@ -24,7 +24,7 @@ set_elisp()
     fi
 
     __elisp=$(cat << EOF
-    (progn
+    (prog1
       ; Open up the git buffer.
       (find-file "${buffer_filename}")
       ${maybe_fill_72}
