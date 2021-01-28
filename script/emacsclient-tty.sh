@@ -17,6 +17,12 @@ set_elisp()
         ;;
     esac
 
+    # Exit if we can't determine the $buffer_filename, because it is required.
+    if [[ -z "${buffer_filename}" || ! -e "${buffer_filename}" ]]; then
+        echo >&2 "could not determine \$buffer_filename; aborting"
+        exit 1
+    fi
+
     __elisp=$(cat << EOF
     (progn
       ; Open up the git buffer.
