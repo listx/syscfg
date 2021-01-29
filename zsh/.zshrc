@@ -140,6 +140,13 @@ __l_get_mem()
 # https://stackoverflow.com/a/30456173/437583.
 __l_prompt_tick ()
 {
+    # Don't redraw the prompt if we've typed *anything* into the command line.
+    # This way we can at least save an approximate timestamp of when we last
+    # started typing.
+    if (( $#BUFFER > 0 )); then
+        return
+    fi
+
     case "$WIDGET" in
         # Don't call reset-prompt if we are using fzf widgets. This checks 4
         # known cases:
