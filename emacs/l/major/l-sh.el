@@ -16,8 +16,14 @@
 ; temporary files.
 (defun l/shellcheck-format ()
   (interactive)
-  (let (basedir filename patch)
+  (let* (basedir filename patch)
     (setq basedir (file-name-directory buffer-file-truename))
+    (setq basedir (if (string-match "^/:" basedir)
+      ; Remove leading "/:" if found. This happens if we open a file with the
+      ; "/:" disambiguating substring, as documented in
+      ; https://www.gnu.org/software/emacs/manual/html_node/emacs/Quoted-File-Names.html#Quoted-File-Names.
+      (substring basedir 2 nil)
+      basedir))
     (setq filename (file-name-nondirectory buffer-file-truename))
     (setq patch (shell-command-to-string (concat
       "cd " basedir
