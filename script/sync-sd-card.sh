@@ -4,11 +4,7 @@ set -o errexit
 set -o nounset
 set -o pipefail
 
-if (( $# != 1 )); then
-	echo >&2 "usage: $0 <FUJI_FOLDER_PREFIX>"
-fi
-
-if [[ -z $1 ]]; then
+if (( $# != 1 )) || [[ -z $1 ]]; then
 	echo >&2 "usage: $0 <FUJI_FOLDER_PREFIX>"
 fi
 
