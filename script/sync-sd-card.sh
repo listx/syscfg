@@ -15,6 +15,7 @@ fi
 if [[ -d /Volumes/sd128GB ]]; then
 	rsync -ahP --no-whole-file --inplace \
 		--exclude='.*/' \
+		--exclude='*.DAT' \
 		/Volumes/{sd128GB,wd1TB}
 fi
 
