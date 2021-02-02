@@ -6,7 +6,7 @@
 f()
 {
 	if (( $# < 2 )); then
-		echo >&2 "usage: $0 <TYPE> <PATTERN> [OTHER_RIPGREP_ARGS..]"
+		echo >&2 "usage: $0 <TYPE> [OTHER_RIPGREP_ARGS..] <PATTERN>"
 		echo >&2 "args:"
 		printf >&2 '%s\n' "$@"
 		return 1
@@ -16,9 +16,19 @@ f()
 	local pattern
 	local args
 	_type="${1}"
-	pattern="${2}"
-	shift 2
-	args="$@"
+	shift 1
+
+	# PATTERN is in the last element of "$@". Assign all other elements to
+	# $args array.
+	args=("$@")
+	pattern=${args[-1]}
+	unset 'args[-1]'
+
+	# Imply '--' if the pattern starts with a dash. Otherwise the pattern
+	# becomes a flag for rg.
+	if [[ "${pattern}" =~ ^- ]]; then
+		args+=(--)
+	fi
 
 	# Determine type of search. Search files and directories for 'f' and text
 	# for 't'.
