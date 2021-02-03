@@ -26,3 +26,4 @@ bind generic y !@bash -c "git rev-parse %(commit) \
 	| head -c -1 \
 	| ~/syscfg/script/copy-clipboard.sh"
 bind main    R !git rebase -i %(commit)
+bind generic <Backspace> move-page-up
