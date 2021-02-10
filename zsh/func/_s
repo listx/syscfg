@@ -1,0 +1,38 @@
+#compdef s
+
+# Adapted from https://unix.stackexchange.com/questions/239528/dynamic-zsh-autocomplete-for-custom-commands.
+_s() {
+	local state
+
+	_arguments \
+		'1: :->host' \
+		'2: :->session_name'
+
+	local __user
+	case "${words[2]}" in
+	w0) __user="ingra" ;;
+	*)  __user="l" ;;
+	esac
+
+	case $state in
+		(host) _arguments '1:hosts:(k0 k1 m0 w0)' ;;
+        *) compadd "$@" "$(__get_remote_tmux_sessions "${__user}" "${words[2]}")" ;;
+	esac
+}
+
+__get_remote_tmux_sessions()
+{
+	local user="${1}"
+	local host="${2}"
+	declare -a sessions=()
+	sessions=($(tmux_list_sessions "${user}" "${host}"))
+
+	if (( $#sessions[@] )); then
+		echo "${sessions[@]}"
+	else
+		# Suggest "${host}-1" as a session name.
+		echo "${host}-1"
+	fi
+}
+
+_s "$@"

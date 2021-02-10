@@ -337,14 +337,10 @@ alias ff='f f'
 # our usual terminal emulator (rxvt-unicode-256coler).
 alias ssh='TERM=xterm-256color ssh'
 # These hostnames depend on either /etc/hosts or ~/.ssh/config.
-alias sk0='ssh l@k0'
-alias sk1='ssh l@k1'
-alias sm0='ssh l@m0'
-alias sw0='ssh ingra@w0'
-alias k0='ssh l@k0     -t -- tmux new-session -A -s k0'
-alias k1='ssh l@k1     -t -- tmux new-session -A -s k1'
-alias m0='ssh l@m0     -t -- tmux new-session -A -s m0'
-alias w0='ssh ingra@w0 -t -- tmux new-session -A -s w0'
+alias sk0='s k0 '
+alias sk1='s k1 '
+alias sm0='s m0 '
+alias sw0='s w0 '
 
 # GLOBAL, position-independent aliases for detaching a process from the shell
 # (useful for starting GUI apps as standalones, without arguments).

@@ -1,0 +1,23 @@
+#!/usr/bin/env zsh
+
+# SSH to known machines by attaching (or creating) a session.
+
+s()
+{
+	if (( $#@ == 0 )); then
+		echo >&2 "Usage: <HOST> [TMUX_SESSION_NAME]"
+		return 1
+	fi
+
+	local user
+	local host="${1}"
+	# Default "${host}-1" session name.
+	local session="${2:-${host}-1}"
+
+	case "${host}" in
+	w0) user="ingra" ;;
+	*)  user="l" ;;
+	esac
+
+	ssh "${user}@${host}" -t -Y -- tmux new-session -A -s "${session}"
+}

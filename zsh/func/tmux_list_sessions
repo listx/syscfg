@@ -1,0 +1,13 @@
+#!/usr/bin/env zsh
+
+tmux_list_sessions()
+{
+	if (( $#@ != 2 )); then
+		echo >&2 "Usage: $0 <USER> <HOST>"
+		return 1
+	fi
+	local user="${1}"
+	local host="${2}"
+
+	2>/dev/null ssh "${user}@${host}" -- tmux list-sessions | cut -d: -f1
+}
