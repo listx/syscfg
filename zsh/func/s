@@ -12,7 +12,19 @@ s()
 	local user
 	local host="${1}"
 	# Default "${host}-1" session name.
-	local session="${2:-${host}-1}"
+	local session="${2:-}"
+
+	# Remove any existing host prefix from the session. This is to prevent it
+	# eventually looking like "HOST-HOST-<SESSION>".
+	session="${session#${host}-}"
+
+	# Prefix session name with the hostname.
+	if [[ -n "${session}" ]]; then
+		session="${host}-${session}"
+	else
+		# Provide default session name.
+		session="${host}-1"
+	fi
 
 	case "${host}" in
 	w0) user="ingra" ;;
