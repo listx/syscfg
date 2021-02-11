@@ -19,12 +19,7 @@ s()
 	session="${session#${host}-}"
 
 	# Prefix session name with the hostname.
-	if [[ -n "${session}" ]]; then
-		session="${host}-${session}"
-	else
-		# Provide default session name.
-		session="${host}-1"
-	fi
+	session="${host}-${session:-1}"
 
 	case "${host}" in
 	w0) user="ingra" ;;
