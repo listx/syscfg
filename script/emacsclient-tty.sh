@@ -34,6 +34,8 @@ set_elisp()
       (menu-bar-mode 0)
       ; Go to the top of the buffer.
       (beginning-of-buffer)
+      ; Kill any keyboard prompts.
+      (keyboard-escape-quit)
     )
 EOF
     )
