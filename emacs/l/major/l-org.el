@@ -183,6 +183,13 @@
     (setq org-download-method 'l/org-download-method)))
 
 (defun l/org-mode-hook ()
+  ; Prevent splitting windows vertically to the right. This makes
+  ; org-agenda-follow-mode behave a bit better by preventing org-mode buffers
+  ; from being split horizontally along a vertical seam (that is, creating a new
+  ; window to the right), because such splitting can become disorienting rather
+  ; quickly.
+  (make-local-variable 'split-width-threshold)
+  (setq split-width-threshold 10000)
   (modify-syntax-entry ?_ "w")
   ; Disable default orgmode hotkeys that interfere with our global hotkeys
   ; defined elsewhere.
@@ -194,6 +201,9 @@
   (define-key org-mode-map (kbd "<backtab>") nil))
 
 (defun l/org-agenda-mode-hook ()
+  ; This prevents horizontal splitting
+  (make-local-variable 'split-width-threshold)
+  (setq split-width-threshold 10000)
   ; Make other buffer follow point to show where the TODO/task item is from.
   ; This is like pressing RET each time we move up/down the agenda buffer.
   (org-agenda-follow-mode)
