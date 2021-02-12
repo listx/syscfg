@@ -15,6 +15,15 @@
 ; Try very hard to not split existing windows to open up links and other new
 ; buffers. https://stackoverflow.com/a/1856069/437583
 (setq same-window-regexps '("."))
+; Split the window vertically to the right (to create a new window as a
+; "column") only if the current window width is greater than 162 character
+; columns wide (163 minimum). This is basically to account for 2 windows of 80
+; columns, plus 1 column each for the git-gutter, plus a 1-column separator (for
+; terminal emacs) between the windows.
+(setq split-width-threshold 162)
+; Split the window horizontally (create a new window as a "row") only if we have
+; at least 100 text lines available in the current window.
+(setq split-height-threshold 45)
 
 ; If on Mac, make Emacs aware of special paths, esp. Homebrew (for `exec-path').
 ; Unfortunately, setting "PATH" does not automatically set `exec-path'. So, we
