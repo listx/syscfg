@@ -204,9 +204,6 @@
   ; This prevents horizontal splitting
   (make-local-variable 'split-width-threshold)
   (setq split-width-threshold 10000)
-  ; Make other buffer follow point to show where the TODO/task item is from.
-  ; This is like pressing RET each time we move up/down the agenda buffer.
-  (org-agenda-follow-mode)
   ; Remap some hotkeys.
   (define-key org-agenda-mode-map "H" 'evil-next-buffer)
   (define-key org-agenda-mode-map "L" 'evil-prev-buffer)
