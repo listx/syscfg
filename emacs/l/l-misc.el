@@ -156,7 +156,7 @@
 ; Ignore "File changed on disk" minibuffer modal prompt for git commit/rebase
 ; messages (even with this setting, we can always just undo to get it back
 ; anyway.)
-(setq revert-without-query '("^COMMIT_EDITMSG" "^git-rebase-todo"))
+(setq revert-without-query '(".*COMMIT_EDITMSG" ".*git-rebase-todo"))
 
 ; NixOS: This enables the various emacs scripts that are installed by
 ; nixos-rebuild. The script below is taken from
