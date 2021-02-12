@@ -4,6 +4,12 @@
   (add-hook 'org-mode-hook 'l/org-mode-hook)
   (add-hook 'org-agenda-mode-hook 'l/org-agenda-mode-hook)
   (add-hook 'after-save-hook 'l/org-mode-save-hook)
+
+  ; Force agenda-mode to start up in the current window.
+  (setq org-agenda-window-setup 'current-window)
+  ; Restore the window configuration (splits, etc) when we exit the agenda.
+  (setq org-agenda-restore-windows-after-quit t)
+
   (setq org-todo-keywords
     '((sequence "TODO" "IN-PROGRESS" "WAITING" "|" "DONE" "CANCELED" "OBSOLETE")))
   ; Indent headings and items.
