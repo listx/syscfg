@@ -68,7 +68,9 @@
         (org-agenda-span 'week)
         (org-agenda-start-with-log-mode '(closed clock state))
         (org-agenda-skip-function
-          '(org-agenda-skip-entry-if 'nottodo 'done))))))
+          '(org-agenda-skip-entry-if 'nottodo 'done))))
+      ; Export as HTML.
+      ("X" "Export HTML" agenda "" () ("~/agenda.html"))))
 
   ; Org-babel settings (for evaluating code blocks).
   (org-babel-do-load-languages
@@ -306,5 +308,21 @@
     (save-excursion
       (while (re-search-forward "^#\\+end_src\n\\([^\n]\\)" nil t)
         (replace-match "\n\\1" nil nil nil 1)))))
+
+(defun l/export-agenda ()
+  "Export agenda to files. This is meant to be used from the CLI, as it loads
+themes (something that might be disruptive if run against a running emacs
+session, such as a running emacs daemon)."
+  (progn
+    ; Set colors. These colors will be used in the HTML file's CSS.
+    (load-theme 'arjen-grey t)
+    (l/theme-hook)
+    (l/arjen-hook)
+
+    ; Finally, perform the export. This function reads in
+    ; org-agenda-custom-commands and runs all functions in there that have a
+    ; filename as an argument (presumably all such functions are for exporting to
+    ; these filenames).
+    (org-store-agenda-views)))
 
 (provide 'l-org)
