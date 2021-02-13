@@ -6,19 +6,16 @@ env:
 window:
   dimensions:
     columns: 163
-    lines: 95
+    lines: 86
   padding:
     x: 4
     y: 4
   title: ''
 font:
   normal:
-    family: "Input Mono Condensed"
-    style: "Extra Light"
-  bold:
-    family: "Input Mono Condensed"
-    style: "Medium"
-  size: 14
+    # From https://github.com/listx/tamsyn-mac-version/blob/f347497a0f962435b94b9f7b906a6eaaf5bf06c0/tamsyn/Tamsyn8x16.dfont.
+    family: "Tamsyn8x16"
+  size: 16
   use_thin_strokes: true
 # Colors (syscfg/script/terms/pastel_dark.sh)
 colors:
