@@ -70,7 +70,13 @@
         (org-agenda-skip-function
           '(org-agenda-skip-entry-if 'nottodo 'done))))
       ; Export as HTML.
-      ("X" "Export HTML" agenda "" () ("~/agenda.html"))))
+      ("X" "Export HTML" agenda ""
+        ((htmlize-head-tags (concat "    <meta"
+          " http-equiv=\"refresh\""
+          ; Refresh every 60 seconds.
+          " content=\"60\""
+          ">\n")))
+        ("~/agenda.html"))))
 
   ; Org-babel settings (for evaluating code blocks).
   (org-babel-do-load-languages
