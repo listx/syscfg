@@ -35,6 +35,14 @@
     nameservers = [ "8.8.8.8" ];
   };
 
+  # Enable cron service
+  services.cron = {
+    enable = true;
+    systemCronJobs = [
+      "* * * * *      l     zsh -l -c ~/syscfg/script/export-agenda.sh"
+    ];
+  };
+
   services.xserver = {
     videoDrivers = [ "nvidia" ];
     # export finalized xorg.conf to /etc/X11/xorg.conf

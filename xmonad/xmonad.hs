@@ -1484,6 +1484,8 @@ l_startupHook hostname = do
     rtorrent
     -- Start up `hledger web` instances over ports 8000 and 8001.
     spawn "~/syscfg/script/hledger.sh"
+    -- Start up a simple server to serve ~/agenda.html.
+    spawn "~/syscfg/script/serve-org-agenda.py"
   where
   l_termCustom = case hostname of
     "k1" -> "LIBGL_ALWAYS_SOFTWARE=1 " <> l_term
