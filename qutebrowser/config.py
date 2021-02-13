@@ -1,9 +1,9 @@
 # pylint: disable=undefined-variable,missing-docstring
 # flake8: noqa
 
-# Use blank pages by default.
-c.url.start_pages = ["about:blank"]
-c.url.default_page = "about:blank"
+# Use the exported org agenda view as the default page.
+c.url.start_pages = ["https://gmail.com", "http://k0:8010", "file:///home/l/agenda.html"]
+c.url.default_page = "file:///home/l/agenda.html"
 
 # Use emacs to edit text; use <ctrl-e> to invoke.
 c.editor.command = ["emacs", "{}"]
