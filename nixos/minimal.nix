@@ -17,6 +17,7 @@
       8000 # hledger -R web -- --serve --host=192.168.0.4 --port=8000
       8001 # hledger    web -- --serve --host=192.168.0.4 --port=8001
       8010 # org-roam-server-mode
+      8011 # ~/syscfg/script/serve-org-agenda.py
       8020 # stack exec -- blog watch --host=192.168.0.4 --port=8020
       8030 # mpd HTTP stream
     ];
