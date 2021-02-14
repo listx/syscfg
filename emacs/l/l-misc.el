@@ -215,6 +215,13 @@
 ; TRAMP mode: use ssh by default.
 (setq tramp-default-method "ssh")
 
+; When going to a line, e.g. with the keys "200G" to go to line 200, make it so
+; that that line is now at the center of the window. This avoids the situation
+; where we open a buffer, then go to line 200 with "200G", but then have point
+; be near the bottom of the screen, forcing us to scroll down to see more
+; context.
+(advice-add 'evil-goto-line :after #'evil-scroll-line-to-center)
+
 ; Inspired by evil-mark-replace
 ; (https://github.com/redguardtoo/evil-mark-replace).
 (defun l/replace-in-buffer ()
