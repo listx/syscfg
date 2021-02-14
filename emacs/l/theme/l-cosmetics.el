@@ -49,6 +49,8 @@
 (defun l/hide-trailing-whitespace ()
   (setq show-trailing-whitespace nil))
 (with-current-buffer "*Messages*" (l/hide-trailing-whitespace))
+(advice-add 'org-switch-to-buffer-other-window :after
+  #'(lambda (&rest _) (setq show-trailing-whitespace nil)))
 
 ; Highlight matching parentheses.
 (show-paren-mode 1)
