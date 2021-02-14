@@ -153,10 +153,11 @@
 ; Add newline (silently) at the end of a file, just like Vim.
 (setq require-final-newline t)
 
-; Ignore "File changed on disk" minibuffer modal prompt for git commit/rebase
-; messages (even with this setting, we can always just undo to get it back
-; anyway.)
-(setq revert-without-query '(".*COMMIT_EDITMSG" ".*git-rebase-todo"))
+; Ignore "File changed on disk" minibuffer modal prompt for all buffers. We can
+; always undo to get back buffers to a certain state. The relentless prompting
+; whenever we edit a buffer from outside of emacs or through git is annoying and
+; almost useless, given how frequently we save and stage into git.
+(setq revert-without-query '(".*"))
 
 ; NixOS: This enables the various emacs scripts that are installed by
 ; nixos-rebuild. The script below is taken from
