@@ -82,8 +82,8 @@
     ; Save and quit.
     "x" 'save-buffers-kill-emacs
 
-    "y" (lambda () (interactive) (l/copy-for-slack nil))
-    "Y" (lambda () (interactive) (l/copy-for-slack t))
+    "y" (lambda () (interactive) (l/copy-for-markdown nil))
+    "Y" (lambda () (interactive) (l/copy-for-markdown t))
     ; Put emacs into the background; only works in terminal mode.
     "Z" 'suspend-emacs))
 

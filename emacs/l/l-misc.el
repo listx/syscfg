@@ -245,151 +245,72 @@
           (concat "\\<" replace-me "\\>"))
         "//gc")))))
 
-(defun l/github-link-prefix (project-folder)
-  "Generate a github upstream link. It is assumed that projectile is
-functioning already here."
-  (interactive)
-  (let*
-    (
-      (com
-        (concat
-          "cd "
-          project-folder
-          " && git remote show -n upstream | grep Push"))
-      (github-user/repo (replace-regexp-in-string "\.git$" ""
-        (replace-regexp-in-string "\n" ""
-        (car (last (split-string (shell-command-to-string com) ":"))))))
-      (upstream-url
-        (concat
-          "https://github.com/"
-          github-user/repo
-          "/blob/develop")))
-    upstream-url))
-
 (defun l/strip-leading-zeroes (str)
   (replace-regexp-in-string "^0+" "" str))
 
-(defun l/copy-for-slack (insert-github-link)
-  "Copy region for Slack, and also add metadata/formatting around it for easy
-pasting. If no region is selected, copy just the buffer's filename."
+(defun l/copy-for-markdown (inject-line-numbers)
+  "Copy region for markdown, and also optionally add line numbers."
   (interactive)
   (let*
     (
-      (filename
-        (if (equal major-mode 'dired-mode)
-          default-directory
-          (buffer-file-name)))
-      (project-name
-        (nth 1 (reverse (split-string (projectile-project-root) "/"))))
-      (delete-me
-        (regexp-quote
-          (concat
-            project-name)))
-      (project-filename
-        (replace-regexp-in-string
-          (concat
-            "\/.+??"
-            delete-me
-          )
-          "" filename))
-      (github-link-prefix
-        (l/github-link-prefix (projectile-project-root)))
       (region-beg
-        (if (use-region-p)
-          (save-excursion
-            (goto-char (region-beginning))
-            (line-beginning-position))
-          nil))
+        (save-excursion
+          (goto-char (region-beginning))
+          (line-beginning-position)))
       (region-end-no-newline
-        (if (use-region-p)
-          (save-excursion
-            (goto-char (region-end))
-            (if (char-equal ?\n (progn (backward-char 1) (point)))
-              (- (point) 1)
-              (line-end-position)))
-          nil))
-      (selection
-        (if (use-region-p)
-          (buffer-substring-no-properties
-            region-beg
-            region-end-no-newline)
-          (buffer-substring-no-properties
-            (line-beginning-position)
+        (save-excursion
+          (goto-char (region-end))
+          (if (char-equal ?\n (progn (backward-char 1) (point)))
+            (- (point) 1)
             (line-end-position))))
+      (selection
+        (buffer-substring-no-properties
+          region-beg
+          region-end-no-newline))
+      ; Like `selection', but with line numbers.
       (selection-lines
-        (if (use-region-p)
-          (let*
-            (
-              (line-beg (line-number-at-pos (region-beginning)))
-              (line-end (line-number-at-pos
-                region-end-no-newline))
-              (line-num-list
-                ; If we do an intra-line selection, the
-                ; beginning and end regions will be on the same
-                ; line. In this case, just return 1 single line.
-                (if (= line-beg line-end)
-                  (list (number-to-string line-beg))
-                  (mapcar 'number-to-string
-                    (number-sequence line-beg line-end))))
-              (max-digits (length (car (last line-num-list)))))
-            (mapcar
-              (lambda (num-str)
-                (if (< (length num-str) max-digits)
-                  (concat
-                    (make-string
-                      (- max-digits (length num-str)) ?0)
-                    num-str)
-                  num-str))
-              line-num-list))
-          (list (number-to-string (line-number-at-pos
-            (line-beginning-position))))))
+        (let*
+          ((line-beg (line-number-at-pos (region-beginning)))
+            (line-end (line-number-at-pos
+              region-end-no-newline))
+            (line-num-list
+              ; If we do an intra-line selection, the
+              ; beginning and end regions will be on the same
+              ; line. In this case, just return 1 single line.
+              (if (= line-beg line-end)
+                (list (number-to-string line-beg))
+                (mapcar 'number-to-string
+                  (number-sequence line-beg line-end))))
+            (max-digits (length (car (last line-num-list)))))
+          (mapcar
+            (lambda (num-str)
+              (if (< (length num-str) max-digits)
+                (concat
+                  (make-string
+                    (- max-digits (length num-str)) ?0)
+                  num-str)
+                num-str))
+            line-num-list)))
       (selection-with-lines
         (let
           (
             (line-num-and-line-pairs
-              (mapcar* 'cons selection-lines
+              (cl-mapcar 'cons selection-lines
                 (split-string selection "\n"))))
           (mapconcat
             (lambda (pair) (concat (car pair) " |" (cdr pair)))
             line-num-and-line-pairs "\n")))
-      (github-link
-        (if (and
-            (projectile-project-root)
-            (not (string-match " " github-link-prefix)))
-          ; We're in a projectile-handled folder. Presumably this
-          ; means we are in a github repo. If so, look for a github
-          ; remote called "upstream" and lift parts of that to build
-          ; our link to github (which is presumably where upstream is
-          ; located).
-          (concat
-            " "
-            github-link-prefix
-            project-filename
-            "#"
-            (if (< 1 (length selection-lines))
-              (concat
-                "L"
-                (l/strip-leading-zeroes
-                  (car selection-lines))
-                "-"
-                "L"
-                (l/strip-leading-zeroes
-                  (car (last selection-lines))))
-              (concat "L" (car selection-lines)))
-            "\n")
-          ""))
-      (slack-msg
+      (copied
         (concat
-          "`"
-          (concat project-name project-filename)
-          "`\n"
-          (when insert-github-link github-link)
-          "```"
-          selection-with-lines
-          "```")))
+          "```\n"
+          (if inject-line-numbers selection-with-lines selection) "\n"
+          "```\n"
+          )))
     (progn
-      (kill-new slack-msg)
-      (message "Clipboard: '%s' contents for Slack" project-filename))))
+      (kill-new copied)
+      ; Deselect selection.
+      (deactivate-mark)
+      (message "Copied markdown-friendly selection to clipboard"))))
 
 (defun l/addrem-comment-region (b e f)
   "Use the `nox' command to comment the current region."
