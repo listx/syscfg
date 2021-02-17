@@ -16,7 +16,7 @@ _s() {
 
 	case $state in
 		(host) _arguments '1:hosts:(k0 k1 m0 w0)' ;;
-        *) compadd "$@" "$(__get_remote_tmux_sessions "${__user}" "${words[2]}")" ;;
+        *) compadd "$@" $(__get_remote_tmux_sessions "${__user}" "${words[2]}") ;;
 	esac
 }
 
