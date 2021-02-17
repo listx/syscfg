@@ -1,6 +1,6 @@
 #!/usr/bin/env zsh
 
-# Search files/directories.
+# Search filenames and directory names.
 f_files()
 {
 	local pattern="${1}"
@@ -28,12 +28,12 @@ f_files()
 		pattern="${pattern}(?!.+/)"
 	fi
 
-	# Combine and interleave the two search results (bye sorting them together).
+	# Combine and interleave the two search results (by sorting them together).
 	# Filenames are highlighted red as usual. However directory names are
 	# highlighted blue, and also end in a trailing slash "/".
 	#
 	# The color replacement (ANSI code 31 with 34) needs to happen *after*
-	# sorting, because otherwise the '34' in the color code it affects the sort
+	# sorting, because otherwise the '34' in the color code affects the sort
 	# order of the lines overall.
 	cat \
 		<(rg --hidden --glob '!.git' --files --null \
