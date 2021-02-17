@@ -332,6 +332,7 @@ alias v='nvim -p'
 alias fl='find_long_lines '
 alias ft='f text'
 alias ff='f files'
+alias fp='f procs'
 
 # Make ssh pretend we are using xterm, because some machines do not recognize
 # our usual terminal emulator (rxvt-unicode-256coler).
