@@ -1,0 +1,12 @@
+#!/usr/bin/env zsh
+
+# Search plaintext. This is the typical use case for ripgrep and is pretty
+# straightforward.
+f_text()
+{
+	local pattern="${1}"
+	shift
+	local args=("$@")
+	rg --color always --smart-case --pcre2 --hidden --glob '!.git' \
+		${args[@]} "${pattern}"
+}
