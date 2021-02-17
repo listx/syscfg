@@ -207,14 +207,18 @@ otherwise, close current tab."
                   (lambda (bufname)
                     (not (l/buffer-looks-like bufname
                       '(
-                      ; Don't delete system buffers buffers.
-                      "^\*Messages\*"
-                      "^COMMIT_EDITMSG"
                       ; Do not delete buffers that may be open which are for git
                       ; rebasing and committing. This is in case these buffers
                       ; are open in other clients which may still be working on
                       ; these buffers.
-                      "^git-rebase-todo"))))
+                      "^COMMIT_EDITMSG"
+                      "^git-rebase-todo"
+                      ; This catches buffers like 'addp-hunk-edit.diff' which is
+                      ; used during surgical edits of what to stage ('e' option
+                      ; to the 'git add -p' command).
+                      ".*hunk-edit.diff"
+                      ; Don't delete system buffers buffers.
+                      "^\*Messages\*"))))
                   (mapcar 'buffer-name (buffer-list))))))
           (evil-quit)) nil))))
 
