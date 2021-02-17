@@ -1,0 +1,47 @@
+#!/usr/bin/env zsh
+
+# Search files/directories.
+f_files()
+{
+	local pattern="${1}"
+	shift
+	local args=("$@")
+	# Patterns without a "/" are restricted to the *last part* of the path. This
+	# is to weed out false hits where the pattern only matches the parent folder
+	# name. E.g., if there is a directory structure like this:
+	#
+	#   emacs/
+	#   emacs/a
+	#   emacs/b
+	#   emacs/c
+	#   emacs/d
+	#   emacs/e
+	#   emacs/f
+	#
+	# and we search for the pattern "e" we only want to show "emacs/" and
+	# "emacs/e", not the other folders like "emacs/a" or "emacs/b".
+	if [[ ! $pattern == */* ]]; then
+		# Add negative lookahead if there is no "/" in the original search
+		# pattern. The negative lookahead makes sure that no other slashes
+		# follow the original pattern, effectively limiting the pattern to the
+		# last "dirname" or "basename" part of a path.
+		pattern="${pattern}(?!.+/)"
+	fi
+
+	# Combine and interleave the two search results (bye sorting them together).
+	# Filenames are highlighted red as usual. However directory names are
+	# highlighted blue, and also end in a trailing slash "/".
+	#
+	# The color replacement (ANSI code 31 with 34) needs to happen *after*
+	# sorting, because otherwise the '34' in the color code it affects the sort
+	# order of the lines overall.
+	cat \
+		<(rg --hidden --glob '!.git' --files --null \
+			| xargs -0 dirname \
+			| rg --color always --smart-case --pcre2 ${args[@]} "${pattern}" \
+			| sed 's|$|/|') \
+		<(rg --hidden --glob '!.git' --files \
+			| rg --color always --smart-case --pcre2 ${args[@]} "${pattern}") \
+		| sort -u \
+		| sed 's|\x1b\[31\(.\+/\)$|\x1b\[34\1|'
+}

@@ -330,8 +330,8 @@ alias elb='emacs_list_buffers'
 alias v='nvim -p'
 
 alias fl='find_long_lines '
-alias ft='f t'
-alias ff='f f'
+alias ft='f text'
+alias ff='f files'
 
 # Make ssh pretend we are using xterm, because some machines do not recognize
 # our usual terminal emulator (rxvt-unicode-256coler).
