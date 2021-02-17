@@ -1,0 +1,17 @@
+#!/usr/bin/env zsh
+
+# Search processes.
+f_procs()
+{
+	local pattern="${1}"
+	shift
+	local args=("$@")
+	# Print out the first line of ps output, because it gives us the column
+	# headers. Otherwise, we get a bunch of results without any indication of
+	# what each column actually means.
+	ps aux | head -n1
+	# The process substitution with the `=(...)' syntax prevents the `rg'
+	# process itself from showing up in the results.
+	rg --color always --smart-case --pcre2 -i --no-line-number \
+		${args[@]} "${pattern}" =(ps aux)
+}

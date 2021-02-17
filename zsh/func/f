@@ -33,7 +33,7 @@ f()
 	# Determine type of search. Search files and directories for 'f' and text
 	# for 't'.
 	case "${subcommand}" in
-		files|text)
+		files|procs|text)
 			f_${subcommand} "${pattern}" "${args[@]}"
 			;;
 		*)
