@@ -39,6 +39,9 @@ f()
 		all_files)
 			f_files "${pattern}" SEARCH_ALL_FILES "${args[@]}"
 			;;
+		all_text)
+			f_text "${pattern}" SEARCH_ALL_FILES "${args[@]}"
+			;;
 		*)
 			echo >&2 "$0: unknown search type \`${_type}'"
 			return 1
