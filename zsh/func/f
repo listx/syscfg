@@ -42,6 +42,9 @@ f()
 		all_text)
 			f_text "${pattern}" SEARCH_ALL_FILES "${args[@]}"
 			;;
+		all_text_binary)
+			f_text "${pattern}" SEARCH_ALL_FILES_BINARY "${args[@]}"
+			;;
 		*)
 			echo >&2 "$0: unknown search type \`${_type}'"
 			return 1
