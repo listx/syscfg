@@ -4,6 +4,7 @@
 f_files()
 {
 	local pattern="${1}"
+	local pattern_orig="${pattern}"
 	shift
 	local args=()
 
@@ -40,18 +41,25 @@ f_files()
 		# following the original pattern, effectively limiting the pattern to
 		# the last "dirname" or "basename" part of a path.
 		pattern="${pattern}(?![^/]*/)"
-		# We also skip the leading first character of each line `^.', which is
-		# the filetype output classified by the `find' command below. The
-		# remaiing '.*?' part and the '\K' is to remove from the match any
-		# characters that do not match the given pattern, which are in-between
-		# the pattern and the very beginning of the line. If we don't have this
-		# "buffer" zone, then the pattern is expected to immediately follow the
-		# initial `^.' only, which makes the search very inflexible (and which
-		# would force the user to type in something like `.*PATTERN' to search
-		# for `PATTERN', not to mention that the leading "buffer" zone will get
-		# highlighted as a positive match by `rg' as well).
-		pattern="(^..*?)\K${pattern}"
 	fi
+
+	# We skip the leading first character of each line `^.', which is the
+	# filetype output classified by the `find' command below. The remaiing '.*?'
+	# part and the '\K' is to remove from the match any characters that do not
+	# match the given pattern, which are in-between the pattern and the very
+	# beginning of the line. If we don't have this "buffer" zone, then the
+	# pattern is expected to immediately follow the initial `^.' only, which
+	# makes the search very inflexible (and which would force the user to type
+	# in something like `.*PATTERN' to search for `PATTERN', not to mention that
+	# the leading "buffer" zone will get highlighted as a positive match by `rg'
+	# as well).
+	pattern="(^..*?)\K${pattern}"
+
+	# If we see a line depicting a symlink, search both the link name and the
+	# target name (we make no distinctions around the " -> " delimiter that
+	# denotes the source and target). For symlinks we also ignore the condition
+	# of trying to only search the trailing "basename" of a path.
+	pattern="(?(?=^l)(^l.*?)\K${pattern_orig}|${pattern})"
 
 	local c_pipe="\x1b[1;32m" # bright green
 	local c_sock="\x1b[1;34m" # bright blue
@@ -85,6 +93,13 @@ f_files()
 	# skip the 1st character because it is the filetype "%y" character.
 
 	find ${find_args[@]} -printf '%y%P\0' \
+		| while IFS="" read -r -d "" find_output; do \
+				if [[ "${find_output:0:1}" == l ]]; then \
+					printf "%s -> %s\0" "${find_output}" "$(readlink -m ${find_output:1})"; \
+				else \
+					printf "%s\0" "${find_output}"; \
+				fi; \
+			done \
 		| rg --null-data --smart-case --pcre2 --color always ${args[@]} "${pattern}" \
 		| sort --zero-terminated -k1.2 \
 		| sed --null-data "${colorizer}" \
