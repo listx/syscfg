@@ -332,10 +332,13 @@ alias v='nvim -p'
 # Find stuff.
 alias fl='find_long_lines '
 alias ff='f files'
-alias fF='f all_files'
+alias ffa='f all_files'
 alias fp='f procs'
 alias ft='f text'
-alias fT='f all_text'
+# Search all text files, including normally hidden/ignored ones.
+alias fta='f all_text'
+# Search even inside binary files.
+alias ftab='f all_text_binary'
 
 # Make ssh pretend we are using xterm, because some machines do not recognize
 # our usual terminal emulator (rxvt-unicode-256coler).

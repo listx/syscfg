@@ -16,6 +16,11 @@ f_text()
 	for arg in "${@}"; do
 		case "${arg}" in
 			SEARCH_ALL_FILES)
+				# Providing 2 -u flags (--unrestricted) makes rg ignore
+				# .gitignore files and also search hidden files and directories.
+				rg_args=(-uu)
+				;;
+			SEARCH_ALL_FILES_BINARY)
 				# Providing three -u flags (--unrestricted) makes rg search even
 				# binary files.
 				rg_args=(-uuu)
