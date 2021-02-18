@@ -45,8 +45,8 @@
 # st=STICKY (dir wit hthe sticky bit set (+t) and not other-writable)
 # ex=EXEC (files with +x execute permission)
 
-# special file types (same, unchanged defaults from 'dircolors -b')
-LS_COLORS='rs=0:di=01;33:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:su=37;41:sg=30;43:ca=30;41:st=37;44:'
+# special file types (compare with 'dircolors -b')
+LS_COLORS='rs=0:di=01;33:mh=00:pi=01;32:so=01;34:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:su=37;41:sg=30;43:ca=30;41:st=37;44:'
 # special file types (different than the ones from 'dircolors -b')
 LS_COLORS+='ln=36:ex=31:tw=1;34;42:ow=1;7;34:'
 # various common filetypes (archives, pictures, movies, and sounds)
