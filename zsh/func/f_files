@@ -23,25 +23,56 @@ f_files()
 	if [[ ! $pattern == */* ]]; then
 		# Add negative lookahead if there is no "/" in the original search
 		# pattern. The negative lookahead makes sure that no other slashes
-		# follow the original pattern, effectively limiting the pattern to the
-		# last "dirname" or "basename" part of a path.
-		pattern="${pattern}(?!.+/)"
+		# following the original pattern, effectively limiting the pattern to
+		# the last "dirname" or "basename" part of a path.
+		pattern="${pattern}(?![^/]*/)"
+		# We also skip the leading first character of each line `^.', which is
+		# the filetype output classified by the `find' command below. The
+		# remaiing '.*?' part and the '\K' is to remove from the match any
+		# characters that do not match the given pattern, which are in-between
+		# the pattern and the very beginning of the line. If we don't have this
+		# "buffer" zone, then the pattern is expected to immediately follow the
+		# initial `^.' only, which makes the search very inflexible (and which
+		# would force the user to type in something like `.*PATTERN' to search
+		# for `PATTERN', not to mention that the leading "buffer" zone will get
+		# highlighted as a positive match by `rg' as well).
+		pattern="(^..*?)\K${pattern}"
 	fi
 
-	# Combine and interleave the two search results (by sorting them together).
-	# Filenames are highlighted red as usual. However directory names are
-	# highlighted blue, and also end in a trailing slash "/".
-	#
-	# The color replacement (ANSI code 31 with 34) needs to happen *after*
-	# sorting, because otherwise the '34' in the color code affects the sort
-	# order of the lines overall.
-	cat \
-		<(rg --hidden --glob '!.git' --files --null \
-			| xargs -0 dirname \
-			| rg --color always --smart-case --pcre2 ${args[@]} "${pattern}" \
-			| sed 's|$|/|') \
-		<(rg --hidden --glob '!.git' --files \
-			| rg --color always --smart-case --pcre2 ${args[@]} "${pattern}") \
-		| sort -u \
-		| sed 's|\x1b\[31\(.\+/\)$|\x1b\[34\1|'
+	local c_pipe="\x1b[1;32m" # bright green
+	local c_sock="\x1b[1;34m" # bright blue
+	local c_dir="\x1b[1;33m" # bright yellow
+	local c_link="\x1b[36m" # cyan
+	local c_end="\x1b[0m"
+
+	local colorizer=""
+
+	# Colorize the different file types recognized by the `%y' printf option for
+	# `find(1)'. We support 5 of the most common file types: files, directories,
+	# symlinks, named pipes, and sockets.
+	colorizer="s|^d|${c_dir}|;"
+	# Regular files aren't colored. However we still inject a color escape
+	# sequence so that the rest of the expressions below don't match against it.
+	# For example, if we have 'fpar' to denote a regular file 'par' and we just
+	# erase the leading 'f', we get 'par', and this will match against the
+	# ${c_pipe} colorizer pattern below (bad!).
+	colorizer+="s|^f|${c_end}|;"
+	colorizer+="s|^l|${c_link}|;"
+	colorizer+="s|^s|${c_sock}|;"
+	colorizer+="s|^p|${c_pipe}|;"
+	# Match the last "turn off color" code injected by `rg'. Use this point to
+	# reinstate the color injected from above. This way the entire line is
+	# colorized a certain way except for the portion matched by rg.
+	colorizer+="s|^\(\(\x1b\[\(1;\)\?3.m\).*\x1b\[0m\)|\1\2|;"
+	# Turn off colors at the end of the line.
+	colorizer+="s|$|${c_end}|"
+
+	# The "-k1.2" sorts by the 1st word's 2nd character on each line. We have to
+	# skip the 1st character because it is the filetype "%y" character.
+
+	find -printf '%y%P\0' \
+		| rg --null-data --smart-case --pcre2 --color always ${args[@]} "${pattern}" \
+		| sort --zero-terminated -k1.2 \
+		| sed --null-data "${colorizer}" \
+		| sed 's|\x00|\n|g'
 }
