@@ -335,6 +335,7 @@ alias ff='f files'
 alias fF='f all_files'
 alias fp='f procs'
 alias ft='f text'
+alias fT='f all_text'
 
 # Make ssh pretend we are using xterm, because some machines do not recognize
 # our usual terminal emulator (rxvt-unicode-256coler).

@@ -6,7 +6,25 @@ f_text()
 {
 	local pattern="${1}"
 	shift
-	local args=("$@")
-	rg --color always --smart-case --pcre2 --hidden --glob '!.git' \
-		${args[@]} "${pattern}"
+	local args=()
+
+	# Explicitly ignore the .git folder because rg by default ignores the paths
+	# inside .gitignore files, but still searches inside the .git folder itself.
+	local rg_args=(--glob '!.git')
+
+	# Filter out arguments meant for f_text(), not rg.
+	for arg in "${@}"; do
+		case "${arg}" in
+			SEARCH_ALL_FILES)
+				# Providing three -u flags (--unrestricted) makes rg search even
+				# binary files.
+				rg_args=(-uuu)
+				;;
+			# Save anything else we don't recognize (to pass along to rg).
+			*) args+=("${arg}") ;;
+		esac
+	done
+
+	rg --color always --smart-case --pcre2 --hidden \
+		${rg_args[@]} ${args[@]} "${pattern}"
 }
