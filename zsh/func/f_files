@@ -5,7 +5,21 @@ f_files()
 {
 	local pattern="${1}"
 	shift
-	local args=("$@")
+	local args=()
+
+	# By default, ignore all hidden files.
+	local find_args=(-not -path '*/\.*')
+	# Filter out arguments meant for f_files(), not rg.
+	for arg in "${@}"; do
+		case "${arg}" in
+			SEARCH_ALL_FILES)
+				find_args=()
+				;;
+			# Save anything else we don't recognize (to pass along to rg).
+			*) args+=("${arg}") ;;
+		esac
+	done
+
 	# Patterns without a "/" are restricted to the *last part* of the path. This
 	# is to weed out false hits where the pattern only matches the parent folder
 	# name. E.g., if there is a directory structure like this:
@@ -70,7 +84,7 @@ f_files()
 	# The "-k1.2" sorts by the 1st word's 2nd character on each line. We have to
 	# skip the 1st character because it is the filetype "%y" character.
 
-	find -printf '%y%P\0' \
+	find ${find_args[@]} -printf '%y%P\0' \
 		| rg --null-data --smart-case --pcre2 --color always ${args[@]} "${pattern}" \
 		| sort --zero-terminated -k1.2 \
 		| sed --null-data "${colorizer}" \
