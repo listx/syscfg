@@ -6,7 +6,7 @@ env:
 window:
   dimensions:
     columns: 165
-    lines: 86
+    lines: 92
   padding:
     x: 4
     y: 4
@@ -16,6 +16,8 @@ font:
     # From https://github.com/listx/tamsyn-mac-version/blob/f347497a0f962435b94b9f7b906a6eaaf5bf06c0/tamsyn/Tamsyn8x16.dfont.
     family: "Tamsyn8x16"
   size: 16
+  offset:
+    y: -1
   use_thin_strokes: true
 # Colors (syscfg/script/terms/pastel_dark.sh)
 colors:
