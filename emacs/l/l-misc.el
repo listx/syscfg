@@ -12,6 +12,9 @@
   (interactive)
   (string-equal system-type system))
 
+; Replace all "yes or no" prompts with just "y or n".
+(fset 'yes-or-no-p 'y-or-n-p)
+
 ; Try very hard to not split existing windows to open up links and other new
 ; buffers. https://stackoverflow.com/a/1856069/437583
 (setq same-window-regexps '("."))
