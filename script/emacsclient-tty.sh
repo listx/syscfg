@@ -4,9 +4,34 @@ set -euo pipefail
 
 set_elisp()
 {
-	local file="${1}"
+	local file
 	local buffer_filename
 	local maybe_fill_72=""
+	local maybe_goto_position=""
+	local position
+	local line
+	local column
+
+	for arg; do
+		if [[ "${arg}" == +* ]]; then
+			position="${arg}"
+		else
+			file="${arg}"
+        fi
+	done
+
+	case "${position:-}" in
+		+*:*)
+			line="${position#+}"
+			line="${line%:*}"
+			column="${position#*:}"
+			maybe_goto_position="(evil-goto-line ${line}) (move-to-column ${column})"
+			;;
+		+*)
+			line="${position#+}"
+			maybe_goto_position="(evil-goto-line ${line})"
+			;;
+	esac
 
 	buffer_filename="$(readlink -e "${file}")"
 
@@ -29,11 +54,10 @@ set_elisp()
 		; Open the file.
 		(find-file "/:${buffer_filename}")
 		${maybe_fill_72}
+		${maybe_goto_position}
 		; Disable menu (for some reason the menu is enabled on the frame
 		; sometimes).
 		(menu-bar-mode 0)
-		; Go to the top of the buffer.
-		(beginning-of-buffer)
 		; Kill any keyboard prompts.
 		(keyboard-escape-quit)
 	)
@@ -46,7 +70,7 @@ EOF
 
 main()
 {
-	set_elisp "$1"
+	set_elisp "$@"
 
 	# The (find-file ...) avoids showing "*scratch*" buffer on startup when
 	# invoking from emacsclient.

@@ -66,7 +66,7 @@ univ_open() {
 				xchm $@ &>/dev/null & disown
 			;;
 			*)
-				~/syscfg/script/emacsclient-tty.sh "${1}"
+				~/syscfg/script/emacsclient-tty.sh "$@"
 			;;
 		esac
 	elif [[ -d $1 ]]; then
