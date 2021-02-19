@@ -55,6 +55,9 @@ set_elisp()
 		(find-file "/:${buffer_filename}")
 		${maybe_fill_72}
 		${maybe_goto_position}
+		; Always show current line position, even if we're opening an
+		; already-opened buffer.
+		(hl-line-highlight-now)
 		; Disable menu (for some reason the menu is enabled on the frame
 		; sometimes).
 		(menu-bar-mode 0)
