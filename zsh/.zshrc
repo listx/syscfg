@@ -393,8 +393,8 @@ alias cal='cal -y'
 alias python=python3
 
 # Manual memory management.
-alias reset_cache='free && sync && echo 3 >/proc/sys/vm/drop_caches && free'
-alias reset_swap='free && swapoff -a && swapon -a && free'
+alias reset_cache='free && sync && sudo echo 3 >/proc/sys/vm/drop_caches && free'
+alias reset_swap='free && sudo swapoff -a && sudo swapon -a && free'
 
 # CUSTOM SCRIPTS
 #
