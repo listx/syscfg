@@ -15,6 +15,22 @@
 ; Replace all "yes or no" prompts with just "y or n".
 (fset 'yes-or-no-p 'y-or-n-p)
 
+; Rebind `keyboard-escape-quit' (default binding is to press "ESC" 3 times on
+; its own), to just "M-ESC" in terminal emacsclient. This `keyboard-escape-quit'
+; function can rescue a hanging terminal emacsclient. This is the bigger cousin
+; of C-g which can abort keyboard inputs.
+;
+; NOTE: According to
+; https://emacs.stackexchange.com/questions/33977/binding-esc-esc-to-have-esc-esc-esc-functionality,
+; this means that in Unix-style terminals this breaks the binding of pressing
+; ESC then a function key to encode a "Meta+function key" combo, because
+; function keys are encoded as character sequences that start with ESC. In other
+; words, now whenever we press ESC and a function key, we will invoke
+; `keyboard-escape-quit'. However, this is fine because we use Evil mode so
+; pressing ESC multiple times does not do anything because all ESC keypresses
+; are "consumed" by the default `evil-normal-state' binding.
+(global-set-key (kbd "ESC <escape>") 'keyboard-escape-quit)
+
 ; Try very hard to not split existing windows to open up links and other new
 ; buffers. https://stackoverflow.com/a/1856069/437583
 (setq same-window-regexps '("."))
