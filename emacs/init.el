@@ -19,7 +19,7 @@
 (require 'l-conf-mode)
 (require 'l-delight)
 (require 'l-evil)
-(require 'l-evil-magit)
+(require 'l-evil-collection)
 (require 'l-evil-surround)
 (require 'l-evil-visualstar)
 (require 'l-evil-matchit)
