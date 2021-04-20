@@ -1,7 +1,4 @@
 (use-package haskell-mode
-  :mode (
-    ("\\.hs\\'" . haskell-mode)
-    ("\\.lhs\\'" . haskell-mode))
   :config
   ; Adopted from http://sequence.complete.org/node/365.
   (remove-hook 'haskell-mode-hook 'turn-on-haskell-indent)
@@ -10,9 +7,8 @@
   ; `.lhs' file. Using mmm-mode, we will activate `haskell-mode' in the code
   ; sections.
   (setq auto-mode-alist
-    (remove (rassoc 'literate-haskell-mode auto-mode-alist) auto-mode-alist))
-  (add-to-list 'auto-mode-alist '("\\.lhs$" . latex-mode))
-  (add-hook 'literate-haskell-mode-hook 'latex-mode)
+    (remove (rassoc 'haskell-literate-mode auto-mode-alist) auto-mode-alist))
+  (add-to-list 'auto-mode-alist '("\\.lhs\\'" . latex-mode))
 
   ; The "Haskell-Cabal" mode that comes built-in with haskell-mode needs some
   ; manual tooth-removal to get it to submit and behave.
@@ -34,23 +30,29 @@
       ; Enable automated HLint suggestion application.
       (hlint-refactor-mode)))
 
-  (defun l/hs-literate-begend ()
+  (defun l/hs-literate-block ()
     (interactive)
-    (end-of-line)
-    (insert "\n")
-    (delete-blank-lines)
-    (insert "\n\\begin{code}\n\n\\end{code}\n")
-    (forward-line -2)
-    (evil-append nil))
+    (let
+      ((point-in-code
+          (save-excursion
+            (re-search-forward "^\\\\\\(begin\\|end\\){code}" nil t)
+            (condition-case nil
+              (string= "end" (match-string-no-properties 1))
+              (args-out-of-range nil)))))
+      (end-of-line)
+      (insert "\n")
+      (delete-blank-lines)
+      (insert (if point-in-code
+        "\\end{code}\n\n\n\n\\begin{code}\n"
+        "\n\\begin{code}\n\n\\end{code}\n"))
+      (forward-line (if point-in-code
+        -3 -2))
+      (evil-append nil)))
 
-  (defun l/hs-literate-endbeg ()
-    (interactive)
-    (end-of-line)
-    (insert "\n")
-    (delete-blank-lines)
-    (insert "\\end{code}\n\n\n\n\\begin{code}\n")
-    (forward-line -3)
-    (evil-append nil))
+  (defhydra hydra-literate-haskell (:foreign-keys warn)
+    "haskell"
+    ("j" l/hs-literate-block "insert-code-block" :exit t)
+    ("q" nil "exit" :exit t))
 
   (use-package hlint-refactor
     :after (flycheck haskell)))

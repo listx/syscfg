@@ -354,7 +354,7 @@
         ('java-mode "//")
         ('js-mode "//")
         ('ledger-mode "\\;")
-        ('literate-haskell-mode "--")
+        ('haskell-literate-mode "--")
         ('LilyPond-mode "%")
         ('latex-mode "%")
         ('plain-tex-mode "%")
