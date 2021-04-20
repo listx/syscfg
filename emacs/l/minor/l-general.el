@@ -44,11 +44,6 @@
 
     "i" 'notmuch
 
-    ; Literate haskell: write end/begin code blocks, and enter insert mode.
-    ; TODO: make this just 1 funcion that does the right thing.
-    "j" 'l/hs-literate-endbeg
-    "J" 'l/hs-literate-begend
-
     "kj" 'hlint-refactor-refactor-at-point
     "kJ" 'hlint-refactor-refactor-buffer
     "kk" 'flycheck-list-errors

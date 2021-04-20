@@ -64,13 +64,12 @@
       ; Haskell
       (h 'haskell-mode-hook nil 2)
       ; Literate Haskell.
-      (if (string-match "\\.lhs$" b)
+      (if (string-match "\\.lhs\\'" b)
         (progn
-          (h 'latex-mode-hook nil 2)
-          (setq mmm-global-mode 't)
-          (setq mmm-submode-decoration-level 1)
-          (mmm-ify-by-class 'literate-haskell-latex)
-          (column-enforce-mode)))
+          (l/leader-def
+            :keymaps 'local
+            :states '(normal)
+            "," 'hydra-literate-haskell/body)))
       ; HTML
       (h 'html-mode-hook t 4)
       ; Idris
