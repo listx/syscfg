@@ -1,5 +1,5 @@
 (use-package markdown-mode
-  :mode "\.md$"
+  :mode "\\.md\\'"
   :config
   (autoload
     'markdown-mode
