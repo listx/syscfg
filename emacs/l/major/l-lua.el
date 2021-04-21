@@ -1,5 +1,5 @@
 (use-package lua-mode
-  :mode "\.lua$"
+  :mode "\\.lua\\'"
   :config
   (autoload 'lua-mode "lua-mode" "Lua editing mode." t))
 

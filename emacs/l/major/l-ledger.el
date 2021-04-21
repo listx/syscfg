@@ -3,7 +3,6 @@
   :config
   (set-face-attribute 'ledger-font-xact-highlight-face nil :weight 'bold :inherit nil)
   (autoload 'ledger-mode "ledger-mode" "A major mode for Ledger" t)
-  (add-to-list 'auto-mode-alist '("\\.ledger$" . ledger-mode))
   ; Go down to the bottom of the file, because the latest entries are on the
   ; bottom. Although (h)ledger allows transactions to be written in any order
   ; (regardless of date), the balance assertions are read in-order (top to
