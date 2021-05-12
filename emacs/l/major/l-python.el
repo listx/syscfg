@@ -23,23 +23,26 @@
   (defun l/python-setup ()
     ; Disable Python <backspace> binding.
     (define-key python-mode-map (kbd "<backspace>") nil)
-    ; Check with flake8, pylint, and mypy. python-mypy already runs
-    ; python-flake8, so there's no need to mention it here. However, we still
-    ; need to mention python-pylint to run after python-flake8. This is a
-    ; so-called "checker chain", as per
-    ; https://www.flycheck.org/en/latest/user/syntax-checkers.html#configuring-checker-chains.
-    (flycheck-add-next-checker 'python-flake8 'python-pylint)
-    (add-hook 'flycheck-before-syntax-check-hook #'set-flychecker-executables
-      'local)
-    ; Start Flycheck.
-    (flycheck-mode)
-    ; Set max line length to 79 characters (from PEP8). (Although Emacs columns
-    ; are 0-indexed, column-enforce-mode counts from 1, so we use 79 here and
-    ; not 78.)
-    (setq column-enforce-column 79)
-    ; We need to tell Emacs to do paragrah-filling at 79 caharacters
-    ; (column-enforce-mode only highlights regions --- it does not change how
-    ; paragraph filling is done).
-    (setq fill-column 79)))
+
+    (when (not (bound-and-true-p poly-org-mode))
+      ; Check with flake8, pylint, and mypy. python-mypy already runs
+      ; python-flake8, so there's no need to mention it here. However, we still
+      ; need to mention python-pylint to run after python-flake8. This is a
+      ; so-called "checker chain", as per
+      ; https://www.flycheck.org/en/latest/user/syntax-checkers.html#configuring-checker-chains.
+      (flycheck-add-next-checker 'python-flake8 'python-pylint)
+      (add-hook 'flycheck-before-syntax-check-hook #'set-flychecker-executables
+        'local)
+      ; Start Flycheck.
+      (flycheck-mode)
+      ; Set max line length to 79 characters (from PEP8). (Although Emacs columns
+      ; are 0-indexed, column-enforce-mode counts from 1, so we use 79 here and
+      ; not 78.)
+      ;(setq column-enforce-column 79)
+      ; We need to tell Emacs to do paragrah-filling at 79 caharacters
+      ; (column-enforce-mode only highlights regions --- it does not change how
+      ; paragraph filling is done).
+      (setq fill-column 79))))
+
 
 (provide 'l-python)
