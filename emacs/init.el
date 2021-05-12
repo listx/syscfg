@@ -71,6 +71,7 @@
 (require 'l-notmuch)
 (require 'l-org)
 (require 'l-php)
+(require 'l-polymode)
 (require 'l-python)
 (require 'l-ranger)
 (require 'l-rust)
