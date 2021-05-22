@@ -103,9 +103,9 @@ zsh:
 	ln -fs ${C}/zsh/.zshenv                             ${H}
 	ln -fs ${C}/zsh/.zshrc                              ${H}
 	test -f ${C}/zsh/zprofile-${T} \
-		&& ln -fs ${C}/zsh/zprofile-${T}                ${H}/.zprofile
+		&& ln -fs ${C}/zsh/zprofile-${T}                ${H}/.zprofile || true
 	test -f ${C}/zsh/zlogin-${T} \
-		&& ln -fs ${C}/zsh/zlogin-${T}                  ${H}/.zlogin
+		&& ln -fs ${C}/zsh/zlogin-${T}                  ${H}/.zlogin || true
 	mkdir -p ${H}/.zsh-untracked
 
 .PHONY: \
