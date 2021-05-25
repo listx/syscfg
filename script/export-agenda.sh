@@ -22,15 +22,15 @@ set -o pipefail
 get_git_repo_checksum()
 {
 	local git_repo_dir="${1}"
-	local base_sha
-	local files
+	local head_sha
+	local files_shas
 	pushd "${git_repo_dir}" >/dev/null
-	base_sha="$(git rev-parse HEAD)"
-	files="$(git ls-files -z --exclude-standard --cached --deleted --modified --others | xargs --null sha1sum)"
+	head_sha="$(git rev-parse HEAD)"
+	files_shas="$(git ls-files -z --exclude-standard --cached --deleted --modified --others | xargs --null sha1sum)"
 	popd >/dev/null
 
 	# Simplify the checksums to a single sha1sum.
-	echo "${base_sha}${files}" | _sha1sum
+	echo "${head_sha}${files_shas}" | _sha1sum
 }
 
 get_git_repos_checksum()
