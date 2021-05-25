@@ -23,22 +23,14 @@ get_git_repo_checksum()
 {
 	local git_repo_dir="${1}"
 	local base_sha
-	local diff_worktree
-	local diff_cached
-	local untracked_files=""
+	local files
 	pushd "${git_repo_dir}" >/dev/null
 	base_sha="$(git rev-parse HEAD)"
-	diff_worktree="$(git diff | _sha1sum)"
-	diff_cached="$(git diff --cached | _sha1sum)"
-	while IFS= read -r -d '' f; do
-		untracked_files+="$(_sha1sum "$f")";
-	done < <(git ls-files --others --exclude-standard)
-	# Simplify untracked_files checksum.
-	untracked_files="$(echo "${untracked_files}" | _sha1sum)"
+	files="$(git ls-files -z --exclude-standard --cached --deleted --modified --others | xargs --null sha1sum)"
 	popd >/dev/null
 
 	# Simplify the checksums to a single sha1sum.
-	echo "${base_sha}${diff_worktree}${diff_cached}${untracked_files}" | _sha1sum
+	echo "${base_sha}${files}" | _sha1sum
 }
 
 get_git_repos_checksum()
