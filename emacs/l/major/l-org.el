@@ -221,6 +221,8 @@
   ; Remap some hotkeys.
   (define-key org-agenda-mode-map "H" 'evil-next-buffer)
   (define-key org-agenda-mode-map "L" 'evil-prev-buffer)
+  (define-key org-agenda-mode-map "h" 'evil-backward-char)
+  (define-key org-agenda-mode-map "l" 'evil-forward-char)
   (define-key org-agenda-mode-map "j" 'org-agenda-next-line)
   (define-key org-agenda-mode-map "k" 'org-agenda-previous-line)
   (define-key org-agenda-mode-map (kbd "C-l") 'tab-next)
