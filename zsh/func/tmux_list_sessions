@@ -9,5 +9,5 @@ tmux_list_sessions()
 	local user="${1}"
 	local host="${2}"
 
-	2>/dev/null ssh "${user}@${host}" -- tmux list-sessions | cut -d: -f1
+	2>/dev/null ssh "${user}@${host}" tmux list-sessions | cut -d: -f1
 }
