@@ -27,5 +27,5 @@ s()
 	*)  user="l" ;;
 	esac
 
-	ssh "${user}@${host}" -t -Y -- tmux new-session -A -s "${session}"
+	ssh "${user}@${host}" -t -Y tmux new-session -A -s "${session}"
 }
