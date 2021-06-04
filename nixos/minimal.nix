@@ -54,12 +54,13 @@
 
   time.timeZone = "America/Los_Angeles";
 
-  users.extraGroups.l = {
+  users.groups.l = {
     gid = 1000;
   };
 
   # Set password for extra users with 'passwd' command as root.
-  users.extraUsers.l = {
+  users.users.l = {
+    isNormalUser = true;
     group = "l";
     description = "Linus Arver";
     createHome = true;
