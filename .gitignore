@@ -9,7 +9,6 @@
 *~
 alacritty/alacritty.yml
 cache
-cblrepo/haskell-*
 cmus/*
 emacs/.org-id-locations
 emacs/auto-save-list
@@ -38,7 +37,6 @@ openvpn/*.ovpn
 qutebrowser/bookmarks
 qutebrowser/quickmarks
 qutebrowser/qsettings
-sage/*
 ssh/*
 vim/.VimballRecord
 vim/.netrwhist
