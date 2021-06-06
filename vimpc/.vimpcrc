@@ -1,0 +1,29 @@
+set windows playlist,browse,library,lists
+set window playlist
+
+" Navigate up/down any window quickly.
+map <Space> 10j
+map <BS> 10k
+
+" Make tab navigation reasonable.
+map <C-h> :tabprevious<Enter>
+map <C-l> :tabnext<Enter>
+
+" Skip forward/backward 5 seconds.
+map h :seek- 5<Enter>
+map l :seek+ 5<Enter>
+
+" Change songs.
+map H :previous<Enter>
+map L :next<Enter>
+
+map p :pause<Enter>
+
+" <C-c> already exits vimpc.
+map <C-d> :qa<Enter>
+
+" Go to current song.
+map c f
+
+" Go to random song.
+map r %

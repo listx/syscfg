@@ -89,6 +89,8 @@ vim:
 	ln -fns ${C}/vim                                    ${H}/.vim
 	ln -fs ${C}/vim/cfg                                 ${H}/.vimrc
 	ln -fs ${C}/vim/cfg                                 ${H}/.gvimrc
+vimpc:
+	ln -fs ${C}/vimpc/.vimpcrc                          ${H}
 xdefaults:
 	ln -fs ${C}/xdefaults/cfg                           ${H}/.Xdefaults
 xmonad:
@@ -133,6 +135,7 @@ zsh:
 	tmux \
 	uim \
 	vim \
+	vimpc \
 	xdefaults \
 	xmonad \
 	xorg \
