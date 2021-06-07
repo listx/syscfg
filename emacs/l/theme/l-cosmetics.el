@@ -1,5 +1,7 @@
 ; Disable cursor blinking altogether.
 (blink-cursor-mode 0)
+; Do the same in Terminal emacs.
+(setq visible-cursor nil)
 
 ; Disable GUI menu.
 (menu-bar-mode 0)
