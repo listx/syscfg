@@ -82,6 +82,8 @@ tig:
 	ln -fs ${C}/tig/.tigrc                              ${H}
 tmux:
 	ln -fs ${C}/tmux/.tmux.conf                         ${H}
+tmuxinator:
+	ln -fns ${C}/tmuxinator                             ${H}/.config
 uim:
 	ln -fns ${C}/uim/.uim                               ${H}/.uim
 	ln -fns ${C}/uim                                    ${H}/.uim.d
@@ -133,6 +135,7 @@ zsh:
 	ssh \
 	tig \
 	tmux \
+	tmuxinator \
 	uim \
 	vim \
 	vimpc \
