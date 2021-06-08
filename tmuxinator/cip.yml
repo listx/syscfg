@@ -1,0 +1,16 @@
+name: cip
+root: ~/
+
+windows:
+- cip:
+  - d.cip
+- cip:
+  - d.cip
+- k/k8sio:
+  - d.ki
+- k/k:
+  - d.kk
+- k/test-infra:
+  - d.kt
+- k/release:
+  - d.kr
