@@ -13,6 +13,8 @@ main()
 {
 	local host
 	host="$(hostname)"
+	# Replace non-tmux-session-name-friendly characters with an underscore.
+	host="${host//./_}"
 
 	if [[ -z "${1:-}" ]]; then
 		echo "tmux sessions:"
