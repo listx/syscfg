@@ -1,0 +1,17 @@
+name: h
+root: ~/
+
+windows:
+- GTD:
+  - d ~/lo/note/index.org
+- admin:
+    layout: main-horizontal
+    panes:
+    - d ~/syscfg
+    - d ~/lo/note
+- music:
+    layout: main-horizontal
+    panes:
+    - vimpc
+- htop:
+  - htop

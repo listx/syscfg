@@ -349,6 +349,8 @@ alias sk1='s k1 '
 alias sm0='s m0 '
 alias sw0='s w0 '
 
+alias ts='tmuxinator start --suppress-tmux-version-warning=SUPPRESS-TMUX-VERSION-WARNING'
+
 # GLOBAL, position-independent aliases for detaching a process from the shell
 # (useful for starting GUI apps as standalones, without arguments).
 alias -g D='& disown'
