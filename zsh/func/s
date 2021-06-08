@@ -13,6 +13,14 @@ s()
 	local host="${1}"
 	# Grab the first subdomain as a short nickname for the host.
 	local host_shortname="${host%%.*}"
+
+	# Fix WSL hostname. That is, other computers on the LAN call it "w0", but it
+	# knows itself as "DESKTOP-P54E4V0". This affects things like the "hostname"
+	# command when invoked locally.
+	case "${host_shortname}" in
+	w0) host_shortname="DESKTOP-P54E4V0" ;;
+	esac
+
 	local session="${2:-}"
 
 	# Remove any existing host prefix from the session. This is to prevent it
@@ -29,10 +37,10 @@ s()
 
 	case "${host}" in
 	w0)
-		ssh "${user}@${host}" -t -Y \"tmux new-session -A -s ${session}\"
+		ssh "${user}@${host}" -t -Y \"zsh -lc \\\"~/syscfg/script/tmux.sh ${session}\\\"\"
 		;;
 	*)
-		ssh "${user}@${host}" -t -Y tmux new-session -A -s "${session}"
+		ssh "${user}@${host}" -t -Y tmux.sh "${session}"
 		;;
 	esac
 }
