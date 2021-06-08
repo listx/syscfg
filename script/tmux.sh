@@ -6,7 +6,7 @@ set -o pipefail
 
 tmuxinator_project_exists()
 {
-	tmuxinator list | grep -v '^tmuxinator projects:' | grep -q "^${1}"
+	tmuxinator list --newline | grep -v '^tmuxinator projects:' | grep -q "^${1}"
 }
 
 main()
@@ -20,7 +20,7 @@ main()
 		echo "tmux sessions:"
 		tmux list-sessions || true
 
-		tmuxinator list
+		tmuxinator list --newline
 
 		return
 	fi
