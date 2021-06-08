@@ -27,3 +27,6 @@ map c f
 
 " Go to random song.
 map r %
+
+" Increase volume.
+map = +
