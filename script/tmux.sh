@@ -18,7 +18,7 @@ main()
 
 	if [[ -z "${1:-}" ]]; then
 		echo "tmux sessions:"
-		tmux list-sessions
+		tmux list-sessions || true
 
 		tmuxinator list
 
