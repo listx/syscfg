@@ -1,21 +1,16 @@
 # https://stackoverflow.com/a/56180220/437583
 
 with import (builtins.fetchGit {
-    # Unfortunately, we can't check out arbitrary GitHub commit SHAs, so we
-    # have to refer to a local clone of
-    # https://github.com/NixOS/nixpkgs-channels (which itself just follows
-    # https://github.com/NixOS/nixpkgs.git with a verification delay, as per
-    # https://nixos.wiki/wiki/Nix_channels).
     url = "~/prog/foreign/nixpkgs";
-    # Known good commit for moving branch "nixpkgs-unstable".
-    ref = "eb24f9efb98c32f2b3ce073573162399814e7167";
+    # Known good commit for moving branch "nixos-21.05".
+    ref = "60cce7e5e1fdf62421ef6d4184ee399b46209366";
 }) {};
 
 haskell.lib.buildStackProject {
     name = "my-project";
     buildInputs = [
       gmp
-      haskell.compiler.ghc883
+      haskell.compiler.ghc8104
       libffi
       pkgconfig
       x11

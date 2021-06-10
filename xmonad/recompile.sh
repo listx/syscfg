@@ -2,7 +2,8 @@
 
 set -ex
 
-# Install the xmonad binary to the local path.
-stack --local-bin-path=${HOME}/.xmonad install
+xmonad_dir="${HOME}/syscfg/xmonad"
+cd "${xmonad_dir}"
+nix-shell --command "cabal install --installdir ${xmonad_dir} --overwrite-policy=always"
+cp -f "${xmonad_dir}/xmonad" "${xmonad_dir}/xmonad-x86_64-linux"
 
-cp -f ${HOME}/.xmonad/{xmonad,xmonad-x86_64-linux}
