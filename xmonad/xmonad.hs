@@ -351,7 +351,7 @@ data RichText = RichText
 richTextDef :: RichText
 richTextDef = RichText
   { rtString = " "
-  , rtFont = "dejavu sans mono"
+  , rtFont = "DejaVu Sans Mono"
   , rtSize = 160
   , rtForeground = "white"
   , rtBackground = "blue"
