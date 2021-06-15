@@ -82,6 +82,7 @@ tig:
 	ln -fs ${C}/tig/.tigrc                              ${H}
 tmux:
 	ln -fs ${C}/tmux/.tmux.conf                         ${H}
+	${C}/tmux/install.sh tpm
 tmuxinator:
 	ln -fns ${C}/tmuxinator                             ${H}/.config
 uim:
