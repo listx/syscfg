@@ -55,6 +55,7 @@
      (paths `(
       ,(concat HOME "/syscfg/script")
       ,(concat HOME "/bin")
+      ,(concat HOME "/.cargo/bin")
       ,(concat HOME "/.nix-profile/bin"))))
     (setenv "PATH" (concat (mapconcat 'identity paths ":") ":" PATH))
     ; The way in which `exec-path' is set here is hacky. It appears that
@@ -72,6 +73,7 @@
      (PATH (getenv "PATH"))
      (paths `(
       ,(concat HOME "/syscfg/script")
+      ,(concat HOME "/.cargo/bin")
       ,(concat HOME "/.local/bin"))))
     (setenv "PATH" (concat (mapconcat 'identity paths ":") ":" PATH))
     (setq exec-path
