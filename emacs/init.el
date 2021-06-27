@@ -82,7 +82,6 @@
 (require 'l-yaml)
 
 ; Load things related to themes/appearance.
-(require 'l-alect-themes)
 (require 'l-zenburn-theme)
 (require 'l-arjen-grey-theme)
 (require 'l-hl-line+)
