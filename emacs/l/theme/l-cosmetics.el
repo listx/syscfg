@@ -118,36 +118,30 @@
     (
       (theme (format "%s" (l/theme-name))))
     ; TODO: Insert theme-specific adjustments here.
-    ))
+    (progn
+      (set-face-attribute 'auto-dim-other-buffers-face nil :foreground "grey" :background "black")
+      (set-face-attribute 'lazy-highlight nil :foreground "pink" :background "dark red" :weight 'normal)
+      (set-face-attribute 'isearch nil :foreground "dark red" :background "pink" :weight 'bold)
+      (set-face-attribute 'region nil :foreground "dark red" :background "pink" :weight 'bold)
 
-; Select theme based on GUI or ncurses mode.
-(if (display-graphic-p)
-  (progn
-    (l/theme-hook))
-  (progn
-    (set-face-attribute 'auto-dim-other-buffers-face nil :foreground "grey" :background "black")
-    (set-face-attribute 'lazy-highlight nil :foreground "pink" :background "dark red" :weight 'normal)
-    (set-face-attribute 'isearch nil :foreground "dark red" :background "pink" :weight 'bold)
-    (set-face-attribute 'region nil :foreground "dark red" :background "pink" :weight 'bold)
+      ; Tab bar colors.
+      (set-face-attribute 'tab-bar nil :font (nth l/font-choice l/font-collection) :height 100 :background "grey32")
+      (set-face-attribute 'tab-bar-tab nil :font (nth l/font-choice l/font-collection) :height 100 :weight 'bold :box nil :background "pink")
+      (set-face-attribute 'tab-bar-tab-inactive nil :font (nth l/font-choice l/font-collection) :height 100 :weight 'bold :box nil :foreground "grey80" :background "grey32")
 
-    ; Tab bar colors.
-    (set-face-attribute 'tab-bar nil :font (nth l/font-choice l/font-collection) :height 100 :background "grey32")
-    (set-face-attribute 'tab-bar-tab nil :font (nth l/font-choice l/font-collection) :height 100 :weight 'bold :box nil :background "pink")
-    (set-face-attribute 'tab-bar-tab-inactive nil :font (nth l/font-choice l/font-collection) :height 100 :weight 'bold :box nil :background "grey32")
-
-    ; Fix ugly colors for diffs. Prevalent because of git comit message buffers
-    ; like COMMIT_EDITMSG.
-    (set-face-attribute 'default nil :foreground "#ffffff" :background "gray25")
-    (set-face-attribute 'font-lock-comment-face nil :foreground "#9fc59f" :background "gray25")
-    (use-package git-commit
-      :config (set-face-attribute 'git-commit-summary nil :foreground "cyan1" :background "gray25"))
-    (set-face-attribute 'diff-added nil :foreground "green" :background "dark green")
-    (set-face-attribute 'diff-removed nil :foreground "red" :background "dark red")
-    (set-face-attribute 'diff-context nil :foreground "#ffffff" :background "gray25")
-    (set-face-attribute 'diff-file-header nil :foreground "yellow" :background "gray25" :weight 'bold)
-    (set-face-attribute 'diff-header      nil :foreground "yellow" :background "gray25" :weight 'bold)
-    (set-face-attribute 'diff-hunk-header nil :foreground "cyan"   :background "gray25")
-    (set-face-attribute 'hl-line nil :background "dim gray")))
+      ; Fix ugly colors for diffs. Prevalent because of git comit message buffers
+      ; like COMMIT_EDITMSG.
+      (set-face-attribute 'font-lock-comment-face nil :foreground "#9fc59f" :background "gray25")
+      (use-package git-commit
+        :config (set-face-attribute 'git-commit-summary nil :foreground "cyan1" :background "gray25"))
+      (set-face-attribute 'diff-added nil :foreground "green" :background "dark green")
+      (set-face-attribute 'diff-removed nil :foreground "red" :background "dark red")
+      (set-face-attribute 'diff-context nil :foreground "#ffffff" :background "gray25")
+      (set-face-attribute 'diff-file-header nil :foreground "yellow" :background "gray25" :weight 'bold)
+      (set-face-attribute 'diff-header      nil :foreground "yellow" :background "gray25" :weight 'bold)
+      (set-face-attribute 'diff-hunk-header nil :foreground "cyan"   :background "gray25")
+      (set-face-attribute 'diff-hunk-header nil :foreground "cyan"   :background "gray25")
+      (set-face-attribute 'hl-line nil :background "dim gray"))))
 
 ; If we're on our laptop, make the text slightly bigger to match my desktop's
 ; behavior.
@@ -187,5 +181,9 @@
 ; of this variable.
 (if (= (length argv) 0)
   (setq default-directory "~/"))
+
+; Set the first theme.
+(load-theme (l/theme-name) t)
+(l/theme-hook)
 
 (provide 'l-cosmetics)
