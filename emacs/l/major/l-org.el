@@ -157,26 +157,6 @@
   (use-package org-download
     :after org
     :config
-    (if (string= (l/theme-name) "arjen-grey")
-      ; Customizations for arjen-grey theme and org-mode.
-      (progn
-        ; Colorize custom TODO-like keywords for org-mode.
-        (setq org-todo-keyword-faces '(
-          ("TODO" . org-warning)
-          ("IN-PROGRESS" . "yellow")
-          ("WAITING" . "purple")
-          ("DONE" . org-done)
-          ("CANCELED" . (:foreground "orange" :weight bold))
-          ("OBSOLETE" . (:foreground "grey" :weight bold))))
-        (set-face-attribute 'org-todo nil :foreground "indian red" :weight 'bold)
-        (set-face-attribute 'org-level-1 nil :foreground "pink" :weight 'bold)
-        (set-face-attribute 'org-level-2 nil :foreground "aquamarine" :weight 'bold)
-        (set-face-attribute 'org-level-3 nil :weight 'bold)
-        (set-face-attribute 'org-level-4 nil :inherit 'org-level-7 :weight 'bold)
-        (set-face-attribute 'org-level-5 nil :foreground "light cyan" :weight 'bold)
-        (set-face-attribute 'org-level-6 nil :foreground "RosyBrown2" :weight 'bold)
-        (set-face-attribute 'org-level-7 nil :weight 'bold)
-        (set-face-attribute 'org-level-8 nil :weight 'bold)))
     (setq org-download-screenshot-method "scrot -os %s")
     (defun l/org-download-method (link)
       (let*
@@ -323,9 +303,8 @@ themes (something that might be disruptive if run against a running emacs
 session, such as a running emacs daemon)."
   (progn
     ; Set colors. These colors will be used in the HTML file's CSS.
-    (load-theme 'arjen-grey t)
+    (load-theme 'zenburn t)
     (l/theme-hook)
-    (l/arjen-hook)
 
     ; Finally, perform the export. This function reads in
     ; org-agenda-custom-commands and runs all functions in there that have a
