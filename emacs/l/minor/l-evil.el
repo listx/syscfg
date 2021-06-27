@@ -10,8 +10,8 @@
   (setq evil-insert-state-modes nil)
   (setq evil-motion-state-modes nil)
   (setq evil-default-state 'normal)
-  ; Cursor colors for the various states --- by default, we choose cursor colors
-  ; for alect-light (as it is the first theme loaded).
+  ; Cursor colors for the various states.
+  ; TODO: Make these depend on the actual theme.
   (setq evil-insert-state-cursor '("#000000" box))
   (setq evil-emacs-state-cursor '("#ff0000" box))
   (setq evil-normal-state-cursor '("DodgerBlue1" box))

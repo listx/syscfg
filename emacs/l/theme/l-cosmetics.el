@@ -93,8 +93,6 @@
 (defvar l/themes
   '(
     arjen-grey
-    alect-light
-    alect-dark
     zenburn)
   "Default themes")
 
@@ -122,33 +120,6 @@
     (
       (theme (format "%s" (l/theme-name))))
     (cond
-      ((string= "alect-light" theme)
-        (progn
-          (set-face-background 'hiwin-face
-            ; set default to alect-light
-            (if (display-graphic-p) "#ded6c5" "gray16"))
-          (set-face-background 'auto-dim-other-buffers-face
-            (if (display-graphic-p) "#ded6c5" "gray16"))
-          (setq evil-insert-state-cursor '("#000000" box))
-          (setq evil-normal-state-cursor '("DodgerBlue1" box))))
-      ((or
-          (string= "alect-dark" theme)
-          (string= "alect-black" theme))
-        (progn
-          (set-face-background 'hiwin-face
-            (if (display-graphic-p)
-              (if (string= "alect-dark" theme)
-                "#0d0d0f"
-                "gray0")
-              "gray16"))
-          (set-face-background 'auto-dim-other-buffers-face
-            (if (display-graphic-p)
-              (if (string= "alect-dark" theme)
-                "#0d0d0f"
-                "gray0")
-              "gray16"))
-          (setq evil-insert-state-cursor '("#ffffff" box))
-          (setq evil-normal-state-cursor '("#00ff00" box))))
       ((string= "arjen-grey" theme)
         (progn
           (set-face-background 'hiwin-face
@@ -188,7 +159,7 @@
     (l/theme-hook)
     (l/arjen-hook))
   (progn
-    (set-face-attribute 'auto-dim-other-buffers-face nil :foreground "white" :background "black")
+    (set-face-attribute 'auto-dim-other-buffers-face nil :foreground "grey" :background "black")
     (set-face-attribute 'lazy-highlight nil :foreground "pink" :background "dark red" :weight 'normal)
     (set-face-attribute 'isearch nil :foreground "dark red" :background "pink" :weight 'bold)
     (set-face-attribute 'region nil :foreground "dark red" :background "pink" :weight 'bold)
