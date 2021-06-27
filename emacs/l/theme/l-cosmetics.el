@@ -92,7 +92,6 @@
 
 (defvar l/themes
   '(
-    arjen-grey
     zenburn)
   "Default themes")
 
@@ -110,8 +109,7 @@
 
     ; Apply the theme
     (load-theme (l/theme-name) t)
-    (l/theme-hook)
-    (when (string= "arjen-grey" (l/theme-name)) (l/arjen-hook))))
+    (l/theme-hook)))
 
 ; Set colors depending on theme name.
 (defun l/theme-hook ()
@@ -119,52 +117,20 @@
   (let
     (
       (theme (format "%s" (l/theme-name))))
-    (cond
-      ((string= "arjen-grey" theme)
-        (progn
-          (set-face-background 'hiwin-face
-            (if (display-graphic-p)
-              "#0d0d0f"
-              "gray16"))
-          (set-face-background 'auto-dim-other-buffers-face
-            (if (display-graphic-p)
-              "#0d0d0f"
-              "gray16"))
-          (setq evil-insert-state-cursor '("#ffffff" box))
-          (setq evil-normal-state-cursor '("#00ff00" box)))))))
-
-(defun l/arjen-hook ()
-  (interactive)
-  (set-face-attribute 'mode-line-buffer-id nil :foreground "black" :distant-foreground "red")
-  (set-face-attribute 'mode-line nil :foreground "black" :background "pink" :box '(:line-width 2 :color "pink" :style nil))
-  (set-face-attribute 'mode-line-inactive nil :foreground "grey64" :box '(:line-width 2 :color "grey32" :style nil))
-  (set-face-attribute 'column-enforce-face nil :inherit 'default)
-  (set-face-attribute 'hl-line nil :background "#1a2126")
-  (set-face-attribute 'region nil :foreground "#7a1717" :background "pink" :weight 'bold)
-  (set-face-attribute 'lazy-highlight nil :foreground "pink" :background "#7a1717" :weight 'normal)
-  (set-face-attribute 'isearch nil :foreground "#7a1717" :background "pink" :weight 'bold)
-  (set-face-attribute 'helm-candidate-number nil :foreground "#7a1717" :background "pink" :weight 'bold)
-  (set-face-attribute 'git-gutter:added nil :foreground "lime green")
-  (set-face-attribute 'git-gutter:modified nil :foreground "purple")
-  (set-face-attribute 'git-gutter:deleted nil :foreground "red")
-  (set-face-attribute 'tab-bar nil :font (nth l/font-choice l/font-collection) :height 100 :background "grey32")
-  (set-face-attribute 'tab-bar-tab nil :font (nth l/font-choice l/font-collection) :height 100 :weight 'bold :box nil :background "pink")
-  (set-face-attribute 'tab-bar-tab-inactive nil :font (nth l/font-choice l/font-collection) :height 100 :weight 'bold :box nil :background "grey32")
-  )
+    ; TODO: Insert theme-specific adjustments here.
+    ))
 
 ; Select theme based on GUI or ncurses mode.
 (if (display-graphic-p)
   (progn
-    (load-theme 'arjen-grey t)
-    (l/theme-hook)
-    (l/arjen-hook))
+    (l/theme-hook))
   (progn
     (set-face-attribute 'auto-dim-other-buffers-face nil :foreground "grey" :background "black")
     (set-face-attribute 'lazy-highlight nil :foreground "pink" :background "dark red" :weight 'normal)
     (set-face-attribute 'isearch nil :foreground "dark red" :background "pink" :weight 'bold)
     (set-face-attribute 'region nil :foreground "dark red" :background "pink" :weight 'bold)
 
-    ; Tab bar colors. These are for arjen but I'm too lazy to fix it up.
+    ; Tab bar colors.
     (set-face-attribute 'tab-bar nil :font (nth l/font-choice l/font-collection) :height 100 :background "grey32")
     (set-face-attribute 'tab-bar-tab nil :font (nth l/font-choice l/font-collection) :height 100 :weight 'bold :box nil :background "pink")
     (set-face-attribute 'tab-bar-tab-inactive nil :font (nth l/font-choice l/font-collection) :height 100 :weight 'bold :box nil :background "grey32")
