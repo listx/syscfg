@@ -54,6 +54,42 @@
 
   time.timeZone = "America/Los_Angeles";
 
+  i18n.inputMethod.enabled = "uim";
+
+  # Fonts
+  fonts = {
+    fontDir.enable = true;
+    enableGhostscriptFonts = true;
+    fonts = with pkgs; [
+      baekmuk-ttf
+      corefonts
+      dejavu_fonts
+      ipafont
+      libertine
+      source-serif-pro
+      terminus_font
+      ubuntu_font_family
+    ];
+  };
+
+  # Prettify the virtual console font early on with Terminus.
+  console = {
+    font = "ter-114n";
+    packages = with pkgs; [ terminus_font ];
+    earlySetup = true;
+  };
+
+  services.openvpn.servers = {
+    # Unless `autoStart = false;', all entries here start automatically as a
+    # systemd service. To stop the `home' OpenVPN client service, run `sudo
+    # systemctl stop openvpn-home'.
+    home = {
+      config = builtins.readFile ../openvpn/home.ovpn;
+    };
+  };
+
+  hardware.pulseaudio.enable = true;
+
   users.groups.l = {
     gid = 1000;
   };

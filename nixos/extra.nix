@@ -5,40 +5,6 @@
     ./minimal.nix
   ];
 
-  # Fonts
-  fonts = {
-    fontDir.enable = true;
-    enableGhostscriptFonts = true;
-    fonts = with pkgs; [
-      baekmuk-ttf
-      corefonts
-      dejavu_fonts
-      ipafont
-      libertine
-      source-serif-pro
-      terminus_font
-      ubuntu_font_family
-    ];
-  };
-
-  hardware.pulseaudio.enable = true;
-
-  # Prettify the virtual console font early on with Terminus.
-  console = {
-    font = "ter-114n";
-    packages = with pkgs; [ terminus_font ];
-    earlySetup = true;
-  };
-
-  services.openvpn.servers = {
-    # Unless `autoStart = false;', all entries here start automatically as a
-    # systemd service. To stop the `home' OpenVPN client service, run `sudo
-    # systemctl stop openvpn-home'.
-    home = {
-      config = builtins.readFile ../openvpn/home.ovpn;
-    };
-  };
-
   services.xserver = {
     enable = true;
     layout = "us";
@@ -70,8 +36,6 @@
 
   # Enable CUPS to print documents.
   services.printing.enable = true;
-
-  i18n.inputMethod.enabled = "uim";
 
   users.extraUsers.l.extraGroups = [ "wheel" "docker" "vboxusers" ] ;
 }
