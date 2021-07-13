@@ -20,6 +20,13 @@
       8011 # ~/syscfg/script/serve-org-agenda.py
       8020 # stack exec -- blog watch --host=192.168.0.4 --port=8020
       8030 # mpd HTTP stream
+
+      # k8s master API server port
+      6443
+      # k8s master cfssl service; required for the node to fetch certs from the
+      # k8s master (otherwise we get "cert: failed to fetch remote CA: failed to
+      # parse rootCA certs" error)
+      8888
     ];
   };
 
