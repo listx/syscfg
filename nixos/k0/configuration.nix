@@ -5,6 +5,7 @@
     [
       ../extra.nix
       ./hardware-configuration.nix
+      ./k8s-master.nix
     ];
 
   boot.loader.systemd-boot.enable = true;
