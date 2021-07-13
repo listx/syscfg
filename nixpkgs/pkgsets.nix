@@ -113,7 +113,6 @@ with super; rec {
       openssl
       pinentry
       cryptsetup
-      mutt
       htop
       dhcpcd
       utillinuxCurses
