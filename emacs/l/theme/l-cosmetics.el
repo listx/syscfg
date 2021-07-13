@@ -131,17 +131,17 @@
 
       ; Fix ugly colors for diffs. Prevalent because of git comit message buffers
       ; like COMMIT_EDITMSG.
-      (set-face-attribute 'font-lock-comment-face nil :foreground "#9fc59f" :background "gray25")
+      (set-face-attribute 'font-lock-comment-face nil :foreground "#9fc59f")
       (use-package git-commit
-        :config (set-face-attribute 'git-commit-summary nil :foreground "cyan1" :background "gray25"))
+        :config (set-face-attribute 'git-commit-summary nil :foreground "cyan1" :background "grey25"))
       (set-face-attribute 'diff-added nil :foreground "green" :background "dark green")
       (set-face-attribute 'diff-removed nil :foreground "red" :background "dark red")
-      (set-face-attribute 'diff-context nil :foreground "#ffffff" :background "gray25")
-      (set-face-attribute 'diff-file-header nil :foreground "yellow" :background "gray25" :weight 'bold)
-      (set-face-attribute 'diff-header      nil :foreground "yellow" :background "gray25" :weight 'bold)
-      (set-face-attribute 'diff-hunk-header nil :foreground "cyan"   :background "gray25")
-      (set-face-attribute 'diff-hunk-header nil :foreground "cyan"   :background "gray25")
-      (set-face-attribute 'hl-line nil :background "dim gray"))))
+      (set-face-attribute 'diff-context nil :foreground "#ffffff" :background "grey25")
+      (set-face-attribute 'diff-file-header nil :foreground "yellow" :background "grey25" :weight 'bold)
+      (set-face-attribute 'diff-header      nil :foreground "yellow" :background "grey25" :weight 'bold)
+      (set-face-attribute 'diff-hunk-header nil :foreground "cyan"   :background "grey25")
+      (set-face-attribute 'diff-hunk-header nil :foreground "cyan"   :background "grey25")
+      (set-face-attribute 'hl-line nil :background "grey32"))))
 
 ; If we're on our laptop, make the text slightly bigger to match my desktop's
 ; behavior.
