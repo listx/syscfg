@@ -9,7 +9,6 @@ in
     roles = ["master" "node"];
     masterAddress = kubeMasterHostname;
     apiserverAddress = "https://${kubeMasterHostname}:${builtins.toString kubeMasterAPIServerPort}";
-    easyCerts = true;
     apiserver = {
       securePort = kubeMasterAPIServerPort;
       advertiseAddress = kubeMasterIP;
