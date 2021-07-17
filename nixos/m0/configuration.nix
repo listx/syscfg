@@ -5,7 +5,7 @@
     [
       ../minimal.nix
       ./hardware-configuration.nix
-      ./k8s-node.nix
+      ../k8s-node.nix
     ];
 
   boot.loader.grub.enable = true;
