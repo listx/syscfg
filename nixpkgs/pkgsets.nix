@@ -53,34 +53,36 @@ with super; rec {
       l_set_base
       l_set_dev
       l_set_haskell
-      l_set_vm
     ];
   });
 
-  # Meant for headless backup boxes.
-  l_set_backup = setPrio "10" (buildEnv {
+  # Meant for headless backup boxes. Subset of things in l-set-base and
+  # l-set-dev.
+  l_set_backup = setPrio "9" (buildEnv {
     name = "l-set-backup";
     ignoreCollisions = true;
     paths = [
       bmon
       emacs
-      fd
       fzf
       gcc
       git
       gitAndTools.git-annex
       gnumake
       gnupg
+      google-cloud-sdk
       htop
       neovim
       ripgrep
+      sqlite
       tig
       tmux
+      tmuxinator
       tree
     ];
   });
 
-  l_set_base = setPrio "7" (buildEnv {
+  l_set_base = setPrio "8" (buildEnv {
     name = "l-set-base";
     ignoreCollisions = true;
     paths = [
@@ -95,18 +97,17 @@ with super; rec {
       xorg.xdpyinfo
       xorg.xkill
       xcompmgr
-      HEAD.alacritty
+      alacritty
       tmux
+      tmuxinator
 
       emacs
       sqlite # for org-roam in emacs
       graphviz # for org-roam-graph in emacs
+      neovim
 
       xsel
-      ed
-      vim
       ripgrep
-      fd
       fzf
       colordiff
       gnupg
@@ -115,7 +116,6 @@ with super; rec {
       cryptsetup
       htop
       dhcpcd
-      utillinuxCurses
       lsof
       tree
       sshfsFuse
@@ -124,10 +124,6 @@ with super; rec {
       pciutils # lspci
       bind # 'dig' cli program
       ncdu
-      perf-tools
-      sysstat
-      tcpdump
-      wireshark-cli # tshark
       parallel
 
       # Docs
@@ -145,21 +141,19 @@ with super; rec {
 
       # filesystem
       fuse
+      parted
       gparted
       ntfs3g
       gptfdisk
       ranger
 
       # other
-      xscreensaver
       pavucontrol
       woeusb
-      feh
-      tokei # for counting source code lines
     ];
   });
 
-  l_set_dev = setPrio "8" (buildEnv {
+  l_set_dev = setPrio "7" (buildEnv {
     name = "l-set-dev";
     ignoreCollisions = true;
     paths = [
@@ -167,47 +161,29 @@ with super; rec {
       git
       tig
       clang
-      clojure
-      openjdk
       elixir
       gcc
       go
       golint
-      gdb
       binutils
-      valgrind
       gnumake
-      python # 'python' is python2
-      python38
-      python38Packages.pylint
-      python38Packages.flake8
-      ruby
-      cloc
-      cwebbin
+      python39
+      python39Packages.pylint
+      python39Packages.flake8
       noweb
-      erlang
       rustup
       # Some node stuff.
       nodejs
       wasm-pack
 
-      # Lisps
-      ccl # clozure
-      clisp
-      sbcl
-      leiningen
+      # Containerization.
+      docker
+      kubectl
 
       # linters
       cppcheck
       dos2unix
       jq
-
-      # Programming libraries
-      boehmgc
-      glfw
-      glxinfo
-      pcg_c
-      ncurses
 
       # Database
       postgresql
@@ -230,8 +206,10 @@ with super; rec {
       l_set_web
       l_set_av
       l_set_office
-      l_set_games
-      l_set_misc
+
+      # fonts
+      kreative-square-fonts
+      raleway
     ];
   });
 
@@ -244,8 +222,6 @@ with super; rec {
       qutebrowser
       offlineimap
       notmuch
-      links
-      aria2
       rtorrent
     ];
   });
@@ -257,18 +233,14 @@ with super; rec {
       scrot
       geeqie
       gimp
-      inkscape
       imagemagick
       mpv
       ffmpeg
       flac
-      shntool
-      vlc
-      cmus
-      lilypond
-      darktable
-      rawtherapee
-      xsane
+      mpc_cli
+      vimpc
+      mpd
+      r128gain
     ];
   });
 
@@ -276,39 +248,11 @@ with super; rec {
     name = "l-set-office";
     ignoreCollisions = true;
     paths = [
+      pdftk
       # For pdftotext
       poppler_utils
       zathura
-    ];
-  });
-
-  l_set_games = setPrio "8" (buildEnv {
-    name = "l-set-games";
-    ignoreCollisions = true;
-    paths = [
-      higan
-      sdlmame
-    ];
-  });
-
-  l_set_misc = setPrio "8" (buildEnv {
-    name = "l-set-misc";
-    ignoreCollisions = true;
-    paths = [
-      abcde
-      cdparanoia
-      fontforge
-    ];
-  });
-
-  l_set_vm = setPrio "9" (buildEnv {
-    name = "l-set-vm";
-    ignoreCollisions = true;
-    paths = [
-      docker
-      vagrant
-      linuxPackages.virtualbox
-      linuxPackages.virtualboxGuestAdditions
+      texlive.combined.scheme-full
     ];
   });
 
@@ -373,7 +317,7 @@ with super; rec {
       # Compiler versions can be discovered with:
       #
       #   nix-env -f "<nixpkgs>" -qaP -A haskell.compiler
-      haskell.compiler.ghc8102
+      haskell.compiler.ghc901
 
       # Misc userland packages.
       auca
@@ -388,6 +332,7 @@ with super; rec {
       shellcheck
       pandoc
       dhall
+      dhall-json
       gitAndTools.git-annex
     ];
   });

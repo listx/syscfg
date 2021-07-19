@@ -1,5 +1,5 @@
 { mkDerivation, base, cmdargs, directory, hinotify, monads-tf
-, process, stdenv, stm, time
+, process, stdenv, lib, stm, time
 }:
 mkDerivation {
   pname = "auca";
@@ -11,5 +11,5 @@ mkDerivation {
     base cmdargs directory hinotify monads-tf process stm time
   ];
   description = "Execute arbitrary command(s) based on file changes";
-  license = stdenv.lib.licenses.bsd2;
+  license = lib.licenses.bsd2;
 }
