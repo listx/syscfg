@@ -1,6 +1,9 @@
 # pylint: disable=undefined-variable,missing-docstring
 # flake8: noqa
 
+# Load settings configured via the GUI (autoconfig.yml).
+config.load_autoconfig()
+
 # Use the exported org agenda view as the default page.
 c.url.start_pages = [
     "https://gmail.com",
