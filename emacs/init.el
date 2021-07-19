@@ -29,7 +29,6 @@
 (require 'l-helm)
 (require 'l-helm-ag)
 (require 'l-helm-projectile)
-(require 'l-hiwin)
 (require 'l-htmlize)
 (require 'l-hydra)
 (require 'l-kakapo-mode)
