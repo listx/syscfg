@@ -14,6 +14,9 @@
   ; Update git-gutter every time we lose/regain focus to the frame. See
   ; https://emacs.stackexchange.com/a/60971/13006.
   (add-function :after after-focus-change-function (lambda () (unless (frame-focus-state) (git-gutter:update-all-windows))))
+  (set-face-foreground 'git-gutter:modified "#d0d")
+  (set-face-foreground 'git-gutter:added "#0d0")
+  (set-face-foreground 'git-gutter:deleted "#d00")
   (setq git-gutter:modified-sign " ")
   (setq git-gutter:added-sign " ")
   (setq git-gutter:deleted-sign " "))
