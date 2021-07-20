@@ -49,10 +49,23 @@ set_elisp()
 		exit 1
 	fi
 
+    # Protect filename by "quoting" it, as per
+    # https://www.gnu.org/software/emacs/manual/html_node/emacs/Quoted-File-Names.html,
+    # but only if we need to. This usually only comes up rarely if we need to
+    # look at filenames with such characters in them.
+    #
+    # In most circumstances, we don't want to bother doing this because it does
+    # not play well with various third-party Emacs packages that expect the
+    # filename to not have a leading "/:", such as linters and formatters for
+    # programming languages.
+    if [[ "${buffer_filename}" =~ [*:~!?] ]]; then
+        buffer_filename="/:${buffer_filename}"
+    fi
+
 	__elisp=$(cat << EOF
 	(prog1
 		; Open the file.
-		(find-file "/:${buffer_filename}")
+		(find-file "${buffer_filename}")
 		${maybe_fill_72}
 		${maybe_goto_position}
 		; Always show current line position, even if we're opening an
