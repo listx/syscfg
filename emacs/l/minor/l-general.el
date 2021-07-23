@@ -79,8 +79,8 @@
 
     "y" (lambda () (interactive) (l/copy-for-markdown nil))
     "Y" (lambda () (interactive) (l/copy-for-markdown t))
-    ; Put emacs into the background; only works in terminal mode.
-    "Z" 'suspend-emacs))
+    ; Put current emacs frame into the background.
+    "z" 'suspend-frame))
 
 (defun l/force-unix-line-endings ()
   (interactive)
