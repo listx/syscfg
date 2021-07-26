@@ -84,9 +84,27 @@ EOF
 	__elisp="$(echo -e "${__elisp}" | sed '/^\s\+\?;/d;s/;.\+//')"
 }
 
+set_tmux_window_title()
+{
+	if [[ -n "${TMUX_PANE:-}" ]]; then
+		# Manually set window title. This turns off automatic renaming.
+		tmux rename-window -t"${TMUX_PANE}" "#[bold]${1}#[default]"
+	fi
+}
+
+restore_tmux_window_title()
+{
+	if [[ -n "${TMUX_PANE:-}" ]]; then
+		tmux set-window-option automatic-rename "on"
+	fi
+}
+
 main()
 {
 	set_elisp "$@"
+
+	# Set TMUX window title, if possible.
+	set_tmux_window_title "emacs"
 
 	# The (find-file ...) avoids showing "*scratch*" buffer on startup when
 	# invoking from emacsclient.
@@ -94,6 +112,8 @@ main()
 		--alternate-editor "" \
 		--tty \
 		--eval "${__elisp}"
+
+	restore_tmux_window_title
 }
 
 main "$@"
