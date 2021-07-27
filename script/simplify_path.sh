@@ -11,19 +11,19 @@ fi
 prefix="${path%/*}"
 basename="${path##*/}"
 
-__TRUNCATE_THRESHOLD=20
+__TRUNCATE_THRESHOLD=30
 
 # Truncate long prefix paths.
+final_path="${prefix}/${basename}"
 i=0
 mapfile -td / fields < <(printf "%s\0" "${prefix}")
-while (( "${#prefix}" > "${__TRUNCATE_THRESHOLD}" )) && (( $i < "${#fields[@]}" )); do
+while (( "${#final_path}" > "${__TRUNCATE_THRESHOLD}" )) && (( $i < "${#fields[@]}" )); do
 	# Truncate this portion of the prefix to its first letter.
 	fields["${i}"]="${fields[${i}]::1}"
 	prefix=$(IFS=/; printf '%s' "${fields[*]}")
+	final_path="${prefix}/${basename}"
 	i=$(($i + 1))
 done
-
-final_path="${prefix}/${basename}"
 
 if [[ "${final_path}" == "~/~" ]]; then
 	echo "~"
