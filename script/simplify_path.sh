@@ -1,5 +1,16 @@
 #!/usr/bin/env bash
 
+# Truncate a path, based on __TRUNCATE_THRESHOLD. E.g., this script converts
+#
+#   ~/aaaaaaaaaaaaaa/bbbbbbbbbbbbbbbbb/cccccccccccccc/hello
+#
+# into
+#
+#   ~/a/b/c/hello
+#
+# and is meant to be used for TMUX window titles, although it can be used
+# elsewhere as well.
+
 set -euxo pipefail
 
 path="${1:-}"
@@ -25,6 +36,7 @@ while (( "${#final_path}" > "${__TRUNCATE_THRESHOLD}" )) && (( $i < "${#fields[@
 	i=$(($i + 1))
 done
 
+# Handle edge case for the $HOME path as input.
 if [[ "${final_path}" == "~/~" ]]; then
 	echo "~"
 	exit 0
