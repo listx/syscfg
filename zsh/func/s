@@ -37,10 +37,10 @@ s()
 
 	case "${host}" in
 	w0)
-		ssh "${user}@${host}" -t -Y \"zsh -lc \\\"~/syscfg/script/tmux.sh ${session}\\\"\"
+		ssh -t -Y "${user}@${host}" \"zsh -lc \\\"~/syscfg/script/tmux.sh ${session}\\\"\"
 		;;
 	*)
-		ssh "${user}@${host}" -t -Y '~/syscfg/script/tmux.sh' "${session}"
+		ssh -t -Y "${user}@${host}" '~/syscfg/script/tmux.sh' "${session}"
 		;;
 	esac
 }
