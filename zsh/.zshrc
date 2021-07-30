@@ -430,6 +430,17 @@ ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=2,bold"
 # binding for this).
 bindkey '^e' autosuggest-accept
 
+# History editing.
+zplug "marlonrichert/zsh-hist"
+
+# Prevent command typos from cluttering up history.
+# See https://stackoverflow.com/a/66060510/437583.
+autoload -Uz add-zsh-hook
+command-not-found () {
+  (( ? == 127 )) && hist -fs f -1
+}
+add-zsh-hook precmd command-not-found
+
 # Install plugins if there are plugins that have not been installed
 if ! zplug check --verbose; then
     printf "Install? [y/N]: "
