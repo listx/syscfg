@@ -175,7 +175,7 @@ TRAPALRM() {
 }
 
 # history settings
-HISTSIZE=20000
+HISTSIZE=50000
 SAVEHIST=40000
 HISTFILE=~/.zsh-untracked/history
 
