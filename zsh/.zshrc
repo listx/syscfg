@@ -420,7 +420,15 @@ else
     source ~/.zplug/init.zsh
 fi
 
+# Print warning if we don't use an existing alias for a command.
 zplug "MichaelAquilina/zsh-you-should-use"
+
+# Fish-shell-like automatically-suggested completions.
+zplug "zsh-users/zsh-autosuggestions"
+ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=2,bold"
+# Bind C-e to accept the current suggestion (same as default "Right Arrow"
+# binding for this).
+bindkey '^e' autosuggest-accept
 
 # Install plugins if there are plugins that have not been installed
 if ! zplug check --verbose; then
