@@ -470,9 +470,40 @@ if [[ -n "${commands[fzf-share]}" ]]; then
 	source "$(fzf-share)/completion.zsh"
 	source "$(fzf-share)/key-bindings.zsh"
 
-    # Use ALT-D binding instead of the default ALT-C.
-    bindkey '\ed' fzf-cd-widget
-    export FZF_DEFAULT_COMMAND='rg --files --hidden --glob "!.git"'
-    export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
-    export FZF_ALT_C_COMMAND='rg --files --hidden --glob "!.git" --null | xargs -0 dirname | sort -u'
+	# Use exact matches (except for space characters; i.e., you can type "world
+	# hello" and it will match a "hello world" string).
+	FZF_CTRL_R_OPTS=" --exact"
+	# Sort entries. This essentially just groups together similarly-named
+	# commands to be together (that is, search hits that share the same prefix
+	# will be shown together, instead of being shown separately if they were not
+	# executed one after the other chronologically).
+	FZF_CTRL_R_OPTS+=" --sort"
+	# `--select-1' automatically selects the item if there's only one so that you
+	# don't have to press enter key. Likewise, `--exit-0' automatically exits
+	# when the list is empty.
+	FZF_CTRL_R_OPTS+=" --select-1 --exit-0"
+	# Enable preview window. This makes it so that we can see the full command
+	# if it is too long to be displayed in a single line. We hide this preview
+	# window by default, and bind the `?' key to display it if we want to.
+	FZF_CTRL_R_OPTS+=" --preview 'echo {}' --preview-window down:3:hidden:wrap --bind '?:toggle-preview'"
+	export FZF_CTRL_R_OPTS
+
+	export FZF_DEFAULT_COMMAND='rg --files --hidden --glob "!.git"'
+
+	# C-t fuzzy searches a file argument to the current command we're trying to build up.
+	export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+
+	# Enable preview window for files.
+	FZF_CTRL_T_OPTS=" --preview '(cat {} || tree -C {}) 2> /dev/null | head -200'"
+	FZF_CTRL_T_OPTS+=" --select-1 --exit-0"
+	export FZF_CTRL_T_OPTS
+
+	# Use ALT-D binding instead of the default ALT-C.
+	bindkey '\ed' fzf-cd-widget
+	export FZF_ALT_C_COMMAND='rg --files --hidden --glob "!.git" --null | xargs -0 dirname | sort -u'
+
+	# Preview directory entries.
+	FZF_ALT_C_OPTS="--preview 'tree -C {} | head -200'"
+	FZF_ALT_C_OPTS+=" --select-1 --exit-0"
+	export FZF_ALT_C_OPTS
 fi
