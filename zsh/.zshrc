@@ -212,15 +212,6 @@ setopt GLOB_DOTS
 # that do not start with "foo".
 setopt extendedglob
 
-# Key bindings.
-
-bindkey -v # use vim bindings!
-bindkey     '^[[3~'         delete-char         # DELETE key
-bindkey     '^[[7~'         beginning-of-line   # HOME key
-bindkey     '^[[8~'         end-of-line         # END key
-bindkey -M menuselect '' .accept-line # just execute the command when selecting from a menu and pressing <enter>
-#bindkey     '\t' menu-expand-or-complete   # press <tab> just ONCE to bring up menu *AND* select the first item
-
 # Reclaim "^s" (C-s) from terminal to Zsh. Traditionally, terminals pause
 # output with C-s and resume output with C-q, but these hotkeys are rarely
 # used.
@@ -420,17 +411,48 @@ else
     source ~/.zplug/init.zsh
 fi
 
+# Use Vim bindings! (Note: this command must come first before the other bindkey
+# invocations).
+bindkey -v
+
+# Map DELETE key.
+bindkey '^[[3~' delete-char
+# Map HOME key. Natively in NixOS, we get the OH key sequence. If we don't
+# bind this, this sequence gets interpreted as "ESC, O, H", where the O is the
+# "open line above" keybinding under the Vim bindings --- so it is useless
+# anyway. Over SSH, we get the ^[[1~ sequence.
+bindkey 'OH'  beginning-of-line
+bindkey '^[[1~' beginning-of-line
+# Map END key. Natively in NixOS, we get the OF key, and over SSH we get
+# ^[[4~.
+bindkey "OF" end-of-line
+bindkey '^[[4~' end-of-line
+
+# Just execute the command when selecting from a menu and pressing <enter>.
+# Regarding the `.' in front of 'accept-line', the manpage for zshcompsys(1) has
+# this to say:
+#
+#   Should you need to use the original completion commands, you can still bind
+#   keys to the old widgets by putting a `.' in front of the widget name, e.g.
+#   `.expand-or-complete'.
+bindkey -M menuselect '' .accept-line
+
 # Print warning if we don't use an existing alias for a command.
 zplug "MichaelAquilina/zsh-you-should-use"
 
 # Fish-shell-like automatically-suggested completions.
 zplug "zsh-users/zsh-autosuggestions"
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=2,bold"
-# Bind C-e to accept the current suggestion (same as default "Right Arrow"
-# binding for this).
-bindkey '^e' autosuggest-accept
 
-# History editing.
+# Make C-e go to the end of the line. This also makes it accept the
+# autosuggested completion, if there is any.
+bindkey '^e' end-of-line
+# For completeness, map C-a to go to the beginning of the line. This is like the
+# default emacs bindings.
+bindkey '^a' beginning-of-line
+bindkey '^x' autosuggest-execute
+
+# History editing. This brings in the `hist' command .
 zplug "marlonrichert/zsh-hist"
 
 # Prevent command typos from cluttering up history.
