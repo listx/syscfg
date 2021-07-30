@@ -464,6 +464,9 @@ fi
 
 # Load fzf bindings (upstream) to ZSH.
 if [[ -n "${commands[fzf-share]}" ]]; then
+	# Try to use fzf-tmux to use tmux split panes (if we are inside tmux).
+	export FZF_TMUX=1
+
 	source "$(fzf-share)/completion.zsh"
 	source "$(fzf-share)/key-bindings.zsh"
 
