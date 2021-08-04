@@ -56,6 +56,7 @@ key_bindings:
   - { key: L,         mods: Control|Alt,        chars: "\x02\x6e" } # C-b n (tmux: next-window)
   - { key: Y,         mods: Control|Alt|Shift,  chars: "\x02\x5b" } # C-b [ (tmux: copy-mode)
   - { key: Y,         mods: Control|Alt,        chars: "\x02\x20" } # C-b <Space> (tmux-thumbs: enter tmux-thumbs)
+  - { key: Equals,    mods: Control|Alt,        chars: "\x02\x7a" } # C-b z (tmux: zoom current pane (resize-pane -Z))
   # 'dirs -v' stack navigation.
   - { key: Space,     mods: Control,            chars: " dirs_navigate next\x0a"}
   - { key: Back,      mods: Control,            chars: " dirs_navigate prev\x0a"}
