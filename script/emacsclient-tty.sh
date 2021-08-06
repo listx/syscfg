@@ -88,7 +88,7 @@ set_tmux_window_title()
 {
 	if [[ -n "${TMUX_PANE:-}" ]]; then
 		# Manually set window title. This turns off automatic renaming.
-		tmux rename-window -t"${TMUX_PANE}" "#[bold]${1}#[default]"
+		tmux rename-window -t"${TMUX_PANE}" "${1}"
 	fi
 }
 
