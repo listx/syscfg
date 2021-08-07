@@ -393,8 +393,31 @@ alias reset_swap='free && sudo swapoff -a && sudo swapon -a && free'
 alias rgmp3='~/syscfg/script/audio/replaygain/mp3/tmwrg.sh'
 alias rgflac='~/syscfg/script/audio/replaygain/flac/tfwrg.sh'
 
-# Add commonly-used paths as aliases.
+# Add commonly-used paths into the named directory hash table.
 . ~/.zsh/path-aliases
+# Wrap around default accept-line zle widget in order to do special handling of
+# `d.<aliased_directory>', where `<aliased_directory' comes from
+# ~/zsh/path-aliases. See https://stackoverflow.com/a/28101424.
+__l_accept_line () {
+  # Check for a command that starts with `d.'.
+  if [[ "$BUFFER" == "d."* ]]; then
+    # Only convert to a named directory buffer if we get a match of the named
+    # directory in the hash table.
+    local dir_alias
+    local dir_expanded_alias
+    dir_alias="${BUFFER#d.}"
+    dir_expanded_alias=$(hash -dm "${dir_alias}")
+    dir_expanded_alias="${dir_expanded_alias#*=}"
+    if [[ -e "${dir_expanded_alias}" ]]; then
+		BUFFER="d ~${dir_alias}"
+    else
+		echo -e >&2 "\nunrecognized directory alias ${(q)dir_alias}"
+    fi
+  fi
+  # Call original `accept-line' widget by prepending the leading period.
+  zle .accept-line
+}
+zle -N accept-line __l_accept_line
 
 # Get rid of odd ^[[2004h characters from Emacs' `M-x shell'. The problem has to
 # do with ZSH trying to set bracketed paste mode which came out in ZSH 5.1.1,
