@@ -107,9 +107,6 @@ export PATH=~/syscfg/script:$PATH
 # stop zsh from eating space before pipe symbol
 export ZLE_REMOVE_SUFFIX_CHARS=""
 
-# 10ms for ESC key vs ALT+... disambiguation.
-export KEYTIMEOUT=1
-
 autoload -U compinit
 compinit
 
@@ -437,6 +434,12 @@ fi
 # Use Vim bindings! (Note: this command must come first before the other bindkey
 # invocations).
 bindkey -v
+
+# Make "kj" in viins mode enter vi-cmd-mode (same as pressing ESC).
+bindkey -M viins "kj" vi-cmd-mode
+# 0.1s for ESC key vs ALT+... disambiguation. This is required for the "kj"
+# binding above to work.
+export KEYTIMEOUT=10
 
 # Map DELETE key.
 bindkey '^[[3~' delete-char
