@@ -20,6 +20,19 @@ __pane_current_path="${1}"
 __mouse_word="${2}"
 __tmux_config_snippet=""
 
+# If the word starts with '/' or '~', just try to cd into it. We virtually press
+# a TAB key to resolve any named directories or shortened directory names
+# (because Zsh can recognize paths like "/a/b/c" to mean
+# "/apple/banana/carrot").
+if [[ "${__mouse_word}" =~ ^[/~]  ]]; then
+	__tmux_config_snippet=$(cat << EOF
+	send-keys -t "#{pane_id}" " d #{mouse_word}" Tab Enter
+EOF
+	)
+	echo "${__tmux_config_snippet}"
+	exit
+fi
+
 if [[ ! -e "${__pane_current_path}/${__mouse_word}" ]]; then
 	# If the word doesn't exist, check if it's of the form "file:NUM", and if
 	# "file" does exit, open it up at that line number.
