@@ -492,7 +492,13 @@ zplug "marlonrichert/zsh-hist"
 # See https://stackoverflow.com/a/66060510/437583.
 autoload -Uz add-zsh-hook
 command-not-found () {
-  (( ? == 127 )) && hist -fs f -1
+	# $exit_status is set by the prompt. If we simply use "$?" as the variable
+	# to check, unfortunately it does not get cleared when we (1) invoke an
+	# known command, then (2) delete the contents of BUFFER loaded by `hist -fs
+	# f -1'.
+	if (( exit_status == 127 )) ; then
+		hist -fs f -1
+	fi
 }
 add-zsh-hook precmd command-not-found
 

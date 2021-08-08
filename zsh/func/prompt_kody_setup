@@ -10,9 +10,10 @@ preexec() {
 # precmd() is executed before each prompt.
 precmd()
 {
-	# Catch cases where we press C-c to stop execution; we want to treat such
-	# cases as non-error exits. So, if we did not run anything (preexec() did
-	# not get executed due to C-c), then assign exit_status as 0.
+	# Catch cases where we press C-c to stop execution (or if we just pressed
+	# ENTER after deleting the entire BUFFER); we want to treat such cases as
+	# non-error exits. So, if we did not run anything (preexec() did not get
+	# executed due to C-c), then assign exit_status as 0.
 	exit_status=$?
 	if ! $ran_something; then
 		exit_status=0
