@@ -1,6 +1,10 @@
-hash -d cip="$HOME/go/src/sigs.k8s.io/k8s-container-image-promoter"
-hash -d ki="$HOME/go/src/github.com/kubernetes/k8s.io"
-hash -d kk="$HOME/go/src/k8s.io/kubernetes"
-hash -d kr="$HOME/go/src/k8s.io/release"
-hash -d kt="$HOME/go/src/k8s.io/test-infra"
-hash -d s="$HOME/syscfg"
+# To sort on expanded paths, first separate the expanded paths into their own
+# column (as the 4th whitespace-delimited column of text), then sort with `C-u 4
+# M-x sort-fields'.
+
+hash -d  ki=$HOME/go/src/github.com/kubernetes/k8s.io
+hash -d  kk=$HOME/go/src/k8s.io/kubernetes
+hash -d  kr=$HOME/go/src/k8s.io/release
+hash -d  kt=$HOME/go/src/k8s.io/test-infra
+hash -d cip=$HOME/go/src/sigs.k8s.io/k8s-container-image-promoter
+hash -d   s=$HOME/syscfg
