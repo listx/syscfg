@@ -23,7 +23,7 @@ precmd()
 maybe_show_exit_status() {
 	case $exit_status in
 		0) ;;
-		*) echo " %B%F{$prompt_color5}$exit_status%b%f" ;;
+		*) echo "%B%F{$prompt_color5}$exit_status%b%f " ;;
 	esac
 }
 
@@ -56,6 +56,26 @@ prompt_kody_setup()
 
 	add-zsh-hook precmd prompt_kody_precmd
 }
+
+# The zle-keymap-select and zle-line-finish functions are special widgets that
+# are empty by default. See "Special Widgets" in zshzle(1).
+zle-line-init zle-keymap-select() {
+	case "${KEYMAP}" in
+	vicmd)
+	__l_zsh_keymap_indicator="%B%K{201}%F{16} <N> %f%k%b "
+	;;
+	main|viins)
+	__l_zsh_keymap_indicator="%B <I> %b "
+	;;
+	esac
+	# After recalculating the indicator, rebuild the prompt before resetting it.
+	# Otherwise the prompt itself does not get re-built (it only gets re-printed
+	# using the old state).
+	prompt_kody_precmd
+	zle reset-prompt
+}
+zle -N zle-line-init
+zle -N zle-keymap-select
 
 # the actual prompt
 prompt_kody_precmd()
@@ -92,20 +112,18 @@ prompt_kody_precmd()
 	#         string is formatted with the strftime function. See 'man 3 strftime' for more details.
 
 	# Git info (if we're inside a git repo).
-	local ginfo_short=" -"
+	local ginfo_short=""
 	if git rev-parse --is-inside-work-tree &> /dev/null; then
 		ginfo_short=$(gsts for_prompt)
-		if [[ -z $ginfo_short ]]; then
-			ginfo_short=""
-		else
-			ginfo_short=" ${ginfo_short}"
+		if [[ -n $ginfo_short ]]; then
+			ginfo_short="${ginfo_short} "
 		fi
 	fi
 
 	# Python VirtualEnv info.
 	local venv=""
 	if test -n "${VIRTUAL_ENV}"; then
-        venv=" ($(basename "${VIRTUAL_ENV}"))"
+        venv="($(basename "${VIRTUAL_ENV}")) "
 	fi
 
 	day=""
@@ -119,10 +137,10 @@ prompt_kody_precmd()
 		Sun) day="%B%F{$prompt_color6}日%b%f" ;;
 	esac
 
-	prompt_kody_time_a="%B%F{$prompt_color3}[%b%f$day %D{%d} %*%B%F{$prompt_color3}]%b%f$(maybe_show_exit_status)${ginfo_short}${venv}"
-	prompt_kody_time_b="%B%F{$prompt_color3}[%b%f$day %D{%d} %*%B%F{$prompt_color3}]%b%f$(maybe_show_exit_status)"
-	prompt_kody_time_c="%B%F{$prompt_color3}[%b%f$day %D{%d} %*%B%F{$prompt_color3}]%b%f"
-	prompt_kody_time_d="%D{%d} %*"
+	prompt_kody_time_a="$day %D{%d} %* ${__l_zsh_keymap_indicator}$(maybe_show_exit_status)${ginfo_short}${venv}"
+	prompt_kody_time_b="$day %D{%d} %* ${__l_zsh_keymap_indicator}$(maybe_show_exit_status)"
+	prompt_kody_time_c="$day %D{%d} %* ${__l_zsh_keymap_indicator}"
+	prompt_kody_time_d="%D{%d} %* ${__l_zsh_keymap_indicator}"
 
 	prompt_hostcolor=$prompt_color3
 	prompt_charcolor=$prompt_color3
@@ -136,13 +154,17 @@ prompt_kody_precmd()
 	prompt_kody_pwd="%B%F{$prompt_color1}%~%b%f"
 
 	# three default possibilities for the first prompt line, depending on available screen width space
-	prompt_line_1a="$prompt_kody_time_a $prompt_userhost $prompt_kody_pwd"
-	prompt_line_1b="$prompt_kody_time_b $prompt_userhost $prompt_kody_pwd"
-	prompt_line_1c="$prompt_kody_time_c $prompt_userhost $prompt_kody_pwd"
-	prompt_line_1d="$prompt_kody_time_d $prompt_userhost $prompt_kody_pwd"
-	prompt_line_1e="$prompt_userhost $prompt_kody_pwd"
-	prompt_line_1f="$prompt_kody_pwd"
+	prompt_line_1a="$prompt_kody_time_a$prompt_userhost $prompt_kody_pwd"
+	prompt_line_1b="$prompt_kody_time_b$prompt_userhost $prompt_kody_pwd"
+	prompt_line_1c="$prompt_kody_time_c$prompt_userhost $prompt_kody_pwd"
+	prompt_line_1d="$prompt_kody_time_d$prompt_userhost $prompt_kody_pwd"
+	prompt_line_1e="$__l_zsh_keymap_indicator$prompt_userhost $prompt_kody_pwd"
+	prompt_line_1f="$__l_zsh_keymap_indicator$prompt_kody_pwd"
 	prompt_line_2="%B%F{$prompt_color3} "
+	# The prompt character to display, based on "CONDITIONAL SUBSTRINGS IN
+	# PROMPTS" in zshmisc(1). The `!' tests if the current user is running with
+	# privileges, and the periods separate the true and false cases. So if we're
+	# root, then display "# ", else "$ ".
 	prompt_char="%(!.# .$"
 
 	# choose the correct prompt, depending on screen length

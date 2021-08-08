@@ -120,9 +120,6 @@ promptinit
 
 autoload -U zmv
 
-# This will set the default prompt to the kody theme
-prompt kody
-
 # Make the prompt re-evaluate itself every second. Among other things, this
 # makes the clock tick every second. See https://askubuntu.com/a/360172.
 setopt PROMPT_SUBST
@@ -472,6 +469,13 @@ zplug "MichaelAquilina/zsh-you-should-use"
 # Fish-shell-like automatically-suggested completions.
 zplug "zsh-users/zsh-autosuggestions"
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=2,bold"
+
+# Allow parameter expansion, command substitution and arithmetic expansion in
+# prompts.
+setopt PROMPT_SUBST
+
+# This will set the default prompt to the kody theme
+prompt kody
 
 # Make C-e go to the end of the line. This also makes it accept the
 # autosuggested completion, if there is any.
