@@ -441,6 +441,9 @@ bindkey -M viins "kj" vi-cmd-mode
 # binding above to work.
 export KEYTIMEOUT=10
 
+# Make Backspace delete past the point of the last point of viins insertion.
+bindkey "^?" backward-delete-char
+
 # Map DELETE key.
 bindkey '^[[3~' delete-char
 # Map HOME key. Natively in NixOS, we get the OH key sequence. If we don't
