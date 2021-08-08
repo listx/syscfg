@@ -13,39 +13,19 @@
 
 set -euxo pipefail
 
+# Source utility functions.
+SCRIPT_ROOT="$(dirname "$(readlink -f "$0")")"
+. "${SCRIPT_ROOT}"/libzsh.sh
+
 path="${1:-}"
 
 is_named_path=0
 
-# Recognize specially-named paths.
-named_paths_definition="$HOME/syscfg/zsh/path-aliases"
-named_paths=()
-while IFS= read -r line; do
-	# Skip empty lines.
-	if [[ -z "${line}" ]]; then
-		continue
-	fi
-	# Skip comment lines.
-	if [[ "${line}" == \#* ]]; then
-		continue
-	fi
-
-	path_expanded="${line#*=}"
-	# Convert literal "$HOME" to actual value of "$HOME".
-	if [[ "${path_expanded}" == "\$HOME"* ]]; then
-		path_expanded="${path_expanded/\$HOME/$HOME}"
-	fi
-	path_alias="${line%=*}"
-	path_alias="${path_alias#hash -d}"
-	# Remove leading whitespace characters. See
-	# https://stackoverflow.com/a/3352015/437583.
-	path_alias="${path_alias#"${path_alias%%[![:space:]]*}"}"
-	named_paths+=("${path_alias}=${path_expanded}")
-done < "${named_paths_definition}"
+__l_get_named_paths
 
 # See if we hit any of the specially-named paths. If so, then we set final_path
 # to include it.
-for named_path in "${named_paths[@]}"; do
+for named_path in "${__l_named_paths[@]}"; do
 	if [[ "${path}" != "${named_path#*=}"* ]]; then
 		continue
 	fi
