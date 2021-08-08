@@ -133,7 +133,7 @@
       ; like COMMIT_EDITMSG.
       (set-face-attribute 'font-lock-comment-face nil :foreground "#9fc59f")
       (use-package git-commit
-        :config (set-face-attribute 'git-commit-summary nil :foreground "cyan1" :background "grey25"))
+        :config (set-face-attribute 'git-commit-summary nil :foreground "cyan1"))
       (set-face-attribute 'diff-added       nil :foreground "green" :background "dark green")
       (set-face-attribute 'diff-removed     nil :foreground "red" :background "dark red")
       (set-face-attribute 'diff-context     nil :foreground "#ffffff")
