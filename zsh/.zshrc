@@ -1,5 +1,9 @@
 # ZSH configuration.
 #
+# To profile Zsh startup time, uncomment this and also call `zprof' at the end
+# of this file.
+#zmodload zsh/zprof
+#
 # For reference, ZSH configuration load order is:
 #
 # 1. /etc/zshenv.
@@ -579,3 +583,6 @@ if [[ -n "${commands[fzf-share]}" ]]; then
 	FZF_ALT_C_OPTS+=" --select-1 --exit-0"
 	export FZF_ALT_C_OPTS
 fi
+
+# Uncomment to profile.
+#zprof
