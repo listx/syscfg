@@ -531,7 +531,7 @@ fi
 # error. Loading completion code last, as in
 # https://github.com/robbyrussell/oh-my-zsh/issues/6163#issuecomment-315836297,
 # makes it go away.
-if [ "${commands[kubectl]}" ]; then
+if [[ -n "${commands[kubectl]}" ]]; then
     source <(kubectl completion zsh)
     # Pass through the default kubectl completions to kl (zsh/func/kl).
     compdef kl=kubectl
