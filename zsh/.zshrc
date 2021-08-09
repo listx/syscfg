@@ -114,8 +114,6 @@ export ZLE_REMOVE_SUFFIX_CHARS=""
 autoload -U compinit
 compinit
 
-zmodload zsh/complist # for the 'menuselect' keymap
-
 fpath=(~/.zsh/func $fpath) # add ~/.zsh/func to $fpath
 autoload -U ~/.zsh/func/*(:t) # load all functions in ~/.zsh/func
 
@@ -458,6 +456,7 @@ bindkey '^[[1~' beginning-of-line
 bindkey "OF" end-of-line
 bindkey '^[[4~' end-of-line
 
+zmodload zsh/complist # for the 'menuselect' keymap
 # Just execute the command when selecting from a menu and pressing <enter>.
 # Regarding the `.' in front of 'accept-line', the manpage for zshcompsys(1) has
 # this to say:
