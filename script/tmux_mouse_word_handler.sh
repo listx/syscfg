@@ -16,64 +16,56 @@
 
 set -euo pipefail
 
-__pane_current_path="${1}"
-__mouse_word="${2}"
-__tmux_config_snippet=""
+__pane_id="${1}"
+__pane_current_path="${2}"
+__mouse_word="${3}"
+__exit_copy_mode="${4:-}"
 
 # "univ_open" is the function that "d" is aliased to in Zsh.
 __l_univ_open()
 {
-	__tmux_config_snippet=$(cat << EOF
-	send-keys -t "#{pane_id}" " d #{mouse_word}" Enter
-EOF
-	)
-	echo "${__tmux_config_snippet}"
+	tmux send-keys -t "${__pane_id}" " d ${__mouse_word}" Enter
 }
 
 __l_complete_and_univ_open()
 {
-	__tmux_config_snippet=$(cat << EOF
-	send-keys -t "#{pane_id}" " d #{mouse_word}" Tab Enter
-EOF
-	)
-	echo "${__tmux_config_snippet}"
+	tmux send-keys -t "${__pane_id}" " d ${__mouse_word}" Tab Enter
 }
 
 __l_edit()
 {
-	__tmux_config_snippet=$(cat << EOF
-		display-popup -w90% -h90% -E -E -d '#{pane_current_path}' ' \
-			~/syscfg/script/emacsclient-tty.sh "#{mouse_word}" \
-		'
-EOF
-	)
-	echo "${__tmux_config_snippet}"
+	tmux display-popup -t "${__pane_id}" -w90% -h90% -E -E -d "${__pane_current_path}" " \
+		~/syscfg/script/emacsclient-tty.sh \"${__mouse_word}\" \
+	"
 }
 
 __l_edit_at_line()
 {
-	__tmux_config_snippet=$(cat << EOF
-	display-popup -w90% -h90% -E -E -d '#{pane_current_path}' ' \
+	tmux display-popup -t "${__pane_id}" -w90% -h90% -E -E -d "${__pane_current_path}" " \
 		~/syscfg/script/emacsclient-tty.sh \
-			"${__mouse_word%:*}" \
-			"+${__mouse_word#*:}" \
-	'
-EOF
-)
-	echo "${__tmux_config_snippet}"
+			\"${__mouse_word%:*}\" \
+			\"+${__mouse_word#*:}\" \
+	"
 }
 
 __l_copy_to_tmux_buffer()
 {
-	__tmux_config_snippet=$(cat << EOF
-		if-shell -F "#{||:#{pane_in_mode},#{mouse_any_flag}}" "send -M" "copy-mode -H ; send -X select-word ; run -d0.3 ; send -X copy-pipe-and-cancel"
-EOF
-	)
-	echo "${__tmux_config_snippet}"
+	local tmpfile
+	tmpfile=$(mktemp)
+
+	echo -n "${__mouse_word}" > "${tmpfile}"
+	tmux load-buffer -t "${__pane_id}" "${tmpfile}"
+	rm -f "${tmpfile}"
+	tmux display-message -t "${__pane_id}" -d1000 "copied \"${__mouse_word}\""
 }
 
 main()
 {
+	# Exit copy-mode if we are already in it.
+	if [[ -n "${__exit_copy_mode}" ]]; then
+		tmux send-keys -t "${__pane_id}" q
+	fi
+
 	# If the word starts with '/' or '~', just try to cd into it. We virtually
 	# press a TAB key to resolve any named directories or shortened directory
 	# names (because Zsh can recognize paths like "/a/b/c" to mean
