@@ -136,7 +136,7 @@ __l_prompt_tick ()
     # Don't redraw the prompt if we've typed *anything* into the command line.
     # This way we can at least save an approximate timestamp of when we last
     # started typing.
-    if (( $#BUFFER > 0 )); then
+    if (( ${#BUFFER} > 0 )); then
         return
     fi
 
