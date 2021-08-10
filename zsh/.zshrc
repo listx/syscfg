@@ -576,10 +576,12 @@ zinit light "marlonrichert/zsh-hist"
 
 zinit light "qoomon/zsh-lazyload"
 
-lazyload kubectl -- "source <(kubectl completion zsh)"
+if [[ $commands[kubectl] ]]; then
+	lazyload kubectl -- "source <(kubectl completion zsh)"
 
-# Pass through the default kubectl completions to kl (zsh/func/kl).
-compdef kl=kubectl
+	# Pass through the default kubectl completions to kl (zsh/func/kl).
+	compdef kl=kubectl
+fi
 
 # Uncomment to profile.
 #zprof
