@@ -574,14 +574,58 @@ ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=2,bold"
 zinit ice wait lucid
 zinit light "marlonrichert/zsh-hist"
 
-zinit light "qoomon/zsh-lazyload"
+# Instead of using "qoomon/zsh-lazyload", we simply examine the letters that are
+# already inserted into the zle buffer. If it is "kl" and we press either the
+# Space or Tab key, we invoke our custom widget which loads completions for
+# kubectl, but only if it is both installed and if the completions have not been
+# sourced already. This is an improvement over
+# https://github.com/kubernetes/kubernetes/issues/59078#issuecomment-363384825
+# because even the initially-attempted invocation will get completions.
+bindkey -M viins " " __l_lazy_load_completions
+bindkey -M viins "^I" __l_lazy_load_completions # ^I is the TAB key
+__l_maybe_load_completions()
+{
+	# Remove leading whitespace from BUFFER, to catch cases where we enter some
+	# spaces or tabs before actually typing the command name. See
+	# https://stackoverflow.com/a/3352015.
+	case "${BUFFER#"${BUFFER%%[![:space:]]*}"}" in
+	kl)
+		if ! [[ $commands[kubectl] ]]; then
+			return
+		fi
 
-if [[ $commands[kubectl] ]]; then
-	# Only load kubectl completions when we first invoke the command (without
-	# completions). Pass through the default kubectl completions to kl
-	# (zsh/func/kl).
-	lazyload kubectl -- "source <(kubectl completion zsh) && compdef kl=kubectl"
-fi
+		# The __start_kubectl is defined only if we've already sourced the
+		# completions.
+		if (( $+functions[__start_kubectl] )); then
+			return
+		fi
+
+		source <(command kubectl completion zsh)
+		# Pass through the default kubectl completions to kl (zsh/func/kl).
+		compdef kl=kubectl
+		;;
+	*)
+		;;
+	esac
+}
+__l_lazy_load_completions()
+{
+	__l_maybe_load_completions
+	# Now invoke the vanilla zle widget that was supposed to have been called
+	# from viins mode.
+	case "${KEYS[-1]}" in
+	" ") zle .self-insert
+		;;
+	"	") zle fzf-completion
+		;;
+	# We'd never reach this branch, unless we bound our keys wrong. Since we
+	# have nothing better to do, just insert KEYS into the zle buffer.
+	*) zle .self-insert
+		;;
+	esac
+}
+zle -N __l_maybe_load_completions
+zle -N __l_lazy_load_completions
 
 # Uncomment to profile.
 #zprof
