@@ -13,6 +13,13 @@ main()
 {
 	local host
 	host="$(hostname)"
+
+	# If there's a shorter name available, use it.
+	if [[ -f ~/.hostname-short ]]; then
+		# Only read the first 5 bytes. It better be short!
+		host=$(head -c 5 ~/.hostname-short)
+	fi
+
 	# Replace non-tmux-session-name-friendly characters with an underscore.
 	host="${host//./_}"
 
