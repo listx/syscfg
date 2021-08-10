@@ -111,9 +111,6 @@ export PATH=~/syscfg/script:$PATH
 # stop zsh from eating space before pipe symbol
 export ZLE_REMOVE_SUFFIX_CHARS=""
 
-autoload -U compinit
-compinit
-
 fpath=(~/.zsh/func $fpath) # add ~/.zsh/func to $fpath
 autoload -U ~/.zsh/func/*(:t) # load all functions in ~/.zsh/func
 
@@ -423,13 +420,6 @@ if [[ $TERM == "dumb" ]]; then
     unset zle_bracketed_paste
 fi
 
-# ZSH Plugins with ZPlug. To install ZPlug, see https://github.com/zplug/zplug.
-if [[ $HOST =~ macbook ]]; then
-    source "$HOME"/.nix-profile/init.zsh
-else
-    source ~/.zplug/init.zsh
-fi
-
 # Use Vim bindings! (Note: this command must come first before the other bindkey
 # invocations).
 bindkey -v
@@ -466,13 +456,6 @@ zmodload zsh/complist # for the 'menuselect' keymap
 #   `.expand-or-complete'.
 bindkey -M menuselect '' .accept-line
 
-# Print warning if we don't use an existing alias for a command.
-zplug "MichaelAquilina/zsh-you-should-use"
-
-# Fish-shell-like automatically-suggested completions.
-zplug "zsh-users/zsh-autosuggestions"
-ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=2,bold"
-
 # Allow parameter expansion, command substitution and arithmetic expansion in
 # prompts.
 setopt PROMPT_SUBST
@@ -488,9 +471,6 @@ bindkey '^e' end-of-line
 bindkey '^a' beginning-of-line
 bindkey '^x' autosuggest-execute
 
-# History editing. This brings in the `hist' command .
-zplug "marlonrichert/zsh-hist"
-
 # Prevent command typos from cluttering up history.
 # See https://stackoverflow.com/a/66060510/437583.
 autoload -Uz add-zsh-hook
@@ -505,36 +485,11 @@ command-not-found () {
 }
 add-zsh-hook precmd command-not-found
 
-# Install plugins if there are plugins that have not been installed
-if ! zplug check --verbose; then
-    printf "Install? [y/N]: "
-    if read -q; then
-        echo; zplug install
-    fi
-fi
-
-# This has to happen *before* loading custom completions.
-zplug load
-
-# Load in completions for Google Cloud SDK. For some reason, this has to be
-# done *after* the call to 'zplug load'.
+# Load in completions for Google Cloud SDK.
 google_cloud_sdk_path="${L_GOOGLE_CLOUD_SDK_PATH:-}"
 if [[ -n "${google_cloud_sdk_path}" ]]; then
     f="${google_cloud_sdk_path}/completion.zsh.inc"
     source "${f}" || echo "could not source ${f}"
-fi
-
-# For some reason loading it from ~/.zprofile-enif leads to a cryptic
-#
-#   complete:13: command not found: compdef
-#
-# error. Loading completion code last, as in
-# https://github.com/robbyrussell/oh-my-zsh/issues/6163#issuecomment-315836297,
-# makes it go away.
-if [[ -n "${commands[kubectl]}" ]]; then
-    source <(kubectl completion zsh)
-    # Pass through the default kubectl completions to kl (zsh/func/kl).
-    compdef kl=kubectl
 fi
 
 # Load fzf bindings (upstream) to ZSH.
@@ -582,6 +537,49 @@ if [[ -n "${commands[fzf-share]}" ]]; then
 	FZF_ALT_C_OPTS+=" --select-1 --exit-0"
 	export FZF_ALT_C_OPTS
 fi
+
+### Added by Zinit's installer
+if [[ ! -f $HOME/.zinit/bin/zinit.zsh ]]; then
+    print -P "%F{33}▓▒░ %F{220}Installing %F{33}DHARMA%F{220} Initiative Plugin Manager (%F{33}zdharma/zinit%F{220})…%f"
+    command mkdir -p "$HOME/.zinit" && command chmod g-rwX "$HOME/.zinit"
+    command git clone https://github.com/zdharma/zinit "$HOME/.zinit/bin" && \
+        print -P "%F{33}▓▒░ %F{34}Installation successful.%f%b" || \
+        print -P "%F{160}▓▒░ The clone has failed.%f%b"
+fi
+
+source "$HOME/.zinit/bin/zinit.zsh"
+autoload -Uz _zinit
+(( ${+_comps} )) && _comps[zinit]=_zinit
+
+# Load a few important annexes, without Turbo
+# (this is currently required for annexes)
+zinit light-mode for \
+    zinit-zsh/z-a-rust \
+    zinit-zsh/z-a-as-monitor \
+    zinit-zsh/z-a-patch-dl \
+    zinit-zsh/z-a-bin-gem-node
+
+### End of Zinit's installer chunk
+
+# Print warning if we don't use an existing alias for a command.
+zinit ice wait lucid
+zinit light "MichaelAquilina/zsh-you-should-use"
+
+# Fish-shell-like automatically-suggested completions.
+zinit wait lucid atload'_zsh_autosuggest_start' light-mode for \
+    zsh-users/zsh-autosuggestions
+ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=2,bold"
+
+# History editing. This brings in the `hist' command .
+zinit ice wait lucid
+zinit light "marlonrichert/zsh-hist"
+
+zinit light "qoomon/zsh-lazyload"
+
+lazyload kubectl -- "source <(kubectl completion zsh)"
+
+# Pass through the default kubectl completions to kl (zsh/func/kl).
+compdef kl=kubectl
 
 # Uncomment to profile.
 #zprof
