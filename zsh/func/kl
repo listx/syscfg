@@ -3,11 +3,11 @@
 # Shortcut for "kubectl" but with a built-in pager.
 kl()
 {
-    case "$1" in
-    # Don't pipe to "less" if we're dealing with a possible "--tty" flag which
-    # is supposed to make the shell interactive (can't be interactive if we're
-    # piping to less).
-    exec) kubectl "$@" ;;
+	case "$1" in
+	# Don't pipe to "less" if we're dealing with a possible "--tty" flag which
+	# is supposed to make the shell interactive (can't be interactive if we're
+	# piping to less).
+	exec) kubectl "$@" ;;
 	*) kubectl "$@" | less ;;
-    esac
+	esac
 }
