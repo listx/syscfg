@@ -7,4 +7,5 @@ hash -d  kk=$HOME/go/src/k8s.io/kubernetes
 hash -d  kr=$HOME/go/src/k8s.io/release
 hash -d  kt=$HOME/go/src/k8s.io/test-infra
 hash -d cip=$HOME/go/src/sigs.k8s.io/k8s-container-image-promoter
+hash -d   l=$HOME/lo
 hash -d   s=$HOME/syscfg
