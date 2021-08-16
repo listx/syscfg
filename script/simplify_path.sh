@@ -92,10 +92,16 @@ while (( "${#final_path}" > "${__TRUNCATE_THRESHOLD}" )) && (( $i < "${#fields[@
 	i=$(($i + 1))
 done
 
-# Handle edge case for the $HOME path as input.
-if [[ "${final_path}" == "~/~" ]]; then
+# Handle edge cases.
+case "${final_path}" in
+# $HOME path as input.
+"~/~")
 	echo "~"
-	exit 0
-fi
-
-echo "${final_path%/}"
+	;;
+"/")
+	echo "/"
+	;;
+*)
+	echo "${final_path%/}"
+	;;
+esac
