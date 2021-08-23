@@ -150,6 +150,7 @@ with super; rec {
       # other
       pavucontrol
       woeusb
+      inotify-tools
     ];
   });
 
