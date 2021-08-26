@@ -8,6 +8,7 @@ set_elisp()
 	local buffer_filename
 	local maybe_fill_72=""
 	local maybe_goto_position=""
+	local maybe_open_new_tab=""
 	local position
 	local line
 	local column
@@ -62,8 +63,17 @@ set_elisp()
         buffer_filename="/:${buffer_filename}"
     fi
 
+	# If we're just trying to tell the daemon to open the file without
+	# allocating a tty (from inside an emacs vterm session), then create a new
+	# tab first. This prevents "overriding" the current window (destroying
+	# splits, etcs) from inside vterm which can be a bit jarring.
+	if inside_emacs_vterm; then
+		maybe_open_new_tab="(tab-new)"
+	fi
+
 	__elisp=$(cat << EOF
 	(prog1
+		${maybe_open_new_tab}
 		; Open the file.
 		(find-file "${buffer_filename}")
 		${maybe_fill_72}
@@ -99,9 +109,29 @@ restore_tmux_window_title()
 	fi
 }
 
+# If we're invoking this script from within a vterm session already from inside
+# emacs (presumably emacsclient), then just make emacsclient open the file
+# without trying to allocate a tty.
+open_file_from_vterm()
+{
+	# If we're inside an emacsclient vterm session already, then we just need to
+	# tell the daemon to open the file.
+	emacsclient --eval "${__elisp}"
+	exit
+}
+
+inside_emacs_vterm()
+{
+	[[ -n "${EMACS_VTERM_PATH:-}" ]]
+}
+
 main()
 {
 	set_elisp "$@"
+
+	if inside_emacs_vterm; then
+		open_file_from_vterm
+	fi
 
 	# Set TMUX window title, if possible.
 	set_tmux_window_title "emacs"

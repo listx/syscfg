@@ -46,6 +46,10 @@ with super; rec {
   # https://github.com/jagajaga/my_configs/blob/master/.nixpkgs/common.nix.
   setPrio = prio: drv: lib.addMetaAttrs { priority = prio; } drv;
 
+  custom-emacs = pkgs.emacsWithPackages (with pkgs.emacsPackagesNg; [
+    emacs-libvterm
+  ]);
+
   l_set_basic = setPrio "10" (buildEnv {
     name = "l-set-basic";
     ignoreCollisions = true;
@@ -63,7 +67,7 @@ with super; rec {
     ignoreCollisions = true;
     paths = [
       bmon
-      emacs
+      custom-emacs
       fzf
       gcc
       git
@@ -101,7 +105,7 @@ with super; rec {
       tmux
       tmuxinator
 
-      emacs
+      custom-emacs
       sqlite # for org-roam in emacs
       graphviz # for org-roam-graph in emacs
       neovim

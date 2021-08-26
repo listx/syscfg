@@ -10,9 +10,14 @@
 # Currently it does one of 4 things, based on what <mouse_word> is:
 #
 #   - (directory): cd into it
-#   - (file): open it with emacsclient
-#   - (file:NUM): open it with emacsclient, and go to line NUM
+#   - (file): open it with emacsclient as a TMUX pane popup
+#   - (file:NUM): open it with emacsclient, and go to line NUM as a TMUX popup
 #   - (other): copy it as a Tmux "buffer" (aka "register" in Vim-lingo)
+#
+# Note that previewing files with a floating TMUX pane popup (with emacsclient)
+# depends on the `pane_current_path' value to resolve the filename, and so will
+# most likely not work if (1) we run emacsclient and (2) within emacsclient run
+# vterm to list files and (3) double-click on files from there.
 
 set -euo pipefail
 

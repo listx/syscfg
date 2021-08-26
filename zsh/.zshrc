@@ -133,6 +133,14 @@ __l_get_mem()
 # https://stackoverflow.com/a/30456173/437583.
 __l_prompt_tick ()
 {
+	# Don't redraw the prompt if we are inside an Emacs vterm session, because
+	# redrawing it forces the cursor to move to the bottom of the screen after
+	# each redraw even if we're in Evil's "normal" mode, rendering normal mode
+	# useless.
+	if [[ -n "${EMACS_VTERM_PATH:-}" ]]; then
+		return
+	fi
+
     # Don't redraw the prompt if we've typed *anything* into the command line.
     # This way we can at least save an approximate timestamp of when we last
     # started typing.
