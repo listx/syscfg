@@ -61,7 +61,7 @@ nixos:
 	ln -fs ${C}/nixos/${T}/configuration.nix            /etc/nixos
 	ln -fs ${C}/nixos/${T}/hardware-configuration.nix   /etc/nixos
 nixpkgs:
-	ln -fns ${C}/nixpkgs                                ${H}/.nixpkgs
+	ln -fns ${C}/nixpkgs                                ${H}/.config/nixpkgs
 notmuch:
 	ln -fs ${C}/notmuch/notmuch-config                  ${H}/.notmuch-config
 nvim:
