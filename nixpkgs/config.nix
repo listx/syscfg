@@ -38,6 +38,7 @@ super:
     # . Read more at http://nixos.org/nix/manual/#chap-writing-nix-expressions.
 
     inherit (self.pkgsets)
+      l_emacs
       l_set_basic
       l_set_base
       l_set_backup
