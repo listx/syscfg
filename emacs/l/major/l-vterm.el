@@ -6,9 +6,13 @@
 
 (defun l/vterm-mode-hook ()
   (interactive)
-  ; Unfortunately we have to rebind some obvious hotkeys here because they are
-  ; overriden elsewhere. Somehow, evil-collection does not take precedence over
-  ; them.
+  ; Our other configurations have bindings that take precedence over the
+  ; vterm-mode-map. So we have to say, "no, when vterm is active, we have to
+  ; send these keys into the underlying terminal application inside vterm, and
+  ; refrain from interpreting them at the Evil/Emacs level". That's why we have
+  ; these bindings below. The reason why we don't rebind *everything* is because
+  ; anything that we don't explicitly bind at the Evil/Emacs level is already
+  ; sent into vterm as-is.
   (evil-define-key 'insert vterm-mode-map
     ; ESC key. Sometimes we want to send the ESC key to vterm, and let vterm
     ; send the ESC key event to the underlying terminal app. Other times, we
@@ -31,7 +35,14 @@
 
     ; Override default 'k' key that is bound to l/maybe-exit.
     (kbd "k")   'self-insert-command
+
+    ; Override window movement keys.
+    (kbd "C-j") 'vterm-send-C-j
+    (kbd "C-k") 'vterm-send-C-k
+
+    ; Override default "redo" binding.
     (kbd "C-r") 'vterm-send-C-r
+
     (kbd "C-t") 'vterm-send-C-x
     (kbd "C-x") 'vterm-send-C-x
     (kbd "RET") 'vterm-send-return
