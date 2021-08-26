@@ -46,8 +46,19 @@
   ; Make "kj" behave as ESC key, adapted from
   ; http://article.gmane.org/gmane.emacs.vim-emulation/980.
   (define-key evil-insert-state-map "k" #'l/maybe-exit)
+
+  ; TAB to shift focus to the next window.
   (define-key evil-motion-state-map (kbd "TAB") 'other-window)
+  ; S-TAB to shift focus to the previous window.
   (l/define-key-args evil-motion-state-map (kbd "<backtab>") other-window -1)
+
+  ; Swap current window (and its buffer) with the next window.
+  (define-key evil-motion-state-map (kbd "C-j") 'window-swap-states)
+  (define-key evil-motion-state-map (kbd "C-k") '(lambda () (interactive)
+    (other-window -1)
+    (window-swap-states)
+    (other-window -1)))
+
   (l/define-key-args evil-motion-state-map (kbd "SPC") l/scroll-jump 10)
   (l/define-key-args evil-motion-state-map (kbd "DEL") l/scroll-jump -10)
   (l/define-key-args evil-normal-state-map (kbd "DEL") l/scroll-jump -10)
