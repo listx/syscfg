@@ -74,8 +74,8 @@
     "w" 'save-buffer
     "W" 'l/save-buffer!
 
-    ; Save and quit.
-    "x" 'save-buffers-kill-emacs
+    ; Spawn vterm (embedded terminal within emacs).
+    "x" 'vterm
 
     "y" (lambda () (interactive) (l/copy-for-markdown nil))
     "Y" (lambda () (interactive) (l/copy-for-markdown t))
