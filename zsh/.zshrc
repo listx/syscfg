@@ -546,41 +546,21 @@ if [[ -n "${commands[fzf-share]}" ]]; then
 	export FZF_ALT_C_OPTS
 fi
 
-### Added by Zinit's installer
-if [[ ! -f $HOME/.zinit/bin/zinit.zsh ]]; then
-    print -P "%F{33}▓▒░ %F{220}Installing %F{33}DHARMA%F{220} Initiative Plugin Manager (%F{33}zdharma/zinit%F{220})…%f"
-    command mkdir -p "$HOME/.zinit" && command chmod g-rwX "$HOME/.zinit"
-    command git clone https://github.com/zdharma/zinit "$HOME/.zinit/bin" && \
-        print -P "%F{33}▓▒░ %F{34}Installation successful.%f%b" || \
-        print -P "%F{160}▓▒░ The clone has failed.%f%b"
+# Use zpm. Run "zpm clean" if modifying the .zshrc file to clear out the cache.
+if [[ ! -f ~/.zpm/zpm.zsh ]]; then
+  git clone --recursive https://github.com/zpm-zsh/zpm ~/.zpm
 fi
-
-source "$HOME/.zinit/bin/zinit.zsh"
-autoload -Uz _zinit
-(( ${+_comps} )) && _comps[zinit]=_zinit
-
-# Load a few important annexes, without Turbo
-# (this is currently required for annexes)
-zinit light-mode for \
-    zinit-zsh/z-a-rust \
-    zinit-zsh/z-a-as-monitor \
-    zinit-zsh/z-a-patch-dl \
-    zinit-zsh/z-a-bin-gem-node
-
-### End of Zinit's installer chunk
+source ~/.zpm/zpm.zsh
 
 # Print warning if we don't use an existing alias for a command.
-zinit ice wait lucid
-zinit light "MichaelAquilina/zsh-you-should-use"
+zpm load "MichaelAquilina/zsh-you-should-use",async
 
 # Fish-shell-like automatically-suggested completions.
-zinit wait lucid atload'_zsh_autosuggest_start' light-mode for \
-    zsh-users/zsh-autosuggestions
+zpm load "zsh-users/zsh-autosuggestions",source:zsh-autosuggestions.zsh
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=2,bold"
 
 # History editing. This brings in the `hist' command .
-zinit ice wait lucid
-zinit light "marlonrichert/zsh-hist"
+zpm load "marlonrichert/zsh-hist",async
 
 # Instead of using "qoomon/zsh-lazyload", we simply examine the letters that are
 # already inserted into the zle buffer. If it is "kl" and we press either the

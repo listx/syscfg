@@ -7,6 +7,7 @@
 *.swp
 *.DS_Store
 *~
+*.zwc
 alacritty/alacritty.yml
 cache
 cmus/*
