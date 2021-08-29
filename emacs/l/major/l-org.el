@@ -223,12 +223,25 @@
   (define-key org-agenda-mode-map (kbd "<backtab>") (lambda () (interactive) (other-window -1)))
   (define-key org-agenda-mode-map (kbd "<tab>") 'other-window))
 
+; Emulates org-roam v1's org-roam-jump-to-index functionality in org-roam v2+.
+; See suggested snippet in
+; https://github.com/org-roam/org-roam/issues/597#issuecomment-907743125.
+;
+; This is a slight tweak to `org-roam-node-visit', because that function cannot
+; be used directly due to a bug. When
+; https://github.com/org-roam/org-roam/pull/1821 is merged, we can use the
+; suggested snippet above (which uses `org-roam-node-visit') as-is.
 (defun l/org-roam-jump-to-index ()
   (interactive)
-  (let ((node (org-roam-node-read "Index")))
-    (if (org-roam-node-file node)
-        (org-roam-node-visit node)
-      (message "could not find \"Index\" file"))))
+  (let*
+    (
+      (node (org-roam-node-from-id
+        (caar (or (org-roam-db-query [:select id :from nodes :where (= title "Index") :limit 1])
+                  (user-error "No node with title `Index'")))))
+      (buf (org-roam-node-find-noselect node nil)))
+  (funcall #'pop-to-buffer-same-window buf)
+  (when (org-invisible-p) (org-show-context))
+  buf))
 
 (defhydra hydra-org (:foreign-keys warn)
   "org"
