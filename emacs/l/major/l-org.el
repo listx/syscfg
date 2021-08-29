@@ -248,7 +248,8 @@
   ("a" org-agenda "org-agenda" :exit t)
   ("b" org-cycle-list-bullet "org-cycle-bullet-type")
   ("d" org-deadline "org-deadline" :exit t)
-  ("e" org-roam-find-node "org-roam-find-node" :exit t)
+  ; Go to an existing org-roam Node, or create one if it doesn't exist yet.
+  ("e" org-roam-node-find "org-roam-node-find" :exit t)
   ("E" org-roam-buffer-toggle "org-roam-buffer-toggle" :exit t)
   ("i" org-download-screenshot "org-download-screenshot" :exit t)
   ("I" org-download-yank "org-download-yank" :exit t)
@@ -258,6 +259,8 @@
   ("L" org-global-cycle "org-global-cycle")
   ("o" org-insert-heading-after-current "org-insert-heading-after-current" :exit t)
   ("s" org-schedule "org-schedule" :exit t)
+  ; Insert a link to an existing org-roam Node, or create one if it doesn't
+  ; exist yet (and link to it).
   ("u" org-roam-node-insert "org-roam-node-insert" :exit t)
   ("q" nil "exit" :exit t)
   ; Evaluate source code block.
