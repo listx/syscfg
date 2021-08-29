@@ -223,22 +223,29 @@
   (define-key org-agenda-mode-map (kbd "<backtab>") (lambda () (interactive) (other-window -1)))
   (define-key org-agenda-mode-map (kbd "<tab>") 'other-window))
 
+(defun l/org-roam-jump-to-index ()
+  (interactive)
+  (let ((node (org-roam-node-read "Index")))
+    (if (org-roam-node-file node)
+        (org-roam-node-visit node)
+      (message "could not find \"Index\" file"))))
+
 (defhydra hydra-org (:foreign-keys warn)
   "org"
   ("a" org-agenda "org-agenda" :exit t)
   ("b" org-cycle-list-bullet "org-cycle-bullet-type")
   ("d" org-deadline "org-deadline" :exit t)
-  ("e" org-roam-find-file "org-roam-find-file" :exit t)
-  ("E" org-roam "org-roam" :exit t)
+  ("e" org-roam-find-node "org-roam-find-node" :exit t)
+  ("E" org-roam-buffer-toggle "org-roam-buffer-toggle" :exit t)
   ("i" org-download-screenshot "org-download-screenshot" :exit t)
   ("I" org-download-yank "org-download-yank" :exit t)
-  ("j" org-roam-jump-to-index "org-roam-jump-to-index" :exit t)
+  ("j" l/org-roam-jump-to-index "l/org-roam-jump-to-index" :exit t)
   ; Cycle section visibility level.
   ("l" org-cycle "org-cycle")
   ("L" org-global-cycle "org-global-cycle")
   ("o" org-insert-heading-after-current "org-insert-heading-after-current" :exit t)
   ("s" org-schedule "org-schedule" :exit t)
-  ("u" org-roam-insert "org-roam-insert" :exit t)
+  ("u" org-roam-node-insert "org-roam-node-insert" :exit t)
   ("q" nil "exit" :exit t)
   ; Evaluate source code block.
   ("x" org-ctrl-c-ctrl-c "org-ctrl-c-ctrl-c" :exit t)
