@@ -216,7 +216,32 @@ left of point. Otherwise, run `completion-at-point'."
     (make-local-variable 'minor-mode-overriding-map-alist)
     (push `(kakapo-mode . ,newmap) minor-mode-overriding-map-alist))
   ; Now we need to bind the TAB key to `l/tab-or-complete'.
-  (evil-define-key 'insert org-mode-map (kbd "TAB") 'l/tab-or-complete))
+  (evil-define-key 'insert org-mode-map (kbd "TAB") 'l/tab-or-complete)
+
+  ; Sensible evil-mode-friendly keybindings for org-mode's calendar minibuffer.
+  (define-key org-read-date-minibuffer-local-map "h" (lambda () (interactive)
+    (org-eval-in-calendar '(calendar-backward-day 1))))
+  (define-key org-read-date-minibuffer-local-map "l" (lambda () (interactive)
+    (org-eval-in-calendar '(calendar-forward-day 1))))
+
+  (define-key org-read-date-minibuffer-local-map "j" (lambda () (interactive)
+    (org-eval-in-calendar '(calendar-forward-week 1))))
+  (define-key org-read-date-minibuffer-local-map "k" (lambda () (interactive)
+    (org-eval-in-calendar '(calendar-backward-week 1))))
+  (define-key org-read-date-minibuffer-local-map "0" (lambda () (interactive)
+    (org-eval-in-calendar '(calendar-beginning-of-week 1))))
+  (define-key org-read-date-minibuffer-local-map "$" (lambda () (interactive)
+    (org-eval-in-calendar '(calendar-end-of-week 1))))
+
+  (define-key org-read-date-minibuffer-local-map "H" (lambda () (interactive)
+    (org-eval-in-calendar '(calendar-backward-month 1))))
+  (define-key org-read-date-minibuffer-local-map "L" (lambda () (interactive)
+    (org-eval-in-calendar '(calendar-forward-month 1))))
+
+  (define-key org-read-date-minibuffer-local-map "J" (lambda () (interactive)
+    (org-eval-in-calendar '(calendar-forward-month 2))))
+  (define-key org-read-date-minibuffer-local-map "K" (lambda () (interactive)
+    (org-eval-in-calendar '(calendar-backward-month 2)))))
 
 (defun l/org-agenda-mode-hook ()
   ; This prevents horizontal splitting
