@@ -35,8 +35,8 @@
     "F" 'helm-projectile-switch-project
 
     "gj" 'git-gutter:revert-hunk
-    "gn" 'git-gutter:next-hunk
-    "gN" 'git-gutter:previous-hunk
+    "gn" (lambda () (interactive) (git-gutter:next-hunk 1) (evil-scroll-line-to-center nil))
+    "gN" (lambda () (interactive) (git-gutter:previous-hunk 1) (evil-scroll-line-to-center nil))
     "gs" 'git-gutter:popup-hunk
 
     "G" 'helm-all-mark-rings
@@ -47,8 +47,8 @@
     "kj" 'hlint-refactor-refactor-at-point
     "kJ" 'hlint-refactor-refactor-buffer
     "kk" 'flycheck-list-errors
-    "kn" 'flycheck-next-error
-    "kN" 'flycheck-previous-error
+    "kn" (lambda () (interactive) (flycheck-next-error) (evil-scroll-line-to-center nil))
+    "kN" (lambda () (interactive) (flycheck-previous-error) (evil-scroll-line-to-center nil))
 
     "m" 'hydra-magit/body
     ; New tab.
