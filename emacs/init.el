@@ -1,9 +1,9 @@
 ; Add load-paths.
-(add-to-list 'load-path "~/.emacs.d/l")
-(add-to-list 'load-path "~/.emacs.d/l/major")
-(add-to-list 'load-path "~/.emacs.d/l/minor")
-(add-to-list 'load-path "~/.emacs.d/l/theme")
-(add-to-list 'custom-theme-load-path "~/.emacs.d/l/theme")
+(add-to-list 'load-path "~/syscfg/emacs/l")
+(add-to-list 'load-path "~/syscfg/emacs/l/major")
+(add-to-list 'load-path "~/syscfg/emacs/l/minor")
+(add-to-list 'load-path "~/syscfg/emacs/l/theme")
+(add-to-list 'custom-theme-load-path "~/syscfg/emacs/l/theme")
 
 ; Load things in alphabetical order where possible, but grouped by their
 ; functionality.

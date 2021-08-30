@@ -396,7 +396,7 @@
 (require 'iso-transl)
 
 ; Do not use init.el for auto-writing custom-set-variables definitions.
-(setq custom-file "~/.emacs.d/custom.el")
+(setq custom-file "~/syscfg/emacs/custom.el")
 (load custom-file)
 
 (provide 'l-misc)

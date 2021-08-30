@@ -18,10 +18,22 @@ bash:
 cmus:
 	ln -fns ${C}/cmus                                   ${H}/.cmus
 emacs:
-	ln -fns ${C}/emacs                                  ${H}/.emacs.d
-	touch                                               ${H}/.emacs.d/custom.el
-	xdg-mime default org-protocol.desktop x-scheme-handler/org-protocol
-	ln -fs ${C}/emacs/org-protocol.desktop              ${H}/.local/share/applications
+	# Set up chemacs2 to enable emacs "profiles". Useful for trying out other
+	# people's configurations, etc. It works by (1) making ~/.emacs.d point to
+	# chemacs2's root dir, and (2) creating a ~/.emacs-profiles.el file that is
+	# a basic key-value table of profile names to emacs configuration
+	# directories.
+	#
+	# `${C}/emacs' is the `legacy' emacs configuration.
+	# `${C}/zzz/doom-emacs' is the `doom' emacs configuration.
+	ln -fns ${C}/zzz/chemacs2                           ${H}/.emacs.d
+	ln -fs ${C}/emacs/.emacs-profiles.el                ${H}
+	# "doom-emacs" profile
+	# Set up doom-emac's DOOMDIR.
+	ln -fns ${C}/doom                                   ${H}/.doom.d
+	# "legacy" profile
+	# Set up legacy custom.el file if there isn't one already.
+	touch                                               ${C}/emacs/custom.el
 git:
 	ln -fs ${C}/git/cfg.personal.conf                   ${H}/.gitconfig
 	ln -fns ${C}/git/template                           ${H}/.git-templates

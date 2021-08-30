@@ -84,7 +84,7 @@ main()
 
 	timeout -k 10 45 ~/.nix-profile/bin/emacs \
 		--batch \
-		--load ~/.emacs.d/init.el \
+		--load ~/syscfg/emacs/init.el \
 		--eval '(l/export-agenda)'
 }
 
