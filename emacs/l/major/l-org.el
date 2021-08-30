@@ -214,9 +214,9 @@ left of point. Otherwise, run `completion-at-point'."
     (set-keymap-parent newmap oldmap)
     (define-key newmap (kbd "TAB") nil)
     (make-local-variable 'minor-mode-overriding-map-alist)
-    (push `(kakapo-mode . ,newmap) minor-mode-overriding-map-alist)))
+    (push `(kakapo-mode . ,newmap) minor-mode-overriding-map-alist))
   ; Now we need to bind the TAB key to `l/tab-or-complete'.
-  (evil-define-key 'insert org-mode-map (kbd "TAB") 'l/tab-or-complete)
+  (evil-define-key 'insert org-mode-map (kbd "TAB") 'l/tab-or-complete))
 
 (defun l/org-agenda-mode-hook ()
   ; This prevents horizontal splitting
