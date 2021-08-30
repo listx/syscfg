@@ -36,23 +36,13 @@
 ; Show empty lines in the fringe area.
 (setq-default indicate-empty-lines t)
 
-; Show trailing whitespace.
-(setq-default show-trailing-whitespace t)
-; Disable trailing whitespace highlighting for certain non-text-editing modes.
-(add-hook 'calendar-mode-hook 'l/hide-trailing-whitespace)
-(add-hook 'special-mode-hook 'l/hide-trailing-whitespace)
-; For the "*Messages*" buffer, we need the hook *and* the "with-current-buffer
-; ..." invocation. This is because by the time this add-hook is run, the
-; *Messages* buffer already exists and so the add-hook (at least initially) does
-; nothing. Instead of trying to figure out where exactly we need to call this
-; add-hook bit, instead we just take care of it with the "with-current-buffer"
-; macro.
-(add-hook 'messages-buffer-mode-hook 'l/hide-trailing-whitespace)
-(defun l/hide-trailing-whitespace ()
-  (setq show-trailing-whitespace nil))
-(with-current-buffer "*Messages*" (l/hide-trailing-whitespace))
-(advice-add 'org-switch-to-buffer-other-window :after
-  #'(lambda (&rest _) (setq show-trailing-whitespace nil)))
+; Show trailing whitespace, but only for user-editing modes.
+(setq-default show-trailing-whitespace nil)
+(add-hook 'prog-mode-hook 'l/show-trailing-whitespace)
+(add-hook 'text-mode-hook 'l/show-trailing-whitespace)
+(add-hook 'git-commit-setup-hook 'l/show-trailing-whitespace)
+(defun l/show-trailing-whitespace ()
+  (setq show-trailing-whitespace t))
 
 ; Highlight matching parentheses.
 (show-paren-mode 1)
