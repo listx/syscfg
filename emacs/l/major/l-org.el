@@ -176,6 +176,14 @@
         (expand-file-name filename-with-timestamp dirname)))
     (setq org-download-method 'l/org-download-method)))
 
+(defun l/tab-or-complete ()
+  "Insert a TAB if there is either 0 or more whitespace immediately to the
+left of point. Otherwise, run `completion-at-point'."
+  (interactive)
+  (if (looking-back "[[:space:]]")
+    (kakapo-tab)
+    (completion-at-point)))
+
 (defun l/org-mode-hook ()
   ; Prevent splitting windows vertically to the right. This makes
   ; org-agenda-follow-mode behave a bit better by preventing org-mode buffers
@@ -192,7 +200,23 @@
   (define-key org-mode-map (kbd "<S-iso-lefttab>") nil)
   ; S-tab for Mac.
   (define-key org-mode-map (kbd "<S-tab>") nil)
-  (define-key org-mode-map (kbd "<backtab>") nil))
+  (define-key org-mode-map (kbd "<backtab>") nil)
+
+  ; When org-mode is active, and we are in Evil's insert mode, we want to make
+  ; "TAB" run the `l/tab-or-complete' interactive function. Unfortunately,
+  ; kakapo-mode (a global minor mode) already binds TAB to run `kakapo-tab'. In
+  ; order to resolve this conflict, we need to first unbind TAB from kakapo-mode
+  ; when we are in org-mode. The following code snippet does
+  ; this, per
+  ; https://emacsredux.com/blog/2013/09/25/removing-key-bindings-from-minor-mode-keymaps/.
+  (let ((oldmap (cdr (assoc 'prelude-mode minor-mode-map-alist)))
+        (newmap (make-sparse-keymap)))
+    (set-keymap-parent newmap oldmap)
+    (define-key newmap (kbd "TAB") nil)
+    (make-local-variable 'minor-mode-overriding-map-alist)
+    (push `(kakapo-mode . ,newmap) minor-mode-overriding-map-alist)))
+  ; Now we need to bind the TAB key to `l/tab-or-complete'.
+  (evil-define-key 'insert org-mode-map (kbd "TAB") 'l/tab-or-complete)
 
 (defun l/org-agenda-mode-hook ()
   ; This prevents horizontal splitting
