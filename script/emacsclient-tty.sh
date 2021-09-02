@@ -14,11 +14,12 @@ set_elisp()
 	local column
 
 	for arg; do
-		if [[ "${arg}" == +* ]]; then
+		if [[ "${arg}" == +* ]] && (( $# > 1 )); then
 			position="${arg}"
 		else
 			file="${arg}"
-        fi
+		fi
+		shift
 	done
 
 	case "${position:-}" in
