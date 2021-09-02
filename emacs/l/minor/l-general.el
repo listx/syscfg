@@ -9,6 +9,7 @@
     :keymaps '(evil-normal-state-map evil-visual-state-map emacs)
     "-" 'hydra-zoom/body
     "<tab>" 'hydra-window/body
+    "TAB" 'hydra-window/body
     "<SPC>" 'magit-status
     ; Set line ending to UNIX.
     "\\" 'l/force-unix-line-endings
