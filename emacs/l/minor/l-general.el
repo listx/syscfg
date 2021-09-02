@@ -242,14 +242,12 @@ otherwise, close current tab."
   "Split window verically."
   (interactive)
   (split-window-vertically)
-  (balance-windows)
-  (other-window 1))
+  (balance-windows))
 (defun l/split-horizontally ()
   "Split window horizontally."
   (interactive)
   (split-window-horizontally)
-  (balance-windows)
-  (other-window 1))
+  (balance-windows))
 
 ; http://stackoverflow.com/a/3217206/437583
 (defun l/save-buffer! ()
