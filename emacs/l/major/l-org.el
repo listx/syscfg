@@ -209,7 +209,7 @@ left of point. Otherwise, run `completion-at-point'."
   ; when we are in org-mode. The following code snippet does
   ; this, per
   ; https://emacsredux.com/blog/2013/09/25/removing-key-bindings-from-minor-mode-keymaps/.
-  (let ((oldmap (cdr (assoc 'prelude-mode minor-mode-map-alist)))
+  (let ((oldmap (cdr (assoc 'kakapo-mode minor-mode-map-alist)))
         (newmap (make-sparse-keymap)))
     (set-keymap-parent newmap oldmap)
     (define-key newmap (kbd "TAB") nil)
