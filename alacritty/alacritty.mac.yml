@@ -168,7 +168,7 @@ key_bindings:
 #  - { key: Space,     mods: Control,   chars: "\x00"                        } # Ctrl + Space
 #  - { key: Grave,     mods: Alt,       chars: "\x1b`"                       } # Alt + `
 #  - { key: Grave,     mods: Alt|Shift, chars: "\x1b~"                       } # Alt + ~
-#  - { key: Period,    mods: Alt,       chars: "\x1b."                       } # Alt + .
+  - { key: Period,    mods: Alt,       chars: "\x1b."                       } # Alt + .
 #  - { key: Key8,      mods: Alt|Shift, chars: "\x1b*"                       } # Alt + *
 #  - { key: Key3,      mods: Alt|Shift, chars: "\x1b#"                       } # Alt + #
 #  - { key: Period,    mods: Alt|Shift, chars: "\x1b>"                       } # Alt + >
