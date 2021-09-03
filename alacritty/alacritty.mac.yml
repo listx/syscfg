@@ -153,7 +153,7 @@ key_bindings:
   - { key: X,         mods: Alt|Shift, chars: "\x1bX"                       }
   - { key: Y,         mods: Alt|Shift, chars: "\x1bY"                       }
   - { key: Z,         mods: Alt|Shift, chars: "\x1bZ"                       }
-  # For eamcs M-:.
+  # For emacs M-:.
   - { key: Semicolon, mods: Alt|Shift, chars: "\x1b:"                       }
 #  - { key: Key1,      mods: Alt,       chars: "\x1b1"                       }
 #  - { key: Key2,      mods: Alt,       chars: "\x1b2"                       }
