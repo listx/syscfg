@@ -78,9 +78,9 @@ Return an event vector."
       ;
       ; See https://emacs.stackexchange.com/a/59225 for the idea. Note that this
       ; code does not match the answer there because it also depends on how you
-      ; set up your Alacritty bindings from the terminal emulator; if you make
-      ; Alacritty send lowercase codepoints then this hack probably is not
-      ; necessary.
+      ; set up your Alacritty bindings; if you make Alacritty send lowercase
+      ; ASCII letters (a-z) instead of uppercase ones (A-Z) then this hack
+      ; probably is not necessary.
       (while (<= uppercase 90)
         (mapc (lambda (x)
                 (define-key xterm-function-map (format (car x) uppercase)
