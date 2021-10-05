@@ -145,7 +145,12 @@ inoremap <C-l> <esc>:tabnext<cr>
 inoremap <C-h> <esc>:tabprevious<cr>
 
 " Window movement (i.e., moving around INSIDE a tab).
-nmap <Tab> <C-w><C-w>
+nmap <Tab> <C-w>w
+nmap <S-Tab> <C-w>W
+nmap <C-j> <C-w>w
+nmap <C-k> <C-w>W
+nmap <C-S-j> <C-w>r
+nmap <C-S-k> <C-w>R
 
 " Buffer movement (i.e., moving around INSIDE a window).
 nmap <S-h> :bn<cr>
