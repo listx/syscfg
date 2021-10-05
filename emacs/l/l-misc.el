@@ -65,13 +65,24 @@ Return an event vector."
                 ("\e\[%d;7u" control meta)
                 ("\e\[%d;8u" control meta shift)))
         (setq c (1+ c)))
-      ; Interpret the sequence, e.g., "\e\[76;6u" (C-S-L) as C-S-l. This is
-      ; because in Alacritty we always use the uppercase ASCII letter for the
-      ; codepoint between the `[' and `;' delimiters of the sequence. This is
-      ; better because in emacs we can define keybindings as C-S-l instead of
-      ; C-S-L (it is not known if the latter will even work as I have not tried
-      ; it). The C-S-L binding is also redundant because it encodes the Shift
-      ; key information twice.
+      ; Interpret the C-S-<letter> sequences encoded as `CSI u' sequences,
+      ; (e.g., "\e\[76;6u" (C-S-L) as C-S-l). This is because in Alacritty we
+      ; always use the uppercase ASCII letter for the codepoint between the `['
+      ; and `;' delimiters of the sequence. This use of 6u instead of 5u
+      ; somewhat deviates from the example for "A" vs "a" as described in
+      ; http://www.leonerd.org.uk/hacks/fixterms/, because there they recommend
+      ; "\e\[65;5u" (note the 5u instead of the 6u) to encode C-S-A. The reason
+      ; we use 6u instead of the recommended 5u is because for some reason we
+      ; cannot get 5u to work with tmux. That is, if we pass in "\e\[76;5u" from
+      ; Alacritty to tmux, tmux encodes it as C-l instead of C-S-l. So instead
+      ; we feed in the 6u variant from Alacritty, which tmux does recognize as
+      ; C-S-l. And then we tell tmux to convert all such C-S- sequences back
+      ; into a `CSI u' sequence, again using the 6u variant for Emacs to
+      ; consume. We could probably use the 5u variant from within Emacs but
+      ; using the 6u variant keeps all settings consistent across alacritty,
+      ; tmux, and emacs.
+      ;
+      ; Anyway, now in terminal emacs we can distinguish between C-S-l and C-l.
       ;
       ; The (+ 32 uppercase) expression shifts the uppercase codepoint up by 32,
       ; making it lowercase for Emacs.

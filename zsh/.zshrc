@@ -467,17 +467,6 @@ bindkey -s '^l' ' dirs_navigate next\n'
 # newline. So binding it is the same thing as rebinding the newline character.
 bindkey -s '^K' ' k\n'
 
-# Rudimentary `CSI u` support for C-r. See
-# https://iterm2.com/documentation-csiu.html. Unfortunately we cannot bind all
-# the letters as Zsh's bindkey functionality is limited to the zle component.
-# However this binding at least gives us history completion so it's actually
-# quite useful.
-#
-# Normally we don't even need this binding when running Zsh from inside tmux,
-# because tmux already translates the `CSI u` sequences to the legacy bindings
-# before sending them to Zsh (at least, it appears that way).
-bindkey -s "\x1b[82;5u" '^R'
-
 zmodload zsh/complist # for the 'menuselect' keymap
 # Just execute the command when selecting from a menu and pressing <enter>.
 # Regarding the `.' in front of 'accept-line', the manpage for zshcompsys(1) has
