@@ -52,9 +52,19 @@
   ; S-TAB to shift focus to the previous window.
   (l/define-key-args evil-motion-state-map (kbd "<backtab>") other-window -1)
 
+  ; Use C-j and C-k to shift focus to the next/prev window.
+  (define-key evil-motion-state-map (kbd "C-j") 'other-window)
+  (l/define-key-args evil-motion-state-map (kbd "C-k") other-window -1)
+  (define-key evil-insert-state-map (kbd "C-j") 'other-window)
+  (l/define-key-args evil-insert-state-map (kbd "C-k") other-window -1)
   ; Swap current window (and its buffer) with the next window.
-  (define-key evil-motion-state-map (kbd "C-j") 'window-swap-states)
-  (define-key evil-motion-state-map (kbd "C-k") '(lambda () (interactive)
+  (define-key evil-motion-state-map (kbd "C-S-j") 'window-swap-states)
+  (define-key evil-motion-state-map (kbd "C-S-k") '(lambda () (interactive)
+    (other-window -1)
+    (window-swap-states)
+    (other-window -1)))
+  (define-key evil-insert-state-map (kbd "C-S-j") 'window-swap-states)
+  (define-key evil-insert-state-map (kbd "C-S-k") '(lambda () (interactive)
     (other-window -1)
     (window-swap-states)
     (other-window -1)))
