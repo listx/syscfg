@@ -68,6 +68,10 @@
   (define-key evil-motion-state-map (kbd "C-h") 'tab-previous)
   (define-key evil-insert-state-map (kbd "C-l") 'tab-next)
   (define-key evil-insert-state-map (kbd "C-h") 'tab-previous)
+  (l/define-key-args evil-motion-state-map (kbd "C-S-l") tab-bar-move-tab 1)
+  (l/define-key-args evil-motion-state-map (kbd "C-S-h") tab-bar-move-tab -1)
+  (l/define-key-args evil-insert-state-map (kbd "C-S-l") tab-bar-move-tab 1)
+  (l/define-key-args evil-insert-state-map (kbd "C-S-h") tab-bar-move-tab -1)
   (define-key evil-normal-state-map (kbd "C-o") 'l/insert-newline-below)
   (define-key evil-normal-state-map (kbd "C-S-o") 'l/insert-newline-above)
 

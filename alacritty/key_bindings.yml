@@ -18,10 +18,10 @@ key_bindings:
 
   # Alt + <key> ------------------------------
 
-  # Notice how these are technically still the upper-case ASCII codepoints; this
-  # still works because it appears that the modifier keys are strictly
-  # interpreted from the `;...` portion, not the key itself in the `...;`
-  # portion.
+  # Notice how these are technically still the upper-case ASCII codepoints
+  # (65-90); this still works because it appears that the modifier keys are
+  # strictly interpreted from the `;...` portion, not the key itself in the
+  # `...;` portion.
   - { key: A, mods: Alt, chars: "\x1b[65;3u" }
   - { key: B, mods: Alt, chars: "\x1b[66;3u" }
   - { key: C, mods: Alt, chars: "\x1b[67;3u" }
@@ -48,8 +48,8 @@ key_bindings:
   - { key: X, mods: Alt, chars: "\x1b[88;3u" }
   - { key: Y, mods: Alt, chars: "\x1b[89;3u" }
   - { key: Z, mods: Alt, chars: "\x1b[90;3u" }
-  # TODO: Fix this so that Emacs understands the `CSI u` version instead.
-  - { key: Period, mods: Alt, chars: "\x1b." } # Alt + .
+  - { key: Period, mods: Alt, chars: "\x1b[46;3u" } # M-.
+  - { key: Semicolon, mods: Alt|Shift, chars: "\x1b[58;3u" } # M-:
 
   # Alt + Shift + <key> ----------------------------
 
@@ -79,10 +79,10 @@ key_bindings:
   - { key: X, mods: Alt|Shift, chars: "\x1b[88;4u" }
   - { key: Y, mods: Alt|Shift, chars: "\x1b[89;4u" }
   - { key: Z, mods: Alt|Shift, chars: "\x1b[90;4u" }
-  # TODO: Fix this so that Emacs understands the `CSI u` version instead.
-  - { key: Semicolon, mods: Alt|Shift, chars: "\x1b:" }
 
   # Control + <key> ------------------------------
+  # NOTE: Unfortunately this breaks Zsh when invoked directly from Alacritty.
+  # The only way to use Zsh correctly is through tmux.
 
   - { key: A, mods: Control, chars: "\x1b[65;5u" }
   - { key: B, mods: Control, chars: "\x1b[66;5u" }

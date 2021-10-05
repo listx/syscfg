@@ -31,6 +31,66 @@
 ; are "consumed" by the default `evil-normal-state' binding.
 (global-set-key (kbd "ESC <escape>") 'keyboard-escape-quit)
 
+; Enable `CSI u` support. See https://emacs.stackexchange.com/a/59225.
+; xterm with the resource ?.VT100.modifyOtherKeys: 1
+; GNU Emacs >=24.4 sets xterm in this mode and define
+; some of the escape sequences but not all of them.
+; xterm with the resource ?.VT100.modifyOtherKeys: 1
+; GNU Emacs >=24.4 sets xterm in this mode and define
+; some of the escape sequences but not all of them.
+(defun character-apply-modifiers (c &rest modifiers)
+  "Apply modifiers to the character C.
+MODIFIERS must be a list of symbols amongst (meta control shift).
+Return an event vector."
+  (if (memq 'control modifiers) (setq c (if (or (and (<= ?@ c) (<= c ?_))
+                                                (and (<= ?a c) (<= c ?z)))
+                                            (logand c ?\x1f)
+                                          (logior (lsh 1 26) c))))
+  (if (memq 'meta modifiers) (setq c (logior (lsh 1 27) c)))
+  (if (memq 'shift modifiers) (setq c (logior (lsh 1 25) c)))
+  (vector c))
+(defun l/eval-after-load-xterm ()
+  (interactive)
+  (when (and (boundp 'xterm-extra-capabilities) (boundp 'xterm-function-map))
+    (let ((c 32) (uppercase 65))
+      ; Create bindings for all ASCII codepoints from 32 (SPACE) to 126 (~).
+      ; That is, make Emacs understand what these `CSI u' sequences mean.
+      (while (<= c 126)
+        (mapc (lambda (x)
+                (define-key xterm-function-map (format (car x) c)
+                  (apply 'character-apply-modifiers c (cdr x))))
+              '(("\e\[%d;3u" meta)
+                ("\e\[%d;5u" control)
+                ("\e\[%d;6u" control shift)
+                ("\e\[%d;7u" control meta)
+                ("\e\[%d;8u" control meta shift)))
+        (setq c (1+ c)))
+      ; Interpret the sequence, e.g., "\e\[76;6u" (C-S-L) as C-S-l. This is
+      ; because in Alacritty we always use the uppercase ASCII letter for the
+      ; codepoint between the `[' and `;' delimiters of the sequence. This is
+      ; better because in emacs we can define keybindings as C-S-l instead of
+      ; C-S-L (it is not known if the latter will even work as I have not tried
+      ; it). The C-S-L binding is also redundant because it encodes the Shift
+      ; key information twice.
+      ;
+      ; The (+ 32 uppercase) expression shifts the uppercase codepoint up by 32,
+      ; making it lowercase for Emacs.
+      ;
+      ; See https://emacs.stackexchange.com/a/59225 for the idea. Note that this
+      ; code does not match the answer there because it also depends on how you
+      ; set up your Alacritty bindings from the terminal emulator; if you make
+      ; Alacritty send lowercase codepoints then this hack probably is not
+      ; necessary.
+      (while (<= uppercase 90)
+        (mapc (lambda (x)
+                (define-key xterm-function-map (format (car x) uppercase)
+                  (apply 'character-apply-modifiers (+ 32 uppercase) (cdr x))))
+              '(("\e\[%d;6u" control shift)
+                ("\e\[%d;8u" control meta shift)))
+        (setq uppercase (1+ uppercase)))
+        )))
+(eval-after-load "xterm" '(l/eval-after-load-xterm))
+
 ; Try very hard to not split existing windows to open up links and other new
 ; buffers. https://stackoverflow.com/a/1856069/437583
 (setq same-window-regexps '("."))
