@@ -1,0 +1,224 @@
+key_bindings:
+  # Vi Mode
+  # Custom Vi mode bindings.
+  - { key: Y,         mode: ~Vi, mods: Super,       action: ToggleViMode         }
+  # Paste.
+  - { key: P,         mode: ~Vi, mods: Super,       action: Paste                }
+  - { key: P,         mode:  Vi,                    action: Paste                }
+
+  # Distinguish between problematic keys (such as C-<key> and C-S-<key>) via
+  # manual `CSI u` support. See https://iterm2.com/documentation-csiu.html for a
+  # background around `CSI u` aka `libtickit`, and
+  # https://github.com/alacritty/alacritty/issues/3101 for the upstream issue to
+  # enable native `CSI u` support in Alacritty.
+  #
+  # The list
+  # here is drawn from
+  # https://github.com/alexherbo2/alacritty-extended-keys/blob/bc08749ae8fd9f8e00d0c93f96d5c67c244c6480/keys.yml#L16.
+
+  # Alt + <key> ------------------------------
+
+  # Notice how these are technically still the upper-case ASCII codepoints; this
+  # still works because it appears that the modifier keys are strictly
+  # interpreted from the `;...` portion, not the key itself in the `...;`
+  # portion.
+  - { key: A, mods: Alt, chars: "\x1b[65;3u" }
+  - { key: B, mods: Alt, chars: "\x1b[66;3u" }
+  - { key: C, mods: Alt, chars: "\x1b[67;3u" }
+  - { key: D, mods: Alt, chars: "\x1b[68;3u" }
+  - { key: E, mods: Alt, chars: "\x1b[69;3u" }
+  - { key: F, mods: Alt, chars: "\x1b[70;3u" }
+  - { key: G, mods: Alt, chars: "\x1b[71;3u" }
+  - { key: H, mods: Alt, chars: "\x1b[72;3u" }
+  - { key: I, mods: Alt, chars: "\x1b[73;3u" }
+  - { key: J, mods: Alt, chars: "\x1b[74;3u" }
+  - { key: K, mods: Alt, chars: "\x1b[75;3u" }
+  - { key: L, mods: Alt, chars: "\x1b[76;3u" }
+  - { key: M, mods: Alt, chars: "\x1b[77;3u" }
+  - { key: N, mods: Alt, chars: "\x1b[78;3u" }
+  - { key: O, mods: Alt, chars: "\x1b[79;3u" }
+  - { key: P, mods: Alt, chars: "\x1b[80;3u" }
+  - { key: Q, mods: Alt, chars: "\x1b[81;3u" }
+  - { key: R, mods: Alt, chars: "\x1b[82;3u" }
+  - { key: S, mods: Alt, chars: "\x1b[83;3u" }
+  - { key: T, mods: Alt, chars: "\x1b[84;3u" }
+  - { key: U, mods: Alt, chars: "\x1b[85;3u" }
+  - { key: V, mods: Alt, chars: "\x1b[86;3u" }
+  - { key: W, mods: Alt, chars: "\x1b[87;3u" }
+  - { key: X, mods: Alt, chars: "\x1b[88;3u" }
+  - { key: Y, mods: Alt, chars: "\x1b[89;3u" }
+  - { key: Z, mods: Alt, chars: "\x1b[90;3u" }
+
+  # Alt + Shift + <key> ----------------------------
+
+  - { key: A, mods: Alt|Shift, chars: "\x1b[65;4u" }
+  - { key: B, mods: Alt|Shift, chars: "\x1b[66;4u" }
+  - { key: C, mods: Alt|Shift, chars: "\x1b[67;4u" }
+  - { key: D, mods: Alt|Shift, chars: "\x1b[68;4u" }
+  - { key: E, mods: Alt|Shift, chars: "\x1b[69;4u" }
+  - { key: F, mods: Alt|Shift, chars: "\x1b[70;4u" }
+  - { key: G, mods: Alt|Shift, chars: "\x1b[71;4u" }
+  - { key: H, mods: Alt|Shift, chars: "\x1b[72;4u" }
+  - { key: I, mods: Alt|Shift, chars: "\x1b[73;4u" }
+  - { key: J, mods: Alt|Shift, chars: "\x1b[74;4u" }
+  - { key: K, mods: Alt|Shift, chars: "\x1b[75;4u" }
+  - { key: L, mods: Alt|Shift, chars: "\x1b[76;4u" }
+  - { key: M, mods: Alt|Shift, chars: "\x1b[77;4u" }
+  - { key: N, mods: Alt|Shift, chars: "\x1b[78;4u" }
+  - { key: O, mods: Alt|Shift, chars: "\x1b[79;4u" }
+  - { key: P, mods: Alt|Shift, chars: "\x1b[80;4u" }
+  - { key: Q, mods: Alt|Shift, chars: "\x1b[81;4u" }
+  - { key: R, mods: Alt|Shift, chars: "\x1b[82;4u" }
+  - { key: S, mods: Alt|Shift, chars: "\x1b[83;4u" }
+  - { key: T, mods: Alt|Shift, chars: "\x1b[84;4u" }
+  - { key: U, mods: Alt|Shift, chars: "\x1b[85;4u" }
+  - { key: V, mods: Alt|Shift, chars: "\x1b[86;4u" }
+  - { key: W, mods: Alt|Shift, chars: "\x1b[87;4u" }
+  - { key: X, mods: Alt|Shift, chars: "\x1b[88;4u" }
+  - { key: Y, mods: Alt|Shift, chars: "\x1b[89;4u" }
+  - { key: Z, mods: Alt|Shift, chars: "\x1b[90;4u" }
+  # TODO: Fix this so that Emacs understands the `CSI u` version instead.
+  - { key: Semicolon, mods: Alt|Shift, chars: "\x1b:" }
+
+  # Control + <key> ------------------------------
+
+  - { key: A, mods: Control, chars: "\x1b[65;5u" }
+  - { key: B, mods: Control, chars: "\x1b[66;5u" }
+  - { key: C, mods: Control, chars: "\x1b[67;5u" }
+  - { key: D, mods: Control, chars: "\x1b[68;5u" }
+  - { key: E, mods: Control, chars: "\x1b[69;5u" }
+  - { key: F, mods: Control, chars: "\x1b[70;5u" }
+  - { key: G, mods: Control, chars: "\x1b[71;5u" }
+  - { key: H, mods: Control, chars: "\x1b[72;5u" }
+  - { key: I, mods: Control, chars: "\x1b[73;5u" }
+  - { key: J, mods: Control, chars: "\x1b[74;5u" }
+  - { key: K, mods: Control, chars: "\x1b[75;5u" }
+  - { key: L, mods: Control, chars: "\x1b[76;5u" }
+  - { key: M, mods: Control, chars: "\x1b[77;5u" }
+  - { key: N, mods: Control, chars: "\x1b[78;5u" }
+  - { key: O, mods: Control, chars: "\x1b[79;5u" }
+  - { key: P, mods: Control, chars: "\x1b[80;5u" }
+  - { key: Q, mods: Control, chars: "\x1b[81;5u" }
+  - { key: R, mods: Control, chars: "\x1b[82;5u" }
+  - { key: S, mods: Control, chars: "\x1b[83;5u" }
+  - { key: T, mods: Control, chars: "\x1b[84;5u" }
+  - { key: U, mods: Control, chars: "\x1b[85;5u" }
+  - { key: V, mods: Control, chars: "\x1b[86;5u" }
+  - { key: W, mods: Control, chars: "\x1b[87;5u" }
+  - { key: X, mods: Control, chars: "\x1b[88;5u" }
+  - { key: Y, mods: Control, chars: "\x1b[89;5u" }
+  - { key: Z, mods: Control, chars: "\x1b[90;5u" }
+
+  # Control + Shift + <key> ----------------------------
+
+  - { key: A, mods: Control|Shift, chars: "\x1b[65;6u" }
+  - { key: B, mods: Control|Shift, chars: "\x1b[66;6u" }
+  - { key: C, mods: Control|Shift, chars: "\x1b[67;6u" }
+  - { key: D, mods: Control|Shift, chars: "\x1b[68;6u" }
+  - { key: E, mods: Control|Shift, chars: "\x1b[69;6u" }
+  - { key: F, mods: Control|Shift, chars: "\x1b[70;6u" }
+  - { key: G, mods: Control|Shift, chars: "\x1b[71;6u" }
+  - { key: H, mods: Control|Shift, chars: "\x1b[72;6u" }
+  - { key: I, mods: Control|Shift, chars: "\x1b[73;6u" }
+  - { key: J, mods: Control|Shift, chars: "\x1b[74;6u" }
+  - { key: K, mods: Control|Shift, chars: "\x1b[75;6u" }
+  - { key: L, mods: Control|Shift, chars: "\x1b[76;6u" }
+  - { key: M, mods: Control|Shift, chars: "\x1b[77;6u" }
+  - { key: N, mods: Control|Shift, chars: "\x1b[78;6u" }
+  - { key: O, mods: Control|Shift, chars: "\x1b[79;6u" }
+  - { key: P, mods: Control|Shift, chars: "\x1b[80;6u" }
+  - { key: Q, mods: Control|Shift, chars: "\x1b[81;6u" }
+  - { key: R, mods: Control|Shift, chars: "\x1b[82;6u" }
+  - { key: S, mods: Control|Shift, chars: "\x1b[83;6u" }
+  - { key: T, mods: Control|Shift, chars: "\x1b[84;6u" }
+  - { key: U, mods: Control|Shift, chars: "\x1b[85;6u" }
+  - { key: V, mods: Control|Shift, chars: "\x1b[86;6u" }
+  - { key: W, mods: Control|Shift, chars: "\x1b[87;6u" }
+  - { key: X, mods: Control|Shift, chars: "\x1b[88;6u" }
+  - { key: Y, mods: Control|Shift, chars: "\x1b[89;6u" }
+  - { key: Z, mods: Control|Shift, chars: "\x1b[90;6u" }
+
+  # Control + Alt + <key> ----------------------------
+
+  - { key: A, mods: Control|Alt, chars: "\x1b[65;7u" }
+  - { key: B, mods: Control|Alt, chars: "\x1b[66;7u" }
+  - { key: C, mods: Control|Alt, chars: "\x1b[67;7u" }
+  - { key: D, mods: Control|Alt, chars: "\x1b[68;7u" }
+  - { key: E, mods: Control|Alt, chars: "\x1b[69;7u" }
+  - { key: F, mods: Control|Alt, chars: "\x1b[70;7u" }
+  - { key: G, mods: Control|Alt, chars: "\x1b[71;7u" }
+  - { key: H, mods: Control|Alt, chars: "\x1b[72;7u" }
+  - { key: I, mods: Control|Alt, chars: "\x1b[73;7u" }
+  - { key: J, mods: Control|Alt, chars: "\x1b[74;7u" }
+  - { key: K, mods: Control|Alt, chars: "\x1b[75;7u" }
+  - { key: L, mods: Control|Alt, chars: "\x1b[76;7u" }
+  - { key: M, mods: Control|Alt, chars: "\x1b[77;7u" }
+  - { key: N, mods: Control|Alt, chars: "\x1b[78;7u" }
+  - { key: O, mods: Control|Alt, chars: "\x1b[79;7u" }
+  - { key: P, mods: Control|Alt, chars: "\x1b[80;7u" }
+  - { key: Q, mods: Control|Alt, chars: "\x1b[81;7u" }
+  - { key: R, mods: Control|Alt, chars: "\x1b[82;7u" }
+  - { key: S, mods: Control|Alt, chars: "\x1b[83;7u" }
+  - { key: T, mods: Control|Alt, chars: "\x1b[84;7u" }
+  - { key: U, mods: Control|Alt, chars: "\x1b[85;7u" }
+  - { key: V, mods: Control|Alt, chars: "\x1b[86;7u" }
+  - { key: W, mods: Control|Alt, chars: "\x1b[87;7u" }
+  - { key: X, mods: Control|Alt, chars: "\x1b[88;7u" }
+  - { key: Y, mods: Control|Alt, chars: "\x1b[89;7u" }
+  - { key: Z, mods: Control|Alt, chars: "\x1b[90;7u" }
+
+  # Control + Alt + Shift + <key> --------------------------
+
+  - { key: A, mods: Control|Alt|Shift, chars: "\x1b[65;8u" }
+  - { key: B, mods: Control|Alt|Shift, chars: "\x1b[66;8u" }
+  - { key: C, mods: Control|Alt|Shift, chars: "\x1b[67;8u" }
+  - { key: D, mods: Control|Alt|Shift, chars: "\x1b[68;8u" }
+  - { key: E, mods: Control|Alt|Shift, chars: "\x1b[69;8u" }
+  - { key: F, mods: Control|Alt|Shift, chars: "\x1b[70;8u" }
+  - { key: G, mods: Control|Alt|Shift, chars: "\x1b[71;8u" }
+  - { key: H, mods: Control|Alt|Shift, chars: "\x1b[72;8u" }
+  - { key: I, mods: Control|Alt|Shift, chars: "\x1b[73;8u" }
+  - { key: J, mods: Control|Alt|Shift, chars: "\x1b[74;8u" }
+  - { key: K, mods: Control|Alt|Shift, chars: "\x1b[75;8u" }
+  - { key: L, mods: Control|Alt|Shift, chars: "\x1b[76;8u" }
+  - { key: M, mods: Control|Alt|Shift, chars: "\x1b[77;8u" }
+  - { key: N, mods: Control|Alt|Shift, chars: "\x1b[78;8u" }
+  - { key: O, mods: Control|Alt|Shift, chars: "\x1b[79;8u" }
+  - { key: P, mods: Control|Alt|Shift, chars: "\x1b[80;8u" }
+  - { key: Q, mods: Control|Alt|Shift, chars: "\x1b[81;8u" }
+  - { key: R, mods: Control|Alt|Shift, chars: "\x1b[82;8u" }
+  - { key: S, mods: Control|Alt|Shift, chars: "\x1b[83;8u" }
+  - { key: T, mods: Control|Alt|Shift, chars: "\x1b[84;8u" }
+  - { key: U, mods: Control|Alt|Shift, chars: "\x1b[85;8u" }
+  - { key: V, mods: Control|Alt|Shift, chars: "\x1b[86;8u" }
+  - { key: W, mods: Control|Alt|Shift, chars: "\x1b[87;8u" }
+  - { key: X, mods: Control|Alt|Shift, chars: "\x1b[88;8u" }
+  - { key: Y, mods: Control|Alt|Shift, chars: "\x1b[89;8u" }
+  - { key: Z, mods: Control|Alt|Shift, chars: "\x1b[90;8u" }
+
+  # When exiting Vi mode, scroll to the very bottom first to restore
+  # pre-Vi-mode context.
+  - { key: Q,         mode:  Vi,                      action: ScrollToBottom       }
+  - { key: Q,         mode:  Vi,                      action: ToggleViMode         }
+  # Quick navigation. This is like 10j or 10k in Vim's normal mode, but with one
+  # keystroke.
+  - { key: Back,      mode:  Vi,                      action: Up   }
+  - { key: Back,      mode:  Vi,                      action: Up   }
+  - { key: Back,      mode:  Vi,                      action: Up   }
+  - { key: Back,      mode:  Vi,                      action: Up   }
+  - { key: Back,      mode:  Vi,                      action: Up   }
+  - { key: Back,      mode:  Vi,                      action: Up   }
+  - { key: Back,      mode:  Vi,                      action: Up   }
+  - { key: Back,      mode:  Vi,                      action: Up   }
+  - { key: Back,      mode:  Vi,                      action: Up   }
+  - { key: Back,      mode:  Vi,                      action: Up   }
+  - { key: Space,     mode:  Vi,                      action: Down   }
+  - { key: Space,     mode:  Vi,                      action: Down   }
+  - { key: Space,     mode:  Vi,                      action: Down   }
+  - { key: Space,     mode:  Vi,                      action: Down   }
+  - { key: Space,     mode:  Vi,                      action: Down   }
+  - { key: Space,     mode:  Vi,                      action: Down   }
+  - { key: Space,     mode:  Vi,                      action: Down   }
+  - { key: Space,     mode:  Vi,                      action: Down   }
+  - { key: Space,     mode:  Vi,                      action: Down   }
+  - { key: Space,     mode:  Vi,                      action: Down   }

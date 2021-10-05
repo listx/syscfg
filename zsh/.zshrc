@@ -454,6 +454,19 @@ bindkey '^[[1~' beginning-of-line
 bindkey "OF" end-of-line
 bindkey '^[[4~' end-of-line
 
+# Some directory history navigation. 'h' goes backward in history, and 'l' goes
+# "forward". Essentially this amounts to simulating a doubly-linked-list
+# traversal, forwards and backwards.
+#
+# We prepend these commands with a space to block them from being saved into
+# the shell history (because of HIST_IGNORE_SPACE).
+bindkey -s '^h' " dirs_navigate prev\n"
+bindkey -s '^l' ' dirs_navigate next\n'
+# Move up a directory. This is slightly faster than typing 'k' then 'Enter'. We
+# can't bind C-j, because it is interpreted by Zsh to be the same thing as a
+# newline. So binding it is the same thing as rebinding the newline character.
+bindkey -s '^K' ' k\n'
+
 zmodload zsh/complist # for the 'menuselect' keymap
 # Just execute the command when selecting from a menu and pressing <enter>.
 # Regarding the `.' in front of 'accept-line', the manpage for zshcompsys(1) has
