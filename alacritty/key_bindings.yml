@@ -48,6 +48,8 @@ key_bindings:
   - { key: X, mods: Alt, chars: "\x1b[88;3u" }
   - { key: Y, mods: Alt, chars: "\x1b[89;3u" }
   - { key: Z, mods: Alt, chars: "\x1b[90;3u" }
+  # TODO: Fix this so that Emacs understands the `CSI u` version instead.
+  - { key: Period, mods: Alt, chars: "\x1b." } # Alt + .
 
   # Alt + Shift + <key> ----------------------------
 
