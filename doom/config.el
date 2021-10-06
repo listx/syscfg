@@ -266,7 +266,19 @@ otherwise, close current tab."
 (setq tab-bar-show t
       tab-bar-new-button-show nil
       tab-bar-close-button-show nil
-      tab-bar-separator "  ")
+      tab-bar-separator (propertize " " 'font-lock-face '(:background "color-16"))
+      tab-bar-tab-name-function #'l/get-tab-name)
+
+; Based on `tab-bar-tab-name-current-with-count', with some tweaks.
+(defun l/get-tab-name ()
+  "Generate tab name from the buffer of the selected window.
+Also add the number of windows in the window configuration."
+  (interactive)
+  (let ((count (length (window-list-1 nil 'nomini)))
+        (name (window-buffer (minibuffer-selected-window))))
+    (if (> count 1)
+        (format " [%d] %s " (- count 1) name)
+        (format " %s " name))))
 (map! :mi "C-l" #'tab-next
       :mi "C-h" #'tab-previous
       :mi "C-S-l" (cmd!! #'tab-bar-move-tab 1)
@@ -275,6 +287,92 @@ otherwise, close current tab."
       :leader "v" #'l/split-horizontally)
 (map! :leader "N" #'tab-new)
 
+(map! :mi "C-o" #'l/insert-newline-below
+      :mi "C-S-o" #'l/insert-newline-above)
+
+(defun l/insert-newline-below ()
+  (interactive)
+  (forward-line 1)
+  (beginning-of-line)
+  (insert "\n")
+  (forward-line -1))
+(defun l/insert-newline-above ()
+  (interactive)
+  (beginning-of-line)
+  (insert "\n")
+  (forward-line -1))
+
+(set-face-attribute 'tab-bar nil :background "color-16")
+(set-face-attribute 'tab-bar-tab nil :weight 'bold :box nil :background "color-51")
+(set-face-attribute 'tab-bar-tab-inactive nil :weight 'bold :box nil :foreground "color-16" :background "color-38")
+; Enable only left-side fringe.
+(set-fringe-mode '(10 . 0))
+
+; Disable hl-line mode, because it is extremely slow. We want to use hl-line+
+; mode instead, which is much faster because it only highlights the line when
+; idle.
+(remove-hook 'doom-first-buffer-hook #'global-hl-line-mode)
+
+(use-package hl-line+
+  :config
+  (set-face-attribute 'hl-line nil :background "grey32")
+  ; Highlight the current cursor line; set overlay to a high number to override
+  ; other properties (e.g., mmm-default-submode-face).
+  (setq hl-line-overlay-priority (/ most-positive-fixnum (expt 2 55)))
+  ; Only highlight when idle.
+  (toggle-hl-line-when-idle)
+  (setq global-hl-line-mode nil)
+  (hl-line-when-idle-interval 0.5))
+
+
+; Modeline colors.
+(set-face-attribute
+ 'mode-line nil
+ :background "color-235"
+ :foreground "color-231")
+(set-face-attribute
+ 'mode-line-inactive nil
+ :weight 'bold
+ :background "color-16"
+ :foreground "color-245")
+
+; Dim buffers in inactive windows to make the current one "pop".
+(use-package! auto-dim-other-buffers
+ :config
+ (auto-dim-other-buffers-mode)
+ (set-face-attribute 'auto-dim-other-buffers-face nil :foreground "color-250" :background "color-234"))
+
+; Always enable the tab bar, even if there is just one buffer showing (such as
+; when we open a single buffer).
+(tab-bar-mode)
+
+; Use bright visuals for coloring regions and interactive search hits.
+(set-face-attribute 'lazy-highlight nil :foreground "pink" :background "dark red" :weight 'normal)
+(set-face-attribute 'isearch nil :foreground "dark red" :background "pink" :weight 'bold)
+(set-face-attribute 'region nil :foreground "dark red" :background "pink" :weight 'bold)
+
+(use-package! git-gutter
+  :config
+  ; Git diff +/- marks.
+  (global-git-gutter-mode +1)
+  ; Update git-gutter every time we lose/regain focus of the current window.
+  ; This is to catch cases where we are SSH-ed in to a machine and are running
+  ; emacs in terminal mode, which doesn't get the same "frame" focus signals as
+  ; above because there is literally no frame.
+  (defun l/git-gutter-refresh (orig-fun &rest args)
+    (prog1
+        (apply orig-fun args)
+      (git-gutter:update-all-windows)))
+  (advice-add 'select-window :around #'l/git-gutter-refresh)
+  ; Update git-gutter every time we lose/regain focus to the frame. See
+  ; https://emacs.stackexchange.com/a/60971/13006.
+  (add-function :after after-focus-change-function (lambda () (unless (frame-focus-state) (git-gutter:update-all-windows))))
+  (set-face-foreground 'git-gutter:modified "#d0d")
+  (set-face-foreground 'git-gutter:added "#0d0")
+  (set-face-foreground 'git-gutter:deleted "#d00")
+  (setq git-gutter:modified-sign " ")
+  (setq git-gutter:added-sign " ")
+  (setq git-gutter:deleted-sign " "))
 
 ;; Here are some additional functions/macros that could help you configure Doom:
 ;;
