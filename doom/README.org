@@ -334,6 +334,8 @@ Note that this file is pretty much **required** and acts as the base for all oth
 <<remap-leader-h>>
 <<remap-leader-n>>
 
+<<save-buffer>>
+
 <<navigation-buffer-intra>>
 <<navigation-buffer-inter>>
 
@@ -532,6 +534,14 @@ FIXME: This can't be done because "n" is bound to a map prefix which is not a fu
 ;(map! :leader :desc "notes" "N" help-map)
 #+end_src
 
+*** Map ", W" to "save buffer"
+
+#+name: save-buffer
+#+begin_src elisp
+(map! :leader :desc "window" "W" evil-window-map)
+(map! :leader :desc "save-buffer" "w" #'save-buffer)
+#+end_src
+
 ** Window management
 
 #+name: window-management
@@ -547,8 +557,8 @@ Splitting windows happens so frequently that we put these bindings at the top le
 
 #+name: window-splits
 #+begin_src elisp
-(map! :leader "h" #'l/split-vertically
-      :leader "v" #'l/split-horizontally)
+(map! :leader :desc "split-h" "h" #'l/split-vertically
+      :leader :desc "split-v" "v" #'l/split-horizontally)
 (defun l/split-vertically ()
   "Split window verically."
   (interactive)
@@ -760,7 +770,7 @@ FIXME: try to see if we can remap this to just "n" instead of "N".
 
 #+name: tab-creation
 #+begin_src elisp
-(map! :leader "N" #'tab-new)
+(map! :leader "n" #'tab-new)
 #+end_src
 
 *** Navigation

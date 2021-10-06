@@ -101,6 +101,9 @@ Return an event vector."
 (map! :leader :desc "help" "H" help-map)
 ;(map! :leader :desc "notes" "N" help-map)
 
+(map! :leader :desc "window" "W" evil-window-map)
+(map! :leader :desc "save-buffer" "w" #'save-buffer)
+
 (map! :m "SPC" (cmd!! #'l/scroll-jump 10)
       :mn "DEL" (cmd!! #'l/scroll-jump -10))
 (defun l/scroll-jump (cnt)
@@ -111,8 +114,8 @@ Return an event vector."
 (map! :m "H" #'previous-buffer
       :m "L" #'next-buffer)
 
-(map! :leader "h" #'l/split-vertically
-      :leader "v" #'l/split-horizontally)
+(map! :leader :desc "split-h" "h" #'l/split-vertically
+      :leader :desc "split-v" "v" #'l/split-horizontally)
 (defun l/split-vertically ()
   "Split window verically."
   (interactive)
@@ -285,7 +288,7 @@ Also add the number of windows in the window configuration."
       :mi "C-S-h" (cmd!! #'tab-bar-move-tab -1))
 (map! :leader "h" #'l/split-vertically
       :leader "v" #'l/split-horizontally)
-(map! :leader "N" #'tab-new)
+(map! :leader "n" #'tab-new)
 
 (map! :mi "C-o" #'l/insert-newline-below
       :mi "C-S-o" #'l/insert-newline-above)
