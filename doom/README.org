@@ -244,9 +244,9 @@ FIXME: Use C-, instead (the only reason we don't see it in the terminal is becau
 #+name: leader-key
 #+begin_src elisp
 (setq doom-leader-key ","
-      doom-leader-alt-key "<f7>"
+      doom-leader-alt-key "C-,"
       doom-localleader-key ", m"
-      doom-localleader-alt-key "<f7> m")
+      doom-localleader-alt-key "C-, m")
 #+end_src
 
 * $DOOMDIR/packages.el

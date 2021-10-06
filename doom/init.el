@@ -189,6 +189,6 @@
 
 
 (setq doom-leader-key ","
-      doom-leader-alt-key "<f7>"
+      doom-leader-alt-key "C-,"
       doom-localleader-key ", m"
-      doom-localleader-alt-key "<f7> m")
+      doom-localleader-alt-key "C-, m")

@@ -110,6 +110,7 @@ key_bindings:
   - { key: X, mods: Control, chars: "\x18" }
   - { key: Y, mods: Control, chars: "\x19" }
   - { key: Z, mods: Control, chars: "\x1A" }
+  - { key: Comma, mods: Control, chars: "\x1b[44;5u" } # C-,
 
   # Control + Shift + <key> ----------------------------
 
