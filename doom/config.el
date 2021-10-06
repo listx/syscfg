@@ -7,6 +7,77 @@
   ;; Fix conflict with embark.
   (setq iedit-toggle-key-default nil))
 
+; Enable `CSI u` support. See https://emacs.stackexchange.com/a/59225.
+; xterm with the resource ?.VT100.modifyOtherKeys: 1
+; GNU Emacs >=24.4 sets xterm in this mode and define
+; some of the escape sequences but not all of them.
+; xterm with the resource ?.VT100.modifyOtherKeys: 1
+; GNU Emacs >=24.4 sets xterm in this mode and define
+; some of the escape sequences but not all of them.
+(defun character-apply-modifiers (c &rest modifiers)
+  "Apply modifiers to the character C.
+MODIFIERS must be a list of symbols amongst (meta control shift).
+Return an event vector."
+  (if (memq 'control modifiers) (setq c (if (or (and (<= ?@ c) (<= c ?_))
+                                                (and (<= ?a c) (<= c ?z)))
+                                            (logand c ?\x1f)
+                                          (logior (lsh 1 26) c))))
+  (if (memq 'meta modifiers) (setq c (logior (lsh 1 27) c)))
+  (if (memq 'shift modifiers) (setq c (logior (lsh 1 25) c)))
+  (vector c))
+(defun l/eval-after-load-xterm ()
+  (interactive)
+  (when (and (boundp 'xterm-extra-capabilities) (boundp 'xterm-function-map))
+    (let ((c 32) (uppercase 65))
+      ; Create bindings for all ASCII codepoints from 32 (SPACE) to 126 (~).
+      ; That is, make Emacs understand what these `CSI u' sequences mean.
+      (while (<= c 126)
+        (mapc (lambda (x)
+                (define-key xterm-function-map (format (car x) c)
+                  (apply 'character-apply-modifiers c (cdr x))))
+              '(("\e\[%d;3u" meta)
+                ("\e\[%d;5u" control)
+                ("\e\[%d;6u" control shift)
+                ("\e\[%d;7u" control meta)
+                ("\e\[%d;8u" control meta shift)))
+        (setq c (1+ c)))
+      ; Interpret the C-S-<letter> sequences encoded as `CSI u' sequences,
+      ; (e.g., "\e\[76;6u" (C-S-L) as C-S-l). This is because in Alacritty we
+      ; always use the uppercase ASCII letter for the codepoint between the `['
+      ; and `;' delimiters of the sequence. This use of 6u instead of 5u
+      ; somewhat deviates from the example for "A" vs "a" as described in
+      ; http://www.leonerd.org.uk/hacks/fixterms/, because there they recommend
+      ; "\e\[65;5u" (note the 5u instead of the 6u) to encode C-S-A. The reason
+      ; we use 6u instead of the recommended 5u is because for some reason we
+      ; cannot get 5u to work with tmux. That is, if we pass in "\e\[76;5u" from
+      ; Alacritty to tmux, tmux encodes it as C-l instead of C-S-l. So instead
+      ; we feed in the 6u variant from Alacritty, which tmux does recognize as
+      ; C-S-l. And then we tell tmux to convert all such C-S- sequences back
+      ; into a `CSI u' sequence, again using the 6u variant for Emacs to
+      ; consume. We could probably use the 5u variant from within Emacs but
+      ; using the 6u variant keeps all settings consistent across alacritty,
+      ; tmux, and emacs.
+      ;
+      ; Anyway, now in terminal emacs we can distinguish between C-S-l and C-l.
+      ;
+      ; The (+ 32 uppercase) expression shifts the uppercase codepoint up by 32,
+      ; making it lowercase for Emacs.
+      ;
+      ; See https://emacs.stackexchange.com/a/59225 for the idea. Note that this
+      ; code does not match the answer there because it also depends on how you
+      ; set up your Alacritty bindings; if you make Alacritty send lowercase
+      ; ASCII letters (a-z) instead of uppercase ones (A-Z) then this hack
+      ; probably is not necessary.
+      (while (<= uppercase 90)
+        (mapc (lambda (x)
+                (define-key xterm-function-map (format (car x) uppercase)
+                  (apply 'character-apply-modifiers (+ 32 uppercase) (cdr x))))
+              '(("\e\[%d;6u" control shift)
+                ("\e\[%d;8u" control meta shift)))
+        (setq uppercase (1+ uppercase)))
+        )))
+(eval-after-load "xterm" '(l/eval-after-load-xterm))
+
 (setq user-full-name "Linus Arver"
       user-mail-address "linusarver@gmail.com")
 
@@ -174,19 +245,32 @@ otherwise, close current tab."
   (interactive)
   (eval (cons 'or (mapcar
     (lambda (rgx) (string-match rgx bufname)) regexes))))
-;(after! evil-org
-;  (map! (:map evil-org-mode-map
-;           :mnv "TAB" #'other-window
-;           :mnv "<backtab>" (cmd!! #'other-window -1))
-;        :mnv "TAB" #'other-window
-;        :mnv "<backtab>" (cmd!! #'other-window -1)))
+(map! :after evil-org
+      :map evil-org-mode-map
+      ;; The org lang module (doom's module) has some arcane bindings which we
+      ;; have to undo by pulling some teeth out. This includes undoing the
+      ;; CSdown and CSup bindings which silently map to C-S-j and C-S-k,
+      ;; respectively.
+      :ni CSup nil
+      :ni CSdown nil)
+(map! :imnv "C-j" (cmd!! #'other-window 1)
+      :imnv "C-k" (cmd!! #'other-window -1)
+      :imnv "C-S-j" #'window-swap-states
+      :imnv "C-S-k" #'l/swap-window-states)
+
+(defun l/swap-window-states () (interactive)
+  (other-window -1)
+  (window-swap-states)
+  (other-window -1))
 
 (setq tab-bar-show t
       tab-bar-new-button-show nil
       tab-bar-close-button-show nil
       tab-bar-separator "  ")
 (map! :mi "C-l" #'tab-next
-      :mi "C-h" #'tab-previous)
+      :mi "C-h" #'tab-previous
+      :mi "C-S-l" (cmd!! #'tab-bar-move-tab 1)
+      :mi "C-S-h" (cmd!! #'tab-bar-move-tab -1))
 (map! :leader "h" #'l/split-vertically
       :leader "v" #'l/split-horizontally)
 (map! :leader "N" #'tab-new)
