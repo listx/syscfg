@@ -352,6 +352,7 @@ Also add the number of windows in the window configuration."
 (set-face-attribute 'region nil :foreground "dark red" :background "pink" :weight 'bold)
 
 (use-package! git-gutter
+  :after (hl-line+)
   :config
   ; Git diff +/- marks.
   (global-git-gutter-mode +1)
@@ -364,6 +365,9 @@ Also add the number of windows in the window configuration."
         (apply orig-fun args)
       (git-gutter:update-all-windows)))
   (advice-add 'select-window :around #'l/git-gutter-refresh)
+  ; Make git-gutter refresh based on a timer (abuse the fact that
+  ; hl-line-highlight-now is called whenever we're idle).
+  (advice-add 'hl-line-highlight-now :around #'l/git-gutter-refresh)
   ; Update git-gutter every time we lose/regain focus to the frame. See
   ; https://emacs.stackexchange.com/a/60971/13006.
   (add-function :after after-focus-change-function (lambda () (unless (frame-focus-state) (git-gutter:update-all-windows))))
