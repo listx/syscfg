@@ -48,6 +48,7 @@
 ;; ...Or *all* packages (NOT RECOMMENDED; will likely break things)
 ;(unpin! t)
 (package! hl-line+)
+(package! vim-empty-lines-mode)
 (package! git-gutter)
 (package! auto-dim-other-buffers)
 (package! kakapo-mode)
