@@ -7,9 +7,6 @@ window:
   dimensions:
     columns: 165
     lines: 92
-  padding:
-    x: 4
-    y: 4
   title: ''
 font:
   normal:
