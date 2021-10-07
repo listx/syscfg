@@ -99,10 +99,9 @@ Return an event vector."
 (remove-hook 'doom-first-input-hook #'evil-snipe-mode)
 (map! :n "S" #'evil-snipe-s)
 (map! :leader :desc "help" "H" help-map)
-;(map! :leader :desc "notes" "N" help-map)
-
-(map! :leader :desc "window" "W" evil-window-map)
-(map! :leader :desc "save-buffer" "w" #'save-buffer)
+(map! :leader
+      :desc "notes"
+      "N" doom-leader-notes-map)
 
 (map! :m "SPC" (cmd!! #'l/scroll-jump 10)
       :mn "DEL" (cmd!! #'l/scroll-jump -10))
@@ -114,19 +113,24 @@ Return an event vector."
 (map! :m "H" #'previous-buffer
       :m "L" #'next-buffer)
 
-(map! :leader :desc "split-h" "h" #'l/split-vertically
-      :leader :desc "split-v" "v" #'l/split-horizontally)
-(defun l/split-vertically ()
-  "Split window verically."
-  (interactive)
-  (split-window-vertically)
-  (balance-windows))
-(defun l/split-horizontally ()
-  "Split window horizontally."
-  (interactive)
-  (split-window-horizontally)
-  (balance-windows))
-(map! :leader "q" #'l/quit-buffer)
+(map! :leader
+      :desc "split-h" "h" #'split-window-vertically
+      :desc "split-v" "v" #'split-window-horizontally)
+(map! :after org
+      :map org-mode-map
+      "|" nil)
+(map! :after evil
+      :map evil-normal-state-map
+      "=" nil
+      :map evil-motion-state-map
+      "-" #'enlarge-window
+      "_" #'shrink-window
+      "+" #'balance-windows
+      "\\" #'enlarge-window-horizontally
+      "|" #'shrink-window-horizontally)
+(map! :leader
+      :desc "quit/session" "Q" doom-leader-quit/session-map
+      :desc "l/quit-buffer" "q" #'l/quit-buffer)
 (defun l/quit-buffer ()
   "Tries to escape the current buffer by closing it (or moving to a
 non-auxiliary buffer if possible). Calls `l/gc-views' to handle any sort of
@@ -201,7 +205,7 @@ otherwise, close current tab."
     (cond
       ; If current tab has split windows in it, close the current live
       ; window.
-      ((not one-window) (delete-window) (balance-windows) nil)
+      ((not one-window) (delete-window) nil)
       ; If there are multiple tabs, close the current one.
       ((not one-tab) (tab-bar-close-tab) nil)
       ; If there is only one tab, just try to quit (calling tab-bar-close-tab
@@ -286,9 +290,24 @@ Also add the number of windows in the window configuration."
       :mi "C-h" #'tab-previous
       :mi "C-S-l" (cmd!! #'tab-bar-move-tab 1)
       :mi "C-S-h" (cmd!! #'tab-bar-move-tab -1))
-(map! :leader "h" #'l/split-vertically
-      :leader "v" #'l/split-horizontally)
-(map! :leader "n" #'tab-new)
+(map! :leader :desc "tab-new" "n" #'tab-new)
+
+(map! :leader :desc "window" "W" evil-window-map)
+(map! :leader :desc "save-buffer" "w" #'save-buffer)
+(map! :leader :desc "kill-buffer" "d" #'l/kill-this-buffer)
+(map! :leader :desc "kill-buffer!" "D" #'l/kill-this-buffer!)
+(defun l/kill-this-buffer ()
+  "Kill current buffer."
+  (interactive)
+  (if (bound-and-true-p with-editor-mode)
+    (with-editor-cancel t)
+    (kill-this-buffer)))
+
+(defun l/kill-this-buffer! ()
+  "Kill current buffer even if it is modified."
+  (interactive)
+  (set-buffer-modified-p nil)
+  (l/kill-this-buffer))
 
 (map! :mi "C-o" #'l/insert-newline-below
       :mi "C-S-o" #'l/insert-newline-above)
@@ -304,6 +323,21 @@ Also add the number of windows in the window configuration."
   (beginning-of-line)
   (insert "\n")
   (forward-line -1))
+(map! :after flycheck
+      :leader :desc "flycheck" "F" flycheck-command-map)
+(map! :after flycheck
+      :map flycheck-command-map
+      "n" #'l/flycheck-next-error
+      "N" #'l/flycheck-prev-error)
+
+(defun l/flycheck-next-error ()
+  (interactive)
+  (flycheck-next-error)
+  (evil-scroll-line-to-center nil))
+(defun l/flycheck-prev-error ()
+  (interactive)
+  (flycheck-previous-error)
+  (evil-scroll-line-to-center nil))
 
 (set-face-attribute 'tab-bar nil :background "color-16")
 (set-face-attribute 'tab-bar-tab nil :weight 'bold :box nil :background "color-51")
@@ -359,6 +393,25 @@ Also add the number of windows in the window configuration."
 (set-face-attribute 'lazy-highlight nil :foreground "pink" :background "dark red" :weight 'normal)
 (set-face-attribute 'isearch nil :foreground "dark red" :background "pink" :weight 'bold)
 (set-face-attribute 'region nil :foreground "dark red" :background "pink" :weight 'bold)
+
+(map! :after (git-gutter magit)
+      :map doom-leader-git-map
+      ; BUG: For some reason the "hunk" description does not show up in which-key.
+      (:prefix-map ("h" . "hunk")
+      "n" #'l/git-gutter:next-hunk
+      "N" #'l/git-gutter:prev-hunk
+      "r" #'git-gutter:revert-hunk
+      ; "s" to mean "show hunk"
+      "s" #'git-gutter:popup-hunk))
+
+(defun l/git-gutter:next-hunk ()
+  (interactive)
+  (git-gutter:next-hunk 1)
+  (evil-scroll-line-to-center nil))
+(defun l/git-gutter:prev-hunk ()
+  (interactive)
+  (git-gutter:previous-hunk 1)
+  (evil-scroll-line-to-center nil))
 
 (use-package! git-gutter
   :after (hl-line+)

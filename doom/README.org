@@ -143,7 +143,7 @@ DOOM requires 3 configuration files in the =$DOOMDIR=:
        ;;beancount         ; mind the GAAP
        ;;cc                ; C > C++ == 1
        ;;clojure           ; java with a lisp
-       ;;common-lisp       ; if you've seen one lisp, you've seen them all
+       common-lisp       ; if you've seen one lisp, you've seen them all
        ;;coq               ; proofs-as-programs
        ;;crystal           ; ruby at the speed of c
        ;;csharp            ; unity, .NET, and mono shenanigans
@@ -334,8 +334,6 @@ Note that this file is pretty much **required** and acts as the base for all oth
 <<remap-leader-h>>
 <<remap-leader-n>>
 
-<<save-buffer>>
-
 <<navigation-buffer-intra>>
 <<navigation-buffer-inter>>
 
@@ -343,7 +341,10 @@ Note that this file is pretty much **required** and acts as the base for all oth
 
 <<tab-management>>
 
+<<buffer-management>>
+
 <<editing>>
+<<code>>
 
 <<colors>>
 <<misc-ui>>
@@ -527,19 +528,15 @@ Remap =s= back to =evil-substitute=, instead of =evil-snipe-s=. However, map =S=
 
 *** Remap the "+notes" function from ", n" to ", N"
 
-FIXME: This can't be done because "n" is bound to a map prefix which is not a function that can be called.
+The "+notes" is a ~:prefix-map~ binding, which means that it creates a ~doom-leader-<description>-map~ keymap. In order to rebind this thing, we just need to refer to it by its map.
+
+See https://github.com/hlissner/doom-emacs/issues/4569#issuecomment-777861333.
 
 #+name: remap-leader-n
 #+begin_src elisp
-;(map! :leader :desc "notes" "N" help-map)
-#+end_src
-
-*** Map ", W" to "save buffer"
-
-#+name: save-buffer
-#+begin_src elisp
-(map! :leader :desc "window" "W" evil-window-map)
-(map! :leader :desc "save-buffer" "w" #'save-buffer)
+(map! :leader
+      :desc "notes"
+      "N" doom-leader-notes-map)
 #+end_src
 
 ** Window management
@@ -557,8 +554,28 @@ Splitting windows happens so frequently that we put these bindings at the top le
 
 #+name: window-splits
 #+begin_src elisp
-(map! :leader :desc "split-h" "h" #'l/split-vertically
-      :leader :desc "split-v" "v" #'l/split-horizontally)
+(map! :leader
+      :desc "split-h" "h" #'split-window-vertically
+      :desc "split-v" "v" #'split-window-horizontally)
+(map! :after org
+      :map org-mode-map
+      "|" nil)
+(map! :after evil
+      :map evil-normal-state-map
+      "=" nil
+      :map evil-motion-state-map
+      "-" #'enlarge-window
+      "_" #'shrink-window
+      "+" #'balance-windows
+      "\\" #'enlarge-window-horizontally
+      "|" #'shrink-window-horizontally)
+#+end_src
+
+**** Dead code
+
+We used to use this to always split and rebalance. However in practice the need to rebalance does not arise that frequently because by default the initial split will be balanced.
+
+#+begin_src elisp
 (defun l/split-vertically ()
   "Split window verically."
   (interactive)
@@ -577,11 +594,11 @@ If there are multiple windows, close the current window. Otherwise close the cur
 
 We take care to tread around so-called "auxiliary" buffers, which are auto-generated buffers from various emacs modes/packages.
 
-FIXME: remap doom emacs' "q" binding to something else
-
 #+name: window-deletion
 #+begin_src elisp
-(map! :leader "q" #'l/quit-buffer)
+(map! :leader
+      :desc "quit/session" "Q" doom-leader-quit/session-map
+      :desc "l/quit-buffer" "q" #'l/quit-buffer)
 (defun l/quit-buffer ()
   "Tries to escape the current buffer by closing it (or moving to a
 non-auxiliary buffer if possible). Calls `l/gc-views' to handle any sort of
@@ -656,7 +673,7 @@ otherwise, close current tab."
     (cond
       ; If current tab has split windows in it, close the current live
       ; window.
-      ((not one-window) (delete-window) (balance-windows) nil)
+      ((not one-window) (delete-window) nil)
       ; If there are multiple tabs, close the current one.
       ((not one-tab) (tab-bar-close-tab) nil)
       ; If there is only one tab, just try to quit (calling tab-bar-close-tab
@@ -704,6 +721,9 @@ otherwise, close current tab."
   (eval (cons 'or (mapcar
     (lambda (rgx) (string-match rgx bufname)) regexes))))
 #+end_src
+
+#+RESULTS: window-deletion
+: l/buffer-looks-like
 
 *** Navigation
 
@@ -766,11 +786,9 @@ Also add the number of windows in the window configuration."
 
 We don't have any code for deleting a tab because we only delete windows instead (and only delete the tab when the tab has only one window in it). This is so that we don't accidentally close a tab with a bunch of window splits, which can be laborious to reconstruct.
 
-FIXME: try to see if we can remap this to just "n" instead of "N".
-
 #+name: tab-creation
 #+begin_src elisp
-(map! :leader "n" #'tab-new)
+(map! :leader :desc "tab-new" "n" #'tab-new)
 #+end_src
 
 *** Navigation
@@ -780,10 +798,45 @@ FIXME: try to see if we can remap this to just "n" instead of "N".
       :mi "C-h" #'tab-previous
       :mi "C-S-l" (cmd!! #'tab-bar-move-tab 1)
       :mi "C-S-h" (cmd!! #'tab-bar-move-tab -1))
-(map! :leader "h" #'l/split-vertically
-      :leader "v" #'l/split-horizontally)
 #+end_src
+** Buffer management
+
+#+name: buffer-management
+#+begin_src elisp
+<<save-buffer>>
+<<kill-buffer>>
+#+end_src
+
+*** Map ", w" to "save buffer"
+
+#+name: save-buffer
+#+begin_src elisp
+(map! :leader :desc "window" "W" evil-window-map)
+(map! :leader :desc "save-buffer" "w" #'save-buffer)
+#+end_src
+
+*** Kill buffers
+
+#+name: kill-buffer
+#+begin_src elisp
+(map! :leader :desc "kill-buffer" "d" #'l/kill-this-buffer)
+(map! :leader :desc "kill-buffer!" "D" #'l/kill-this-buffer!)
+(defun l/kill-this-buffer ()
+  "Kill current buffer."
+  (interactive)
+  (if (bound-and-true-p with-editor-mode)
+    (with-editor-cancel t)
+    (kill-this-buffer)))
+
+(defun l/kill-this-buffer! ()
+  "Kill current buffer even if it is modified."
+  (interactive)
+  (set-buffer-modified-p nil)
+  (l/kill-this-buffer))
+#+end_src
+
 * Editing
+
 #+name: editing
 #+begin_src elisp
 (map! :mi "C-o" #'l/insert-newline-below
@@ -801,6 +854,28 @@ FIXME: try to see if we can remap this to just "n" instead of "N".
   (insert "\n")
   (forward-line -1))
 #+end_src
+
+* Code
+
+#+name: code
+#+begin_src elisp
+(map! :after flycheck
+      :leader :desc "flycheck" "F" flycheck-command-map)
+(map! :after flycheck
+      :map flycheck-command-map
+      "n" #'l/flycheck-next-error
+      "N" #'l/flycheck-prev-error)
+
+(defun l/flycheck-next-error ()
+  (interactive)
+  (flycheck-next-error)
+  (evil-scroll-line-to-center nil))
+(defun l/flycheck-prev-error ()
+  (interactive)
+  (flycheck-previous-error)
+  (evil-scroll-line-to-center nil))
+#+end_src
+
 * Colors
 
 First install the zenburn-theme package, then load it by setting =doom-theme= to it.
@@ -858,7 +933,9 @@ This determines the style of line numbers in effect. If set to "nil", line numbe
 (setq display-line-numbers-type nil)
 #+end_src
 
-FIXME: we have to manually turn on kakapo-mode in this org buffer. How can we turn it on automatically?
+** Dead code
+
+Before we started using Doom Emacs, we used to rely heavily on kakapo-mode to always insert either a tab or space character with the =TAB= key. However nowadays most languages have automated formatters that takes the guesswork around tabs/spaces out of the way. We could still enable kakapo-mode for some of the simpler modes that do not have a formatter, but for now we don't bother.
 
 #+name: kakapo
 #+begin_src elisp
@@ -927,6 +1004,25 @@ FIXME: we have to manually turn on kakapo-mode in this org buffer. How can we tu
 (set-face-attribute 'lazy-highlight nil :foreground "pink" :background "dark red" :weight 'normal)
 (set-face-attribute 'isearch nil :foreground "dark red" :background "pink" :weight 'bold)
 (set-face-attribute 'region nil :foreground "dark red" :background "pink" :weight 'bold)
+
+(map! :after (git-gutter magit)
+      :map doom-leader-git-map
+      ; BUG: For some reason the "hunk" description does not show up in which-key.
+      (:prefix-map ("h" . "hunk")
+      "n" #'l/git-gutter:next-hunk
+      "N" #'l/git-gutter:prev-hunk
+      "r" #'git-gutter:revert-hunk
+      ; "s" to mean "show hunk"
+      "s" #'git-gutter:popup-hunk))
+
+(defun l/git-gutter:next-hunk ()
+  (interactive)
+  (git-gutter:next-hunk 1)
+  (evil-scroll-line-to-center nil))
+(defun l/git-gutter:prev-hunk ()
+  (interactive)
+  (git-gutter:previous-hunk 1)
+  (evil-scroll-line-to-center nil))
 
 (use-package! git-gutter
   :after (hl-line+)
