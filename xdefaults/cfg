@@ -1,5 +1,13 @@
 /* xterm */
 XTerm.background: #000000
 XTerm.foreground: #ffffff
+# Use xterm-style key combo disambiguation (alternative to `CSI u` style). See
+# https://invisible-island.net/xterm/modified-keys.html and
+# http://invisible-island.net/xterm/ctlseqs/ctlseqs.html.
+#XTerm*vt100.modifyOtherKeys: 1
+
+# Use `CSI u` style key combo disambiguation sequences. See
+# http://www.leonerd.org.uk/hacks/fixterms/.
+#XTerm*vt100.formatOtherKeys: 1
 
 Xcursor.size: 16
