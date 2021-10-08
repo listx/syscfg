@@ -392,7 +392,8 @@ key_bindings:
   - { key: Period,     mods: Control|Alt|Shift, chars: "\x1b[62;7u" }  # C-M->
   - { key: Slash,      mods: Control|Alt|Shift, chars: "\x1b[47;8u" }  # C-M-? (C-M-S-/)
   - { key: Key2,       mods: Control|Alt|Shift, chars: "\x1b[64;7u" }  # C-M-@
-  - { key: LBracket,   mods: Control|Alt,       chars: "\x1b[91;7u" }  # C-M-[
+  # We cannot bind C-M-[ because it conflicts (in tmux) with M-ESC.
+  #- { key: LBracket,   mods: Control|Alt,       chars: "\x1b[91;7u" }  # C-M-[
   - { key: Backslash,  mods: Control|Alt,       chars: "\x1b[92;7u" }  # C-M-\
   - { key: RBracket,   mods: Control|Alt,       chars: "\x1b[93;7u" }  # C-M-]
   - { key: Key6,       mods: Control|Alt|Shift, chars: "\x1b[94;7u" }  # C-M-^
