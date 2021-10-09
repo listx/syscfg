@@ -1017,6 +1017,9 @@ Before we started using Doom Emacs, we used to rely heavily on kakapo-mode to al
 
 #+name: misc-ui
 #+begin_src elisp
+;; Enable soft word-wrap almost everywhere (including elisp).
+(+global-word-wrap-mode +1)
+
 ; Enable only left-side fringe.
 (set-fringe-mode '(10 . 0))
 
