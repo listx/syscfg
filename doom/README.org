@@ -394,6 +394,8 @@ Here are some workarounds for upstream bugs that have not yet been fixed.
 ** CSI u mode support
 See https://emacs.stackexchange.com/questions/1020/problems-with-keybindings-when-using-terminal/13957#13957 for a discussion of ~CSI u~ mode. Basically for us it allows us to use =C-S-= bindings from terminal emacs. It also allows us to specify many special keys in an unambiguous manner, so that we can, e.g., make =C-i= be recognized as =C-i= in terminal emacs (and not simply as =TAB= as is the default behavior).
 
+For information on how xterm does it, see https://invisible-island.net/xterm/ctlseqs/ctlseqs.html and search for ~modifyOtherKeys~.
+
 #+name: CSI-u-mode-support
 #+begin_src emacs-lisp
 ; Enable `CSI u` support. See https://emacs.stackexchange.com/a/59225.
