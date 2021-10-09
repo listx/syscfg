@@ -8,7 +8,7 @@ We use DOOM emacs (insert link) as a base configuration, and further customize i
 
 ** About the top-level PROPERTY settings for this buffer
 - These property settings take effect when the buffer is loaded. So that means if you change these settings, you have to reload the buffer for them to take effect.
-- We set =:tangle no-export= by default for all source code blocks. This is because the =literate= DOOM module by default tangles all elisp source code blocks to config.el, which defeats the purpose of literate programming (where the raw order of how things are defined do **not** dictate how the end result looks like).
+- We set =:tangle no-export= by default for all source code blocks. This is because the =literate= DOOM module by default tangles all emacs-lisp source code blocks to config.el, which defeats the purpose of literate programming (where the raw order of how things are defined do **not** dictate how the end result looks like).
 - We set =:noweb no-export= to enable Noweb's =<<LINK>>= syntax in all source code blocks during **tangling** (=config.el= generation) and **evaluation** (when running a code snippet from org-mode with =C-c C-c=). However when we export this org-mode file (e.g., publish it to HTML), we do **NOT** expand it because we want to reveal the underlying noweb structure to the reader. Anyway, turning on noweb for tangling and evaluating allows us to inject source code anywhere and also define them freely.
 
 ** Guiding principles
@@ -27,7 +27,7 @@ DOOM requires 3 configuration files in the =$DOOMDIR=:
 
 * $DOOMDIR/init.el
 
-#+begin_src elisp :tangle init.el
+#+begin_src emacs-lisp :tangle init.el
 ;;; init.el -*- lexical-binding: t; -*-
 
 ;; This file controls what Doom modules are enabled and what order they load
@@ -222,7 +222,7 @@ DOOM requires 3 configuration files in the =$DOOMDIR=:
 #+end_src
 
 ** Change the literate DOOM config file location
-#+begin_src elisp
+#+begin_src emacs-lisp
 (setq +literate-config-file (concat doom-private-dir "README.org"))
 #+end_src
 
@@ -240,7 +240,7 @@ NOTE: For all of DOOM's bindings, you can just press the keys and pause, and the
 In order to use =C-,= from terminal Emacs, you have to make your terminal (e.g., Alacritty) send a special sequence (such as the =CSI u= scheme) and also make Emacs understand that sequence.
 
 #+name: leader-key
-#+begin_src elisp
+#+begin_src emacs-lisp
 (setq doom-leader-key ","
       doom-leader-alt-key "C-,"
       doom-localleader-key ", m"
@@ -249,7 +249,7 @@ In order to use =C-,= from terminal Emacs, you have to make your terminal (e.g.,
 
 * $DOOMDIR/packages.el
 
-#+begin_src elisp :tangle packages.el
+#+begin_src emacs-lisp :tangle packages.el
 ;; -*- no-byte-compile: t; -*-
 ;;; $DOOMDIR/packages.el
 
@@ -313,7 +313,7 @@ This is the final structured output of =$DOOMDIR/config.el=, which is a special 
 
 Note that this file is pretty much **required** and acts as the base for all other configurations that are pulled in. And so we define it first here.
 
-#+begin_src elisp :tangle config.el
+#+begin_src emacs-lisp :tangle config.el
 ;;; $DOOMDIR/config.el -*- lexical-binding: t; -*-
 
 <<doom-bug-workarounds>>
@@ -375,13 +375,13 @@ Note that this file is pretty much **required** and acts as the base for all oth
 Here are some workarounds for upstream bugs that have not yet been fixed.
 
 #+name: doom-bug-workarounds
-#+begin_src elisp
+#+begin_src emacs-lisp
 <<iedit-embark-conflict>>
 #+end_src
 
 ** https://github.com/hlissner/doom-emacs/issues/5374 (Key-binding conflict between iedit and embark)
 #+name: iedit-embark-conflict
-#+begin_src elisp
+#+begin_src emacs-lisp
 (use-package! iedit
   :when (featurep! :completion vertico)
   :defer t
@@ -395,7 +395,7 @@ Here are some workarounds for upstream bugs that have not yet been fixed.
 See https://emacs.stackexchange.com/questions/1020/problems-with-keybindings-when-using-terminal/13957#13957 for a discussion of ~CSI u~ mode. Basically for us it allows us to use =C-S-= bindings from terminal emacs. It also allows us to specify many special keys in an unambiguous manner, so that we can, e.g., make =C-i= be recognized as =C-i= in terminal emacs (and not simply as =TAB= as is the default behavior).
 
 #+name: CSI-u-mode-support
-#+begin_src elisp
+#+begin_src emacs-lisp
 ; Enable `CSI u` support. See https://emacs.stackexchange.com/a/59225.
 ; xterm with the resource ?.VT100.modifyOtherKeys: 1
 ; GNU Emacs >=24.4 sets xterm in this mode and define
@@ -521,7 +521,7 @@ Return an event vector."
 ** Point navigation
 
 #+name: point-navigation
-#+begin_src elisp
+#+begin_src emacs-lisp
 <<easy-esc>>
 <<visual-line-movement>>
 #+end_src
@@ -530,7 +530,7 @@ Return an event vector."
 
 Make "kj" behave as ESC key.
 #+name: easy-esc
-#+begin_src elisp
+#+begin_src emacs-lisp
 (use-package! evil-escape
   :config
   (setq evil-escape-key-sequence "kj"))
@@ -548,7 +548,7 @@ Make "kj" behave as ESC key.
 We remap Backspace and Space keys because they are by default aliases to =h= and =l= keys, respectively, making them redundant.
 
 #+name: navigation-buffer-intra
-#+begin_src elisp
+#+begin_src emacs-lisp
 (map! :m "SPC" (cmd!! #'l/scroll-jump 10)
       :mn "DEL" (cmd!! #'l/scroll-jump -10))
 (defun l/scroll-jump (cnt)
@@ -563,7 +563,7 @@ We remap Backspace and Space keys because they are by default aliases to =h= and
 We remap H and L keys because they do almost-useless things (go to the top and bottom of the current window).
 
 #+name: navigation-buffer-inter
-#+begin_src elisp
+#+begin_src emacs-lisp
 (map! :m "H" #'previous-buffer
       :m "L" #'next-buffer)
 #+end_src
@@ -572,7 +572,7 @@ We remap H and L keys because they do almost-useless things (go to the top and b
 
 Remap =s= back to =evil-substitute=, instead of =evil-snipe-s=. However, map =S= to evil-snipe-s because it can't hurt and we never use =S= in vanilla Vim anyway.
 #+name: remap-s
-#+begin_src elisp
+#+begin_src emacs-lisp
 (remove-hook 'doom-first-input-hook #'evil-snipe-mode)
 (map! :n "S" #'evil-snipe-s)
 #+end_src
@@ -580,7 +580,7 @@ Remap =s= back to =evil-substitute=, instead of =evil-snipe-s=. However, map =S=
 *** Remap the "+help" function from ", h" to ", H"
 
 #+name: remap-leader-h
-#+begin_src elisp
+#+begin_src emacs-lisp
 (map! :leader :desc "help" "H" help-map)
 #+end_src
 
@@ -604,7 +604,7 @@ The "+notes" is a ~:prefix-map~ binding, which means that it creates a ~doom-lea
 See https://github.com/hlissner/doom-emacs/issues/4569#issuecomment-777861333.
 
 #+name: remap-leader-n
-#+begin_src elisp
+#+begin_src emacs-lisp
 (map! :leader
       :desc "notes"
       "N" doom-leader-notes-map)
@@ -613,7 +613,7 @@ See https://github.com/hlissner/doom-emacs/issues/4569#issuecomment-777861333.
 ** Window management
 
 #+name: window-management
-#+begin_src elisp
+#+begin_src emacs-lisp
 <<window-splits>>
 <<window-deletion>>
 <<window-navigation>>
@@ -624,7 +624,7 @@ See https://github.com/hlissner/doom-emacs/issues/4569#issuecomment-777861333.
 Splitting windows happens so frequently that we put these bindings at the top level just after the leader key.
 
 #+name: window-splits
-#+begin_src elisp
+#+begin_src emacs-lisp
 (map! :leader
       :desc "split-h" "h" #'split-window-vertically
       :desc "split-v" "v" #'split-window-horizontally)
@@ -646,7 +646,7 @@ Splitting windows happens so frequently that we put these bindings at the top le
 
 We used to use this to always split and rebalance. However in practice the need to rebalance does not arise that frequently because by default the initial split will be balanced.
 
-#+begin_src elisp
+#+begin_src emacs-lisp
 (defun l/split-vertically ()
   "Split window verically."
   (interactive)
@@ -666,7 +666,7 @@ If there are multiple windows, close the current window. Otherwise close the cur
 We take care to tread around so-called "auxiliary" buffers, which are auto-generated buffers from various emacs modes/packages.
 
 #+name: window-deletion
-#+begin_src elisp
+#+begin_src emacs-lisp
 (map! :leader
       :desc "quit/session" "Q" doom-leader-quit/session-map
       :desc "l/quit-buffer" "q" #'l/quit-buffer)
@@ -801,7 +801,7 @@ otherwise, close current tab."
 Make =C-{j,k}= cycle through windows, and =C-S-{j,k}=.
 
 #+name: window-navigation
-#+begin_src elisp
+#+begin_src emacs-lisp
 (map! :after evil-org
       :map evil-org-mode-map
       ;; The org lang module (doom's module) has some arcane bindings which we
@@ -826,7 +826,7 @@ Make =C-{j,k}= cycle through windows, and =C-S-{j,k}=.
 ** Tabs
 
 #+name: tab-management
-#+begin_src elisp
+#+begin_src emacs-lisp
 <<tab-ui>>
 <<tab-navigation>>
 <<tab-creation>>
@@ -834,7 +834,7 @@ Make =C-{j,k}= cycle through windows, and =C-S-{j,k}=.
 
 *** UI
 #+name: tab-ui
-#+begin_src elisp
+#+begin_src emacs-lisp
 (setq tab-bar-show t
       tab-bar-new-button-show nil
       tab-bar-close-button-show nil
@@ -858,13 +858,13 @@ Also add the number of windows in the window configuration."
 We don't have any code for deleting a tab because we only delete windows instead (and only delete the tab when the tab has only one window in it). This is so that we don't accidentally close a tab with a bunch of window splits, which can be laborious to reconstruct.
 
 #+name: tab-creation
-#+begin_src elisp
+#+begin_src emacs-lisp
 (map! :leader :desc "tab-new" "n" #'tab-new)
 #+end_src
 
 *** Navigation
 #+name: tab-navigation
-#+begin_src elisp
+#+begin_src emacs-lisp
 (map! :mi "C-l" #'tab-next
       :mi "C-h" #'tab-previous
       :mi "C-S-l" (cmd!! #'tab-bar-move-tab 1)
@@ -873,7 +873,7 @@ We don't have any code for deleting a tab because we only delete windows instead
 ** Buffer management
 
 #+name: buffer-management
-#+begin_src elisp
+#+begin_src emacs-lisp
 <<save-buffer>>
 <<kill-buffer>>
 #+end_src
@@ -881,7 +881,7 @@ We don't have any code for deleting a tab because we only delete windows instead
 *** Map ", w" to "save buffer"
 
 #+name: save-buffer
-#+begin_src elisp
+#+begin_src emacs-lisp
 (map! :leader :desc "window" "W" evil-window-map)
 (map! :leader :desc "save-buffer" "w" #'save-buffer)
 #+end_src
@@ -889,7 +889,7 @@ We don't have any code for deleting a tab because we only delete windows instead
 *** Kill buffers
 
 #+name: kill-buffer
-#+begin_src elisp
+#+begin_src emacs-lisp
 (map! :leader :desc "kill-buffer" "d" #'l/kill-this-buffer)
 (map! :leader :desc "kill-buffer!" "D" #'l/kill-this-buffer!)
 (defun l/kill-this-buffer ()
@@ -909,7 +909,7 @@ We don't have any code for deleting a tab because we only delete windows instead
 * Editing
 
 #+name: editing
-#+begin_src elisp
+#+begin_src emacs-lisp
 (map! :mi "C-o" #'l/insert-newline-below
       :mi "C-S-o" #'l/insert-newline-above)
 
@@ -929,7 +929,7 @@ We don't have any code for deleting a tab because we only delete windows instead
 * Code
 
 #+name: code
-#+begin_src elisp
+#+begin_src emacs-lisp
 (map! :after flycheck
       :leader :desc "flycheck" "F" flycheck-command-map)
 (map! :after flycheck
@@ -952,17 +952,17 @@ We don't have any code for deleting a tab because we only delete windows instead
 First install the zenburn-theme package, then load it by setting =doom-theme= to it.
 
 #+name: package-zenburn-theme
-#+begin_src elisp
+#+begin_src emacs-lisp
 (package! zenburn-theme)
 #+end_src
 
 #+name: theme
-#+begin_src elisp
+#+begin_src emacs-lisp
 (setq doom-theme 'zenburn)
 #+end_src
 
 #+name: colors
-#+begin_src elisp
+#+begin_src emacs-lisp
 (custom-set-faces!
   '(tab-bar  :background "color-16")
   '(tab-bar-tab  :weight bold :box nil :foreground "color-16" :background "color-51")
@@ -1008,7 +1008,7 @@ Note that we have to use =M-J= to encode =M-S-j=. This appears to be Emacs conve
 
 If you use "org" and don't want your org files in the default location below, change org-directory. It must be set before org loads!
 #+name: org-misc
-#+begin_src elisp
+#+begin_src emacs-lisp
 (setq org-directory "~/lo/note/")
 #+end_src
 
@@ -1018,14 +1018,14 @@ If you use "org" and don't want your org files in the default location below, ch
 
 Some functionality uses this to identify you, e.g. GPG configuration, email clients, file templates and snippets.
 #+name: name-and-email
-#+begin_src elisp
+#+begin_src emacs-lisp
 (setq user-full-name "Linus Arver"
       user-mail-address "linusarver@gmail.com")
 #+end_src
 
 This determines the style of line numbers in effect. If set to "nil", line numbers are disabled. For relative line numbers, set this to "relative".
 #+name: line-numbers
-#+begin_src elisp
+#+begin_src emacs-lisp
 (setq display-line-numbers-type nil)
 #+end_src
 
@@ -1034,7 +1034,7 @@ This determines the style of line numbers in effect. If set to "nil", line numbe
 Before we started using Doom Emacs, we used to rely heavily on kakapo-mode to always insert either a tab or space character with the =TAB= key. However nowadays most languages have automated formatters that takes the guesswork around tabs/spaces out of the way. We could still enable kakapo-mode for some of the simpler modes that do not have a formatter, but for now we don't bother.
 
 #+name: kakapo
-#+begin_src elisp
+#+begin_src emacs-lisp
 (use-package! kakapo-mode
   :config
   (add-hook 'text-mode-hook #'kakapo-mode)
@@ -1048,7 +1048,7 @@ Before we started using Doom Emacs, we used to rely heavily on kakapo-mode to al
 ** UI
 
 #+name: misc-ui
-#+begin_src elisp
+#+begin_src emacs-lisp
 ;; Enable soft word-wrap almost everywhere (including elisp).
 (+global-word-wrap-mode +1)
 
