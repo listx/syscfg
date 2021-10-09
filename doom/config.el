@@ -145,6 +145,12 @@ Return an event vector."
 (use-package! evil-escape
   :config
   (setq evil-escape-key-sequence "kj"))
+(map! :after evil-org
+      :map evil-org-mode-map
+      :m "gk" #'evil-previous-visual-line
+      :m "gj" #'evil-next-visual-line
+      :m "M-N" #'org-backward-element
+      :m "M-n" #'org-forward-element)
 
 (remove-hook 'doom-first-input-hook #'evil-snipe-mode)
 (map! :n "S" #'evil-snipe-s)

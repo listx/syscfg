@@ -328,7 +328,7 @@ Note that this file is pretty much **required** and acts as the base for all oth
 
 <<line-numbers>>
 
-<<easy-esc>>
+<<point-navigation>>
 
 <<remap-s>>
 <<remap-leader-h>>
@@ -518,7 +518,15 @@ Return an event vector."
 (eval-after-load "xterm" '(l/eval-after-load-xterm))
 #+end_src
 
-** Enter Evil normal state quickly (default: "ESC" key)
+** Point navigation
+
+#+name: point-navigation
+#+begin_src elisp
+<<easy-esc>>
+<<visual-line-movement>>
+#+end_src
+
+*** Enter Evil normal state quickly (default: "ESC" key)
 
 Make "kj" behave as ESC key.
 #+name: easy-esc
@@ -574,6 +582,21 @@ Remap =s= back to =evil-substitute=, instead of =evil-snipe-s=. However, map =S=
 #+name: remap-leader-h
 #+begin_src elisp
 (map! :leader :desc "help" "H" help-map)
+#+end_src
+
+*** Visual line movement
+
+**** Org
+
+~evil-org-mode~ overrides the =gj= and =gk= bindings so we have to reinstate them here in a tweaked way.
+#+name: visual-line-movement
+#+begin_src elisp
+(map! :after evil-org
+      :map evil-org-mode-map
+      :m "gk" #'evil-previous-visual-line
+      :m "gj" #'evil-next-visual-line
+      :m "M-N" #'org-backward-element
+      :m "M-n" #'org-forward-element)
 #+end_src
 
 *** Remap the "+notes" function from ", n" to ", N"
