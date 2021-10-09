@@ -392,6 +392,23 @@ Also add the number of windows in the window configuration."
 (set-face-attribute 'tab-bar nil :background "color-16")
 (set-face-attribute 'tab-bar-tab nil :weight 'bold :box nil :background "color-51")
 (set-face-attribute 'tab-bar-tab-inactive nil :weight 'bold :box nil :foreground "color-16" :background "color-38")
+(eval-after-load 'diff-mode
+  '(progn
+     ; Fix ugly colors for diffs. Prevalent because of git comit message buffers
+     ; like COMMIT_EDITMSG.
+     ; (set-face-attribute 'font-lock-comment-face nil :foreground "#9fc59f")
+     ; (use-package git-commit
+     ; :config (set-face-attribute 'git-commit-summary nil :foreground "cyan1"))
+     (set-face-attribute 'diff-added       nil :foreground "green" :background "dark green")
+     (set-face-attribute 'diff-removed     nil :foreground "red" :background "dark red")
+     (set-face-attribute 'diff-context     nil :foreground "#ffffff")
+     (set-face-attribute 'diff-header      nil :foreground "yellow" :background "#3f3f3f" :weight 'bold)
+     (set-face-attribute 'diff-file-header nil :foreground "yellow" :background "#3f3f3f" :weight 'bold)
+     (set-face-attribute 'diff-hunk-header nil :foreground "cyan"   :background "#3f3f3f")
+     (set-face-attribute 'git-commit-keyword nil :foreground "#dcdccc" :background "#3f3f3f")))
+;; Enable soft word-wrap almost everywhere (including elisp).
+(+global-word-wrap-mode +1)
+
 ; Enable only left-side fringe.
 (set-fringe-mode '(10 . 0))
 
