@@ -102,6 +102,13 @@ Return an event vector."
         (setq uppercase (1+ uppercase)))
 
       ; Tab
+      ;
+      ; The conflicts with TAB and C-i are due to tmux, which has a regression
+      ; that treats these keys the same, even if our terminal uses `CSI u' mode
+      ; to disambiguate them. See https://github.com/tmux/tmux/issues/2705. If
+      ; it did not have that regression we would be able to bind TAB and C-i
+      ; freely without restrictions.
+      ;
       ; We cannot read M-S-Tab (it gets read as C-M-i).
       ;(define-key xterm-function-map "\e\[9;4u"
       ;  (apply 'character-apply-modifiers 9 '(meta shift)))         ; M-S-TAB
@@ -119,10 +126,8 @@ Return an event vector."
       ; Backspace (DEL)
       (define-key xterm-function-map "\e\[127;3u"
         (apply 'character-apply-modifiers 127 '(meta)))               ; M-DEL
-      ; For some reason Emacs cannot see this sequence, even if we make tmux
-      ; send it to us.
-      ;(define-key xterm-function-map "\e\[127;4u"
-      ;  (apply 'character-apply-modifiers 127 '(meta shift)))         ; M-S-DEL
+      (define-key xterm-function-map "\e\[127;4u"
+        (apply 'character-apply-modifiers 127 '(meta shift)))         ; M-S-DEL
       (define-key xterm-function-map "\e\[127;5u"
         (apply 'character-apply-modifiers 127 '(control)))            ; C-DEL
       (define-key xterm-function-map "\e\[127;6u"
