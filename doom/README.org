@@ -1012,6 +1012,10 @@ If you use "org" and don't want your org files in the default location below, ch
 (setq org-directory "~/lo/note/")
 #+end_src
 
+** Notes
+
+In insert mode, type =<s= followed by =TAB= to auto-complete a ~#+begin_src~ and ~#+end_src~ code block.
+
 * Misc settings
 
 ** Personal information
