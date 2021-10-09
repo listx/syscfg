@@ -389,23 +389,23 @@ Also add the number of windows in the window configuration."
   (flycheck-previous-error)
   (evil-scroll-line-to-center nil))
 
-(set-face-attribute 'tab-bar nil :background "color-16")
-(set-face-attribute 'tab-bar-tab nil :weight 'bold :box nil :background "color-51")
-(set-face-attribute 'tab-bar-tab-inactive nil :weight 'bold :box nil :foreground "color-16" :background "color-38")
-(eval-after-load 'diff-mode
-  '(progn
-     ; Fix ugly colors for diffs. Prevalent because of git comit message buffers
-     ; like COMMIT_EDITMSG.
-     ; (set-face-attribute 'font-lock-comment-face nil :foreground "#9fc59f")
-     ; (use-package git-commit
-     ; :config (set-face-attribute 'git-commit-summary nil :foreground "cyan1"))
-     (set-face-attribute 'diff-added       nil :foreground "green" :background "dark green")
-     (set-face-attribute 'diff-removed     nil :foreground "red" :background "dark red")
-     (set-face-attribute 'diff-context     nil :foreground "#ffffff")
-     (set-face-attribute 'diff-header      nil :foreground "yellow" :background "#3f3f3f" :weight 'bold)
-     (set-face-attribute 'diff-file-header nil :foreground "yellow" :background "#3f3f3f" :weight 'bold)
-     (set-face-attribute 'diff-hunk-header nil :foreground "cyan"   :background "#3f3f3f")
-     (set-face-attribute 'git-commit-keyword nil :foreground "#dcdccc" :background "#3f3f3f")))
+(custom-set-faces!
+  '(tab-bar  :background "color-16")
+  '(tab-bar-tab  :weight bold :box nil :foreground "color-16" :background "color-51")
+  '(tab-bar-tab-inactive  :weight bold :box nil :foreground "color-16" :background "color-38"))
+
+(custom-set-faces!
+  ;; Fix ugly colors for diffs. Prevalent because of git comit message buffers
+  ;; like COMMIT_EDITMSG.
+  '(font-lock-comment-face  :foreground "#9fc59f")
+  '(git-commit-summary  :foreground "cyan1")
+  '(diff-added        :foreground "green" :background "dark green")
+  '(diff-removed      :foreground "red" :background "dark red")
+  '(diff-context      :foreground "#ffffff")
+  '(diff-header       :foreground "yellow" :background "#3f3f3f" :weight bold)
+  '(diff-file-header  :foreground "yellow" :background "#3f3f3f" :weight bold)
+  '(diff-hunk-header  :foreground "cyan"   :background "#3f3f3f")
+  '(git-commit-keyword  :foreground "#dcdccc" :background "#3f3f3f"))
 ;; Enable soft word-wrap almost everywhere (including elisp).
 (+global-word-wrap-mode +1)
 
@@ -419,7 +419,7 @@ Also add the number of windows in the window configuration."
 
 (use-package! hl-line+
   :config
-  (set-face-attribute 'hl-line nil :background "grey32")
+  (custom-set-faces! '(hl-line :background "grey32"))
   ; Highlight the current cursor line; set overlay to a high number to override
   ; other properties (e.g., mmm-default-submode-face).
   (setq hl-line-overlay-priority (/ most-positive-fixnum (expt 2 55)))
@@ -433,43 +433,43 @@ Also add the number of windows in the window configuration."
   (add-hook 'org-mode-hook 'vim-empty-lines-mode)
   (add-hook 'prog-mode-hook 'vim-empty-lines-mode)
   (add-hook 'text-mode-hook 'vim-empty-lines-mode)
-  (set-face-attribute 'vim-empty-lines-face nil :weight 'bold))
+  (custom-set-faces! '(vim-empty-lines-face :weight bold)))
 
 ; Modeline colors.
-(set-face-attribute
- 'mode-line nil
- :background "color-235"
- :foreground "color-231")
-(set-face-attribute
- 'mode-line-inactive nil
- :weight 'bold
- :background "color-16"
- :foreground "color-245")
+(custom-set-faces!
+ '(mode-line
+   :background "color-235"
+   :foreground "color-231")
+ '(mode-line-inactive
+   :weight bold
+   :background "color-16"
+   :foreground "color-245"))
 
 ; Dim buffers in inactive windows to make the current one "pop".
 (use-package! auto-dim-other-buffers
  :config
  (auto-dim-other-buffers-mode)
- (set-face-attribute 'auto-dim-other-buffers-face nil :foreground "color-250" :background "color-234"))
+ (custom-set-faces! '(auto-dim-other-buffers-face :foreground "color-250" :background "color-234")))
 
 ; Always enable the tab bar, even if there is just one buffer showing (such as
 ; when we open a single buffer).
 (tab-bar-mode)
 
 ; Use bright visuals for coloring regions and interactive search hits.
-(set-face-attribute 'lazy-highlight nil :foreground "pink" :background "dark red" :weight 'normal)
-(set-face-attribute 'isearch nil :foreground "dark red" :background "pink" :weight 'bold)
-(set-face-attribute 'region nil :foreground "dark red" :background "pink" :weight 'bold)
+(custom-set-faces!
+ '(lazy-highlight  :foreground "pink" :background "dark red" :weight normal)
+ '(isearch  :foreground "dark red" :background "pink" :weight bold)
+ '(region  :foreground "dark red" :background "pink" :weight bold))
 
 (map! :after (git-gutter magit)
       :map doom-leader-git-map
       ; BUG: For some reason the "hunk" description does not show up in which-key.
       (:prefix-map ("h" . "hunk")
-      "n" #'l/git-gutter:next-hunk
-      "N" #'l/git-gutter:prev-hunk
-      "r" #'git-gutter:revert-hunk
+       "n" #'l/git-gutter:next-hunk
+       "N" #'l/git-gutter:prev-hunk
+       "r" #'git-gutter:revert-hunk
       ; "s" to mean "show hunk"
-      "s" #'git-gutter:popup-hunk))
+       "s" #'git-gutter:popup-hunk))
 
 (defun l/git-gutter:next-hunk ()
   (interactive)
@@ -500,9 +500,10 @@ Also add the number of windows in the window configuration."
   ; Update git-gutter every time we lose/regain focus to the frame. See
   ; https://emacs.stackexchange.com/a/60971/13006.
   (add-function :after after-focus-change-function (lambda () (unless (frame-focus-state) (git-gutter:update-all-windows))))
-  (set-face-foreground 'git-gutter:modified "#d0d")
-  (set-face-foreground 'git-gutter:added "#0d0")
-  (set-face-foreground 'git-gutter:deleted "#d00")
+  (custom-set-faces!
+  '(git-gutter:modified :foreground "#d0d")
+  '(git-gutter:added :foreground "#0d0")
+  '(git-gutter:deleted :foreground "#d00"))
   (setq git-gutter:modified-sign " ")
   (setq git-gutter:added-sign " ")
   (setq git-gutter:deleted-sign " "))
