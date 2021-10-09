@@ -308,8 +308,8 @@ otherwise, close current tab."
       ;; have to undo by pulling some teeth out. This includes undoing the
       ;; CSdown and CSup bindings which silently map to C-S-j and C-S-k,
       ;; respectively.
-      :ni CSup nil
-      :ni CSdown nil)
+      :ni "C-S-k" nil
+      :ni "C-S-j" nil)
 (map! :imnv "C-j" (cmd!! #'other-window 1)
       :imnv "C-k" (cmd!! #'other-window -1)
       :imnv "C-S-j" #'window-swap-states
