@@ -75,7 +75,57 @@ Return an event vector."
               '(("\e\[%d;6u" control shift)
                 ("\e\[%d;8u" control meta shift)))
         (setq uppercase (1+ uppercase)))
-        )))
+
+      ; Tab
+      ;
+      ; The conflicts with TAB and C-i are due to tmux, which has a regression
+      ; that treats these keys the same, even if our terminal uses `CSI u' mode
+      ; to disambiguate them. See https://github.com/tmux/tmux/issues/2705. If
+      ; it did not have that regression we would be able to bind TAB and C-i
+      ; freely without restrictions.
+      ;
+      ; We cannot read M-S-Tab (it gets read as C-M-i).
+      ;(define-key xterm-function-map "\e\[9;4u"
+      ;  (apply 'character-apply-modifiers 9 '(meta shift)))         ; M-S-TAB
+      (define-key xterm-function-map "\e\[9;5u"
+        (apply 'character-apply-modifiers 9 '(control)))            ; C-TAB
+      (define-key xterm-function-map "\e\[9;6u"
+        (apply 'character-apply-modifiers 9 '(control shift)))      ; C-S-TAB
+      ; We cannot read C-M-Tab (it gets read as C-M-i).
+      ;(define-key xterm-function-map "\e\[9;7u"
+      ;  (apply 'character-apply-modifiers 9 '(control meta)))       ; C-M-TAB
+      ; We cannot read C-M-S-Tab (it gets read as C-M-S-i).
+      ;(define-key xterm-function-map "\e\[9;8u"
+      ;  (apply 'character-apply-modifiers 9 '(control meta shift))) ; C-M-S-TAB
+
+      ; Backspace (DEL)
+      (define-key xterm-function-map "\e\[127;3u"
+        (apply 'character-apply-modifiers 127 '(meta)))               ; M-DEL
+      (define-key xterm-function-map "\e\[127;4u"
+        (apply 'character-apply-modifiers 127 '(meta shift)))         ; M-S-DEL
+      (define-key xterm-function-map "\e\[127;5u"
+        (apply 'character-apply-modifiers 127 '(control)))            ; C-DEL
+      (define-key xterm-function-map "\e\[127;6u"
+        (apply 'character-apply-modifiers 127 '(control shift)))      ; C-S-DEL
+      (define-key xterm-function-map "\e\[127;7u"
+        (apply 'character-apply-modifiers 127 '(control meta)))       ; C-M-DEL
+      (define-key xterm-function-map "\e\[127;8u"
+        (apply 'character-apply-modifiers 127 '(control meta shift))) ; C-M-S-DEL
+
+      ; Enter (RET)
+      (define-key xterm-function-map "\e\[13;3u"
+        (apply 'character-apply-modifiers 13 '(meta)))               ; M-RET
+      (define-key xterm-function-map "\e\[13;4u"
+        (apply 'character-apply-modifiers 13 '(meta shift)))         ; M-S-RET
+      (define-key xterm-function-map "\e\[13;5u"
+        (apply 'character-apply-modifiers 13 '(control)))            ; C-RET
+      (define-key xterm-function-map "\e\[13;6u"
+        (apply 'character-apply-modifiers 13 '(control shift)))      ; C-S-RET
+      (define-key xterm-function-map "\e\[13;7u"
+        (apply 'character-apply-modifiers 13 '(control meta)))       ; C-M-RET
+      (define-key xterm-function-map "\e\[13;8u"
+        (apply 'character-apply-modifiers 13 '(control meta shift)))))) ; C-M-S-RET
+
 (eval-after-load "xterm" '(l/eval-after-load-xterm))
 
 (setq user-full-name "Linus Arver"
