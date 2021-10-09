@@ -590,13 +590,11 @@ Remap =s= back to =evil-substitute=, instead of =evil-snipe-s=. However, map =S=
 
 ~evil-org-mode~ overrides the =gj= and =gk= bindings so we have to reinstate them here in a tweaked way.
 #+name: visual-line-movement
-#+begin_src elisp
+#+begin_src emacs-lisp
 (map! :after evil-org
       :map evil-org-mode-map
       :m "gk" #'evil-previous-visual-line
-      :m "gj" #'evil-next-visual-line
-      :m "M-N" #'org-backward-element
-      :m "M-n" #'org-forward-element)
+      :m "gj" #'evil-next-visual-line)
 #+end_src
 
 *** Remap the "+notes" function from ", n" to ", N"
@@ -985,12 +983,23 @@ First install the zenburn-theme package, then load it by setting =doom-theme= to
 #+end_src
 
 * Org mode
+
+By default evil-org-mode makes =M-j= move the subtree (bound to ~org-forward-element~). But instead we change things so that =M-<letter>= nondestructively navigates, and =M-S-<letter>= moves things around. This is more intuitive to me, at least.
+
+Note that we have to use =M-J= to encode =M-S-j=. This appears to be Emacs convention.
+
 #+name: org
-#+begin_src elisp
-;(after! (evil-org kakapo-mode)
-;  (map! (:map (org-mode-map evil-org-mode-map)
-;           :i [return] #'kakapo-ret-and-indent
-;           :i "RET" #'kakapo-ret-and-indent)))
+#+begin_src emacs-lisp
+(map! :after evil-org
+      :map evil-org-mode-map
+      :mnv "M-k" #'org-backward-element
+      :mnv "M-j" #'org-forward-element
+      :mnv "M-h" #'org-up-element
+      :mnv "M-l" #'org-down-element
+      :mnv "M-K" #'org-metaup
+      :mnv "M-J" #'org-metadown
+      :mnv "M-H" #'org-shiftmetaleft
+      :mnv "M-L" #'org-shiftmetaright)
 
 <<org-misc>>
 #+end_src

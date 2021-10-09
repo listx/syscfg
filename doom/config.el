@@ -133,10 +133,16 @@ Return an event vector."
 
 (setq doom-theme 'zenburn)
 
-;(after! (evil-org kakapo-mode)
-;  (map! (:map (org-mode-map evil-org-mode-map)
-;           :i [return] #'kakapo-ret-and-indent
-;           :i "RET" #'kakapo-ret-and-indent)))
+(map! :after evil-org
+      :map evil-org-mode-map
+      :mnv "M-k" #'org-backward-element
+      :mnv "M-j" #'org-forward-element
+      :mnv "M-h" #'org-up-element
+      :mnv "M-l" #'org-down-element
+      :mnv "M-K" #'org-metaup
+      :mnv "M-J" #'org-metadown
+      :mnv "M-H" #'org-shiftmetaleft
+      :mnv "M-L" #'org-shiftmetaright)
 
 (setq org-directory "~/lo/note/")
 
@@ -148,9 +154,7 @@ Return an event vector."
 (map! :after evil-org
       :map evil-org-mode-map
       :m "gk" #'evil-previous-visual-line
-      :m "gj" #'evil-next-visual-line
-      :m "M-N" #'org-backward-element
-      :m "M-n" #'org-forward-element)
+      :m "gj" #'evil-next-visual-line)
 
 (remove-hook 'doom-first-input-hook #'evil-snipe-mode)
 (map! :n "S" #'evil-snipe-s)
