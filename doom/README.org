@@ -947,6 +947,8 @@ We don't have any code for deleting a tab because we only delete windows instead
   (interactive)
   (flycheck-previous-error)
   (evil-scroll-line-to-center nil))
+
+<<lsp>>
 #+end_src
 
 * Colors
@@ -982,6 +984,15 @@ First install the zenburn-theme package, then load it by setting =doom-theme= to
   '(diff-file-header  :foreground "yellow" :background "#3f3f3f" :weight bold)
   '(diff-hunk-header  :foreground "cyan"   :background "#3f3f3f")
   '(git-commit-keyword  :foreground "#dcdccc" :background "#3f3f3f"))
+#+end_src
+
+* Language Server Protocol (LSP)
+
+#+name: lsp
+#+begin_src emacs-lisp
+(after! lsp-mode
+  (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]bazel-.*\\'")
+  (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\.cache\\'"))
 #+end_src
 
 * Org mode

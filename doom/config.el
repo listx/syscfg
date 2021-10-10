@@ -399,6 +399,10 @@ Also add the number of windows in the window configuration."
   (flycheck-previous-error)
   (evil-scroll-line-to-center nil))
 
+(after! lsp-mode
+  (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]bazel-.*\\'")
+  (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\.cache\\'"))
+
 (custom-set-faces!
   '(tab-bar  :background "color-16")
   '(tab-bar-tab  :weight bold :box nil :foreground "color-16" :background "color-51")
