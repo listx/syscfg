@@ -630,3 +630,36 @@ zle -N __l_lazy_load_completions
 
 # Uncomment to profile.
 #zprof
+
+# Invoke tmux, but find the smallest free number among the existing session
+# names, and use that. This avoids having always-increasing session numbers,
+# which can get out of hand if we're invoking tmux many times on a machine
+# that's on for weeks or months.
+#
+# See https://funloop.org/post/2016-09-24-parking-lot-problem-revisited.html for
+# a discussion about optimal ways to find the smallest free number. We just use
+# a brute-force approach here because (1) we're lazy and (2) this is shell code.
+__l_tmux_command()
+{
+    local desired_id=0
+    local session_ids
+    # (f) causes the output to be split on newlines.
+    session_ids=(${(f)"$(tmux list-sessions | cut -d: -f1 | grep '^[0-9]\+$' | sort)"})
+    for session_id in "${session_ids[@]}"; do
+        if (( desired_id < session_id )); then
+            break
+        else
+            ((desired_id++))
+        fi
+    done
+    echo "tmux new-session -A -s ${desired_id}"
+}
+
+# Replace current shell process with tmux, because it's much nicer to use tmux
+# than a raw shell instance.
+if command -v tmux &> /dev/null \
+    && [[ -n "$PS1" ]] \
+    && [[ ! "$TERM" =~ tmux ]] \
+    && [[ -z "$TMUX" ]]; then
+  exec $(__l_tmux_command)
+fi
