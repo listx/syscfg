@@ -28,6 +28,8 @@ emacs/tramp
 emacs/transient
 emacs/url
 gpg
+karabiner/assets
+karabiner/automatic_backups
 mplayer/mplayerplug-in.conf
 ncmpcpp/config
 ncmpcpp/keys

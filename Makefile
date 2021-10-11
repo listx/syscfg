@@ -43,6 +43,8 @@ gpg:
 	ln -fs ${C}/gpg/gpg-agent.nixos.conf                ${H}/.gnupg/gpg-agent.conf
 gtk:
 	ln -fs ${C}/gtk/cfg                                 ${H}/.gtkrc-2.0.mine
+karabiner:
+	ln -fns ${C}/karabiner                              ${H}/.config/karabiner
 kube:
 	mkdir -p ${C}/kube
 	cp -f  /etc/kubernetes/cluster-admin.kubeconfig     ${C}/kube/config
@@ -143,6 +145,7 @@ zsh:
 	git \
 	gpg \
 	gtk \
+	karabiner \
 	kube \
 	lesskey \
 	mpd \
