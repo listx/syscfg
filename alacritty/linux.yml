@@ -1,18 +1,13 @@
 # See https://github.com/alacritty/alacritty/blob/master/alacritty.yml for a
 # canonical reference.
 
-env:
-  TERM: xterm-256color
 window:
   dimensions:
     columns: 163
     lines: 95
-  title: ''
+  title: ""
 font:
   normal:
     family: "Terminus"
-  size: 10
+  size: 9
   use_thin_strokes: true
-import:
-  - "~/syscfg/alacritty/colors.yml"
-  - "~/syscfg/alacritty/key_bindings.yml"

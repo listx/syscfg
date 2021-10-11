@@ -1,4 +1,1 @@
-import:
-  - "~/syscfg/alacritty/alacritty.yml"
-env:
-  L_WANT_RAW_SHELL: "1"
+/Users/linusa/syscfg/alacritty/mac_shell.yml

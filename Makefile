@@ -7,11 +7,14 @@ T := $(shell hostname | cut -d. -f1)
 alacritty:
 	ln -fns ${C}/alacritty                              ${H}/.config/alacritty
 ifeq ('${T}','k1')
-	ln -fs ${C}/alacritty/alacritty.${T}.yml            ${H}/.config/alacritty/alacritty.yml
+	ln -fs ${C}/alacritty/k1_tmux.yml                   ${H}/.config/alacritty/alacritty.yml
+	ln -fs ${C}/alacritty/k1_shell.yml                  ${C}/alacritty/alacritty_raw_shell.yml
 else ifeq ('${S}','Linux')
-	ln -fs ${C}/alacritty/alacritty.linux.yml           ${H}/.config/alacritty/alacritty.yml
+	ln -fs ${C}/alacritty/linux_tmux.yml                ${H}/.config/alacritty/alacritty.yml
+	ln -fs ${C}/alacritty/linux_shell.yml               ${C}/alacritty/alacritty_raw_shell.yml
 else
-	ln -fs ${C}/alacritty/alacritty.mac.yml             ${H}/.config/alacritty/alacritty.yml
+	ln -fs ${C}/alacritty/mac_tmux.yml                  ${H}/.config/alacritty/alacritty.yml
+	ln -fs ${C}/alacritty/mac_shell.yml                 ${C}/alacritty/alacritty_raw_shell.yml
 endif
 bash:
 	ln -fs ${C}/bash/.bashrc                            ${H}

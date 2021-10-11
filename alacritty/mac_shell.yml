@@ -1,0 +1,7 @@
+import:
+  - "~/syscfg/alacritty/base.yml"
+  - "~/syscfg/alacritty/mac.yml"
+  - "~/syscfg/alacritty/colors.yml"
+  - "~/syscfg/alacritty/key_bindings_shell.yml"
+env:
+  L_WANT_RAW_SHELL: "1"

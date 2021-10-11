@@ -1,13 +1,11 @@
 # See https://github.com/alacritty/alacritty/blob/master/alacritty.yml for a
 # canonical reference.
 
-env:
-  TERM: xterm-256color
 window:
   dimensions:
     columns: 165
     lines: 92
-  title: ''
+  title: ""
 font:
   normal:
     # From https://github.com/listx/tamsyn-mac-version/blob/f347497a0f962435b94b9f7b906a6eaaf5bf06c0/tamsyn/Tamsyn8x16.dfont.
@@ -16,6 +14,3 @@ font:
   offset:
     y: -1
   use_thin_strokes: true
-import:
-  - "~/syscfg/alacritty/colors.yml"
-  - "~/syscfg/alacritty/key_bindings.yml"
