@@ -643,16 +643,29 @@ __l_tmux_command()
 {
     local desired_id=0
     local session_ids
+    local _hostname
+
+    # Grab hostname. If we're using our own home-grown convention of using
+    # ~/.hostname-short as a shorter hostname alias for scripting, use that
+    # instead if it is available.
+    _hostname=$(hostname)
+    if [[ -f ~/.hostname-short ]]; then
+        _hostname=$(cat ~/.hostname-short)
+    fi
+
+    # Prefer to use defaul session names where the format is
+    # <hostname>-<session_id>, and <session_id> is the smallest number possible.
+    #
     # (f) causes the output to be split on newlines.
-    session_ids=(${(f)"$(tmux list-sessions | cut -d: -f1 | grep '^[0-9]\+$' | sort)"})
+    session_ids=(${(f)"$(tmux list-sessions | cut -d: -f1 | grep "^${_hostname}-[0-9]\+\$" | sort)"})
     for session_id in "${session_ids[@]}"; do
-        if (( desired_id < session_id )); then
+        if (( desired_id < ${session_id#*-} )); then
             break
         else
             ((desired_id++))
         fi
     done
-    echo "tmux new-session -A -s ${desired_id}"
+    echo "tmux new-session -A -s ${_hostname}-${desired_id}"
 }
 
 # Replace current shell process with tmux, because it's much nicer to use tmux
