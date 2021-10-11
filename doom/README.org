@@ -416,6 +416,16 @@ Return an event vector."
   (if (memq 'meta modifiers) (setq c (logior (lsh 1 27) c)))
   (if (memq 'shift modifiers) (setq c (logior (lsh 1 25) c)))
   (vector c))
+; This is like character-apply-modifiers, but we don't do any special
+; behind-the-scenes modification of the character.
+(defun character-apply-modifiers-raw (c &rest modifiers)
+  "Apply modifiers to the character C.
+MODIFIERS must be a list of symbols amongst (meta control shift).
+Return an event vector."
+  (if (memq 'control modifiers) (setq c (logior (lsh 1 26) c)))
+  (if (memq 'meta modifiers) (setq c (logior (lsh 1 27) c)))
+  (if (memq 'shift modifiers) (setq c (logior (lsh 1 25) c)))
+  (vector c))
 (defun l/eval-after-load-xterm ()
   (interactive)
   (when (and (boundp 'xterm-extra-capabilities) (boundp 'xterm-function-map))
@@ -469,15 +479,26 @@ Return an event vector."
 
       ; Tab
       ;
-      ; The conflicts with TAB and C-i are due to tmux, which has a regression
-      ; that treats these keys the same, even if our terminal uses `CSI u' mode
-      ; to disambiguate them. See https://github.com/tmux/tmux/issues/2705. If
-      ; it did not have that regression we would be able to bind TAB and C-i
-      ; freely without restrictions.
-      ;
       ; We cannot read M-S-Tab (it gets read as C-M-i).
       ;(define-key xterm-function-map "\e\[9;4u"
       ;  (apply 'character-apply-modifiers 9 '(meta shift)))         ; M-S-TAB
+
+      ; We can't refer to C-i as "C-i", because emacs does behind-the-scenes
+      ; conversion of it into TAB. So we have to refer to it by its raw vector.
+      ; The vector just contains a single integer value, which represents a
+      ; single keypress with some combination of modifier keys.
+      ;
+      ; But at least it works!
+      ;
+      ; The following are all basically equivalent:
+      ;
+      ;   (global-set-key (vector (logior (lsh 1 26) 105)) #'foo)
+      ;   (global-set-key [#x4000069] #'foo)
+      ;   (evil-define-key 'normal global-map (character-apply-modifiers-raw 105 'control) #'foo)
+
+      (define-key xterm-function-map "\e\[105;5u"
+        (apply 'character-apply-modifiers-raw 105 '(control)))
+
       (define-key xterm-function-map "\e\[9;5u"
         (apply 'character-apply-modifiers 9 '(control)))            ; C-TAB
       (define-key xterm-function-map "\e\[9;6u"

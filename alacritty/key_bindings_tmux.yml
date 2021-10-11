@@ -1,3 +1,6 @@
+# Run this when we open this buffer, so that we don't format away the nice
+# alignments for each keybinding.
+# (format-all-mode -1)
 key_bindings:
   # Bindings for Alacritty itself ---------------------------------------------
 
@@ -127,7 +130,9 @@ key_bindings:
   - { key: F, mods: Control, chars: "\x06" }
   - { key: G, mods: Control, chars: "\x07" }
   - { key: H, mods: Control, chars: "\x08" }
-  - { key: I, mods: Control, chars: "\x09" }
+  # Make "C-i" send "F12 Tab". Then from tmux we send the `CSI u`-encoded
+  # version of "C-i" ("\x1b[105;5u").
+  - { key: I, mods: Control, chars: "\x1b[24~\x09" }
   - { key: J, mods: Control, chars: "\x0A" }
   - { key: K, mods: Control, chars: "\x0B" }
   - { key: L, mods: Control, chars: "\x0C" }
