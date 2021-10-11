@@ -657,9 +657,22 @@ __l_tmux_command()
 
 # Replace current shell process with tmux, because it's much nicer to use tmux
 # than a raw shell instance.
+#
+#   - The "$PS1" check sees if this is a login shell.
+#   - The "$TERM" and $TMUX" checks are for avoiding running tmux within tmux
+#     (without this, if we launch a new shell from inside tmux, we would get
+#     tmux-within-tmux).
+#   - The
+#
+# If we do want to launch a raw shell instance, then we have to invoke our
+# terminal emulator (Alacritty) with a non-zero value environment variable value
+# for L_WANT_RAW_SHELL. Using a raw shell instance is useful if we want to
+# connect to a remote tmux session (to remove the outer tmux layer as this outer
+# layer is unnecessary).
 if command -v tmux &> /dev/null \
-    && [[ -n "$PS1" ]] \
-    && [[ ! "$TERM" =~ tmux ]] \
-    && [[ -z "$TMUX" ]]; then
+    && [[ -n "${PS1}" ]] \
+    && [[ ! "${TERM}" =~ tmux ]] \
+    && [[ -z "${TMUX}" ]] \
+    && [[ -z "${L_WANT_RAW_SHELL:-}" ]]; then
   exec $(__l_tmux_command)
 fi
