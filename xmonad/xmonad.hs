@@ -1112,9 +1112,15 @@ l_workspaceIsEmpty xzy = do
     , isNothing $ W.stack ww
     ]
 
--- Terminals (using various different color themes).
-l_term :: String
-l_term = "alacritty"
+-- Terminals.
+l_term :: String -> Bool ->  String
+l_term hostname wantRawShell = case hostname of
+  "k1" -> "LIBGL_ALWAYS_SOFTWARE=1 " <> invocation
+  _ -> invocation
+  where
+  invocation = if wantRawShell
+    then "alacritty --config-file ~/syscfg/alacritty/alacritty_raw_shell.yml"
+    else "alacritty"
 
 l_isPortraitMonitorLayout :: String -> Bool
 l_isPortraitMonitorLayout givenHost = any (`isPrefixOf` givenHost) portraitHosts
@@ -1281,7 +1287,8 @@ l_keyBindings hostname numScreens conf@XConfig {XMonad.modMask = hypr}
   -- Launch apps.
   [ ((hypr,   xK_i            ), spawn "qutebrowser")
   , ((hyprS,  xK_i            ), spawnSelected def ["chromium", "firefox"])
-  , ((hypr,   xK_e            ), spawn l_termCustom)
+  , ((hypr,   xK_x            ), spawn $ l_term hostname True)
+  , ((hypr,   xK_e            ), spawn $ l_term hostname False)
   -- Backup binding to launch a terminal in case our Hyper key (hypr) is
   -- unavailable. This happens whenever we unplug/replug our keyboard, and a
   -- terminal isn't already showing in a window somewhere to be able to call
@@ -1289,13 +1296,10 @@ l_keyBindings hostname numScreens conf@XConfig {XMonad.modMask = hypr}
   -- Hyper key is used exclusively to maneuver around Xmonad, we need a
   -- non-Hyper-key binding to launch a terminal to bootstrap ourselves back in
   -- with initkeys.sh.
-  , ((altS,   xK_e            ), spawn l_termCustom)
+  , ((altS,   xK_e            ), spawn $ l_term hostname True)
   , ((hypr,   xK_u            ), spawn "emacs")
   ]
   where
-  l_termCustom = case hostname of
-    "k1" -> "LIBGL_ALWAYS_SOFTWARE=1 " <> l_term
-    _ -> l_term
   yEdgeGuard dir = l_if (l_atYEdge dir) (return ())
   shrinkExpand master slave = if l_isPortraitMonitorLayout hostname
     then sendMessage slave
@@ -1460,19 +1464,21 @@ l_startupHook hostname = do
       else show (l_XZYFrom (X (-1)) numScreens ZGSys y)
     -- Spawn rtorrent on the rightmost screen (XCoord index of -1; we use -1
     -- because we don't know how many screens there will actually be).
-    rtorrent = spawn $ l_termCustom
+    rtorrent = spawn $ l_term hostname True
       ++ " --class atWorkspace_"
       ++ farRightScreen
       ++ " --command rtorrent"
   -- Spawn one terminal in every screen at the "Work" ZGroup at the current
   -- YCoord (but only if that screen is empty). We have to feed in `(take 1)' in
   -- order to spawn terminals in a single ZCoord.
+  --
+  -- Each of these terminals also spawn a tmux client instance.
   mapM_
     (\xzy -> whenX (l_workspaceIsEmpty xzy)
-      (spawn $ l_termCustom ++ " --class atWorkspace_" ++ show xzy))
+      (spawn $ l_term hostname False ++ " --class atWorkspace_" ++ show xzy))
     $ l_XZYsFrom numScreens ZGWork (take 1) y
   -- Spawn htop on the rightmost screen.
-  spawn $ l_termCustom
+  spawn $ l_term hostname True
     ++ " --class atWorkspace_"
     ++ farRightScreen
     ++ " --command htop"
@@ -1483,10 +1489,6 @@ l_startupHook hostname = do
     spawn "qutebrowser"
     rtorrent
   spawn "~/syscfg/script/startup_hook.sh"
-  where
-  l_termCustom = case hostname of
-    "k1" -> "LIBGL_ALWAYS_SOFTWARE=1 " <> l_term
-    _ -> l_term
 
 -- Reset the location of the mouse pointer, with the destination depending on
 -- the type of window that is currently focused.
