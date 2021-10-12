@@ -7,46 +7,157 @@
   ;; Fix conflict with embark.
   (setq iedit-toggle-key-default nil))
 
-; Enable `CSI u` support. See https://emacs.stackexchange.com/a/59225.
-; xterm with the resource ?.VT100.modifyOtherKeys: 1
-; GNU Emacs >=24.4 sets xterm in this mode and define
-; some of the escape sequences but not all of them.
-; xterm with the resource ?.VT100.modifyOtherKeys: 1
-; GNU Emacs >=24.4 sets xterm in this mode and define
-; some of the escape sequences but not all of them.
-(defun character-apply-modifiers (c &rest modifiers)
-  "Apply modifiers to the character C.
-MODIFIERS must be a list of symbols amongst (meta control shift).
-Return an event vector."
-  (if (memq 'control modifiers) (setq c (if (or (and (<= ?@ c) (<= c ?_))
-                                                (and (<= ?a c) (<= c ?z)))
-                                            (logand c ?\x1f)
-                                          (logior (lsh 1 26) c))))
-  (if (memq 'meta modifiers) (setq c (logior (lsh 1 27) c)))
-  (if (memq 'shift modifiers) (setq c (logior (lsh 1 25) c)))
-  (vector c))
+;; Enable `CSI u` support. See https://emacs.stackexchange.com/a/59225.  xterm
+;; with the resource ?.VT100.modifyOtherKeys: 1 GNU Emacs >=24.4 sets xterm in
+;; this mode and define some of the escape sequences but not all of them.  xterm
+;; with the resource ?.VT100.modifyOtherKeys: 1 GNU Emacs >=24.4 sets xterm in
+;; this mode and define some of the escape sequences but not all of them.
+(defun l/csi-u-support ()
+  (interactive)
+  (when (and (boundp 'xterm-extra-capabilities) (boundp 'xterm-function-map))
+    (let ((c 32))
+      ;; Create bindings for all ASCII codepoints from 32 (SPACE) to 126 (~).
+      ;; That is, make Emacs understand what these `CSI u' sequences mean.
+      (while (<= c 127)
+        (mapc (lambda (x)
+                (define-key xterm-function-map
+                  ;; What the terminal sends.
+                  (format (car x) c)
+                  ;; The Emacs key event to trigger.
+                  (apply 'l/char-mods c (cdr x))))
+              '(("\x1b[%d;2u" S)
+                ("\x1b[%d;3u" M)
+                ("\x1b[%d;4u" M S)
+                ("\x1b[%d;5u" C)
+                ("\x1b[%d;6u" C S)
+                ("\x1b[%d;7u" C M)
+                ("\x1b[%d;8u" C M S)))
+        (setq c (1+ c)))
 
-(defun l/mods-to-int (ms)
-  (let ((c 0))
-   (if (memq 'C ms) (setq c (logior (lsh 1 2) c)))
-   (if (memq 'M ms) (setq c (logior (lsh 1 1) c)))
-   (if (memq 'S ms) (setq c (logior (lsh 1 0) c)))
-   (+ 1 c)))
-(defun l/mods-to-string (ms)
-  (let ((s ""))
-   (if (memq 'C ms) (setq s "C"))
-   (if (memq 'M ms) (setq s (concat s (if (not (string= "" s)) "-") "M")))
-   (if (memq 'S ms) (setq s (concat s (if (not (string= "" s)) "-") "S")))
-   s))
+      ;; For C-{j-k} (e.g., "\x1b[106;5u" for C-j) and C-S-{j-k} (e.g.,
+      ;; "\x1b[106;6u" for C-S-j), we have to bind things a bit differently
+      ;; because Emacs's key event recognizes the character "10" as C-j. So If
+      ;; we reference bindings with "C-j" elsewhere, such as using doom's `map!'
+      ;; macro, Emacs expect a key event with character value 10, and not 105
+      ;; ("j" character's ASCII value). We convert 105 to 10 by just masking the
+      ;; lower 5 bits. Likewise, because the value itself (10) is already a
+      ;; "control" character, there is no need to apply the control character
+      ;; modifier itself, which is why they are missing in the list of bindings
+      ;; below.
+      ;;
+      ;; We only bind keys that we use here. The keys that are not bound are
+      ;; left alone, to leave them unmapped.
+      (setq special-keys '(106 107))
+      (while special-keys
+        (setq c (car special-keys))
+        (mapc (lambda (x)
+                (define-key xterm-function-map
+                  (format (car x) c)
+                  (apply 'l/char-mods (logand c #b11111) (cdr x))))
+              '(("\x1b[%d;5u")
+                ("\x1b[%d;6u" S)
+                ("\x1b[%d;7u" M)
+                ("\x1b[%d;8u" M S)))
+        (setq special-keys (cdr special-keys)))
+
+      ;; Take care of `CSI u` encoding of special keys. These are:
+      ;;
+      ;; 9      TAB
+      ;; 13     RET (Enter)
+      ;; 27     ESC
+      ;; 32     SPC
+      ;; 64     @
+      ;; 91     [
+      ;; 127    DEL (Backspace)
+      ;;
+      ;; We don't bother with codes 32 64 91 127 because they're already taken
+      ;; care of in the first loop above for the range 32-127.
+      (setq special-keys '(9 13 27))
+      (while special-keys
+       (setq c (car special-keys))
+       (mapc (lambda (x)
+              (define-key xterm-function-map
+                (format (car x) c)
+                (apply 'l/char-mods c (cdr x))))
+        '(("\x1b[%d;2u" S)
+          ("\x1b[%d;3u" M)
+          ("\x1b[%d;4u" M S)
+          ("\x1b[%d;5u" C)
+          ("\x1b[%d;6u" C S)
+          ("\x1b[%d;7u" C M)
+          ("\x1b[%d;8u" C M S)))
+       (setq special-keys (cdr special-keys))))))
+
+(eval-after-load "xterm" '(l/csi-u-support))
+(defun l/disambiguate-problematic-keys ()
+  "This doesn't really do anything special other than just create placeholder
+bindings for as-yet-unbound keys (determined manually). If we don't do this then
+running `describe-keys' on these bindings sometimes gives the wrong answer
+because Emacs will equate these keys with other keys (e.g., C-i with C-S-i)."
+  (interactive)
+
+  ;; ASCII 9 (<TAB>)
+  (l/bind-placeholder '(9 C))      ; C-TAB
+  (l/bind-placeholder '(9 C S))    ; C-S-TAB
+  (l/bind-placeholder '(9 C M))    ; C-M-TAB
+  (l/bind-placeholder '(9 C M S))  ; C-M-S-TAB
+
+  ;; Similar to TAB, don't mess with RET key for now.
+  ;; ASCII 13 (Enter, aka <RET>)
+  (l/bind-placeholder '(13 S))         ; S-RET
+  (l/bind-placeholder '(13 M))         ; M-RET
+  (l/bind-placeholder '(13 M S))       ; M-S-RET
+  (l/bind-placeholder '(13 C))         ; C-RET
+  (l/bind-placeholder '(13 C S))       ; C-S-RET
+  (l/bind-placeholder '(13 C M))       ; C-M-RET
+  (l/bind-placeholder '(13 C M S))     ; C-M-S-RET
+
+  ;; ASCII 27 (0x1b, <ESC>)
+  (l/bind-placeholder '(#x1b S))      ; S-ESC
+  (l/bind-placeholder '(#x1b M S))    ; M-S-ESC
+  (l/bind-placeholder '(#x1b C))      ; C-ESC
+  (l/bind-placeholder '(#x1b C S))    ; C-S-ESC
+  (l/bind-placeholder '(#x1b C M))    ; C-M-ESC
+  (l/bind-placeholder '(#x1b C M S))  ; C-M-S-ESC
+
+  ;; ASCII 64 ('@')
+  (l/bind-placeholder '(64 C))
+
+  ;; ASCII 91 ('[')
+  ;; "[" key. Usually conflicts with Escape.
+  ;; M-[ is already recognized correctly, so we don't do anything here. (That
+  ;; is, there is no need to tweak the "\e[91;3u" binding already taken care
+  ;; of with l/eval-after-load-xterm).
+  (l/bind-placeholder '(91 M S))    ; M-S-[
+  (l/bind-placeholder '(91 C))      ; C-[
+  (l/bind-placeholder '(91 C S))    ; C-S-[
+  (l/bind-placeholder '(91 C M))    ; C-M-[
+  (l/bind-placeholder '(91 C M S))  ; C-M-S-[
+
+  ;; ASCII 105 ('i')
+  (l/bind-placeholder '(105 C))      ; C-i
+  (l/bind-placeholder '(105 C S))    ; C-S-i
+  (l/bind-placeholder '(105 C M))    ; C-M-i
+  (l/bind-placeholder '(105 C M S))  ; C-M-S-i
+
+  ;; C-j and C-S-j are already bound for window navigation.
+  ;; C-M-j and C-M-S-j are already bound from tmux, so no point in binding them here (we'll never see them).
+
+  ;; ASCII 109 ('m')
+  (l/bind-placeholder '(109 C))     ; C-m
+  (l/bind-placeholder '(109 C S))   ; C-S-m
+  (l/bind-placeholder '(109 C M))   ; C-M-m
+  (l/bind-placeholder '(109 C M S)) ; C-M-S-m
+
+  ;; ASCII 127 (Backspace, aka <DEL>)
+  (l/bind-placeholder '(127 M))      ; M-DEL
+  (l/bind-placeholder '(127 M S))    ; M-S-DEL
+  (l/bind-placeholder '(127 C))      ; C-DEL
+  (l/bind-placeholder '(127 C S))    ; C-S-DEL
+  (l/bind-placeholder '(127 C M))    ; C-M-DEL
+  (l/bind-placeholder '(127 C M S)))  ; C-M-S-DEL
 
 (defmacro l/bind-placeholder (binding)
-  `(let (
-         (c (car ,binding))
-         (ms (cdr ,binding)))
-
-    (define-key xterm-function-map
-      (format "\e\[%d;%du" c (l/mods-to-int ms))
-      (apply 'l/char-mods-raw c ms))
   ; Note: we can't refer to C-i as "C-i", because emacs does behind-the-scenes
   ; conversion of it into TAB. So we have to refer to it by its raw vector.
   ; The vector just contains a single integer value, which represents a
@@ -58,12 +169,32 @@ Return an event vector."
   ;
   ;   (global-set-key (vector (logior (lsh 1 26) 105)) #'foo)
   ;   (global-set-key [#x4000069] #'foo)
-    (evil-define-key 'normal global-map (apply 'l/char-mods-raw (car ,binding) (cdr ,binding))
-       #'(lambda () (interactive) (message "[unbound] %s-%s" (l/mods-to-string (cdr ,binding)) (single-key-description (car ,binding)))))))
+  `(define-key l-disambiguation-mode-map
+     (apply 'l/char-mods (car ,binding) (cdr ,binding))
+     #'(lambda () (interactive)
+         (message "[unbound] %s-%s (\x1b[%d;%du)"
+                  (l/mods-to-string (cdr ,binding))
+                  (single-key-description (car ,binding))
+                  (car ,binding)
+                  (l/mods-to-int (cdr ,binding))))))
+
+(defun l/mods-to-int (ms)
+  (let ((c 0))
+   (if (memq 'C ms) (setq c (logior (lsh 1 2) c)))
+   (if (memq 'M ms) (setq c (logior (lsh 1 1) c)))
+   (if (memq 'S ms) (setq c (logior (lsh 1 0) c)))
+   (+ 1 c)))
+
+(defun l/mods-to-string (ms)
+  (let ((s ""))
+   (if (memq 'C ms) (setq s "C"))
+   (if (memq 'M ms) (setq s (concat s (if (not (string= "" s)) "-") "M")))
+   (if (memq 'S ms) (setq s (concat s (if (not (string= "" s)) "-") "S")))
+   s))
 
 ; This is like character-apply-modifiers, but we don't do any special
 ; behind-the-scenes modification of the character.
-(defun l/char-mods-raw (c &rest modifiers)
+(defun l/char-mods (c &rest modifiers)
   "Apply modifiers to the character C.
 MODIFIERS must be a list of symbols amongst (C M S).
 Return an event vector."
@@ -71,121 +202,17 @@ Return an event vector."
   (if (memq 'M modifiers) (setq c (logior (lsh 1 27) c)))
   (if (memq 'S modifiers) (setq c (logior (lsh 1 25) c)))
   (vector c))
-(defun l/eval-after-load-xterm ()
-  (interactive)
-  (when (and (boundp 'xterm-extra-capabilities) (boundp 'xterm-function-map))
-    (let ((c 32) (uppercase 65))
-      ; Create bindings for all ASCII codepoints from 32 (SPACE) to 126 (~).
-      ; That is, make Emacs understand what these `CSI u' sequences mean.
-      (while (<= c 126)
-        (mapc (lambda (x)
-                (define-key xterm-function-map (format (car x) c)
-                  (apply 'character-apply-modifiers c (cdr x))))
-              '(("\e\[%d;3u" meta)
-                ("\e\[%d;5u" control)
-                ("\e\[%d;6u" control shift)
-                ("\e\[%d;7u" control meta)
-                ("\e\[%d;8u" control meta shift)))
-        (setq c (1+ c)))
-      ; Interpret the C-S-<letter> sequences encoded as `CSI u' sequences,
-      ; (e.g., "\e\[76;6u" (C-S-L) as C-S-l). This is because in Alacritty we
-      ; always use the uppercase ASCII letter for the codepoint between the `['
-      ; and `;' delimiters of the sequence. This use of 6u instead of 5u
-      ; somewhat deviates from the example for "A" vs "a" as described in
-      ; http://www.leonerd.org.uk/hacks/fixterms/, because there they recommend
-      ; "\e\[65;5u" (note the 5u instead of the 6u) to encode C-S-A. The reason
-      ; we use 6u instead of the recommended 5u is because for some reason we
-      ; cannot get 5u to work with tmux. That is, if we pass in "\e\[76;5u" from
-      ; Alacritty to tmux, tmux encodes it as C-l instead of C-S-l. So instead
-      ; we feed in the 6u variant from Alacritty, which tmux does recognize as
-      ; C-S-l. And then we tell tmux to convert all such C-S- sequences back
-      ; into a `CSI u' sequence, again using the 6u variant for Emacs to
-      ; consume. We could probably use the 5u variant from within Emacs but
-      ; using the 6u variant keeps all settings consistent across alacritty,
-      ; tmux, and emacs.
-      ;
-      ; Anyway, now in terminal emacs we can distinguish between C-S-l and C-l.
-      ;
-      ; The (+ 32 uppercase) expression shifts the uppercase codepoint up by 32,
-      ; making it lowercase for Emacs.
-      ;
-      ; See https://emacs.stackexchange.com/a/59225 for the idea. Note that this
-      ; code does not match the answer there because it also depends on how you
-      ; set up your Alacritty bindings; if you make Alacritty send lowercase
-      ; ASCII letters (a-z) instead of uppercase ones (A-Z) then this hack
-      ; probably is not necessary.
-      (while (<= uppercase 90)
-        (mapc (lambda (x)
-                (define-key xterm-function-map (format (car x) uppercase)
-                  (apply 'character-apply-modifiers (+ 32 uppercase) (cdr x))))
-              '(("\e\[%d;6u" control shift)
-                ("\e\[%d;8u" control meta shift)))
-        (setq uppercase (1+ uppercase)))
 
-      ;; Don't bind TAB combos yet, because a lot of modes make use of it.
-      ;; Instead rebind them inside major modes as we desire in the future.
-      ;
-      ; ASCII 9 (<TAB>)
-      ;(l/bind-placeholder '(9 C))      ; C-TAB
-      ;(l/bind-placeholder '(9 C S))    ; C-S-TAB
-      ;(l/bind-placeholder '(9 C M))    ; C-M-TAB
-      ;(l/bind-placeholder '(9 C M S))  ; C-M-S-TAB
-
-      ; ASCII 105 ('i')
-      (l/bind-placeholder '(105 C))      ; C-i
-      (l/bind-placeholder '(105 C S))    ; C-S-i
-      (l/bind-placeholder '(105 C M))    ; C-M-i
-      (l/bind-placeholder '(105 C M S))  ; C-M-S-i
-
-      ; ASCII 27 (0x1b, <ESC>)
-      (l/bind-placeholder '(#x1b S))      ; S-ESC
-      (l/bind-placeholder '(#x1b M S))    ; M-S-ESC
-      (l/bind-placeholder '(#x1b C))      ; C-ESC
-      (l/bind-placeholder '(#x1b C S))    ; C-S-ESC
-      (l/bind-placeholder '(#x1b C M))    ; C-M-ESC
-      (l/bind-placeholder '(#x1b C M S))  ; C-M-S-ESC
-
-      ; ASCII 91 ('[')
-      ; "[" key. Usually conflicts with Escape.
-      ; M-[ is already recognized correctly, so we don't do anything here. (That
-      ; is, there is no need to tweak the "\e[91;3u" binding already taken care
-      ; of with l/eval-after-load-xterm).
-      (l/bind-placeholder '(91 M S))    ; M-S-[
-      (l/bind-placeholder '(91 C))      ; C-[
-      (l/bind-placeholder '(91 C S))    ; C-S-[
-      (l/bind-placeholder '(91 C M))    ; C-M-[
-      (l/bind-placeholder '(91 C M S))  ; C-M-S-[
-
-      ; ASCII 127 (Backspace, aka <DEL>)
-      (l/bind-placeholder '(127 M))      ; M-DEL
-      (l/bind-placeholder '(127 M S))    ; M-S-DEL
-      (l/bind-placeholder '(127 C))      ; C-DEL
-      (l/bind-placeholder '(127 C S))    ; C-S-DEL
-      (l/bind-placeholder '(127 C M))    ; C-M-DEL
-      (l/bind-placeholder '(127 C M S))  ; C-M-S-DEL
-
-      ; Similarl to TAB, don't mess with RET key for now.
-      ; ASCII 13 (Enter, aka <RET>)
-      ;(l/bind-placeholder '(13 M))         ; M-RET
-      ;(l/bind-placeholder '(13 M S))       ; M-S-RET
-      ;(l/bind-placeholder '(13 C))         ; C-RET
-      ;(l/bind-placeholder '(13 C S))       ; C-S-RET
-      ;(l/bind-placeholder '(13 C M))       ; C-M-RET
-      ;(l/bind-placeholder '(13 C M S))     ; C-M-S-RET
-
-      ; C-j and C-S-j are already bound for window navigation.
-      ; C-M-j and C-M-S-j are already bound from tmux, so no point in binding them here (we'll never see them).
-
-      ; ASCII 109 ('m')
-      (l/bind-placeholder '(109 C))     ; C-m
-      (l/bind-placeholder '(109 C S))   ; C-S-m
-      (l/bind-placeholder '(109 C M))   ; C-M-m
-      (l/bind-placeholder '(109 C M S)) ; C-M-S-m
-
-      ; ASCII 64 ('@')
-      (l/bind-placeholder '(64 C)))))
-
-(eval-after-load "xterm" '(l/eval-after-load-xterm))
+(defvar l-disambiguation-mode-map (make-keymap) "Keymap for disambiguating keys in terminal Emacs.")
+(define-minor-mode l-disambiguation-mode
+   "A mode for binding key sequences so that we can see them with `M-x
+  describe-key'."
+  :global t
+  :init-value nil
+  :lighter " Disambiguation"
+  ;; The keymap.
+  :keymap l-disambiguation-mode-map)
+(add-hook 'l-disambiguation-mode-on-hook 'l/disambiguate-problematic-keys)
 
 (setq user-full-name "Linus Arver"
       user-mail-address "linusarver@gmail.com")
@@ -224,7 +251,7 @@ Return an event vector."
 
 (map! :m "SPC" (cmd!! #'l/scroll-jump 10)
       :mn "DEL" (cmd!! #'l/scroll-jump -10))
-;(map! :m (apply 'l/char-mods-raw 32 '(C M S)) (cmd!! #'l/scroll-jump 20))
+;(map! :m (apply 'l/char-mods 32 '(C M S)) (cmd!! #'l/scroll-jump 20))
 
 (defun l/scroll-jump (cnt)
   "Scroll by CNT lines."
@@ -407,6 +434,10 @@ Also add the number of windows in the window configuration."
     (if (> count 1)
         (format " [%d] %s " (- count 1) name)
         (format " %s " name))))
+(map! :after evil-org
+      :map evil-org-mode-map
+      :ni "C-S-h" nil
+      :ni "C-S-l" nil)
 (map! :mi "C-l" #'tab-next
       :mi "C-h" #'tab-previous
       :mi "C-S-l" (cmd!! #'tab-bar-move-tab 1)

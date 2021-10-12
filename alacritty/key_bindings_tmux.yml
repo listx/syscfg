@@ -132,21 +132,13 @@ key_bindings:
   - { key: F, mods: Control, chars: "\x06" }
   - { key: G, mods: Control, chars: "\x07" }
   - { key: H, mods: Control, chars: "\x08" }
-  # Make "C-i" send "F12 C-i". Then from tmux we manually forward the `CSI
-  # u`-encoded version of "C-i" ("\x1b[105;5u"). We have to have this level of
-  # indirection to avoid tmux's own handling of keys, which equates C-i with
-  # TAB. See https://github.com/tmux/tmux/issues/2705 for a discussion.
-  #
-  # We do similar things for other usually-problematic keys, such as C-j, C-m,
-  # and even C-[. Just grep for the use of F12 (\x1b24~) to see all keys that
-  # use such combinations.
-  - { key: I, mods: Control, chars: "\x1b[24~\x1b[105;5u" }
-  - { key: J, mods: Control, chars: "\x1b[24~\x1b[106;5u" }
-  - { key: K, mods: Control, chars: "\x0B" }
-  - { key: L, mods: Control, chars: "\x0C" }
-  - { key: M, mods: Control, chars: "\x1b[24~\x1b[109;5u" }
-  - { key: N, mods: Control, chars: "\x0E" }
-  - { key: O, mods: Control, chars: "\x0F" }
+  - { key: I, mods: Control, chars: "\x1b[24~\x09" }
+  - { key: J, mods: Control, chars: "\x0a" }
+  - { key: K, mods: Control, chars: "\x0b" }
+  - { key: L, mods: Control, chars: "\x0c" }
+  - { key: M, mods: Control, chars: "\x1b[24~\x0d" }
+  - { key: N, mods: Control, chars: "\x0e" }
+  - { key: O, mods: Control, chars: "\x0f" }
   - { key: P, mods: Control, chars: "\x10" }
   - { key: Q, mods: Control, chars: "\x11" }
   - { key: R, mods: Control, chars: "\x12" }
@@ -157,36 +149,36 @@ key_bindings:
   - { key: W, mods: Control, chars: "\x17" }
   - { key: X, mods: Control, chars: "\x18" }
   - { key: Y, mods: Control, chars: "\x19" }
-  - { key: Z, mods: Control, chars: "\x1A" }
+  - { key: Z, mods: Control, chars: "\x1a" }
 
   # C-S-{a-z} -----------------------------------------------------------------
 
-  - { key: A, mods: Control|Shift, chars: "\x1b[65;6u" }
-  - { key: B, mods: Control|Shift, chars: "\x1b[66;6u" }
-  - { key: C, mods: Control|Shift, chars: "\x1b[67;6u" }
-  - { key: D, mods: Control|Shift, chars: "\x1b[68;6u" }
-  - { key: E, mods: Control|Shift, chars: "\x1b[69;6u" }
-  - { key: F, mods: Control|Shift, chars: "\x1b[70;6u" }
-  - { key: G, mods: Control|Shift, chars: "\x1b[71;6u" }
-  - { key: H, mods: Control|Shift, chars: "\x1b[72;6u" }
+  - { key: A, mods: Control|Shift, chars: "\x1b[24~\x1b[97;6u" }
+  - { key: B, mods: Control|Shift, chars: "\x1b[24~\x1b[98;6u" }
+  - { key: C, mods: Control|Shift, chars: "\x1b[24~\x1b[99;6u" }
+  - { key: D, mods: Control|Shift, chars: "\x1b[24~\x1b[100;6u" }
+  - { key: E, mods: Control|Shift, chars: "\x1b[24~\x1b[101;6u" }
+  - { key: F, mods: Control|Shift, chars: "\x1b[24~\x1b[102;6u" }
+  - { key: G, mods: Control|Shift, chars: "\x1b[24~\x1b[103;6u" }
+  - { key: H, mods: Control|Shift, chars: "\x1b[24~\x1b[104;6u" }
   - { key: I, mods: Control|Shift, chars: "\x1b[24~\x1b[105;6u" }
   - { key: J, mods: Control|Shift, chars: "\x1b[24~\x1b[106;6u" }
-  - { key: K, mods: Control|Shift, chars: "\x1b[75;6u" }
-  - { key: L, mods: Control|Shift, chars: "\x1b[76;6u" }
+  - { key: K, mods: Control|Shift, chars: "\x1b[24~\x1b[107;6u" }
+  - { key: L, mods: Control|Shift, chars: "\x1b[24~\x1b[108;6u" }
   - { key: M, mods: Control|Shift, chars: "\x1b[24~\x1b[109;6u" }
-  - { key: N, mods: Control|Shift, chars: "\x1b[78;6u" }
-  - { key: O, mods: Control|Shift, chars: "\x1b[79;6u" }
-  - { key: P, mods: Control|Shift, chars: "\x1b[80;6u" }
-  - { key: Q, mods: Control|Shift, chars: "\x1b[81;6u" }
-  - { key: R, mods: Control|Shift, chars: "\x1b[82;6u" }
-  - { key: S, mods: Control|Shift, chars: "\x1b[83;6u" }
-  - { key: T, mods: Control|Shift, chars: "\x1b[84;6u" }
-  - { key: U, mods: Control|Shift, chars: "\x1b[85;6u" }
-  - { key: V, mods: Control|Shift, chars: "\x1b[86;6u" }
-  - { key: W, mods: Control|Shift, chars: "\x1b[87;6u" }
-  - { key: X, mods: Control|Shift, chars: "\x1b[88;6u" }
-  - { key: Y, mods: Control|Shift, chars: "\x1b[89;6u" }
-  - { key: Z, mods: Control|Shift, chars: "\x1b[90;6u" }
+  - { key: N, mods: Control|Shift, chars: "\x1b[24~\x1b[110;6u" }
+  - { key: O, mods: Control|Shift, chars: "\x1b[24~\x1b[111;6u" }
+  - { key: P, mods: Control|Shift, chars: "\x1b[24~\x1b[112;6u" }
+  - { key: Q, mods: Control|Shift, chars: "\x1b[24~\x1b[113;6u" }
+  - { key: R, mods: Control|Shift, chars: "\x1b[24~\x1b[114;6u" }
+  - { key: S, mods: Control|Shift, chars: "\x1b[24~\x1b[115;6u" }
+  - { key: T, mods: Control|Shift, chars: "\x1b[24~\x1b[116;6u" }
+  - { key: U, mods: Control|Shift, chars: "\x1b[24~\x1b[117;6u" }
+  - { key: V, mods: Control|Shift, chars: "\x1b[24~\x1b[118;6u" }
+  - { key: W, mods: Control|Shift, chars: "\x1b[24~\x1b[119;6u" }
+  - { key: X, mods: Control|Shift, chars: "\x1b[24~\x1b[120;6u" }
+  - { key: Y, mods: Control|Shift, chars: "\x1b[24~\x1b[121;6u" }
+  - { key: Z, mods: Control|Shift, chars: "\x1b[24~\x1b[122;6u" }
 
   # C-M-{a-z} -----------------------------------------------------------------
 
@@ -202,14 +194,13 @@ key_bindings:
   - { key: F, mods: Control|Alt, chars: "\x1b\x06" }
   - { key: G, mods: Control|Alt, chars: "\x1b\x07" }
   - { key: H, mods: Control|Alt, chars: "\x1b\x08" }
-  - { key: I, mods: Control|Alt, chars: "\x1b[24~\x1b[105;7u" }
-  - { key: J, mods: Control|Alt, chars: "\x1b\x0A" }
-  # Don't bind C-M-j because we use it in TMUX (no pass-through to CLI application).
-  - { key: K, mods: Control|Alt, chars: "\x1b\x0B" }
-  - { key: L, mods: Control|Alt, chars: "\x1b\x0C" }
-  - { key: M, mods: Control|Alt, chars: "\x1b[24~\x1b[109;7u" }
-  - { key: N, mods: Control|Alt, chars: "\x1b\x0E" }
-  - { key: O, mods: Control|Alt, chars: "\x1b\x0F" }
+  - { key: I, mods: Control|Alt, chars: "\x1b\x09" }
+  - { key: J, mods: Control|Alt, chars: "\x1b\x0a" }
+  - { key: K, mods: Control|Alt, chars: "\x1b\x0b" }
+  - { key: L, mods: Control|Alt, chars: "\x1b\x0c" }
+  - { key: M, mods: Control|Alt, chars: "\x1b\x0d" }
+  - { key: N, mods: Control|Alt, chars: "\x1b\x0e" }
+  - { key: O, mods: Control|Alt, chars: "\x1b\x0f" }
   - { key: P, mods: Control|Alt, chars: "\x1b\x10" }
   - { key: Q, mods: Control|Alt, chars: "\x1b\x11" }
   - { key: R, mods: Control|Alt, chars: "\x1b\x12" }
@@ -220,7 +211,7 @@ key_bindings:
   - { key: W, mods: Control|Alt, chars: "\x1b\x17" }
   - { key: X, mods: Control|Alt, chars: "\x1b\x18" }
   - { key: Y, mods: Control|Alt, chars: "\x1b\x19" }
-  - { key: Z, mods: Control|Alt, chars: "\x1b\x1A" }
+  - { key: Z, mods: Control|Alt, chars: "\x1b\x1a" }
 
   # C-M-S-{a-z} ---------------------------------------------------------------
 
@@ -229,33 +220,32 @@ key_bindings:
   # use (because we don't like having the same bindings do different things
   # based on whether we're running inside tmux or not).
 
-  - { key: A, mods: Control|Alt|Shift, chars: "\x1b[65;8u" }
-  - { key: B, mods: Control|Alt|Shift, chars: "\x1b[66;8u" }
-  - { key: C, mods: Control|Alt|Shift, chars: "\x1b[67;8u" }
-  - { key: D, mods: Control|Alt|Shift, chars: "\x1b[68;8u" }
-  - { key: E, mods: Control|Alt|Shift, chars: "\x1b[69;8u" }
-  - { key: F, mods: Control|Alt|Shift, chars: "\x1b[70;8u" }
-  - { key: G, mods: Control|Alt|Shift, chars: "\x1b[71;8u" }
-  - { key: H, mods: Control|Alt|Shift, chars: "\x1b[72;8u" }
+  - { key: A, mods: Control|Alt|Shift, chars: "\x1b[24~\x1b[97;8u" }
+  - { key: B, mods: Control|Alt|Shift, chars: "\x1b[24~\x1b[98;8u" }
+  - { key: C, mods: Control|Alt|Shift, chars: "\x1b[24~\x1b[99;8u" }
+  - { key: D, mods: Control|Alt|Shift, chars: "\x1b[24~\x1b[100;8u" }
+  - { key: E, mods: Control|Alt|Shift, chars: "\x1b[24~\x1b[101;8u" }
+  - { key: F, mods: Control|Alt|Shift, chars: "\x1b[24~\x1b[102;8u" }
+  - { key: G, mods: Control|Alt|Shift, chars: "\x1b[24~\x1b[103;8u" }
+  - { key: H, mods: Control|Alt|Shift, chars: "\x1b[24~\x1b[104;8u" }
   - { key: I, mods: Control|Alt|Shift, chars: "\x1b[24~\x1b[105;8u" }
-  # Don't bind C-M-S-j because we use it in TMUX (no pass-through to CLI application).
-  - { key: J, mods: Control|Alt|Shift, chars: "\x1b[74;8u" }
-  - { key: K, mods: Control|Alt|Shift, chars: "\x1b[75;8u" }
-  - { key: L, mods: Control|Alt|Shift, chars: "\x1b[76;8u" }
+  - { key: J, mods: Control|Alt|Shift, chars: "\x1b[24~\x1b[106;8u" }
+  - { key: K, mods: Control|Alt|Shift, chars: "\x1b[24~\x1b[107;8u" }
+  - { key: L, mods: Control|Alt|Shift, chars: "\x1b[24~\x1b[108;8u" }
   - { key: M, mods: Control|Alt|Shift, chars: "\x1b[24~\x1b[109;8u" }
-  - { key: N, mods: Control|Alt|Shift, chars: "\x1b[78;8u" }
-  - { key: O, mods: Control|Alt|Shift, chars: "\x1b[79;8u" }
-  - { key: P, mods: Control|Alt|Shift, chars: "\x1b[80;8u" }
-  - { key: Q, mods: Control|Alt|Shift, chars: "\x1b[81;8u" }
-  - { key: R, mods: Control|Alt|Shift, chars: "\x1b[82;8u" }
-  - { key: S, mods: Control|Alt|Shift, chars: "\x1b[83;8u" }
-  - { key: T, mods: Control|Alt|Shift, chars: "\x1b[84;8u" }
-  - { key: U, mods: Control|Alt|Shift, chars: "\x1b[85;8u" }
-  - { key: V, mods: Control|Alt|Shift, chars: "\x1b[86;8u" }
-  - { key: W, mods: Control|Alt|Shift, chars: "\x1b[87;8u" }
-  - { key: X, mods: Control|Alt|Shift, chars: "\x1b[88;8u" }
-  - { key: Y, mods: Control|Alt|Shift, chars: "\x1b[89;8u" }
-  - { key: Z, mods: Control|Alt|Shift, chars: "\x1b[90;8u" }
+  - { key: N, mods: Control|Alt|Shift, chars: "\x1b[24~\x1b[110;8u" }
+  - { key: O, mods: Control|Alt|Shift, chars: "\x1b[24~\x1b[111;8u" }
+  - { key: P, mods: Control|Alt|Shift, chars: "\x1b[24~\x1b[112;8u" }
+  - { key: Q, mods: Control|Alt|Shift, chars: "\x1b[24~\x1b[113;8u" }
+  - { key: R, mods: Control|Alt|Shift, chars: "\x1b[24~\x1b[114;8u" }
+  - { key: S, mods: Control|Alt|Shift, chars: "\x1b[24~\x1b[115;8u" }
+  - { key: T, mods: Control|Alt|Shift, chars: "\x1b[24~\x1b[116;8u" }
+  - { key: U, mods: Control|Alt|Shift, chars: "\x1b[24~\x1b[117;8u" }
+  - { key: V, mods: Control|Alt|Shift, chars: "\x1b[24~\x1b[118;8u" }
+  - { key: W, mods: Control|Alt|Shift, chars: "\x1b[24~\x1b[119;8u" }
+  - { key: X, mods: Control|Alt|Shift, chars: "\x1b[24~\x1b[120;8u" }
+  - { key: Y, mods: Control|Alt|Shift, chars: "\x1b[24~\x1b[121;8u" }
+  - { key: Z, mods: Control|Alt|Shift, chars: "\x1b[24~\x1b[122;8u" }
 
   # (Normally) dead keys. Bring them back to life with `CSI u` sequences!
   #
@@ -461,13 +451,7 @@ key_bindings:
   - { key: Back,   mods: Control|Alt,         chars: "\x1b[127;7u" } # C-M-Backspace
   - { key: Back,   mods: Control|Alt|Shift,   chars: "\x1b[127;8u" } # C-M-S-Backspace
 
-  # Because tmux has another bug where Enter (0x0a, or decimal codepoint 10) is
-  # indistinguishable from C-j, even if we use `CSI u` encodings, we have to use
-  # (0x0d) instead (decimal codepoint 13 or '\r').
-  #
-  # Unfortunately, tmux interprets "\x1b[13;2u" as C-S-m, so don't bother
-  # binding it here.
-  #- { key: Return,   mods: Shift,             chars: "\x1b[13;2u" } # S-Enter
+  - { key: Return,   mods: Shift,             chars: "\x1b[24~\x1a" } # S-Enter
   - { key: Return,   mods: Alt,               chars: "\x1b[13;3u" } # M-Enter
   - { key: Return,   mods: Alt|Shift,         chars: "\x1b[13;4u" } # M-S-Enter
   - { key: Return,   mods: Control,           chars: "\x1b[13;5u" } # C-Enter
