@@ -1,6 +1,8 @@
 # Run this when we open this buffer, so that we don't format away the nice
 # alignments for each keybinding.
-# (format-all-mode -1)
+#
+#   (format-all-mode -1)
+
 key_bindings:
   # Bindings for Alacritty itself ---------------------------------------------
 
@@ -130,13 +132,19 @@ key_bindings:
   - { key: F, mods: Control, chars: "\x06" }
   - { key: G, mods: Control, chars: "\x07" }
   - { key: H, mods: Control, chars: "\x08" }
-  # Make "C-i" send "F12 Tab". Then from tmux we send the `CSI u`-encoded
-  # version of "C-i" ("\x1b[105;5u").
-  - { key: I, mods: Control, chars: "\x1b[24~\x09" }
-  - { key: J, mods: Control, chars: "\x0A" }
+  # Make "C-i" send "F12 C-i". Then from tmux we manually forward the `CSI
+  # u`-encoded version of "C-i" ("\x1b[105;5u"). We have to have this level of
+  # indirection to avoid tmux's own handling of keys, which equates C-i with
+  # TAB. See https://github.com/tmux/tmux/issues/2705 for a discussion.
+  #
+  # We do similar things for other usually-problematic keys, such as C-j, C-m,
+  # and even C-[. Just grep for the use of F12 (\x1b24~) to see all keys that
+  # use such combinations.
+  - { key: I, mods: Control, chars: "\x1b[24~\x1b[105;5u" }
+  - { key: J, mods: Control, chars: "\x1b[24~\x1b[106;5u" }
   - { key: K, mods: Control, chars: "\x0B" }
   - { key: L, mods: Control, chars: "\x0C" }
-  - { key: M, mods: Control, chars: "\x0D" }
+  - { key: M, mods: Control, chars: "\x1b[24~\x1b[109;5u" }
   - { key: N, mods: Control, chars: "\x0E" }
   - { key: O, mods: Control, chars: "\x0F" }
   - { key: P, mods: Control, chars: "\x10" }
@@ -161,11 +169,11 @@ key_bindings:
   - { key: F, mods: Control|Shift, chars: "\x1b[70;6u" }
   - { key: G, mods: Control|Shift, chars: "\x1b[71;6u" }
   - { key: H, mods: Control|Shift, chars: "\x1b[72;6u" }
-  - { key: I, mods: Control|Shift, chars: "\x1b[73;6u" }
-  - { key: J, mods: Control|Shift, chars: "\x1b[74;6u" }
+  - { key: I, mods: Control|Shift, chars: "\x1b[24~\x1b[105;6u" }
+  - { key: J, mods: Control|Shift, chars: "\x1b[24~\x1b[106;6u" }
   - { key: K, mods: Control|Shift, chars: "\x1b[75;6u" }
   - { key: L, mods: Control|Shift, chars: "\x1b[76;6u" }
-  - { key: M, mods: Control|Shift, chars: "\x1b[77;6u" }
+  - { key: M, mods: Control|Shift, chars: "\x1b[24~\x1b[109;6u" }
   - { key: N, mods: Control|Shift, chars: "\x1b[78;6u" }
   - { key: O, mods: Control|Shift, chars: "\x1b[79;6u" }
   - { key: P, mods: Control|Shift, chars: "\x1b[80;6u" }
@@ -194,11 +202,12 @@ key_bindings:
   - { key: F, mods: Control|Alt, chars: "\x1b\x06" }
   - { key: G, mods: Control|Alt, chars: "\x1b\x07" }
   - { key: H, mods: Control|Alt, chars: "\x1b\x08" }
-  - { key: I, mods: Control|Alt, chars: "\x1b\x09" }
+  - { key: I, mods: Control|Alt, chars: "\x1b[24~\x1b[105;7u" }
   - { key: J, mods: Control|Alt, chars: "\x1b\x0A" }
+  # Don't bind C-M-j because we use it in TMUX (no pass-through to CLI application).
   - { key: K, mods: Control|Alt, chars: "\x1b\x0B" }
   - { key: L, mods: Control|Alt, chars: "\x1b\x0C" }
-  - { key: M, mods: Control|Alt, chars: "\x1b\x0D" }
+  - { key: M, mods: Control|Alt, chars: "\x1b[24~\x1b[109;7u" }
   - { key: N, mods: Control|Alt, chars: "\x1b\x0E" }
   - { key: O, mods: Control|Alt, chars: "\x1b\x0F" }
   - { key: P, mods: Control|Alt, chars: "\x1b\x10" }
@@ -228,11 +237,12 @@ key_bindings:
   - { key: F, mods: Control|Alt|Shift, chars: "\x1b[70;8u" }
   - { key: G, mods: Control|Alt|Shift, chars: "\x1b[71;8u" }
   - { key: H, mods: Control|Alt|Shift, chars: "\x1b[72;8u" }
-  - { key: I, mods: Control|Alt|Shift, chars: "\x1b[73;8u" }
+  - { key: I, mods: Control|Alt|Shift, chars: "\x1b[24~\x1b[105;8u" }
+  # Don't bind C-M-S-j because we use it in TMUX (no pass-through to CLI application).
   - { key: J, mods: Control|Alt|Shift, chars: "\x1b[74;8u" }
   - { key: K, mods: Control|Alt|Shift, chars: "\x1b[75;8u" }
   - { key: L, mods: Control|Alt|Shift, chars: "\x1b[76;8u" }
-  - { key: M, mods: Control|Alt|Shift, chars: "\x1b[77;8u" }
+  - { key: M, mods: Control|Alt|Shift, chars: "\x1b[24~\x1b[109;8u" }
   - { key: N, mods: Control|Alt|Shift, chars: "\x1b[78;8u" }
   - { key: O, mods: Control|Alt|Shift, chars: "\x1b[79;8u" }
   - { key: P, mods: Control|Alt|Shift, chars: "\x1b[80;8u" }
@@ -291,15 +301,22 @@ key_bindings:
   - { key: Slash,      mods: Control|Shift, chars: "\x1b[47;6u" }  # C-? (C-S-/)
   # C-@ (that is, C-S-2) by default sends the NUL character. This is pretty much
   # useless so we create a separate mapping here.
-  - { key: Key2,       mods: Control|Shift, chars: "\x1b[64;5u" } # C-@
+  - { key: Key2,       mods: Control|Shift, chars: "\x1b[24~\x1b[64;5u" } # C-@
 
   # C-A to C-Z (codepoints 65-90) are handled already above.
   #
-  # Don't make C-[ map to ESC, because we never use it that way.
-  # Unfortunately, tmux does not recognize "\x1b[91;5u" as any different from
-  # plain "\x1b", so we cannot rebind it there. So we don't bother binding it
-  # here.
-  #- { key: LBracket,   mods: Control,       chars: "\x1b[91;5u" } # C-[
+  # Don't make C-[ map to ESC, because we never use it that way. Again, we
+  # rebind this from tmux to be the `CSI u` encoded version. (This is the same
+  # method we use to map C-i (to be different from TAB)).
+  # 
+  # For simplicity we handle all variations of the problematic "[" key here
+  # (usually conflicts with Escape).
+  - { key: LBracket,   mods: Alt,               chars: "\x1b[24~\x1b[91;3u" }  # M-[
+  - { key: LBracket,   mods: Alt|Shift,         chars: "\x1b[24~\x1b[91;4u" }  # M-S-[
+  - { key: LBracket,   mods: Control,           chars: "\x1b[24~\x1b[91;5u" }  # C-[
+  - { key: LBracket,   mods: Control|Shift,     chars: "\x1b[24~\x1b[91;6u" }  # C-S-[
+  - { key: LBracket,   mods: Control|Alt,       chars: "\x1b[24~\x1b[91;7u" }  # C-M-[
+  - { key: LBracket,   mods: Control|Alt|Shift, chars: "\x1b[24~\x1b[91;8u" }  # C-M-S-[
 
   # C-\ by default sends 0x1c, which is the FS (file separator) key. See
   # https://en.wikipedia.org/wiki/Control-%5C. Most UNIX programs interpret this
@@ -315,7 +332,6 @@ key_bindings:
   - { key: Key6,       mods: Control|Shift, chars: "\x1b[94;5u" }  # C-^
   - { key: Minus,      mods: Control|Shift, chars: "\x1b[95;5u" }  # C-_
   - { key: Grave,      mods: Control,       chars: "\x1b[96;5u" }  # C-`
-  - { key: LBracket,   mods: Control|Shift, chars: "\x1b[91;6u" }  # C-{ (C-S-[)
   - { key: Backslash,  mods: Control|Shift, chars: "\x1b[92;6u" }  # C-| (C-S-\)
   - { key: RBracket,   mods: Control|Shift, chars: "\x1b[93;6u" }  # C-} (C-S-])
   - { key: Grave,      mods: Control|Shift, chars: "\x1b[96;6u" }  # C-~ (C-S-`)
@@ -353,14 +369,12 @@ key_bindings:
   - { key: Slash,      mods: Alt|Shift, chars: "\x1b[47;4u" }  # M-? (M-S-/)
   - { key: Key2,       mods: Alt|Shift, chars: "\x1b[64;3u" }  # M-@
   # Codes 65-90 are A-Z.
-  - { key: LBracket,   mods: Alt,       chars: "\x1b[91;3u" }  # M-[
   - { key: Backslash,  mods: Alt,       chars: "\x1b[92;3u" }  # M-\
   - { key: RBracket,   mods: Alt,       chars: "\x1b[93;3u" }  # M-]
   - { key: Key6,       mods: Alt|Shift, chars: "\x1b[94;3u" }  # M-^
   - { key: Minus,      mods: Alt|Shift, chars: "\x1b[95;3u" }  # M-_
   - { key: Grave,      mods: Alt,       chars: "\x1b[96;3u" }  # M-`
   # Codes 97-122 are a-z.
-  - { key: LBracket,   mods: Alt|Shift, chars: "\x1b[91;4u" }  # M-{ (M-S-[)
   - { key: Backslash,  mods: Alt|Shift, chars: "\x1b[92;4u" }  # M-| (M-S-\)
   - { key: RBracket,   mods: Alt|Shift, chars: "\x1b[93;4u" }  # M-} (M-S-])
   - { key: Grave,      mods: Alt|Shift, chars: "\x1b[96;4u" }  # M-~ (M-S-`)
@@ -398,29 +412,28 @@ key_bindings:
   - { key: Slash,      mods: Control|Alt|Shift, chars: "\x1b[47;8u" }  # C-M-? (C-M-S-/)
   - { key: Key2,       mods: Control|Alt|Shift, chars: "\x1b[64;7u" }  # C-M-@
   # We cannot bind C-M-[ because it conflicts (in tmux) with M-ESC.
-  #- { key: LBracket,   mods: Control|Alt,       chars: "\x1b[91;7u" }  # C-M-[
   - { key: Backslash,  mods: Control|Alt,       chars: "\x1b[92;7u" }  # C-M-\
   - { key: RBracket,   mods: Control|Alt,       chars: "\x1b[93;7u" }  # C-M-]
   - { key: Key6,       mods: Control|Alt|Shift, chars: "\x1b[94;7u" }  # C-M-^
   - { key: Minus,      mods: Control|Alt|Shift, chars: "\x1b[95;7u" }  # C-M-_
   - { key: Grave,      mods: Control|Alt,       chars: "\x1b[96;7u" }  # C-M-`
-  - { key: LBracket,   mods: Control|Alt|Shift, chars: "\x1b[91;8u" }  # C-M-{ (C-M-S-[)
   - { key: Backslash,  mods: Control|Alt|Shift, chars: "\x1b[92;8u" }  # C-M-| (C-M-S-\)
   - { key: RBracket,   mods: Control|Alt|Shift, chars: "\x1b[93;8u" }  # C-M-} (C-M-S-])
   - { key: Grave,      mods: Control|Alt|Shift, chars: "\x1b[96;8u" }  # C-M-~ (C-M-S-`)
 
   # Non-printing or otherwise special keys ------------------------------------
 
-  # Because tmux has a bug where "C-[" and ESC are both indistinguishable (even
-  # when we are using `CSI u` mode for encoding "C-["), we don't bother binding
-  # the various ESC keys here.
-  #- { key: Escape,   mods: Shift,             chars: "\x1b[27;2u" } # S-ESC
-  #- { key: Escape,   mods: Alt,               chars: "\x1b[27;3u" } # M-ESC
-  #- { key: Escape,   mods: Alt|Shift,         chars: "\x1b[27;4u" } # M-S-ESC
-  #- { key: Escape,   mods: Control,           chars: "\x1b[27;5u" } # C-ESC
-  #- { key: Escape,   mods: Control|Shift,     chars: "\x1b[27;6u" } # C-S-ESC
-  #- { key: Escape,   mods: Control|Alt,       chars: "\x1b[27;7u" } # C-M-ESC
-  #- { key: Escape,   mods: Control|Alt|Shift, chars: "\x1b[27;8u" } # C-M-S-ESC
+  # Disambiguate various ESC + modifier key chords. We have to use a
+  # combination of other keys (\x1d, \x1e, \x1f) in order to avoid buggy
+  # overlap with other logic somehwere down the
+  # terminal-emulation-key-sequencing-parsing rabbit hole.
+  - { key: Escape,   mods: Shift,             chars: "\x1b[24~\x1d" } # S-ESC
+  - { key: Escape,   mods: Alt,               chars: "\x1b[24~\x1e" } # M-ESC
+  - { key: Escape,   mods: Alt|Shift,         chars: "\x1b[24~\x1f" } # M-S-ESC
+  - { key: Escape,   mods: Control,           chars: "\x1b[24~\x1b[27;5u" } # C-ESC
+  - { key: Escape,   mods: Control|Shift,     chars: "\x1b[24~\x1b[27;6u" } # C-S-ESC
+  - { key: Escape,   mods: Control|Alt,       chars: "\x1b[24~\x1b[27;7u" } # C-M-ESC
+  - { key: Escape,   mods: Control|Alt|Shift, chars: "\x1b[24~\x1b[27;8u" } # C-M-S-ESC
 
   # Don't map S-TAB because most terminals (including Alacritty) send "\x1b[Z"
   # for this, and many existing programs interpret this as S-TAB. In Emacs it

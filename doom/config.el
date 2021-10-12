@@ -25,15 +25,51 @@ Return an event vector."
   (if (memq 'meta modifiers) (setq c (logior (lsh 1 27) c)))
   (if (memq 'shift modifiers) (setq c (logior (lsh 1 25) c)))
   (vector c))
+
+(defun l/mods-to-int (ms)
+  (let ((c 0))
+   (if (memq 'C ms) (setq c (logior (lsh 1 2) c)))
+   (if (memq 'M ms) (setq c (logior (lsh 1 1) c)))
+   (if (memq 'S ms) (setq c (logior (lsh 1 0) c)))
+   (+ 1 c)))
+(defun l/mods-to-string (ms)
+  (let ((s ""))
+   (if (memq 'C ms) (setq s "C"))
+   (if (memq 'M ms) (setq s (concat s (if (not (string= "" s)) "-") "M")))
+   (if (memq 'S ms) (setq s (concat s (if (not (string= "" s)) "-") "S")))
+   s))
+
+(defmacro l/bind-placeholder (binding)
+  `(let (
+         (c (car ,binding))
+         (ms (cdr ,binding)))
+
+    (define-key xterm-function-map
+      (format "\e\[%d;%du" c (l/mods-to-int ms))
+      (apply 'l/char-mods-raw c ms))
+  ; Note: we can't refer to C-i as "C-i", because emacs does behind-the-scenes
+  ; conversion of it into TAB. So we have to refer to it by its raw vector.
+  ; The vector just contains a single integer value, which represents a
+  ; single keypress with some combination of modifier keys.
+  ;
+  ; But at least it works!
+  ;
+  ; The following are all basically equivalent:
+  ;
+  ;   (global-set-key (vector (logior (lsh 1 26) 105)) #'foo)
+  ;   (global-set-key [#x4000069] #'foo)
+    (evil-define-key 'normal global-map (apply 'l/char-mods-raw (car ,binding) (cdr ,binding))
+       #'(lambda () (interactive) (message "[unbound] %s-%s" (l/mods-to-string (cdr ,binding)) (single-key-description (car ,binding)))))))
+
 ; This is like character-apply-modifiers, but we don't do any special
 ; behind-the-scenes modification of the character.
-(defun character-apply-modifiers-raw (c &rest modifiers)
+(defun l/char-mods-raw (c &rest modifiers)
   "Apply modifiers to the character C.
-MODIFIERS must be a list of symbols amongst (meta control shift).
+MODIFIERS must be a list of symbols amongst (C M S).
 Return an event vector."
-  (if (memq 'control modifiers) (setq c (logior (lsh 1 26) c)))
-  (if (memq 'meta modifiers) (setq c (logior (lsh 1 27) c)))
-  (if (memq 'shift modifiers) (setq c (logior (lsh 1 25) c)))
+  (if (memq 'C modifiers) (setq c (logior (lsh 1 26) c)))
+  (if (memq 'M modifiers) (setq c (logior (lsh 1 27) c)))
+  (if (memq 'S modifiers) (setq c (logior (lsh 1 25) c)))
   (vector c))
 (defun l/eval-after-load-xterm ()
   (interactive)
@@ -86,66 +122,68 @@ Return an event vector."
                 ("\e\[%d;8u" control meta shift)))
         (setq uppercase (1+ uppercase)))
 
-      ; Tab
+      ;; Don't bind TAB combos yet, because a lot of modes make use of it.
+      ;; Instead rebind them inside major modes as we desire in the future.
       ;
-      ; We cannot read M-S-Tab (it gets read as C-M-i).
-      ;(define-key xterm-function-map "\e\[9;4u"
-      ;  (apply 'character-apply-modifiers 9 '(meta shift)))         ; M-S-TAB
+      ; ASCII 9 (<TAB>)
+      ;(l/bind-placeholder '(9 C))      ; C-TAB
+      ;(l/bind-placeholder '(9 C S))    ; C-S-TAB
+      ;(l/bind-placeholder '(9 C M))    ; C-M-TAB
+      ;(l/bind-placeholder '(9 C M S))  ; C-M-S-TAB
 
-      ; We can't refer to C-i as "C-i", because emacs does behind-the-scenes
-      ; conversion of it into TAB. So we have to refer to it by its raw vector.
-      ; The vector just contains a single integer value, which represents a
-      ; single keypress with some combination of modifier keys.
-      ;
-      ; But at least it works!
-      ;
-      ; The following are all basically equivalent:
-      ;
-      ;   (global-set-key (vector (logior (lsh 1 26) 105)) #'foo)
-      ;   (global-set-key [#x4000069] #'foo)
-      ;   (evil-define-key 'normal global-map (character-apply-modifiers-raw 105 'control) #'foo)
+      ; ASCII 105 ('i')
+      (l/bind-placeholder '(105 C))      ; C-i
+      (l/bind-placeholder '(105 C S))    ; C-S-i
+      (l/bind-placeholder '(105 C M))    ; C-M-i
+      (l/bind-placeholder '(105 C M S))  ; C-M-S-i
 
-      (define-key xterm-function-map "\e\[105;5u"
-        (apply 'character-apply-modifiers-raw 105 '(control)))
+      ; ASCII 27 (0x1b, <ESC>)
+      (l/bind-placeholder '(#x1b S))      ; S-ESC
+      (l/bind-placeholder '(#x1b M S))    ; M-S-ESC
+      (l/bind-placeholder '(#x1b C))      ; C-ESC
+      (l/bind-placeholder '(#x1b C S))    ; C-S-ESC
+      (l/bind-placeholder '(#x1b C M))    ; C-M-ESC
+      (l/bind-placeholder '(#x1b C M S))  ; C-M-S-ESC
 
-      (define-key xterm-function-map "\e\[9;5u"
-        (apply 'character-apply-modifiers 9 '(control)))            ; C-TAB
-      (define-key xterm-function-map "\e\[9;6u"
-        (apply 'character-apply-modifiers 9 '(control shift)))      ; C-S-TAB
-      ; We cannot read C-M-Tab (it gets read as C-M-i).
-      ;(define-key xterm-function-map "\e\[9;7u"
-      ;  (apply 'character-apply-modifiers 9 '(control meta)))       ; C-M-TAB
-      ; We cannot read C-M-S-Tab (it gets read as C-M-S-i).
-      ;(define-key xterm-function-map "\e\[9;8u"
-      ;  (apply 'character-apply-modifiers 9 '(control meta shift))) ; C-M-S-TAB
+      ; ASCII 91 ('[')
+      ; "[" key. Usually conflicts with Escape.
+      ; M-[ is already recognized correctly, so we don't do anything here. (That
+      ; is, there is no need to tweak the "\e[91;3u" binding already taken care
+      ; of with l/eval-after-load-xterm).
+      (l/bind-placeholder '(91 M S))    ; M-S-[
+      (l/bind-placeholder '(91 C))      ; C-[
+      (l/bind-placeholder '(91 C S))    ; C-S-[
+      (l/bind-placeholder '(91 C M))    ; C-M-[
+      (l/bind-placeholder '(91 C M S))  ; C-M-S-[
 
-      ; Backspace (DEL)
-      (define-key xterm-function-map "\e\[127;3u"
-        (apply 'character-apply-modifiers 127 '(meta)))               ; M-DEL
-      (define-key xterm-function-map "\e\[127;4u"
-        (apply 'character-apply-modifiers 127 '(meta shift)))         ; M-S-DEL
-      (define-key xterm-function-map "\e\[127;5u"
-        (apply 'character-apply-modifiers 127 '(control)))            ; C-DEL
-      (define-key xterm-function-map "\e\[127;6u"
-        (apply 'character-apply-modifiers 127 '(control shift)))      ; C-S-DEL
-      (define-key xterm-function-map "\e\[127;7u"
-        (apply 'character-apply-modifiers 127 '(control meta)))       ; C-M-DEL
-      (define-key xterm-function-map "\e\[127;8u"
-        (apply 'character-apply-modifiers 127 '(control meta shift))) ; C-M-S-DEL
+      ; ASCII 127 (Backspace, aka <DEL>)
+      (l/bind-placeholder '(127 M))      ; M-DEL
+      (l/bind-placeholder '(127 M S))    ; M-S-DEL
+      (l/bind-placeholder '(127 C))      ; C-DEL
+      (l/bind-placeholder '(127 C S))    ; C-S-DEL
+      (l/bind-placeholder '(127 C M))    ; C-M-DEL
+      (l/bind-placeholder '(127 C M S))  ; C-M-S-DEL
 
-      ; Enter (RET)
-      (define-key xterm-function-map "\e\[13;3u"
-        (apply 'character-apply-modifiers 13 '(meta)))               ; M-RET
-      (define-key xterm-function-map "\e\[13;4u"
-        (apply 'character-apply-modifiers 13 '(meta shift)))         ; M-S-RET
-      (define-key xterm-function-map "\e\[13;5u"
-        (apply 'character-apply-modifiers 13 '(control)))            ; C-RET
-      (define-key xterm-function-map "\e\[13;6u"
-        (apply 'character-apply-modifiers 13 '(control shift)))      ; C-S-RET
-      (define-key xterm-function-map "\e\[13;7u"
-        (apply 'character-apply-modifiers 13 '(control meta)))       ; C-M-RET
-      (define-key xterm-function-map "\e\[13;8u"
-        (apply 'character-apply-modifiers 13 '(control meta shift)))))) ; C-M-S-RET
+      ; Similarl to TAB, don't mess with RET key for now.
+      ; ASCII 13 (Enter, aka <RET>)
+      ;(l/bind-placeholder '(13 M))         ; M-RET
+      ;(l/bind-placeholder '(13 M S))       ; M-S-RET
+      ;(l/bind-placeholder '(13 C))         ; C-RET
+      ;(l/bind-placeholder '(13 C S))       ; C-S-RET
+      ;(l/bind-placeholder '(13 C M))       ; C-M-RET
+      ;(l/bind-placeholder '(13 C M S))     ; C-M-S-RET
+
+      ; C-j and C-S-j are already bound for window navigation.
+      ; C-M-j and C-M-S-j are already bound from tmux, so no point in binding them here (we'll never see them).
+
+      ; ASCII 109 ('m')
+      (l/bind-placeholder '(109 C))     ; C-m
+      (l/bind-placeholder '(109 C S))   ; C-S-m
+      (l/bind-placeholder '(109 C M))   ; C-M-m
+      (l/bind-placeholder '(109 C M S)) ; C-M-S-m
+
+      ; ASCII 64 ('@')
+      (l/bind-placeholder '(64 C)))))
 
 (eval-after-load "xterm" '(l/eval-after-load-xterm))
 
@@ -186,6 +224,8 @@ Return an event vector."
 
 (map! :m "SPC" (cmd!! #'l/scroll-jump 10)
       :mn "DEL" (cmd!! #'l/scroll-jump -10))
+;(map! :m (apply 'l/char-mods-raw 32 '(C M S)) (cmd!! #'l/scroll-jump 20))
+
 (defun l/scroll-jump (cnt)
   "Scroll by CNT lines."
   (interactive "p")
