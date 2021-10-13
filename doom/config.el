@@ -46,8 +46,9 @@
       ;; below.
       ;;
       ;; We only bind keys that we use here. The keys that are not bound are
-      ;; left alone, to leave them unmapped.
-      (setq special-keys '(106 107))
+      ;; left alone, to leave them unmapped. This way, l-disambiguation-mode can
+      ;; recognize those unbound keys properly.
+      (setq special-keys '(?h ?j ?k ?l))
       (while special-keys
         (setq c (car special-keys))
         (mapc (lambda (x)
