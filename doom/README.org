@@ -1132,6 +1132,10 @@ Note that we have to use =M-J= to encode =M-S-j=. This appears to be Emacs conve
       :mnv "M-H" #'org-shiftmetaleft
       :mnv "M-L" #'org-shiftmetaright)
 
+(after! org
+  (add-to-list 'org-todo-keywords
+    '(sequence "TODO" "IN-PROGRESS" "WAITING" "|" "DONE" "CANCELED" "OBSOLETE")))
+
 <<org-misc>>
 <<org-agenda>>
 #+end_src

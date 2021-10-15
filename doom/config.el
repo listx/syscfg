@@ -232,6 +232,10 @@ Return an event vector."
       :mnv "M-H" #'org-shiftmetaleft
       :mnv "M-L" #'org-shiftmetaright)
 
+(after! org
+  (add-to-list 'org-todo-keywords
+    '(sequence "TODO" "IN-PROGRESS" "WAITING" "|" "DONE" "CANCELED" "OBSOLETE")))
+
 (setq org-directory
       (nth 0 (split-string (getenv "L_ORG_AGENDA_DIRS"))))
 ;; List of directories to use for agenda files. Each directory is searched
