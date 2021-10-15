@@ -220,6 +220,14 @@ Return an event vector."
 
 (setq doom-theme 'zenburn)
 
+(map! :after dired
+      :map dired-mode-map
+      ;; "H" is by default bound to dired-do-hardlink.
+      :mnv "H" #'previous-buffer
+      ;; "L" is by default bound to dired-do-load.
+      :mnv "L" #'next-buffer
+      :mnv "h" #'dired-up-directory
+      :mnv "l" #'dired-find-file)
 (map! :after evil-org
       :map evil-org-mode-map
       :mnv "M-k" #'org-backward-element

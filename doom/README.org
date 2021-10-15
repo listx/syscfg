@@ -324,6 +324,7 @@ Note that this file is pretty much **required** and acts as the base for all oth
 
 <<theme>>
 
+<<dired>>
 <<org>>
 
 <<line-numbers>>
@@ -1093,6 +1094,20 @@ First install the zenburn-theme package, then load it by setting =doom-theme= to
 (after! lsp-mode
   (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]bazel-.*\\'")
   (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\.cache\\'"))
+#+end_src
+
+* Dired mode
+
+#+name: dired
+#+begin_src emacs-lisp
+(map! :after dired
+      :map dired-mode-map
+      ;; "H" is by default bound to dired-do-hardlink.
+      :mnv "H" #'previous-buffer
+      ;; "L" is by default bound to dired-do-load.
+      :mnv "L" #'next-buffer
+      :mnv "h" #'dired-up-directory
+      :mnv "l" #'dired-find-file)
 #+end_src
 
 * Org mode
