@@ -1133,6 +1133,17 @@ Note that we have to use =M-J= to encode =M-S-j=. This appears to be Emacs conve
       :mnv "M-L" #'org-shiftmetaright)
 
 <<org-misc>>
+<<org-agenda>>
+#+end_src
+
+** Agenda
+
+#+name: org-agenda
+#+begin_src emacs-lisp
+(map! :after evil-org-agenda
+      :map evil-org-agenda-mode-map
+      :mnv "H" #'previous-buffer
+      :mnv "L" #'next-buffer)
 #+end_src
 
 ** Misc

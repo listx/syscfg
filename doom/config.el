@@ -251,6 +251,10 @@ Return an event vector."
        exclude-patterns
        files)))
   (setq org-agenda-files reduced))
+(map! :after evil-org-agenda
+      :map evil-org-agenda-mode-map
+      :mnv "H" #'previous-buffer
+      :mnv "L" #'next-buffer)
 
 (setq display-line-numbers-type nil)
 
