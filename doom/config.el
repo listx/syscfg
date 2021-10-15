@@ -287,6 +287,9 @@ Return an event vector."
   (evil-scroll-line-to-center nil))
 (map! :m "H" #'previous-buffer
       :m "L" #'next-buffer)
+(after! vertico
+  (map! :map vertico-map
+         "S-DEL" #'vertico-directory-up))
 
 (map! :leader
       :desc "split-h" "h" #'split-window-vertically

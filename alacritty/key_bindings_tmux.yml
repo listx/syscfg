@@ -442,8 +442,7 @@ key_bindings:
   # The Backspace key is mapped to ASCII 127 (DEL), and when we press the delete
   # key, most terminals (including Alacritty) send "\x1b[3~". It's unfortunate
   # that the ASCII codepoint 127 is named DEL, but oh well.
-  #
-  # Don't bind S-Backspace because we use it when typing capital letters.
+  - { key: Back,   mods: Shift,               chars: "\x1b[24~\x19" } # S-Backspace
   - { key: Back,   mods: Alt,                 chars: "\x1b[127;3u" } # M-Backspace
   - { key: Back,   mods: Alt|Shift,           chars: "\x1b[127;4u" } # M-S-Backspace
   - { key: Back,   mods: Control,             chars: "\x1b[127;5u" } # C-Backspace
