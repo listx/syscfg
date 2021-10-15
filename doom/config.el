@@ -290,7 +290,17 @@ Return an event vector."
       :m "L" #'next-buffer)
 (after! vertico
   (map! :map vertico-map
-         "S-DEL" #'vertico-directory-up))
+         "S-DEL" #'l/vertico-directory-up))
+
+;; Like vertico-directory-up, but always delete up to the nearest '/'.
+(defun l/vertico-directory-up ()
+  "Delete directory before point."
+  (interactive)
+  (save-excursion
+    (goto-char (1- (point)))
+    (when (search-backward "/" (minibuffer-prompt-end) t)
+      (delete-region (1+ (point)) (point-max))
+      t)))
 
 (map! :leader
       :desc "split-h" "h" #'split-window-vertically
