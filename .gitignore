@@ -9,6 +9,7 @@
 *~
 *.zwc
 alacritty/alacritty.yml
+alacritty/alacritty_raw_shell.yml
 cache
 cmus/*
 emacs/.org-id-locations
