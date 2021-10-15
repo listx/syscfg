@@ -1122,7 +1122,25 @@ Note that we have to use =M-J= to encode =M-S-j=. This appears to be Emacs conve
 If you use "org" and don't want your org files in the default location below, change org-directory. It must be set before org loads!
 #+name: org-misc
 #+begin_src emacs-lisp
-(setq org-directory "~/lo/note/")
+(setq org-directory
+      (nth 0 (split-string (getenv "L_ORG_AGENDA_DIRS"))))
+;; List of directories to use for agenda files. Each directory is searched
+;; recursively.
+(let*
+  ((files (mapcan
+           (lambda (dir) (directory-files-recursively dir "\\.org$"))
+           (split-string (getenv "L_ORG_AGENDA_DIRS"))))
+   (exclude-patterns (split-string (getenv "L_ORG_AGENDA_EXCLUDE_PATTERNS")))
+   (reduced
+     (seq-reduce
+       (lambda (fs exclude-pattern)
+         (seq-filter
+           (lambda (f)
+             (not (string-match-p (regexp-quote exclude-pattern) f)))
+           fs))
+       exclude-patterns
+       files)))
+  (setq org-agenda-files reduced))
 #+end_src
 
 ** Notes

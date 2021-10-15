@@ -231,7 +231,25 @@ Return an event vector."
       :mnv "M-H" #'org-shiftmetaleft
       :mnv "M-L" #'org-shiftmetaright)
 
-(setq org-directory "~/lo/note/")
+(setq org-directory
+      (nth 0 (split-string (getenv "L_ORG_AGENDA_DIRS"))))
+;; List of directories to use for agenda files. Each directory is searched
+;; recursively.
+(let*
+  ((files (mapcan
+           (lambda (dir) (directory-files-recursively dir "\\.org$"))
+           (split-string (getenv "L_ORG_AGENDA_DIRS"))))
+   (exclude-patterns (split-string (getenv "L_ORG_AGENDA_EXCLUDE_PATTERNS")))
+   (reduced
+     (seq-reduce
+       (lambda (fs exclude-pattern)
+         (seq-filter
+           (lambda (f)
+             (not (string-match-p (regexp-quote exclude-pattern) f)))
+           fs))
+       exclude-patterns
+       files)))
+  (setq org-agenda-files reduced))
 
 (setq display-line-numbers-type nil)
 
