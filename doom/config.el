@@ -159,14 +159,7 @@ because Emacs will equate these keys with other keys (e.g., C-i with C-S-i)."
   (l/bind-placeholder '(127 C M S)))  ; C-M-S-DEL
 
 (defmacro l/bind-placeholder (binding)
-  ; Note: we can't refer to C-i as "C-i", because emacs does behind-the-scenes
-  ; conversion of it into TAB. So we have to refer to it by its raw vector.
-  ; The vector just contains a single integer value, which represents a
-  ; single keypress with some combination of modifier keys.
-  ;
-  ; But at least it works!
-  ;
-  ; The following are all basically equivalent:
+  ; Note: The following are all basically equivalent:
   ;
   ;   (global-set-key (vector (logior (lsh 1 26) 105)) #'foo)
   ;   (global-set-key [#x4000069] #'foo)
