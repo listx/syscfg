@@ -29,6 +29,7 @@ emacs:
 	#
 	# `${C}/emacs' is the `legacy' emacs configuration.
 	# `${C}/zzz/doom-emacs' is the `doom' emacs configuration.
+	git -C ${C} submodule update --init ${C}/zzz
 	ln -fns ${C}/zzz/chemacs2                           ${H}/.emacs.d
 	ln -fs ${C}/emacs/.emacs-profiles.el                ${H}
 	# "doom-emacs" profile
@@ -109,6 +110,7 @@ tig:
 	ln -fs ${C}/tig/.tigrc                              ${H}
 tmux:
 	ln -fs ${C}/tmux/.tmux.conf                         ${H}
+	git -C ${C} submodule update --init ${C}/tmux/plugins
 	ln -fns ${C}/tmux                                   ${H}/.tmux
 tmuxinator:
 	ln -fns ${C}/tmuxinator                             ${H}/.config
