@@ -4,3 +4,9 @@
 [submodule "zzz/chemacs2"]
 	path = zzz/chemacs2
 	url = https://github.com/plexus/chemacs2.git
+[submodule "zzz/tpm"]
+	path = tmux/plugins/tpm
+	url = https://github.com/tmux-plugins/tpm
+[submodule "zzz/tmux-thumbs"]
+	path = tmux/plugins/tmux-thumbs
+	url = https://github.com/fcsonline/tmux-thumbs
