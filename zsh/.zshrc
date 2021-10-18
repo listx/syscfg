@@ -501,7 +501,7 @@ command-not-found () {
 	# known command, then (2) delete the contents of BUFFER loaded by `hist -fs
 	# f -1'.
 	if (( exit_status == 127 )) ; then
-		hist -fs f -1 || true
+		hist -fs f -1 || echo "\`hist' is not installed"
 	fi
 }
 add-zsh-hook precmd command-not-found
