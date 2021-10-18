@@ -142,6 +142,8 @@ zsh:
 		&& ln -fs ${C}/zsh/zlogin-${T}                  ${H}/.zlogin || true
 	mkdir -p ${H}/.zsh-untracked
 	git -C ${C} submodule update --init ${C}/zsh/zpm
+	# NOTE: zpm relies on GNU parallel. The "parallel" package from "moreutils"
+	# will silently conflict with zpm.
 	ln -fns ${C}/zsh/zpm                                ${H}/.zpm
 
 .PHONY: \
