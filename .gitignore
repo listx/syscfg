@@ -12,6 +12,7 @@ alacritty/alacritty.yml
 alacritty/alacritty_raw_shell.yml
 cache
 cmus/*
+doom/autoload*.el
 emacs/.org-id-locations
 emacs/auto-save-list
 emacs/bookmarks
