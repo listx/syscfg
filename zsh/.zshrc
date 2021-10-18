@@ -560,8 +560,11 @@ if [[ -n "${commands[fzf-share]}" ]]; then
 fi
 
 # Use zpm. Run "zpm clean" if modifying the .zshrc file to clear out the cache.
+#
+# If there are troubles with zpm, reset it like this:
+# rm -rf "${TMPDIR:-/tmp}/zsh-${UID:-user}"
 if [[ ! -f ~/.zpm/zpm.zsh ]]; then
-  git clone --recursive https://github.com/zpm-zsh/zpm ~/.zpm
+  echo >&2 "error: missing ~/.zpm/zpm.zsh"
 fi
 source ~/.zpm/zpm.zsh
 

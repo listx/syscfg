@@ -10,3 +10,6 @@
 [submodule "zzz/tmux-thumbs"]
 	path = tmux/plugins/tmux-thumbs
 	url = https://github.com/fcsonline/tmux-thumbs
+[submodule "zsh/zpm"]
+	path = zsh/zpm
+	url = https://github.com/zpm-zsh/zpm

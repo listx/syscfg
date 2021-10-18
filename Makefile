@@ -139,6 +139,8 @@ zsh:
 	test -f ${C}/zsh/zlogin-${T} \
 		&& ln -fs ${C}/zsh/zlogin-${T}                  ${H}/.zlogin || true
 	mkdir -p ${H}/.zsh-untracked
+	git -C ${C} submodule update --init ${C}/zsh/zpm
+	ln -fns ${C}/zsh/zpm                                ${H}/.zpm
 
 .PHONY: \
 	alacritty \
