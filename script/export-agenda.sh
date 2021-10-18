@@ -82,10 +82,8 @@ main()
 {
 	exit_if_cache_hit
 
-	timeout -k 10 45 ~/.nix-profile/bin/emacs \
-		--batch \
-		--load ~/syscfg/emacs/init.el \
-		--eval '(l/export-agenda)'
+	timeout -k 10 45 emacsclient \
+		--eval '(org-store-agenda-views)'
 }
 
 main "$@"

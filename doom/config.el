@@ -260,6 +260,25 @@ Return an event vector."
       :mnv "H" #'previous-buffer
       :mnv "L" #'next-buffer)
 
+; org-agenda: Add weekly review view.
+; https://emacs.stackexchange.com/a/8163/13006
+(setq org-agenda-custom-commands
+  '(("w" "Weekly review"
+    agenda ""
+    (
+      (org-agenda-span 'week)
+      (org-agenda-start-with-log-mode '(closed clock state))
+      (org-agenda-skip-function
+        '(org-agenda-skip-entry-if 'nottodo 'done))))
+    ; Export as HTML.
+    ("X" "Export HTML" agenda ""
+      ((htmlize-head-tags (concat "    <meta"
+        " http-equiv=\"refresh\""
+        ; Refresh every 60 seconds.
+        " content=\"60\""
+        ">\n")))
+      ("~/agenda.html"))))
+
 (setq display-line-numbers-type nil)
 
 (use-package! evil-escape
