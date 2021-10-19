@@ -67,7 +67,7 @@ DOOM requires 3 configuration files in the =$DOOMDIR=:
        ;;indent-guides     ; highlighted indent columns
        ;;ligatures         ; ligatures and symbols to make your code pretty again
        ;;minimap           ; show a map of the code on the side
-       (modeline +light)         ; snazzy, Atom-inspired modeline, plus API
+       modeline         ; snazzy, Atom-inspired modeline, plus API
        ;;nav-flash         ; blink cursor line after big motions
        ;;neotree           ; a project drawer, like NERDTree for vim
        ;;ophints           ; highlight the region an operation acts on
@@ -485,6 +485,9 @@ For information on how xterm does it, see https://invisible-island.net/xterm/ctl
 
 (eval-after-load "xterm" '(l/csi-u-support))
 <<disambiguate-problematic-keys>>
+
+;; Load xterm-specific settings for TERM=alacritty-xtermlike.
+(add-to-list 'term-file-aliases '("alacritty-xtermlike" . "xterm-256color"))
 #+end_src
 
 *** Disambiguate typically-problematic keys
@@ -932,7 +935,7 @@ Make =C-{j,k}= cycle through windows, and =C-S-{j,k}=.
 (setq tab-bar-show t
       tab-bar-new-button-show nil
       tab-bar-close-button-show nil
-      tab-bar-separator (propertize " " 'font-lock-face '(:background "color-16"))
+      tab-bar-separator (propertize " " 'font-lock-face '(:background "#000000"))
       tab-bar-tab-name-function #'l/get-tab-name)
 
 ; Based on `tab-bar-tab-name-current-with-count', with some tweaks.
@@ -1064,22 +1067,20 @@ First install the zenburn-theme package, then load it by setting =doom-theme= to
 #+name: colors
 #+begin_src emacs-lisp
 (custom-set-faces!
-  '(tab-bar  :background "color-16")
-  '(tab-bar-tab  :weight bold :box nil :foreground "color-16" :background "color-51")
-  '(tab-bar-tab-inactive  :weight bold :box nil :foreground "color-16" :background "color-38"))
-
-(custom-set-faces!
   ;; Fix ugly colors for diffs. Prevalent because of git comit message buffers
   ;; like COMMIT_EDITMSG.
   '(font-lock-comment-face  :foreground "#9fc59f")
   '(git-commit-summary  :foreground "#fff" :weight bold)
-  '(diff-added        :foreground "green" :background "dark green")
-  '(diff-removed      :foreground "red" :background "dark red")
+  '(diff-added        :foreground "#66ff66" :background "#009900")
+  '(diff-removed      :foreground "#ff6666" :background "#990000")
   '(diff-context      :foreground "#ffffff")
-  '(diff-header       :foreground "yellow" :background "#3f3f3f" :weight bold)
-  '(diff-file-header  :foreground "yellow" :background "#3f3f3f" :weight bold)
-  '(diff-hunk-header  :foreground "cyan"   :background "#3f3f3f")
+  '(diff-header       :foreground "#ffff00" :background "#3f3f3f" :weight bold)
+  '(diff-file-header  :foreground "#ffff00" :background "#3f3f3f" :weight bold)
+  '(diff-hunk-header  :foreground "#00ffff"   :background "#3f3f3f")
   '(git-commit-keyword  :foreground "#dcdccc" :background "#3f3f3f"))
+
+(custom-set-faces!
+  '(org-block :background "#363636"))
 #+end_src
 
 * Language Server Protocol (LSP)
@@ -1285,19 +1286,55 @@ Before we started using Doom Emacs, we used to rely heavily on kakapo-mode to al
 
 ; Modeline colors.
 (custom-set-faces!
- '(mode-line
-   :background "color-235"
-   :foreground "color-231")
- '(mode-line-inactive
+ '(doom-modeline-info
    :weight bold
-   :background "color-16"
-   :foreground "color-245"))
+   :foreground "#000000")
+ '(doom-modeline-debug
+   :weight bold
+   :foreground "#000000")
+ '(doom-modeline-evil-emacs-state
+   :weight bold
+   :foreground "#000000")
+ '(doom-modeline-evil-normal-state
+   :weight bold
+   :foreground "#000000")
+ '(doom-modeline-evil-insert-state
+   :weight bold
+   :foreground "#000000")
+ '(doom-modeline-evil-visual-state
+   :weight bold
+   :foreground "#000000")
+ '(doom-modeline-project-dir
+   :weight bold
+   :foreground "#000000")
+ '(doom-modeline-buffer-path
+   :weight bold
+   :foreground "#000000")
+ '(doom-modeline-buffer-file
+   :weight bold
+   :foreground "#000000")
+ '(doom-modeline-buffer-modified
+   :inverse-video t
+   :weight normal
+   :foreground "#000000")
+ '(mode-line
+   :weight bold
+   :background "aquamarine1"
+   :foreground "#000000")
+ '(mode-line-inactive
+   :background "#256b54"
+   :foreground "#ffffff"))
+
+(custom-set-faces!
+  '(tab-bar  :background "#000000")
+  '(tab-bar-tab  :weight bold :box nil :foreground "#000000" :background "aquamarine1")
+  '(tab-bar-tab-inactive :box nil :foreground "#ffffff" :background "#256b54"))
 
 ; Dim buffers in inactive windows to make the current one "pop".
 (use-package! auto-dim-other-buffers
  :config
  (auto-dim-other-buffers-mode)
- (custom-set-faces! '(auto-dim-other-buffers-face :foreground "color-250" :background "color-234")))
+ (custom-set-faces! '(auto-dim-other-buffers-face :foreground "#bcbcbc" :background "#1c1c1c")))
 
 ; Always enable the tab bar, even if there is just one buffer showing (such as
 ; when we open a single buffer).
@@ -1358,7 +1395,7 @@ Before we started using Doom Emacs, we used to rely heavily on kakapo-mode to al
 #+end_src
 
 #+RESULTS: misc-ui
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (24929 19095 431973 760000) :init (24929 19095 431962 257000) :config (24929 19095 431943 173000) :config-secs (0 0 5902 333000) :init-secs (0 0 5934 774000) :use-package-secs (0 0 5985 204000)))
+: t
 
 * Reference
 

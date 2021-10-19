@@ -208,6 +208,9 @@ Return an event vector."
   :keymap l-disambiguation-mode-map)
 (add-hook 'l-disambiguation-mode-on-hook 'l/disambiguate-problematic-keys)
 
+;; Load xterm-specific settings for TERM=alacritty-xtermlike.
+(add-to-list 'term-file-aliases '("alacritty-xtermlike" . "xterm-256color"))
+
 (setq user-full-name "Linus Arver"
       user-mail-address "linusarver@gmail.com")
 
@@ -259,7 +262,6 @@ Return an event vector."
       :map evil-org-agenda-mode-map
       :mnv "H" #'previous-buffer
       :mnv "L" #'next-buffer)
-(setq org-roam-directory (concat org-directory "/note"))
 
 ; org-agenda: Add weekly review view.
 ; https://emacs.stackexchange.com/a/8163/13006
@@ -279,6 +281,7 @@ Return an event vector."
         " content=\"60\""
         ">\n")))
       ("~/agenda.html"))))
+(setq org-roam-directory (concat org-directory "/note"))
 
 (setq display-line-numbers-type nil)
 
@@ -482,7 +485,7 @@ otherwise, close current tab."
 (setq tab-bar-show t
       tab-bar-new-button-show nil
       tab-bar-close-button-show nil
-      tab-bar-separator (propertize " " 'font-lock-face '(:background "color-16"))
+      tab-bar-separator (propertize " " 'font-lock-face '(:background "#000000"))
       tab-bar-tab-name-function #'l/get-tab-name)
 
 ; Based on `tab-bar-tab-name-current-with-count', with some tweaks.
@@ -557,22 +560,20 @@ Also add the number of windows in the window configuration."
   (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\.cache\\'"))
 
 (custom-set-faces!
-  '(tab-bar  :background "color-16")
-  '(tab-bar-tab  :weight bold :box nil :foreground "color-16" :background "color-51")
-  '(tab-bar-tab-inactive  :weight bold :box nil :foreground "color-16" :background "color-38"))
-
-(custom-set-faces!
   ;; Fix ugly colors for diffs. Prevalent because of git comit message buffers
   ;; like COMMIT_EDITMSG.
   '(font-lock-comment-face  :foreground "#9fc59f")
   '(git-commit-summary  :foreground "#fff" :weight bold)
-  '(diff-added        :foreground "green" :background "dark green")
-  '(diff-removed      :foreground "red" :background "dark red")
+  '(diff-added        :foreground "#66ff66" :background "#009900")
+  '(diff-removed      :foreground "#ff6666" :background "#990000")
   '(diff-context      :foreground "#ffffff")
-  '(diff-header       :foreground "yellow" :background "#3f3f3f" :weight bold)
-  '(diff-file-header  :foreground "yellow" :background "#3f3f3f" :weight bold)
-  '(diff-hunk-header  :foreground "cyan"   :background "#3f3f3f")
+  '(diff-header       :foreground "#ffff00" :background "#3f3f3f" :weight bold)
+  '(diff-file-header  :foreground "#ffff00" :background "#3f3f3f" :weight bold)
+  '(diff-hunk-header  :foreground "#00ffff"   :background "#3f3f3f")
   '(git-commit-keyword  :foreground "#dcdccc" :background "#3f3f3f"))
+
+(custom-set-faces!
+  '(org-block :background "#363636"))
 ;; Enable soft word-wrap almost everywhere (including elisp).
 (+global-word-wrap-mode +1)
 
@@ -604,19 +605,55 @@ Also add the number of windows in the window configuration."
 
 ; Modeline colors.
 (custom-set-faces!
- '(mode-line
-   :background "color-235"
-   :foreground "color-231")
- '(mode-line-inactive
+ '(doom-modeline-info
    :weight bold
-   :background "color-16"
-   :foreground "color-245"))
+   :foreground "#000000")
+ '(doom-modeline-debug
+   :weight bold
+   :foreground "#000000")
+ '(doom-modeline-evil-emacs-state
+   :weight bold
+   :foreground "#000000")
+ '(doom-modeline-evil-normal-state
+   :weight bold
+   :foreground "#000000")
+ '(doom-modeline-evil-insert-state
+   :weight bold
+   :foreground "#000000")
+ '(doom-modeline-evil-visual-state
+   :weight bold
+   :foreground "#000000")
+ '(doom-modeline-project-dir
+   :weight bold
+   :foreground "#000000")
+ '(doom-modeline-buffer-path
+   :weight bold
+   :foreground "#000000")
+ '(doom-modeline-buffer-file
+   :weight bold
+   :foreground "#000000")
+ '(doom-modeline-buffer-modified
+   :inverse-video t
+   :weight normal
+   :foreground "#000000")
+ '(mode-line
+   :weight bold
+   :background "aquamarine1"
+   :foreground "#000000")
+ '(mode-line-inactive
+   :background "#256b54"
+   :foreground "#ffffff"))
+
+(custom-set-faces!
+  '(tab-bar  :background "#000000")
+  '(tab-bar-tab  :weight bold :box nil :foreground "#000000" :background "aquamarine1")
+  '(tab-bar-tab-inactive :box nil :foreground "#ffffff" :background "#256b54"))
 
 ; Dim buffers in inactive windows to make the current one "pop".
 (use-package! auto-dim-other-buffers
  :config
  (auto-dim-other-buffers-mode)
- (custom-set-faces! '(auto-dim-other-buffers-face :foreground "color-250" :background "color-234")))
+ (custom-set-faces! '(auto-dim-other-buffers-face :foreground "#bcbcbc" :background "#1c1c1c")))
 
 ; Always enable the tab bar, even if there is just one buffer showing (such as
 ; when we open a single buffer).
