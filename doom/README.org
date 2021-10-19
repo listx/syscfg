@@ -1071,8 +1071,8 @@ First install the zenburn-theme package, then load it by setting =doom-theme= to
   ;; like COMMIT_EDITMSG.
   '(font-lock-comment-face  :foreground "#9fc59f")
   '(git-commit-summary  :foreground "#fff" :weight bold)
-  '(diff-added        :foreground "#66ff66" :background "#009900")
-  '(diff-removed      :foreground "#ff6666" :background "#990000")
+  '(diff-added        :foreground "#00ff00" :weight bold)
+  '(diff-removed      :foreground "#ff0000" :weight bold)
   '(diff-context      :foreground "#ffffff")
   '(diff-header       :foreground "#ffff00" :background "#3f3f3f" :weight bold)
   '(diff-file-header  :foreground "#ffff00" :background "#3f3f3f" :weight bold)
