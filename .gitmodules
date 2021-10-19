@@ -13,3 +13,6 @@
 [submodule "zsh/zpm"]
 	path = zsh/zpm
 	url = https://github.com/zpm-zsh/zpm
+[submodule "alacritty/upstream"]
+	path = alacritty/upstream
+	url = https://github.com/alacritty/alacritty

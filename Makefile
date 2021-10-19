@@ -106,6 +106,11 @@ ifeq ($(wildcard ~/.ssh/.),)
 	ln -fns ${C}/ssh                                    ${H}/.ssh
 endif
 	ln -fs ${C}/ssh/config.home.conf                    ${H}/.ssh/config
+terminfo:
+	git -C ${C} submodule update --init ${C}/alacritty/upstream
+	tic -x -o ~/.terminfo ${C}/alacritty/upstream/extra/alacritty.info
+	tic -x -o ~/.terminfo ${C}/terminfo/xterm-24bit.terminfo
+	tic -x -o ~/.terminfo ${C}/terminfo/alacritty-xtermlike.terminfo
 tig:
 	ln -fs ${C}/tig/.tigrc                              ${H}
 tmux:
@@ -169,6 +174,7 @@ zsh:
 	qutebrowser \
 	rtorrent \
 	ssh \
+	terminfo \
 	tig \
 	tmux \
 	tmuxinator \

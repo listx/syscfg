@@ -2,4 +2,4 @@
 # canonical reference.
 
 env:
-  TERM: alacritty
+  TERM: alacritty-xtermlike
