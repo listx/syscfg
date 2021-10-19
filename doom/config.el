@@ -259,6 +259,7 @@ Return an event vector."
       :map evil-org-agenda-mode-map
       :mnv "H" #'previous-buffer
       :mnv "L" #'next-buffer)
+(setq org-roam-directory (concat org-directory "/note"))
 
 ; org-agenda: Add weekly review view.
 ; https://emacs.stackexchange.com/a/8163/13006

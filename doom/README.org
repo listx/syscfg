@@ -326,6 +326,7 @@ Note that this file is pretty much **required** and acts as the base for all oth
 
 <<dired>>
 <<org>>
+<<org-roam>>
 
 <<line-numbers>>
 
@@ -1208,6 +1209,13 @@ If you use "org" and don't want your org files in the default location below, ch
 ** Notes
 
 In insert mode, type =<s= followed by =TAB= to auto-complete a ~#+begin_src~ and ~#+end_src~ code block.
+
+* Org roam
+
+#+name: org-roam
+#+begin_src emacs-lisp
+(setq org-roam-directory (concat org-directory "/note"))
+#+end_src
 
 * Misc settings
 
