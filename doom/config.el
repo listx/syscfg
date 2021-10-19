@@ -224,6 +224,7 @@ Return an event vector."
       :mnv "L" #'next-buffer
       :mnv "h" #'dired-up-directory
       :mnv "l" #'dired-find-file)
+(add-hook 'git-commit-setup-hook #'(lambda () (flyspell-mode -1)))
 (map! :after evil-org
       :map evil-org-mode-map
       :mnv "M-k" #'org-backward-element

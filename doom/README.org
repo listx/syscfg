@@ -325,6 +325,7 @@ Note that this file is pretty much **required** and acts as the base for all oth
 <<theme>>
 
 <<dired>>
+<<magit>>
 <<org>>
 <<org-roam>>
 
@@ -1216,6 +1217,15 @@ In insert mode, type =<s= followed by =TAB= to auto-complete a ~#+begin_src~ and
 #+name: org-roam
 #+begin_src emacs-lisp
 (setq org-roam-directory (concat org-directory "/note"))
+#+end_src
+
+* Magit
+
+** Disable spellcheck in commit message buffers.
+
+#+name: magit
+#+begin_src emacs-lisp
+(add-hook 'git-commit-setup-hook #'(lambda () (flyspell-mode -1)))
 #+end_src
 
 * Misc settings
