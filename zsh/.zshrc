@@ -332,9 +332,6 @@ alias fta='f all_text'
 # Search even inside binary files.
 alias ftab='f all_text_binary'
 
-# Make ssh pretend we are using xterm, because some machines do not recognize
-# our usual terminal emulator (rxvt-unicode-256coler).
-alias ssh='TERM=xterm-256color ssh'
 # These hostnames depend on either /etc/hosts or ~/.ssh/config.
 alias sk0='s k0 '
 alias sk1='s k1 '

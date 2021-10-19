@@ -20,7 +20,7 @@ if [[ -z "${WSL_DISTRO_NAME:-}" ]]; then
     export L_GOOGLE_CLOUD_SDK_PATH=$(dirname $(readlink $(which gcloud)))/../google-cloud-sdk
 fi
 
-export TERM=xterm-256color
+export TERM=alacritty
 
 # Run a command, but wrap it around with set_theme() calls so as to run the
 # command as a particular color theme.
