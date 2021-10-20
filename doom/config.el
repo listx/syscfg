@@ -511,8 +511,8 @@ Also add the number of windows in the window configuration."
   (let ((count (length (window-list-1 nil 'nomini)))
         (name (window-buffer (minibuffer-selected-window))))
     (if (> count 1)
-        (format "[ ◩ %d %s]" (- count 1) name)
-        (format "[%s]" name))))
+        (format " ◩ %d %s " (- count 1) name)
+        (format " %s " name))))
 (map! :after evil-org
       :map evil-org-mode-map
       :ni "C-S-h" nil
@@ -645,7 +645,7 @@ Also add the number of windows in the window configuration."
 (custom-set-faces!
   '(tab-bar  :background "#000000")
   '(tab-bar-tab  :weight bold :box nil :foreground "#000000" :background "tan1")
-  '(tab-bar-tab-inactive :box nil :foreground "tan1" :background "#000000"))
+  '(tab-bar-tab-inactive :weight bold :box nil :foreground "#000" :background "#ad652f"))
 
 ; Dim buffers in inactive windows to make the current one "pop".
 (use-package! auto-dim-other-buffers
