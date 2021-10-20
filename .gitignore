@@ -39,6 +39,7 @@ mpv/mpv.conf
 mutt/hcache
 nvim/.netrwhist
 openvpn/*.ovpn
+qutebrowser/autoconfig.yml
 qutebrowser/bookmarks
 qutebrowser/quickmarks
 qutebrowser/qsettings
