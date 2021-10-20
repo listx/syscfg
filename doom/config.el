@@ -259,6 +259,9 @@ Return an event vector."
        exclude-patterns
        files)))
   (setq org-agenda-files reduced))
+
+;; Disable spellcheck.
+(remove-hook 'org-mode-hook #'flyspell-mode)
 (map! :after evil-org-agenda
       :map evil-org-agenda-mode-map
       :mnv "H" #'previous-buffer

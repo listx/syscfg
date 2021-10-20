@@ -1206,6 +1206,9 @@ If you use "org" and don't want your org files in the default location below, ch
        exclude-patterns
        files)))
   (setq org-agenda-files reduced))
+
+;; Disable spellcheck.
+(remove-hook 'org-mode-hook #'flyspell-mode)
 #+end_src
 
 ** Notes
