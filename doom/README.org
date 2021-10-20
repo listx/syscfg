@@ -947,8 +947,8 @@ Also add the number of windows in the window configuration."
   (let ((count (length (window-list-1 nil 'nomini)))
         (name (window-buffer (minibuffer-selected-window))))
     (if (> count 1)
-        (format " [%d] %s " (- count 1) name)
-        (format " %s " name))))
+        (format "[ ◩ %d %s]" (- count 1) name)
+        (format "[%s]" name))))
 #+end_src
 
 *** Creation
