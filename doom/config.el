@@ -282,6 +282,10 @@ Return an event vector."
         " content=\"60\""
         ">\n")))
       ("~/agenda.html"))))
+(map! :after org-roam
+      :map org-roam-mode-map
+      :mnvi "C-k" nil
+      :mnvi "C-j" nil)
 (setq org-roam-directory (concat org-directory "/note"))
 
 (setq display-line-numbers-type nil)

@@ -1216,6 +1216,10 @@ In insert mode, type =<s= followed by =TAB= to auto-complete a ~#+begin_src~ and
 
 #+name: org-roam
 #+begin_src emacs-lisp
+(map! :after org-roam
+      :map org-roam-mode-map
+      :mnvi "C-k" nil
+      :mnvi "C-j" nil)
 (setq org-roam-directory (concat org-directory "/note"))
 #+end_src
 
