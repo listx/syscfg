@@ -238,7 +238,14 @@ Return an event vector."
 
 (after! org
   (add-to-list 'org-todo-keywords
-    '(sequence "TODO" "IN-PROGRESS" "WAITING" "|" "DONE" "CANCELED" "OBSOLETE")))
+               '(sequence "TODO" "IN-PROGRESS" "WAITING" "|" "DONE" "CANCELED" "OBSOLETE"))
+  (add-hook 'org-mode-hook 'l/org-colors))
+
+;; Dim org-block face (source code blocks) separately, because they are not
+;; dimmed by default. Also dim org-hide as well.
+(defun l/org-colors ()
+  (add-to-list 'face-remapping-alist '(org-hide (:filtered (:window adob--dim t) (:foreground "#1c1c1c")) org-hide))
+  (add-to-list 'face-remapping-alist '(org-block (:filtered (:window adob--dim t) (:background "#262626")) org-block)))
 
 (setq org-directory
       (nth 0 (split-string (getenv "L_ORG_AGENDA_DIRS"))))
@@ -579,9 +586,6 @@ Also add the number of windows in the window configuration."
   '(diff-file-header  :foreground "#ffff00" :background "#3f3f3f" :weight bold)
   '(diff-hunk-header  :foreground "#00ffff"   :background "#3f3f3f")
   '(git-commit-keyword  :foreground "#dcdccc" :background "#3f3f3f"))
-
-(custom-set-faces!
-  '(org-block :background "#363636"))
 ;; Enable soft word-wrap almost everywhere (including elisp).
 (+global-word-wrap-mode +1)
 
