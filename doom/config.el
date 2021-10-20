@@ -710,9 +710,9 @@ Also add the number of windows in the window configuration."
   ; https://emacs.stackexchange.com/a/60971/13006.
   (add-function :after after-focus-change-function (lambda () (unless (frame-focus-state) (git-gutter:update-all-windows))))
   (custom-set-faces!
-  '(git-gutter:modified :foreground "#ff00ff")
-  '(git-gutter:added :foreground "#00ff00")
-  '(git-gutter:deleted :foreground "#ff0000"))
+   '(git-gutter:modified :foreground "#ff00ff")
+   '(git-gutter:added :foreground "#00ff00")
+   '(git-gutter:deleted :foreground "#ff0000"))
   (setq git-gutter:modified-sign " ")
   (setq git-gutter:added-sign " ")
   (setq git-gutter:deleted-sign " "))
