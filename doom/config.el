@@ -608,51 +608,37 @@ Also add the number of windows in the window configuration."
   (add-hook 'text-mode-hook 'vim-empty-lines-mode)
   (custom-set-faces! '(vim-empty-lines-face :weight bold)))
 
+(defmacro l/custom-set-faces-matching! (regex &rest props)
+  "Apply properties in bulk to all faces that match the regex."
+  `(custom-set-faces!
+    ,@(delq nil
+       (mapcar (lambda (f)
+                 (let ((s (symbol-name f)))
+                   (when (string-match-p regex s)
+                     `'(,f ,@props))))
+               (face-list)))))
+
+;; Make all doom-modeline-* faces have a black foreground, to make them easier
+;; to read with our custom `tan1` background. This way we don't have to spell
+;; otu each font one at a time.
+(use-package! doom-modeline
+  :config
+  (l/custom-set-faces-matching! "doom-modeline-" :foreground "#000000"))
+
 ; Modeline colors.
 (custom-set-faces!
- '(doom-modeline-info
-   :weight bold
-   :foreground "#000000")
- '(doom-modeline-debug
-   :weight bold
-   :foreground "#000000")
- '(doom-modeline-evil-emacs-state
-   :weight bold
-   :foreground "#000000")
- '(doom-modeline-evil-normal-state
-   :weight bold
-   :foreground "#000000")
- '(doom-modeline-evil-insert-state
-   :weight bold
-   :foreground "#000000")
- '(doom-modeline-evil-visual-state
-   :weight bold
-   :foreground "#000000")
- '(doom-modeline-project-dir
-   :weight bold
-   :foreground "#000000")
- '(doom-modeline-buffer-path
-   :weight bold
-   :foreground "#000000")
- '(doom-modeline-buffer-file
-   :weight bold
-   :foreground "#000000")
- '(doom-modeline-buffer-modified
-   :inverse-video t
-   :weight normal
-   :foreground "#000000")
  '(mode-line
    :weight bold
-   :background "aquamarine1"
+   :background "tan1"
    :foreground "#000000")
  '(mode-line-inactive
-   :background "#256b54"
-   :foreground "#ffffff"))
+   :background "#000000"
+   :foreground "tan1"))
 
 (custom-set-faces!
   '(tab-bar  :background "#000000")
-  '(tab-bar-tab  :weight bold :box nil :foreground "#000000" :background "aquamarine1")
-  '(tab-bar-tab-inactive :box nil :foreground "#ffffff" :background "#256b54"))
+  '(tab-bar-tab  :weight bold :box nil :foreground "#000000" :background "tan1")
+  '(tab-bar-tab-inactive :box nil :foreground "tan1" :background "#000000"))
 
 ; Dim buffers in inactive windows to make the current one "pop".
 (use-package! auto-dim-other-buffers
