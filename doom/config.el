@@ -649,7 +649,7 @@ Also add the number of windows in the window configuration."
 (custom-set-faces!
   '(tab-bar  :background "#000000")
   '(tab-bar-tab  :inherit mode-line :weight bold :box nil)
-  '(tab-bar-tab-inactive :inherit mode-line-inactive :weight bold :box nil))
+  '(tab-bar-tab-inactive :inherit mode-line-inactive :box nil))
 
 ; Dim buffers in inactive windows to make the current one "pop".
 (use-package! auto-dim-other-buffers
