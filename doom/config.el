@@ -575,10 +575,11 @@ Also add the number of windows in the window configuration."
   (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\.cache\\'"))
 
 (custom-set-faces!
+  '(highlight-numbers-number  :weight bold)
+  '(font-lock-builtin-face  :foreground "#ffcfaf")
   ;; Fix ugly colors for diffs. Prevalent because of git comit message buffers
   ;; like COMMIT_EDITMSG.
-  '(font-lock-comment-face  :foreground "#9fc59f")
-  '(git-commit-summary  :foreground "#fff" :weight bold)
+  '(git-commit-summary  :foreground "#ffffff" :weight bold)
   '(diff-added        :foreground "#00ff00" :weight bold)
   '(diff-removed      :foreground "#ff0000" :weight bold)
   '(diff-context      :foreground "#ffffff")
@@ -586,6 +587,9 @@ Also add the number of windows in the window configuration."
   '(diff-file-header  :foreground "#ffff00" :background "#3f3f3f" :weight bold)
   '(diff-hunk-header  :foreground "#00ffff"   :background "#3f3f3f")
   '(git-commit-keyword  :foreground "#dcdccc" :background "#3f3f3f"))
+
+(use-package! rainbow-mode
+  :hook (prog-mode text-mode))
 ;; Enable soft word-wrap almost everywhere (including elisp).
 (+global-word-wrap-mode +1)
 
@@ -625,27 +629,27 @@ Also add the number of windows in the window configuration."
                      `'(,f ,@props))))
                (face-list)))))
 
-;; Make all doom-modeline-* faces have a black foreground, to make them easier
-;; to read with our custom `tan1` background. This way we don't have to spell
+;; Make all doom-modeline-* faces have a uniform foreground, to make them easier
+;; to read with our custom mode-line background. This way we don't have to spell
 ;; otu each font one at a time.
 (use-package! doom-modeline
   :config
-  (l/custom-set-faces-matching! "doom-modeline-" :foreground "#000000"))
+  (l/custom-set-faces-matching! "doom-modeline-" :foreground "#ccff94"))
 
 ; Modeline colors.
 (custom-set-faces!
  '(mode-line
    :weight bold
-   :background "tan1"
-   :foreground "#000000")
+   :background "#3f5f4f"
+   :foreground "#ccff94")
  '(mode-line-inactive
-   :background "#000000"
-   :foreground "tan1"))
+   :background "#2e3330"
+   :foreground "#86ab8e"))
 
 (custom-set-faces!
   '(tab-bar  :background "#000000")
-  '(tab-bar-tab  :weight bold :box nil :foreground "#000000" :background "tan1")
-  '(tab-bar-tab-inactive :weight bold :box nil :foreground "#000" :background "#ad652f"))
+  '(tab-bar-tab  :inherit mode-line :weight bold :box nil)
+  '(tab-bar-tab-inactive :inherit mode-line-inactive :weight bold :box nil))
 
 ; Dim buffers in inactive windows to make the current one "pop".
 (use-package! auto-dim-other-buffers
