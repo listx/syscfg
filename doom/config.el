@@ -575,6 +575,7 @@ Also add the number of windows in the window configuration."
   (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\.cache\\'"))
 
 (custom-set-faces!
+  '(vertical-border :background "#2e3330" :foreground "#2e3330")
   '(highlight-numbers-number  :weight bold)
   '(font-lock-builtin-face  :foreground "#ffcfaf")
   ;; Fix ugly colors for diffs. Prevalent because of git comit message buffers
