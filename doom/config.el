@@ -6,6 +6,10 @@
   :init
   ;; Fix conflict with embark.
   (setq iedit-toggle-key-default nil))
+(use-package! company
+  :config
+  (setq +company-backend-alist (assq-delete-all 'text-mode +company-backend-alist))
+  (add-to-list '+company-backend-alist '(text-mode (:separate company-dabbrev company-yasnippet))))
 
 ;; Enable `CSI u` support. See https://emacs.stackexchange.com/a/59225.  xterm
 ;; with the resource ?.VT100.modifyOtherKeys: 1 GNU Emacs >=24.4 sets xterm in
