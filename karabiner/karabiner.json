@@ -43,6 +43,26 @@
                                     }
                                 ],
                                 "type": "basic"
+                            },
+                            {
+                                "description": "Run GUI emacsclient to edit text",
+                                "from": {
+                                    "key_code": "spacebar",
+                                    "modifiers": {
+                                        "mandatory": [
+                                            "left_command",
+                                            "left_control",
+                                            "left_option",
+                                            "left_shift"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "shell_command": "~/.nix-profile/bin/emacsclient --eval '(emacs-everywhere)'"
+                                    }
+                                ],
+                                "type": "basic"
                             }
                         ]
                     }
