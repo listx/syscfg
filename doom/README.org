@@ -304,6 +304,8 @@ In order to use =C-,= from terminal Emacs, you have to make your terminal (e.g.,
 (package! git-gutter)
 (package! auto-dim-other-buffers)
 (package! kakapo-mode)
+(package! highlight-sexp
+  :recipe (:host github :repo "daimrod/highlight-sexp"))
 <<package-zenburn-theme>>
 #+end_src
 
@@ -1305,9 +1307,6 @@ Before we started using Doom Emacs, we used to rely heavily on kakapo-mode to al
 (use-package! hl-line+
   :config
   (custom-set-faces! '(hl-line :background "grey32"))
-  ; Highlight the current cursor line; set overlay to a high number to override
-  ; other properties (e.g., mmm-default-submode-face).
-  (setq hl-line-overlay-priority (/ most-positive-fixnum (expt 2 55)))
   ; Only highlight when idle.
   (toggle-hl-line-when-idle)
   (setq global-hl-line-mode nil)
@@ -1416,11 +1415,10 @@ Before we started using Doom Emacs, we used to rely heavily on kakapo-mode to al
   (setq git-gutter:deleted-sign " "))
 
 ;; Highlight the entire expression when hovering over matching parentheses.
-(use-package! paren
+(use-package! highlight-sexp
+  :hook ((prog-mode . highlight-sexp-mode))
   :config
-  (setq show-paren-style 'expression)
-  (custom-set-faces!
-    '(show-paren-match-expression :background "#1c1c1c")))
+  (setq hl-sexp-background-color "grey33"))
 #+end_src
 
 * Reference

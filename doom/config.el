@@ -609,9 +609,6 @@ Also add the number of windows in the window configuration."
 (use-package! hl-line+
   :config
   (custom-set-faces! '(hl-line :background "grey32"))
-  ; Highlight the current cursor line; set overlay to a high number to override
-  ; other properties (e.g., mmm-default-submode-face).
-  (setq hl-line-overlay-priority (/ most-positive-fixnum (expt 2 55)))
   ; Only highlight when idle.
   (toggle-hl-line-when-idle)
   (setq global-hl-line-mode nil)
@@ -720,11 +717,10 @@ Also add the number of windows in the window configuration."
   (setq git-gutter:deleted-sign " "))
 
 ;; Highlight the entire expression when hovering over matching parentheses.
-(use-package! paren
+(use-package! highlight-sexp
+  :hook ((prog-mode . highlight-sexp-mode))
   :config
-  (setq show-paren-style 'expression)
-  (custom-set-faces!
-    '(show-paren-match-expression :background "#1c1c1c")))
+  (setq hl-sexp-background-color "grey33"))
 
 ;; Here are some additional functions/macros that could help you configure Doom:
 ;;

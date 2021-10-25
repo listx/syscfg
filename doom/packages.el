@@ -52,4 +52,6 @@
 (package! git-gutter)
 (package! auto-dim-other-buffers)
 (package! kakapo-mode)
+(package! highlight-sexp
+  :recipe (:host github :repo "daimrod/highlight-sexp"))
 (package! zenburn-theme)
