@@ -1414,10 +1414,14 @@ Before we started using Doom Emacs, we used to rely heavily on kakapo-mode to al
   (setq git-gutter:modified-sign " ")
   (setq git-gutter:added-sign " ")
   (setq git-gutter:deleted-sign " "))
-#+end_src
 
-#+RESULTS: misc-ui
-: t
+;; Highlight the entire expression when hovering over matching parentheses.
+(use-package! paren
+  :config
+  (setq show-paren-style 'expression)
+  (custom-set-faces!
+    '(show-paren-match-expression :background "#1c1c1c")))
+#+end_src
 
 * Reference
 

@@ -719,6 +719,13 @@ Also add the number of windows in the window configuration."
   (setq git-gutter:added-sign " ")
   (setq git-gutter:deleted-sign " "))
 
+;; Highlight the entire expression when hovering over matching parentheses.
+(use-package! paren
+  :config
+  (setq show-paren-style 'expression)
+  (custom-set-faces!
+    '(show-paren-match-expression :background "#1c1c1c")))
+
 ;; Here are some additional functions/macros that could help you configure Doom:
 ;;
 ;; - `load!' for loading external *.el files relative to this one
