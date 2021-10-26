@@ -722,6 +722,8 @@ Also add the number of windows in the window configuration."
 (use-package! highlight-sexp
   :hook ((prog-mode . highlight-sexp-mode))
   :config
+  (custom-set-faces!
+    '(hl-sexp-face :extend t))
   (setq hl-sexp-background-color "grey33"))
 
 ;; Here are some additional functions/macros that could help you configure Doom:
