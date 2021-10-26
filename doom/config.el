@@ -577,6 +577,8 @@ Also add the number of windows in the window configuration."
 (after! lsp-mode
   (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]bazel-.*\\'")
   (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\.cache\\'"))
+;; Use text-mode for scratch buffer.
+(setq-default doom-scratch-initial-major-mode 'text-mode)
 
 (custom-set-faces!
   '(vertical-border :background "#2e3330" :foreground "#2e3330")

@@ -351,6 +351,7 @@ Note that this file is pretty much **required** and acts as the base for all oth
 
 <<editing>>
 <<code>>
+<<scratch>>
 
 <<colors>>
 <<misc-ui>>
@@ -1271,6 +1272,16 @@ This determines the style of line numbers in effect. If set to "nil", line numbe
 #+name: line-numbers
 #+begin_src emacs-lisp
 (setq display-line-numbers-type nil)
+#+end_src
+
+** Scratch buffer
+
+In doom, the scratch buffer is persistent and can be visited with =, x=.
+
+#+name: scratch
+#+begin_src emacs-lisp
+;; Use text-mode for scratch buffer.
+(setq-default doom-scratch-initial-major-mode 'text-mode)
 #+end_src
 
 ** Dead code
