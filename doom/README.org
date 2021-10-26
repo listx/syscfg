@@ -307,6 +307,7 @@ In order to use =C-,= from terminal Emacs, you have to make your terminal (e.g.,
 (package! highlight-sexp
   :recipe (:host github :repo "daimrod/highlight-sexp"))
 (package! focus)
+(package! solaire-mode :disable t)
 <<package-zenburn-theme>>
 #+end_src
 

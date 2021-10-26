@@ -55,4 +55,5 @@
 (package! highlight-sexp
   :recipe (:host github :repo "daimrod/highlight-sexp"))
 (package! focus)
+(package! solaire-mode :disable t)
 (package! zenburn-theme)
