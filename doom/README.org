@@ -1301,6 +1301,18 @@ Before we started using Doom Emacs, we used to rely heavily on kakapo-mode to al
   (kakapo-mode))
 #+end_src
 
+*** Describe face under point
+
+#+begin_src emacs-lisp
+;; From https://stackoverflow.com/a/1242366.
+(defun l/what-face (pos)
+  (interactive "d")
+  (let ((face (or (get-char-property pos 'read-face-name)
+                  (get-char-property pos 'face))))
+    (if face (message "Face: %s" face) (message "No face at %d" pos))
+    face))
+#+end_src
+
 ** UI
 
 #+name: misc-ui
