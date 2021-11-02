@@ -31,6 +31,7 @@ emacs:
 	# `${C}/zzz/doom-emacs' is the `doom' emacs configuration.
 	git -C ${C} submodule update --init ${C}/zzz
 	ln -fns ${C}/zzz/chemacs2                           ${H}/.emacs.d
+	ln -fs ${C}/emacs                                   ${H}/.emacs.legacy
 	ln -fs ${C}/emacs/.emacs-profiles.el                ${H}
 	# "doom-emacs" profile
 	# Set up doom-emac's DOOMDIR.
