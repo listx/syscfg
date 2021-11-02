@@ -10,6 +10,6 @@ set -o nounset
 set -o pipefail
 
 rm -rf "${TMPDIR:-/tmp}/zsh-${UID:-user}"
-rm ~/.zshrc.zwc
-rm ~/.compdump
-rm ~/.zpm/plugins/**/*.zwc
+rm -f ~/.zshrc.zwc
+rm -f ~/.zcompdump
+rm -f ~/.zpm/plugins/**/*.zwc
