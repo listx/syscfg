@@ -701,15 +701,16 @@ Also add the number of windows in the window configuration."
   ; above because there is literally no frame.
   (defun l/git-gutter-refresh (orig-fun &rest args)
     (prog1
-        (apply orig-fun args)
-      (git-gutter:update-all-windows)))
+      (apply orig-fun args)
+      (when (frame-focus-state)
+        (git-gutter:update-all-windows))))
   (advice-add 'select-window :around #'l/git-gutter-refresh)
   ; Make git-gutter refresh based on a timer (abuse the fact that
   ; hl-line-highlight-now is called whenever we're idle).
   (advice-add 'hl-line-highlight-now :around #'l/git-gutter-refresh)
   ; Update git-gutter every time we lose/regain focus to the frame. See
   ; https://emacs.stackexchange.com/a/60971/13006.
-  (add-function :after after-focus-change-function (lambda () (unless (frame-focus-state) (git-gutter:update-all-windows))))
+  (add-function :after after-focus-change-function (lambda () (when (frame-focus-state) (git-gutter:update-all-windows))))
   (custom-set-faces!
    '(git-gutter:modified :foreground "#ff00ff")
    '(git-gutter:added :foreground "#00ff00")
