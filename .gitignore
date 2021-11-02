@@ -45,6 +45,7 @@ qutebrowser/bookmarks
 qutebrowser/quickmarks
 qutebrowser/qsettings
 ssh/*
+tmux/resurrect
 vim/.VimballRecord
 vim/.netrwhist
 vim/colors
