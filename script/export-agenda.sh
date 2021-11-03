@@ -1,15 +1,9 @@
 #!/usr/bin/env bash
 
-# This invokes emacs and makes it export the agenda to disk. The details are in
-# the `l/export-agenda' function in the emacs config.
+# This invokes emacs and makes it export the agenda to disk.
 #
-# Most of the logic here is to try to prevent running the `l/export-agenda'
-# function if possible, because it is expensive. It is expensive for 2 reasons:
-# (1) the function loads color themes because it affects the HTML CSS styling of
-# the exported file, and (2) we are forced to run a separate (new) emacs
-# invocation because running against an existing daemon means blocking that
-# daemon while this function runs (and also we don't want to have a dedicated
-# separate emacs daemon just for this command only).
+# Most of the logic here is to try to prevent running the
+# `(org-store-agenda-views)' function if possible, because it can be expensive.
 
 set -o errexit
 set -o nounset
