@@ -34,8 +34,9 @@
   # Enable cron service
   services.cron = {
     enable = true;
-    systemCronJobs =
-      [ "* * * * *      l     zsh -l -c ~/syscfg/script/export-agenda.sh" ];
+    systemCronJobs = [
+      "* * * * *      l     . /etc/profile; ~/syscfg/script/export-agenda.sh"
+    ];
   };
 
   services.xserver = {
