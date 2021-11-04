@@ -1,23 +1,19 @@
 { config, pkgs, ... }:
 
 {
-  imports =
-    [
-      ../extra.nix
-      ./hardware-configuration.nix
-      ../k8s-master.nix
-    ];
+  imports = [ ../extra.nix ./hardware-configuration.nix ../k8s-master.nix ];
 
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
   # See https://askubuntu.com/a/863301 (this fixes flooding of the kernel logs
   # with "printk messages dropped".
-  boot.kernelParams = ["pcie_aspm=off"];
+  boot.kernelParams = [ "pcie_aspm=off" ];
 
   boot.initrd.luks.devices = {
     luksroot = {
-      device = "/dev/disk/by-id/nvme-SAMSUNG_MZVKW512HMJP-000H1_S34CNA0J100907-part2";
+      device =
+        "/dev/disk/by-id/nvme-SAMSUNG_MZVKW512HMJP-000H1_S34CNA0J100907-part2";
       preLVM = true;
     };
   };
@@ -29,8 +25,7 @@
 
   networking = {
     hostName = "k0";
-    extraHosts = ''
-    '';
+    extraHosts = "";
 
     defaultGateway = "192.168.0.1";
     nameservers = [ "8.8.8.8" ];
@@ -39,9 +34,8 @@
   # Enable cron service
   services.cron = {
     enable = true;
-    systemCronJobs = [
-      "* * * * *      l     zsh -l -c ~/syscfg/script/export-agenda.sh"
-    ];
+    systemCronJobs =
+      [ "* * * * *      l     zsh -l -c ~/syscfg/script/export-agenda.sh" ];
   };
 
   services.xserver = {
