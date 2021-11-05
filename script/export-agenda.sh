@@ -8,6 +8,7 @@
 set -o errexit
 set -o nounset
 set -o pipefail
+set -o xtrace
 
 # Create a simple checksum of the git state inside a given git directory. We
 # compute this by simply getting (1) current commit sha, plus any deltas found
@@ -76,8 +77,27 @@ main()
 {
 	exit_if_cache_hit
 
-	timeout -k 10 45 emacsclient \
-		--eval '(org-store-agenda-views)'
+	# Sanity check. Script will exit if this variable is not set.
+	echo $L_ORG_AGENDA_DIRS
+
+	__elisp=$(cat << EOF
+	(progn
+		; Load theme. This makes the HTML output colorized.
+		(load-theme 'zenburn t)
+		; Export agenda as HTML file.
+		(org-store-agenda-views)
+	)
+EOF
+	)
+
+	# Strip comments.
+	__elisp="$(echo -e "${__elisp}" | sed '/^\s\+\?;/d;s/;.\+//')"
+
+	timeout -k 30 20 \
+		emacs \
+		--batch \
+		--load ~/syscfg/zzz/doom-emacs/init.el \
+		--eval "${__elisp}"
 }
 
 main "$@"

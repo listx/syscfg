@@ -35,7 +35,8 @@
   services.cron = {
     enable = true;
     systemCronJobs = [
-      "* * * * *      l     . /etc/profile; ~/syscfg/script/export-agenda.sh"
+      "* * * * *      l     2>&1 zsh -l -c ~/syscfg/script/export-agenda.sh | tee -a ~/agenda.cron.log.txt"
+      "0 * * * *      l     rm -f ~/agenda.cron.log.txt"
     ];
   };
 
