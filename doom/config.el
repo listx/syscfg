@@ -725,7 +725,7 @@ Also add the number of windows in the window configuration."
   :config
   (custom-set-faces!
     '(hl-sexp-face :extend t))
-  (setq hl-sexp-background-color "grey33"))
+  (setq hl-sexp-background-color "grey20"))
 
 ;; Useful for highlighting single sentences in plain text (because).
 (use-package! focus
