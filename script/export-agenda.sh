@@ -40,15 +40,19 @@ get_git_repos_checksum()
 	echo "${checksum}" | _sha1sum
 }
 
-exit_if_cache_hit()
+cache_hit()
 {
-	local cache="$HOME/syscfg/cache/export-agenda"
+	cache="$HOME/syscfg/cache/export-agenda"
 	mkdir -p "$HOME/syscfg/cache"
 	local checksum
 	local old_checksum
 
 	# Caclculate new checksum.
 	checksum="$(get_git_repos_checksum "${L_ORG_AGENDA_DIRS}")"
+	# Append date into checksum. This way, even if the agenda content does not
+	# change, we will get a cache miss if a day passes with no change (forcing
+	# the generation of a new agenda.html centered on today's date).
+	checksum+=",$(date +%Y-%m-%d)"
 	echo "new checksum is ${checksum}"
 
 	# Check if cache exists.
@@ -56,15 +60,16 @@ exit_if_cache_hit()
 		old_checksum="$(cat "${cache}")"
 		echo "old checksum is ${old_checksum}"
 
-		# Exit if the cached file has not changed.
+		# Cache hit?
 		if [[ "${old_checksum}" == "${checksum}" ]]; then
-			echo >&2 "cache has not changed; aborting"
-			return 1
+			echo >&2 "cache hit"
+			return 0
 		fi
 	fi
 
-	# Overwrite old cache.
+	# Overwrite stale cache.
 	echo "${checksum}" > "${cache}"
+	return 1
 }
 
 # Like sha1sum, but discard trailing filename.
@@ -75,7 +80,10 @@ _sha1sum()
 
 main()
 {
-	exit_if_cache_hit
+	if cache_hit; then
+		echo >&2 "aborting due to cache hit"
+		exit
+	fi
 
 	# Sanity check. Script will exit if this variable is not set.
 	echo $L_ORG_AGENDA_DIRS
