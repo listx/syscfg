@@ -230,6 +230,17 @@ Return an event vector."
       :mnv "l" #'dired-find-file)
 (add-hook 'git-commit-setup-hook #'(lambda () (flyspell-mode -1)))
 (map! :after evil-org
+      :map org-read-date-minibuffer-local-map
+      "h" (cmd! (org-eval-in-calendar '(calendar-backward-day 1)))
+      "l" (cmd! (org-eval-in-calendar '(calendar-forward-day 1)))
+      "j" (cmd! (org-eval-in-calendar '(calendar-forward-week 1)))
+      "k" (cmd! (org-eval-in-calendar '(calendar-backward-week 1)))
+      "0" (cmd! (org-eval-in-calendar '(calendar-beginning-of-week 1)))
+      "$" (cmd! (org-eval-in-calendar '(calendar-end-of-week 1)))
+      "H" (cmd! (org-eval-in-calendar '(calendar-backward-month 1)))
+      "L" (cmd! (org-eval-in-calendar '(calendar-forward-month 1)))
+      "J" (cmd! (org-eval-in-calendar '(calendar-forward-month 2)))
+      "K" (cmd! (org-eval-in-calendar '(calendar-backward-month 2)))
       :map evil-org-mode-map
       :mnv "M-k" #'org-backward-element
       :mnv "M-j" #'org-forward-element
