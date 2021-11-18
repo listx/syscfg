@@ -21,14 +21,24 @@ s()
 	w0) host_shortname="DESKTOP-P54E4V0" ;;
 	esac
 
-	local session="${2:-}"
+	local session
+	local session_suffix="${2:-}"
 
-	# Remove any existing host prefix from the session. This is to prevent it
-	# eventually looking like "HOST-HOST-<SESSION>".
-	session="${session#${host_shortname}-}"
+	if [[ -n "${session_suffix}" ]]; then
+		# Remove any existing host prefix from the session. This is to prevent it
+		# eventually looking like "HOST-HOST-<SESSION>".
+		session_suffix="${session#${host_shortname}-}"
 
-	# Prefix session name with the hostname.
-	session="${host_shortname}-${session:-1}"
+		# Prefix session name with the hostname.
+		session="${host_shortname}-${session_suffix:-1}"
+	else
+		# If the numeric suffix is empty, then that means it was not initially
+		# provided. In this case we go with the default option, which is the
+		# empty string. That way, tmux.sh will allocate a default name on its
+		# own.
+		session=""
+	fi
+
 
 	case "${host}" in
 	w0) user="ingra" ;;
@@ -40,7 +50,7 @@ s()
 		ssh -t "${user}@${host}" \"zsh -lc \\\"~/syscfg/script/tmux.sh ${session}\\\"\"
 		;;
 	*)
-		ssh -t "${user}@${host}" '~/syscfg/script/tmux.sh' "${session}"
+		ssh -t "${user}@${host}" '~/syscfg/script/tmux.sh' ${session:+"${session}"}
 		;;
 	esac
 }
