@@ -126,53 +126,53 @@ TMOUT=1
 
 __l_get_mem()
 {
-    ps -o rss= -p $$
+  ps -o rss= -p $$
 }
 
 # Don't redraw the prompt if we are in the middle of a completion widget. See
 # https://stackoverflow.com/a/30456173/437583.
 __l_prompt_tick ()
 {
-	# Don't redraw the prompt if we are inside an Emacs vterm session, because
-	# redrawing it forces the cursor to move to the bottom of the screen after
-	# each redraw even if we're in Evil's "normal" mode, rendering normal mode
-	# useless.
-	if [[ -n "${EMACS_VTERM_PATH:-}" ]]; then
-		return
-	fi
+  # Don't redraw the prompt if we are inside an Emacs vterm session, because
+  # redrawing it forces the cursor to move to the bottom of the screen after
+  # each redraw even if we're in Evil's "normal" mode, rendering normal mode
+  # useless.
+  if [[ -n "${EMACS_VTERM_PATH:-}" ]]; then
+    return
+  fi
 
-    # Don't redraw the prompt if we've typed *anything* into the command line.
-    # This way we can at least save an approximate timestamp of when we last
-    # started typing.
-    if (( ${#BUFFER} > 0 )); then
-        return
-    fi
+  # Don't redraw the prompt if we've typed *anything* into the command line.
+  # This way we can at least save an approximate timestamp of when we last
+  # started typing.
+  if (( ${#BUFFER} > 0 )); then
+    return
+  fi
 
-    case "$WIDGET" in
-        # Don't call reset-prompt if we are using fzf widgets. This checks 4
-        # known cases:
-        #   fzf-cd-widget (ALT-D)
-        #   fzf-history-widget (CTRL-R)
-        #   fzf-file-widget (CTRL-T)
-        #   fzf-completion (TAB-completion)
-        fzf-*) return ;;
-        # Multi-line input with "\" character at the end.
-        accept-line) (( $#BUFFER > 0 )) && return ;;
-    esac
+  case "$WIDGET" in
+    # Don't call reset-prompt if we are using fzf widgets. This checks 4
+    # known cases:
+    #   fzf-cd-widget (ALT-D)
+    #   fzf-history-widget (CTRL-R)
+    #   fzf-file-widget (CTRL-T)
+    #   fzf-completion (TAB-completion)
+    fzf-*) return ;;
+    # Multi-line input with "\" character at the end.
+    accept-line) (( $#BUFFER > 0 )) && return ;;
+  esac
 
-    # There seems to be a memory leak in zsh 5.8 (x86_64-apple-darwin17.7.0),
-    # where constantly resetting the prompt eats up memory. We've observed the
-    # shell ballooning to over 1GiB in memory usage after several days.
-    #
-    # As a temporary workaround, do not reset the prompt if our memory usage is
-    # too high (>50MB).
-    (( $(__l_get_mem) > 50000 )) && return
+  # There seems to be a memory leak in zsh 5.8 (x86_64-apple-darwin17.7.0),
+  # where constantly resetting the prompt eats up memory. We've observed the
+  # shell ballooning to over 1GiB in memory usage after several days.
+  #
+  # As a temporary workaround, do not reset the prompt if our memory usage is
+  # too high (>50MB).
+  (( $(__l_get_mem) > 50000 )) && return
 
-    zle reset-prompt
+  zle reset-prompt
 }
 
 TRAPALRM() {
-    __l_prompt_tick
+  __l_prompt_tick
 }
 
 # history settings
@@ -399,18 +399,18 @@ alias rgflac='~/syscfg/script/audio/replaygain/flac/tfwrg.sh'
 __l_accept_line () {
   # Check for a command that starts with `d.'.
   if [[ "$BUFFER" == "d."* ]]; then
-    # Only convert to a named directory buffer if we get a match of the named
-    # directory in the hash table.
-    local dir_alias
-    local dir_expanded_alias
-    dir_alias="${BUFFER#d.}"
-    dir_expanded_alias=$(hash -dm "${dir_alias}")
-    dir_expanded_alias="${dir_expanded_alias#*=}"
-    if [[ -e "${dir_expanded_alias}" ]]; then
-		BUFFER="d ~${dir_alias}"
-    else
-		echo -e >&2 "\nunrecognized directory alias ${(q)dir_alias}"
-    fi
+  # Only convert to a named directory buffer if we get a match of the named
+  # directory in the hash table.
+  local dir_alias
+  local dir_expanded_alias
+  dir_alias="${BUFFER#d.}"
+  dir_expanded_alias=$(hash -dm "${dir_alias}")
+  dir_expanded_alias="${dir_expanded_alias#*=}"
+  if [[ -e "${dir_expanded_alias}" ]]; then
+    BUFFER="d ~${dir_alias}"
+  else
+    echo -e >&2 "\nunrecognized directory alias ${(q)dir_alias}"
+  fi
   fi
   # Call original `accept-line' widget by prepending the leading period.
   zle .accept-line
@@ -422,7 +422,7 @@ zle -N accept-line __l_accept_line
 # even though the "dumb" terminal that `M-x shell' sets is unable to handle it.
 # See https://github.com/syl20bnr/spacemacs/issues/3035.
 if [[ $TERM == "dumb" ]]; then
-    unset zle_bracketed_paste
+  unset zle_bracketed_paste
 fi
 
 # Use Vim bindings! (Note: this command must come first before the other bindkey
@@ -493,67 +493,67 @@ bindkey '^x' autosuggest-execute
 # See https://stackoverflow.com/a/66060510/437583.
 autoload -Uz add-zsh-hook
 command-not-found () {
-	# $exit_status is set by the prompt. If we simply use "$?" as the variable
-	# to check, unfortunately it does not get cleared when we (1) invoke an
-	# known command, then (2) delete the contents of BUFFER loaded by `hist -fs
-	# f -1'.
-	if (( exit_status == 127 )) ; then
-		hist -fs f -1 || echo "\`hist' is not installed"
-	fi
+  # $exit_status is set by the prompt. If we simply use "$?" as the variable
+  # to check, unfortunately it does not get cleared when we (1) invoke an
+  # known command, then (2) delete the contents of BUFFER loaded by `hist -fs
+  # f -1'.
+  if (( exit_status == 127 )) ; then
+    hist -fs f -1 || echo "\`hist' is not installed"
+  fi
 }
 add-zsh-hook precmd command-not-found
 
 # Load in completions for Google Cloud SDK.
 google_cloud_sdk_path="${L_GOOGLE_CLOUD_SDK_PATH:-}"
 if [[ -n "${google_cloud_sdk_path}" ]]; then
-    f="${google_cloud_sdk_path}/completion.zsh.inc"
-    source "${f}" || echo "could not source ${f}"
+  f="${google_cloud_sdk_path}/completion.zsh.inc"
+  source "${f}" || echo "could not source ${f}"
 fi
 
 # Load fzf bindings (upstream) to ZSH.
 if [[ -n "${commands[fzf-share]}" ]]; then
-	# Try to use fzf-tmux to use tmux split panes (if we are inside tmux).
-	export FZF_TMUX=1
+  # Try to use fzf-tmux to use tmux split panes (if we are inside tmux).
+  export FZF_TMUX=1
 
-	source "$(fzf-share)/completion.zsh"
-	source "$(fzf-share)/key-bindings.zsh"
+  source "$(fzf-share)/completion.zsh"
+  source "$(fzf-share)/key-bindings.zsh"
 
-	# Use exact matches (except for space characters; i.e., you can type "world
-	# hello" and it will match a "hello world" string).
-	FZF_CTRL_R_OPTS=" --exact"
-	# Sort entries. This essentially just groups together similarly-named
-	# commands to be together (that is, search hits that share the same prefix
-	# will be shown together, instead of being shown separately if they were not
-	# executed one after the other chronologically).
-	FZF_CTRL_R_OPTS+=" --sort"
-	# `--select-1' automatically selects the item if there's only one so that you
-	# don't have to press enter key. Likewise, `--exit-0' automatically exits
-	# when the list is empty.
-	FZF_CTRL_R_OPTS+=" --select-1 --exit-0"
-	# Enable preview window. This makes it so that we can see the full command
-	# if it is too long to be displayed in a single line. We hide this preview
-	# window by default, and bind the `?' key to display it if we want to.
-	FZF_CTRL_R_OPTS+=" --preview 'echo {}' --preview-window down:3:hidden:wrap --bind '?:toggle-preview'"
-	export FZF_CTRL_R_OPTS
+  # Use exact matches (except for space characters; i.e., you can type "world
+  # hello" and it will match a "hello world" string).
+  FZF_CTRL_R_OPTS=" --exact"
+  # Sort entries. This essentially just groups together similarly-named
+  # commands to be together (that is, search hits that share the same prefix
+  # will be shown together, instead of being shown separately if they were not
+  # executed one after the other chronologically).
+  FZF_CTRL_R_OPTS+=" --sort"
+  # `--select-1' automatically selects the item if there's only one so that you
+  # don't have to press enter key. Likewise, `--exit-0' automatically exits
+  # when the list is empty.
+  FZF_CTRL_R_OPTS+=" --select-1 --exit-0"
+  # Enable preview window. This makes it so that we can see the full command
+  # if it is too long to be displayed in a single line. We hide this preview
+  # window by default, and bind the `?' key to display it if we want to.
+  FZF_CTRL_R_OPTS+=" --preview 'echo {}' --preview-window down:3:hidden:wrap --bind '?:toggle-preview'"
+  export FZF_CTRL_R_OPTS
 
-	export FZF_DEFAULT_COMMAND='rg --files --hidden --glob "!.git"'
+  export FZF_DEFAULT_COMMAND='rg --files --hidden --glob "!.git"'
 
-	# C-t fuzzy searches a file argument to the current command we're trying to build up.
-	export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+  # C-t fuzzy searches a file argument to the current command we're trying to build up.
+  export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 
-	# Enable preview window for files.
-	FZF_CTRL_T_OPTS=" --preview '(cat {} || tree -C {}) 2> /dev/null | head -200'"
-	FZF_CTRL_T_OPTS+=" --select-1 --exit-0"
-	export FZF_CTRL_T_OPTS
+  # Enable preview window for files.
+  FZF_CTRL_T_OPTS=" --preview '(cat {} || tree -C {}) 2> /dev/null | head -200'"
+  FZF_CTRL_T_OPTS+=" --select-1 --exit-0"
+  export FZF_CTRL_T_OPTS
 
-	# Use ALT-D binding instead of the default ALT-C.
-	bindkey '\ed' fzf-cd-widget
-	export FZF_ALT_C_COMMAND='rg --files --hidden --glob "!.git" --null | xargs -0 dirname | sort -u'
+  # Use ALT-D binding instead of the default ALT-C.
+  bindkey '\ed' fzf-cd-widget
+  export FZF_ALT_C_COMMAND='rg --files --hidden --glob "!.git" --null | xargs -0 dirname | sort -u'
 
-	# Preview directory entries.
-	FZF_ALT_C_OPTS="--preview 'tree -C {} | head -200'"
-	FZF_ALT_C_OPTS+=" --select-1 --exit-0"
-	export FZF_ALT_C_OPTS
+  # Preview directory entries.
+  FZF_ALT_C_OPTS="--preview 'tree -C {} | head -200'"
+  FZF_ALT_C_OPTS+=" --select-1 --exit-0"
+  export FZF_ALT_C_OPTS
 fi
 
 # Use zpm. Run "zpm clean" if modifying the .zshrc file to clear out the cache.
@@ -586,44 +586,44 @@ bindkey -M viins " " __l_lazy_load_completions
 bindkey -M viins "^I" __l_lazy_load_completions # ^I is the TAB key
 __l_maybe_load_completions()
 {
-	# Remove leading whitespace from BUFFER, to catch cases where we enter some
-	# spaces or tabs before actually typing the command name. See
-	# https://stackoverflow.com/a/3352015.
-	case "${BUFFER#"${BUFFER%%[![:space:]]*}"}" in
-	kl)
-		if ! [[ $commands[kubectl] ]]; then
-			return
-		fi
+  # Remove leading whitespace from BUFFER, to catch cases where we enter some
+  # spaces or tabs before actually typing the command name. See
+  # https://stackoverflow.com/a/3352015.
+  case "${BUFFER#"${BUFFER%%[![:space:]]*}"}" in
+  kl)
+    if ! [[ $commands[kubectl] ]]; then
+      return
+    fi
 
-		# The __start_kubectl is defined only if we've already sourced the
-		# completions.
-		if (( $+functions[__start_kubectl] )); then
-			return
-		fi
+    # The __start_kubectl is defined only if we've already sourced the
+    # completions.
+    if (( $+functions[__start_kubectl] )); then
+      return
+    fi
 
-		source <(command kubectl completion zsh)
-		# Pass through the default kubectl completions to kl (zsh/func/kl).
-		compdef kl=kubectl
-		;;
-	*)
-		;;
-	esac
+    source <(command kubectl completion zsh)
+    # Pass through the default kubectl completions to kl (zsh/func/kl).
+    compdef kl=kubectl
+    ;;
+  *)
+    ;;
+  esac
 }
 __l_lazy_load_completions()
 {
-	__l_maybe_load_completions
-	# Now invoke the vanilla zle widget that was supposed to have been called
-	# from viins mode.
-	case "${KEYS[-1]}" in
-	" ") zle .self-insert
-		;;
-	"	") zle fzf-completion
-		;;
-	# We'd never reach this branch, unless we bound our keys wrong. Since we
-	# have nothing better to do, just insert KEYS into the zle buffer.
-	*) zle .self-insert
-		;;
-	esac
+  __l_maybe_load_completions
+  # Now invoke the vanilla zle widget that was supposed to have been called
+  # from viins mode.
+  case "${KEYS[-1]}" in
+  " ") zle .self-insert
+    ;;
+  "	") zle fzf-completion
+    ;;
+  # We'd never reach this branch, unless we bound our keys wrong. Since we
+  # have nothing better to do, just insert KEYS into the zle buffer.
+  *) zle .self-insert
+    ;;
+  esac
 }
 zle -N __l_maybe_load_completions
 zle -N __l_lazy_load_completions
@@ -641,31 +641,31 @@ zle -N __l_lazy_load_completions
 # a brute-force approach here because (1) we're lazy and (2) this is shell code.
 __l_tmux_command()
 {
-    local desired_id=0
-    local session_ids
-    local _hostname
+  local desired_id=0
+  local session_ids
+  local _hostname
 
-    # Grab hostname. If we're using our own home-grown convention of using
-    # ~/.hostname-short as a shorter hostname alias for scripting, use that
-    # instead if it is available.
-    _hostname=$(hostname)
-    if [[ -f ~/.hostname-short ]]; then
-        _hostname=$(cat ~/.hostname-short)
+  # Grab hostname. If we're using our own home-grown convention of using
+  # ~/.hostname-short as a shorter hostname alias for scripting, use that
+  # instead if it is available.
+  _hostname=$(hostname)
+  if [[ -f ~/.hostname-short ]]; then
+    _hostname=$(cat ~/.hostname-short)
+  fi
+
+  # Prefer to use defaul session names where the format is
+  # <hostname>-<session_id>, and <session_id> is the smallest number possible.
+  #
+  # (f) causes the output to be split on newlines.
+  session_ids=(${(f)"$(tmux list-sessions | cut -d: -f1 | grep "^${_hostname}-[0-9]\+\$" | sort)"})
+  for session_id in "${session_ids[@]}"; do
+    if (( desired_id < ${session_id#*-} )); then
+      break
+    else
+      ((desired_id++))
     fi
-
-    # Prefer to use defaul session names where the format is
-    # <hostname>-<session_id>, and <session_id> is the smallest number possible.
-    #
-    # (f) causes the output to be split on newlines.
-    session_ids=(${(f)"$(tmux list-sessions | cut -d: -f1 | grep "^${_hostname}-[0-9]\+\$" | sort)"})
-    for session_id in "${session_ids[@]}"; do
-        if (( desired_id < ${session_id#*-} )); then
-            break
-        else
-            ((desired_id++))
-        fi
-    done
-    echo "tmux new-session -A -s ${_hostname}-${desired_id}"
+  done
+  echo "tmux new-session -A -s ${_hostname}-${desired_id}"
 }
 
 # Replace current shell process with tmux, because it's much nicer to use tmux
@@ -683,9 +683,9 @@ __l_tmux_command()
 # connect to a remote tmux session (to remove the outer tmux layer as this outer
 # layer is unnecessary).
 if command -v tmux &> /dev/null \
-    && [[ -n "${PS1}" ]] \
-    && [[ ! "${TERM}" =~ tmux ]] \
-    && [[ -z "${TMUX}" ]] \
-    && [[ -z "${L_WANT_RAW_SHELL:-}" ]]; then
+  && [[ -n "${PS1}" ]] \
+  && [[ ! "${TERM}" =~ tmux ]] \
+  && [[ -z "${TMUX}" ]] \
+  && [[ -z "${L_WANT_RAW_SHELL:-}" ]]; then
   exec $(__l_tmux_command)
 fi
