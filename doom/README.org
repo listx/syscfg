@@ -306,7 +306,6 @@ In order to use =C-,= from terminal Emacs, you have to make your terminal (e.g.,
 (package! kakapo-mode)
 (package! highlight-sexp
   :recipe (:host github :repo "daimrod/highlight-sexp"))
-(package! focus)
 (package! solaire-mode :disable t)
 <<package-zenburn-theme>>
 ; Fix org-mode org-element--cache errror. See
@@ -1462,15 +1461,6 @@ Before we started using Doom Emacs, we used to rely heavily on kakapo-mode to al
   (custom-set-faces!
     '(hl-sexp-face :extend t))
   (setq hl-sexp-background-color "grey20"))
-
-;; Useful for highlighting single sentences in plain text (because).
-(use-package! focus
-  :hook ((text-mode . focus-mode))
-  :config
-  (custom-set-faces!
-    '(focus-focused :weight bold :extend t)
-    '(focus-unfocused :inherit nil))
-  (add-to-list 'focus-mode-to-thing '(python-mode . paragraph)))
 #+end_src
 
 * Reference

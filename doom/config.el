@@ -738,15 +738,6 @@ Also add the number of windows in the window configuration."
     '(hl-sexp-face :extend t))
   (setq hl-sexp-background-color "grey20"))
 
-;; Useful for highlighting single sentences in plain text (because).
-(use-package! focus
-  :hook ((text-mode . focus-mode))
-  :config
-  (custom-set-faces!
-    '(focus-focused :weight bold :extend t)
-    '(focus-unfocused :inherit nil))
-  (add-to-list 'focus-mode-to-thing '(python-mode . paragraph)))
-
 ;; Here are some additional functions/macros that could help you configure Doom:
 ;;
 ;; - `load!' for loading external *.el files relative to this one

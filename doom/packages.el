@@ -54,7 +54,6 @@
 (package! kakapo-mode)
 (package! highlight-sexp
   :recipe (:host github :repo "daimrod/highlight-sexp"))
-(package! focus)
 (package! solaire-mode :disable t)
 (package! zenburn-theme)
 ; Fix org-mode org-element--cache errror. See
