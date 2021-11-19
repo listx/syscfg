@@ -57,3 +57,7 @@
 (package! focus)
 (package! solaire-mode :disable t)
 (package! zenburn-theme)
+; Fix org-mode org-element--cache errror. See
+; https://list.orgmode.org/87ee7jdv70.fsf@localhost/. This includes the fix in
+; c3f457375.
+(package! org :pin "faf8ce7dee52f4473134376dd243c34130e50915")
