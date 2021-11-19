@@ -732,7 +732,7 @@ Also add the number of windows in the window configuration."
 
 ;; Highlight the entire expression when hovering over matching parentheses.
 (use-package! highlight-sexp
-  :hook ((prog-mode . highlight-sexp-mode))
+  :hook (lisp-mode emacs-lisp-mode)
   :config
   (custom-set-faces!
     '(hl-sexp-face :extend t))
