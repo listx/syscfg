@@ -1,0 +1,19 @@
+#+TITLE: Linus's Helpers
+#+AUTHOR: Linus Arver
+#+PROPERTY: header-args :tangle no :noweb no-export
+
+* Introduction
+
+The ~lh~ binary is meant to slowly replace the shell scripts in =~/syscfg/script= with replacements written in Rust.
+
+* Subcommands
+
+** shorten-path
+
+Replaces [[file:doc/code/simplify_path.sh]]. Basically it shortens long paths to try to fit under 30 characters if possible. It uses a Zsh named directory hash table as a way to try to shorten tho path.
+
+#+begin_src
+lh path-shorten --path-aliases ~/syscfg/zsh/path-aliases ~/aaaaaaaaaaaaaaaaaa/bbbbbbbbbbbb/cccccccccccccc/hello
+
+  =>  ~/a/b/c/hello
+#+end_src
