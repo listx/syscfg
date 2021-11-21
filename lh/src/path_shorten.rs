@@ -8,53 +8,79 @@ pub fn shorten(path: &str, path_aliases_file: &str) -> String {
 }
 
 fn path_shorten(path_canonical: &str) -> String {
-    if path_canonical.chars().count() < 2 {
+    // Don't shorten paths that are 30 characters or less in length.
+    if path_canonical.chars().count() <= 30 {
         return path_canonical.to_string();
     }
 
-    let mut dirs: Vec<String> = Vec::new();
+    // Don't bother shortening anything if there is only 1 directory.
+    let parts_count = path_canonical.split("/").count();
+    if parts_count == 1 {
+        return path_canonical.to_string();
+    }
+    let first_char = path_canonical.chars().next().unwrap();
+    if first_char == '/' && parts_count == 2 {
+        return path_canonical.to_string();
+    }
 
-    let num_dirs = path_canonical.split("/").count();
+    // Determine overall "search" area of possible directories within the path
+    // to shorten to 1 character. We exclude from the search the very first and
+    // last directories.
+    let (j, shortenable_dirs) = match first_char {
+        // Do not shorten leading directories that start with '~', and also do
+        // not consider the root directory '/'.
+        '/' | '~' => (1, 1..(parts_count - 1)),
+        _ => (0, 0..(parts_count - 1)),
+    };
 
-    // Construct the shortened path. As we consider each directory that makes up
-    // the path, shorten it if using it as-is would result in >30 characters
-    // used.
-    let mut path_len = 0;
-    let mut path_len_rem = path_canonical.len();
-    for (i, dir) in path_canonical.split("/").enumerate() {
-        // Handle special case where a leading slash, e.g., "/a/b" results in
-        // iterating over ["", "a", "b"]. We skip over the first element.
-        if i == 0 && dir.len() == 0 {
-            path_len += 1;
-            path_len_rem -= 1;
-            continue;
+    // Construct a set of ranges, using shortenable_dirs. E.g., if
+    // shortenable_dirs is (1..3), then construct:
+    //   (1..2)
+    //   (1..3)
+    //   (1..4).
+    // We use these ranges to denote directories that should be shortened. As
+    // these ranges include more and more numbers, we shorten more and more
+    // directories until we are satisified with how much we've shortened
+    // path_canonical.
+    let mut ranges: Vec<std::ops::Range<usize>> = Vec::new();
+
+    for i in shortenable_dirs {
+        ranges.push(j..i + 1);
+    }
+
+    let mut candidate_best: Option<String> = None;
+    for range in ranges {
+        // Construct shortened path candidate with all directories in the range
+        // shortened.
+        let mut candidate: Vec<String> = Vec::new();
+        for (part_idx, part) in path_canonical.split("/").enumerate() {
+            if range.contains(&part_idx) {
+                // Add shortened version.
+                candidate.push(part.chars().next().unwrap().to_string());
+            } else {
+                // Add as-is.
+                candidate.push(part.to_string());
+            }
         }
+        let shortened = candidate.join("/");
+        // If a better (shorter) candidate is found, prefer it over the previous
+        // candidate.
+        if candidate_best.is_none()
+            || shortened.chars().count() < candidate_best.as_ref().unwrap().chars().count()
+        {
+            candidate_best = Some(shortened);
+        };
 
-        let dir_long = dir.to_string();
-        let dir_long_len = dir.len();
-
-        let dir_short = dir.chars().next().unwrap().to_string();
-
-        if path_len + path_len_rem > 30 && !dir.contains("~") && i != num_dirs - 1 {
-            dirs.push(dir_short);
-            path_len += 1;
-            path_len_rem -= dir_long_len;
-        } else {
-            dirs.push(dir_long);
-            path_len += dir_long_len;
-            path_len_rem -= dir_long_len;
-        }
-        // Only add length of "/" separator if we're not at the end.
-        if i != num_dirs - 1 {
-            path_len += 1;
-            path_len_rem -= 1;
+        // If a candidate is already under 30 characters, stop searching.
+        if candidate_best.is_some() && candidate_best.as_ref().unwrap().chars().count() <= 30 {
+            break;
         }
     }
 
-    if path_canonical.chars().next().unwrap() == '/' {
-        format!("/{}", dirs.join("/"))
+    if candidate_best.is_none() {
+        path_canonical.to_string()
     } else {
-        dirs.join("/")
+        candidate_best.unwrap().to_string()
     }
 }
 
@@ -135,7 +161,6 @@ mod test {
         assert_eq!(path_shorten(""), "");
         assert_eq!(path_shorten("~"), "~");
         assert_eq!(path_shorten("/"), "/");
-        //assert_eq!("/a/b".split("/").collect::<Vec<&str>>(), [""]);
         assert_eq!(path_shorten("/a"), "/a");
         assert_eq!(path_shorten("/a/b/c"), "/a/b/c");
         assert_eq!(path_shorten("a"), "a");
@@ -148,34 +173,63 @@ mod test {
         // If the path is just over 30 characters, we should shorten the first
         // directory.
         assert_eq!(
-            path_shorten("/a23456789/123456789/123456789a"),
-            "/a/123456789/123456789a"
+            path_shorten("/a23456789/b23456789/c23456789d"),
+            "/a/b23456789/c23456789d"
         );
         // Some longer directories.
         assert_eq!(
-            path_shorten("/a23456789/b23456789/123456789/123456789"),
-            "/a/b/123456789/123456789"
+            path_shorten("/a23456789/b23456789/c23456789/d23456789"),
+            "/a/b/c23456789/d23456789"
         );
         assert_eq!(
-            path_shorten("a23456789/b23456789/123456789/123456789"),
-            "a/b/123456789/123456789"
+            path_shorten("a23456789/b23456789/c23456789/d23456789"),
+            "a/b/c23456789/d23456789"
         );
         // Shortening of aliases (directories with "~") in them are forbidden.
         assert_eq!(
-            path_shorten("~123456789/123456789/123456789/123456789"),
-            "~123456789/1/1/123456789"
+            path_shorten("~a23456789/b23456789/c23456789/d23456789"),
+            "~a23456789/b/c/d23456789"
         );
         // Realistic example (last directory remains untouched).
         assert_eq!(
             path_shorten("~/prog/foreign/git/contrib/thunderbird-patch-inline"),
             "~/p/f/g/c/thunderbird-patch-inline"
         );
-        // Extreme example.
+        // Extreme cases.
         assert_eq!(
             path_shorten(
                 "~/aaaaaaaaaaaaaaaaaaaa/bbbbbbbbbbbbbbbbbbbbbb/cccccccccccccccccccccc/hello"
             ),
             "~/a/b/c/hello"
+        );
+        // Unusual case of just 2 directories, where both are very long.
+        assert_eq!(
+            path_shorten(
+                "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+            ),
+            "a/bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        );
+        // Non-ASCII (exactly 30 characters).
+        assert_eq!(
+            path_shorten("/일이삼사오육칠팔구/일이삼사오육칠팔구/일이삼사오육칠팔구"),
+            "/일이삼사오육칠팔구/일이삼사오육칠팔구/일이삼사오육칠팔구"
+        );
+        assert_eq!(
+            path_shorten("일이삼사오육칠팔구/일이삼사오육칠팔구/일이삼사오육칠팔구a"),
+            "일이삼사오육칠팔구/일이삼사오육칠팔구/일이삼사오육칠팔구a"
+        );
+        assert_eq!(
+            path_shorten("~일이삼사오육칠팔구/일이삼사오육칠팔구/일이삼사오육칠팔구"),
+            "~일이삼사오육칠팔구/일이삼사오육칠팔구/일이삼사오육칠팔구"
+        );
+        // Non-ASCII (over 30 characters).
+        assert_eq!(
+            path_shorten("/일이삼사오육칠팔구/일이삼사오육칠팔구/일이삼사오육칠팔구/a"),
+            "/일/일이삼사오육칠팔구/일이삼사오육칠팔구/a"
+        );
+        assert_eq!(
+            path_shorten("~/일일일일일일일일일일일일일일일일일일일일/이이이이이이이이이이이이이이이이이이이이/삼삼삼삼삼삼삼삼삼삼삼삼삼삼삼삼삼삼삼삼/hello"),
+            "~/일/이/삼/hello"
         );
     }
 }
