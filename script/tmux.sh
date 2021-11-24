@@ -3,6 +3,7 @@
 set -o errexit
 set -o nounset
 set -o pipefail
+set -o xtrace
 
 get_default_session_id()
 {
