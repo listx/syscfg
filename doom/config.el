@@ -312,6 +312,10 @@ Return an event vector."
       :mnvi "C-k" nil
       :mnvi "C-j" nil)
 (setq org-roam-directory (concat org-directory "/note"))
+(map! :after alchemist
+      :map alchemist-mode-map
+      :mnvi "C-k" nil
+      :mnvi "C-j" nil)
 
 (setq display-line-numbers-type nil)
 

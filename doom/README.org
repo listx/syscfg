@@ -331,6 +331,7 @@ Note that this file is pretty much **required** and acts as the base for all oth
 <<magit>>
 <<org>>
 <<org-roam>>
+<<elixir>>
 
 <<line-numbers>>
 
@@ -1248,6 +1249,16 @@ If you use "org" and don't want your org files in the default location below, ch
 ** Notes
 
 In insert mode, type =<s= followed by =TAB= to auto-complete a ~#+begin_src~ and ~#+end_src~ code block.
+
+* Elixir
+
+#+name: elixir
+#+begin_src emacs-lisp
+(map! :after alchemist
+      :map alchemist-mode-map
+      :mnvi "C-k" nil
+      :mnvi "C-j" nil)
+#+end_src
 
 * Org roam
 
