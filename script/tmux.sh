@@ -14,8 +14,9 @@ get_default_session_id()
   # Prefer to use defaul session names where the format is
   # <hostname>-<session_id>, and <session_id> is the smallest number possible.
   readarray -t session_ids <<<"$(tmux list-sessions | cut -d: -f1 | grep "^${_hostname}-[0-9]\+\$" | sort)"
-  if (( "${#session_ids[@]}" )); then
+  if [[ -n "${session_ids[0]:-}" ]]; then
     for session_id in "${session_ids[@]}"; do
+      echo >&2 $session_id
       if (( desired_id < ${session_id#*-} )); then
         break
       else
