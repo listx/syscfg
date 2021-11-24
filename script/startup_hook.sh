@@ -8,6 +8,9 @@ set -o pipefail
 
 case $(hostname) in
 k0)
+	# Start up the lh service. This is used by lhc for shortening path
+	# information.
+	(cd ~/syscfg/lh && ./run.sh &)
 	# Start up `hledger web` instances over ports 8000 and 8001.
 	~/syscfg/script/hledger.sh &
 	# Start up a simple server to serve ~/agenda.html.

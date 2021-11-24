@@ -2,6 +2,7 @@ use std::collections::HashMap;
 use std::env;
 use std::fs;
 
+#[rustler::nif]
 pub fn shorten(path: &str, path_aliases_file: &str) -> String {
     let path_canonical = make_canonical_path(path, path_aliases_file);
     path_shorten(&path_canonical)

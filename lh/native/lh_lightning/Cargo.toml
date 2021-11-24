@@ -1,0 +1,13 @@
+[package]
+name = "lh_lightning"
+version = "0.1.0"
+authors = []
+edition = "2018"
+
+[lib]
+name = "lh_lightning"
+path = "src/lib.rs"
+crate-type = ["cdylib"]
+
+[dependencies]
+rustler = "0.22.2"
