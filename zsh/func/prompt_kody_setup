@@ -152,7 +152,7 @@ prompt_kody_precmd()
 	prompt_userhost="$prompt_username$prompt_at_sign$prompt_hostname"
 
 	# set display of current working directory
-	pwd_short="$(lh path-shorten --path-aliases ~/syscfg/zsh/path-aliases $PWD)"
+	pwd_short="$(lhc path-shorten --path-aliases ~/syscfg/zsh/path-aliases $PWD 2>/dev/null || ~/syscfg/lhc/doc/code/simplify_path.sh $PWD)"
 	prompt_kody_pwd="%B%F{$prompt_color1}${pwd_short}%b%f"
 
 	# three default possibilities for the first prompt line, depending on available screen width space

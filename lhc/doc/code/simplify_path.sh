@@ -11,7 +11,7 @@
 # and is meant to be used for TMUX window titles, although it can be used
 # elsewhere as well.
 
-set -euxo pipefail
+set -euo pipefail
 
 # Source utility functions.
 SCRIPT_ROOT="$(dirname "$(readlink -f "$0")")"
