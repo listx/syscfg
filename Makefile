@@ -63,8 +63,8 @@ kube:
 launch-my-browser:
 	ln -fs ${C}/script/launch-my-browser                ${H}/bin
 lesskey:
-lh:
-	make -C ${C}/lh
+lhc:
+	make -C ${C}/lhc
 mpd:
 	ln -fns ${C}/mpd                                    ${H}/.config/mpd
 mpv:
@@ -163,7 +163,7 @@ zsh:
 	karabiner \
 	kube \
 	lesskey \
-	lh \
+	lhc \
 	mpd \
 	mpv \
 	mupen \
