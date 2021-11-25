@@ -24,14 +24,22 @@ defmodule LH.Router do
   # Strings in Elixir are represented as binaries, so we use is_binary/1 instead
   # of is_string/1.
   defp path_shorten(path) when is_binary(path) do
-    home_dir = System.get_env("HOME")
-    path_aliases_file = home_dir <> "/syscfg/zsh/path-aliases"
+    {status, msg} = Cachex.get(:path_cache, path)
 
-    msg =
-      LH.Lightning.shorten(
-        path,
-        path_aliases_file
-      )
+    if msg == nil do
+      home_dir = System.get_env("HOME")
+      path_aliases_file = home_dir <> "/syscfg/zsh/path-aliases"
+
+      msg =
+        LH.Lightning.shorten(
+          path,
+          path_aliases_file
+        )
+
+      IO.inspect(msg)
+
+      Cachex.put(:path_cache, path, msg)
+    end
 
     Jason.encode!(%{path_shortened: msg})
   end
