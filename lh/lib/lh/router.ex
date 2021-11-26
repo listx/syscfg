@@ -11,6 +11,11 @@ defmodule LH.Router do
     send_resp(conn, 200, msg)
   end
 
+  get "/shutdown" do
+    send_resp(conn, 200, "Shutting down...")
+    shutdown()
+  end
+
   post "/path-shorten" do
     {status, body} =
       case conn.body_params do
@@ -55,6 +60,10 @@ defmodule LH.Router do
 
   defp missing_path do
     Jason.encode!(%{error: "Expected Payload: { 'path': '...' }"})
+  end
+
+  defp shutdown do
+    System.stop(0)
   end
 
   # A catchall route to match anything else that does not line up to the
