@@ -556,24 +556,21 @@ if [[ -n "${commands[fzf-share]}" ]]; then
   export FZF_ALT_C_OPTS
 fi
 
-# Use zpm. Run "zpm clean" if modifying the .zshrc file to clear out the cache.
-#
-# If there are troubles with zpm, reset it like this:
-# rm -rf "${TMPDIR:-/tmp}/zsh-${UID:-user}"
-if [[ ! -f ~/.zpm/zpm.zsh ]]; then
-  echo >&2 "error: missing ~/.zpm/zpm.zsh"
+# Use zcomet.
+if [[ ! -f ~/.zcomet/zcomet.zsh ]]; then
+  echo >&2 "error: missing ~/.zcomet/zcomet.zsh"
 fi
-source ~/.zpm/zpm.zsh
+source ~/.zcomet/zcomet.zsh
 
 # Print warning if we don't use an existing alias for a command.
-zpm load "MichaelAquilina/zsh-you-should-use",async
-
-# Fish-shell-like automatically-suggested completions.
-zpm load "zsh-users/zsh-autosuggestions",source:zsh-autosuggestions.zsh
-ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=2,bold"
+zcomet load "MichaelAquilina/zsh-you-should-use"
 
 # History editing. This brings in the `hist' command .
-zpm load "marlonrichert/zsh-hist",async
+zcomet load "marlonrichert/zsh-hist"
+
+# Fish-shell-like automatically-suggested completions.
+zcomet load "zsh-users/zsh-autosuggestions"
+ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=2,bold"
 
 # Instead of using "qoomon/zsh-lazyload", we simply examine the letters that are
 # already inserted into the zle buffer. If it is "kl" and we press either the

@@ -10,9 +10,6 @@
 [submodule "zzz/tmux-thumbs"]
 	path = tmux/plugins/tmux-thumbs
 	url = https://github.com/fcsonline/tmux-thumbs
-[submodule "zsh/zpm"]
-	path = zsh/zpm
-	url = https://github.com/zpm-zsh/zpm
 [submodule "alacritty/upstream"]
 	path = alacritty/upstream
 	url = https://github.com/alacritty/alacritty
@@ -25,3 +22,6 @@
 [submodule "tmux/plugins/extrakto"]
 	path = tmux/plugins/extrakto
 	url = https://git::@github.com/laktak/extrakto
+[submodule "zsh/zcomet"]
+	path = zsh/zcomet
+	url = https://github.com/agkozak/zcomet
