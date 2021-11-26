@@ -118,8 +118,6 @@ tmux:
 	ln -fs ${C}/tmux/.tmux.conf                         ${H}
 	git -C ${C} submodule update --init ${C}/tmux/plugins
 	ln -fns ${C}/tmux                                   ${H}/.tmux
-tmuxinator:
-	ln -fns ${C}/tmuxinator                             ${H}/.config
 uim:
 	ln -fns ${C}/uim/.uim                               ${H}/.uim
 	ln -fns ${C}/uim                                    ${H}/.uim.d
@@ -179,7 +177,6 @@ zsh:
 	terminfo \
 	tig \
 	tmux \
-	tmuxinator \
 	uim \
 	vim \
 	vimpc \
