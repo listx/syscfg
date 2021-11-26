@@ -26,22 +26,27 @@ defmodule LH.Router do
   defp path_shorten(path) when is_binary(path) do
     {status, msg} = Cachex.get(:path_cache, path)
 
-    if msg == nil do
-      home_dir = System.get_env("HOME")
-      path_aliases_file = home_dir <> "/syscfg/zsh/path-aliases"
+    msg_final =
+      if status == :error || msg == nil do
+        home_dir = System.get_env("HOME")
+        path_aliases_file = home_dir <> "/syscfg/zsh/path-aliases"
 
-      msg =
-        LH.Lightning.shorten(
-          path,
-          path_aliases_file
-        )
+        msg =
+          LH.Lightning.shorten(
+            path,
+            path_aliases_file
+          )
 
-      IO.inspect(msg)
+        IO.inspect(msg)
 
-      Cachex.put(:path_cache, path, msg)
-    end
+        Cachex.put(:path_cache, path, msg)
 
-    Jason.encode!(%{path_shortened: msg})
+        msg
+      else
+        msg
+      end
+
+    Jason.encode!(%{path_shortened: msg_final})
   end
 
   defp path_shorten(_) do
