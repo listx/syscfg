@@ -189,11 +189,11 @@ key_bindings:
   - { key: F, mods: Control|Alt, chars: "\x1b\x06" }
   - { key: G, mods: Control|Alt, chars: "\x1b\x07" }
   - { key: H, mods: Control|Alt, chars: "\x1b\x08" }
-  - { key: I, mods: Control|Alt, chars: "\x1b\x09" }
+  - { key: I, mods: Control|Alt, chars: "\x1b[24~\x1b\x09" }
   - { key: J, mods: Control|Alt, chars: "\x1b\x0a" }
   - { key: K, mods: Control|Alt, chars: "\x1b\x0b" }
   - { key: L, mods: Control|Alt, chars: "\x1b\x0c" }
-  - { key: M, mods: Control|Alt, chars: "\x1b\x0d" }
+  - { key: M, mods: Control|Alt, chars: "\x1b[24~\x1b\x0d" }
   - { key: N, mods: Control|Alt, chars: "\x1b\x0e" }
   - { key: O, mods: Control|Alt, chars: "\x1b\x0f" }
   - { key: P, mods: Control|Alt, chars: "\x1b\x10" }
