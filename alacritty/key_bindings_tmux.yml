@@ -55,11 +55,6 @@ key_bindings:
 
   # M-{a-z} -------------------------------------------------------------------
 
-  # Notice how these are technically still the upper-case ASCII codepoints
-  # (65-90); this still works because it appears that the modifier keys are
-  # strictly interpreted from the `;...` portion, not the key itself in the
-  # `...;` portion.
-  #
   # We cannot use `CSI u` mode bindings for plain M-{a-z} combinations because
   # then we break legacy programs (e.g., Zsh). The same thing goes for M-{A-Z},
   # C-{a-z}, and C-M-{a-z} combinations. By default these keys are already
