@@ -359,9 +359,19 @@ Return an event vector."
       (delete-region (1+ (point)) (point-max))
       t)))
 
+(defun l/split-window-vertically ()
+  "Split window verically."
+  (interactive)
+  (split-window-vertically)
+  (other-window 1))
+(defun l/split-window-horizontally ()
+  "Split window horizontally."
+  (interactive)
+  (split-window-horizontally)
+  (other-window 1))
 (map! :leader
-      :desc "split-h" "h" #'split-window-vertically
-      :desc "split-v" "v" #'split-window-horizontally)
+      :desc "split-h" "h" #'l/split-window-vertically
+      :desc "split-v" "v" #'l/split-window-horizontally)
 (map! :after org
       :map org-mode-map
       "|" nil)
