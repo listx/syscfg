@@ -1,4 +1,5 @@
 defmodule LH.Router do
+  require Logger
   use Plug.Router
 
   plug(Plug.Logger)
@@ -31,7 +32,7 @@ defmodule LH.Router do
   defp path_shorten(path) when is_binary(path) do
     {status, msg} = Cachex.get(:path_cache, path)
 
-    msg_final =
+    {msg_final, cached_status} =
       if status == :error || msg == nil do
         home_dir = System.get_env("HOME")
         path_aliases_file = home_dir <> "/syscfg/zsh/path-aliases"
@@ -42,14 +43,13 @@ defmodule LH.Router do
             path_aliases_file
           )
 
-        IO.inspect(msg)
-
         Cachex.put(:path_cache, path, msg)
-
-        msg
+        {msg, :MIS}
       else
-        msg
+        {msg, :HIT}
       end
+
+    Logger.info("/path-shorten: (#{cached_status}) #{inspect(path)} => #{inspect(msg_final)}")
 
     Jason.encode!(%{path_shortened: msg_final})
   end
