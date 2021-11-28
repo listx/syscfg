@@ -22,10 +22,9 @@ let
     url = "/home/l/prog/foreign/nixpkgs";
     ref = "refs/heads/nixpkgs-unstable";
     # Known good commit for moving branch "nixpkgs-unstable".
-    rev = "2c0f6135aab77ff942b615228882c7dd996e0882";
-  }) {};
-in
-{super}:
+    rev = "9c191ebcdfe917043195c54ab6ae8e934434fe7b";
+  }) { };
+in { super }:
 # The `with` keyword in `with X; Y` adds the attributes of X to the scope
 # while evaluating Y. This way, we can just write `buildEnv` instead of
 # `pkgs.buildEnv`.
@@ -46,18 +45,12 @@ with super; rec {
   # https://github.com/jagajaga/my_configs/blob/master/.nixpkgs/common.nix.
   setPrio = prio: drv: lib.addMetaAttrs { priority = prio; } drv;
 
-  l_emacs = pkgs.emacsWithPackages (with pkgs.emacsPackagesNg; [
-    vterm
-  ]);
+  l_emacs = pkgs.emacsWithPackages (with pkgs.emacsPackagesNg; [ vterm ]);
 
   l_set_basic = setPrio "10" (buildEnv {
     name = "l-set-basic";
     ignoreCollisions = true;
-    paths = [
-      l_set_base
-      l_set_dev
-      l_set_haskell
-    ];
+    paths = [ l_set_base l_set_dev l_set_haskell ];
   });
 
   # Meant for headless backup boxes. Subset of things in l-set-base and
@@ -69,6 +62,7 @@ with super; rec {
       bmon
       l_emacs
       fzf
+      fd
       gcc
       git
       gitAndTools.git-annex
@@ -167,9 +161,22 @@ with super; rec {
       tig
       clang
       elixir
+      elixir_ls
       gcc
       go
+      gocode
       golint
+      gomodifytags
+      gore
+      gotests
+      gotools
+      html-tidy
+      inotify-tools
+      ispell
+      nodePackages.js-beautify
+      nodePackages.stylelint
+      nixfmt
+      pipenv
       binutils
       gnumake
       python39
@@ -177,9 +184,19 @@ with super; rec {
       python39Packages.flake8
       noweb
       rustup
+      rust-analyzer
       # Some node stuff.
       nodejs
       wasm-pack
+      sbcl
+
+      unixtools.xxd
+      xclip
+      xorg.xwininfo
+
+      editorconfig-core-c
+
+      cmake
 
       # Containerization.
       docker
@@ -221,14 +238,7 @@ with super; rec {
   l_set_web = setPrio "7" (buildEnv {
     name = "l-set-web";
     ignoreCollisions = true;
-    paths = [
-      firefox
-      chromium
-      qutebrowser
-      offlineimap
-      notmuch
-      rtorrent
-    ];
+    paths = [ firefox chromium qutebrowser offlineimap notmuch rtorrent ];
   });
 
   l_set_av = setPrio "8" (buildEnv {
@@ -292,9 +302,9 @@ with super; rec {
       # the `cabal` binary available. To do this, you should have
       # `haskellPackages.cabal-install` installed either on your system, or
       # through nix-env.
-      auca = self.callPackage ./haskell/auca.nix {};
+      auca = self.callPackage ./haskell/auca.nix { };
       #inky = self.callPackage ./haskell/inky.nix {};
-      nox = self.callPackage ./haskell/nox.nix {};
+      nox = self.callPackage ./haskell/nox.nix { };
     };
   };
 
