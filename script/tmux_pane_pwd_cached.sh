@@ -1,4 +1,12 @@
 #!/usr/bin/env bash
+#
+# Script used by tmux to figure out how to display the status baar for the
+# current window. Note that this is different from setting the window name (aka
+# "#{window_name}", which we purposely avoid due to race conditions.
+#
+# The point of this script is to avoid spamming lh with too many requests.
+# Instead, we only ask lh to shorten a path for us if we detect that there is a
+# change in the curront path.
 
 set -o errexit
 set -o nounset
@@ -62,7 +70,19 @@ main()
   pwd_shortened="$(~/.cargo/bin/lhc path-shorten "${pwd_new}" || ~/syscfg/lhc/doc/code/simplify_path.sh "${pwd_new}")"
   echo $pwd_shortened
 
-  # TODO: Garbage-collect these evironment variables when the window is closed.
+  # TODO: Garbage-collect these tmux evironment variables when the window is
+  # closed.
+  #
+  # Unfortunately as of tmux 3.2a (Nov 2021) there is no way to set a hook (with
+  # set-hook) that runs just before a window is closed. So technically this is a
+  # memory leak but it is OK because:
+  #
+  #   (1) we don't create that many windows (maybe a few hundred, if we have tmux running for months on end);
+  #   (2) the rate of the leak is negligible due to (1); and
+  #   (3) tmux already garbage-collects these variables when the session is
+  #   closed.
+  #
+  # But this is worth revisiting in the future.
   tmux set-environment "L_TMUX_PANE_PWD_${window_id}" "${pwd_new};${pwd_shortened}"
 }
 
