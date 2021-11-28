@@ -1,4 +1,6 @@
 all:
-	nix-shell -p pkg-config openssl --command "cargo install --path . --debug"
+	nix-shell --command "cargo install --path ."
+build:
+	nix-shell --command "cargo build"
 test:
-	nix-shell -p pkg-config openssl --command "cargo test"
+	nix-shell --command "cargo test"
