@@ -1,8 +1,10 @@
 use clap::{crate_version, App, Arg};
-
 use reqwest::blocking::Client;
 use serde::Deserialize;
 use serde_json::json;
+
+mod settings;
+use settings::Settings;
 
 #[derive(Deserialize, Debug)]
 struct PathShortened {
@@ -10,6 +12,8 @@ struct PathShortened {
 }
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
+    let settings = Settings::new().unwrap();
+
     // Subcommands function exactly like sub-Apps, because that's exactly what they are. Each
     // instance of a Subcommand can have its own version, author(s), Args, and even its own
     // subcommands.
@@ -42,7 +46,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 // Safe to use unwrap() because of the required() option
                 let path_to_shorten = m.value_of("path_to_shorten").unwrap();
 
-                let request_url = "http://localhost:8080/path-shorten/";
+                let request_url = format!(
+                    "http://{}:{}/path-shorten/",
+                    settings.server.domain, settings.server.port
+                );
 
                 let json_body = json!({
                 "path": path_to_shorten,
