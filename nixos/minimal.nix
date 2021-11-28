@@ -90,16 +90,12 @@
     # Unless `autoStart = false;', all entries here start automatically as a
     # systemd service. To stop the `home' OpenVPN client service, run `sudo
     # systemctl stop openvpn-home'.
-    home = {
-      config = builtins.readFile ../openvpn/home.ovpn;
-    };
+    home = { config = builtins.readFile ../openvpn/home.ovpn; };
   };
 
   hardware.pulseaudio.enable = true;
 
-  users.groups.l = {
-    gid = 1000;
-  };
+  users.groups.l = { gid = 1000; };
 
   # Set password for extra users with 'passwd' command as root.
   users.users.l = {
@@ -108,7 +104,7 @@
     description = "Linus Arver";
     createHome = true;
     home = "/home/l";
-    extraGroups = [ "wheel" ] ;
+    extraGroups = [ "wheel" ];
     shell = "/run/current-system/sw/bin/zsh";
     uid = 1000;
   };
