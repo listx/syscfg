@@ -21,6 +21,8 @@
       8020 # stack exec -- blog watch --host=192.168.0.4 --port=8020
       8030 # mpd HTTP stream
 
+      8080 # lh (linus's helper)
+
       # k8s master API server port
       6443
       # k8s master cfssl service; required for the node to fetch certs from the
