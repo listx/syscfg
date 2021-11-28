@@ -17,7 +17,7 @@ get_default_session_id()
   if [[ -n "${session_ids[0]:-}" ]]; then
     for session_id in "${session_ids[@]}"; do
       echo >&2 $session_id
-      if (( desired_id < ${session_id#*-} )); then
+      if (( desired_id < ${session_id##*-} )); then
         break
       else
         ((desired_id++))
