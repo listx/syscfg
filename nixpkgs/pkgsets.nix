@@ -332,7 +332,7 @@ with super; rec {
       # Compiler versions can be discovered with:
       #
       #   nix-env -f "<nixpkgs>" -qaP -A haskell.compiler
-      haskell.compiler.ghc901
+      haskell.compiler.ghc921
 
       # Misc userland packages.
       auca
