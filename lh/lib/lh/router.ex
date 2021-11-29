@@ -12,6 +12,10 @@ defmodule LH.Router do
     send_resp(conn, 200, msg)
   end
 
+  get "/ping" do
+    send_resp(conn, 200, "OK")
+  end
+
   get "/shutdown" do
     send_resp(conn, 200, "Shutting down...")
     shutdown()
