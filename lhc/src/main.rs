@@ -48,7 +48,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 let path_to_shorten = m.value_of("path_to_shorten").unwrap();
 
                 let request_url = format!(
-                    "http://{}:{}/path-shorten/",
+                    "http://{}:{}/path-shorten",
                     settings.server.domain, settings.server.port
                 );
 
