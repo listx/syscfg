@@ -47,7 +47,7 @@ s()
 
 	case "${host}" in
 	w0)
-		ssh -t "${user}@${host}" \"wsl.exe -d NixOS -- ~/syscfg/script/tmux.sh ${session}\"
+		ssh -t "${user}@${host}" \"wsl.exe -d NixOS\"
 		;;
 	*)
 		ssh -t "${user}@${host}" '~/syscfg/script/tmux.sh' ${session:+"${session}"}
