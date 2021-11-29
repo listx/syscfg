@@ -14,6 +14,8 @@ export L_ORG_AGENDA_EXCLUDE_PATTERNS="
 	$HOME/lo/note/snippets.org
 "
 
+export PATH=$HOME/.nix-profile/bin:$PATH
+
 # Default path to look for the SDK installed via nixpkgs.
 # Don't bother with Google Cloud SDK on Windows Subsystem for Linux.
 if [[ -z "${WSL_DISTRO_NAME:-}" ]]; then
