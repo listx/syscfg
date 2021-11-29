@@ -14,10 +14,10 @@ s()
 	# Grab the first subdomain as a short nickname for the host.
 	local host_shortname="${host%%.*}"
 
-	local session
-	local session_suffix="${2:-}"
+	local session="${2:-}"
+	local session_suffix
 
-	if [[ -n "${session_suffix}" ]]; then
+	if [[ -n "${session}" ]]; then
 		# Remove any existing host prefix from the session. This is to prevent it
 		# eventually looking like "HOST-HOST-<SESSION>".
 		session_suffix="${session#${host_shortname}-}"
