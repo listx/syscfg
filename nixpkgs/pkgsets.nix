@@ -324,8 +324,6 @@ with super; rec {
       # 'haskellPackages.cabal-install'.
       cabal-install
 
-      stack
-
       # We need GHC because it provides the useful 'ghci' REPL; useful for quick
       # calculator math, etc.
       #
