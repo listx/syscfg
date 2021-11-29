@@ -38,6 +38,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                     .required(true),
             ),
         )
+        .subcommand(App::new("shutdown").about("Shut down lh server instance"))
         .get_matches();
 
     match matches.subcommand_name() {
@@ -61,6 +62,16 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
                 print!("{}", path_shortened.path_shortened);
             }
+        }
+        Some("shutdown") => {
+            let request_url = format!(
+                "http://{}:{}/shutdown",
+                settings.server.domain, settings.server.port
+            );
+
+            let response = Client::new().get(request_url).send()?;
+
+            println!("{}", response.text()?);
         }
         None => println!("Nothing to do."),
         _ => println!("Nothing to do (unrecognized subcommand)."),
