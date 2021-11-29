@@ -21,7 +21,7 @@ if [[ -z "${WSL_DISTRO_NAME:-}" ]]; then
 fi
 
 case "$(hostname)" in
-	DESKTOP*) export TERM=xterm-24bit  ;;
+	w0) export TERM=xterm-24bit  ;;
 	*) export TERM=alacritty-xtermlike ;;
 esac
 

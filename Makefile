@@ -77,8 +77,17 @@ endif
 mupen:
 	ln -fs ${C}/mupen/InputAutoCfg.ini                  /usr/share/mupen64plus
 nixos:
+ifeq ('${T}','w0')
+	ln -fs ${C}/nixos/${T}/configuration.nix            /etc/nixos
+	ln -fs ${C}/nixos/${T}/syschdemd.nix                /etc/nixos
+	ln -fs ${C}/nixos/${T}/syschdemd.sh                 /etc/nixos
+	ln -fs ${C}/nixos/${T}/wsl.conf                     /etc/nixos
+	ln -fs ${C}/nixos/${T}/hosts                        /etc
+	cp -f ${C}/nixos/${T}/resolv.conf                   /etc
+else
 	ln -fs ${C}/nixos/${T}/configuration.nix            /etc/nixos
 	ln -fs ${C}/nixos/${T}/hardware-configuration.nix   /etc/nixos
+endif
 nixpkgs:
 	ln -fns ${C}/nixpkgs                                ${H}/.config/nixpkgs
 notmuch:
