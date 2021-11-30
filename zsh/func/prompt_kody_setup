@@ -124,7 +124,7 @@ prompt_kody_precmd()
 	# Python VirtualEnv info.
 	local venv=""
 	if test -n "${VIRTUAL_ENV}"; then
-        venv="($(basename "${VIRTUAL_ENV}")) "
+		venv="($(basename "${VIRTUAL_ENV}")) "
 	fi
 
 	day=""
