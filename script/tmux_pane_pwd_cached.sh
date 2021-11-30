@@ -67,7 +67,7 @@ main()
 
   # If the active pane's pwd did change, then we must use a newly shortened
   # window name.
-  pwd_shortened="$(~/.cargo/bin/lhc path-shorten "${pwd_new}" || ~/syscfg/lhc/doc/code/simplify_path.sh "${pwd_new}")"
+  pwd_shortened="$(~/.cargo/bin/lhc path-shorten --path-aliases ~/syscfg/zsh/path-aliases "${pwd_new}" || ~/syscfg/lhc/doc/code/simplify_path.sh "${pwd_new}")"
   echo $pwd_shortened
 
   # TODO: Garbage-collect these tmux evironment variables when the window is

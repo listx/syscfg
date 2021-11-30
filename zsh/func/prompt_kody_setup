@@ -28,6 +28,21 @@ maybe_show_exit_status() {
 	esac
 }
 
+get_short_pwd()
+{
+	if [[ "${PWD}" == "${L_PWD_SHORT_PREV#*;}" ]]; then
+		return
+	fi
+	local pwd_short
+	pwd_short="$(lhc path-shorten --path-aliases ~/syscfg/zsh/path-aliases "${PWD}" 2>/dev/null || ~/syscfg/lhc/doc/code/simplify_path.sh "${PWD}")"
+	export L_PWD_SHORT_PREV="${pwd_short};${PWD}"
+}
+
+chpwd() {
+	echo "changing from $OLDPWD to $PWD"
+	get_short_pwd
+}
+
 prompt_kody_setup()
 {
 	# Usage (if customizing the colors at run time):
@@ -56,6 +71,7 @@ prompt_kody_setup()
 	prompt_color8=${8-'magenta'}
 
 	add-zsh-hook precmd prompt_kody_precmd
+	add-zsh-hook chpwd get_short_pwd
 }
 
 # The zle-keymap-select and zle-line-finish functions are special widgets that
@@ -152,8 +168,10 @@ prompt_kody_precmd()
 	prompt_userhost="$prompt_username$prompt_at_sign$prompt_hostname"
 
 	# set display of current working directory
-	pwd_short="$(lhc path-shorten --path-aliases ~/syscfg/zsh/path-aliases $PWD 2>/dev/null || ~/syscfg/lhc/doc/code/simplify_path.sh $PWD)"
-	prompt_kody_pwd="%B%F{$prompt_color1}${pwd_short}%b%f"
+	if [[ -z "${L_PWD_SHORT_PREV:-}" ]]; then
+		get_short_pwd
+	fi
+	prompt_kody_pwd="%B%F{$prompt_color1}${L_PWD_SHORT_PREV%;*}%b%f"
 
 	# three default possibilities for the first prompt line, depending on available screen width space
 	prompt_line_1a="$prompt_kody_time_a$prompt_userhost $prompt_kody_pwd"

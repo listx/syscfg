@@ -18,7 +18,7 @@ gst()
 		printf "\n${c}-- STASH --${ce}\n$gstash\n"
 	fi
 	local groot=$(git rev-parse --show-toplevel)
-	local gau=$(cd "$groot" && git ls-files -v | grep "^[[:lower:]]")
+	local gau=$(git -C "$groot" ls-files -v | grep "^[[:lower:]]")
 	if [[ -n "$gau" ]]; then
 		c="\x1b[1;38;5;201m"
 		printf "\n${c}-- ASSUME UNCHANGED --${ce}\n$gau\n"

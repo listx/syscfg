@@ -68,7 +68,7 @@ gsts_nonbare()
 		g_changed="%B%F{magenta}S%b%f"
 	fi
 
-	local g_untracked=$(cd "$g_path" && git ls-files --other --exclude-standard \
+	local g_untracked=$(git -C "$g_path" ls-files --other --exclude-standard \
 		| wc -l)
 	if (( $g_untracked == 0 )); then
 		g_untracked="-"
@@ -89,7 +89,7 @@ gsts_nonbare()
 		g_stashed="%B%F{196}${g_stashed}%b%f"
 	fi
 
-	local g_assume_unchanged=$(cd "$g_path" && git ls-files -v | grep "^[[:lower:]]" | wc -l)
+	local g_assume_unchanged=$(git -C "$g_path" ls-files -v | grep "^[[:lower:]]" | wc -l)
 	if (( $g_assume_unchanged == 0 )); then
 		g_assume_unchanged="-"
 	else

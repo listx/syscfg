@@ -1,10 +1,8 @@
 use std::collections::HashMap;
-use std::env;
-use std::fs;
 
 #[rustler::nif]
-pub fn shorten(path: &str, path_aliases_file: &str) -> String {
-    let path_canonical = make_canonical_path(path, path_aliases_file);
+pub fn shorten(path: &str, aliases_raw: &str, subs: HashMap<String, String>) -> String {
+    let path_canonical = make_canonical_path(path, aliases_raw, &subs);
     path_shorten(&path_canonical)
 }
 
@@ -85,13 +83,8 @@ fn path_shorten(path_canonical: &str) -> String {
     }
 }
 
-fn make_canonical_path(path: &str, path_aliases_file: &str) -> String {
-    // The '?' operator short-circuits if we don't have a HOME variable defined
-    // in the environment.
-    let home_dir = env::var("HOME").expect("$HOME not set");
-
-    let path_aliases_contents = fs::read_to_string(path_aliases_file).unwrap_or_default();
-    let path_aliases = make_path_aliases(&path_aliases_contents, &home_dir);
+fn make_canonical_path(path: &str, aliases_raw: &str, subs: &HashMap<String, String>) -> String {
+    let path_aliases = make_path_aliases(aliases_raw, subs);
 
     let path_canonical = match get_matching_path_alias(path, &path_aliases) {
         // Find the longest matching expanded path in the path aliases. If there
@@ -102,20 +95,20 @@ fn make_canonical_path(path: &str, path_aliases_file: &str) -> String {
             let new_path = path.replacen(&expanded_path, &path_alias, 1);
             format!("~{}", new_path)
         }
-        // If there is no match, just replace whatever $HOME is with "~".
+        // If there is no match, just perform the standard substitutions.
         None => {
-            if path.starts_with(&home_dir) {
-                format!("{}", path.replacen(&home_dir, "~", 1))
-            } else {
-                format!("{}", path)
-            }
+            let new_path = replace_all(&path, subs);
+            format!("{}", new_path)
         }
     };
 
     path_canonical
 }
 
-fn make_path_aliases(path_aliases_contents: &str, home_dir: &String) -> HashMap<String, String> {
+fn make_path_aliases(
+    path_aliases_contents: &str,
+    subs: &HashMap<String, String>,
+) -> HashMap<String, String> {
     let mut path_aliases = HashMap::new();
 
     for line in path_aliases_contents.lines() {
@@ -125,7 +118,8 @@ fn make_path_aliases(path_aliases_contents: &str, home_dir: &String) -> HashMap<
                     let mut k_or_v = word.split("=");
                     let v = k_or_v.next().unwrap_or("").to_string();
                     let k = k_or_v.next().unwrap_or("").to_string();
-                    let k_final = k.replacen("$HOME", &home_dir, 1);
+                    // Perform substitution replacements.
+                    let k_final = replace_all(&k, subs);
                     path_aliases.insert(k_final, v);
                 }
             }
@@ -133,6 +127,21 @@ fn make_path_aliases(path_aliases_contents: &str, home_dir: &String) -> HashMap<
     }
 
     path_aliases
+}
+
+fn replace_all(s: &str, subs: &HashMap<String, String>) -> String {
+    let mut subbed: String = s.to_string();
+    // Iterate over all keys in subs, but be sure to iterate over the longest
+    // keys first to avoid clobbering other keys that have the same prefix when
+    // we call replace().
+    let mut subs_sorted: Vec<String> = subs.keys().cloned().collect();
+    subs_sorted.sort();
+    subs_sorted.reverse();
+    for k in subs_sorted.into_iter() {
+        let v = subs.get(&k).unwrap();
+        subbed = subbed.replace(&k, &v);
+    }
+    subbed
 }
 
 fn get_matching_path_alias(
@@ -156,6 +165,34 @@ fn get_matching_path_alias(
 #[cfg(test)]
 mod test {
     use super::*;
+
+    #[test]
+    fn test_shorten() {
+        let mut subs: HashMap<String, String> = HashMap::new();
+        subs.insert("$HOME".to_string(), "/home/foo".to_string());
+        subs.insert("/home/foo".to_string(), "~".to_string());
+        let aliases_raw = "
+# Comment.
+hash -d b=$HOME/bar
+hash -d c=$HOME/bar/baz/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx/c
+";
+        assert_eq!(make_canonical_path("", "", &HashMap::new()), "");
+        assert_eq!(make_canonical_path("", "", &subs), "");
+        assert_eq!(make_canonical_path("", aliases_raw, &subs), "");
+        assert_eq!(make_canonical_path("/home/foo", aliases_raw, &subs), "~");
+        assert_eq!(
+            make_canonical_path("/home/foo/bar", aliases_raw, &subs),
+            "~b"
+        );
+        assert_eq!(
+            make_canonical_path(
+                "/home/foo/bar/baz/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx/c",
+                aliases_raw,
+                &subs
+            ),
+            "~c"
+        );
+    }
 
     #[test]
     fn test_path_shorten() {

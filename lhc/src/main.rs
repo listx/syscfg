@@ -3,6 +3,10 @@ use reqwest::blocking::Client;
 use serde::Deserialize;
 use serde_json::json;
 
+use std::collections::HashMap;
+use std::env;
+use std::fs;
+
 mod settings;
 use settings::Settings;
 
@@ -31,12 +35,22 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let matches = App::new("lhc")
         .version(crate_version!())
         .subcommand(
-            App::new("path-shorten").about("Shorten a path").arg(
-                Arg::new("path_to_shorten")
-                    .about("the path to shorten")
-                    .index(1)
-                    .required(true),
-            ),
+            App::new("path-shorten")
+                .about("Shorten a path")
+                .arg(
+                    Arg::new("path_to_shorten")
+                        .about("the path to shorten")
+                        .index(1)
+                        .required(true),
+                )
+                .arg(
+                    Arg::new("path_aliases_file")
+                        .long("path-aliases")
+                        .value_name("FILE")
+                        .about("File containing path aliases")
+                        .takes_value(true)
+                        .required(true),
+                ),
         )
         .subcommand(App::new("ping").about("Check lh server connectivity"))
         .subcommand(App::new("shutdown").about("Shut down lh server instance"))
@@ -47,6 +61,20 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             if let Some(m) = matches.subcommand_matches("path-shorten") {
                 // Safe to use unwrap() because of the required() option
                 let path_to_shorten = m.value_of("path_to_shorten").unwrap();
+                let path_aliases_file = m.value_of("path_aliases_file").unwrap();
+                let path_aliases_contents =
+                    fs::read_to_string(path_aliases_file).unwrap_or_default();
+
+                let mut subs = HashMap::new();
+                let home_dir = env::var("HOME").expect("$HOME not set");
+
+                // This is used to expand the definitions in the path aliases file.
+                subs.insert("$HOME", &home_dir);
+
+                // This is used to shrink the /home/... directory to "~" if
+                // there is no path aliases match.
+                let tilde = "~".to_string();
+                subs.insert(&home_dir, &tilde);
 
                 let request_url = format!(
                     "http://{}:{}/path-shorten",
@@ -54,7 +82,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 );
 
                 let json_body = json!({
-                "path": path_to_shorten,
+                    "name": path_to_shorten,
+                    "aliases_raw": path_aliases_contents,
+                    "substitutions": subs,
                 });
 
                 let response = Client::new().post(request_url).json(&json_body).send()?;
