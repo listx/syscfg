@@ -39,7 +39,6 @@ get_short_pwd()
 }
 
 chpwd() {
-	echo "changing from $OLDPWD to $PWD"
 	get_short_pwd
 }
 
