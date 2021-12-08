@@ -5,9 +5,10 @@ set window playlist
 map <Space> 10j
 map <BS> 10k
 
-" Make tab navigation reasonable.
-map <C-h> :tabprevious<Enter>
-map <C-l> :tabnext<Enter>
+" Make tab navigation reasonable. Unfortunately <C-h> cannot be bound as it
+" conflicts with <BS>. So we have to use the Alt key instead.
+map <A-h> :tabprevious<Enter>
+map <A-l> :tabnext<Enter>
 
 " Skip forward/backward 5 seconds.
 map h :seek- 5<Enter>
