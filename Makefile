@@ -63,6 +63,8 @@ kube:
 launch-my-browser:
 	ln -fs ${C}/script/launch-my-browser                ${H}/bin
 lesskey:
+	ln -fs ${C}/lesskey/cfg                             ${H}/.lesskey
+	lesskey
 lhc:
 	make -C ${C}/lhc
 mpd:
