@@ -25,3 +25,6 @@
 [submodule "zsh/zcomet"]
 	path = zsh/zcomet
 	url = https://github.com/agkozak/zcomet
+[submodule "font/tamsyn-mac-version"]
+	path = font/tamsyn-mac-version
+	url = https://github.com/roman0x58/tamsyn-mac-version.git
