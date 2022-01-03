@@ -1,4 +1,4 @@
-use clap::{crate_version, App, Arg};
+use clap::{app_from_crate, App, Arg, AppSettings};
 use reqwest::blocking::Client;
 use serde::Deserialize;
 use serde_json::json;
@@ -18,28 +18,16 @@ struct PathShortened {
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let settings = Settings::new().unwrap();
 
-    // Subcommands function exactly like sub-Apps, because that's exactly what they are. Each
-    // instance of a Subcommand can have its own version, author(s), Args, and even its own
-    // subcommands.
-    //
-    // # Help and Version
-    // Just like Apps, each subcommand will get its own "help" and "version" flags automatically
-    // generated. Also, like Apps, you can override "-V" or "-h" safely and still get "--help" and
-    // "--version" auto generated.
-    //
-    // NOTE: If you specify a subcommand for your App, clap will also autogenerate a "help"
-    // subcommand along with "-h" and "--help" (applies to sub-subcommands as well).
-    //
-    // Just like arg() and args(), subcommands can be specified one at a time via subcommand() or
-    // multiple ones at once with a Vec<App> provided to subcommands().
-    let matches = App::new("lhc")
-        .version(crate_version!())
+    let matches = app_from_crate!()
+        .global_setting(AppSettings::PropagateVersion)
+        .global_setting(AppSettings::UseLongFormatForHelpSubcommand)
+        .setting(AppSettings::SubcommandRequiredElseHelp)
         .subcommand(
             App::new("path-shorten")
                 .about("Shorten a path")
                 .arg(
                     Arg::new("path_to_shorten")
-                        .about("the path to shorten")
+                        .help("the path to shorten")
                         .index(1)
                         .required(true),
                 )
@@ -47,7 +35,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                     Arg::new("path_aliases_file")
                         .long("path-aliases")
                         .value_name("FILE")
-                        .about("File containing path aliases")
+                        .help("File containing path aliases")
                         .takes_value(true)
                         .required(true),
                 ),
