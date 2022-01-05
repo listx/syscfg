@@ -18,8 +18,12 @@ export PATH=$HOME/.nix-profile/bin:$PATH
 
 # Default path to look for the SDK installed via nixpkgs.
 # Don't bother with Google Cloud SDK on Windows Subsystem for Linux.
-if [[ -z "${WSL_DISTRO_NAME:-}" ]]; then
-	export L_GOOGLE_CLOUD_SDK_PATH=$(dirname $(readlink $(which gcloud)))/../google-cloud-sdk
+if 2>&1 >/dev/null which gcloud; then
+	if [[ -z "${WSL_DISTRO_NAME:-}" ]]; then
+		export L_GOOGLE_CLOUD_SDK_PATH=$(dirname $(readlink $(which gcloud)))/../google-cloud-sdk
+	fi
+else
+	export L_GOOGLE_CLOUD_SDK_PATH=
 fi
 
 case "$(hostname)" in
