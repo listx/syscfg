@@ -1204,6 +1204,8 @@ Note that we have to use =M-J= to encode =M-S-j=. This appears to be Emacs conve
 #+begin_src emacs-lisp
 (map! :after evil-org-agenda
       :map evil-org-agenda-mode-map
+      :mnv "C-k" nil
+      :mnv "C-j" nil
       :mnv "H" #'previous-buffer
       :mnv "L" #'next-buffer)
 

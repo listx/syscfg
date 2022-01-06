@@ -286,6 +286,8 @@ Return an event vector."
 (remove-hook 'org-mode-hook #'flyspell-mode)
 (map! :after evil-org-agenda
       :map evil-org-agenda-mode-map
+      :mnv "C-k" nil
+      :mnv "C-j" nil
       :mnv "H" #'previous-buffer
       :mnv "L" #'next-buffer)
 
