@@ -50,6 +50,8 @@ main()
   local pwd_shortened
 
   window_id="${1}"
+  # Get rid of leading "@" symbol, as it is unnecessary.
+  window_id="${window_id#@}"
   pane_id="${2}"
   pwd_new="${3}"
 
