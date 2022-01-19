@@ -672,7 +672,8 @@ __l_tmux_command()
 #   - The "$TERM" and $TMUX" checks are for avoiding running tmux within tmux
 #     (without this, if we launch a new shell from inside tmux, we would get
 #     tmux-within-tmux).
-#   - The
+#   - The L_WANT_RAW_SHELL check is to see if this environment variable is set
+#     (to avoid automatically executing tmux).
 #
 # If we do want to launch a raw shell instance, then we have to invoke our
 # terminal emulator (Alacritty) with a non-zero value environment variable value
