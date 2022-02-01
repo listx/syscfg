@@ -1405,9 +1405,17 @@ Before we started using Doom Emacs, we used to rely heavily on kakapo-mode to al
    :foreground "#86ab8e"))
 
 (custom-set-faces!
-  '(tab-bar  :background "#000000")
-  '(tab-bar-tab  :inherit mode-line :weight bold :box nil)
-  '(tab-bar-tab-inactive :inherit mode-line-inactive :box nil))
+  '(tab-bar
+    :background "#000000")
+  '(tab-bar-tab
+    :background "#3f5f4f"
+    :foreground "#ccff94"
+    :weight bold
+    :box nil)
+  '(tab-bar-tab-inactive
+    :background "#2e3330"
+    :foreground "#86ab8e"
+    :box nil))
 
 ; Dim buffers in inactive windows to make the current one "pop".
 (use-package! auto-dim-other-buffers
