@@ -503,13 +503,6 @@ command-not-found () {
 }
 add-zsh-hook precmd command-not-found
 
-# Load in completions for Google Cloud SDK.
-google_cloud_sdk_path="${L_GOOGLE_CLOUD_SDK_PATH:-}"
-if [[ -n "${google_cloud_sdk_path}" ]]; then
-  f="${google_cloud_sdk_path}/completion.zsh.inc"
-  source "${f}" || echo "could not source ${f}"
-fi
-
 # Load fzf bindings (upstream) to ZSH.
 if [[ -n "${commands[fzf-share]}" ]]; then
   # Try to use fzf-tmux to use tmux split panes (if we are inside tmux).
