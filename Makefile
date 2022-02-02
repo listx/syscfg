@@ -49,7 +49,8 @@ gpg:
 gtk:
 	ln -fs ${C}/gtk/cfg                                 ${H}/.gtkrc-2.0.mine
 karabiner:
-	ln -fns ${C}/karabiner                              ${H}/.config/karabiner
+	mkdir -p ${H}/.config/karabiner
+	ln -fns ${C}/karabiner/karabiner.json               ${H}/.config/karabiner
 kube:
 	mkdir -p ${C}/kube
 	cp -f  /etc/kubernetes/cluster-admin.kubeconfig     ${C}/kube/config
