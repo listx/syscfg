@@ -38,7 +38,7 @@ EOF
 
 git_rebase_range_prompt_continue()
 {
-    local resp
+	local resp
 	while true; do
 		vared -p "Continue? " resp
 		case $resp in
@@ -46,7 +46,7 @@ git_rebase_range_prompt_continue()
 			[Nn]*) return 1 ;;
 			*) echo "Please answer [y]es or [n]o" ;;
 		esac
-        resp=""
+		resp=""
 	done
 }
 
@@ -99,11 +99,11 @@ git_rebase_range()
 		return 1
 	fi
 
-    # Ensure we are only dealing with non-merge, non-branching commits. If we
-    # try to call `git_rebase_range' against the same $commit_anchor a second
-    # time, by that time $commit_anchor will have more than 1 child, so
-    # `git_check_linearity' will fail. Here allow the user to continue anyway
-    # at their option.
+	# Ensure we are only dealing with non-merge, non-branching commits. If we
+	# try to call `git_rebase_range' against the same $commit_anchor a second
+	# time, by that time $commit_anchor will have more than 1 child, so
+	# `git_check_linearity' will fail. Here allow the user to continue anyway
+	# at their option.
 	git_check_linearity $commit_anchor HEAD ||
 		git_rebase_range_prompt_continue ||
 		return 1
