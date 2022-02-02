@@ -648,13 +648,15 @@ __l_tmux_command()
   #
   # (f) causes the output to be split on newlines.
   session_ids=(${(f)"$(tmux list-sessions | cut -d: -f1 | grep "^${_hostname}-[0-9]\+\$" | sort)"})
-  for session_id in "${session_ids[@]}"; do
-    if (( desired_id < ${session_id##*-} )); then
-      break
-    else
-      ((desired_id++))
-    fi
-  done
+  if [[ -n "${session_ids[0]:-}" ]]; then
+    for session_id in "${session_ids[@]}"; do
+      if (( desired_id < ${session_id##*-} )); then
+        break
+      else
+        ((desired_id++))
+      fi
+    done
+  fi
   echo "tmux new-session -A -s ${_hostname}-${desired_id}"
 }
 
