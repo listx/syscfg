@@ -1,0 +1,92 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+# Checkout PR from GitHub into a local (uniquely named) branch for local
+# browsing.
+
+usage()
+{
+	echo >&2 "usage: $(basename "${0}") <REMOTE> <PR_NUMBER>"
+}
+
+get_desired_branch_name()
+{
+	local remote
+	local pr_number
+	local branch
+	remote="${1}"
+	pr_number="${2}"
+	branch="${remote}-PR${pr_number}-v1"
+
+	echo "${branch}"
+}
+
+local_branch_name_exists()
+{
+	git branch | grep -q "${1}"
+}
+
+get_unique_desired_branch_name()
+{
+	local branch
+	local counter
+	local counter_len
+	branch="${1}"
+
+	if ! local_branch_name_exists "${branch}"; then
+		echo "${branch}"
+		return
+	fi
+
+	# If the branch name already exists, append a "-v<NUM>" to it, like "-v0" or
+	# "-v1".
+	if [[ "${branch}" =~ .*-v([0-9]+)$ ]]; then
+		counter="${BASH_REMATCH[1]}"
+		counter_len="${#counter}"
+
+		# Make it unique.
+		if [[ -n "${counter:-}" ]]; then
+			((++counter))
+		fi
+
+		# Strip the old counter and replace it with the new one to make this branch
+		# unique.
+		branch="${branch::-${counter_len}}"
+		branch="${branch}${counter}"
+	else
+		# This should never happen, because we always append a "-v1" in
+		# get_desired_branch_name.
+		echo >&2 "error: could not uniquify branch name \`${branch}'"
+		return 1
+	fi
+
+	echo "${branch}"
+}
+
+checkout_pr()
+{
+	local branch
+	local remote
+	local pr_number
+	remote="${1}"
+	pr_number="${2}"
+	branch=$(get_desired_branch_name "${1}" "${2}")
+	branch=$(get_unique_desired_branch_name "${branch}")
+
+	echo >&2 "using unique local branch name: \`$branch'"
+	git fetch "${remote}" "pull/${pr_number}/head:${branch}"
+	git checkout "${branch}"
+}
+
+main()
+{
+	if (( $# != 2 )); then
+		usage
+		exit 1
+	fi
+
+	checkout_pr "${1}" "${2}"
+}
+
+main "$@"
