@@ -3,7 +3,7 @@
 
 window:
   dimensions:
-    columns: 165
+    columns: 82
     lines: 92
   title: ""
 font:
