@@ -1280,7 +1280,8 @@ In insert mode, type =<s= followed by =TAB= to auto-complete a ~#+begin_src~ and
       :map org-roam-mode-map
       :mnvi "C-k" nil
       :mnvi "C-j" nil)
-(setq org-roam-directory (concat org-directory "/note"))
+(setq org-roam-directory (concat org-directory "/note")
+      +org-roam-open-buffer-on-find-file nil)
 #+end_src
 
 * Magit
