@@ -648,7 +648,8 @@ __l_tmux_command()
   #
   # (f) causes the output to be split on newlines.
   session_ids=(${(f)"$(tmux list-sessions | cut -d: -f1 | grep "^${_hostname}-[0-9]\+\$" | sort)"})
-  if [[ -n "${session_ids[0]:-}" ]]; then
+  # In Zsh, arrays indices start from 1, not 0.
+  if [[ -n "${session_ids[1]:-}" ]]; then
     for session_id in "${session_ids[@]}"; do
       if (( desired_id < ${session_id##*-} )); then
         break
