@@ -6,7 +6,6 @@ config.load_autoconfig()
 
 # Use the exported org agenda view as the default page.
 c.url.start_pages = [
-    "https://gmail.com",
     "http://k0:8000", # hledger (real)
     "http://k0:8001", # hledger (virtual)
     "http://k0:8010", # org-roam
