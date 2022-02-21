@@ -1454,20 +1454,6 @@ l_startupHook hostname = do
   y <- gets (l_YFromWindowSet . windowset)
   let
     numScreens = length $ W.screens windowSet
-    farRightScreen = if hostname == "k0"
-      -- For k0, spawn at workspace 1 instead of 3 (workspaces are 0, 1, 2, 3)
-      -- because the actual layout of the screens (from the human user's
-      -- perspective) is:
-      --    2 3 0 1
-      -- so "1" is the rightmost screen.
-      then show (l_XZYFrom (X 1) numScreens ZGSys y)
-      else show (l_XZYFrom (X (-1)) numScreens ZGSys y)
-    -- Spawn rtorrent on the rightmost screen (XCoord index of -1; we use -1
-    -- because we don't know how many screens there will actually be).
-    rtorrent = spawn $ l_term hostname True
-      ++ " --class atWorkspace_"
-      ++ farRightScreen
-      ++ " --command rtorrent"
   -- Spawn one terminal in every screen at the "Work" ZGroup at the current
   -- YCoord (but only if that screen is empty). We have to feed in `(take 1)' in
   -- order to spawn terminals in a single ZCoord.
@@ -1477,17 +1463,11 @@ l_startupHook hostname = do
     (\xzy -> whenX (l_workspaceIsEmpty xzy)
       (spawn $ l_term hostname False ++ " --class atWorkspace_" ++ show xzy))
     $ l_XZYsFrom numScreens ZGWork (take 1) y
-  -- Spawn htop on the rightmost screen.
-  spawn $ l_term hostname True
-    ++ " --class atWorkspace_"
-    ++ farRightScreen
-    ++ " --command htop"
   -- The emacs daemon also starts up org-roam-server-mode, which turns on an
   -- HTTP server to serve org-roam files over port 8010.
   spawn "emacs --daemon"
   when (hostname == "k0") $ do
     spawn "qutebrowser"
-    rtorrent
   spawn "~/syscfg/script/startup_hook.sh"
 
 -- Reset the location of the mouse pointer, with the destination depending on
