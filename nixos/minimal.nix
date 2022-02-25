@@ -7,9 +7,9 @@
   networking = {
     extraHosts = ''
       192.168.0.3 m0
-      192.168.0.4 k0
+      192.168.0.9 k0
       192.168.0.5 k1
-      192.168.0.7 linusa-macbookpro
+      192.168.0.240 macp
       192.168.0.8 w0
     '';
     # Port 22 is opened automatically if SSH daemon is enabled (no need to specify it here).
