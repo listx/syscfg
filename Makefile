@@ -61,8 +61,6 @@ kube:
 	# being a normal user (by default)", according to
 	# https://logs.nix.samueldr.com/nixos-kubernetes/2018-09-07.
 	sudo chmod go+r /var/lib/kubernetes/secrets/cluster-admin-key.pem
-launch-my-browser:
-	ln -fs ${C}/script/launch-my-browser                ${H}/bin
 lesskey:
 	ln -fs ${C}/lesskey/cfg                             ${H}/.lesskey
 	lesskey

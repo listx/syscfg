@@ -32,9 +32,6 @@ univ_open() {
 			(pps|ppt)
 				soffice -impress $@ &>/dev/null & disown
 			;;
-			(htm|html)
-				launch-my-browser $@ &>/dev/null & disown
-			;;
 			(djvu|dvi|eps|pdf|ps)
 				zathura $@ &>/dev/null & disown
 			;;

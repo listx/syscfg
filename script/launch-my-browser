@@ -1,9 +1,0 @@
-#!/usr/bin/env bash
-if [[ $(uname) == "Linux" ]]; then
-    chromium $@
-elif [[ $(uname) == "Darwin" ]]; then
-    "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" $@
-else
-    # Fallback to firefox.
-    firefox $@
-fi
