@@ -276,8 +276,13 @@ alias  lk=' dir_info verbose-by-date'
 
 alias q=' exit'
 
-alias ma='mpv --vo=null'
-alias mp='mpv -playlist'
+mp() {
+  mpv --vo=null --loop-playlist --playlist="${1}"
+}
+
+mps() {
+  mpv --vo=null --loop-playlist --shuffle --playlist="${1}"
+}
 
 alias rsa="rand_open norecurse 'mpv -vo null -playlist' '' $ft_snd"
 alias rsaa="rand_open recurse 'mpv -vo null -playlist' '' $ft_snd"
