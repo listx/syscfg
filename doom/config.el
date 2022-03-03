@@ -292,6 +292,9 @@ Return an event vector."
       :mnv "H" #'previous-buffer
       :mnv "L" #'next-buffer)
 
+; Make a fast shortcut to show the agenda
+(map! :leader :desc "org-agenda-list" "A" #'org-agenda-list)
+
 ; org-agenda: Add weekly review view.
 ; https://emacs.stackexchange.com/a/8163/13006
 (setq org-agenda-custom-commands
