@@ -497,7 +497,7 @@ bindkey '^x' autosuggest-execute
 # Prevent command typos from cluttering up history.
 # See https://stackoverflow.com/a/66060510/437583.
 autoload -Uz add-zsh-hook
-command-not-found () {
+__l_command_not_found () {
   # $exit_status is set by the prompt. If we simply use "$?" as the variable
   # to check, unfortunately it does not get cleared when we (1) invoke an
   # known command, then (2) delete the contents of BUFFER loaded by `hist -fs
@@ -506,7 +506,7 @@ command-not-found () {
     hist -fs f -1 || echo "\`hist' is not installed"
   fi
 }
-add-zsh-hook precmd command-not-found
+add-zsh-hook precmd __l_command_not_found
 
 # Load fzf bindings (upstream) to ZSH.
 if [[ -n "${commands[fzf-share]}" ]]; then
