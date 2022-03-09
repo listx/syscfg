@@ -404,18 +404,18 @@ alias rgflac='~/syscfg/script/audio/replaygain/flac/tfwrg.sh'
 __l_accept_line () {
   # Check for a command that starts with `d.'.
   if [[ "$BUFFER" == "d."* ]]; then
-  # Only convert to a named directory buffer if we get a match of the named
-  # directory in the hash table.
-  local dir_alias
-  local dir_expanded_alias
-  dir_alias="${BUFFER#d.}"
-  dir_expanded_alias=$(hash -dm "${dir_alias}")
-  dir_expanded_alias="${dir_expanded_alias#*=}"
-  if [[ -e "${dir_expanded_alias}" ]]; then
-    BUFFER="d ~${dir_alias}"
-  else
-    echo -e >&2 "\nunrecognized directory alias ${(q)dir_alias}"
-  fi
+    # Only convert to a named directory buffer if we get a match of the named
+    # directory in the hash table.
+    local dir_alias
+    local dir_expanded_alias
+    dir_alias="${BUFFER#d.}"
+    dir_expanded_alias=$(hash -dm "${dir_alias}")
+    dir_expanded_alias="${dir_expanded_alias#*=}"
+    if [[ -e "${dir_expanded_alias}" ]]; then
+      BUFFER="d ~${dir_alias}"
+    else
+      echo -e >&2 "\nunrecognized directory alias ${(q)dir_alias}"
+    fi
   fi
   # Call original `accept-line' widget by prepending the leading period.
   zle .accept-line
