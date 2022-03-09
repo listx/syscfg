@@ -626,6 +626,20 @@ zle -N __l_lazy_load_completions
 # Uncomment to profile.
 #zprof
 
+# Check if the current shell session is an SSH session (a remote session).
+__l_is_ssh_connection()
+{
+  if [[ -n "${SSH_CLIENT:-}" ]] || [[ -n "${SSH_TTY:-}" ]]; then
+    return
+  fi
+
+  case $(ps -o comm= -p "$PPID") in
+    sshd|*/sshd) return;;
+  esac
+
+  return 1
+}
+
 # Invoke tmux, but find the smallest free number among the existing session
 # names, and use that. This avoids having always-increasing session numbers,
 # which can get out of hand if we're invoking tmux many times on a machine
@@ -652,8 +666,30 @@ __l_tmux_command()
   # <hostname>-<session_id>, and <session_id> is the smallest number possible.
   #
   # (f) causes the output to be split on newlines.
+  #
+  # First collect all existing session names to try to pick the first free
+  # session id. This is the "parking lot" problem described at
+  # https://funloop.org/post/2016-09-24-parking-lot-problem-revisited.html.
   session_ids=(${(f)"$(tmux list-sessions | cut -d: -f1 | grep "^${_hostname}-[0-9]\+\$" | sort)"})
-  # In Zsh, arrays indices start from 1, not 0.
+
+  # If connecting over SSH, don't try to create a new session, because chances
+  # are that we want to just reattach to an existing session. Users can create a
+  # separate, new tmux session manually if they need one.
+  if __l_is_ssh_connection; then
+    if [[ -n "${session_ids[1]:-}" ]]; then
+      # Get last element of array.
+      desired_id=${session_ids[-1]##*-}
+    fi
+
+    echo "tmux new-session -A -s ${_hostname}-${desired_id}"
+    return
+  fi
+
+  # If it's not an SSH connection, then create a brand new session. This way, if
+  # we open multiple terminal windows locally, each window gets its own unique
+  # tmux session.
+  #
+  # Note that in Zsh, arrays indices start from 1, not 0.
   if [[ -n "${session_ids[1]:-}" ]]; then
     for session_id in "${session_ids[@]}"; do
       if (( desired_id < ${session_id##*-} )); then
@@ -663,6 +699,7 @@ __l_tmux_command()
       fi
     done
   fi
+
   echo "tmux new-session -A -s ${_hostname}-${desired_id}"
 }
 
