@@ -648,7 +648,7 @@ __l_tmux_command()
     _hostname=$(cat ~/.hostname-short)
   fi
 
-  # Prefer to use defaul session names where the format is
+  # Prefer to use default session names where the format is
   # <hostname>-<session_id>, and <session_id> is the smallest number possible.
   #
   # (f) causes the output to be split on newlines.
