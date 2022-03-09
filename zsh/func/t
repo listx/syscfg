@@ -1,6 +1,0 @@
-#!/usr/bin/env zsh
-
-t()
-{
-	~/syscfg/script/tmux.sh "$@"
-}
