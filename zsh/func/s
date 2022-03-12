@@ -1,37 +1,16 @@
 #!/usr/bin/env zsh
 
-# SSH to known machines by attaching (or creating) a session.
+# SSH to known machines.
 
 s()
 {
 	if (( $#@ == 0 )); then
-		echo >&2 "Usage: <HOST> [TMUX_SESSION_NAME]"
+		echo >&2 "Usage: <HOST>"
 		return 1
 	fi
 
 	local user
 	local host="${1}"
-	# Grab the first subdomain as a short nickname for the host.
-	local host_shortname="${host%%.*}"
-
-	local session="${2:-}"
-	local session_suffix
-
-	if [[ -n "${session}" ]]; then
-		# Remove any existing host prefix from the session. This is to prevent it
-		# eventually looking like "HOST-HOST-<SESSION>".
-		session_suffix="${session#${host_shortname}-}"
-
-		# Prefix session name with the hostname.
-		session="${host_shortname}-${session_suffix:-1}"
-	else
-		# If the numeric suffix is empty, then that means it was not initially
-		# provided. In this case we go with the default option, which is the
-		# empty string. That way, tmux.sh will allocate a default name on its
-		# own.
-		session=""
-	fi
-
 
 	case "${host}" in
 	w0) user="ingra" ;;
@@ -43,7 +22,7 @@ s()
 		ssh -t "${user}@${host}" \"wsl.exe -d NixOS\"
 		;;
 	*)
-		ssh -t "${user}@${host}" '~/syscfg/script/tmux.sh' ${session:+"${session}"}
+		ssh -t "${user}@${host}"
 		;;
 	esac
 }

@@ -5,8 +5,7 @@ _s() {
 	local state
 
 	_arguments \
-		'1: :->host' \
-		'2: :->session_name'
+		'1: :->host'
 
 	local user
 	case "${words[2]}" in
@@ -15,24 +14,8 @@ _s() {
 	esac
 
 	case $state in
-		(host) _arguments '1:hosts:(k0 k1 m0 w0)' ;;
-        *) compadd "$@" $(__get_remote_tmux_sessions "${user}" "${words[2]}") ;;
+		(host) _arguments '1:hosts:(k0 k1 m0 w0 macp)' ;;
 	esac
-}
-
-__get_remote_tmux_sessions()
-{
-	local user="${1}"
-	local host="${2}"
-	local host_shortname="${host%%.*}"
-	declare -a sessions=()
-	sessions=($(tmux_list_sessions "${user}" "${host}"))
-
-	if (( $#sessions[@] )); then
-		echo "${sessions[@]}"
-	else
-		echo "${host_shortname}-1"
-	fi
 }
 
 _s "$@"
