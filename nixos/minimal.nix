@@ -5,12 +5,14 @@
   i18n.defaultLocale = "en_US.UTF-8";
 
   networking = {
+    # 192.168.0.1 router
+    # 192.168.0.2 printer
     extraHosts = ''
       192.168.0.3 m0
-      192.168.0.9 k0
+      192.168.0.4 k0
       192.168.0.5 k1
-      192.168.0.240 macp
-      192.168.0.8 w0
+      192.168.0.6 w0
+      192.168.0.7 macp
     '';
     # Port 22 is opened automatically if SSH daemon is enabled (no need to specify it here).
     firewall.allowedTCPPorts = [

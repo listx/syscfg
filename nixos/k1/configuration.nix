@@ -2,16 +2,12 @@
 { config, pkgs, ... }:
 
 {
-  imports =
-    [
-      ../extra.nix
-      ./hardware-configuration.nix
-      ../k8s-node.nix
-    ];
+  imports = [ ../extra.nix ./hardware-configuration.nix ../k8s-node.nix ];
 
   boot.loader.grub.enable = true;
   boot.loader.grub.version = 2;
-  boot.loader.grub.device = "/dev/disk/by-id/ata-FUJITSU_MHZ2320BH_G2_K623T922A38A";
+  boot.loader.grub.device =
+    "/dev/disk/by-id/ata-FUJITSU_MHZ2320BH_G2_K623T922A38A";
   boot.initrd.luks.devices = {
     root = {
       device = "/dev/disk/by-id/ata-FUJITSU_MHZ2320BH_G2_K623T922A38A-part3";
@@ -42,11 +38,10 @@
     # Enables wireless support via wpa_supplicant.
     wireless.enable = true;
 
-    # Assign static IP manually. The other half of this trick to make it work
-    # is to tell the Motorola router to start its DHCP lease assignment address
-    # from 192.168.0.10+, and then use the addresses 192.168.0.2-192.168.0.9
-    # statically (192.168.0.1 is reserved for the router itself).
-    interfaces.wlp24s0.ipv4.addresses = [ { address = "192.168.0.5"; prefixLength = 24; } ];
+    interfaces.wlp24s0.ipv4.addresses = [{
+      address = "192.168.0.5";
+      prefixLength = 24;
+    }];
     defaultGateway = "192.168.0.1";
     nameservers = [ "8.8.8.8" ];
   };

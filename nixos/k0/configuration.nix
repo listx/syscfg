@@ -36,10 +36,10 @@
     wireless.enable = true;
     # Assign static IP manually. The other half of this trick to make it work
     # is to tell the Motorola router to start its DHCP lease assignment address
-    # from 192.168.0.10+, and then use the addresses 192.168.0.2-192.168.0.9
+    # from 192.168.0.240+, and then use the addresses 192.168.0.2-192.168.0.239
     # statically (192.168.0.1 is reserved for the router itself).
     interfaces.wlp0s20u4u3.ipv4.addresses = [{
-      address = "192.168.0.9";
+      address = "192.168.0.4";
       prefixLength = 24;
     }];
   };

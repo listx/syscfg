@@ -279,10 +279,11 @@ alias fta='f all_text'
 alias ftab='f all_text_binary'
 
 # These hostnames depend on either /etc/hosts or ~/.ssh/config.
-alias sk0='s k0 '
-alias sk1='s k1 '
-alias sm0='s m0 '
-alias sw0='s w0 '
+alias sk0='s k0'
+alias sk1='s k1'
+alias sm0='s m0'
+alias sw0='s w0'
+alias smacp='s macp'
 
 # GLOBAL, position-independent aliases for detaching a process from the shell
 # (useful for starting GUI apps as standalones, without arguments).
