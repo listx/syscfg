@@ -164,6 +164,8 @@ zsh:
 	ln -fs ${C}/zsh/.zshrc                              ${H}
 	test -f ${C}/zsh/zprofile-${T} \
 		&& ln -fs ${C}/zsh/zprofile-${T}                ${H}/.zprofile || true
+	test -f ${C}/zsh/zprofile-${S} \
+		&& ln -fs ${C}/zsh/zprofile-${S}                ${H}/.zprofile || true
 	test -f ${C}/zsh/zlogin-${T} \
 		&& ln -fs ${C}/zsh/zlogin-${T}                  ${H}/.zlogin || true
 	mkdir -p ${H}/.zsh-untracked

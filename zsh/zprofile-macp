@@ -1,0 +1,4 @@
+# Allow both chinese characters (in our prompt) and also the UTF-8 geometric
+# character set we use for displaying our git prompts. If we don't do this,
+# these characters don't get displayed correctly.
+export LANG=en_US.UTF-8
