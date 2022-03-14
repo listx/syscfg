@@ -3,7 +3,7 @@
 {
   imports =
     [
-      ../minimal.nix
+      ../extra.nix
       ./hardware-configuration.nix
       ../k8s-node.nix
     ];
