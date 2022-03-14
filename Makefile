@@ -9,6 +9,9 @@ alacritty:
 ifeq ('${T}','k1')
 	ln -fs ${C}/alacritty/k1_tmux.yml                   ${H}/.config/alacritty/alacritty.yml
 	ln -fs ${C}/alacritty/k1_shell.yml                  ${C}/alacritty/alacritty_raw_shell.yml
+else ifeq ('${T}','m0')
+	ln -fs ${C}/alacritty/k1_tmux.yml                   ${H}/.config/alacritty/alacritty.yml
+	ln -fs ${C}/alacritty/k1_shell.yml                  ${C}/alacritty/alacritty_raw_shell.yml
 else ifeq ('${S}','Linux')
 	ln -fs ${C}/alacritty/linux_tmux.yml                ${H}/.config/alacritty/alacritty.yml
 	ln -fs ${C}/alacritty/linux_shell.yml               ${C}/alacritty/alacritty_raw_shell.yml
