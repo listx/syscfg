@@ -1,7 +1,14 @@
+# Configuration directory.
 C := $(shell pwd)
+# Home directory.
 H := ${HOME}
-S := $(shell uname)
+# Platform. E.g., "Darwin", "Linux".
+P := $(shell uname)
+# Long hostname, without the trailing domain name, if any.
 T := $(shell hostname | cut -d. -f1)
+# Short (custom) hostname.
+S := $(shell cat ${H}/.hostname-short)
+
 # Add the -n flag for directories, as otherwise, stray symlinks will be created
 # inside the C (config) directory itself.
 alacritty:
@@ -12,7 +19,7 @@ ifeq ('${T}','k1')
 else ifeq ('${T}','m0')
 	ln -fs ${C}/alacritty/k1_tmux.yml                   ${H}/.config/alacritty/alacritty.yml
 	ln -fs ${C}/alacritty/k1_shell.yml                  ${C}/alacritty/alacritty_raw_shell.yml
-else ifeq ('${S}','Linux')
+else ifeq ('${P}','Linux')
 	ln -fs ${C}/alacritty/linux_tmux.yml                ${H}/.config/alacritty/alacritty.yml
 	ln -fs ${C}/alacritty/linux_shell.yml               ${C}/alacritty/alacritty_raw_shell.yml
 else
@@ -75,7 +82,7 @@ mpv:
 	ln -fns ${C}/mpv                                    ${H}/.config/mpv
 ifeq ('${T}','k0')
 	ln -fs ${C}/mpv/mpv.${T}.conf                       ${H}/.config/mpv/mpv.conf
-else ifeq ('${S}','Darwin')
+else ifeq ('${P}','Darwin')
 	ln -fs ${C}/mpv/mpv.osx.conf                        ${H}/.config/mpv/mpv.conf
 else
 	ln -fs ${C}/mpv/mpv.linux.conf                      ${H}/.config/mpv/mpv.conf
