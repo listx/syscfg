@@ -1,9 +1,9 @@
 #!/usr/bin/env zsh
 
 # Rebase COMMIT_RANGE of commits back into the history just after the given
-# REVISION_ANCHOR. This is like running `git rebase -i REVISION_ANCHOR` and moving
-# the desired COMMIT_RANGE of commits up to the top (oldest), so that they
-# directly follow REVISION_ANCHOR.
+# REVISION_ANCHOR. This is like running `git rebase -i REVISION_ANCHOR` and
+# moving the desired COMMIT_RANGE of commits up to the top (oldest), so that
+# they directly follow REVISION_ANCHOR.
 #
 # This is function is designed for the case where you are on a branch
 # ("offshoot") but want to hack on commits for upstream "master". E.g., maybe
