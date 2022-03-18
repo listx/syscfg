@@ -223,6 +223,7 @@ alias   l=' dir_info verbose-by-name'
 alias  lj=' dir_info verbose-by-size'
 alias  lk=' dir_info verbose-by-date'
 
+alias n=' alacritty-raw-shell.sh & disown'
 alias q=' exit'
 
 alias rsa="rand_open norecurse 'mpv -vo null -playlist' '' $ft_snd"
