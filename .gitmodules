@@ -20,7 +20,7 @@
 	path = tmux/plugins/extrakto
 	url = https://git::@github.com/laktak/extrakto
 [submodule "zsh/zcomet"]
-	path = zsh/zcomet
+	path = zsh/zcomet-upstream
 	url = https://github.com/agkozak/zcomet
 [submodule "font/tamsyn-mac-version"]
 	path = font/tamsyn-mac-version

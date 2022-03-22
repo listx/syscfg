@@ -158,7 +158,7 @@ zsh:
 	test -f ${C}/zsh/zlogin-${T} \
 		&& ln -fs ${C}/zsh/zlogin-${T}                  ${H}/.zlogin || true
 	mkdir -p ${H}/.zsh-untracked
-	git -C ${C} submodule update --init ${C}/zsh/zcomet
+	git -C ${C} submodule update --init ${C}/zsh/zcomet-upstream
 	ln -fns ${C}/zsh/zcomet                             ${H}/.zcomet
 
 .PHONY: \
