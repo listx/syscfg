@@ -31,24 +31,13 @@ bash:
 cmus:
 	ln -fns ${C}/cmus                                   ${H}/.cmus
 emacs:
-	# Set up chemacs2 to enable emacs "profiles". Useful for trying out other
-	# people's configurations, etc. It works by (1) making ~/.emacs.d point to
-	# chemacs2's root dir, and (2) creating a ~/.emacs-profiles.el file that is
-	# a basic key-value table of profile names to emacs configuration
-	# directories.
-	#
-	# `${C}/emacs' is the `legacy' emacs configuration.
-	# `${C}/zzz/doom-emacs' is the `doom' emacs configuration.
-	git -C ${C} submodule update --init ${C}/zzz
-	ln -fns ${C}/zzz/chemacs2                           ${H}/.emacs.d
-	ln -fs ${C}/emacs                                   ${H}/.emacs.legacy
-	ln -fs ${C}/emacs/.emacs-profiles.el                ${H}
-	# "doom-emacs" profile
-	# Set up doom-emac's DOOMDIR.
-	ln -fns ${C}/doom                                   ${H}/.doom.d
-	# "legacy" profile
-	# Set up legacy custom.el file if there isn't one already.
-	touch                                               ${C}/emacs/custom.el
+	git -C ${C} submodule update --init ${C}/emacs/doom-upstream
+	# Point .emacs.d to upstream doom code.
+	ln -fns ${C}/emacs/doom-upstream                    ${H}/.emacs.d
+	# Make $DOOMDIR point to our doom-cfg folder.
+	ln -fns ${C}/emacs/doom-cfg                         ${H}/.doom.d
+	# Bring 'doom' script into $PATH.
+	ln -fs ${C}/emacs/doom-upstream/bin/doom            ${C}/script
 git:
 	ln -fs ${C}/git/cfg.personal.conf                   ${H}/.gitconfig
 	ln -fns ${C}/git/template                           ${H}/.git-templates

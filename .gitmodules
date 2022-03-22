@@ -1,9 +1,6 @@
 [submodule "zzz/doom-emacs"]
-	path = zzz/doom-emacs
+	path = emacs/doom-upstream
 	url = https://github.com/hlissner/doom-emacs
-[submodule "zzz/chemacs2"]
-	path = zzz/chemacs2
-	url = https://github.com/plexus/chemacs2.git
 [submodule "zzz/tpm"]
 	path = tmux/plugins/tpm
 	url = https://github.com/tmux-plugins/tpm
