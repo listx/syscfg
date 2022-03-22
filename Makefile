@@ -37,7 +37,7 @@ emacs:
 	# Make $DOOMDIR point to our doom-cfg folder.
 	ln -fns ${C}/emacs/doom-cfg                         ${H}/.doom.d
 	# Bring 'doom' script into $PATH.
-	ln -fs ${C}/emacs/doom-upstream/bin/doom            ${C}/script
+	cd ${C}/script && ln -fs ../emacs/doom-upstream/bin/doom
 git:
 	ln -fs ${C}/git/cfg.personal.conf                   ${H}/.gitconfig
 	ln -fns ${C}/git/template                           ${H}/.git-templates
