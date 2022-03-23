@@ -1264,7 +1264,7 @@ If you use "org" and don't want your org files in the default location below, ch
 
 ** Notes
 
-In insert mode, type =<s= followed by =TAB= to auto-complete a ~#+begin_src~ and ~#+end_src~ code block.
+In Org 9.2+, you can do =C-c C-,= to run org-insert-structure-template, and then press =e= to insert a ~#+begin_example\n#+end_example~ template. See https://emacs.stackexchange.com/a/46992/13006.
 
 * Elixir
 
