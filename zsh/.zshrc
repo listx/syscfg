@@ -467,10 +467,11 @@ if [[ -n "${commands[fzf-share]}" ]]; then
 fi
 
 # Use zcomet.
-if [[ ! -f ~/.zcomet/zcomet.zsh ]]; then
-  echo >&2 "error: missing ~/.zcomet/zcomet.zsh"
+__l_zcomet_path="${HOME}/.zsh/zcomet-upstream/zcomet.zsh"
+if [[ ! -f "${__l_zcomet_path}" ]]; then
+  echo >&2 "error: missing ${__l_zcomet_path}"
 fi
-source ~/.zcomet/zcomet.zsh
+source "${__l_zcomet_path}"
 
 # Print warning if we don't use an existing alias for a command.
 zcomet load "MichaelAquilina/zsh-you-should-use"
