@@ -1,0 +1,31 @@
+name: lhx
+version: 0.0.0.0
+author: Linus Arver
+maintainer: linusarver@gmail.com
+category: Utility
+build-type: Simple
+cabal-version: >=1.10
+
+executable lhx
+  main-is: lhx.hs
+  default-language: GHC2021
+  default-extensions:
+    DisambiguateRecordFields
+    DuplicateRecordFields
+    ImportQualifiedPost
+    LambdaCase
+    MultiWayIf
+    NoFieldSelectors
+    NoDoAndIfThenElse
+    NoNondecreasingIndentation
+    OverloadedRecordDot
+    OverloadedRecordUpdate
+    OverloadedStrings
+  ghc-options:
+    -O2 -Werror -threaded -fno-warn-tabs
+    -Wall -Wcompat -Widentities -Wincomplete-uni-patterns
+    -Wincomplete-record-updates -Wredundant-constraints
+    -fhide-source-paths -Wpartial-fields
+  build-depends:
+      base >= 4.8
+    , containers >= 0.5.6.2
