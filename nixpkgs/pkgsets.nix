@@ -89,8 +89,8 @@ with super; rec {
       wget
       curl
       zsh
-      xlibs.xmodmap
-      xlibs.xev
+      xorg.xmodmap
+      xorg.xev
       xdotool
       xorg.xdpyinfo
       xorg.xkill
@@ -116,7 +116,7 @@ with super; rec {
       dhcpcd
       lsof
       tree
-      sshfsFuse
+      sshfs-fuse
       bmon
       inetutils
       pciutils # lspci
