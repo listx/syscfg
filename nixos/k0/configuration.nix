@@ -60,6 +60,15 @@
     config = pkgs.lib.mkOverride 50 (builtins.readFile ./quadmon.conf);
   };
 
+  # Unfortunately, upgrading to nixos 21.11 led to us getting the new 495.44
+  # driver, which breaks our configuration (boo NVIDIA). So, we are forced to
+  # use the older version (which works perfectly!). The configuration here is
+  # taken from this commit
+  # https://github.com/NixOS/nixpkgs/commit/f8d38db8d7c995e0e20ab6b4e48cac26c2ef0dfa.
+  # The instructions at https://nixos.wiki/wiki/Nvidia led me to this commit.
+  hardware.nvidia.package =
+    config.boot.kernelPackages.nvidiaPackages.legacy_470;
+
   # Steps to add printer: Go to localhost:631 to access the CUPS admin page.
   # Then add a printer by specifying http://<PRINTER_IP_ADDRESS>:631/ipp.
   # Specify the correct driver for the make and model. As of 2020-01-03 the
