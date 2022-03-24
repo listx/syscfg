@@ -24,7 +24,7 @@ main()
 		unset "${env_var%=*}"
 	done < <(env | grep '^\(L_\)\?TMUX')
 
-	L_WANT_RAW_SHELL=1 alacritty --working-directory "${PWD}"
+	2>/dev/null L_WANT_RAW_SHELL=1 alacritty --working-directory "${PWD}"
 }
 
 main "$@"
