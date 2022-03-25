@@ -1,0 +1,3 @@
+executable-stripping: True
+packages:
+  ./lhx.cabal
