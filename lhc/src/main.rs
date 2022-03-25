@@ -1,4 +1,4 @@
-use clap::{app_from_crate, App, Arg, AppSettings};
+use clap::{app_from_crate, App, AppSettings, Arg};
 use reqwest::blocking::Client;
 use serde::Deserialize;
 use serde_json::json;
