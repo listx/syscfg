@@ -12,3 +12,7 @@ config = { version = "0.11", features = ["yaml"]}
 reqwest = { version = "0.11", features = ["blocking", "json"] }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
+
+[profile.release]
+# Strip all symbols.
+strip = true
