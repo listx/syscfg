@@ -43,7 +43,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         .subcommand(App::new("ping").about("Check lh server connectivity"))
         .subcommand(App::new("shutdown").about("Shut down lh server instance"))
         .get_matches();
-
+    let client = Client::new();
     match matches.subcommand_name() {
         Some("path-shorten") => {
             if let Some(m) = matches.subcommand_matches("path-shorten") {
@@ -75,7 +75,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                     "substitutions": subs,
                 });
 
-                let response = Client::new().post(request_url).json(&json_body).send()?;
+                let response = client.post(request_url).json(&json_body).send()?;
 
                 let path_shortened: PathShortened = response.json()?;
 
@@ -88,7 +88,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 settings.server.domain, settings.server.port
             );
 
-            let response = Client::new().get(request_url).send()?;
+            let response = client.get(request_url).send()?;
 
             println!("{}", response.text()?);
         }
@@ -98,7 +98,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 settings.server.domain, settings.server.port
             );
 
-            let response = Client::new().get(request_url).send()?;
+            let response = client.get(request_url).send()?;
 
             println!("{}", response.text()?);
         }
