@@ -1,4 +1,4 @@
-use clap::{app_from_crate, App, AppSettings, Arg};
+use clap::{Arg, Command};
 use reqwest::blocking::Client;
 use serde::Deserialize;
 use serde_json::json;
@@ -18,12 +18,13 @@ struct PathShortened {
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let settings = Settings::new().unwrap();
 
-    let matches = app_from_crate!()
-        .global_setting(AppSettings::PropagateVersion)
-        .global_setting(AppSettings::UseLongFormatForHelpSubcommand)
-        .setting(AppSettings::SubcommandRequiredElseHelp)
+    let cmd = clap::Command::new("lhc")
+        .version("v0.0")
+        .propagate_version(true)
+        .subcommand_required(true)
+        .arg_required_else_help(true)
         .subcommand(
-            App::new("path-shorten")
+            Command::new("path-shorten")
                 .about("Shorten a path")
                 .arg(
                     Arg::new("path_to_shorten")
@@ -40,9 +41,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                         .required(true),
                 ),
         )
-        .subcommand(App::new("ping").about("Check lh server connectivity"))
-        .subcommand(App::new("shutdown").about("Shut down lh server instance"))
-        .get_matches();
+        .subcommand(Command::new("ping").about("Check lh server connectivity"))
+        .subcommand(Command::new("shutdown").about("Shut down lh server instance"));
+    let matches = cmd.get_matches();
     let client = Client::new();
     match matches.subcommand_name() {
         Some("path-shorten") => {
@@ -102,8 +103,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
             println!("{}", response.text()?);
         }
-        None => println!("Nothing to do."),
-        _ => println!("Nothing to do (unrecognized subcommand)."),
+        _ => unreachable!("clap should ensure we don't get here"),
     }
     Ok(())
 }
