@@ -1297,6 +1297,7 @@ l_keyBindings hostname numScreens conf@XConfig {XMonad.modMask = hypr}
   -- non-Hyper-key binding to launch a terminal to bootstrap ourselves back in
   -- with initkeys.sh.
   , ((altS,   xK_e            ), spawn $ l_term hostname True)
+  , ((altS,   xK_x            ), spawn "xterm")
   , ((hypr,   xK_u            ), spawn "emacs")
   ]
   where
