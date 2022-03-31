@@ -9,16 +9,23 @@ defmodule LH.Router do
 
   get "/" do
     msg = LH.Lightning.hfr()
-    send_resp(conn, 200, msg)
+
+    conn
+    |> send_resp(200, msg)
+    |> halt()
   end
 
   get "/ping" do
     conn
     |> send_resp(200, "")
+    |> halt()
   end
 
   get "/shutdown" do
-    send_resp(conn, 200, "Shutting down...")
+    conn
+    |> send_resp(200, "Shutting down...")
+    |> halt()
+
     shutdown()
   end
 
@@ -32,7 +39,9 @@ defmodule LH.Router do
           {422, missing_path()}
       end
 
-    send_resp(conn, status, body)
+    conn
+    |> send_resp(status, body)
+    |> halt()
   end
 
   # Strings in Elixir are represented as binaries, so we use is_binary/1 instead
@@ -82,6 +91,8 @@ defmodule LH.Router do
   # A catchall route to match anything else that does not line up to the
   # expected endpoints above.
   match _ do
-    send_resp(conn, 404, "Oops!")
+    conn
+    |> send_resp(404, "Oops!")
+    |> halt()
   end
 end
