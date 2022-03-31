@@ -19,12 +19,12 @@ import LHX.GitVersion
 
 type Message = T.Text
 
-type LHAPI = "ping" :> Get '[PlainText] Message -- GET /ping
+type LHAPI = "ping" :> GetNoContent -- GET /ping
 
 lhApi :: Proxy LHAPI
 lhApi = Proxy
 
-getPing :: ClientM Message
+getPing :: ClientM NoContent
 getPing = client lhApi
 
 newtype Opts = Opts
@@ -88,4 +88,4 @@ ping manager' = do
   res <- runClientM getPing (mkClientEnv manager' (BaseUrl Http "localhost" 8080 ""))
   case res of
     Left err -> putStrLn $ "Error: " ++ show err
-    Right msg -> T.putStrLn msg
+    Right _ -> T.putStrLn "OK"
