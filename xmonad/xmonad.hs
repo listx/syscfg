@@ -1285,10 +1285,8 @@ l_keyBindings hostname numScreens conf@XConfig {XMonad.modMask = hypr}
   ]
   ++
   -- Launch apps.
-  [ ((hypr,   xK_i            ), spawn "qutebrowser")
-  , ((hyprS,  xK_i            ), spawnSelected def ["chromium", "firefox"])
-  , ((hypr,   xK_x            ), spawn $ l_term hostname True)
-  , ((hypr,   xK_e            ), spawn $ l_term hostname False)
+  [ ((hypr,   xK_i            ), spawnSelected def ["qutebrowser", "firefox", "chromium"])
+  , ((hypr,   xK_e            ), spawnSelected def [l_term hostname False, l_term hostname True, "xterm"])
   -- Backup binding to launch a terminal in case our Hyper key (hypr) is
   -- unavailable. This happens whenever we unplug/replug our keyboard, and a
   -- terminal isn't already showing in a window somewhere to be able to call
@@ -1296,9 +1294,8 @@ l_keyBindings hostname numScreens conf@XConfig {XMonad.modMask = hypr}
   -- Hyper key is used exclusively to maneuver around Xmonad, we need a
   -- non-Hyper-key binding to launch a terminal to bootstrap ourselves back in
   -- with initkeys.sh.
-  , ((altS,   xK_e            ), spawn $ l_term hostname True)
-  , ((altS,   xK_x            ), spawn "xterm")
-  , ((hypr,   xK_u            ), spawn "emacs")
+  , ((altS,   xK_e            ), spawnSelected def [l_term hostname False, l_term hostname True, "xterm"])
+  , ((hypr,   xK_u            ), spawnSelected def ["emacsclient", "emacs"])
   ]
   where
   yEdgeGuard dir = l_if (l_atYEdge dir) (return ())
