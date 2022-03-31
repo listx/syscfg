@@ -14,8 +14,7 @@ defmodule LH.Router do
 
   get "/ping" do
     conn
-    |> put_resp_header("content-type", "text/plain;charset=utf-8")
-    |> send_resp(200, "OK")
+    |> send_resp(200, "")
   end
 
   get "/shutdown" do
