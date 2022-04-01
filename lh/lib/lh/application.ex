@@ -11,7 +11,7 @@ defmodule LH.Application do
     children = [
       # Use Plug.Cowboy.child_spec/3 to register our endpoint as a plug
       Plug.Cowboy.child_spec(scheme: :http, plug: LH.Router, options: [port: 8080]),
-      LH.Path.Cache
+      LH.Cache.PathShorten
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

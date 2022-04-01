@@ -1,8 +1,8 @@
-defmodule LH.Path.Cache do
+defmodule LH.Cache.PathShorten do
   @moduledoc """
-  Path Cache
+  path-shorten Cache
   """
-  @cache_id :path_cache
+  @cache_id :path_shorten_cache
 
   def child_spec(_init_arg) do
     %{

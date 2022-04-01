@@ -49,7 +49,7 @@ defmodule LH.Router do
   # of is_string/1.
   defp path_shorten(path, aliases_raw, subs)
        when is_binary(path) and is_binary(aliases_raw) and is_map(subs) do
-    {status, msg} = Cachex.get(:path_cache, {path, aliases_raw, subs})
+    {status, msg} = Cachex.get(:path_shorten_cache, {path, aliases_raw, subs})
 
     {msg_final, cached_status} =
       if status == :error || msg == nil do
@@ -60,7 +60,7 @@ defmodule LH.Router do
             subs
           )
 
-        Cachex.put(:path_cache, {path, aliases_raw, subs}, msg)
+        Cachex.put(:path_shorten_cache, {path, aliases_raw, subs}, msg)
         {msg, :MIS}
       else
         {msg, :HIT}
