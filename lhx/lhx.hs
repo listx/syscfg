@@ -18,6 +18,8 @@ import Options.Applicative
 import Servant.API
 import Servant.Client
 import System.Environment
+import System.Exit
+import System.IO
 
 import Paths_lhx (version)
 import LHX.GitVersion
@@ -95,7 +97,9 @@ runClient :: ClientEnv -> ClientM a -> (a -> IO ()) -> IO ()
 runClient clientEnv action_ valHandler = do
   res <- runClientM action_ clientEnv
   case res of
-    Left err -> T.putStrLn $ "Error: " <> (T.pack $ show err)
+    Left err -> do
+      T.hPutStrLn stderr $ "Error: " <> (T.pack $ show err)
+      exitFailure
     Right val -> valHandler val
 
 optsHandler :: Opts -> Manager -> IO ()
