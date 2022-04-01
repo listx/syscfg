@@ -71,17 +71,27 @@ defmodule LH.Router do
     Jason.encode!(%{path_shortened: msg_final})
   end
 
-  defp path_shorten(a, b, c) do
+  defp path_shorten(path, aliases_raw, subs) do
+    if not is_binary(path) do
+      Logger.error("/path-shorten: path is not a string: #{path}")
+    end
+
+    if not is_binary(aliases_raw) do
+      Logger.error("/path-shorten: aliases_raw is not a string: #{aliases_raw}")
+    end
+
+    if not is_map(subs) do
+      Logger.error("/path-shorten: subs is not a map: #{subs}")
+    end
+
     Jason.encode!(%{
-      error:
-        "Expected Payload: { 'name': '...', 'aliases_raw': '...', 'substitutions': { ...  } }, but got #{a}, #{b}, #{c}"
+      error: "bad arguments"
     })
   end
 
   defp missing_path do
     Jason.encode!(%{
-      error:
-        "Expected Payload: { 'name': '...', 'aliases_raw': '...', 'substitutions': { ...  } }"
+      error: "unknown path"
     })
   end
 
