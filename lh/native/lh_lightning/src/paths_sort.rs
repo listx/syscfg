@@ -11,19 +11,14 @@ use std::collections::HashSet;
 // the ordering in priorities_raw; the latter remain undisturbed.
 #[rustler::nif]
 pub fn paths_sort(paths: &str, priorities_raw: &str, home: &str) -> String {
-    let paths_canonical = make_canonical_paths(&paths, &home);
-    _paths_sort(&paths_canonical, priorities_raw).replace("~", home)
+    let paths_canonical = make_canonical_paths(&paths);
+    _paths_sort(&paths_canonical, priorities_raw, home).replace("~", home)
 }
 
-fn _paths_sort(paths_canonical: &Vec<String>, priorities_raw: &str) -> String {
-    let priorities: Vec<String> = priorities_raw.split(":").map(|s| s.to_string()).collect();
+fn _paths_sort(paths_canonical: &Vec<String>, priorities_raw: &str, home: &str) -> String {
+    let priorities = make_priorities(priorities_raw, home);
 
     let nop: String = paths_canonical.join(":");
-
-    // No need to do any work if we don't want to sort anything (NOP).
-    if priorities.len() == 0 {
-        return nop;
-    }
 
     // Likewise, NOP if there is only 1 path in $PATH.
     if paths_canonical.len() == 1 {
@@ -73,11 +68,25 @@ fn _paths_sort(paths_canonical: &Vec<String>, priorities_raw: &str) -> String {
     paths_final.join(":")
 }
 
-// Convert paths ($PATH) so that all instances of (basically) "/home/foo" are
-// replaced with just "~".
-fn make_canonical_paths(paths: &str, home: &str) -> Vec<String> {
-    let parts = paths.split(":");
-    parts.map(|x| x.replacen(home, "~", 1)).collect()
+fn make_canonical_paths(paths: &str) -> Vec<String> {
+    paths.split(":").map(|x| x.to_string()).collect()
+}
+
+fn make_priorities(priorities_raw: &str, home: &str) -> Vec<String> {
+    let mut priorities_final: Vec<String> = Vec::new();
+
+    for line in priorities_raw.lines() {
+        if line.starts_with("#") {
+            continue;
+        }
+        if line.len() == 0 {
+            continue;
+        }
+
+        priorities_final.push(line.replace("$HOME", home));
+    }
+
+    priorities_final
 }
 
 #[cfg(test)]
@@ -92,31 +101,54 @@ mod test {
 
     #[test]
     fn test_paths_sort() {
-        let prio = "~/a:~/b:~/c";
+        let prio = "$HOME/a\n$HOME/b\n$HOME/c";
+        let home = "/home/x";
         // Empty case.
-        assert_eq!(_paths_sort(&vec_strings![], prio), "");
+        assert_eq!(_paths_sort(&vec_strings![], prio, home), "");
         // No prioritization == NOP.
-        assert_eq!(_paths_sort(&vec_strings!["~/b", "~/a"], ""), "~/b:~/a");
-        // No prioritization == NOP (excep deduping).
         assert_eq!(
-            _paths_sort(&vec_strings!["~/b", "~/b", "~/a"], ""),
-            "~/b:~/a"
+            _paths_sort(&vec_strings!["/home/x/b", "/home/x/a"], "", home),
+            "/home/x/b:/home/x/a"
+        );
+        // No prioritization == NOP (except deduping).
+        assert_eq!(
+            _paths_sort(
+                &vec_strings!["/home/x/b", "/home/x/b", "/home/x/a"],
+                "",
+                home
+            ),
+            "/home/x/b:/home/x/a"
         );
         // Simple sort.
-        assert_eq!(_paths_sort(&vec_strings!["~/b", "~/a"], prio), "~/a:~/b");
+        assert_eq!(
+            _paths_sort(&vec_strings!["/home/x/b", "/home/x/a"], prio, home),
+            "/home/x/a:/home/x/b"
+        );
         // Dedup and sort.
         assert_eq!(
-            _paths_sort(&vec_strings!["~/b", "~/b", "~/a", "~/a"], prio),
-            "~/a:~/b"
+            _paths_sort(
+                &vec_strings!["/home/x/b", "/home/x/b", "/home/x/a", "/home/x/a"],
+                prio,
+                home
+            ),
+            "/home/x/a:/home/x/b"
         );
         // Dedup, sort, and collect unprioritized paths (and preserve their
         // order).
         assert_eq!(
             _paths_sort(
-                &vec_strings!["~/c", "~/foo", "~/a", "~/bar/baz", "~/foo", "~/b"],
-                prio
+                &vec_strings![
+                    "/home/x/c",
+                    "/home/x/foo",
+                    "/home/x/a",
+                    "/home/x/bar/baz",
+                    "/home/x/foo",
+                    "/home/x/b"
+                ],
+                prio,
+                home
             ),
-            "~/a:~/b:~/c:~/foo:~/bar/baz"
+            "/home/x/a:/home/x/b:/home/x/c:/home/x/foo:/home/x/bar/baz"
         );
     }
 }

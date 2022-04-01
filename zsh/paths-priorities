@@ -1,0 +1,20 @@
+# xmonad
+$HOME/.xmonad
+
+# Personal scripts
+$HOME/syscfg/script
+
+# Haskell (Nix)
+$HOME/.cabal/bin
+
+# Haskell (Stack)
+$HOME/.local/bin
+
+# Rust
+$HOME/.cargo/bin
+
+# Golang
+$HOME/go/bin
+
+# nix-env profile
+$HOME/.nix-profile/bin
