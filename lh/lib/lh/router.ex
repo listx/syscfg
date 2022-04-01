@@ -70,10 +70,10 @@ defmodule LH.Router do
     Jason.encode!(%{path_shortened: msg_final})
   end
 
-  defp path_shorten(_, _, _) do
+  defp path_shorten(a, b, c) do
     Jason.encode!(%{
       error:
-        "Expected Payload: { 'name': '...', 'aliases_raw': '...', 'substitutions': { ...  } }"
+        "Expected Payload: { 'name': '...', 'aliases_raw': '...', 'substitutions': { ...  } }, but got #{a}, #{b}, #{c}"
     })
   end
 
