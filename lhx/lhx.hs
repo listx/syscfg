@@ -26,6 +26,7 @@ type Message = T.Text
 
 type LHAPI = "path-shorten" :> ReqBody '[JSON] PathShortenReqBody :> Post '[JSON] PathShortened -- POST /path-shorten
         :<|> "ping" :> GetNoContent -- GET /ping
+        :<|> "shutdown" :> GetNoContent -- GET /shutdown
 
 lhApi :: Proxy LHAPI
 lhApi = Proxy
@@ -49,7 +50,8 @@ instance FromJSON PathShortened
 -- of these actions depending on what we want to do in "runClient".
 postPathShorten :: PathShortenReqBody -> ClientM PathShortened
 getPing :: ClientM NoContent
-(postPathShorten :<|> getPing) = client lhApi
+getShutdown :: ClientM NoContent
+(postPathShorten :<|> getPing :<|> getShutdown) = client lhApi
 
 newtype Opts = Opts
   { subcommand :: Subcommand }
@@ -57,6 +59,7 @@ newtype Opts = Opts
 data Subcommand
   = PathShorten PathShortenOpts
   | Ping
+  | Shutdown
 
 data PathShortenOpts = PathShortenOpts
   { name :: FilePath
@@ -70,6 +73,7 @@ subcommandP :: Parser Subcommand
 subcommandP = hsubparser
   ( command "path-shorten" (info (PathShorten <$> pathShortenOptsP) (progDesc "Shorten a path"))
   <> command "ping" (info (pure Ping) (progDesc "Check lh server connectivity"))
+  <> command "shutdown" (info (pure Shutdown) (progDesc "Shut down lh server instance"))
   <> metavar "SUBCOMMAND"
   )
 
@@ -111,6 +115,7 @@ optsHandler (Opts subcommand) mgr = do
           }
       resolve (postPathShorten pathShortenReqBody) (T.putStr . T.pack . (.path_shortened))
     Ping -> resolve getPing (\_ -> T.putStrLn "OK")
+    Shutdown -> resolve getShutdown (\_ -> T.putStrLn "Shutting down...")
 
 main :: IO ()
 main = do
