@@ -89,9 +89,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 settings.server.domain, settings.server.port
             );
 
-            let response = client.get(request_url).send()?;
+            client.get(request_url).send()?;
 
-            println!("{}", response.text()?);
+            println!("OK");
         }
         Some("shutdown") => {
             let request_url = format!(
