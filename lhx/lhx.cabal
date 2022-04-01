@@ -31,12 +31,14 @@ executable lhx
   build-depends:
       base >= 4.8
     , lhx
+    , aeson >= 2.0.3.0
     , bytestring >= 0.11.3.0
     , http-client >= 0.7.11
     , optparse-applicative >= 0.17.0.0
     , servant >= 0.19
     , servant-client >= 0.19
     , text >= 2.0
+    , unordered-containers >= 0.2.16.0
 
 library
   exposed-modules:

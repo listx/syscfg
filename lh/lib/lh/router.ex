@@ -40,6 +40,7 @@ defmodule LH.Router do
       end
 
     conn
+    |> put_resp_header("content-type", "application/json;charset=utf-8")
     |> send_resp(status, body)
     |> halt()
   end
