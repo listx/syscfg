@@ -1,12 +1,12 @@
 use std::collections::HashMap;
 
 #[rustler::nif]
-pub fn shorten(path: &str, aliases_raw: &str, subs: HashMap<String, String>) -> String {
+pub fn path_shorten(path: &str, aliases_raw: &str, subs: HashMap<String, String>) -> String {
     let path_canonical = make_canonical_path(path, aliases_raw, &subs);
-    path_shorten(&path_canonical)
+    _path_shorten(&path_canonical)
 }
 
-fn path_shorten(path_canonical: &str) -> String {
+fn _path_shorten(path_canonical: &str) -> String {
     // Don't shorten paths that are 30 characters or less in length.
     if path_canonical.chars().count() <= 30 {
         return path_canonical.to_string();
@@ -167,7 +167,7 @@ mod test {
     use super::*;
 
     #[test]
-    fn test_shorten() {
+    fn test_make_canonical_path() {
         let mut subs: HashMap<String, String> = HashMap::new();
         subs.insert("$HOME".to_string(), "/home/foo".to_string());
         subs.insert("/home/foo".to_string(), "~".to_string());
@@ -196,77 +196,77 @@ hash -d c=$HOME/bar/baz/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx/c
 
     #[test]
     fn test_path_shorten() {
-        assert_eq!(path_shorten(""), "");
-        assert_eq!(path_shorten("~"), "~");
-        assert_eq!(path_shorten("/"), "/");
-        assert_eq!(path_shorten("/a"), "/a");
-        assert_eq!(path_shorten("/a/b/c"), "/a/b/c");
-        assert_eq!(path_shorten("a"), "a");
-        assert_eq!(path_shorten("a/b/c"), "a/b/c");
+        assert_eq!(_path_shorten(""), "");
+        assert_eq!(_path_shorten("~"), "~");
+        assert_eq!(_path_shorten("/"), "/");
+        assert_eq!(_path_shorten("/a"), "/a");
+        assert_eq!(_path_shorten("/a/b/c"), "/a/b/c");
+        assert_eq!(_path_shorten("a"), "a");
+        assert_eq!(_path_shorten("a/b/c"), "a/b/c");
         // If the path is exactly 30 characters, we should not shorten anything.
         assert_eq!(
-            path_shorten("/a23456789/b23456789/c23456789"),
+            _path_shorten("/a23456789/b23456789/c23456789"),
             "/a23456789/b23456789/c23456789"
         );
         // If the path is just over 30 characters, we should shorten the first
         // directory.
         assert_eq!(
-            path_shorten("/a23456789/b23456789/c23456789d"),
+            _path_shorten("/a23456789/b23456789/c23456789d"),
             "/a/b23456789/c23456789d"
         );
         // Some longer directories.
         assert_eq!(
-            path_shorten("/a23456789/b23456789/c23456789/d23456789"),
+            _path_shorten("/a23456789/b23456789/c23456789/d23456789"),
             "/a/b/c23456789/d23456789"
         );
         assert_eq!(
-            path_shorten("a23456789/b23456789/c23456789/d23456789"),
+            _path_shorten("a23456789/b23456789/c23456789/d23456789"),
             "a/b/c23456789/d23456789"
         );
         // Shortening of aliases (directories with "~") in them are forbidden.
         assert_eq!(
-            path_shorten("~a23456789/b23456789/c23456789/d23456789"),
+            _path_shorten("~a23456789/b23456789/c23456789/d23456789"),
             "~a23456789/b/c/d23456789"
         );
         // Realistic example (last directory remains untouched).
         assert_eq!(
-            path_shorten("~/prog/foreign/git/contrib/thunderbird-patch-inline"),
+            _path_shorten("~/prog/foreign/git/contrib/thunderbird-patch-inline"),
             "~/p/f/g/c/thunderbird-patch-inline"
         );
         // Extreme cases.
         assert_eq!(
-            path_shorten(
+            _path_shorten(
                 "~/aaaaaaaaaaaaaaaaaaaa/bbbbbbbbbbbbbbbbbbbbbb/cccccccccccccccccccccc/hello"
             ),
             "~/a/b/c/hello"
         );
         // Unusual case of just 2 directories, where both are very long.
         assert_eq!(
-            path_shorten(
+            _path_shorten(
                 "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
             ),
             "a/bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
         );
         // Non-ASCII (exactly 30 characters).
         assert_eq!(
-            path_shorten("/일이삼사오육칠팔구/일이삼사오육칠팔구/일이삼사오육칠팔구"),
+            _path_shorten("/일이삼사오육칠팔구/일이삼사오육칠팔구/일이삼사오육칠팔구"),
             "/일이삼사오육칠팔구/일이삼사오육칠팔구/일이삼사오육칠팔구"
         );
         assert_eq!(
-            path_shorten("일이삼사오육칠팔구/일이삼사오육칠팔구/일이삼사오육칠팔구a"),
+            _path_shorten("일이삼사오육칠팔구/일이삼사오육칠팔구/일이삼사오육칠팔구a"),
             "일이삼사오육칠팔구/일이삼사오육칠팔구/일이삼사오육칠팔구a"
         );
         assert_eq!(
-            path_shorten("~일이삼사오육칠팔구/일이삼사오육칠팔구/일이삼사오육칠팔구"),
+            _path_shorten("~일이삼사오육칠팔구/일이삼사오육칠팔구/일이삼사오육칠팔구"),
             "~일이삼사오육칠팔구/일이삼사오육칠팔구/일이삼사오육칠팔구"
         );
         // Non-ASCII (over 30 characters).
         assert_eq!(
-            path_shorten("/일이삼사오육칠팔구/일이삼사오육칠팔구/일이삼사오육칠팔구/a"),
+            _path_shorten("/일이삼사오육칠팔구/일이삼사오육칠팔구/일이삼사오육칠팔구/a"),
             "/일/일이삼사오육칠팔구/일이삼사오육칠팔구/a"
         );
         assert_eq!(
-            path_shorten("~/일일일일일일일일일일일일일일일일일일일일/이이이이이이이이이이이이이이이이이이이이/삼삼삼삼삼삼삼삼삼삼삼삼삼삼삼삼삼삼삼삼/hello"),
+            _path_shorten("~/일일일일일일일일일일일일일일일일일일일일/이이이이이이이이이이이이이이이이이이이이/삼삼삼삼삼삼삼삼삼삼삼삼삼삼삼삼삼삼삼삼/hello"),
             "~/일/이/삼/hello"
         );
     }

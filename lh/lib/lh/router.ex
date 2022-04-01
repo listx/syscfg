@@ -36,7 +36,23 @@ defmodule LH.Router do
           {200, path_shorten(path, aliases_raw, subs)}
 
         _ ->
-          {422, missing_path()}
+          {422, bad_request_body()}
+      end
+
+    conn
+    |> put_resp_header("content-type", "application/json;charset=utf-8")
+    |> send_resp(status, body)
+    |> halt()
+  end
+
+  post "/paths-sort" do
+    {status, body} =
+      case conn.body_params do
+        %{"paths" => paths, "priorities_raw" => priorities_raw, "home" => home} ->
+          {200, paths_sort(paths, priorities_raw, home)}
+
+        _ ->
+          {422, bad_request_body()}
       end
 
     conn
@@ -54,7 +70,7 @@ defmodule LH.Router do
     {msg_final, cached_status} =
       if status == :error || msg == nil do
         msg =
-          LH.Lightning.shorten(
+          LH.Lightning.path_shorten(
             path,
             aliases_raw,
             subs
@@ -89,9 +105,46 @@ defmodule LH.Router do
     })
   end
 
-  defp missing_path do
+  defp paths_sort(paths, priorities_raw, home)
+       when is_binary(paths) and is_binary(priorities_raw) and is_binary(home) do
+    {status, msg} = Cachex.get(:paths_sort_cache, {paths, priorities_raw, home})
+
+    {msg_final, cached_status} =
+      if status == :error || msg == nil do
+        msg = LH.Lightning.paths_sort(paths, priorities_raw, home)
+
+        Cachex.put(:paths_sort_cache, {paths, priorities_raw, home}, msg)
+        {msg, :MIS}
+      else
+        {msg, :HIT}
+      end
+
+    Logger.info("/paths-sort: (#{cached_status}) #{inspect(paths)} => #{inspect(msg_final)}")
+
+    Jason.encode!(%{paths_sorted: msg_final})
+  end
+
+  defp paths_sort(paths, priorities_raw, home) do
+    if not is_binary(paths) do
+      Logger.error("/path-shorten: paths is not a string: #{paths}")
+    end
+
+    if not is_binary(priorities_raw) do
+      Logger.error("/path-shorten: priorities_raw is not a string: #{priorities_raw}")
+    end
+
+    if not is_binary(home) do
+      Logger.error("/path-shorten: home is not a string: #{home}")
+    end
+
     Jason.encode!(%{
-      error: "unknown path"
+      error: "bad arguments"
+    })
+  end
+
+  defp bad_request_body do
+    Jason.encode!(%{
+      error: "bad_request_body"
     })
   end
 
