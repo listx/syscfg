@@ -34,9 +34,9 @@ emacs:
 	git -C ${C} submodule update --init ${C}/emacs/doom-upstream
 	# Point .emacs.d to upstream doom code.
 	ln -fns ${C}/emacs/doom-upstream                    ${H}/.emacs.d
-	# Make $DOOMDIR point to our doom-cfg folder.
+	# Make $$DOOMDIR point to our doom-cfg folder.
 	ln -fns ${C}/emacs/doom-cfg                         ${H}/.doom.d
-	# Bring 'doom' script into $PATH.
+	# Bring 'doom' script into $$PATH.
 	cd ${C}/script && ln -fs ../emacs/doom-upstream/bin/doom
 git:
 	ln -fs ${C}/git/cfg.personal.conf                   ${H}/.gitconfig
