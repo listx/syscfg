@@ -7,8 +7,4 @@ export LANG=en_US.UTF-8
 # changes the order of PATH directories, because it calls out to
 # /usr/libexec/path_helper, putting the ~/.nix-profile/bin folder _after_ the
 # other standard locations, which is NOT what we want.
-#
-# For cleanliness we remove the trailing ~/.nix-profile/bin from the PATH
-# before re-adding it back toward the front.
-export PATH="${PATH%:$HOME/.nix-profile/bin}"
-export PATH=~/.nix-profile/bin:$PATH
+__l_prepend_path $HOME/.nix-profile/bin
