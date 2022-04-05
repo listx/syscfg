@@ -253,12 +253,18 @@ __l_tmux_command()
   __l_new_tmux_session_command "${_hostname}" "${desired_id}"
 }
 
+# Use this to avoid putting in duplicate entries into the $PATH. This can happen
+# if you log in with zsh as your login shell (resulting in reading ~/.zshrc),
+# and then invoke tmux (which itself invokes zsh again, as a login shell). This
+# scenario will result in ~/.zshrc being read 2x --- so if you have plain
+# "export PATH=..." statements, it will result in a duplicate entry.
+#
+# To avoid duplicate entries, we only prepend to the path if we have a non-empty
+# string and it isn't already in the PATH.
 __l_prepend_path()
 {
   local dir="${1:-}"
 
-  # Only prepend to the path if we have a non-empty string and it isn't already
-  # in the PATH.
   [[ -z "${dir}" ]] && return
   [[ "${PATH}" == *"${dir}"* ]] && return
 
