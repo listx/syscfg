@@ -264,9 +264,19 @@ __l_tmux_command()
 __l_prepend_path()
 {
   local dir="${1:-}"
+  local tmp_path
 
   [[ -z "${dir}" ]] && return
-  [[ "${PATH}" == *"${dir}"* ]] && return
+
+  # If dir is already in the PATH, move it to the front.
+  if [[ "${PATH}" == *"${dir}"* ]]; then
+    # Catch edge case where we want to promote the very last dir.
+    tmp_path="${PATH}:"
+    tmp_path="${tmp_path//${dir}:/}"
+    # Remove trailing ":".
+    export PATH="${dir}:${tmp_path%:}"
+    return
+  fi
 
   export PATH=${dir}:$PATH
 }
