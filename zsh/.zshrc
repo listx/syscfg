@@ -96,20 +96,22 @@ export GCC_COLORS=1
 # path to local nixpkgs git repo
 export NIXPKGS=~/prog/foreign/nixpkgs
 
+__l_prepend_path ~/.nix-profile/bin
+
 # Add Golang binaries to the PATH.
-export PATH=~/go/bin:$PATH
+__l_prepend_path ~/go/bin
 
 # Add Rust binaries (installed with "cargo install" to the PATH.
-export PATH=~/.cargo/bin:$PATH
+__l_prepend_path ~/.cargo/bin
 
 # Stack (https://www.haskellstack.org/) needs this.
-export PATH=~/.local/bin:$PATH
+__l_prepend_path ~/.local/bin
 
 # Load executables for "cabal v2-install".
-export PATH=~/.cabal/bin:$PATH
+__l_prepend_path ~/.cabal/bin
 
 # Add system scripts to the PATH.
-export PATH=~/syscfg/script:$PATH
+__l_prepend_path ~/syscfg/script
 
 # stop zsh from eating space before pipe symbol
 export ZLE_REMOVE_SUFFIX_CHARS=""

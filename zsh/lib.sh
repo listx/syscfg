@@ -253,6 +253,17 @@ __l_tmux_command()
   __l_new_tmux_session_command "${_hostname}" "${desired_id}"
 }
 
+__l_prepend_path()
+{
+  local dir="${1:-}"
+
+  # Only prepend to the path if we have a non-empty string and it isn't already
+  # in the PATH.
+  [[ -z "${dir}" ]] && return
+  [[ "${PATH}" == *"${dir}"* ]] && return
+
+  export PATH=${dir}:$PATH
+}
 
 # The following are functions that are meant to be invoked interactively by the
 # user.

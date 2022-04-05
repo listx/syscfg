@@ -1,6 +1,8 @@
 # Default (personal) values. Use these as a baseline, and modify further in
 # ~/.zprofile depending on the machine as necessary.
 
+. $HOME/.zsh/lib.sh
+
 # Space-delimited list of directories to use for setting org-agenda-files. All
 # *.org files in these directories are included, recursively.
 export L_ORG_AGENDA_DIRS="$HOME/lo"
@@ -14,7 +16,7 @@ export L_ORG_AGENDA_EXCLUDE_PATTERNS="
 	$HOME/lo/note/snippets.org
 "
 
-export PATH=$HOME/.nix-profile/bin:$PATH
+__l_prepend_path ~/.nix-profile/bin
 
 case "$(hostname)" in
 	w0) export TERM=xterm-24bit  ;;
