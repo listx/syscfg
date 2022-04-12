@@ -8,7 +8,7 @@ cd "${SCRIPT_ROOT}"
 
 # Daemonize with the "-d" flag.
 if [[ "${1:-}" == -d ]]; then
-    nohup mix run --no-halt >/dev/null & disown
+    nix-shell --command "nohup mix run --no-halt >/dev/null & disown"
 else
-    mix run --no-halt
+    nix-shell --command "mix run --no-halt"
 fi
