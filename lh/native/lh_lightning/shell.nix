@@ -1,0 +1,1 @@
+../../../lhc/shell.nix
