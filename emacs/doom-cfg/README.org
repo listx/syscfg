@@ -982,7 +982,7 @@ We don't have any code for deleting a tab because we only delete windows instead
 
 #+name: tab-creation
 #+begin_src emacs-lisp
-(map! :leader :desc "tab-new" "n" (cmd!! #'tab-bar-new-tab 100))
+(map! :leader :desc "tab-new" "n" (cmd!! #'tab-bar-new-tab 1))
 #+end_src
 
 *** Navigation

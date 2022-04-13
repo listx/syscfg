@@ -557,7 +557,7 @@ Also add the number of windows in the window configuration."
       :mi "C-h" #'tab-previous
       :mi "C-S-l" (cmd!! #'tab-bar-move-tab 1)
       :mi "C-S-h" (cmd!! #'tab-bar-move-tab -1))
-(map! :leader :desc "tab-new" "n" (cmd!! #'tab-bar-new-tab 100))
+(map! :leader :desc "tab-new" "n" (cmd!! #'tab-bar-new-tab 1))
 
 (map! :leader :desc "window" "W" evil-window-map)
 (map! :leader :desc "save-buffer" "w" #'save-buffer)
