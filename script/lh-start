@@ -2,5 +2,4 @@
 
 set -euo pipefail
 
-cd "$HOME/syscfg/lhc"
-nix-shell --command "~/syscfg/lh/run.sh"
+"$HOME/syscfg/lh/run.sh" "$@"
