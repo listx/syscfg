@@ -72,11 +72,11 @@ mpd:
 mpv:
 	ln -fns ${C}/mpv                                    ${H}/.config/mpv
 ifeq ('${T}','k0')
-	ln -fs ${C}/mpv/mpv.${T}.conf                       ${H}/.config/mpv/mpv.conf
+	ln -fs mpv.${T}.conf                                mpv/mpv.conf
 else ifeq ('${P}','Darwin')
-	ln -fs ${C}/mpv/mpv.osx.conf                        ${H}/.config/mpv/mpv.conf
+	ln -fs mpv.osx.conf                                 mpv/mpv.conf
 else
-	ln -fs ${C}/mpv/mpv.linux.conf                      ${H}/.config/mpv/mpv.conf
+	ln -fs mpv.linux.conf                               mpv/mpv.conf
 endif
 mupen:
 	ln -fs ${C}/mupen/InputAutoCfg.ini                  /usr/share/mupen64plus
