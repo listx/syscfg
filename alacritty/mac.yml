@@ -6,6 +6,7 @@ window:
     columns: 82
     lines: 92
   title: ""
+  dynamic_title: false
 font:
   normal:
     # From https://github.com/listx/tamsyn-mac-version/blob/f347497a0f962435b94b9f7b906a6eaaf5bf06c0/tamsyn/Tamsyn8x16.dfont.

@@ -6,6 +6,7 @@ window:
     columns: 163
     lines: 95
   title: ""
+  dynamic_title: false
 font:
   normal:
     family: "Terminus"
