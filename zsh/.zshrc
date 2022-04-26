@@ -409,6 +409,12 @@ setopt PROMPT_SUBST
 # This will set the default prompt to the kody theme
 prompt kody
 
+# Set theme name. This should match the colors used by Alacritty on startup. We
+# need to set the theme name because otherwise when we invoke 'c' and 'C'
+# (aliases for color_cycle()), we don't cycle through properly on the first
+# invocation.
+export TERM_COLOR_THEME=PastelDark.dhall
+
 # Make C-e go to the end of the line. This also makes it accept the
 # autosuggested completion, if there is any.
 bindkey '^e' end-of-line
