@@ -15,5 +15,5 @@ set_theme() {
 	fi
 	source <(dhall text <<< "${renderer_path} ${for_tmux} ${root_dir}/themes/${1}")
 
-	TERM_COLOR_THEME=$(basename $1)
+	export TERM_COLOR_THEME=$(basename $1)
 }

@@ -25,7 +25,7 @@ in  λ(forTmux : Bool) →
           ${setColor forTmux 10 theme.foreground}
           # Background color.
           ${setColor forTmux 11 theme.background}
-          # Cursor color.
+          # Cursor background color.
           ${setColor forTmux 12 theme.cursor}
           # Remaining 16 colors.
           ''

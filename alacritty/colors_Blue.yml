@@ -1,0 +1,29 @@
+colors:
+  cursor:
+    text:   '#000000'
+    cursor: '#ff00ff'
+  primary:
+    background: '#d1eaff'
+    foreground: '#2a343a'
+  search:
+    matches:
+      foreground: '#000000'
+      background: '#00ff00'
+  normal:
+    black:   '#b1caff'
+    red:     '#c43d16'
+    green:   '#00a836'
+    yellow:  '#a87a00'
+    blue:    '#356ab7'
+    magenta: '#6b72b3'
+    cyan:    '#b02f30'
+    white:   '#2a343a'
+  bright:
+    black:   '#d1eaff'
+    red:     '#c43d16'
+    green:   '#00a836'
+    yellow:  '#a87a00'
+    blue:    '#356ab7'
+    magenta: '#6b72b3'
+    cyan:    '#b02f30'
+    white:   '#000000'

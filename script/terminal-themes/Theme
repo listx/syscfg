@@ -1,4 +1,5 @@
 { name : Text
+, text : Text
 , cursor : Text
 , background : Text
 , foreground : Text

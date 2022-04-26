@@ -1,10 +1,11 @@
 -- Based on Visibone Alt. 2 from https://terminal.sexy
 { name = "Dark"
 , cursor = "#00ff00"
+, text = "#000000"
 , background = "#333333"
 , foreground = "#cccccc"
 , palette16 =
-  [ "#000000"
+  [ "#222222"
   , "#cc6699"
   , "#99cc66"
   , "#cc9966"
@@ -12,7 +13,7 @@
   , "#9966cc"
   , "#66cc99"
   , "#cccccc"
-  , "#666666"
+  , "#333333"
   , "#ff99cc"
   , "#ccff99"
   , "#ffcc99"
