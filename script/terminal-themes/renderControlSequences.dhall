@@ -23,15 +23,29 @@ in  λ(forTmux : Bool) →
           ''
           # Foreground color. (Default text color).
           ${setColor forTmux 10 theme.foreground}
+
           # Background color.
           ${setColor forTmux 11 theme.background}
+
           # Cursor background color.
           ${setColor forTmux 12 theme.cursor}
+          ''
+      ++  ( if    forTmux
+            then  ''
+                  # Set colors for TMUX status bar. We just recycle the colors defined
+                  # for the cursor.
+                  tmux set-environment L_TMUX_STATUS_BG "${theme.text}"
+                  tmux set-environment L_TMUX_STATUS_FG "${theme.cursor}"
+                  tmux set -gF status-style "bg=${theme.text} fg=${theme.cursor} bold"
+                  tmux set -gF status-left-style "bg=${theme.cursor} fg=${theme.text} bold"
 
-          # Set colors for TMUX status bar. We just recycle the colors defined
-          # for the cursor.
-          tmux set-environment L_TMUX_STATUS_BG "${theme.text}"
-          tmux set-environment L_TMUX_STATUS_FG "${theme.cursor}"
+                  ''
+            else  ''
+                  export L_TMUX_STATUS_BG="${theme.text}"
+                  export L_TMUX_STATUS_FG="${theme.cursor}"
+                  ''
+          )
+      ++  ''
           # Remaining 16 colors.
           ''
       ++  List/fold

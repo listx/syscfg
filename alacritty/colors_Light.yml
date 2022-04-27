@@ -19,7 +19,7 @@ colors:
     cyan:    '#00a4c1'
     white:   '#34363c'
   bright:
-    black:   '#f3f9ec'
+    black:   '#fef9ec'
     red:     '#b22b31'
     green:   '#007427'
     yellow:  '#715f00'

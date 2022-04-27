@@ -1,6 +1,6 @@
 -- Based on Visibone Alt. 2 from https://terminal.sexy
 { name = "Dark"
-, cursor = "#00ff00"
+, cursor = "#ffffff"
 , text = "#000000"
 , background = "#333333"
 , foreground = "#cccccc"
