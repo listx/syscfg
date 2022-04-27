@@ -36,8 +36,7 @@ in  λ(forTmux : Bool) →
                   # for the cursor.
                   tmux set-environment L_TMUX_STATUS_BG "${theme.text}"
                   tmux set-environment L_TMUX_STATUS_FG "${theme.cursor}"
-                  tmux set -gF status-style "bg=${theme.text} fg=${theme.cursor} bold"
-                  tmux set -gF status-left-style "bg=${theme.cursor} fg=${theme.text} bold"
+                  tmux source-file ~/.tmux/colors.conf
 
                   ''
             else  ''

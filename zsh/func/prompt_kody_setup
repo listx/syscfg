@@ -78,7 +78,7 @@ prompt_kody_setup()
 zle-line-init zle-keymap-select() {
 	case "${KEYMAP}" in
 	vicmd)
-	__l_zsh_keymap_indicator="%B%K{201}%F{16} <N> %f%k%b "
+	__l_zsh_keymap_indicator="%B%K{blue}%F{black} <N> %f%k%b "
 	;;
 	main|viins)
 	__l_zsh_keymap_indicator="%B <I> %b "
