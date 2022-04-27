@@ -414,6 +414,8 @@ prompt kody
 # (aliases for color_cycle()), we don't cycle through properly on the first
 # invocation.
 export TERM_COLOR_THEME=PastelDark.dhall
+export L_TMUX_STATUS_BG="#000000"
+export L_TMUX_STATUS_FG="#ffffff"
 
 # Make C-e go to the end of the line. This also makes it accept the
 # autosuggested completion, if there is any.

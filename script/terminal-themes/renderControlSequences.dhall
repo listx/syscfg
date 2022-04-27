@@ -27,6 +27,11 @@ in  λ(forTmux : Bool) →
           ${setColor forTmux 11 theme.background}
           # Cursor background color.
           ${setColor forTmux 12 theme.cursor}
+
+          # Set colors for TMUX status bar. We just recycle the colors defined
+          # for the cursor.
+          tmux set-environment L_TMUX_STATUS_BG "${theme.text}"
+          tmux set-environment L_TMUX_STATUS_FG "${theme.cursor}"
           # Remaining 16 colors.
           ''
       ++  List/fold
