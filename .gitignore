@@ -11,6 +11,7 @@
 *.zwc
 alacritty/alacritty.yml
 alacritty/alacritty_raw_shell.yml
+alacritty/upstream
 cache
 cmus/*
 doom/autoload*.el
