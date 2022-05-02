@@ -1,6 +1,6 @@
 -- Based on Codeschool light by Chris Kempson from https://terminal.sexy
 { name = "Blue"
-, cursor = "#000000"
+, cursor = "#2299dd"
 , text = "#ffffff"
 , background = "#b1eaff"
 , foreground = "#2a343a"

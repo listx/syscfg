@@ -1,6 +1,6 @@
 -- Based on Ivory Light by Baskerville from https://terminal.sexy
 { name = "Light"
-, cursor = "#000000"
+, cursor = "#999933"
 , text = "#ffffff"
 , background = "#fef9ec"
 , foreground = "#34363c"

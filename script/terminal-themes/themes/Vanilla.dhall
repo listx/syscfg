@@ -1,5 +1,5 @@
 { name = "Vanilla"
-, cursor = "#222222"
+, cursor = "#aaaaaa"
 , text = "#ffffff"
 , background = "#ffffff"
 , foreground = "#222222"
