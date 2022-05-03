@@ -37,8 +37,8 @@ set_elisp()
 
 	buffer_filename="$(readlink -e "${file}")"
 
-	# If Git is invoking this editor (for `git commit'), then manually set the line
-	# length to 72.
+	# If Git is invoking this editor (for `git commit'), then manually set the
+	# line length to 72.
 	case "${buffer_filename}" in
 		*COMMIT_EDITMSG|*git-rebase-todo)
 			maybe_fill_72="(setq fill-column 72)"
