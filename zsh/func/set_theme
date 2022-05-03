@@ -1,12 +1,40 @@
 #!/usr/bin/env zsh
 
+# Input is a string like "#abcdef". We have to convert this to: "#xabab #xcdcd
+# #xefef".
+__emacs_color(){
+
+	local color
+	local r
+	local g
+	local b
+	color=${1}
+
+	# Return #000000 if we are told to parse an invalid color.
+	if [[ ! "${color}" =~ ^#[0-9a-f]+$ ]] || (( $#color != 7 )) {
+		echo "#x0000 #x0000 #x0000"
+		return
+	}
+
+	color=${color#\#}
+	r=${color[1,2]}
+	g=${color[3,4]}
+	b=${color[5,6]}
+
+	echo "#x${r}${r} #x${g}${g} #x${b}${b}"
+}
+
 set_theme() {
+	local theme
 	local for_tmux
 	local renderer_path
 	local root_dir
 	local emacs_theme
+	local all_colors
+	declare -A colors
 	local __elisp
 
+	theme="${1}"
 	root_dir="${HOME}/syscfg/script/terminal-themes"
 	renderer_path="${root_dir}/renderControlSequences.dhall"
 
@@ -15,17 +43,45 @@ set_theme() {
 	if [[ -n "${TMUX:-}" ]]; then
 		for_tmux="True"
 	fi
-	source <(dhall text <<< "${renderer_path} ${for_tmux} ${root_dir}/themes/${1}")
+	source <(dhall text <<< "${renderer_path} ${for_tmux} ${root_dir}/themes/${theme}")
 
 	# Change doom emacs color theme. This doesn't check if the emacs daemon is
 	# already running --- rather it just executes and forgets about it.
-	emacs_theme="$(dhall <<< "(${root_dir}/themes/${1}).emacsTheme")"
-	# Remove quotes (dhall prints a quoted string).
-	emacs_theme=${(Q)emacs_theme}
+	emacs_theme="$(dhall text <<< "(${root_dir}/themes/${theme}).emacsTheme")"
+
+	all_colors="$(dhall text <<< "${root_dir}/listTerminalColors.dhall ${root_dir}/themes/${theme}")"
+	for colorline in "${(f)all_colors}"; do
+		colors[${colorline%=*}]=${colorline#*=}
+	done
 
 	__elisp=$(cat << EOF
 	(progn
 		(load-theme '${emacs_theme} t)
+		; Set custom colors. These are only usable from 24-bit color-enabled
+		; emacs.
+		; TODO: Use these colors to further tweak the modeline, tab-bar and other parts.
+		(setq l/color-foreground             "${colors[foreground]}")
+		(setq l/color-background             "${colors[background]}")
+		(setq l/color-cursor                 "${colors[cursor]}")
+		; Set 16 colors. This is because the default 16 colors are hardcoded by
+		; emacs, making it impossible to refer to the colors used by the
+		; existing terminal color theme.
+		(tty-color-define "black"          0 '($(__emacs_color ${colors[black]})))
+		(tty-color-define "red"            1 '($(__emacs_color ${colors[red]})))
+		(tty-color-define "green"          2 '($(__emacs_color ${colors[green]})))
+		(tty-color-define "yellow"         3 '($(__emacs_color ${colors[yellow]})))
+		(tty-color-define "blue"           4 '($(__emacs_color ${colors[blue]})))
+		(tty-color-define "magenta"        5 '($(__emacs_color ${colors[magenta]})))
+		(tty-color-define "cyan"           6 '($(__emacs_color ${colors[cyan]})))
+		(tty-color-define "white"          7 '($(__emacs_color ${colors[white]})))
+		(tty-color-define "brightblack"    8 '($(__emacs_color ${colors[brightblack]})))
+		(tty-color-define "brightred"      9 '($(__emacs_color ${colors[brightred]})))
+		(tty-color-define "brightgreen"   10 '($(__emacs_color ${colors[brightgreen]})))
+		(tty-color-define "brightyellow"  11 '($(__emacs_color ${colors[brightyellow]})))
+		(tty-color-define "brightblue"    12 '($(__emacs_color ${colors[brightblue]})))
+		(tty-color-define "brightmagenta" 13 '($(__emacs_color ${colors[brightmagenta]})))
+		(tty-color-define "brightcyan"    14 '($(__emacs_color ${colors[brightcyan]})))
+		(tty-color-define "brightwhite"   15 '($(__emacs_color ${colors[brightwhite]})))
 	)
 EOF
 	)

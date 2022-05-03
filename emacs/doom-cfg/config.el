@@ -642,7 +642,7 @@ Also add the number of windows in the window configuration."
 
 (use-package! hl-line+
   :config
-  (custom-set-faces! '(hl-line :background "grey32"))
+  (custom-set-faces! '(hl-line :background "brightblack"))
   ; Only highlight when idle.
   (toggle-hl-line-when-idle)
   (setq global-hl-line-mode nil)
@@ -699,7 +699,7 @@ Also add the number of windows in the window configuration."
 (use-package! auto-dim-other-buffers
  :config
  (auto-dim-other-buffers-mode)
- (custom-set-faces! '(auto-dim-other-buffers-face :foreground "#bcbcbc" :background "#1c1c1c")))
+ (custom-set-faces! '(auto-dim-other-buffers-face :foreground "white" :background "black")))
 
 ; Always enable the tab bar, even if there is just one buffer showing (such as
 ; when we open a single buffer).
@@ -765,7 +765,7 @@ Also add the number of windows in the window configuration."
   :config
   (custom-set-faces!
     '(hl-sexp-face :extend t))
-  (setq hl-sexp-background-color "grey20"))
+  (setq hl-sexp-background-color "brightblack"))
 
 ;; Here are some additional functions/macros that could help you configure Doom:
 ;;
