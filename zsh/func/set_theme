@@ -4,6 +4,8 @@ set_theme() {
 	local for_tmux
 	local renderer_path
 	local root_dir
+	local emacs_theme
+	local __elisp
 
 	root_dir="${HOME}/syscfg/script/terminal-themes"
 	renderer_path="${root_dir}/renderControlSequences.dhall"
@@ -14,6 +16,20 @@ set_theme() {
 		for_tmux="True"
 	fi
 	source <(dhall text <<< "${renderer_path} ${for_tmux} ${root_dir}/themes/${1}")
+
+	# Change doom emacs color theme. This doesn't check if the emacs daemon is
+	# already running --- rather it just executes and forgets about it.
+	emacs_theme="$(dhall <<< "(${root_dir}/themes/${1}).emacsTheme")"
+	# Remove quotes (dhall prints a quoted string).
+	emacs_theme=${(Q)emacs_theme}
+
+	__elisp=$(cat << EOF
+	(progn
+		(load-theme '${emacs_theme} t)
+	)
+EOF
+	)
+	>/dev/null 2>&1 emacsclient -e "${__elisp}" -a "" & disown
 
 	export TERM_COLOR_THEME=$(basename $1)
 }

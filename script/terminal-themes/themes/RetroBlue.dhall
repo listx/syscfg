@@ -1,4 +1,5 @@
 { name = "RetroBlue"
+, emacsTheme = "zenburn"
 , cursor = "#ffffff"
 , text = "#000000"
 , background = "#1111aa"

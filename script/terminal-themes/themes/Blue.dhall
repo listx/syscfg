@@ -1,5 +1,6 @@
 -- Based on Codeschool light by Chris Kempson from https://terminal.sexy
 { name = "Blue"
+, emacsTheme = "doom-one-light"
 , cursor = "#2299dd"
 , text = "#ffffff"
 , background = "#b1eaff"

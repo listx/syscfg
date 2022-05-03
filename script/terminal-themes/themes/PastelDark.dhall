@@ -19,6 +19,7 @@
 -- The "text" field is only used by Alacritty to colorize the text (letter) of
 -- the current cursor position.
 { name = "PastelDark"
+, emacsTheme = "zenburn"
 , cursor = "#ffffff"
 , text = "#000000"
 , background = "#343c48"

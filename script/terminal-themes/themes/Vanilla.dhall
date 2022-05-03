@@ -1,4 +1,5 @@
 { name = "Vanilla"
+, emacsTheme = "doom-one-light"
 , cursor = "#aaaaaa"
 , text = "#ffffff"
 , background = "#ffffff"

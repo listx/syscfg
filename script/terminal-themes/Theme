@@ -1,4 +1,5 @@
 { name : Text
+, emacsTheme : Text
 , text : Text
 , cursor : Text
 , background : Text

@@ -1,5 +1,6 @@
 -- Based on Visibone Alt. 2 from https://terminal.sexy
 { name = "Dark"
+, emacsTheme = "zenburn"
 , cursor = "#ffffff"
 , text = "#000000"
 , background = "#333333"

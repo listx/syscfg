@@ -1,5 +1,6 @@
 -- Based on Ivory Light by Baskerville from https://terminal.sexy
 { name = "Light"
+, emacsTheme = "doom-solarized-light"
 , cursor = "#999933"
 , text = "#ffffff"
 , background = "#fef9ec"

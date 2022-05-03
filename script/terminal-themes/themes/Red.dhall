@@ -1,5 +1,6 @@
 -- Based on Aiseered.vim by Alexander Evstiougov from https://www.vim.org/scripts/script.php?script_id=750
 { name = "Red"
+, emacsTheme = "zenburn"
 , cursor = "#ffffff"
 , text = "#000000"
 , background = "#400000"
