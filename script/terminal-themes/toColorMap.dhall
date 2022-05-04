@@ -1,5 +1,7 @@
 let Enumerated = { index : Natural, value : Text }
 
+let Mapped = { mapKey : Text, mapValue : Text }
+
 let isIndex =
       λ(idx : Natural) →
       λ(n : Natural) →
@@ -43,25 +45,18 @@ let getColorName =
         else  "?"
 
 in  λ(theme : ./Theme) →
-          ''
-          text=${theme.text}
-          cursor=${theme.cursor}
-          background=${theme.background}
-          foreground=${theme.foreground}
-          ''
-      ++  List/fold
-            Enumerated
-            ( List/reverse
-                { index : Natural, value : Text }
-                (List/indexed Text theme.palette16)
-            )
-            Text
-            ( λ(a : Enumerated) →
-              λ(b : Text) →
-                    b
-                ++  getColorName a.index
-                ++  ''
-                    =${a.value}
-                    ''
-            )
-            ""
+        [ { mapKey = "text", mapValue = theme.text }
+        , { mapKey = "cursor", mapValue = theme.cursor }
+        , { mapKey = "background", mapValue = theme.background }
+        , { mapKey = "foreground", mapValue = theme.foreground }
+        ]
+      # List/fold
+          Enumerated
+          (List/reverse Enumerated (List/indexed Text theme.palette16))
+          (List Mapped)
+          ( λ(a : Enumerated) →
+            λ(b : List Mapped) →
+              b # [ { mapKey = getColorName a.index, mapValue = a.value } ]
+          )
+          ([] : List Mapped)
+      # toMap theme.paletteExtra

@@ -31,6 +31,9 @@ set_theme() {
 	local root_dir
 	local emacs_theme
 	local all_colors
+	local extra_colors
+	local colorKey
+	local colorValue
 	declare -A colors
 	local __elisp
 
@@ -49,20 +52,20 @@ set_theme() {
 	# already running --- rather it just executes and forgets about it.
 	emacs_theme="$(dhall text <<< "(${root_dir}/themes/${theme}).emacsTheme")"
 
-	all_colors="$(dhall text <<< "${root_dir}/listTerminalColors.dhall ${root_dir}/themes/${theme}")"
+	all_colors="$(dhall text <<< "${root_dir}/listColorsForShell.dhall ${root_dir}/themes/${theme}")"
+	extra_colors="$(dhall text <<< "${root_dir}/listColorsForEmacs.dhall ${root_dir}/themes/${theme}")"
 	for colorline in "${(f)all_colors}"; do
-		colors[${colorline%=*}]=${colorline#*=}
+		colorKey=${colorline%=*}
+		colorValue=${colorline#*=}
+		colors[${colorKey}]=${colorValue}
 	done
 
 	__elisp=$(cat << EOF
 	(progn
-		(load-theme '${emacs_theme} t)
 		; Set custom colors. These are only usable from 24-bit color-enabled
 		; emacs.
-		; TODO: Use these colors to further tweak the modeline, tab-bar and other parts.
-		(setq l/color-foreground             "${colors[foreground]}")
-		(setq l/color-background             "${colors[background]}")
-		(setq l/color-cursor                 "${colors[cursor]}")
+${extra_colors}
+
 		; Set 16 colors. This is because the default 16 colors are hardcoded by
 		; emacs, making it impossible to refer to the colors used by the
 		; existing terminal color theme.
@@ -82,6 +85,8 @@ set_theme() {
 		(tty-color-define "brightmagenta" 13 '($(__emacs_color ${colors[brightmagenta]})))
 		(tty-color-define "brightcyan"    14 '($(__emacs_color ${colors[brightcyan]})))
 		(tty-color-define "brightwhite"   15 '($(__emacs_color ${colors[brightwhite]})))
+		(load-theme '${emacs_theme} t)
+		(l/reset-faces)
 	)
 EOF
 	)

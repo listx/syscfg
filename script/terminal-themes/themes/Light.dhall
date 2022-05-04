@@ -23,4 +23,5 @@
   , "#007693"
   , "#000000"
   ]
+, paletteExtra = (./Vanilla.dhall).paletteExtra
 }

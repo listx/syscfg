@@ -260,8 +260,8 @@ Return an event vector."
 ;; Dim org-block face (source code blocks) separately, because they are not
 ;; dimmed by default. Also dim org-hide as well.
 (defun l/org-colors ()
-  (add-to-list 'face-remapping-alist '(org-hide (:filtered (:window adob--dim t) (:foreground "#1c1c1c")) org-hide))
-  (add-to-list 'face-remapping-alist '(org-block (:filtered (:window adob--dim t) (:background "#262626")) org-block)))
+  (add-to-list 'face-remapping-alist `(org-hide (:filtered (:window adob--dim t) (:foreground ,l/color-xGrey1)) org-hide))
+  (add-to-list 'face-remapping-alist `(org-block (:filtered (:window adob--dim t) (:background ,l/color-xGrey2)) org-block)))
 
 (setq org-directory
       (nth 0 (split-string (getenv "L_ORG_AGENDA_DIRS"))))
@@ -536,7 +536,7 @@ otherwise, close current tab."
 (setq tab-bar-show t
       tab-bar-new-button-show nil
       tab-bar-close-button-show nil
-      tab-bar-separator (propertize " " 'font-lock-face '(:background "#000000"))
+      tab-bar-separator (propertize " " 'font-lock-face '(:background "black"))
       tab-bar-tab-name-function #'l/get-tab-name)
 
 ; Based on `tab-bar-tab-name-current-with-count', with some tweaks.
@@ -612,20 +612,103 @@ Also add the number of windows in the window configuration."
 ;; Use text-mode for scratch buffer.
 (setq-default doom-scratch-initial-major-mode 'text-mode)
 
-(custom-set-faces!
-  '(vertical-border :background "#2e3330" :foreground "#2e3330")
+; Colors taken from PastelDark.dhall.
+(setq l/color-text "#000000")
+(setq l/color-cursor "#ffffff")
+(setq l/color-background "#343c48")
+(setq l/color-foreground "#e5e7ea")
+(setq l/color-black "#22222f")
+(setq l/color-red "#e49f9f")
+(setq l/color-green "#91e380")
+(setq l/color-yellow "#eae47c")
+(setq l/color-blue "#7cacd3")
+(setq l/color-magenta "#df9494")
+(setq l/color-cyan "#8cdbd8")
+(setq l/color-white "#e5e7ea")
+(setq l/color-brightblack "#343c48")
+(setq l/color-brightred "#e5bfbf")
+(setq l/color-brightgreen "#afe0a1")
+(setq l/color-brightyellow "#f2fb9e")
+(setq l/color-brightblue "#95add1")
+(setq l/color-brightmagenta "#f2b0b0")
+(setq l/color-brightcyan "#b4f0f0")
+(setq l/color-brightwhite "#ffffff")
+(setq l/color-xAvocado "#3f5f4f")
+(setq l/color-xBrightOrange "#ffcfaf")
+(setq l/color-xDarkGreen "#2e3330")
+(setq l/color-xGrey1 "#1c1c1c")
+(setq l/color-xGrey2 "#262626")
+(setq l/color-xLime "#ccff94")
+(setq l/color-xMoss "#86ab8e")
+(setq l/color-xUltraBrightGreen "#00ff00")
+(setq l/color-xUltraBrightMagenta "#ff00ff")
+(setq l/color-xUltraBrightRed "#ff0000")
+(defmacro l/custom-set-faces-matching! (regex &rest props)
+  "Apply properties in bulk to all faces that match the regex."
+  `(custom-set-faces!
+    ,@(delq nil
+       (mapcar (lambda (f)
+                 (let ((s (symbol-name f)))
+                   (when (string-match-p regex s)
+                     `'(,f ,@props))))
+               (face-list)))))
+
+(defun l/reset-faces ()
+  (interactive)
+  (custom-set-faces!
+  `(vertical-border :background ,l/color-xDarkGreen :foreground ,l/color-xDarkGreen)
   '(highlight-numbers-number  :weight bold)
-  '(font-lock-builtin-face  :foreground "#ffcfaf")
+  `(font-lock-builtin-face  :foreground ,l/color-xBrightOrange)
+  '(hl-line :background "black")
+  '(vim-empty-lines-face :weight bold)
+
+  '(auto-dim-other-buffers-face :foreground "white" :background "black")
+  ; Use bright visuals for coloring regions and interactive search hits.
+  '(lazy-highlight  :foreground "pink" :background "dark red" :weight normal)
+  '(isearch  :foreground "dark red" :background "pink" :weight bold)
+  '(region  :foreground "dark red" :background "pink" :weight bold)
+
+  '(tab-bar
+      :background "black")
+  `(tab-bar-tab
+      :background ,l/color-xAvocado
+      :foreground ,l/color-xLime
+      :weight bold
+      :box nil)
+  `(tab-bar-tab-inactive
+      :background ,l/color-xDarkGreen
+      :foreground ,l/color-xMoss
+      :box nil)
+
+  `(mode-line
+      :weight bold
+      :background ,l/color-xAvocado
+      :foreground ,l/color-xLime)
+  `(mode-line-inactive
+      :background ,l/color-xDarkGreen
+      :foreground ,l/color-xMoss)
+
+  `(git-gutter:modified :foreground ,l/color-xUltraBrightMagenta)
+  `(git-gutter:added :foreground ,l/color-xUltraBrightGreen)
+  `(git-gutter:deleted :foreground ,l/color-xUltraBrightRed)
   ;; Fix ugly colors for diffs. Prevalent because of git comit message buffers
   ;; like COMMIT_EDITMSG.
-  '(git-commit-summary  :foreground "#ffffff" :weight bold)
-  '(diff-added        :foreground "#00ff00" :weight bold)
-  '(diff-removed      :foreground "#ff0000" :weight bold)
-  '(diff-context      :foreground "#ffffff")
-  '(diff-header       :foreground "#ffff00" :background "#3f3f3f" :weight bold)
-  '(diff-file-header  :foreground "#ffff00" :background "#3f3f3f" :weight bold)
-  '(diff-hunk-header  :foreground "#00ffff"   :background "#3f3f3f")
-  '(git-commit-keyword  :foreground "#dcdccc" :background "#3f3f3f"))
+  '(git-commit-summary  :foreground "brightwhite" :weight bold)
+  '(diff-added        :foreground "brightgreen" :weight bold)
+  '(diff-removed      :foreground "brightred" :weight bold)
+  '(diff-context      :foreground "brightwhite")
+  '(diff-function     :foreground "brightmagenta")
+  '(diff-header       :foreground "brightyellow" :weight bold)
+  '(diff-file-header  :foreground "brightyellow")
+  '(diff-hunk-header  :foreground "brightcyan")
+  '(git-commit-keyword  :foreground "brightmagenta" :weight bold))
+
+  ;; Make all doom-modeline-* faces have a uniform foreground, to make them easier
+  ;; to read with our custom mode-line background. This way we don't have to spell
+  ;; out each font one at a time.
+  (eval `(l/custom-set-faces-matching! "doom-modeline-" :foreground ,l/color-xLime)))
+
+(l/reset-faces)
 
 (use-package! rainbow-mode
   :hook (prog-mode text-mode))
@@ -642,7 +725,6 @@ Also add the number of windows in the window configuration."
 
 (use-package! hl-line+
   :config
-  (custom-set-faces! '(hl-line :background "brightblack"))
   ; Only highlight when idle.
   (toggle-hl-line-when-idle)
   (setq global-hl-line-mode nil)
@@ -652,64 +734,20 @@ Also add the number of windows in the window configuration."
   :config
   (add-hook 'org-mode-hook 'vim-empty-lines-mode)
   (add-hook 'prog-mode-hook 'vim-empty-lines-mode)
-  (add-hook 'text-mode-hook 'vim-empty-lines-mode)
-  (custom-set-faces! '(vim-empty-lines-face :weight bold)))
+  (add-hook 'text-mode-hook 'vim-empty-lines-mode))
 
-(defmacro l/custom-set-faces-matching! (regex &rest props)
-  "Apply properties in bulk to all faces that match the regex."
-  `(custom-set-faces!
-    ,@(delq nil
-       (mapcar (lambda (f)
-                 (let ((s (symbol-name f)))
-                   (when (string-match-p regex s)
-                     `'(,f ,@props))))
-               (face-list)))))
-
-;; Make all doom-modeline-* faces have a uniform foreground, to make them easier
-;; to read with our custom mode-line background. This way we don't have to spell
-;; otu each font one at a time.
 (use-package! doom-modeline
   :config
-  (l/custom-set-faces-matching! "doom-modeline-" :foreground "#ccff94"))
-
-; Modeline colors.
-(custom-set-faces!
- '(mode-line
-   :weight bold
-   :background "#3f5f4f"
-   :foreground "#ccff94")
- '(mode-line-inactive
-   :background "#2e3330"
-   :foreground "#86ab8e"))
-
-(custom-set-faces!
-  '(tab-bar
-    :background "#000000")
-  '(tab-bar-tab
-    :background "#3f5f4f"
-    :foreground "#ccff94"
-    :weight bold
-    :box nil)
-  '(tab-bar-tab-inactive
-    :background "#2e3330"
-    :foreground "#86ab8e"
-    :box nil))
+  (l/reset-faces))
 
 ; Dim buffers in inactive windows to make the current one "pop".
 (use-package! auto-dim-other-buffers
  :config
- (auto-dim-other-buffers-mode)
- (custom-set-faces! '(auto-dim-other-buffers-face :foreground "white" :background "black")))
+ (auto-dim-other-buffers-mode))
 
 ; Always enable the tab bar, even if there is just one buffer showing (such as
 ; when we open a single buffer).
 (tab-bar-mode)
-
-; Use bright visuals for coloring regions and interactive search hits.
-(custom-set-faces!
- '(lazy-highlight  :foreground "pink" :background "dark red" :weight normal)
- '(isearch  :foreground "dark red" :background "pink" :weight bold)
- '(region  :foreground "dark red" :background "pink" :weight bold))
 
 (map! :after (git-gutter magit)
       :map doom-leader-git-map
@@ -751,10 +789,6 @@ Also add the number of windows in the window configuration."
   ; Update git-gutter every time we lose/regain focus to the frame. See
   ; https://emacs.stackexchange.com/a/60971/13006.
   (add-function :after after-focus-change-function (lambda () (when (frame-focus-state) (git-gutter:update-all-windows))))
-  (custom-set-faces!
-   '(git-gutter:modified :foreground "#ff00ff")
-   '(git-gutter:added :foreground "#00ff00")
-   '(git-gutter:deleted :foreground "#ff0000"))
   (setq git-gutter:modified-sign " ")
   (setq git-gutter:added-sign " ")
   (setq git-gutter:deleted-sign " "))

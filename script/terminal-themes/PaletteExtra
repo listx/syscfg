@@ -1,0 +1,11 @@
+{ xBrightOrange : Text
+, xDarkGreen : Text
+, xAvocado : Text
+, xLime : Text
+, xMoss : Text
+, xUltraBrightMagenta : Text
+, xUltraBrightGreen : Text
+, xUltraBrightRed : Text
+, xGrey1 : Text
+, xGrey2 : Text
+}

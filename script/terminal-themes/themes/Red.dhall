@@ -23,4 +23,5 @@
   , "#88eeee"
   , "#ffffff"
   ]
+, paletteExtra = (./PastelDark.dhall).paletteExtra
 }

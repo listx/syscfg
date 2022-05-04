@@ -5,4 +5,5 @@
 , background : Text
 , foreground : Text
 , palette16 : List Text
+, paletteExtra : ./PaletteExtra
 }

@@ -42,4 +42,16 @@
   , "#b4f0f0"
   , "#ffffff"
   ]
+, paletteExtra =
+  { xBrightOrange = "#ffcfaf"
+  , xDarkGreen = "#2e3330"
+  , xAvocado = "#3f5f4f"
+  , xLime = "#ccff94"
+  , xMoss = "#86ab8e"
+  , xUltraBrightMagenta = "#ff00ff"
+  , xUltraBrightGreen = "#00ff00"
+  , xUltraBrightRed = "#ff0000"
+  , xGrey1 = "#1c1c1c"
+  , xGrey2 = "#262626"
+  }
 }
