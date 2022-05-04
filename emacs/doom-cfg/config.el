@@ -767,6 +767,13 @@ Also add the number of windows in the window configuration."
     '(hl-sexp-face :extend t))
   (setq hl-sexp-background-color "brightblack"))
 
+;; Disable vertical bar cursor shape in terminal emacs.
+(setq evil-motion-state-cursor 'box)
+(setq evil-visual-state-cursor 'box)
+(setq evil-normal-state-cursor 'box)
+(setq evil-insert-state-cursor 'box)
+(setq evil-emacs-state-cursor  'box)
+
 ;; Here are some additional functions/macros that could help you configure Doom:
 ;;
 ;; - `load!' for loading external *.el files relative to this one
