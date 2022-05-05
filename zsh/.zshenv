@@ -22,17 +22,3 @@ case "$(hostname)" in
 	w0) export TERM=xterm-24bit  ;;
 	*) export TERM=alacritty-xtermlike ;;
 esac
-
-# Run a command, but wrap it around with set_theme() calls so as to run the
-# command as a particular color theme.
-run_with_theme() {
-	local new_theme
-	local old_theme="${TERM_COLOR_THEME:-PastelDark.dhall}"
-	new_theme="${1}"
-	shift
-	if [[ "${old_theme}" != "${new_theme}" ]]; then
-		set_theme "${new_theme}"
-	fi
-	"$@"
-	set_theme "${old_theme}"
-}

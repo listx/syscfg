@@ -284,13 +284,6 @@ __l_prepend_path()
 # The following are functions that are meant to be invoked interactively by the
 # user.
 
-# Quick-access functions to invoke standardized tmux sessions. The
-# ${funcstack[1]} in Zsh holds the calling function's name.
-admin()
-{
-  run_with_theme Red.dhall tmux new-session -A -s "${funcstack[1]}"
-}
-
 mp()
 {
   mpv --vo=null --loop-playlist --playlist="${1}"

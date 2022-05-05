@@ -2,35 +2,12 @@
 
 color_cycle()
 {
-	local themes
-	local themes_indexed
 	local root_dir
 	local direction
-	local i
-	local j
-	local len
-	local next_theme
+	local res
 
-	root_dir="$HOME/syscfg/script/terminal-themes/themes"
+	root_dir="$HOME/syscfg/script/terminal-themes"
 	direction=$1
 
-	# Cycle through to the next theme in the list.
-	declare -A themes
-	declare -A themes_indexed
-	i=0
-	len=$(ls ${root_dir} | wc -l)
-	for theme in "${root_dir}"/*; do
-		t=$(basename "$theme")
-		themes[$i]="$t"
-		themes_indexed["$t"]=$i
-		((i++))
-	done
-	j=${themes_indexed["$TERM_COLOR_THEME"]}
-	if [[ "$direction" == "next" ]]; then
-		((j+=1))
-	else
-		((j+=len - 1))
-	fi
-	next_theme=${themes[$((j%len))]}
-	set_theme "${next_theme}"
+	source <("${root_dir}/change_theme.sh" "${direction}")
 }

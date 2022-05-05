@@ -34,14 +34,14 @@ in  λ(forTmux : Bool) →
             then  ''
                   # Set colors for TMUX status bar. We just recycle the colors defined
                   # for the cursor.
-                  tmux set-environment L_TMUX_STATUS_BG "${theme.text}"
-                  tmux set-environment L_TMUX_STATUS_FG "${theme.cursor}"
+                  tmux set-environment L_TMUX_COLOR_TEXT "${theme.text}"
+                  tmux set-environment L_TMUX_COLOR_CURSOR "${theme.cursor}"
                   tmux source-file ~/.tmux/colors.conf
 
                   ''
             else  ''
-                  export L_TMUX_STATUS_BG="${theme.text}"
-                  export L_TMUX_STATUS_FG="${theme.cursor}"
+                  export L_TMUX_COLOR_TEXT="${theme.text}"
+                  export L_TMUX_COLOR_CURSOR="${theme.cursor}"
                   ''
           )
       ++  ''
