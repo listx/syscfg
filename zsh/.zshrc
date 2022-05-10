@@ -416,6 +416,8 @@ prompt kody
 export TERM_COLOR_THEME=PastelDark.dhall
 export L_TMUX_STATUS_BG="#000000"
 export L_TMUX_STATUS_FG="#ffffff"
+export L_TMUX_COLOR_TEXT="#000000"
+export L_TMUX_COLOR_CURSOR="#ffffff"
 
 # Make C-e go to the end of the line. This also makes it accept the
 # autosuggested completion, if there is any.
