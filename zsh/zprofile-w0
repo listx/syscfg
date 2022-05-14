@@ -1,0 +1,3 @@
+# In w0 (wsl -d NixOS) we start out at /mnt/c/Users/ingra so we have to move
+# back into our home folder.
+cd
