@@ -1216,6 +1216,9 @@ dhall text <<< "./listColorsForEmacs.dhall ./themes/PastelDark.dhall"
 #+name: lsp
 #+begin_src emacs-lisp
 (after! lsp-mode
+  ;; Disable autoformatting of YAML files, because it can result in huge
+  ;; indentation (whitespace) changes with no semantic difference.
+  (setq lsp-yaml-format-enable nil)
   (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]bazel-.*\\'")
   (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\.cache\\'"))
 #+end_src

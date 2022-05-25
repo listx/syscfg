@@ -607,6 +607,9 @@ Also add the number of windows in the window configuration."
   (evil-scroll-line-to-center nil))
 
 (after! lsp-mode
+  ;; Disable autoformatting of YAML files, because it can result in huge
+  ;; indentation (whitespace) changes with no semantic difference.
+  (setq lsp-yaml-format-enable nil)
   (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]bazel-.*\\'")
   (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\.cache\\'"))
 ;; Use text-mode for scratch buffer.
