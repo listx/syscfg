@@ -495,6 +495,9 @@ zcomet load "marlonrichert/zsh-hist"
 zcomet load "zsh-users/zsh-autosuggestions"
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=2,bold"
 
+autoload -U compinit
+compinit
+
 # Instead of using "qoomon/zsh-lazyload", we simply examine the letters that are
 # already inserted into the zle buffer. If it is "kl" and we press either the
 # Space or Tab key, we invoke our custom widget which loads completions for

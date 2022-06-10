@@ -91,9 +91,9 @@ __l_maybe_load_completions()
       return
     fi
 
-    # The __start_kubectl is defined only if we've already sourced the
+    # The _kubectl is defined only if we've already sourced the
     # completions.
-    if (( $+functions[__start_kubectl] )); then
+    if (( $+functions[_kubectl] )); then
       return
     fi
 
