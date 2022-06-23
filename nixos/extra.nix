@@ -1,9 +1,7 @@
 { config, pkgs, ... }:
 
 {
-  imports = [
-    ./minimal.nix
-  ];
+  imports = [ ./minimal.nix ];
 
   services.xserver = {
     enable = true;
@@ -12,13 +10,11 @@
     xkbOptions = "terminate:ctrl_alt_bksp";
     displayManager.defaultSession = "l_xmonad";
     # See https://unix.stackexchange.com/questions/597358/nixos-how-to-configure-custom-desktop-session/597359#597359.
-    displayManager.session = [
-      {
-        manage = "desktop";
-        name = "l_xmonad";
-        start = ''exec $HOME/.xsession'';
-      }
-    ];
+    displayManager.session = [{
+      manage = "desktop";
+      name = "l_xmonad";
+      start = "exec $HOME/.xsession";
+    }];
     displayManager = {
       autoLogin.enable = true;
       autoLogin.user = "l";
@@ -37,5 +33,5 @@
   # Enable CUPS to print documents.
   services.printing.enable = true;
 
-  users.extraUsers.l.extraGroups = [ "wheel" "docker" "vboxusers" ] ;
+  users.extraUsers.l.extraGroups = [ "wheel" "docker" "vboxusers" ];
 }
