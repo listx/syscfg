@@ -396,7 +396,6 @@ key_bindings:
   - { key: Period,     mods: Control|Alt|Shift, chars: "\x1b[62;7u" }  # C-M->
   - { key: Slash,      mods: Control|Alt|Shift, chars: "\x1b[47;8u" }  # C-M-? (C-M-S-/)
   - { key: Key2,       mods: Control|Alt|Shift, chars: "\x1b[64;7u" }  # C-M-@
-  # We cannot bind C-M-[ because it conflicts (in tmux) with M-ESC.
   - { key: Backslash,  mods: Control|Alt,       chars: "\x1b[92;7u" }  # C-M-\
   - { key: RBracket,   mods: Control|Alt,       chars: "\x1b[93;7u" }  # C-M-]
   - { key: Key6,       mods: Control|Alt|Shift, chars: "\x1b[94;7u" }  # C-M-^
@@ -445,6 +444,12 @@ key_bindings:
   - { key: Back,   mods: Control|Alt,         chars: "\x1b[127;7u" } # C-M-Backspace
   - { key: Back,   mods: Control|Alt|Shift,   chars: "\x1b[127;8u" } # C-M-S-Backspace
 
+  # Because tmux has another bug where Enter (0x0a, or decimal codepoint 10) is
+  # indistinguishable from C-j, even if we use `CSI u` encodings, we have to use
+  # (0x0d) instead (decimal codepoint 13 or '\r').
+  #
+  # For S-Enter we use the same trick of sending F12 (\x1b[24~) first to enter
+  # our tmux's 'virt' key table as we've done elsewhere in this config.
   - { key: Return,   mods: Shift,             chars: "\x1b[24~\x1a" } # S-Enter
   - { key: Return,   mods: Alt,               chars: "\x1b[13;3u" } # M-Enter
   - { key: Return,   mods: Alt|Shift,         chars: "\x1b[13;4u" } # M-S-Enter

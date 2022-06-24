@@ -1,3 +1,8 @@
+# Run this when we open this buffer, so that we don't format away the nice
+# alignments for each keybinding.
+#
+#   (format-all-mode -1)
+
 key_bindings:
   # Bindings for Alacritty itself ---------------------------------------------
 
@@ -128,12 +133,12 @@ key_bindings:
   - { key: G, mods: Control, chars: "\x07" }
   - { key: H, mods: Control, chars: "\x08" }
   - { key: I, mods: Control, chars: "\x09" }
-  - { key: J, mods: Control, chars: "\x0A" }
-  - { key: K, mods: Control, chars: "\x0B" }
-  - { key: L, mods: Control, chars: "\x0C" }
-  - { key: M, mods: Control, chars: "\x0D" }
-  - { key: N, mods: Control, chars: "\x0E" }
-  - { key: O, mods: Control, chars: "\x0F" }
+  - { key: J, mods: Control, chars: "\x0a" }
+  - { key: K, mods: Control, chars: "\x0b" }
+  - { key: L, mods: Control, chars: "\x0c" }
+  - { key: M, mods: Control, chars: "\x0d" }
+  - { key: N, mods: Control, chars: "\x0e" }
+  - { key: O, mods: Control, chars: "\x0f" }
   - { key: P, mods: Control, chars: "\x10" }
   - { key: Q, mods: Control, chars: "\x11" }
   - { key: R, mods: Control, chars: "\x12" }
@@ -144,7 +149,7 @@ key_bindings:
   - { key: W, mods: Control, chars: "\x17" }
   - { key: X, mods: Control, chars: "\x18" }
   - { key: Y, mods: Control, chars: "\x19" }
-  - { key: Z, mods: Control, chars: "\x1A" }
+  - { key: Z, mods: Control, chars: "\x1a" }
 
   # C-S-{a-z} -----------------------------------------------------------------
 
@@ -190,12 +195,12 @@ key_bindings:
   - { key: G, mods: Control|Alt, chars: "\x1b\x07" }
   - { key: H, mods: Control|Alt, chars: "\x1b\x08" }
   - { key: I, mods: Control|Alt, chars: "\x1b\x09" }
-  - { key: J, mods: Control|Alt, chars: "\x1b\x0A" }
-  - { key: K, mods: Control|Alt, chars: "\x1b\x0B" }
-  - { key: L, mods: Control|Alt, chars: "\x1b\x0C" }
-  - { key: M, mods: Control|Alt, chars: "\x1b\x0D" }
-  - { key: N, mods: Control|Alt, chars: "\x1b\x0E" }
-  - { key: O, mods: Control|Alt, chars: "\x1b\x0F" }
+  - { key: J, mods: Control|Alt, chars: "\x1b\x0a" }
+  - { key: K, mods: Control|Alt, chars: "\x1b\x0b" }
+  - { key: L, mods: Control|Alt, chars: "\x1b\x0c" }
+  - { key: M, mods: Control|Alt, chars: "\x1b\x0d" }
+  - { key: N, mods: Control|Alt, chars: "\x1b\x0e" }
+  - { key: O, mods: Control|Alt, chars: "\x1b\x0f" }
   - { key: P, mods: Control|Alt, chars: "\x1b\x10" }
   - { key: Q, mods: Control|Alt, chars: "\x1b\x11" }
   - { key: R, mods: Control|Alt, chars: "\x1b\x12" }
@@ -206,7 +211,7 @@ key_bindings:
   - { key: W, mods: Control|Alt, chars: "\x1b\x17" }
   - { key: X, mods: Control|Alt, chars: "\x1b\x18" }
   - { key: Y, mods: Control|Alt, chars: "\x1b\x19" }
-  - { key: Z, mods: Control|Alt, chars: "\x1b\x1A" }
+  - { key: Z, mods: Control|Alt, chars: "\x1b\x1a" }
 
   # C-M-S-{a-z} ---------------------------------------------------------------
 
@@ -294,7 +299,14 @@ key_bindings:
   # Unfortunately, tmux does not recognize "\x1b[91;5u" as any different from
   # plain "\x1b", so we cannot rebind it there. So we don't bother binding it
   # here.
-  #- { key: LBracket,   mods: Control,       chars: "\x1b[91;5u" } # C-[
+  #
+  # Note that we cannot bind C-M-[ because it conflicts (in tmux) with M-ESC.
+  - { key: LBracket,   mods: Alt,               chars: "\x1b[91;3u" }  # M-[
+  - { key: LBracket,   mods: Alt|Shift,         chars: "\x1b[91;4u" }  # M-{ (M-S-[)
+ #- { key: LBracket,   mods: Control,           chars: "\x1b[91;5u" }  # C-[
+  - { key: LBracket,   mods: Control|Shift,     chars: "\x1b[91;6u" }  # C-{ (C-S-[)
+ #- { key: LBracket,   mods: Control|Alt,       chars: "\x1b[91;7u" }  # C-M-[
+  - { key: LBracket,   mods: Control|Alt|Shift, chars: "\x1b[91;8u" }  # C-M-{ (C-M-S-[)
 
   # C-\ by default sends 0x1c, which is the FS (file separator) key. See
   # https://en.wikipedia.org/wiki/Control-%5C. Most UNIX programs interpret this
@@ -310,7 +322,6 @@ key_bindings:
   - { key: Key6,       mods: Control|Shift, chars: "\x1b[94;5u" }  # C-^
   - { key: Minus,      mods: Control|Shift, chars: "\x1b[95;5u" }  # C-_
   - { key: Grave,      mods: Control,       chars: "\x1b[96;5u" }  # C-`
-  - { key: LBracket,   mods: Control|Shift, chars: "\x1b[91;6u" }  # C-{ (C-S-[)
   - { key: Backslash,  mods: Control|Shift, chars: "\x1b[92;6u" }  # C-| (C-S-\)
   - { key: RBracket,   mods: Control|Shift, chars: "\x1b[93;6u" }  # C-} (C-S-])
   - { key: Grave,      mods: Control|Shift, chars: "\x1b[96;6u" }  # C-~ (C-S-`)
@@ -348,14 +359,12 @@ key_bindings:
   - { key: Slash,      mods: Alt|Shift, chars: "\x1b[47;4u" }  # M-? (M-S-/)
   - { key: Key2,       mods: Alt|Shift, chars: "\x1b[64;3u" }  # M-@
   # Codes 65-90 are A-Z.
-  - { key: LBracket,   mods: Alt,       chars: "\x1b[91;3u" }  # M-[
   - { key: Backslash,  mods: Alt,       chars: "\x1b[92;3u" }  # M-\
   - { key: RBracket,   mods: Alt,       chars: "\x1b[93;3u" }  # M-]
   - { key: Key6,       mods: Alt|Shift, chars: "\x1b[94;3u" }  # M-^
   - { key: Minus,      mods: Alt|Shift, chars: "\x1b[95;3u" }  # M-_
   - { key: Grave,      mods: Alt,       chars: "\x1b[96;3u" }  # M-`
   # Codes 97-122 are a-z.
-  - { key: LBracket,   mods: Alt|Shift, chars: "\x1b[91;4u" }  # M-{ (M-S-[)
   - { key: Backslash,  mods: Alt|Shift, chars: "\x1b[92;4u" }  # M-| (M-S-\)
   - { key: RBracket,   mods: Alt|Shift, chars: "\x1b[93;4u" }  # M-} (M-S-])
   - { key: Grave,      mods: Alt|Shift, chars: "\x1b[96;4u" }  # M-~ (M-S-`)
@@ -392,14 +401,11 @@ key_bindings:
   - { key: Period,     mods: Control|Alt|Shift, chars: "\x1b[62;7u" }  # C-M->
   - { key: Slash,      mods: Control|Alt|Shift, chars: "\x1b[47;8u" }  # C-M-? (C-M-S-/)
   - { key: Key2,       mods: Control|Alt|Shift, chars: "\x1b[64;7u" }  # C-M-@
-  # We cannot bind C-M-[ because it conflicts (in tmux) with M-ESC.
-  #- { key: LBracket,   mods: Control|Alt,       chars: "\x1b[91;7u" }  # C-M-[
   - { key: Backslash,  mods: Control|Alt,       chars: "\x1b[92;7u" }  # C-M-\
   - { key: RBracket,   mods: Control|Alt,       chars: "\x1b[93;7u" }  # C-M-]
   - { key: Key6,       mods: Control|Alt|Shift, chars: "\x1b[94;7u" }  # C-M-^
   - { key: Minus,      mods: Control|Alt|Shift, chars: "\x1b[95;7u" }  # C-M-_
   - { key: Grave,      mods: Control|Alt,       chars: "\x1b[96;7u" }  # C-M-`
-  - { key: LBracket,   mods: Control|Alt|Shift, chars: "\x1b[91;8u" }  # C-M-{ (C-M-S-[)
   - { key: Backslash,  mods: Control|Alt|Shift, chars: "\x1b[92;8u" }  # C-M-| (C-M-S-\)
   - { key: RBracket,   mods: Control|Alt|Shift, chars: "\x1b[93;8u" }  # C-M-} (C-M-S-])
   - { key: Grave,      mods: Control|Alt|Shift, chars: "\x1b[96;8u" }  # C-M-~ (C-M-S-`)
@@ -434,7 +440,6 @@ key_bindings:
   # The Backspace key is mapped to ASCII 127 (DEL), and when we press the delete
   # key, most terminals (including Alacritty) send "\x1b[3~". It's unfortunate
   # that the ASCII codepoint 127 is named DEL, but oh well.
-  #
   # Don't bind S-Backspace because we use it when typing capital letters.
   - { key: Back,   mods: Alt,                 chars: "\x1b[127;3u" } # M-Backspace
   - { key: Back,   mods: Alt|Shift,           chars: "\x1b[127;4u" } # M-S-Backspace
