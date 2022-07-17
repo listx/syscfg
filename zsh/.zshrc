@@ -495,6 +495,9 @@ zcomet load "marlonrichert/zsh-hist"
 zcomet load "zsh-users/zsh-autosuggestions"
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=2,bold"
 
+# Pass utility completions. This brings in the "fzp" shell alias.
+zcomet load "smeagol74/zsh-fzf-pass"
+
 autoload -U compinit
 compinit
 
