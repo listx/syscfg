@@ -1,3 +1,4 @@
+mod git_info;
 mod path_shorten;
 mod paths_sort;
 
@@ -13,5 +14,5 @@ fn hfr() -> &'static str {
 
 rustler::init!(
     "Elixir.LH.Lightning",
-    [add, hfr, path_shorten::path_shorten, paths_sort::paths_sort]
+    [add, hfr, git_info::git_info, path_shorten::path_shorten, paths_sort::paths_sort]
 );

@@ -129,11 +129,9 @@ prompt_kody_precmd()
 
 	# Git info (if we're inside a git repo).
 	local ginfo_short=""
-	if git rev-parse --is-inside-work-tree &> /dev/null; then
-		ginfo_short=$(gsts for_prompt)
-		if [[ -n $ginfo_short ]]; then
-			ginfo_short="${ginfo_short} "
-		fi
+	ginfo_short="$(lhc git-info "${PWD}" 2>/dev/null || gsts for_prompt)"
+	if [[ -n $ginfo_short ]]; then
+		ginfo_short="${ginfo_short} "
 	fi
 
 	# Python VirtualEnv info.

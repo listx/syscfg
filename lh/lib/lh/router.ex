@@ -29,6 +29,22 @@ defmodule LH.Router do
     shutdown()
   end
 
+  post "/git-info" do
+    {status, body} =
+      case conn.body_params do
+        %{"path" => path} ->
+          {200, git_info(path)}
+
+        _ ->
+          {422, bad_request_body()}
+      end
+
+    conn
+    |> put_resp_header("content-type", "application/json;charset=utf-8")
+    |> send_resp(status, body)
+    |> halt()
+  end
+
   post "/path-shorten" do
     {status, body} =
       case conn.body_params do
@@ -59,6 +75,28 @@ defmodule LH.Router do
     |> put_resp_header("content-type", "application/json;charset=utf-8")
     |> send_resp(status, body)
     |> halt()
+  end
+
+  # Strings in Elixir are represented as binaries, so we use is_binary/1 instead
+  # of is_string/1.
+  defp git_info(path)
+       when is_binary(path) do
+    msg = LH.Lightning.git_info(path)
+
+    Logger.info("/git-info: #{inspect(path)} => #{inspect(msg)}")
+
+    # The msg is already encoded as JSON, so we return it directly.
+    msg
+  end
+
+  defp git_info(path) do
+    if not is_binary(path) do
+      Logger.error("/git-info: path is not a string: #{path}")
+    end
+
+    Jason.encode!(%{
+      error: "bad arguments"
+    })
   end
 
   # Strings in Elixir are represented as binaries, so we use is_binary/1 instead

@@ -29,6 +29,16 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         .subcommand_required(true)
         .arg_required_else_help(true)
         .subcommand(
+            Command::new("git-info")
+                .about("Get Git information (to be used for a shell prompt).")
+                .arg(
+                    Arg::new("git_repo_path")
+                        .help("the path to the Git repository")
+                        .index(1)
+                        .required(true),
+                ),
+        )
+        .subcommand(
             Command::new("path-shorten")
                 .about("Shorten a path")
                 .arg(
@@ -71,6 +81,25 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let request_base_url = format!("http://{}:{}", settings.server.domain, settings.server.port);
     let home_dir = env::var("HOME").expect("$HOME not set");
     match matches.subcommand_name() {
+        Some("git-info") => {
+            if let Some(m) = matches.subcommand_matches("git-info") {
+                let git_repo_path = m.value_of("git_repo_path").unwrap();
+
+                let request_url = format!("{}/git-info", request_base_url);
+
+                let json_body = json!({
+                    "path": git_repo_path,
+                });
+
+                let response = client.post(request_url).json(&json_body).send()?;
+
+                let git_info: lh_common::GitInfo = response.json()?;
+
+                // Force colored output.
+                colored::control::set_override(true);
+                print!("{}", git_info.oneline());
+            }
+        }
         Some("path-shorten") => {
             if let Some(m) = matches.subcommand_matches("path-shorten") {
                 // Safe to use unwrap() because of the required() option
