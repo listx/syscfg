@@ -25,3 +25,5 @@
 [submodule "font/tamsyn-mac-version"]
 	path = font/tamsyn-mac-version
 	url = https://github.com/roman0x58/tamsyn-mac-version.git
+[submodule "doom-upstream"]
+	url = https://github.com/doomemacs/doomemacs
