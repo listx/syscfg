@@ -161,6 +161,10 @@ prompt_kody_precmd()
 	prompt_username="%F{$prompt_charcolor}%n%f"
 	prompt_at_sign="%F{$prompt_color3}@%f"
 	prompt_hostname="%F{$prompt_hostcolor}%m%f"
+	prompt_hostname_short="$(cat ~/.hostname-short)"
+	if [[ -n "${prompt_hostname_short}" ]]; then
+		prompt_hostname="%F{$prompt_hostcolor}${prompt_hostname_short}%f"
+	fi
 	# set user@host
 	prompt_userhost="$prompt_username$prompt_at_sign$prompt_hostname"
 
