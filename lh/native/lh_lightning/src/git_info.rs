@@ -42,7 +42,7 @@ pub fn git_info_raw(path: &str) -> Result<GitInfo, Box<dyn Error>> {
     }
 
     let (ahead, behind) = get_upstream_divergence(&repo, &head)?;
-    let (unstaged_hunks, staged_hunks) = get_hunks(&repo, &head)?;
+    let (unstaged_stats, staged_stats) = get_diffstats(&repo, &head)?;
     let untracked_count = get_untracked_count(&repo)?;
     let assume_unchanged_count = get_assume_unchanged_count(&repo)?;
 
@@ -52,8 +52,10 @@ pub fn git_info_raw(path: &str) -> Result<GitInfo, Box<dyn Error>> {
         head_branch: branch,
         head_ahead: ahead,
         head_behind: behind,
-        hunk_changed: unstaged_hunks,
-        hunk_staged: staged_hunks,
+        unstaged_insertions: unstaged_stats.insertions() as u32,
+        unstaged_deletions: unstaged_stats.deletions() as u32,
+        staged_insertions: staged_stats.insertions() as u32,
+        staged_deletions: staged_stats.deletions() as u32,
         untracked: untracked_count,
         stashed: stashed_count,
         assume_unchanged: assume_unchanged_count,
@@ -118,19 +120,19 @@ pub fn count_commits(
     Ok(count)
 }
 
-pub fn get_hunks(
+pub fn get_diffstats(
     repo: &git2::Repository,
     head: &git2::Reference,
-) -> Result<(u32, u32), Box<dyn Error>> {
+) -> Result<(git2::DiffStats, git2::DiffStats), Box<dyn Error>> {
     let head_tree = head.peel_to_tree()?;
 
     let diff = repo.diff_index_to_workdir(None, None)?;
-    let diff_count = diff.deltas().count() as u32;
+    let diff_stats = diff.stats()?;
 
     let diff_cached = repo.diff_tree_to_index(Some(&head_tree), None, None)?;
-    let diff_cached_count = diff_cached.deltas().count() as u32;
+    let diff_cached_stats = diff_cached.stats()?;
 
-    Ok((diff_count, diff_cached_count))
+    Ok((diff_stats, diff_cached_stats))
 }
 
 pub fn get_untracked_count(repo: &git2::Repository) -> Result<u32, Box<dyn Error>> {

@@ -8,8 +8,10 @@ pub struct GitInfo {
     pub head_branch: String,
     pub head_ahead: u32,
     pub head_behind: u32,
-    pub hunk_changed: u32,
-    pub hunk_staged: u32,
+    pub unstaged_insertions: u32,
+    pub unstaged_deletions: u32,
+    pub staged_insertions: u32,
+    pub staged_deletions: u32,
     pub untracked: u32,
     pub stashed: u32,
     pub assume_unchanged: u32,
@@ -25,14 +27,48 @@ impl GitInfo {
 
         let head_sha = &self.head_sha;
 
-        let mut hunk_changed = "".to_string();
-        if self.hunk_changed > 0 {
-            hunk_changed = format!(" {}{}", "D".bold().green(), self.hunk_changed.to_string());
+        let mut unstaged_diffstat = "".to_string();
+        let mut unstaged_insertions = "".to_string();
+        let mut unstaged_deletions = "".to_string();
+        if self.unstaged_insertions > 0 {
+            unstaged_insertions = format!("+{}", self.unstaged_insertions).to_string();
+        }
+        if self.unstaged_deletions > 0 {
+            unstaged_deletions = format!("-{}", self.unstaged_deletions).to_string();
+        }
+        if self.unstaged_insertions > 0 || self.unstaged_deletions > 0 {
+            unstaged_diffstat = format!(
+                " {}{}{}",
+                "D".bold().green(),
+                unstaged_insertions.green(),
+                unstaged_deletions.red(),
+            );
         }
 
-        let mut hunk_staged = "".to_string();
-        if self.hunk_staged > 0 {
-            hunk_staged = format!(" {}{}", "S".bold().magenta(), self.hunk_staged.to_string());
+        let mut staged_diffstat = "".to_string();
+        let mut staged_insertions = "".to_string();
+        let mut staged_deletions = "".to_string();
+        if self.staged_insertions > 0 {
+            staged_insertions = format!("+{}", self.staged_insertions).to_string();
+        }
+        if self.staged_deletions > 0 {
+            staged_deletions = format!("-{}", self.staged_deletions).to_string();
+        }
+        if self.staged_insertions > 0 || self.staged_deletions > 0 {
+            staged_diffstat = format!(
+                " {}{}{}",
+                "S".bold().magenta(),
+                // For some inexplicable reason, colorizing these bits here makes
+                // the generated Zsh prompt line eat the previous line. It's hard to
+                // tell if it's the fault of the "colored" crate, Zsh, or Alacritty.
+                //
+                // It's probably due to the mixing of the ANSI escape sequences
+                // here and the processing of the "%F", "%B", etc. tokens by
+                // Zsh. So once we are able to unset PROMPT_SUBST, we should be
+                // able to use colors here.
+                staged_insertions,
+                staged_deletions,
+            );
         }
 
         let mut untracked = "".to_string();
@@ -82,8 +118,8 @@ impl GitInfo {
             "[{}{}{}{}{}{}{}{}{}{}]",
             bare,
             head_sha,
-            hunk_changed,
-            hunk_staged,
+            unstaged_diffstat,
+            staged_diffstat,
             untracked,
             stashed,
             assume_unchanged,
