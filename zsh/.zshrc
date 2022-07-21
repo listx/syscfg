@@ -126,7 +126,6 @@ autoload -U zmv
 
 # Make the prompt re-evaluate itself every second. Among other things, this
 # makes the clock tick every second. See https://askubuntu.com/a/360172.
-setopt PROMPT_SUBST
 TMOUT=1
 TRAPALRM() {
   __l_prompt_tick
@@ -402,11 +401,8 @@ zmodload zsh/complist # for the 'menuselect' keymap
 #   `.expand-or-complete'.
 bindkey -M menuselect '' .accept-line
 
-# Allow parameter expansion, command substitution and arithmetic expansion in
-# prompts.
-setopt PROMPT_SUBST
-
-# This will set the default prompt to the kody theme
+# This will set the default prompt to the kody theme. This expects the
+# "prompt_kody_setup" function to exist.
 prompt kody
 
 # Set theme name. This should match the colors used by Alacritty on startup. We

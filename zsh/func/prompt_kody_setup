@@ -1,10 +1,43 @@
 #!/usr/bin/env zsh
-# kody prompt theme, based on adam2
+# "kody" prompt theme.
+
+# Allow parameter expansion, command substitution and arithmetic expansion in
+# prompts.
+setopt PROMPT_SUBST
+
+# The zle-keymap-select and zle-line-finish functions are special widgets that
+# are empty by default. We use it to set the Vim-style "<I>" or "<N>" mode
+# indicators in the prompt. See "Special Widgets" in zshzle(1).
+zle-line-init zle-keymap-select() {
+	# After recalculating the indicator, rebuild the prompt before resetting it.
+	# Otherwise the prompt itself does not get re-built (it only gets re-printed
+	# using the old state).
+	set_zsh_keymap_indicator
+	construct_prompt
+	zle reset-prompt
+}
+# Create user-defined widgets.
+zle -N zle-line-init
+zle -N zle-keymap-select
+
+prompt_kody_setup()
+{
+	# Run construct_prompt() after executing precmd().
+	add-zsh-hook precmd construct_prompt
+
+	# Make text typed in by the user be displayed as bold text.
+	zle_highlight[(r)default:*]="default:fg=default,bold"
+}
+
+# The chpwd(), preexec() and precmd() functions are specially recognized by Zsh.
+# Normally they are not defined and hence nothing happens.
 
 # preexec() is a hook function under "SPECIAL FUNCTIONS"; it is executed just
 # after a command has been read, but before it is executed.
 preexec() {
-	ran_something=true
+	# We set the ran_something variable to TRUE to indicate that the user typed
+	# in a command to be executed.
+	global_ran_something=1
 }
 
 # precmd() is executed before each prompt.
@@ -13,206 +46,152 @@ precmd()
 	# Catch cases where we press C-c to stop execution (or if we just pressed
 	# ENTER after deleting the entire BUFFER); we want to treat such cases as
 	# non-error exits. So, if we did not run anything (preexec() did not get
-	# executed due to C-c), then assign exit_status as 0.
-	exit_status=$?
-	if ! $ran_something; then
-		exit_status=0
+	# executed due to C-c), then assign global_exit_status as 0.
+	global_exit_status=$?
+	if ! (( $global_ran_something )); then
+		global_exit_status=0
 	fi
-	ran_something=false
+	global_ran_something=0
+
+	# Set global variables used for prompt generation. This function is only
+	# executed once. That is, even in cases where we press ESC to enter "Normal"
+	# mode, we do _not_ call this function.
+	set_globals
 }
 
-maybe_show_exit_status() {
-	case $exit_status in
-		0) ;;
-		*) echo "%B%F{$prompt_color5}$exit_status%b%f " ;;
-	esac
+# Whenever we change directories, recalculate the shortened named. However, skip
+# this calculation if we haven't actually changed directories. This happens when
+# we press "ENTER".
+chpwd() {
+	set_pwd_short_prev
 }
 
-get_short_pwd()
+set_pwd_short_prev()
 {
 	if [[ "${PWD}" == "${L_PWD_SHORT_PREV#*;}" ]]; then
 		return
 	fi
 	local pwd_short
 	pwd_short="$(lhc path-shorten --path-aliases ~/syscfg/zsh/path-aliases "${PWD}" 2>/dev/null || ~/syscfg/lhc/doc/code/simplify_path.sh "${PWD}")"
+	# We have to use an environment variable here to carry state across prompt
+	# generation invocations.
 	export L_PWD_SHORT_PREV="${pwd_short};${PWD}"
 }
 
-chpwd() {
-	get_short_pwd
-}
-
-prompt_kody_setup()
+# PWD (possibly shortened).
+get_short_pwd()
 {
-	# Usage (if customizing the colors at run time):
-	# prompt_kody_setup 8bit <color1> <color2> <color3> ... <color8>
-
-	# if invoked with "8bit" argument, initialize data
-	if [[ $1 == '8bit' ]]; then
-		shift
+	# If we just started a fresh shell instance, then we haven't had a chance to
+	# run chpwd() yet. So run it now (to create the very first prompt).
+	if [[ -z "${L_PWD_SHORT_PREV:-}" ]]; then
+		set_pwd_short_prev
 	fi
-
-	# Color scheme -- use zsh's parameter expansion form ${NAME:-WORD} (if NAME
-	# is set, use it; otherwise if NAME is not set, use WORD in its place)
-	# Here, we use the default WORDs cyan, red, white, etc -- these words are
-	# zsh-special and can be found in CHARACTER HIGHLIGHTING in zshzle(1). Most
-	# terminals support the colours black, red, green, yellow, blue, magenta,
-	# cyan and white, which can be set by name. In addition. default  may be used
-	# to set the terminal's default foreground colour.  Abbreviations are
-	# allowed; b or bl selects black.
-	prompt_color1=${1-'cyan'}     # present directory
-	prompt_color2=${2-'blue'}
-	prompt_color3=${3-'default'}  # user@host (also color of all regular text from commands like ls, cat, etc)
-	prompt_color4=${4-'white'}
-	prompt_color5=${5-'red'}
-	prompt_color6=${6-'green'}
-	prompt_color7=${7-'yellow'}
-	prompt_color8=${8-'magenta'}
-
-	add-zsh-hook precmd prompt_kody_precmd
-	add-zsh-hook chpwd get_short_pwd
+	echo "%B%F{cyan}${L_PWD_SHORT_PREV%;*}%b%f"
 }
 
-# The zle-keymap-select and zle-line-finish functions are special widgets that
-# are empty by default. See "Special Widgets" in zshzle(1).
-zle-line-init zle-keymap-select() {
+set_zsh_keymap_indicator()
+{
 	case "${KEYMAP}" in
 	vicmd)
-	__l_zsh_keymap_indicator="%B%K{blue}%F{black} <N> %f%k%b "
+		global_keymap_indicator="%B%K{blue}%F{black} <N> %f%k%b "
 	;;
 	main|viins)
-	__l_zsh_keymap_indicator="%B <I> %b "
+		global_keymap_indicator="%B <I> %b "
 	;;
 	esac
-	# After recalculating the indicator, rebuild the prompt before resetting it.
-	# Otherwise the prompt itself does not get re-built (it only gets re-printed
-	# using the old state).
-	prompt_kody_precmd
-	zle reset-prompt
 }
-zle -N zle-line-init
-zle -N zle-keymap-select
 
-# the actual prompt
-prompt_kody_precmd()
+# Git info (if we're inside a git repo).
+get_git_info()
 {
-	# Special ZSH Prompt Escape Characters (see 'man zshmisc' for more info on these)
-	#
-	# Visual effects
-	# %B (%b)
-	#     Start (stop) boldface mode
-	# %F (%f) (used as %F{chosen_color})
-	#     Start (stop) using a different foreground color, if supported by the
-	#     terminal.  The colour may be specified two ways: either as a numeric
-	#     argument, as normal,  or by a sequence in braces following the %F, for
-	#     example %F{red}.  In the latter case the values allowed are as
-	#     described for the fg zle_high‐ light attribute; see Character
-	#     Highlighting in zshzle(1).  This means that numeric colours are allowed
-	#     in the second format also.
-	#
-	# %K (%k)
-	#     Start (stop) using a different background color. Same syntax as %F and %f.
-	#
-	# Other special characters
-	#
-	# %n      Same as $USERNAME
-	#
-	# Shell states
-	#
-	# %M      Full machine hostname
-	# %#      A `#' if the shell is running with privileges (e.g., logged in as root), a `%' if not. Equivalent to `%(!.#.%%)'.
-	# %?      The return status of the last command executed just before the prompt (the prompt is itself a function that is executed after every command).
-	# %~      Shows $PWD, but replaced $HOME with `~'.
-	# %*      Current time of day in 24-hour format with seconds (same as %D{%H:%M:%S})
-	# %D{string}
-	#         string is formatted with the strftime function. See 'man 3 strftime' for more details.
-
-	# Git info (if we're inside a git repo).
-	local ginfo_short=""
-	ginfo_short="$(lhc git-info "${PWD}" 2>/dev/null || gsts for_prompt)"
-	if [[ -n $ginfo_short ]]; then
-		ginfo_short="${ginfo_short} "
+	local git_info_oneline=""
+	git_info_oneline="$(lhc git-info "${PWD}" 2>/dev/null || gsts for_prompt)"
+	if [[ -n $git_info_oneline ]]; then
+		git_info_oneline+=" "
 	fi
+	echo "${git_info_oneline}"
 
-	# Python VirtualEnv info.
-	local venv=""
-	if test -n "${VIRTUAL_ENV}"; then
-		venv="($(basename "${VIRTUAL_ENV}")) "
+}
+
+# Python VirtualEnv info.
+get_venv_info()
+{
+	if [[ -n "${VIRTUAL_ENV}" ]]; then
+		echo "($(basename "${VIRTUAL_ENV}")) "
 	fi
+}
 
-	day=""
+get_day()
+{
+	local day=""
+	day="%B%F{blue}"
 	case $(date +%a) in
-		Mon) day="%B%F{$prompt_color2}月%b%f" ;;
-		Tue) day="%B%F{$prompt_color2}火%b%f" ;;
-		Wed) day="%B%F{$prompt_color2}水%b%f" ;;
-		Thu) day="%B%F{$prompt_color2}木%b%f" ;;
-		Fri) day="%B%F{$prompt_color8}金%b%f" ;;
-		Sat) day="%B%F{$prompt_color6}土%b%f" ;;
-		Sun) day="%B%F{$prompt_color6}日%b%f" ;;
+		Mon) day+="月%b%f" ;;
+		Tue) day+="火%b%f" ;;
+		Wed) day+="水%b%f" ;;
+		Thu) day+="木%b%f" ;;
+		Fri) day+="金%b%f" ;;
+		Sat) day+="土%b%f" ;;
+		Sun) day+="日%b%f" ;;
 	esac
+	echo "${day}"
+}
 
-	prompt_kody_time_a="$day %D{%d} %* ${__l_zsh_keymap_indicator}$(maybe_show_exit_status)${ginfo_short}${venv}"
-	prompt_kody_time_b="$day %D{%d} %* ${__l_zsh_keymap_indicator}$(maybe_show_exit_status)"
-	prompt_kody_time_c="$day %D{%d} %* ${__l_zsh_keymap_indicator}"
-	prompt_kody_time_d="%D{%d} %* ${__l_zsh_keymap_indicator}"
-
-	prompt_hostcolor=$prompt_color3
-	prompt_charcolor=$prompt_color3
-	prompt_username="%F{$prompt_charcolor}%n%f"
-	prompt_at_sign="%F{$prompt_color3}@%f"
-	prompt_hostname="%F{$prompt_hostcolor}%m%f"
-	prompt_hostname_short="$(cat ~/.hostname-short)"
+get_user_host()
+{
+	local prompt_hostname="%m"
+	local prompt_hostname_short="$(cat ~/.hostname-short)"
 	if [[ -n "${prompt_hostname_short}" ]]; then
-		prompt_hostname="%F{$prompt_hostcolor}${prompt_hostname_short}%f"
+		prompt_hostname="${prompt_hostname_short}"
 	fi
-	# set user@host
-	prompt_userhost="$prompt_username$prompt_at_sign$prompt_hostname"
-
-	# set display of current working directory
-	if [[ -z "${L_PWD_SHORT_PREV:-}" ]]; then
-		get_short_pwd
-	fi
-	prompt_kody_pwd="%B%F{$prompt_color1}${L_PWD_SHORT_PREV%;*}%b%f"
-
-	# three default possibilities for the first prompt line, depending on available screen width space
-	prompt_line_1a="$prompt_kody_time_a$prompt_userhost $prompt_kody_pwd"
-	prompt_line_1b="$prompt_kody_time_b$prompt_userhost $prompt_kody_pwd"
-	prompt_line_1c="$prompt_kody_time_c$prompt_userhost $prompt_kody_pwd"
-	prompt_line_1d="$prompt_kody_time_d$prompt_userhost $prompt_kody_pwd"
-	prompt_line_1e="$__l_zsh_keymap_indicator$prompt_userhost $prompt_kody_pwd"
-	prompt_line_1f="$__l_zsh_keymap_indicator$prompt_kody_pwd"
-	prompt_line_2="%B%F{$prompt_color3} "
-	# The prompt character to display, based on "CONDITIONAL SUBSTRINGS IN
-	# PROMPTS" in zshmisc(1). The `!' tests if the current user is running with
-	# privileges, and the periods separate the true and false cases. So if we're
-	# root, then display "# ", else "$ ".
-	prompt_char="%(!.# .$"
-
-	# choose the correct prompt, depending on screen length
-	prompt_kody_choose_prompt
-
-	# PS1 -> what you see by default
-	PS1="$prompt_line_1$prompt_newline$prompt_line_2%B%F{$prompt_charcolor}$prompt_char %b%f"
-	# PS2 -> what you see when you enter a multi-line shell command
-	PS2="$prompt_line_2%B%F{$prompt_charcolor}..%_ > %b%f" # `%_' is a special character that is expanded
-	# PS3 -> what you see when you are given a selection option screen (e.g., selecting a directory in the directory stack)
-	PS3="$prompt_line_2%B%F{$prompt_charcolor}?# %b%f"
-	zle_highlight[(r)default:*]="default:fg=$prompt_charcolor,bold"
+	echo "%F{default}%n@${prompt_hostname}%f"
 }
 
-# See http://www.zsh.org/mla/users/2015/msg00566.html (which references
-# http://stackoverflow.com/a/10564427/15690).
-visible_length()
+get_exit_status()
 {
-	local zero='%([BSUbfksu]|([FB]|){*})'
-	print ${#${(S%%)1//$~zero}}
+	if (( $global_exit_status )); then
+		echo "%B%F{red}$global_exit_status%b%f "
+	fi
 }
 
-# Resize the prompt according to the working directory's length.
-prompt_kody_choose_prompt()
+set_globals()
 {
+	global_git_info="$(get_git_info)"
+	global_venv_info="$(get_venv_info)"
+	global_day="$(get_day)"
+	global_pwd="$(get_short_pwd)"
+	global_user_host="$(get_user_host)"
+	global_cmd_exit_status="$(get_exit_status)"
+}
+
+# The actual prompt. This does mostly pure string manipulation as all of the
+# data that we want to display has been calculated elsewhere (and set as global
+# variables).
+#
+# The use of global variables here is important because it allows us to avoid
+# recalculating costly bits. Practically speaking, we recalculate the keymap
+# indicator whenever the user enters or leaves vi mode ("Normal" mode), but we
+# do not recalculate the other globals.
+construct_prompt()
+{
+	# Date, time, Zsh keymap indicator, exit code, Git, and VirtualEnv.
+	local prompt_kody_time_a="$global_day %D{%d} %* ${global_keymap_indicator}${global_venv_info}${global_cmd_exit_status}${global_git_info}"
+	local prompt_kody_time_b="$global_day %D{%d} %* ${global_keymap_indicator}${global_cmd_exit_status}"
+	local prompt_kody_time_c="$global_day %D{%d} %* ${global_keymap_indicator}"
+	local prompt_kody_time_d="%D{%d} %* ${global_keymap_indicator}"
+
+	# Set multiple possible prompt lines.
+	local prompt_line_1a="$prompt_kody_time_a$global_user_host $global_pwd"
+	local prompt_line_1b="$prompt_kody_time_b$global_user_host $global_pwd"
+	local prompt_line_1c="$prompt_kody_time_c$global_user_host $global_pwd"
+	local prompt_line_1d="$prompt_kody_time_d$global_user_host $global_pwd"
+	local prompt_line_1e="${global_keymap_indicator}$global_user_host $global_pwd"
+	local prompt_line_1f="${global_keymap_indicator}$global_pwd"
+
+	# Set prompt_line_1, depending on available screen width.
+	local prompt_line_1=""
 	# Default prompt.
-	prompt_line_1="$prompt_l_brack%B%F{$prompt_color2}%$COLUMNS<...<%~%<<$prompt_r_brack%b"
+	prompt_line_1="$prompt_line_1f"
 
 	# Try to set longer prompt lines if we can do it.
 	longer_prompt_lines=(
@@ -221,8 +200,8 @@ prompt_kody_choose_prompt()
 		"$prompt_line_1c"
 		"$prompt_line_1d"
 		"$prompt_line_1e"
-		"$prompt_line_1f"
 	)
+
 	for line in $longer_prompt_lines; do
 		if (( $COLUMNS - $(visible_length "$line") >= 0 )); then
 			prompt_line_1=$line;
@@ -230,6 +209,29 @@ prompt_kody_choose_prompt()
 		fi
 	done
 
+	local prompt_line_2="%B%F{default} "
+
+	# The prompt character to display, based on "CONDITIONAL SUBSTRINGS IN
+	# PROMPTS" in zshmisc(1). The `!' tests if the current user is running with
+	# privileges, and the periods separate the true and false cases. So if we're
+	# root, then display "# ", else "$ ".
+	local cursor_prefix="%(!.# .$"
+
+	# PS1 -> what you see by default.
+	PS1="$prompt_line_1$prompt_newline${prompt_line_2}%B%F{default}${cursor_prefix} %b%f"
+	# PS2 -> what you see when you enter a multi-line shell command.
+	PS2="${prompt_line_2}%B%F{default}..%_ > %b%f"
+	# PS3 -> what you see when you are given a selection option screen (e.g.,
+	# selecting a directory in the directory stack).
+	PS3="${prompt_line_2}%B%F{default}?# %b%f"
+}
+
+# See http://www.zsh.org/mla/users/2015/msg00566.html (which references
+# http://stackoverflow.com/a/10564427/15690).
+visible_length()
+{
+	local zero='%([BSUbfksu]|([FB]|){*})'
+	print ${#${(S%%)1//$~zero}}
 }
 
 prompt_kody_setup "$@"
