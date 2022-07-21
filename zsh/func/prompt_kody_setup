@@ -203,7 +203,7 @@ construct_prompt()
 	)
 
 	for line in $longer_prompt_lines; do
-		if (( $COLUMNS - $(visible_length "$line") >= 0 )); then
+		if (( $COLUMNS + 1000 - $(visible_length "$line") >= 0 )); then
 			prompt_line_1=$line;
 			break;
 		fi
