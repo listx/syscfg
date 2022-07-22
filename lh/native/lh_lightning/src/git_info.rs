@@ -24,8 +24,8 @@ pub fn git_info_raw(path: &str) -> Result<GitInfo, Box<dyn Error>> {
 
     let (sha, branch) = get_sha_branch(&repo)?;
 
+    let mut ret = GitInfo::default();
     if repo.is_bare() {
-        let mut ret = GitInfo::default();
         ret.bare = true;
         ret.head_sha = sha;
         ret.head_branch = branch;
@@ -33,25 +33,16 @@ pub fn git_info_raw(path: &str) -> Result<GitInfo, Box<dyn Error>> {
     }
 
     let (ahead, behind) = get_upstream_divergence(&repo)?;
-    let (unstaged_stats, staged_stats) = get_diffstats(&repo)?;
-    let untracked_count = get_untracked_count(&repo)?;
     let assume_unchanged_count = get_assume_unchanged_count(&repo)?;
     let stashed_count = get_stashed_count(&mut repo);
 
-    let ret = GitInfo {
-        bare: false,
-        head_sha: sha,
-        head_branch: branch,
-        head_ahead: ahead,
-        head_behind: behind,
-        unstaged_insertions: unstaged_stats.insertions() as u32,
-        unstaged_deletions: unstaged_stats.deletions() as u32,
-        staged_insertions: staged_stats.insertions() as u32,
-        staged_deletions: staged_stats.deletions() as u32,
-        untracked: untracked_count,
-        stashed: stashed_count,
-        assume_unchanged: assume_unchanged_count,
-    };
+    ret.bare = false;
+    ret.head_sha = sha;
+    ret.head_branch = branch;
+    ret.head_ahead = ahead;
+    ret.head_behind = behind;
+    ret.stash_size = stashed_count;
+    ret.assume_unchanged_files = assume_unchanged_count;
 
     Ok(ret)
 }
@@ -117,6 +108,10 @@ pub fn count_commits(
     Ok(count)
 }
 
+// TODO: This is expensive for some reason. For Nixpkgs repo it takes about half
+// a second to calculate an empty diffstat. Using plain git CLI, this is more or
+// less instant. So we should use Git CLI instead from Elixir.
+#[allow(dead_code)]
 pub fn get_diffstats(
     repo: &git2::Repository,
 ) -> Result<(git2::DiffStats, git2::DiffStats), Box<dyn Error>> {
@@ -136,6 +131,9 @@ pub fn get_diffstats(
     Ok((diff_stats, diff_cached_stats))
 }
 
+// TODO: This is expensive, as it probably needs to iterate over every single
+// file in the repo. So we should use Git CLI instead from Elixir.
+#[allow(dead_code)]
 pub fn get_untracked_count(repo: &git2::Repository) -> Result<u32, Box<dyn Error>> {
     let mut opts = git2::StatusOptions::new();
     opts.include_untracked(true).recurse_untracked_dirs(true);

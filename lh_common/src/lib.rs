@@ -8,13 +8,15 @@ pub struct GitInfo {
     pub head_branch: String,
     pub head_ahead: u32,
     pub head_behind: u32,
+    pub unstaged_files: u32,
     pub unstaged_insertions: u32,
     pub unstaged_deletions: u32,
+    pub staged_files: u32,
     pub staged_insertions: u32,
     pub staged_deletions: u32,
-    pub untracked: u32,
-    pub stashed: u32,
-    pub assume_unchanged: u32,
+    pub untracked_files: u32,
+    pub stash_size: u32,
+    pub assume_unchanged_files: u32,
 }
 
 impl GitInfo {
@@ -71,26 +73,30 @@ impl GitInfo {
             );
         }
 
-        let mut untracked = "".to_string();
-        if self.untracked > 0 {
-            untracked = format!(" {}{}", "N".bold().yellow(), self.untracked.to_string());
-        }
-
-        let mut stashed = "".to_string();
-        if self.stashed > 0 {
-            stashed = format!(
+        let mut untracked_files = "".to_string();
+        if self.untracked_files > 0 {
+            untracked_files = format!(
                 " {}{}",
-                "T".bold().truecolor(255, 0, 0),
-                self.stashed.to_string()
+                "N".bold().yellow(),
+                self.untracked_files.to_string()
             );
         }
 
-        let mut assume_unchanged = "".to_string();
-        if self.assume_unchanged > 0 {
-            assume_unchanged = format!(
+        let mut stash_size = "".to_string();
+        if self.stash_size > 0 {
+            stash_size = format!(
+                " {}{}",
+                "T".bold().truecolor(255, 0, 0),
+                self.stash_size.to_string()
+            );
+        }
+
+        let mut assume_unchanged_files = "".to_string();
+        if self.assume_unchanged_files > 0 {
+            assume_unchanged_files = format!(
                 " {}{}",
                 "A".bold().truecolor(255, 0, 255),
-                self.assume_unchanged.to_string()
+                self.assume_unchanged_files.to_string()
             );
         }
 
@@ -120,9 +126,9 @@ impl GitInfo {
             head_sha,
             unstaged_diffstat,
             staged_diffstat,
-            untracked,
-            stashed,
-            assume_unchanged,
+            untracked_files,
+            stash_size,
+            assume_unchanged_files,
             head_branch,
             head_ahead,
             head_behind
