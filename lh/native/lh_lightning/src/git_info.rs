@@ -25,6 +25,13 @@ pub fn git_info_raw(path: &str) -> Result<GitInfo, Box<dyn Error>> {
     let (sha, branch) = get_sha_branch(&repo)?;
 
     let mut ret = GitInfo::default();
+
+    ret.root = repo
+        .workdir()
+        .unwrap_or(std::path::Path::new(""))
+        .to_str()
+        .unwrap_or_default()
+        .to_string();
     if repo.is_bare() {
         ret.bare = true;
         ret.head_sha = sha;
@@ -104,45 +111,6 @@ pub fn count_commits(
     for _id in revwalk {
         count += 1;
     }
-
-    Ok(count)
-}
-
-// TODO: This is expensive for some reason. For Nixpkgs repo it takes about half
-// a second to calculate an empty diffstat. Using plain git CLI, this is more or
-// less instant. So we should use Git CLI instead from Elixir.
-#[allow(dead_code)]
-pub fn get_diffstats(
-    repo: &git2::Repository,
-) -> Result<(git2::DiffStats, git2::DiffStats), Box<dyn Error>> {
-    let index = repo.index()?;
-    let mut opts = git2::DiffOptions::new();
-    opts.skip_binary_check(true)
-        .enable_fast_untracked_dirs(true);
-    let diff_stats = repo
-        .diff_index_to_workdir(Some(&index), Some(&mut opts))?
-        .stats()?;
-
-    let head_tree = repo.head()?.peel_to_tree()?;
-    let diff_cached_stats = repo
-        .diff_tree_to_index(Some(&head_tree), Some(&index), Some(&mut opts))?
-        .stats()?;
-
-    Ok((diff_stats, diff_cached_stats))
-}
-
-// TODO: This is expensive, as it probably needs to iterate over every single
-// file in the repo. So we should use Git CLI instead from Elixir.
-#[allow(dead_code)]
-pub fn get_untracked_count(repo: &git2::Repository) -> Result<u32, Box<dyn Error>> {
-    let mut opts = git2::StatusOptions::new();
-    opts.include_untracked(true).recurse_untracked_dirs(true);
-    let statuses = repo.statuses(Some(&mut opts))?;
-
-    let count = statuses
-        .iter()
-        .filter(|e| e.status() == git2::Status::WT_NEW)
-        .count() as u32;
 
     Ok(count)
 }

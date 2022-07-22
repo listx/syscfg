@@ -3,6 +3,7 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Default, Debug)]
 pub struct GitInfo {
+    pub root: String,
     pub bare: bool,
     pub head_sha: String,
     pub head_branch: String,
@@ -30,8 +31,12 @@ impl GitInfo {
         let head_sha = &self.head_sha;
 
         let mut unstaged_diffstat = "".to_string();
+        let mut unstaged_files = "".to_string();
         let mut unstaged_insertions = "".to_string();
         let mut unstaged_deletions = "".to_string();
+        if self.unstaged_files > 0 {
+            unstaged_files = format!("\u{2022}{}", self.unstaged_files).to_string();
+        }
         if self.unstaged_insertions > 0 {
             unstaged_insertions = format!("+{}", self.unstaged_insertions).to_string();
         }
@@ -40,16 +45,21 @@ impl GitInfo {
         }
         if self.unstaged_insertions > 0 || self.unstaged_deletions > 0 {
             unstaged_diffstat = format!(
-                " {}{}{}",
+                " {}{}{}{}",
                 "D".bold().green(),
-                unstaged_insertions.green(),
-                unstaged_deletions.red(),
+                unstaged_files,
+                unstaged_insertions,
+                unstaged_deletions,
             );
         }
 
         let mut staged_diffstat = "".to_string();
+        let mut staged_files = "".to_string();
         let mut staged_insertions = "".to_string();
         let mut staged_deletions = "".to_string();
+        if self.staged_files > 0 {
+            staged_files = format!("\u{2022}{}", self.staged_files).to_string();
+        }
         if self.staged_insertions > 0 {
             staged_insertions = format!("+{}", self.staged_insertions).to_string();
         }
@@ -58,8 +68,9 @@ impl GitInfo {
         }
         if self.staged_insertions > 0 || self.staged_deletions > 0 {
             staged_diffstat = format!(
-                " {}{}{}",
+                " {}{}{}{}",
                 "S".bold().magenta(),
+                staged_files,
                 // For some inexplicable reason, colorizing these bits here makes
                 // the generated Zsh prompt line eat the previous line. It's hard to
                 // tell if it's the fault of the "colored" crate, Zsh, or Alacritty.

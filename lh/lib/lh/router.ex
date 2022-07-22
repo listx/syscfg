@@ -81,12 +81,44 @@ defmodule LH.Router do
   # of is_string/1.
   defp git_info(path)
        when is_binary(path) do
-    msg = LH.Lightning.git_info(path)
+    # Shell out to git to get additional information for those parts that are
+    # faster using the vanilla git binary instead of using the Rust bindings for
+    # libgit2. We use Task.async to basically "background" these processes while
+    # we do other work.
+    task_get_diff_stats = Task.async(fn -> LH.Git.diff(path) end)
+    task_get_diff_cached_stats = Task.async(fn -> LH.Git.diff_cached(path) end)
 
-    Logger.info("/git-info: #{inspect(path)} => #{inspect(msg)}")
+    json = LH.Lightning.git_info(path)
+    git_info = Poison.decode!(json, as: %LH.Git{})
 
-    # The msg is already encoded as JSON, so we return it directly.
-    msg
+    # For this task, we use the root of the repo (calculated by
+    # LH.Lightning.git_info) because it is sensitive to the PWD in which the
+    # command runs.
+    task_get_untracked_files = Task.async(fn -> LH.Git.untracked_files(git_info.root) end)
+
+    diff_stats = Task.await(task_get_diff_stats)
+    diff_cached_stats = Task.await(task_get_diff_cached_stats)
+    untracked_files = Task.await(task_get_untracked_files)
+
+    unstaged = %{
+      unstaged_files: Map.get(diff_stats, :files, 0),
+      unstaged_insertions: Map.get(diff_stats, :insertions, 0),
+      unstaged_deletions: Map.get(diff_stats, :deletions, 0)
+    }
+
+    staged = %{
+      staged_files: Map.get(diff_cached_stats, :files, 0),
+      staged_insertions: Map.get(diff_cached_stats, :insertions, 0),
+      staged_deletions: Map.get(diff_cached_stats, :deletions, 0)
+    }
+
+    git_info = Map.merge(git_info, unstaged)
+    git_info = Map.merge(git_info, staged)
+    git_info = Map.replace!(git_info, :untracked_files, untracked_files)
+
+    Logger.info("/git-info: #{inspect(path)} => #{inspect(git_info)}")
+
+    Poison.encode!(git_info)
   end
 
   defp git_info(path) do
