@@ -16,22 +16,14 @@ pub fn git_info(path: &str) -> String {
 pub fn git_info_raw(path: &str) -> Result<GitInfo, Box<dyn Error>> {
     // Read Git repository information at given path. If there is no repo at the
     // given path, search upwards.
-    let mut mrepo = Repository::discover(path)?;
-
-    // Perform mutable borrow.
-    let stashed_count = get_stashed_count(&mut mrepo);
-
-    // Now from this point on, use the immutable reference.
-    let repo = &mrepo;
+    let mut repo = Repository::discover(path)?;
 
     let empty = repo.is_empty()?;
     if empty {
         return Err("empty repo".into());
     }
 
-    let head = repo.head()?;
-    let sha = get_sha(&head)?;
-    let branch = get_branch(&head);
+    let (sha, branch) = get_sha_branch(&repo)?;
 
     if repo.is_bare() {
         let mut ret = GitInfo::default();
@@ -41,10 +33,11 @@ pub fn git_info_raw(path: &str) -> Result<GitInfo, Box<dyn Error>> {
         return Ok(ret);
     }
 
-    let (ahead, behind) = get_upstream_divergence(&repo, &head)?;
-    let (unstaged_stats, staged_stats) = get_diffstats(&repo, &head)?;
+    let (ahead, behind) = get_upstream_divergence(&repo)?;
+    let (unstaged_stats, staged_stats) = get_diffstats(&repo)?;
     let untracked_count = get_untracked_count(&repo)?;
     let assume_unchanged_count = get_assume_unchanged_count(&repo)?;
+    let stashed_count = get_stashed_count(&mut repo);
 
     let ret = GitInfo {
         bare: false,
@@ -64,6 +57,13 @@ pub fn git_info_raw(path: &str) -> Result<GitInfo, Box<dyn Error>> {
     Ok(ret)
 }
 
+pub fn get_sha_branch(repo: &git2::Repository) -> Result<(String, String), Box<dyn Error>> {
+    let head = repo.head()?;
+    let sha = get_sha(&head)?;
+    let branch = get_branch(&head);
+    Ok((sha, branch))
+}
+
 pub fn get_sha(gref: &git2::Reference) -> Result<String, Box<dyn Error>> {
     let commit = gref.peel_to_commit()?;
     let sha = commit.id().to_string()[0..7].to_string();
@@ -80,10 +80,8 @@ pub fn get_branch(gref: &git2::Reference) -> String {
 // basically an equivalent of:
 //
 //      git rev-list --left-right --count HEAD...@{upstream}
-pub fn get_upstream_divergence(
-    repo: &git2::Repository,
-    head: &git2::Reference,
-) -> Result<(u32, u32), Box<dyn Error>> {
+pub fn get_upstream_divergence(repo: &git2::Repository) -> Result<(u32, u32), Box<dyn Error>> {
+    let head = repo.head()?;
     let head_commit = head.peel_to_commit()?;
     let head_id = head_commit.id();
     let upstream_obj = repo.revparse_single("@{upstream}")?;
@@ -122,8 +120,8 @@ pub fn count_commits(
 
 pub fn get_diffstats(
     repo: &git2::Repository,
-    head: &git2::Reference,
 ) -> Result<(git2::DiffStats, git2::DiffStats), Box<dyn Error>> {
+    let head = repo.head()?;
     let head_tree = head.peel_to_tree()?;
 
     let diff = repo.diff_index_to_workdir(None, None)?;
