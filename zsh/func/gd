@@ -9,7 +9,7 @@ gd()
 	local c_magenta="\x1b[1;35m"
 	local ce="\x1b[0m"
 
-	local git_repo=$(git_find_repo)
+	local git_repo=$(git rev-parse --show-toplevel)
 	local tag="    ${c_blue}-- $git_repo --${ce}\n"
 	local git_diff=$(git diff --color=always)
 	local git_diff_c=$(git diff --cached --color=always)
