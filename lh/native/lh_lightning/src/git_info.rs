@@ -1,4 +1,3 @@
-use git2::Repository;
 use lh_common::GitInfo;
 use std::error::Error;
 
@@ -16,7 +15,7 @@ pub fn git_info(path: &str) -> String {
 pub fn git_info_raw(path: &str) -> Result<GitInfo, Box<dyn Error>> {
     // Read Git repository information at given path. If there is no repo at the
     // given path, search upwards.
-    let mut repo = Repository::discover(path)?;
+    let mut repo = git2::Repository::discover(path)?;
 
     let empty = repo.is_empty()?;
     if empty {
