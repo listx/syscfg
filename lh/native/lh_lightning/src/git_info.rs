@@ -121,14 +121,18 @@ pub fn count_commits(
 pub fn get_diffstats(
     repo: &git2::Repository,
 ) -> Result<(git2::DiffStats, git2::DiffStats), Box<dyn Error>> {
-    let head = repo.head()?;
-    let head_tree = head.peel_to_tree()?;
+    let index = repo.index()?;
+    let mut opts = git2::DiffOptions::new();
+    opts.skip_binary_check(true)
+        .enable_fast_untracked_dirs(true);
+    let diff_stats = repo
+        .diff_index_to_workdir(Some(&index), Some(&mut opts))?
+        .stats()?;
 
-    let diff = repo.diff_index_to_workdir(None, None)?;
-    let diff_stats = diff.stats()?;
-
-    let diff_cached = repo.diff_tree_to_index(Some(&head_tree), None, None)?;
-    let diff_cached_stats = diff_cached.stats()?;
+    let head_tree = repo.head()?.peel_to_tree()?;
+    let diff_cached_stats = repo
+        .diff_tree_to_index(Some(&head_tree), Some(&index), Some(&mut opts))?
+        .stats()?;
 
     Ok((diff_stats, diff_cached_stats))
 }
