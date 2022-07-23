@@ -28,6 +28,24 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         .subcommand_required(true)
         .arg_required_else_help(true)
         .subcommand(
+            Command::new("prompt-info")
+                .about("Get information to display for a shell prompt.")
+                .arg(
+                    Arg::new("path")
+                        .help("the path to the PWD of the shell instance")
+                        .index(1)
+                        .required(true),
+                )
+                .arg(
+                    Arg::new("path_aliases_file")
+                        .long("path-aliases")
+                        .value_name("FILE")
+                        .help("File containing path aliases")
+                        .takes_value(true)
+                        .required(true),
+                ),
+        )
+        .subcommand(
             Command::new("git-info")
                 .about("Get Git information (to be used for a shell prompt).")
                 .arg(
@@ -80,6 +98,38 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let request_base_url = format!("http://{}:{}", settings.server.domain, settings.server.port);
     let home_dir = env::var("HOME").expect("$HOME not set");
     match matches.subcommand_name() {
+        Some("prompt-info") => {
+            if let Some(m) = matches.subcommand_matches("prompt-info") {
+                let path = m.value_of("path").unwrap();
+                let path_aliases_file = m.value_of("path_aliases_file").unwrap();
+                let path_aliases_contents =
+                    fs::read_to_string(path_aliases_file).unwrap_or_default();
+
+                let request_url = format!("{}/prompt-info", request_base_url);
+
+                let json_body = json!({
+                    "path": path,
+                    "aliases": path_aliases_contents,
+                });
+
+                let response = client.post(request_url).json(&json_body).send()?;
+
+                let prompt: lh_common::Prompt = response.json()?;
+
+                let mut prompt_git = prompt.git_repo_stats.oneline();
+                if prompt_git == "NOT_GIT_REPO" {
+                    prompt_git = "".to_string();
+                } else {
+                    prompt_git = format!("[{}] ", prompt_git);
+                }
+
+                print!(
+                    "global_prompt_git=\"{}\"
+global_prompt_path_short=\"%B%F{{cyan}}{}%f%b\"",
+                    prompt_git, prompt.path_short
+                );
+            }
+        }
         Some("git-info") => {
             if let Some(m) = matches.subcommand_matches("git-info") {
                 let git_repo_path = m.value_of("git_repo_path").unwrap();

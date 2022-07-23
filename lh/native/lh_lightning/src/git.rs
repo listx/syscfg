@@ -2,6 +2,14 @@ use lh_common::GitRepoStats;
 use std::error::Error;
 
 #[rustler::nif]
+pub fn is_git_repo(path: &str) -> bool {
+    match git2::Repository::discover(path) {
+        Ok(_) => true,
+        _ => false,
+    }
+}
+
+#[rustler::nif]
 pub fn repo_stats(path: &str) -> String {
     match repo_stats_maybe(path) {
         Ok(gi) => serde_json::to_string(&gi).unwrap(),

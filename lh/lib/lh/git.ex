@@ -20,7 +20,46 @@ defmodule LH.Git do
             stash_size: 0,
             assume_unchanged_files: 0
 
-  def diff(path) do
+  def repo_stats(path) do
+    # Shell out to git to get additional information for those parts that are
+    # faster using the vanilla git binary instead of using the Rust bindings for
+    # libgit2. We use Task.async to basically "background" these processes while
+    # we do other work.
+    task_get_diff_stats = Task.async(fn -> diff(path) end)
+    task_get_diff_cached_stats = Task.async(fn -> diff_cached(path) end)
+
+    json = LH.Lightning.repo_stats(path)
+    git_repo_stats = Poison.decode!(json, as: %LH.Git{})
+
+    # For this task, we use the root of the repo (calculated by
+    # LH.Lightning.repo_stats) because it is sensitive to the PWD in which the
+    # command runs.
+    task_get_untracked_files = Task.async(fn -> untracked_files(git_repo_stats.root) end)
+
+    diff_stats = Task.await(task_get_diff_stats)
+    diff_cached_stats = Task.await(task_get_diff_cached_stats)
+    untracked_files = Task.await(task_get_untracked_files)
+
+    unstaged = %{
+      unstaged_files: Map.get(diff_stats, :files, 0),
+      unstaged_insertions: Map.get(diff_stats, :insertions, 0),
+      unstaged_deletions: Map.get(diff_stats, :deletions, 0)
+    }
+
+    staged = %{
+      staged_files: Map.get(diff_cached_stats, :files, 0),
+      staged_insertions: Map.get(diff_cached_stats, :insertions, 0),
+      staged_deletions: Map.get(diff_cached_stats, :deletions, 0)
+    }
+
+    git_repo_stats = Map.merge(git_repo_stats, unstaged)
+    git_repo_stats = Map.merge(git_repo_stats, staged)
+    git_repo_stats = Map.replace!(git_repo_stats, :untracked_files, untracked_files)
+
+    git_repo_stats
+  end
+
+  defp diff(path) do
     case System.cmd("git", ["diff", "--shortstat"], cd: path) do
       {shortstat, 0} ->
         to_map(shortstat)
@@ -30,7 +69,7 @@ defmodule LH.Git do
     end
   end
 
-  def diff_cached(path) do
+  defp diff_cached(path) do
     case System.cmd("git", ["diff", "--cached", "--shortstat"], cd: path) do
       {shortstat, 0} ->
         to_map(shortstat)
@@ -41,7 +80,7 @@ defmodule LH.Git do
   end
 
   # Count untracked files.
-  def untracked_files(path) do
+  defp untracked_files(path) do
     case System.cmd("git", ["ls-files", "--others", "--exclude-standard"], cd: path) do
       {untracked_files, 0} ->
         # Count each line (assume each file is on its own line). Discard blank
@@ -56,7 +95,7 @@ defmodule LH.Git do
     end
   end
 
-  def to_map(shortstat) do
+  defp to_map(shortstat) do
     # The shortstat string looks like this:
     #   " 3 files changed, 9 insertions(+), 3 deletions(-)"
     # We split by the comma, then take the first 2 words.
@@ -72,7 +111,7 @@ defmodule LH.Git do
     Map.new(pairs)
   end
 
-  def sanitize_to_pair(x) do
+  defp sanitize_to_pair(x) do
     case x do
       [n, keyword] ->
         {

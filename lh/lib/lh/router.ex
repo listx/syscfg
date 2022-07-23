@@ -27,6 +27,22 @@ defmodule LH.Router do
     shutdown()
   end
 
+  post "/prompt-info" do
+    {status, body} =
+      case conn.body_params do
+        %{"path" => path, "aliases" => aliases} ->
+          {200, prompt_info(path, aliases)}
+
+        _ ->
+          {422, bad_request_body()}
+      end
+
+    conn
+    |> put_resp_header("content-type", "application/json;charset=utf-8")
+    |> send_resp(status, body)
+    |> halt()
+  end
+
   post "/git-info" do
     {status, body} =
       case conn.body_params do
@@ -75,51 +91,41 @@ defmodule LH.Router do
     |> halt()
   end
 
+  defp prompt_info(path, aliases)
+       when is_binary(path) and is_binary(aliases) do
+    prompt = LH.Prompt.generate(path, aliases)
+
+    Logger.info("/prompt-info: #{inspect(path)} => #{inspect(prompt)}")
+
+    Poison.encode!(prompt)
+  end
+
+  defp prompt_info(path, aliases) do
+    if not is_binary(path) do
+      Logger.error("/prompt-info: path is not a string: #{path}")
+    end
+
+    if not is_binary(aliases) do
+      Logger.error("/prompt-info: aliases is not a string: #{aliases}")
+    end
+
+    Jason.encode!(%{
+      error: "bad arguments"
+    })
+  end
+
   # Strings in Elixir are represented as binaries, so we use is_binary/1 instead
   # of is_string/1.
   defp repo_stats(path)
        when is_binary(path) do
-    # Shell out to git to get additional information for those parts that are
-    # faster using the vanilla git binary instead of using the Rust bindings for
-    # libgit2. We use Task.async to basically "background" these processes while
-    # we do other work.
-    task_get_diff_stats = Task.async(fn -> LH.Git.diff(path) end)
-    task_get_diff_cached_stats = Task.async(fn -> LH.Git.diff_cached(path) end)
-
-    json = LH.Lightning.repo_stats(path)
-    git_repo_stats = Poison.decode!(json, as: %LH.Git{})
-
-    # For this task, we use the root of the repo (calculated by
-    # LH.Lightning.repo_stats) because it is sensitive to the PWD in which the
-    # command runs.
-    task_get_untracked_files = Task.async(fn -> LH.Git.untracked_files(git_repo_stats.root) end)
-
-    diff_stats = Task.await(task_get_diff_stats)
-    diff_cached_stats = Task.await(task_get_diff_cached_stats)
-    untracked_files = Task.await(task_get_untracked_files)
-
-    unstaged = %{
-      unstaged_files: Map.get(diff_stats, :files, 0),
-      unstaged_insertions: Map.get(diff_stats, :insertions, 0),
-      unstaged_deletions: Map.get(diff_stats, :deletions, 0)
-    }
-
-    staged = %{
-      staged_files: Map.get(diff_cached_stats, :files, 0),
-      staged_insertions: Map.get(diff_cached_stats, :insertions, 0),
-      staged_deletions: Map.get(diff_cached_stats, :deletions, 0)
-    }
-
-    git_repo_stats = Map.merge(git_repo_stats, unstaged)
-    git_repo_stats = Map.merge(git_repo_stats, staged)
-    git_repo_stats = Map.replace!(git_repo_stats, :untracked_files, untracked_files)
+    git_repo_stats = LH.Git.repo_stats(path)
 
     Logger.info("/git-info: #{inspect(path)} => #{inspect(git_repo_stats)}")
 
     Poison.encode!(git_repo_stats)
   end
 
-  defp git_repo_stats(path) do
+  defp repo_stats(path) do
     if not is_binary(path) do
       Logger.error("/git-info: path is not a string: #{path}")
     end
@@ -133,25 +139,11 @@ defmodule LH.Router do
   # of is_string/1.
   defp path_shorten(path, aliases)
        when is_binary(path) and is_binary(aliases) do
-    {status, msg} = Cachex.get(:path_shorten_cache, {path, aliases})
+    {path_short, cached_status} = LH.Path.path_shorten(path, aliases)
 
-    {msg_final, cached_status} =
-      if status == :error || msg == nil do
-        msg =
-          LH.Lightning.path_shorten(
-            path,
-            aliases
-          )
+    Logger.info("/path-shorten: (#{cached_status}) #{inspect(path)} => #{inspect(path_short)}")
 
-        Cachex.put(:path_shorten_cache, {path, aliases}, msg)
-        {msg, :MIS}
-      else
-        {msg, :HIT}
-      end
-
-    Logger.info("/path-shorten: (#{cached_status}) #{inspect(path)} => #{inspect(msg_final)}")
-
-    Jason.encode!(%{path_shortened: msg_final})
+    Jason.encode!(%{path_shortened: path_short})
   end
 
   defp path_shorten(path, aliases) do

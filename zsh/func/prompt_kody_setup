@@ -1,10 +1,6 @@
 #!/usr/bin/env zsh
 # "kody" prompt theme.
 
-# Allow parameter expansion, command substitution and arithmetic expansion in
-# prompts.
-setopt PROMPT_SUBST
-
 # The zle-keymap-select and zle-line-finish functions are special widgets that
 # are empty by default. We use it to set the Vim-style "<I>" or "<N>" mode
 # indicators in the prompt. See "Special Widgets" in zshzle(1).
@@ -22,6 +18,10 @@ zle -N zle-keymap-select
 
 prompt_kody_setup()
 {
+	typeset -g prompt_newline
+	autoload -Uz add-zsh-hook
+	prompt_newline=$'\n%{\r%}'
+
 	# Run construct_prompt() after executing precmd().
 	add-zsh-hook precmd construct_prompt
 
@@ -59,38 +59,9 @@ precmd()
 	set_globals
 }
 
-# Whenever we change directories, recalculate the shortened named. However, skip
-# this calculation if we haven't actually changed directories. This happens when
-# we press "ENTER".
-chpwd() {
-	set_pwd_short_prev
-}
-
-set_pwd_short_prev()
-{
-	if [[ "${PWD}" == "${L_PWD_SHORT_PREV#*;}" ]]; then
-		return
-	fi
-	local pwd_short
-	pwd_short="$(lhc path-shorten --path-aliases ~/syscfg/zsh/path-aliases "${PWD}" 2>/dev/null || ~/syscfg/lhc/doc/code/simplify_path.sh "${PWD}")"
-	# We have to use an environment variable here to carry state across prompt
-	# generation invocations.
-	export L_PWD_SHORT_PREV="${pwd_short};${PWD}"
-}
-
-# PWD (possibly shortened).
-get_short_pwd()
-{
-	# If we just started a fresh shell instance, then we haven't had a chance to
-	# run chpwd() yet. So run it now (to create the very first prompt).
-	if [[ -z "${L_PWD_SHORT_PREV:-}" ]]; then
-		set_pwd_short_prev
-	fi
-	echo "%B%F{cyan}${L_PWD_SHORT_PREV%;*}%b%f"
-}
-
 set_zsh_keymap_indicator()
 {
+
 	case "${KEYMAP}" in
 	vicmd)
 		global_keymap_indicator="%B%K{blue}%F{black} <N> %f%k%b "
@@ -99,18 +70,6 @@ set_zsh_keymap_indicator()
 		global_keymap_indicator="%B <I> %b "
 	;;
 	esac
-}
-
-# Git info (if we're inside a git repo).
-get_git_info()
-{
-	local git_info_oneline=""
-	git_info_oneline="$(lhc git-info "${PWD}" 2>/dev/null || gsts for_prompt)"
-	if [[ -n $git_info_oneline ]]; then
-		git_info_oneline+=" "
-	fi
-	echo "${git_info_oneline}"
-
 }
 
 # Python VirtualEnv info.
@@ -124,15 +83,14 @@ get_venv_info()
 get_day()
 {
 	local day=""
-	day="%B%F{blue}"
 	case $(date +%a) in
-		Mon) day+="月%b%f" ;;
-		Tue) day+="火%b%f" ;;
-		Wed) day+="水%b%f" ;;
-		Thu) day+="木%b%f" ;;
-		Fri) day+="金%b%f" ;;
-		Sat) day+="土%b%f" ;;
-		Sun) day+="日%b%f" ;;
+		Mon) day+="月" ;;
+		Tue) day+="火" ;;
+		Wed) day+="水" ;;
+		Thu) day+="木" ;;
+		Fri) day+="金" ;;
+		Sat) day+="土" ;;
+		Sun) day+="日" ;;
 	esac
 	echo "${day}"
 }
@@ -144,24 +102,37 @@ get_user_host()
 	if [[ -n "${prompt_hostname_short}" ]]; then
 		prompt_hostname="${prompt_hostname_short}"
 	fi
-	echo "%F{default}%n@${prompt_hostname}%f"
+	echo "%n@${prompt_hostname}"
 }
 
 get_exit_status()
 {
 	if (( $global_exit_status )); then
-		echo "%B%F{red}$global_exit_status%b%f "
+		echo "$global_exit_status "
+	fi
+}
+
+get_lh_info()
+{
+	# TODO: make gsts match lhc output for git information.
+	if ! lhc prompt-info --path-aliases ~/syscfg/zsh/path-aliases "${PWD}" 2>/dev/null; then
+		cat <<EOF
+global_prompt_path_short="%B%F{cyan}$(~/syscfg/lhc/doc/code/simplify_path.sh ${PWD})%f%b"
+global_prompt_git="$(gsts for_prompt)"
+EOF
 	fi
 }
 
 set_globals()
 {
-	global_git_info="$(get_git_info)"
-	global_venv_info="$(get_venv_info)"
-	global_day="$(get_day)"
-	global_pwd="$(get_short_pwd)"
+	eval "$(get_lh_info)"
+
+	# These bits are very "close" to the shell and so we just get the info from
+	# the shell directly instead of asking lhc for it.
+	global_prompt_day=" %K{green}%F{black}$(get_day)%f%k"
 	global_user_host="$(get_user_host)"
 	global_cmd_exit_status="$(get_exit_status)"
+	global_venv_info="$(get_venv_info)"
 }
 
 # The actual prompt. This does mostly pure string manipulation as all of the
@@ -175,63 +146,17 @@ set_globals()
 construct_prompt()
 {
 	# Date, time, Zsh keymap indicator, exit code, Git, and VirtualEnv.
-	local prompt_kody_time_a="$global_day %D{%d} %* ${global_keymap_indicator}${global_venv_info}${global_cmd_exit_status}${global_git_info}"
-	local prompt_kody_time_b="$global_day %D{%d} %* ${global_keymap_indicator}${global_cmd_exit_status}"
-	local prompt_kody_time_c="$global_day %D{%d} %* ${global_keymap_indicator}"
-	local prompt_kody_time_d="%D{%d} %* ${global_keymap_indicator}"
+	local prompt_line_1="${global_prompt_day} %D{%d %H:%M:%S %Z} ${global_keymap_indicator}${global_venv_info}${global_cmd_exit_status}${global_prompt_git}${global_user_host} ${global_prompt_path_short}"
 
-	# Set multiple possible prompt lines.
-	local prompt_line_1a="$prompt_kody_time_a$global_user_host $global_pwd"
-	local prompt_line_1b="$prompt_kody_time_b$global_user_host $global_pwd"
-	local prompt_line_1c="$prompt_kody_time_c$global_user_host $global_pwd"
-	local prompt_line_1d="$prompt_kody_time_d$global_user_host $global_pwd"
-	local prompt_line_1e="${global_keymap_indicator}$global_user_host $global_pwd"
-	local prompt_line_1f="${global_keymap_indicator}$global_pwd"
-
-	# Set prompt_line_1, depending on available screen width.
-	local prompt_line_1=""
-	# Default prompt.
-	prompt_line_1="$prompt_line_1f"
-
-	# Try to set longer prompt lines if we can do it.
-	longer_prompt_lines=(
-		"$prompt_line_1a"
-		"$prompt_line_1b"
-		"$prompt_line_1c"
-		"$prompt_line_1d"
-		"$prompt_line_1e"
-	)
-
-	for line in $longer_prompt_lines; do
-		if (( $COLUMNS + 1000 - $(visible_length "$line") >= 0 )); then
-			prompt_line_1=$line;
-			break;
-		fi
-	done
-
-	local prompt_line_2="%B%F{default} "
-
-	# The prompt character to display, based on "CONDITIONAL SUBSTRINGS IN
-	# PROMPTS" in zshmisc(1). The `!' tests if the current user is running with
-	# privileges, and the periods separate the true and false cases. So if we're
-	# root, then display "# ", else "$ ".
-	local cursor_prefix="%(!.# .$"
+	local prompt_line_2=" "
 
 	# PS1 -> what you see by default.
-	PS1="$prompt_line_1$prompt_newline${prompt_line_2}%B%F{default}${cursor_prefix} %b%f"
+	PS1="${prompt_line_1}${prompt_newline}${prompt_line_2}\$ "
 	# PS2 -> what you see when you enter a multi-line shell command.
-	PS2="${prompt_line_2}%B%F{default}..%_ > %b%f"
+	PS2="${prompt_line_2}..%_ > "
 	# PS3 -> what you see when you are given a selection option screen (e.g.,
 	# selecting a directory in the directory stack).
-	PS3="${prompt_line_2}%B%F{default}?# %b%f"
-}
-
-# See http://www.zsh.org/mla/users/2015/msg00566.html (which references
-# http://stackoverflow.com/a/10564427/15690).
-visible_length()
-{
-	local zero='%([BSUbfksu]|([FB]|){*})'
-	print ${#${(S%%)1//$~zero}}
+	PS3="${prompt_line_2}?# "
 }
 
 prompt_kody_setup "$@"

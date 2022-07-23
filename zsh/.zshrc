@@ -119,9 +119,6 @@ export ZLE_REMOVE_SUFFIX_CHARS=""
 fpath=(~/.zsh/func $fpath) # add ~/.zsh/func to $fpath
 autoload -U ~/.zsh/func/*(:t) # load all functions in ~/.zsh/func
 
-autoload -U promptinit
-promptinit
-
 autoload -U zmv
 
 # Make the prompt re-evaluate itself every second. Among other things, this
@@ -401,9 +398,8 @@ zmodload zsh/complist # for the 'menuselect' keymap
 #   `.expand-or-complete'.
 bindkey -M menuselect '' .accept-line
 
-# This will set the default prompt to the kody theme. This expects the
-# "prompt_kody_setup" function to exist.
-prompt kody
+# Use the kody theme.
+prompt_kody_setup
 
 # Set theme name. This should match the colors used by Alacritty on startup. We
 # need to set the theme name because otherwise when we invoke 'c' and 'C'

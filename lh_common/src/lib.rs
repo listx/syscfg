@@ -1,7 +1,6 @@
-use colored::*;
 use serde::{Deserialize, Serialize};
 
-#[derive(Serialize, Deserialize, Default, Debug)]
+#[derive(Serialize, Deserialize, Default, Debug, PartialEq, Eq)]
 pub struct GitRepoStats {
     pub root: String,
     pub bare: bool,
@@ -21,8 +20,12 @@ pub struct GitRepoStats {
 }
 
 impl GitRepoStats {
-    pub fn oneline(&self) -> String {
-        //let y = format!("{}", &"haha".to_string().red());
+    pub fn oneline(self) -> String {
+        // For an empty struct, return NOT_GIT_REPO.
+        if self == GitRepoStats::default() {
+            return "NOT_GIT_REPO".to_string();
+        }
+
         let mut bare = "".to_string();
         if self.bare {
             bare = "<bare> ".to_string();
@@ -46,10 +49,7 @@ impl GitRepoStats {
         if self.unstaged_insertions > 0 || self.unstaged_deletions > 0 {
             unstaged_diffstat = format!(
                 " {}{}{}{}",
-                "D".bold().green(),
-                unstaged_files,
-                unstaged_insertions,
-                unstaged_deletions,
+                "%B%F{green}D%f%b", unstaged_files, unstaged_insertions, unstaged_deletions,
             );
         }
 
@@ -69,7 +69,7 @@ impl GitRepoStats {
         if self.staged_insertions > 0 || self.staged_deletions > 0 {
             staged_diffstat = format!(
                 " {}{}{}{}",
-                "S".bold().magenta(),
+                "%B%F{magenta}S%f%b",
                 staged_files,
                 // For some inexplicable reason, colorizing these bits here makes
                 // the generated Zsh prompt line eat the previous line. It's hard to
@@ -88,25 +88,21 @@ impl GitRepoStats {
         if self.untracked_files > 0 {
             untracked_files = format!(
                 " {}{}",
-                "N".bold().yellow(),
+                "%B%F{yellow}N%f%b",
                 self.untracked_files.to_string()
             );
         }
 
         let mut stash_size = "".to_string();
         if self.stash_size > 0 {
-            stash_size = format!(
-                " {}{}",
-                "T".bold().truecolor(255, 0, 0),
-                self.stash_size.to_string()
-            );
+            stash_size = format!(" {}{}", "%B%F{196}T%f%b", self.stash_size.to_string());
         }
 
         let mut assume_unchanged_files = "".to_string();
         if self.assume_unchanged_files > 0 {
             assume_unchanged_files = format!(
                 " {}{}",
-                "A".bold().truecolor(255, 0, 255),
+                "%B%F{201}A%f%b",
                 self.assume_unchanged_files.to_string()
             );
         }
@@ -117,7 +113,7 @@ impl GitRepoStats {
         if self.head_ahead > 0 {
             head_ahead = format!(
                 " {}{}",
-                "\u{25b2}".bold().green(),
+                "%B%F{green}\u{25b2}%f%b",
                 self.head_ahead.to_string()
             );
         }
@@ -126,13 +122,13 @@ impl GitRepoStats {
         if self.head_behind > 0 {
             head_behind = format!(
                 " {}{}",
-                "\u{25bc}".bold().red(),
+                "%B%F{red}\u{25bc}%f%b",
                 self.head_behind.to_string()
             );
         }
 
         format!(
-            "[{}{}{}{}{}{}{}{}{}{}]",
+            "{}{}{}{}{}{}{}{}{}{}",
             bare,
             head_sha,
             unstaged_diffstat,
@@ -145,6 +141,12 @@ impl GitRepoStats {
             head_behind
         )
     }
+}
+
+#[derive(Serialize, Deserialize, Default, Debug)]
+pub struct Prompt {
+    pub path_short: String,
+    pub git_repo_stats: GitRepoStats,
 }
 
 #[cfg(test)]
