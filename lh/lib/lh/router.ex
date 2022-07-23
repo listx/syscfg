@@ -8,10 +8,8 @@ defmodule LH.Router do
   plug(:dispatch)
 
   get "/" do
-    msg = LH.Lightning.hfr()
-
     conn
-    |> send_resp(200, msg)
+    |> send_resp(200, "hello")
     |> halt()
   end
 
