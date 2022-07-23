@@ -3,7 +3,6 @@ use reqwest::blocking::Client;
 use serde::Deserialize;
 use serde_json::json;
 
-use std::collections::HashMap;
 use std::env;
 use std::fs;
 
@@ -108,22 +107,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 let path_aliases_contents =
                     fs::read_to_string(path_aliases_file).unwrap_or_default();
 
-                let mut subs = HashMap::new();
-
-                // This is used to expand the definitions in the path aliases file.
-                subs.insert("$HOME", &home_dir);
-
-                // This is used to shrink the /home/... directory to "~" if
-                // there is no path aliases match.
-                let tilde = "~".to_string();
-                subs.insert(&home_dir, &tilde);
-
                 let request_url = format!("{}/path-shorten", request_base_url);
 
                 let json_body = json!({
-                    "name": path_to_shorten,
-                    "aliases_raw": path_aliases_contents,
-                    "substitutions": subs,
+                    "path": path_to_shorten,
+                    "aliases": path_aliases_contents,
                 });
 
                 let response = client.post(request_url).json(&json_body).send()?;

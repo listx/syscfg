@@ -46,8 +46,8 @@ defmodule LH.Router do
   post "/path-shorten" do
     {status, body} =
       case conn.body_params do
-        %{"name" => path, "aliases_raw" => aliases_raw, "substitutions" => subs} ->
-          {200, path_shorten(path, aliases_raw, subs)}
+        %{"path" => path, "aliases" => aliases} ->
+          {200, path_shorten(path, aliases)}
 
         _ ->
           {422, bad_request_body()}
@@ -131,20 +131,19 @@ defmodule LH.Router do
 
   # Strings in Elixir are represented as binaries, so we use is_binary/1 instead
   # of is_string/1.
-  defp path_shorten(path, aliases_raw, subs)
-       when is_binary(path) and is_binary(aliases_raw) and is_map(subs) do
-    {status, msg} = Cachex.get(:path_shorten_cache, {path, aliases_raw, subs})
+  defp path_shorten(path, aliases)
+       when is_binary(path) and is_binary(aliases) do
+    {status, msg} = Cachex.get(:path_shorten_cache, {path, aliases})
 
     {msg_final, cached_status} =
       if status == :error || msg == nil do
         msg =
           LH.Lightning.path_shorten(
             path,
-            aliases_raw,
-            subs
+            aliases
           )
 
-        Cachex.put(:path_shorten_cache, {path, aliases_raw, subs}, msg)
+        Cachex.put(:path_shorten_cache, {path, aliases}, msg)
         {msg, :MIS}
       else
         {msg, :HIT}
@@ -155,17 +154,13 @@ defmodule LH.Router do
     Jason.encode!(%{path_shortened: msg_final})
   end
 
-  defp path_shorten(path, aliases_raw, subs) do
+  defp path_shorten(path, aliases) do
     if not is_binary(path) do
       Logger.error("/path-shorten: path is not a string: #{path}")
     end
 
-    if not is_binary(aliases_raw) do
-      Logger.error("/path-shorten: aliases_raw is not a string: #{aliases_raw}")
-    end
-
-    if not is_map(subs) do
-      Logger.error("/path-shorten: subs is not a map: #{subs}")
+    if not is_binary(aliases) do
+      Logger.error("/path-shorten: aliases is not a string: #{aliases}")
     end
 
     Jason.encode!(%{

@@ -1,8 +1,8 @@
 use std::collections::HashMap;
 
 #[rustler::nif]
-pub fn path_shorten(path: &str, aliases_raw: &str, subs: HashMap<String, String>) -> String {
-    let path_canonical = make_canonical_path(path, aliases_raw, &subs);
+pub fn path_shorten(path: &str, aliases: &str) -> String {
+    let path_canonical = make_canonical_path(path, aliases);
     _path_shorten(&path_canonical)
 }
 
@@ -83,8 +83,16 @@ fn _path_shorten(path_canonical: &str) -> String {
     }
 }
 
-fn make_canonical_path(path: &str, aliases_raw: &str, subs: &HashMap<String, String>) -> String {
-    let path_aliases = make_path_aliases(aliases_raw, subs);
+fn make_canonical_path(path: &str, aliases: &str) -> String {
+    let mut subs = HashMap::new();
+    let home_dir = std::env::var("HOME").expect("$HOME not set");
+    // This is used to expand the definitions in the path aliases file.
+    subs.insert("$HOME".to_string(), home_dir.to_string());
+    // This is used to shrink the /home/... directory to "~" if
+    // there is no path aliases match.
+    let tilde = "~".to_string();
+    subs.insert(home_dir.to_string(), tilde);
+    let path_aliases = make_path_aliases(aliases, &subs);
 
     let path_canonical = match get_matching_path_alias(path, &path_aliases) {
         // Find the longest matching expanded path in the path aliases. If there
@@ -97,7 +105,7 @@ fn make_canonical_path(path: &str, aliases_raw: &str, subs: &HashMap<String, Str
         }
         // If there is no match, just perform the standard substitutions.
         None => {
-            let new_path = replace_all(&path, subs);
+            let new_path = replace_all(&path, &subs);
             format!("{}", new_path)
         }
     };
@@ -171,23 +179,20 @@ mod test {
         let mut subs: HashMap<String, String> = HashMap::new();
         subs.insert("$HOME".to_string(), "/home/foo".to_string());
         subs.insert("/home/foo".to_string(), "~".to_string());
-        let aliases_raw = "
+        let aliases = "
 # Comment.
 hash -d b=$HOME/bar
 hash -d c=$HOME/bar/baz/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx/c
 ";
         assert_eq!(make_canonical_path("", "", &HashMap::new()), "");
         assert_eq!(make_canonical_path("", "", &subs), "");
-        assert_eq!(make_canonical_path("", aliases_raw, &subs), "");
-        assert_eq!(make_canonical_path("/home/foo", aliases_raw, &subs), "~");
-        assert_eq!(
-            make_canonical_path("/home/foo/bar", aliases_raw, &subs),
-            "~b"
-        );
+        assert_eq!(make_canonical_path("", aliases, &subs), "");
+        assert_eq!(make_canonical_path("/home/foo", aliases, &subs), "~");
+        assert_eq!(make_canonical_path("/home/foo/bar", aliases, &subs), "~b");
         assert_eq!(
             make_canonical_path(
                 "/home/foo/bar/baz/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx/c",
-                aliases_raw,
+                aliases,
                 &subs
             ),
             "~c"
