@@ -1,18 +1,18 @@
-use lh_common::GitInfo;
+use lh_common::GitRepoStats;
 use std::error::Error;
 
 #[rustler::nif]
-pub fn git_info(path: &str) -> String {
-    match git_info_raw(path) {
+pub fn repo_stats(path: &str) -> String {
+    match repo_stats_maybe(path) {
         Ok(gi) => serde_json::to_string(&gi).unwrap(),
         Err(e) => {
-            println!("git_info: {:?}", e);
+            println!("repo_stats_maybe: {:?}", e);
             "{}".to_string()
         }
     }
 }
 
-pub fn git_info_raw(path: &str) -> Result<GitInfo, Box<dyn Error>> {
+fn repo_stats_maybe(path: &str) -> Result<GitRepoStats, Box<dyn Error>> {
     // Read Git repository information at given path. If there is no repo at the
     // given path, search upwards.
     let mut repo = git2::Repository::discover(path)?;
@@ -24,7 +24,7 @@ pub fn git_info_raw(path: &str) -> Result<GitInfo, Box<dyn Error>> {
 
     let (sha, branch) = get_sha_branch(&repo)?;
 
-    let mut ret = GitInfo::default();
+    let mut ret = GitRepoStats::default();
 
     ret.root = repo
         .workdir()
@@ -54,21 +54,21 @@ pub fn git_info_raw(path: &str) -> Result<GitInfo, Box<dyn Error>> {
     Ok(ret)
 }
 
-pub fn get_sha_branch(repo: &git2::Repository) -> Result<(String, String), Box<dyn Error>> {
+fn get_sha_branch(repo: &git2::Repository) -> Result<(String, String), Box<dyn Error>> {
     let head = repo.head()?;
     let sha = get_sha(&head)?;
     let branch = get_branch(&head);
     Ok((sha, branch))
 }
 
-pub fn get_sha(gref: &git2::Reference) -> Result<String, Box<dyn Error>> {
+fn get_sha(gref: &git2::Reference) -> Result<String, Box<dyn Error>> {
     let commit = gref.peel_to_commit()?;
     let sha = commit.id().to_string()[0..7].to_string();
 
     Ok(sha)
 }
 
-pub fn get_branch(gref: &git2::Reference) -> String {
+fn get_branch(gref: &git2::Reference) -> String {
     // Use "HEAD" as branch name for detached HEAD mode.
     gref.shorthand().unwrap_or("HEAD").to_string()
 }
@@ -77,7 +77,7 @@ pub fn get_branch(gref: &git2::Reference) -> String {
 // basically an equivalent of:
 //
 //      git rev-list --left-right --count HEAD...@{upstream}
-pub fn get_upstream_divergence(repo: &git2::Repository) -> Result<(u32, u32), Box<dyn Error>> {
+fn get_upstream_divergence(repo: &git2::Repository) -> Result<(u32, u32), Box<dyn Error>> {
     let head = repo.head()?;
     let head_commit = head.peel_to_commit()?;
     let head_id = head_commit.id();
@@ -90,7 +90,7 @@ pub fn get_upstream_divergence(repo: &git2::Repository) -> Result<(u32, u32), Bo
 }
 
 // Count all commits from a to b, excluding a but including b.
-pub fn count_commits(
+fn count_commits(
     repo: &git2::Repository,
     a: git2::Oid,
     b: git2::Oid,
@@ -115,7 +115,7 @@ pub fn count_commits(
     Ok(count)
 }
 
-pub fn get_stashed_count(repo: &mut git2::Repository) -> u32 {
+fn get_stashed_count(repo: &mut git2::Repository) -> u32 {
     let mut count = 0;
     let _ = repo.stash_foreach(|_, _, _| {
         count += 1;
@@ -125,7 +125,7 @@ pub fn get_stashed_count(repo: &mut git2::Repository) -> u32 {
     count
 }
 
-pub fn get_assume_unchanged_count(repo: &git2::Repository) -> Result<u32, Box<dyn Error>> {
+fn get_assume_unchanged_count(repo: &git2::Repository) -> Result<u32, Box<dyn Error>> {
     let index = repo.index()?;
     Ok(index
         .iter()

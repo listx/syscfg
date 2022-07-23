@@ -2,7 +2,7 @@ use colored::*;
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Default, Debug)]
-pub struct GitInfo {
+pub struct GitRepoStats {
     pub root: String,
     pub bare: bool,
     pub head_sha: String,
@@ -20,7 +20,7 @@ pub struct GitInfo {
     pub assume_unchanged_files: u32,
 }
 
-impl GitInfo {
+impl GitRepoStats {
     pub fn oneline(&self) -> String {
         //let y = format!("{}", &"haha".to_string().red());
         let mut bare = "".to_string();

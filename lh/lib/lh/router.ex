@@ -33,7 +33,7 @@ defmodule LH.Router do
     {status, body} =
       case conn.body_params do
         %{"path" => path} ->
-          {200, git_info(path)}
+          {200, repo_stats(path)}
 
         _ ->
           {422, bad_request_body()}
@@ -79,7 +79,7 @@ defmodule LH.Router do
 
   # Strings in Elixir are represented as binaries, so we use is_binary/1 instead
   # of is_string/1.
-  defp git_info(path)
+  defp repo_stats(path)
        when is_binary(path) do
     # Shell out to git to get additional information for those parts that are
     # faster using the vanilla git binary instead of using the Rust bindings for
@@ -88,13 +88,13 @@ defmodule LH.Router do
     task_get_diff_stats = Task.async(fn -> LH.Git.diff(path) end)
     task_get_diff_cached_stats = Task.async(fn -> LH.Git.diff_cached(path) end)
 
-    json = LH.Lightning.git_info(path)
-    git_info = Poison.decode!(json, as: %LH.Git{})
+    json = LH.Lightning.repo_stats(path)
+    git_repo_stats = Poison.decode!(json, as: %LH.Git{})
 
     # For this task, we use the root of the repo (calculated by
-    # LH.Lightning.git_info) because it is sensitive to the PWD in which the
+    # LH.Lightning.repo_stats) because it is sensitive to the PWD in which the
     # command runs.
-    task_get_untracked_files = Task.async(fn -> LH.Git.untracked_files(git_info.root) end)
+    task_get_untracked_files = Task.async(fn -> LH.Git.untracked_files(git_repo_stats.root) end)
 
     diff_stats = Task.await(task_get_diff_stats)
     diff_cached_stats = Task.await(task_get_diff_cached_stats)
@@ -112,16 +112,16 @@ defmodule LH.Router do
       staged_deletions: Map.get(diff_cached_stats, :deletions, 0)
     }
 
-    git_info = Map.merge(git_info, unstaged)
-    git_info = Map.merge(git_info, staged)
-    git_info = Map.replace!(git_info, :untracked_files, untracked_files)
+    git_repo_stats = Map.merge(git_repo_stats, unstaged)
+    git_repo_stats = Map.merge(git_repo_stats, staged)
+    git_repo_stats = Map.replace!(git_repo_stats, :untracked_files, untracked_files)
 
-    Logger.info("/git-info: #{inspect(path)} => #{inspect(git_info)}")
+    Logger.info("/git-info: #{inspect(path)} => #{inspect(git_repo_stats)}")
 
-    Poison.encode!(git_info)
+    Poison.encode!(git_repo_stats)
   end
 
-  defp git_info(path) do
+  defp git_repo_stats(path) do
     if not is_binary(path) do
       Logger.error("/git-info: path is not a string: #{path}")
     end

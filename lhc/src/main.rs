@@ -93,11 +93,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
                 let response = client.post(request_url).json(&json_body).send()?;
 
-                let git_info: lh_common::GitInfo = response.json()?;
+                let git_repo_stats: lh_common::GitRepoStats = response.json()?;
 
                 // Force colored output.
                 colored::control::set_override(true);
-                print!("{}", git_info.oneline());
+                print!("{}", git_repo_stats.oneline());
             }
         }
         Some("path-shorten") => {
