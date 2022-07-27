@@ -38,10 +38,12 @@ defmodule LH.GitRepo do
     # LH.Lightning.repo_stats) because it is sensitive to the PWD in which the
     # command runs.
     task_get_untracked_files = Task.async(fn -> untracked_files!(git_repo_stats.root) end)
+    task_get_submodule_status = Task.async(fn -> submodule_status!(git_repo_stats.root) end)
 
     diff_stats = Task.await(task_get_diff_stats)
     diff_cached_stats = Task.await(task_get_diff_cached_stats)
     untracked_files = Task.await(task_get_untracked_files)
+    submodule_status = Task.await(task_get_submodule_status)
 
     unstaged = %{
       unstaged_files: Map.get(diff_stats, :files, 0),
@@ -55,9 +57,16 @@ defmodule LH.GitRepo do
       staged_deletions: Map.get(diff_cached_stats, :deletions, 0)
     }
 
+    submodules = %{
+      submodule_uninitialized: Map.get(submodule_status, "-", 0),
+      submodule_out_of_sync: Map.get(submodule_status, "+", 0),
+      submodule_merge_conflicts: Map.get(submodule_status, "U", 0)
+    }
+
     git_repo_stats = Map.merge(git_repo_stats, unstaged)
     git_repo_stats = Map.merge(git_repo_stats, staged)
     git_repo_stats = Map.replace!(git_repo_stats, :untracked_files, untracked_files)
+    git_repo_stats = Map.merge(git_repo_stats, submodules)
 
     git_repo_stats
   end
@@ -95,6 +104,22 @@ defmodule LH.GitRepo do
 
       {_, code} ->
         raise RuntimeError, "'git ls-files --others --exclude-standard' failed with code #{code}"
+    end
+  end
+
+  # Get statuses of all submodules for this repo. This mirrors the "git
+  # submodule status" command.
+  defp submodule_status!(path) do
+    case System.cmd("git", ["submodule", "status"], cd: path) do
+      {lines, 0} ->
+        lines
+        |> String.split(["\n", "\r", "\r\n"])
+        |> Enum.take_while(fn x -> String.trim(x) |> String.length() > 0 end)
+        |> Enum.map(&%{type: String.first(&1)})
+        |> Enum.frequencies_by(& &1.type)
+
+      {_, code} ->
+        raise RuntimeError, "'git submodule status' failed with code #{code}"
     end
   end
 

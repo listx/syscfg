@@ -17,6 +17,9 @@ pub struct GitRepoStats {
     pub untracked_files: u32,
     pub stash_size: u32,
     pub assume_unchanged_files: u32,
+    pub submodule_uninitialized: u32,
+    pub submodule_out_of_sync: u32,
+    pub submodule_merge_conflicts: u32,
 }
 
 impl GitRepoStats {
@@ -69,18 +72,7 @@ impl GitRepoStats {
         if self.staged_insertions > 0 || self.staged_deletions > 0 {
             staged_diffstat = format!(
                 " {}{}{}{}",
-                "%B%F{magenta}S%f%b",
-                staged_files,
-                // For some inexplicable reason, colorizing these bits here makes
-                // the generated Zsh prompt line eat the previous line. It's hard to
-                // tell if it's the fault of the "colored" crate, Zsh, or Alacritty.
-                //
-                // It's probably due to the mixing of the ANSI escape sequences
-                // here and the processing of the "%F", "%B", etc. tokens by
-                // Zsh. So once we are able to unset PROMPT_SUBST, we should be
-                // able to use colors here.
-                staged_insertions,
-                staged_deletions,
+                "%B%F{magenta}S%f%b", staged_files, staged_insertions, staged_deletions,
             );
         }
 
@@ -107,6 +99,32 @@ impl GitRepoStats {
             );
         }
 
+        let mut submodule_diffstat = "".to_string();
+        let mut submodule_uninitialized = "".to_string();
+        let mut submodule_out_of_sync = "".to_string();
+        let mut submodule_merge_conflicts = "".to_string();
+        if self.submodule_uninitialized > 0 {
+            submodule_uninitialized = format!("-{}", self.submodule_uninitialized).to_string();
+        }
+        if self.submodule_out_of_sync > 0 {
+            submodule_out_of_sync = format!("+{}", self.submodule_out_of_sync).to_string();
+        }
+        if self.submodule_merge_conflicts > 0 {
+            submodule_merge_conflicts = format!("U{}", self.submodule_merge_conflicts).to_string();
+        }
+        if self.submodule_uninitialized > 0
+            || self.submodule_out_of_sync > 0
+            || self.submodule_merge_conflicts > 0
+        {
+            submodule_diffstat = format!(
+                " {}{}{}{}",
+                "%B%F{blue}M%f%b",
+                submodule_uninitialized,
+                submodule_out_of_sync,
+                submodule_merge_conflicts
+            );
+        }
+
         let head_branch = format!(" {}", self.head_branch);
 
         let mut head_ahead = "".to_string();
@@ -128,7 +146,7 @@ impl GitRepoStats {
         }
 
         format!(
-            "{}{}{}{}{}{}{}{}{}{}",
+            "{}{}{}{}{}{}{}{}{}{}{}",
             bare,
             head_sha,
             unstaged_diffstat,
@@ -136,6 +154,7 @@ impl GitRepoStats {
             untracked_files,
             stash_size,
             assume_unchanged_files,
+            submodule_diffstat,
             head_branch,
             head_ahead,
             head_behind
