@@ -4,7 +4,7 @@ use std::path::Path;
 
 #[rustler::nif]
 pub fn find_existing_parent(path: &str) -> String {
-let mut p = Path::new(path);
+    let mut p = Path::new(path);
     while !p.exists() {
         p = p.parent().unwrap_or(p);
     }
@@ -44,7 +44,7 @@ pub fn get_repo_id(path: &str) -> String {
         Err(e) => {
             println!("could not discover repo, {:?}", e);
             "".to_string()
-        },
+        }
     }
 }
 
@@ -86,7 +86,17 @@ fn repo_stats_maybe(path: &str) -> Result<GitRepoStats, Box<dyn Error>> {
         return Ok(ret);
     }
 
-    let (ahead, behind) = get_upstream_divergence(&repo)?;
+    let (ahead, behind) = if branch == "HEAD" {
+        (0, 0)
+    } else {
+        match get_upstream_divergence(&repo) {
+            Ok((ahead, behind)) => (ahead, behind),
+            Err(e) => {
+                println!("get_upstream_divergence: {:?}", e);
+                (0, 0)
+            }
+        }
+    };
     let assume_unchanged_count = get_assume_unchanged_count(&repo)?;
     let stashed_count = get_stashed_count(&mut repo);
 
