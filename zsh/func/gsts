@@ -1,7 +1,5 @@
 #!/usr/bin/env zsh
 
-local for_prompt=$1
-
 gsts_print()
 {
 	if [[ $for_prompt == for_prompt ]]; then
@@ -106,10 +104,16 @@ gsts_nonbare()
 	gsts_upstream_divergence
 }
 
+local for_prompt=$1
+local l_status
+
 ! git_contents && return
 
 if [[ $(git rev-parse --is-bare-repository) == true ]]; then
 	gsts_bare
 else
-	gsts_nonbare
+	l_status="$(gsts_nonbare)"
+	if [[ -n "${l_status}" ]]; then
+		echo "${l_status} "
+	fi
 fi
