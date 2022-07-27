@@ -1,133 +1,35 @@
 defmodule LH.Git do
   @moduledoc """
-  Call Git binary on the system to get some information from it. This is used in
-  cases where the equivalent libgit2 Rust binding is too slow.
+  Git repo watchers are created dynamically during runtime. This module
+  supervises these watchers so that they are restarted if they should fail.
   """
-  @derive [Poison.Encoder]
-  defstruct root: "",
-            bare: false,
-            head_sha: "",
-            head_branch: "",
-            head_ahead: 0,
-            head_behind: 0,
-            unstaged_files: 0,
-            unstaged_insertions: 0,
-            unstaged_deletions: 0,
-            staged_files: 0,
-            staged_insertions: 0,
-            staged_deletions: 0,
-            untracked_files: 0,
-            stash_size: 0,
-            assume_unchanged_files: 0
 
-  def repo_stats(path) do
-    # Shell out to git to get additional information for those parts that are
-    # faster using the vanilla git binary instead of using the Rust bindings for
-    # libgit2. We use Task.async to basically "background" these processes while
-    # we do other work.
-    task_get_diff_stats = Task.async(fn -> diff(path) end)
-    task_get_diff_cached_stats = Task.async(fn -> diff_cached(path) end)
+  require Logger
 
-    json = LH.Lightning.repo_stats(path)
-    git_repo_stats = Poison.decode!(json, as: %LH.Git{})
+  def start_link() do
+    IO.puts("Starting Git watcher dynamic supervisor")
+    DynamicSupervisor.start_link(name: __MODULE__, strategy: :one_for_one)
+  end
 
-    # For this task, we use the root of the repo (calculated by
-    # LH.Lightning.repo_stats) because it is sensitive to the PWD in which the
-    # command runs.
-    task_get_untracked_files = Task.async(fn -> untracked_files(git_repo_stats.root) end)
-
-    diff_stats = Task.await(task_get_diff_stats)
-    diff_cached_stats = Task.await(task_get_diff_cached_stats)
-    untracked_files = Task.await(task_get_untracked_files)
-
-    unstaged = %{
-      unstaged_files: Map.get(diff_stats, :files, 0),
-      unstaged_insertions: Map.get(diff_stats, :insertions, 0),
-      unstaged_deletions: Map.get(diff_stats, :deletions, 0)
+  def child_spec(_arg) do
+    %{
+      id: __MODULE__,
+      start: {__MODULE__, :start_link, []},
+      type: :supervisor
     }
-
-    staged = %{
-      staged_files: Map.get(diff_cached_stats, :files, 0),
-      staged_insertions: Map.get(diff_cached_stats, :insertions, 0),
-      staged_deletions: Map.get(diff_cached_stats, :deletions, 0)
-    }
-
-    git_repo_stats = Map.merge(git_repo_stats, unstaged)
-    git_repo_stats = Map.merge(git_repo_stats, staged)
-    git_repo_stats = Map.replace!(git_repo_stats, :untracked_files, untracked_files)
-
-    git_repo_stats
   end
 
-  defp diff(path) do
-    case System.cmd("git", ["diff", "--shortstat"], cd: path) do
-      {shortstat, 0} ->
-        to_map(shortstat)
-
-      {_, code} ->
-        raise RuntimeError, "'git diff --shortstat' failed with code #{code}"
+  def start_watcher(repo_id) do
+    case start_child(repo_id) do
+      {:ok, pid} -> pid
+      {:error, {:already_started, pid}} -> pid
+      unknown -> raise("ERROR: #{inspect(unknown)}")
     end
   end
 
-  defp diff_cached(path) do
-    case System.cmd("git", ["diff", "--cached", "--shortstat"], cd: path) do
-      {shortstat, 0} ->
-        to_map(shortstat)
-
-      {_, code} ->
-        raise RuntimeError, "'git diff --cached --shortstat' failed with code #{code}"
-    end
-  end
-
-  # Count untracked files.
-  defp untracked_files(path) do
-    case System.cmd("git", ["ls-files", "--others", "--exclude-standard"], cd: path) do
-      {untracked_files, 0} ->
-        # Count each line (assume each file is on its own line). Discard blank
-        # lines.
-        untracked_files
-        |> String.split(["\n", "\r", "\r\n"])
-        |> Enum.take_while(fn x -> String.trim(x) |> String.length() > 0 end)
-        |> Kernel.length()
-
-      {_, code} ->
-        raise RuntimeError, "'git ls-files --others --exclude-standard' failed with code #{code}"
-    end
-  end
-
-  defp to_map(shortstat) do
-    # The shortstat string looks like this:
-    #   " 3 files changed, 9 insertions(+), 3 deletions(-)"
-    # We split by the comma, then take the first 2 words.
-    pairs =
-      shortstat
-      |> String.split(",")
-      # Take first 2 words. E.g., ["3", "files"], ["9", "insertions(+)"].
-      |> Enum.map(&(&1 |> String.trim() |> String.split(" ") |> Enum.take(2)))
-      |> Enum.filter(&(Kernel.length(&1) == 2))
-      # Convert ["9", "insertions(+)"] into {:insertions, 9}.
-      |> Enum.map(&sanitize_to_pair(&1))
-
-    Map.new(pairs)
-  end
-
-  defp sanitize_to_pair(x) do
-    case x do
-      [n, keyword] ->
-        {
-          # Recall that the keyword can look like "insertions(+)" or
-          # "insertion(+)". We get the 2nd to last character to see what kind of
-          # string it is, and then manually convert to an atom.
-          case String.slice(keyword, -2..-2) do
-            "+" -> :insertions
-            "-" -> :deletions
-            _ -> :files
-          end,
-          String.to_integer(n)
-        }
-
-      x ->
-        raise RuntimeError, "cannot convert #{x} (not a 2-element list) to a tuple pair"
-    end
+  defp start_child(repo_id) do
+    # We pass in the repo_path (String) as an argument to the start_link/1
+    # function of LH.GitWatcher.
+    DynamicSupervisor.start_child(__MODULE__, {LH.GitWatcher, repo_id})
   end
 end

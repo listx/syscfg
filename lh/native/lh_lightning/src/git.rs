@@ -1,11 +1,50 @@
 use lh_common::GitRepoStats;
 use std::error::Error;
+use std::path::Path;
+
+#[rustler::nif]
+pub fn find_existing_parent(path: &str) -> String {
+let mut p = Path::new(path);
+    while !p.exists() {
+        p = p.parent().unwrap_or(p);
+    }
+    p.to_str().unwrap_or("").to_string()
+}
+
+#[rustler::nif]
+pub fn is_git_index_file(path: &str) -> bool {
+    path.contains(".git/") && path.ends_with("/index.lock")
+}
 
 #[rustler::nif]
 pub fn is_git_repo(path: &str) -> bool {
     match git2::Repository::discover(path) {
         Ok(_) => true,
         _ => false,
+    }
+}
+
+// Given an arbitrary path, return the "key" that would be used to associate
+// this path and its Git repo, if any. This key is used for caching Git repo
+// information further up the stack from Elixir.
+#[rustler::nif]
+pub fn get_repo_id(path: &str) -> String {
+    match git2::Repository::discover(path) {
+        Ok(repo) => {
+            if repo.is_bare() {
+                repo.path().to_str().unwrap_or("").to_string()
+            } else {
+                repo.workdir()
+                    .unwrap_or(Path::new(""))
+                    .to_str()
+                    .unwrap_or("")
+                    .to_string()
+            }
+        }
+        Err(e) => {
+            println!("could not discover repo, {:?}", e);
+            "".to_string()
+        },
     }
 }
 
@@ -36,7 +75,7 @@ fn repo_stats_maybe(path: &str) -> Result<GitRepoStats, Box<dyn Error>> {
 
     ret.root = repo
         .workdir()
-        .unwrap_or(std::path::Path::new(""))
+        .unwrap_or(Path::new(""))
         .to_str()
         .unwrap_or_default()
         .to_string();

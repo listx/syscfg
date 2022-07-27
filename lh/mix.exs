@@ -15,7 +15,7 @@ defmodule LH.MixProject do
   # Run "mix help compile.app" to learn about applications.
   def application do
     [
-      extra_applications: [:logger],
+      extra_applications: [:file_system, :logger],
       mod: {LH.Application, []}
     ]
   end
@@ -30,6 +30,7 @@ defmodule LH.MixProject do
   defp deps do
     [
       {:cachex, "~> 3.4"},
+      {:file_system, "~> 0.2"},
       {:jason, "~> 1.2"},
       {:rustler, "~> 0.22.0"},
       {:plug_cowboy, "~> 2.0"},

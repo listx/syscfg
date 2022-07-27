@@ -118,7 +118,7 @@ defmodule LH.Router do
   # of is_string/1.
   defp repo_stats(path)
        when is_binary(path) do
-    git_repo_stats = LH.Git.repo_stats(path)
+    git_repo_stats = LH.GitRepo.repo_stats(path)
 
     Logger.info("/git-info: #{inspect(path)} => #{inspect(git_repo_stats)}")
 
