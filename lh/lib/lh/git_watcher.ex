@@ -58,10 +58,6 @@ defmodule LH.GitWatcher do
     {:ok, %{watcher_pid: watcher_pid, repo_id: repo_id, repo_stats: repo_stats, stale: false}}
   end
 
-  # FIXME: Make git repo information pick up statuses of submodules. Report
-  # number of non-clean submodules (ahead/behind), if any, e.g., M+1-2 to show
-  # that 1 submodule is ahead and another 2 are behind. This is from the output
-  # of git submodule status.
   @impl true
   def handle_info(
         {:file_event, watcher_pid, {path, events}},
