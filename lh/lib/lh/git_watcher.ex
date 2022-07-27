@@ -55,7 +55,7 @@ defmodule LH.GitWatcher do
     # watcher and also the main repo_id which this watcher is responsible for.
     # We need to save this repo_id so that we can use it to reinstate the
     # repo_stats state if it is missing.
-    {:ok, %{watcher_pid: watcher_pid, repo_id: repo_id, repo_stats: repo_stats}}
+    {:ok, %{watcher_pid: watcher_pid, repo_id: repo_id, repo_stats: repo_stats, stale: false}}
   end
 
   # FIXME: Make git repo information pick up statuses of submodules. Report
@@ -65,8 +65,12 @@ defmodule LH.GitWatcher do
   @impl true
   def handle_info(
         {:file_event, watcher_pid, {path, events}},
-        %{watcher_pid: watcher_pid, repo_id: maybe_parent_repo_id, repo_stats: _repo_stats} =
-          state
+        %{
+          watcher_pid: watcher_pid,
+          repo_id: maybe_parent_repo_id,
+          repo_stats: _repo_stats,
+          stale: _stale
+        } = state
       ) do
     # Ignore events to ".git/**/index.lock" files. These can be created and
     # removed, and the typical events we get are [:created, :removed]. However
@@ -103,7 +107,7 @@ defmodule LH.GitWatcher do
 
     case path_resolution do
       {:ok, path} ->
-        # Invalidate the cache entry for this path. We can simply delete the entry.
+        # Invalidate the cache entry for this path.
         repo_id = LH.Lightning.get_repo_id(path)
 
         # The path could be for a submodule, not the actual repo we started the
@@ -111,12 +115,8 @@ defmodule LH.GitWatcher do
         # in the next tick interval) if the repo_id of the given path matches the
         # maybe_parent_repo_id.
         if repo_id == maybe_parent_repo_id do
-          # Logger.info(
-          #  "PATH #{path} (repo_id: #{repo_id}, maybe_parent: #{maybe_parent_repo_id}) PID:#{inspect(self())}: got events #{inspect(events)}"
-          # )
-
-          Logger.info("DELETING repo_stats for repo_id #{repo_id}")
-          {:noreply, %{state | repo_stats: nil}}
+          Logger.info("MARKING AS STALE: #{repo_id}")
+          {:noreply, %{state | stale: true}}
         else
           {:noreply, state}
         end
@@ -132,14 +132,16 @@ defmodule LH.GitWatcher do
 
         {:noreply, state}
     end
-
-    # Cachex.del(:git_cache, repo_id)
-    # Logger.info("repo #{repo_id}: cache entry DELETED and mailbox cleared")
   end
 
   def handle_info(
         {:file_event, watcher_pid, :stop},
-        %{watcher_pid: watcher_pid, repo_id: repo_id, repo_stats: _repo_stats} = state
+        %{
+          watcher_pid: watcher_pid,
+          repo_id: repo_id,
+          repo_stats: _repo_stats,
+          stale: _stale
+        } = state
       ) do
     Logger.info("repo #{repo_id}: FileSystem monitor stopped")
 
@@ -149,16 +151,16 @@ defmodule LH.GitWatcher do
   # Process tick.
   def handle_info(
         :tick,
-        %{watcher_pid: _watcher_pid, repo_id: repo_id, repo_stats: repo_stats} = state
+        %{
+          watcher_pid: _watcher_pid,
+          repo_id: repo_id,
+          repo_stats: repo_stats,
+          stale: stale
+        } = state
       ) do
-    # {:ok, entry} = Cachex.get(:git_cache, repo_id)
-
-    # If we find that the cache entry has been invalidated, refresh it by
-    # generating a new cache entry (get Git information populated again).
     repo_stats =
-      if repo_stats == nil do
-        Logger.info("CREATING new cache entry for #{repo_id} #{inspect(repo_stats)}")
-        # Cachex.put(:git_cache, repo_id, repo_stats)
+      if stale do
+        Logger.info("RE-EVALUATING git repo stats for #{repo_id}")
         LH.GitRepo.repo_stats(repo_id)
       else
         repo_stats
@@ -166,7 +168,7 @@ defmodule LH.GitWatcher do
 
     # Continue ticking for the future.
     tick()
-    {:noreply, %{state | repo_stats: repo_stats}}
+    {:noreply, %{state | repo_stats: repo_stats, stale: false}}
   end
 
   @impl true
