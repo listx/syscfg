@@ -18,10 +18,15 @@ defmodule LH.GitWatcher do
 
   def start_link(repo_path) when is_binary(repo_path) do
     if String.length(repo_path) > 0 do
-      repo_id = LH.Lightning.get_repo_id(repo_path)
-      GenServer.start_link(__MODULE__, %{repo_id: repo_id}, name: via_tuple(repo_path))
+      case LH.Lightning.get_repo_id(repo_path) do
+        {:ok, repo_id} ->
+          GenServer.start_link(__MODULE__, %{repo_id: repo_id}, name: via_tuple(repo_path))
+
+        {:error, :no_repo_id} ->
+          Logger.info("unable to find root git repo for path #{repo_path}")
+      end
     else
-      raise("unable to start watcher for empty git repo path")
+      Logger.info("unable to start watcher for empty git repo path")
     end
   end
 
@@ -63,23 +68,23 @@ defmodule LH.GitWatcher do
         {:file_event, watcher_pid, {path, events}},
         %{
           watcher_pid: watcher_pid,
-          repo_id: maybe_parent_repo_id,
+          repo_id: _repo_id,
           repo_stats: _repo_stats,
           stale: _stale
         } = state
       ) do
-    # Ignore events to ".git/**/index.lock" files. These can be created and
-    # removed, and the typical events we get are [:created, :removed]. However
-    # these events can come out of order, so sometimes we get :removed and then
-    # :created, separately.
-    #
-    # This is actually very frequent because running certain git operations
-    # requires locking of index files, which require the creation and deletion
-    # of said files.
     path_resolution =
       cond do
+        # For index files (".git/**/index.lock"), only ignore events that are
+        # not :modified ones. When we do get a :modified event, this can happen
+        # if HEAD moves, which is important when we (for example) modify the
+        # HEAD of submodules.
         LH.Lightning.is_git_index_file(path) ->
-          {:error, :ignored}
+          if Enum.member?(events, :modified) do
+            {:ok, path}
+          else
+            {:error, :ignored}
+          end
 
         # For removed files, LH.Lightning.get_repo_id/1 will fail because the
         # underlying call to libgit2's Repository::discover() will fail if the
@@ -88,11 +93,11 @@ defmodule LH.GitWatcher do
         # basically, until we arrive at a path that exists.
         !File.exists?(path) ->
           case LH.Lightning.find_existing_parent(path) do
-            "" ->
-              {:error, :unknown_parent}
+            {:error, :no_parent} ->
+              {:error, :no_parent}
 
-            parent ->
-              Logger.info("DELETION DETECTED: resolving #{path} to #{parent}")
+            {:ok, parent} ->
+              Logger.info("DELETION DETECTED: resolving #{path} to #{inspect(parent)}")
               {:ok, parent}
           end
 
@@ -102,22 +107,14 @@ defmodule LH.GitWatcher do
       end
 
     case path_resolution do
-      {:ok, path} ->
-        # Invalidate the cache entry for this path.
-        repo_id = LH.Lightning.get_repo_id(path)
+      {:ok, start_path} ->
+        # Invalidate the cache entry for all current and parent GitWatchers,
+        # starting with the given path.
+        mark_all_stale(start_path)
 
-        # The path could be for a submodule, not the actual repo we started the
-        # watcher from. In this case, only clear the repo state (to be recomputed in
-        # in the next tick interval) if the repo_id of the given path matches the
-        # maybe_parent_repo_id.
-        if repo_id == maybe_parent_repo_id do
-          Logger.info("MARKING AS STALE: #{repo_id}")
-          {:noreply, %{state | stale: true}}
-        else
-          {:noreply, state}
-        end
+        {:noreply, state}
 
-      {:error, :unknown_parent} ->
+      {:error, :no_parent} ->
         Logger.warn("could not resolve parent for #{path}; ignoring")
         {:noreply, state}
 
@@ -168,7 +165,7 @@ defmodule LH.GitWatcher do
   end
 
   @impl true
-  def handle_call({:get_repo_stats}, _, %{repo_stats: repo_stats} = state) do
+  def handle_call(:get_repo_stats, _, %{repo_stats: repo_stats} = state) do
     {
       :reply,
       # Response to the caller.
@@ -176,6 +173,11 @@ defmodule LH.GitWatcher do
       # New state of this GenServer.
       state
     }
+  end
+
+  @impl true
+  def handle_cast(:mark_stale, %{stale: _} = state) do
+    {:noreply, %{state | stale: true}}
   end
 
   # Send a "tick" message to our GenServer in 2 seconds. See https://stackoverflow.com/a/32097971/437583.
@@ -197,6 +199,56 @@ defmodule LH.GitWatcher do
   # to know about the PID of the GitWatcher process because the via_tuple
   # retrieves it from the process registry.
   def get_repo_stats(repo_id) do
-    GenServer.call(via_tuple(repo_id), {:get_repo_stats})
+    # Start the Git watcher for this path. This is idempotent and will not spawn
+    # a new watcher if one already exists for this path.
+    _pid = LH.Git.start_watcher(repo_id)
+    GenServer.call(via_tuple(repo_id), :get_repo_stats)
+  end
+
+  # Mark the given repo_id as stale, but also all parent repos as well.
+  def mark_all_stale(repo_id) do
+    [repo_id | get_all_parent_repo_ids(repo_id)]
+    |> Enum.map(&mark_stale(&1))
+  end
+
+  defp get_all_parent_repo_ids(repo_id) do
+    case get_parent_repo_id(repo_id) do
+      {:ok, parent_repo_id} ->
+        dir_above_parent =
+          Path.split(parent_repo_id)
+          |> Enum.drop(-1)
+          |> Path.join()
+
+        [
+          parent_repo_id
+          | if String.length(dir_above_parent) > 0 do
+              get_all_parent_repo_ids(dir_above_parent)
+            else
+              []
+            end
+        ]
+
+      {:error, _} ->
+        []
+    end
+  end
+
+  defp get_parent_repo_id(repo_id) do
+    case LH.Lightning.find_existing_parent(repo_id) do
+      {:error, :no_parent} ->
+        {:error, :no_parent_repo_id}
+
+      {:ok, parent} ->
+        case LH.Lightning.get_repo_id(parent) do
+          {:error, :no_repo_id} -> {:error, :no_parent_repo_id}
+          {:ok, repo_id} -> {:ok, repo_id}
+        end
+    end
+  end
+
+  # Mark the given repo as stale. This forces the associated GitWatcher to
+  # reevaluate everything (discard the cached version).
+  def mark_stale(repo_id) do
+    GenServer.cast(via_tuple(repo_id), :mark_stale)
   end
 end
