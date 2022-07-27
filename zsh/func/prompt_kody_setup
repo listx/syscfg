@@ -129,7 +129,7 @@ set_globals()
 
 	# These bits are very "close" to the shell and so we just get the info from
 	# the shell directly instead of asking lhc for it.
-	global_prompt_day=" %K{green}%F{black}$(get_day)%f%k"
+	global_prompt_day="%K{green}%F{black}$(get_day)%f%k"
 	global_user_host="$(get_user_host)"
 	global_cmd_exit_status="$(get_exit_status)"
 	global_venv_info="$(get_venv_info)"
