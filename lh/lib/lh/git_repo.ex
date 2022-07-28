@@ -98,8 +98,7 @@ defmodule LH.GitRepo do
         # Count each line (assume each file is on its own line). Discard blank
         # lines.
         untracked_files
-        |> String.split(["\n", "\r", "\r\n"])
-        |> Enum.take_while(fn x -> String.trim(x) |> String.length() > 0 end)
+        |> discard_trailing_empty_lines()
         |> Kernel.length()
 
       {_, code} ->
@@ -113,8 +112,7 @@ defmodule LH.GitRepo do
     case System.cmd("git", ["submodule", "status"], cd: path) do
       {lines, 0} ->
         lines
-        |> String.split(["\n", "\r", "\r\n"])
-        |> Enum.take_while(fn x -> String.trim(x) |> String.length() > 0 end)
+        |> discard_trailing_empty_lines()
         |> Enum.map(&%{type: String.first(&1)})
         |> Enum.frequencies_by(& &1.type)
 
