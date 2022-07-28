@@ -125,7 +125,7 @@ EOF
 
 set_globals()
 {
-	eval "$(get_lh_info)"
+	source <(get_lh_info)
 
 	# These bits are very "close" to the shell and so we just get the info from
 	# the shell directly instead of asking lhc for it.
