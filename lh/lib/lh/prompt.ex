@@ -10,7 +10,7 @@ defmodule LH.Prompt do
 
   def generate(path, aliases) do
     git_repo_stats =
-      case LH.Lightning.get_repo_id(path) do
+      case LH.GitRepo.get_repo_root(path) do
         {:error, :no_repo_id} ->
           Logger.info("SKIPPING: path #{path} is not a Git repo")
           %LH.GitRepo{}

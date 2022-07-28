@@ -18,12 +18,15 @@ defmodule LH.GitWatcher do
 
   def start_link(repo_path) when is_binary(repo_path) do
     if String.length(repo_path) > 0 do
-      case LH.Lightning.get_repo_id(repo_path) do
+      case LH.GitRepo.get_repo_root(repo_path) do
         {:ok, repo_id} ->
           GenServer.start_link(__MODULE__, %{repo_id: repo_id}, name: via_tuple(repo_path))
 
         {:error, :no_repo_id} ->
           Logger.info("unable to find root git repo for path #{repo_path}")
+
+        {:error, msg} ->
+          Logger.warn(msg)
       end
     else
       Logger.info("unable to start watcher for empty git repo path")

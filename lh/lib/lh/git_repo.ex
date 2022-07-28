@@ -127,14 +127,14 @@ defmodule LH.GitRepo do
       {output, 0} ->
         cond do
           String.length(output) > 0 ->
-            {:ok, output}
+            {:ok, String.trim_trailing(output)}
 
           true ->
             {:error, :no_repo_id}
         end
 
       {_, code} ->
-        {:error, "'git rev-parse --show-toplevel' failed with code #{code}"}
+        {:error, "'git rev-parse --show-toplevel' failed with code #{code} for path '#{path}'"}
     end
   end
 

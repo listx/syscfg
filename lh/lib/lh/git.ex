@@ -23,7 +23,7 @@ defmodule LH.Git do
     case start_child(repo_id) do
       {:ok, pid} -> pid
       {:error, {:already_started, pid}} -> pid
-      unknown -> raise("ERROR: #{inspect(unknown)}")
+      unknown -> Logger.warn("start_watcher failed: #{inspect(unknown)}")
     end
   end
 

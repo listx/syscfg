@@ -15,33 +15,6 @@ pub fn is_git_repo(path: &str) -> bool {
     }
 }
 
-// Given an arbitrary path, return the "key" that would be used to associate
-// this path and its Git repo, if any. This key is used for caching Git repo
-// information further up the stack from Elixir.
-#[rustler::nif]
-pub fn get_repo_id_(path: &str) -> String {
-    let candidate = match git2::Repository::discover(path) {
-        Ok(repo) => {
-            if repo.is_bare() {
-                repo.path().to_str().unwrap_or("").to_string()
-            } else {
-                repo.workdir()
-                    .unwrap_or(Path::new(""))
-                    .to_str()
-                    .unwrap_or("")
-                    .to_string()
-            }
-        }
-        Err(e) => {
-            println!("could not discover repo, {:?}", e);
-            "".to_string()
-        }
-    };
-
-    // Remove any trailing "/" from the path.
-    candidate.trim_end_matches('/').to_string()
-}
-
 #[rustler::nif]
 pub fn repo_stats(path: &str) -> String {
     match repo_stats_maybe(path) {
