@@ -87,14 +87,13 @@ defmodule LH.GitWatcher do
           end
 
         true ->
-          Logger.info("PATH:#{path} EVENTS:#{inspect(events)}")
+          Logger.info("PATH #{path} was #{inspect(events)}")
           {:ok, path}
       end
 
     case maybe_leaf_path do
       {:ok, leaf_path} ->
-        # Invalidate the cache entry for all current and parent GitWatchers,
-        # starting with the given path.
+        # Invalidate the cache entry for all current and parent GitWatchers.
         mark_all_stale(leaf_path)
 
         {:noreply, state}
@@ -186,68 +185,19 @@ defmodule LH.GitWatcher do
     GenServer.call(via_tuple(repo_id), :get_repo_stats)
   end
 
-  # Mark the given repo_id as stale, but also all parent repos as well.
-  def mark_all_stale(repo_id) do
-    [repo_id | get_all_parent_repo_ids(repo_id)]
+  # Mark the given path as stale, but also all repos in parent dirs as well.
+  def mark_all_stale(path) do
+    get_all_subpaths(path)
     |> Enum.map(&mark_stale(&1))
   end
 
-  defp get_all_parent_repo_ids(repo_id) do
-    case get_parent_repo_id(repo_id) do
-      {:ok, parent_repo_id} ->
-        case get_parent_path(parent_repo_id) do
-          {:ok, parent} ->
-            [
-              parent_repo_id
-              | if String.length(parent) > 0 do
-                  get_all_parent_repo_ids(parent)
-                else
-                  []
-                end
-            ]
+  # Given "/a/b/c", return ["/", "/a", "/a/b", "/a/b/c"]
+  def get_all_subpaths(path) do
+    parts = Path.split(path)
+    parts_len = length(parts)
 
-          true ->
-            []
-        end
-
-      {:error, _} ->
-        []
-    end
-  end
-
-  defp get_parent_repo_id(repo_id) do
-    case get_parent_path(repo_id) do
-      {:error, :no_parent} ->
-        {:error, :no_parent_repo_id}
-
-      {:ok, parent} ->
-        case LH.GitRepo.get_repo_root(parent) do
-          {:error, :no_repo_id} ->
-            {:error, :no_parent_repo_id}
-
-          {:ok, repo_id} ->
-            {:ok, repo_id}
-
-          {:error, e} ->
-            Logger.warn(e)
-            {:error, :no_parent_repo_id}
-        end
-    end
-  end
-
-  def get_parent_path(path) do
-    maybe_parent =
-      path
-      |> normalize_path()
-      |> Path.split()
-      |> Enum.drop(-1)
-      |> Path.join()
-
-    cond do
-      maybe_parent == path -> {:error, :no_parent}
-      String.length(maybe_parent) > 0 -> {:ok, maybe_parent}
-      true -> {:error, :no_parent}
-    end
+    1..parts_len
+    |> Enum.map(&(Enum.take(parts, &1) |> Path.join()))
   end
 
   def normalize_path(path) do
