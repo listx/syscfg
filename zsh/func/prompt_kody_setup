@@ -108,7 +108,7 @@ get_user_host()
 get_exit_status()
 {
 	if (( $global_exit_status )); then
-		echo "$global_exit_status "
+		echo "%B%F{red}${global_exit_status}%f%b "
 	fi
 }
 
