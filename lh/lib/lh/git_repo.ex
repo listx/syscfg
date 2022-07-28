@@ -123,6 +123,29 @@ defmodule LH.GitRepo do
     end
   end
 
+  # Get root directory of given path if it is a Git repo.
+  def get_repo_root(path) do
+    case System.cmd("git", ["rev-parse", "--show-toplevel"], cd: path) do
+      {output, 0} ->
+        cond do
+          String.length(output) > 0 ->
+            {:ok, output}
+
+          true ->
+            {:error, :no_repo_id}
+        end
+
+      {_, code} ->
+        {:error, "'git rev-parse --show-toplevel' failed with code #{code}"}
+    end
+  end
+
+  def discard_trailing_empty_lines(lines) do
+    lines
+    |> String.split(["\n", "\r", "\r\n"])
+    |> Enum.take_while(fn x -> String.trim(x) |> String.length() > 0 end)
+  end
+
   defp to_map(shortstat) do
     # The shortstat string looks like this:
     #   " 3 files changed, 9 insertions(+), 3 deletions(-)"

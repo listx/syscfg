@@ -73,7 +73,7 @@ defmodule LH.GitWatcher do
           stale: _stale
         } = state
       ) do
-    path_resolution =
+    maybe_leaf_path =
       cond do
         # For index files (".git/**/index.lock"), only ignore events that are
         # not :modified ones. When we do get a :modified event, this can happen
@@ -86,36 +86,17 @@ defmodule LH.GitWatcher do
             {:error, :ignored}
           end
 
-        # For removed files, LH.Lightning.get_repo_id/1 will fail because the
-        # underlying call to libgit2's Repository::discover() will fail if the
-        # given path does not exist. So instead we have to try to get the first
-        # extant folder above it. It might involve multiple ../../.. calls,
-        # basically, until we arrive at a path that exists.
-        !File.exists?(path) ->
-          case LH.Lightning.find_existing_parent(path) do
-            {:error, :no_parent} ->
-              {:error, :no_parent}
-
-            {:ok, parent} ->
-              Logger.info("DELETION DETECTED: resolving #{path} to #{inspect(parent)}")
-              {:ok, parent}
-          end
-
         true ->
           Logger.info("PATH:#{path} EVENTS:#{inspect(events)}")
           {:ok, path}
       end
 
-    case path_resolution do
-      {:ok, start_path} ->
+    case maybe_leaf_path do
+      {:ok, leaf_path} ->
         # Invalidate the cache entry for all current and parent GitWatchers,
         # starting with the given path.
-        mark_all_stale(start_path)
+        mark_all_stale(leaf_path)
 
-        {:noreply, state}
-
-      {:error, :no_parent} ->
-        Logger.warn("could not resolve parent for #{path}; ignoring")
         {:noreply, state}
 
       {:error, :ignored} ->
@@ -214,19 +195,20 @@ defmodule LH.GitWatcher do
   defp get_all_parent_repo_ids(repo_id) do
     case get_parent_repo_id(repo_id) do
       {:ok, parent_repo_id} ->
-        dir_above_parent =
-          Path.split(parent_repo_id)
-          |> Enum.drop(-1)
-          |> Path.join()
+        case get_parent_path(parent_repo_id) do
+          {:ok, parent} ->
+            [
+              parent_repo_id
+              | if String.length(parent) > 0 do
+                  get_all_parent_repo_ids(parent)
+                else
+                  []
+                end
+            ]
 
-        [
-          parent_repo_id
-          | if String.length(dir_above_parent) > 0 do
-              get_all_parent_repo_ids(dir_above_parent)
-            else
-              []
-            end
-        ]
+          true ->
+            []
+        end
 
       {:error, _} ->
         []
@@ -234,16 +216,44 @@ defmodule LH.GitWatcher do
   end
 
   defp get_parent_repo_id(repo_id) do
-    case LH.Lightning.find_existing_parent(repo_id) do
+    case get_parent_path(repo_id) do
       {:error, :no_parent} ->
         {:error, :no_parent_repo_id}
 
       {:ok, parent} ->
-        case LH.Lightning.get_repo_id(parent) do
-          {:error, :no_repo_id} -> {:error, :no_parent_repo_id}
-          {:ok, repo_id} -> {:ok, repo_id}
+        case LH.GitRepo.get_repo_root(parent) do
+          {:error, :no_repo_id} ->
+            {:error, :no_parent_repo_id}
+
+          {:ok, repo_id} ->
+            {:ok, repo_id}
+
+          {:error, e} ->
+            Logger.warn(e)
+            {:error, :no_parent_repo_id}
         end
     end
+  end
+
+  def get_parent_path(path) do
+    maybe_parent =
+      path
+      |> normalize_path()
+      |> Path.split()
+      |> Enum.drop(-1)
+      |> Path.join()
+
+    cond do
+      maybe_parent == path -> {:error, :no_parent}
+      String.length(maybe_parent) > 0 -> {:ok, maybe_parent}
+      true -> {:error, :no_parent}
+    end
+  end
+
+  def normalize_path(path) do
+    path
+    |> Path.split()
+    |> Path.join()
   end
 
   # Mark the given repo as stale. This forces the associated GitWatcher to

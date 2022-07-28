@@ -3,15 +3,6 @@ use std::error::Error;
 use std::path::Path;
 
 #[rustler::nif]
-pub fn find_existing_parent_(path: &str) -> String {
-    let mut p = Path::new(path);
-    while !p.exists() {
-        p = p.parent().unwrap_or(p);
-    }
-    p.to_str().unwrap_or("").to_string()
-}
-
-#[rustler::nif]
 pub fn is_git_index_file(path: &str) -> bool {
     path.contains(".git/") && path.ends_with("/index.lock")
 }
