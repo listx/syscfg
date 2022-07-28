@@ -117,11 +117,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 let prompt: lh_common::Prompt = response.json()?;
 
                 let mut prompt_git = prompt.git_repo_stats.oneline();
-                if prompt_git == "NOT_GIT_REPO" {
-                    prompt_git = "".to_string();
-                } else {
-                    prompt_git = format!("[{}] ", prompt_git);
-                }
+                prompt_git = match prompt.git_repo_stats.status.as_str() {
+                    "FINISHED" => format!("[{}] ", prompt_git),
+                    "LOADING" => "[...] ".to_string(),
+                    _ => "".to_string(),
+                };
 
                 print!(
                     "global_prompt_git=\"{}\"

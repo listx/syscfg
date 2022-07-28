@@ -2,6 +2,7 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Default, Debug, PartialEq, Eq)]
 pub struct GitRepoStats {
+    pub status: String,
     pub root: String,
     pub bare: bool,
     pub head_sha: String,
@@ -23,11 +24,12 @@ pub struct GitRepoStats {
 }
 
 impl GitRepoStats {
-    pub fn oneline(self) -> String {
-        // For an empty struct, return NOT_GIT_REPO.
-        if self == GitRepoStats::default() {
-            return "NOT_GIT_REPO".to_string();
-        }
+    pub fn oneline(&self) -> String {
+        // If the status is anything but finished, early exit with that status.
+        match self.status.as_str() {
+            "FINISHED" => (),
+            status => return status.to_string(),
+        };
 
         let mut bare = "".to_string();
         if self.bare {

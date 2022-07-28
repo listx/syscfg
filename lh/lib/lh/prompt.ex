@@ -13,7 +13,7 @@ defmodule LH.Prompt do
       case LH.GitRepo.get_repo_root(path) do
         {:error, :no_repo_id} ->
           Logger.info("SKIPPING: path #{path} is not a Git repo")
-          %LH.GitRepo{}
+          %LH.GitRepo{status: "NOT_GIT_REPO"}
 
         {:ok, repo_id} ->
           LH.GitWatcher.get_repo_stats(repo_id)

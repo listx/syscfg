@@ -7,7 +7,8 @@ defmodule LH.GitRepo do
   libgit2 Rust binding is too slow.
   """
   @derive [Poison.Encoder]
-  defstruct root: "",
+  defstruct status: "",
+            root: "",
             bare: false,
             head_sha: "",
             head_branch: "",
@@ -71,7 +72,7 @@ defmodule LH.GitRepo do
     git_repo_stats = Map.replace!(git_repo_stats, :untracked_files, untracked_files)
     git_repo_stats = Map.merge(git_repo_stats, submodules)
 
-    git_repo_stats
+    %{git_repo_stats | status: "FINISHED"}
   end
 
   defp diff!(path) do

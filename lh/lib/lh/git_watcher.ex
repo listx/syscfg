@@ -191,12 +191,16 @@ defmodule LH.GitWatcher do
         # a new watcher if one already exists for this path.
         #
         # Because we wrap the start_watcher() call inside a Task, it also runs
-        # asynchronously.
+        # asynchronously (so that we don't block until the startup is finished
+        # before returning the "LOADING" status below).
         Task.Supervisor.start_child(LH.TaskSupervisor, fn ->
           LH.Git.start_watcher(repo_id)
         end)
 
-        %LH.GitRepo{}
+        # We started the watcher just above. For now return a blank struct with
+        # the "LOADING" status so that the caller can know that the given repo
+        # is indeed a Git repo but that we just don't have any data yet.
+        %LH.GitRepo{status: "LOADING"}
     end
   end
 
