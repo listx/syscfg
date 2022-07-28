@@ -159,8 +159,8 @@ defmodule LH.GitWatcher do
   end
 
   @impl true
-  def handle_cast(:mark_stale, %{stale: _} = state) do
-    {:noreply, %{state | stale: true}}
+  def handle_cast(:mark_stale, %{stale: _, repo_stats: repo_stats} = state) do
+    {:noreply, %{state | stale: true, repo_stats: %{repo_stats | status: "LOADING"}}}
   end
 
   # Send a "tick" message to our GenServer in 2 seconds. See https://stackoverflow.com/a/32097971/437583.
