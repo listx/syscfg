@@ -44,6 +44,7 @@ __l_prompt_tick ()
   # too high (>50MB).
   (( $(__l_get_mem) > 50000 )) && return
 
+  construct_prompt
   zle reset-prompt
 }
 

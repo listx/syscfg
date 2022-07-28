@@ -52,11 +52,6 @@ precmd()
 		global_exit_status=0
 	fi
 	global_ran_something=0
-
-	# Set global variables used for prompt generation. This function is only
-	# executed once. That is, even in cases where we press ESC to enter "Normal"
-	# mode, we do _not_ call this function.
-	set_globals
 }
 
 set_zsh_keymap_indicator()
@@ -145,6 +140,11 @@ set_globals()
 # do not recalculate the other globals.
 construct_prompt()
 {
+	# Set global variables used for prompt generation. This function is only
+	# executed once. That is, even in cases where we press ESC to enter "Normal"
+	# mode, we do _not_ call this function.
+	set_globals
+
 	# Date, time, Zsh keymap indicator, exit code, Git, and VirtualEnv.
 	local prompt_line_1="${global_prompt_day} %D{%d %H:%M:%S %Z} ${global_keymap_indicator}${global_venv_info}${global_cmd_exit_status}${global_prompt_git}${global_user_host} ${global_prompt_path_short}"
 
