@@ -21,7 +21,7 @@ defmodule LH.Application do
     # for other strategies and supported options
     opts = [strategy: :one_for_one, name: LH.Supervisor]
 
-    Logger.info("Starting application...")
+    Logger.info("Starting application")
 
     Supervisor.start_link(children, opts)
   end

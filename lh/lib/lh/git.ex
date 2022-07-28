@@ -7,7 +7,7 @@ defmodule LH.Git do
   require Logger
 
   def start_link() do
-    IO.puts("Starting Git watcher dynamic supervisor")
+    Logger.info("Starting Git watcher dynamic supervisor")
     DynamicSupervisor.start_link(name: __MODULE__, strategy: :one_for_one)
   end
 
