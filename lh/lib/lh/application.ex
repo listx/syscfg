@@ -14,6 +14,7 @@ defmodule LH.Application do
       LH.Cache.PathShorten,
       LH.Cache.PathsSort,
       LH.ProcessRegistry,
+      {Task.Supervisor, name: LH.TaskSupervisor},
       LH.Git
     ]
 

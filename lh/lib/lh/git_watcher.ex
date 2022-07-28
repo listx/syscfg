@@ -43,7 +43,7 @@ defmodule LH.GitWatcher do
       raise("cannot start git watcher for 0-length repo_id")
     end
 
-    IO.puts("Starting watcher for #{inspect(args)}")
+    Logger.info("Starting watcher for #{inspect(args)}")
 
     # Start the low-level FileSystem watcher lib for the given args.
     #
@@ -182,10 +182,22 @@ defmodule LH.GitWatcher do
   # to know about the PID of the GitWatcher process because the via_tuple
   # retrieves it from the process registry.
   def get_repo_stats(repo_id) do
-    # Start the Git watcher for this path. This is idempotent and will not spawn
-    # a new watcher if one already exists for this path.
-    _pid = LH.Git.start_watcher(repo_id)
-    GenServer.call(via_tuple(repo_id), :get_repo_stats)
+    case Registry.lookup(LH.ProcessRegistry, {LH.GitWatcher, repo_id}) do
+      [{_pid, nil}] ->
+        GenServer.call(via_tuple(repo_id), :get_repo_stats)
+
+      _ ->
+        # Start the Git watcher for this path. This is idempotent and will not spawn
+        # a new watcher if one already exists for this path.
+        #
+        # Because we wrap the start_watcher() call inside a Task, it also runs
+        # asynchronously.
+        Task.Supervisor.start_child(LH.TaskSupervisor, fn ->
+          LH.Git.start_watcher(repo_id)
+        end)
+
+        %LH.GitRepo{}
+    end
   end
 
   # Mark the given path as stale, but also all repos in parent dirs as well.
