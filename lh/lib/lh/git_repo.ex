@@ -21,7 +21,10 @@ defmodule LH.GitRepo do
             staged_deletions: 0,
             untracked_files: 0,
             stash_size: 0,
-            assume_unchanged_files: 0
+            assume_unchanged_files: 0,
+            submodule_uninitialized: 0,
+            submodule_out_of_sync: 0,
+            submodule_merge_conflicts: 0
 
   def repo_stats(path) do
     # Shell out to git to get additional information for those parts that are
