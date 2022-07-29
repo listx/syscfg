@@ -35,9 +35,22 @@ print "System colors:\n";
 for ($color = 0; $color < 8; $color++) {
     print "\x1b[48;5;${color}m  ";
 }
+
+# test basic colors
 print "\x1b[0m\n";
 for ($color = 8; $color < 16; $color++) {
     print "\x1b[48;5;${color}m  ";
+}
+print "\x1b[0m\n\n";
+for ($color = 0; $color < 16; $color++) {
+    my $hex = sprintf("%x", $color);
+    if ($hex eq "0") {
+        print "\x1b[48;5;${color};38;5;15m${hex}${hex}";
+    } elsif ($hex eq "8") {
+        print "\x1b[48;5;${color};38;5;15m${hex}${hex}";
+    } else {
+        print "\x1b[48;5;${color};38;5;0m${hex}${hex}";
+    }
 }
 print "\x1b[0m\n\n";
 
