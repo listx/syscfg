@@ -36,7 +36,7 @@ impl GitRepoStats {
             bare = "<bare> ".to_string();
         }
 
-        let head_sha = &self.head_sha;
+        let head_sha = Self::colorize_sha(&self.head_sha);
 
         let mut unstaged_diffstat = "".to_string();
         let mut unstaged_files = "".to_string();
@@ -161,6 +161,92 @@ impl GitRepoStats {
             head_ahead,
             head_behind
         )
+    }
+
+    fn colorize_sha(sha: &str) -> String {
+        let bytes = Self::decode_hex(sha);
+
+        // Compute background mask from first byte (19 bytes left). Make the
+        // mask be 10 bits long, surrounded by 1 bit on each side. We also force
+        // the first 2 and last 2 bits be "on" for improved aesthetics.
+        let mut bg_mask: u16 = (bytes[0] << 1).into();
+        bg_mask = bg_mask | 0b1_1000_0001_1;
+
+        // Compute contiguous groups of 1-bits in bg_mask; these locations are
+        // colorized.
+        let mut v = Vec::<&str>::new();
+        let mut last_bit = false;
+        let mut last_color: u8 = 0;
+        for i in 0..10 {
+            if ((1 << i) & bg_mask) > 0 {
+                match last_bit {
+                    // The previous bit was not turned on. Pick a new color.
+                    false => {
+                        // Pick color 0 through 7 (8 possibilities). For color 0
+                        // use the underline formatting instead of black,
+                        // because black is hard to see on a dark terminal.
+                        //
+                        // Offset by 1 byte to ignore the first byte used for
+                        // bg_mask.
+                        let color = &bytes[i + 1] & 0x7;
+                        match color {
+                            0 => v.push("%B%U%F{white}%K{black}"),
+                            1 => v.push("%F{black}%K{red}"),
+                            2 => v.push("%F{black}%K{green}"),
+                            3 => v.push("%F{black}%K{yellow}"),
+                            4 => v.push("%F{black}%K{blue}"),
+                            5 => v.push("%F{black}%K{magenta}"),
+                            6 => v.push("%F{black}%K{cyan}"),
+                            _ => v.push("%F{black}%K{white}"),
+                        }
+                        last_color = color;
+                    }
+                    // Continue existing color.
+                    true => {}
+                };
+                last_bit = true;
+            } else {
+                // If the last bit was on but the current bit is off, clear the
+                // previous bit's color.
+                if last_bit {
+                    match last_color {
+                        0 => v.push("%k%f%u%b"),
+                        _ => v.push("%k%f"),
+                    };
+                };
+                last_bit = false;
+            }
+            // Push character!
+            match i {
+                0 | 9 => v.push(&" "),
+                _ => v.push(&sha[i - 1..i]),
+            };
+        }
+
+        if last_bit {
+            match last_color {
+                0 => v.push("%k%f%u%b"),
+                _ => v.push("%k%f"),
+            };
+        }
+
+        v.join("")
+    }
+
+    // Adapted from https://stackoverflow.com/a/52992629/437583. Return the
+    // parsed bytes or an empty vector if there was an error.
+    pub fn decode_hex(s: &str) -> Vec<u8> {
+        let parse = (0..s.len())
+            .step_by(2)
+            .map(|i| u8::from_str_radix(&s[i..i + 2], 16))
+            .collect();
+        match parse {
+            Ok(vec) => vec,
+            Err(e) => {
+                eprintln!("{:?}", e);
+                Vec::new()
+            }
+        }
     }
 }
 

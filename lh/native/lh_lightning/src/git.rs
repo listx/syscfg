@@ -87,7 +87,7 @@ fn get_sha_branch(repo: &git2::Repository) -> Result<(String, String), Box<dyn E
 
 fn get_sha(gref: &git2::Reference) -> Result<String, Box<dyn Error>> {
     let commit = gref.peel_to_commit()?;
-    let sha = commit.id().to_string()[0..7].to_string();
+    let sha = commit.id().to_string();
 
     Ok(sha)
 }
