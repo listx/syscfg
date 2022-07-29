@@ -97,7 +97,7 @@ get_user_host()
 	if [[ -n "${prompt_hostname_short}" ]]; then
 		prompt_hostname="${prompt_hostname_short}"
 	fi
-	echo "%n@${prompt_hostname}"
+	echo "%n@${prompt_hostname} "
 }
 
 get_exit_status()
@@ -124,7 +124,7 @@ set_globals()
 
 	# These bits are very "close" to the shell and so we just get the info from
 	# the shell directly instead of asking lhc for it.
-	global_prompt_day="%K{green}%F{black}$(get_day)%f%k"
+	global_timestamp="%K{214}%F{16} $(get_day) %D{%d %H:%M:%S %Z} %f%k "
 	global_user_host="$(get_user_host)"
 	global_cmd_exit_status="$(get_exit_status)"
 	global_venv_info="$(get_venv_info)"
@@ -146,7 +146,7 @@ construct_prompt()
 	set_globals
 
 	# Date, time, Zsh keymap indicator, exit code, Git, and VirtualEnv.
-	local prompt_line_1="${global_prompt_day} %D{%d %H:%M:%S %Z} ${global_keymap_indicator}${global_venv_info}${global_cmd_exit_status}${global_prompt_git}${global_user_host} ${global_prompt_path_short}"
+	local prompt_line_1="${global_timestamp}${global_keymap_indicator}${global_venv_info}${global_cmd_exit_status}${global_prompt_git}${global_user_host}${global_prompt_path_short}"
 
 	local prompt_line_2=" "
 
