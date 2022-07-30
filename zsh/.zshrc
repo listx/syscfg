@@ -508,6 +508,8 @@ zle -N __l_lazy_load_completions
 # Uncomment to profile.
 #zprof
 
+eval "$(direnv hook zsh)"
+
 # Replace current shell process with tmux, because it's much nicer to use tmux
 # than a raw shell instance.
 #
