@@ -13,11 +13,17 @@ let
       Security
     ]) else [];
 in mkShell {
+  RUST_SRC_PATH = "${rust-bin.stable.latest.${profile}.override {
+              extensions = [ "rust-src" ];
+          }}/lib/rustlib/src/rust/library";
   nativeBuildInputs =
     [ rust-bin.stable.latest.${profile} pkg-config openssl ] ++ platform-specific;
   buildInputs = [
     #beam.packages.erlangR25.elixir_1_13
     #nodejs-14_x
+    (rust-bin.stable.latest.${profile}.override {
+      extensions = ["rust-src"];
+    })
   ]
   ++ lib.optionals stdenv.isLinux [
     # For ExUnit Notifier on Linux.
