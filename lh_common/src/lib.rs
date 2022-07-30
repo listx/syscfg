@@ -166,70 +166,93 @@ impl GitRepoStats {
     fn colorize_sha(sha: &str) -> String {
         let bytes = Self::decode_hex(sha);
 
-        // Compute background mask from first byte (19 bytes left). Make the
-        // mask be 10 bits long, surrounded by 1 bit on each side. We also force
-        // the first 2 and last 2 bits be "on" for improved aesthetics.
-        let mut bg_mask: u16 = (bytes[0] << 1).into();
-        bg_mask = bg_mask | 0b1_1000_0001_1;
+        let possible_color_groups: [[u8; 4]; 16] = [
+            [8, 0, 0, 0],
+            [2, 6, 0, 0],
+            [3, 5, 0, 0],
+            [4, 4, 0, 0],
+            [5, 3, 0, 0],
+            [6, 2, 0, 0],
+            [2, 2, 4, 0],
+            [2, 4, 2, 0],
+            [4, 2, 2, 0],
+            [2, 3, 3, 0],
+            [3, 2, 3, 0],
+            [3, 3, 2, 0],
+            [2, 2, 2, 2],
+            [1, 7, 0, 0],
+            [7, 1, 0, 0],
+            [5, 2, 1, 0],
+        ];
 
-        // Compute contiguous groups of 1-bits in bg_mask; these locations are
-        // colorized.
+        let possible_color_orders: [[u8; 4]; 32] = [
+            [0, 1, 2, 3],
+            [0, 1, 3, 2],
+            [0, 2, 1, 3],
+            [0, 2, 3, 1],
+            [0, 3, 1, 2],
+            [0, 3, 2, 1],
+            [1, 0, 2, 3],
+            [1, 0, 3, 2],
+            [1, 2, 0, 3],
+            [1, 2, 3, 0],
+            [1, 3, 0, 2],
+            [1, 3, 2, 0],
+            [2, 0, 1, 3],
+            [2, 0, 3, 1],
+            [2, 1, 0, 3],
+            [2, 1, 3, 0],
+            [2, 3, 0, 1],
+            [2, 3, 1, 0],
+            [3, 0, 1, 2],
+            [3, 0, 2, 1],
+            [3, 1, 0, 2],
+            [3, 1, 2, 0],
+            [3, 2, 0, 1],
+            [3, 2, 1, 0],
+            [0, 1, 2, 3],
+            [0, 1, 3, 2],
+            [1, 0, 2, 3],
+            [1, 0, 3, 2],
+            [2, 3, 0, 1],
+            [2, 3, 1, 0],
+            [3, 2, 0, 1],
+            [3, 2, 1, 0],
+        ];
+
+        let color_group_idx = bytes[19] & 0xf;
+        let color_group_selection: [u8; 4] = possible_color_groups[color_group_idx as usize];
+
+        let color_order_idx = bytes[18] & 0xf;
+        let color_order_selection: [u8; 4] = possible_color_orders[color_order_idx as usize];
+
         let mut v = Vec::<&str>::new();
-        let mut last_bit = false;
-        let mut last_color: u8 = 0;
-        for i in 0..10 {
-            if ((1 << i) & bg_mask) > 0 {
-                match last_bit {
-                    // The previous bit was not turned on. Pick a new color.
-                    false => {
-                        // Pick color 0 through 7 (8 possibilities). For color 0
-                        // use the underline formatting instead of black,
-                        // because black is hard to see on a dark terminal.
-                        //
-                        // Offset by 1 byte to ignore the first byte used for
-                        // bg_mask.
-                        let color = &bytes[i + 1] & 0x7;
-                        match color {
-                            0 => v.push("%B%U%F{white}%K{black}"),
-                            1 => v.push("%F{black}%K{red}"),
-                            2 => v.push("%F{black}%K{green}"),
-                            3 => v.push("%F{black}%K{yellow}"),
-                            4 => v.push("%F{black}%K{blue}"),
-                            5 => v.push("%F{black}%K{magenta}"),
-                            6 => v.push("%F{black}%K{cyan}"),
-                            _ => v.push("%F{black}%K{white}"),
-                        }
-                        last_color = color;
-                    }
-                    // Continue existing color.
-                    true => {}
-                };
-                last_bit = true;
-            } else {
-                // If the last bit was on but the current bit is off, clear the
-                // previous bit's color.
-                if last_bit {
-                    match last_color {
-                        0 => v.push("%k%f%u%b"),
-                        _ => v.push("%k%f"),
-                    };
-                };
-                last_bit = false;
+        v.push("%F{black}");
+
+        let mut i: usize = 0;
+        let mut j = 0;
+        for group_size in color_group_selection {
+            println!("");
+            if i > 7 {
+                break;
             }
-            // Push character!
-            match i {
-                0 | 9 => v.push(&" "),
-                _ => v.push(&sha[i - 1..i]),
-            };
+            // Choose color for this group.
+            match color_order_selection[j] {
+                0 => v.push("%K{red}"),
+                1 => v.push("%K{green}"),
+                2 => v.push("%K{blue}"),
+                _ => v.push("%K{yellow}"),
+            }
+            j = j + 1;
+
+            if i == 0 {
+                v.push(" ");
+            }
+            v.push(&sha[i..(i + group_size as usize)]);
+            i = i + group_size as usize;
         }
 
-        if last_bit {
-            match last_color {
-                0 => v.push("%k%f%u%b"),
-                _ => v.push("%k%f"),
-            };
-        }
-
+        v.push(" %k%f");
         v.join("")
     }
 
