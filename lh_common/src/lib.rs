@@ -165,12 +165,27 @@ impl GitRepoStats {
 
     fn colorize_sha(sha: &str) -> String {
         let bytes = Self::decode_hex(sha);
+        let mid_byte = &bytes[10];
+
+        if mid_byte & 1 > 0 {
+            Self::colorize_sha1(sha)
+        } else {
+            Self::colorize_sha2(sha)
+        }
+    }
+
+    // Use a simple coloring scheme that uses a random number of color groups
+    // and color orderings from a chosen set of 4 colors (RGBY).
+    fn colorize_sha1(sha: &str) -> String {
+        let bytes = Self::decode_hex(sha);
 
         let possible_color_groups: [[u8; 4]; 16] = [
-            [8, 0, 0, 0],
+            // Use the [2,2,2,2] pattern 3 times because we don't want to use [8] and [4,4]
+            // (the latter especially so because colorize_sha2() also uses a [4,4] split).
+            [2, 2, 2, 2],
             [2, 6, 0, 0],
             [3, 5, 0, 0],
-            [4, 4, 0, 0],
+            [2, 2, 2, 2],
             [5, 3, 0, 0],
             [6, 2, 0, 0],
             [2, 2, 4, 0],
@@ -254,6 +269,34 @@ impl GitRepoStats {
 
         v.push(" %k%f");
         v.join("")
+    }
+
+    // Use 2 24-bit color backgrounds.
+    fn colorize_sha2(sha: &str) -> String {
+        let bytes = Self::decode_hex(sha);
+        let bg1 = &bytes[17..20];
+        let bg2 = &bytes[14..17];
+        let fg1 = Self::white_or_black(bg1);
+        let fg2 = Self::white_or_black(bg2);
+
+        format!(
+            "%K{{#{}}} %F{{{}}}{}%f%K{{#{}}}%F{{{}}}{}%f %k",
+            sha[34..40].to_string(),
+            fg1,
+            sha[0..4].to_string(),
+            sha[28..34].to_string(),
+            fg2,
+            sha[4..8].to_string()
+        )
+    }
+
+    // See https://stackoverflow.com/a/41491220/437583.
+    fn white_or_black(rgb: &[u8]) -> String {
+        if ((rgb[0] as f32 * 0.299) + (rgb[1] as f32 * 0.587) + (rgb[2] as f32 * 0.114)) > 150.0 {
+            "black".to_string()
+        } else {
+            "white".to_string()
+        }
     }
 
     // Adapted from https://stackoverflow.com/a/52992629/437583. Return the
