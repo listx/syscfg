@@ -8,3 +8,9 @@ export LANG=en_US.UTF-8
 # /usr/libexec/path_helper, putting the ~/.nix-profile/bin folder _after_ the
 # other standard locations, which is NOT what we want.
 __l_prepend_path $HOME/.nix-profile/bin
+
+# Load Nix stuff. For some reason, we have to do this on macp after the Monterey
+#  12.5 update. Otherwise the "nix" command just doesn't get found.
+if [ -e '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh' ]; then
+  . '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh'
+fi
