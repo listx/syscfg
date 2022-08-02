@@ -18,4 +18,6 @@
 # -R: make 'git diff' more compliant with highly customized LESS_TERMCAP options
 #
 # -X: try not to clear the screen
-LESS = -FiMRX
+#
+# --tabs=4: set tab stop to 4 spaces (default 8)
+LESS = -FiMRX --tabs=4
