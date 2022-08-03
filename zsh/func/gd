@@ -1,6 +1,6 @@
 #!/usr/bin/env zsh
 
-gd()
+_gd()
 {
 	! git_contents && return
 
@@ -46,3 +46,37 @@ gd()
 		printf "$msg_diff_c" | less
 	fi
 }
+
+_gd_rs()
+{
+	local git_diff="$(command gd diff --width=${COLUMNS})"
+	local git_diff_c="$(command gd diff --width=${COLUMNS} --staged)"
+
+	if [[ -z "$git_diff" && -z "$git_diff_c" ]]; then
+		return 0
+	fi
+
+	if [[ -n "$git_diff" ]] && [[ -n "$git_diff_c" ]]; then
+		# If we have two buffers to show, force less to pause before
+		# showing the next one. We do this by unsetting the -F flag set in
+		# ~/.lesskey.
+		printf "$git_diff" | less -+F
+		printf "$git_diff_c" | less
+	elif [[ -n "$git_diff" ]]; then
+		printf "$git_diff" | less
+	elif [[ -n "$git_diff_c" ]]; then
+		printf "$git_diff_c" | less
+	fi
+}
+
+gd()
+{
+	if whence -cp "gd" > /dev/null; then
+		_gd_rs
+	else
+		_gd
+	fi
+}
+
+
+gd
