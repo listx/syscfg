@@ -100,8 +100,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     match matches.subcommand_name() {
         Some("prompt-info") => {
             if let Some(m) = matches.subcommand_matches("prompt-info") {
-                let path = m.value_of("path").unwrap();
-                let path_aliases_file = m.value_of("path_aliases_file").unwrap();
+                let path = m.get_one::<String>("path").unwrap();
+                let path_aliases_file = m.get_one::<String>("path_aliases_file").unwrap();
                 let path_aliases_contents =
                     fs::read_to_string(path_aliases_file).unwrap_or_default();
 
@@ -132,7 +132,7 @@ global_prompt_path_short=\"%B%F{{cyan}}{}%f%b\"",
         }
         Some("git-info") => {
             if let Some(m) = matches.subcommand_matches("git-info") {
-                let git_repo_path = m.value_of("git_repo_path").unwrap();
+                let git_repo_path = m.get_one::<String>("git_repo_path").unwrap();
 
                 let request_url = format!("{}/git-info", request_base_url);
 
@@ -152,8 +152,8 @@ global_prompt_path_short=\"%B%F{{cyan}}{}%f%b\"",
         Some("path-shorten") => {
             if let Some(m) = matches.subcommand_matches("path-shorten") {
                 // Safe to use unwrap() because of the required() option
-                let path_to_shorten = m.value_of("path_to_shorten").unwrap();
-                let path_aliases_file = m.value_of("path_aliases_file").unwrap();
+                let path_to_shorten = m.get_one::<String>("path_to_shorten").unwrap();
+                let path_aliases_file = m.get_one::<String>("path_aliases_file").unwrap();
                 let path_aliases_contents =
                     fs::read_to_string(path_aliases_file).unwrap_or_default();
 
@@ -173,8 +173,8 @@ global_prompt_path_short=\"%B%F{{cyan}}{}%f%b\"",
         }
         Some("paths-sort") => {
             if let Some(m) = matches.subcommand_matches("paths-sort") {
-                let paths_to_sort = m.value_of("paths_to_sort").unwrap();
-                let priorities_raw_file = m.value_of("priorities_raw_file").unwrap();
+                let paths_to_sort = m.get_one::<String>("paths_to_sort").unwrap();
+                let priorities_raw_file = m.get_one::<String>("priorities_raw_file").unwrap();
                 let priorities_raw_contents =
                     fs::read_to_string(priorities_raw_file).unwrap_or_default();
 
