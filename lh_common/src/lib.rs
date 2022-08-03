@@ -54,7 +54,7 @@ impl GitRepoStats {
         if self.unstaged_insertions > 0 || self.unstaged_deletions > 0 {
             unstaged_diffstat = format!(
                 " {}{}{}{}",
-                "%B%F{green}D%f%b", unstaged_files, unstaged_insertions, unstaged_deletions,
+                "%B%F{green}C%f%b", unstaged_files, unstaged_insertions, unstaged_deletions,
             );
         }
 

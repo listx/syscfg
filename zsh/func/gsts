@@ -61,7 +61,7 @@ gsts_nonbare()
 	if [[ -n $g_diff && -n $g_diffc ]]; then
 		g_changed="%B%F{208}X%b%f"
 	elif [[ -n $g_diff ]]; then
-		g_changed="%B%F{green}D%b%f"
+		g_changed="%B%F{green}C%b%f"
 	elif [[ -n $g_diffc ]]; then
 		g_changed="%B%F{magenta}S%b%f"
 	fi
