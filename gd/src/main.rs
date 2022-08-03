@@ -55,9 +55,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                     &diff.stdout,
                     &width,
                     if *staged {
-                        "STAGED ---------------------- "
+                        " STAGED ---------------------- "
                     } else {
-                        "CHANGES --------------------- "
+                        " CHANGED --------------------- "
                     },
                     *staged,
                 );
@@ -115,29 +115,39 @@ fn show_diff(output: &Vec<u8>, width: &usize, vlabel: &str, staged: bool) -> () 
             "".normal()
         };
 
-        // vlabel_char is surrounded with 3 spaces, for a total of 4 chars. We
+        // vlabel_part is surrounded with 3 spaces, for a total of 4 chars. We
         // also have to bump the width because each escaped character fools
         // println!() into thinking that the string is 1 char larger than it
         // really is.
         let rwidth = width - 4 + escaped;
-        let vlabel_char = match &vlabel[i..i + 1] {
-            " " => " ".normal(),
+        let vlabel_part = match &vlabel[i..i + 1] {
+            " " => {
+                if staged {
+                    "   ".truecolor(255, 0, 255).on_truecolor(81, 51, 81)
+                } else {
+                    "   ".truecolor(0, 255, 0).on_truecolor(51, 81, 51)
+                }
+            }
             "-" => {
                 if staged {
-                    "\u{2503}".truecolor(255, 0, 255)
+                    " \u{2503} ".truecolor(255, 0, 255).on_truecolor(81, 51, 81)
                 } else {
-                    "\u{2503}".truecolor(0, 255, 0)
+                    " \u{2503} ".truecolor(0, 255, 0).on_truecolor(51, 81, 51)
                 }
             }
             c => {
                 if staged {
-                    c.truecolor(255, 0, 255)
+                    format!(" {} ", c)
+                        .truecolor(255, 0, 255)
+                        .on_truecolor(81, 51, 81)
                 } else {
-                    c.truecolor(0, 255, 0)
+                    format!(" {} ", c)
+                        .truecolor(0, 255, 0)
+                        .on_truecolor(51, 81, 51)
                 }
             }
         };
-        println!(" {}  {:rwidth$}", vlabel_char, cline);
+        println!("{} {:rwidth$}", vlabel_part, cline);
         i = (i + 1) % vlabel.len();
     }
 }
