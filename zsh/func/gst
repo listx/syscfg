@@ -4,23 +4,16 @@ gst()
 {
 	! git_contents && return
 
-	local c="\x1b[1;38;5;196m"
 	local ce="\x1b[0m"
 
-	# We could use `git --no-pager show ...` but it seems to behave
-	# inconsistently with or without newlines.
-	local gshow=$(git show --pretty=format:'%h %D | %s' --no-patch \
-		| sed 's/HEAD -> //')
-	printf "$gshow\n"
-	git -c color.status=always status --short
+	git -c color.status=always status
 	local gstash=$(git stash list)
 	if [[ -n "$gstash" ]]; then
-		printf "\n${c}-- STASH --${ce}\n$gstash\n"
+		printf "\n\x1b[1;38;5;196m-- STASH --${ce}\n$gstash\n"
 	fi
 	local groot=$(git rev-parse --show-toplevel)
 	local gau=$(git -C "$groot" ls-files -v | grep "^[[:lower:]]")
 	if [[ -n "$gau" ]]; then
-		c="\x1b[1;38;5;201m"
-		printf "\n${c}-- ASSUME UNCHANGED --${ce}\n$gau\n"
+		printf "\n\x1b[1;38;5;201m-- ASSUME UNCHANGED --${ce}\n$gau\n"
 	fi
 }
