@@ -84,27 +84,35 @@ fn show_diff(output: &Vec<u8>, width: &usize, vlabel: &str, staged: bool) -> () 
         let mut words_iter = line.split_ascii_whitespace();
         let (eline, escaped) = escape(line);
 
-        let cline = match words_iter.next() {
-            Some("diff") => eline.bold().truecolor(255, 255, 0).on_truecolor(85, 85, 51),
-            Some("index") => eline.bold().truecolor(255, 255, 0).on_truecolor(85, 85, 51),
-            Some("---") => eline.bold().truecolor(255, 255, 0).on_truecolor(85, 85, 51),
-            Some("+++") => eline.bold().truecolor(255, 255, 0).on_truecolor(85, 85, 51),
+        let cline = if line.len() > 0 {
+            if line.chars().nth(0).unwrap().is_ascii_whitespace() {
+                eline.normal()
+            } else {
+                match words_iter.next() {
+                    Some("diff") => eline.bold().truecolor(255, 255, 0).on_truecolor(85, 85, 51),
+                    Some("index") => eline.bold().truecolor(255, 255, 0).on_truecolor(85, 85, 51),
+                    Some("---") => eline.bold().truecolor(255, 255, 0).on_truecolor(85, 85, 51),
+                    Some("+++") => eline.bold().truecolor(255, 255, 0).on_truecolor(85, 85, 51),
 
-            // This is not identical to git-diff (the latter does
-            // not colorize the entire line), but this is close
-            // enough.
-            Some("@@") => eline.cyan(),
+                    // This is not identical to git-diff (the latter does
+                    // not colorize the entire line), but this is close
+                    // enough.
+                    Some("@@") => eline.cyan(),
 
-            // It could be that the word looks like "+foo" if "foo" is at the
-            // beginning of the eline. In this case we have to check for the
-            // first letter.
-            Some(w) => match &w[0..1] {
-                "+" => eline.truecolor(0, 255, 0).on_truecolor(51, 85, 51),
-                "-" => eline.truecolor(255, 0, 0).on_truecolor(85, 51, 51),
-                _ => eline.normal(),
-            },
+                    // It could be that the word looks like "+foo" if "foo" is at the
+                    // beginning of the eline. In this case we have to check for the
+                    // first letter.
+                    Some(w) => match &w[0..1] {
+                        "+" => eline.truecolor(0, 255, 0).on_truecolor(51, 85, 51),
+                        "-" => eline.truecolor(255, 0, 0).on_truecolor(85, 51, 51),
+                        _ => eline.normal(),
+                    },
 
-            None => "".normal(),
+                    None => eline.normal(),
+                }
+            }
+        } else {
+            "".normal()
         };
 
         // vlabel_char is surrounded with 3 spaces, for a total of 4 chars. We
