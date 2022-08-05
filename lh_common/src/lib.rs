@@ -290,12 +290,45 @@ impl GitRepoStats {
         )
     }
 
-    // See https://stackoverflow.com/a/41491220/437583.
+    // https://stackoverflow.com/a/56678483/437583
     fn white_or_black(rgb: &[u8]) -> String {
-        if ((rgb[0] as f32 * 0.299) + (rgb[1] as f32 * 0.587) + (rgb[2] as f32 * 0.114)) > 150.0 {
+        let r = rgb[0] as f32 / 255.0;
+        let g = rgb[1] as f32 / 255.0;
+        let b = rgb[2] as f32 / 255.0;
+
+        let lum = Self::get_luminance(r, g, b);
+
+        // lum_star is a value from 0 (black) to 100 (white) where 50 is the
+        // __perceptual__ middle grey.
+        let lum_star = Self::luminance_to_lum_star(lum);
+
+        if lum_star > 50.0 {
             "black".to_string()
         } else {
             "white".to_string()
+        }
+    }
+
+    fn get_luminance(r: f32, g: f32, b: f32) -> f32 {
+        0.2126 * Self::srgb_to_lin(r)
+            + 0.7152 * Self::srgb_to_lin(g)
+            + 0.0722 * Self::srgb_to_lin(b)
+    }
+
+    fn srgb_to_lin(color_channel: f32) -> f32 {
+        if color_channel <= 0.04045 {
+            color_channel / 12.92
+        } else {
+            let n: f32 = (color_channel + 0.055) / 1.055;
+            n.powf(2.4)
+        }
+    }
+
+    fn luminance_to_lum_star(lum: f32) -> f32 {
+        if lum <= (216.0 / 24389.0) {
+            lum * (24389.0 / 27.0)
+        } else {
+            lum.powf(1.0 / 3.0) * 116.0 - 16.0
         }
     }
 
