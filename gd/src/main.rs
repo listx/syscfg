@@ -79,6 +79,8 @@ fn show_diff(output: &Vec<u8>, width: &usize, vlabel: &str, staged: bool) -> () 
     // vertical label char and (2) depending on leading +/- char
     // colorize the text fg and bg.
 
+    let divider = " ".on_truecolor(0, 0, 0);
+
     let mut i = 0;
     for line in diff_output.lines() {
         let mut words_iter = line.split_ascii_whitespace();
@@ -86,29 +88,45 @@ fn show_diff(output: &Vec<u8>, width: &usize, vlabel: &str, staged: bool) -> () 
 
         let cline = if line.len() > 0 {
             if line.chars().nth(0).unwrap().is_ascii_whitespace() {
-                eline.normal()
+                format!(" {}", eline).normal()
             } else {
                 match words_iter.next() {
-                    Some("diff") => eline.bold().truecolor(255, 255, 0).on_truecolor(85, 85, 51),
-                    Some("index") => eline.bold().truecolor(255, 255, 0).on_truecolor(85, 85, 51),
-                    Some("---") => eline.bold().truecolor(255, 255, 0).on_truecolor(85, 85, 51),
-                    Some("+++") => eline.bold().truecolor(255, 255, 0).on_truecolor(85, 85, 51),
+                    Some("diff") => format!(" {}", eline)
+                        .bold()
+                        .truecolor(255, 255, 0)
+                        .on_truecolor(85, 85, 51),
+                    Some("index") => format!(" {}", eline)
+                        .bold()
+                        .truecolor(255, 255, 0)
+                        .on_truecolor(85, 85, 51),
+                    Some("---") => format!(" {}", eline)
+                        .bold()
+                        .truecolor(255, 255, 0)
+                        .on_truecolor(85, 85, 51),
+                    Some("+++") => format!(" {}", eline)
+                        .bold()
+                        .truecolor(255, 255, 0)
+                        .on_truecolor(85, 85, 51),
 
                     // This is not identical to git-diff (the latter does
                     // not colorize the entire line), but this is close
                     // enough.
-                    Some("@@") => eline.cyan(),
+                    Some("@@") => format!(" {}", eline).cyan(),
 
                     // It could be that the word looks like "+foo" if "foo" is at the
                     // beginning of the eline. In this case we have to check for the
                     // first letter.
                     Some(w) => match &w[0..1] {
-                        "+" => eline.truecolor(0, 255, 0).on_truecolor(51, 85, 51),
-                        "-" => eline.truecolor(255, 0, 0).on_truecolor(85, 51, 51),
-                        _ => eline.normal(),
+                        "+" => format!(" {}", eline)
+                            .truecolor(0, 255, 0)
+                            .on_truecolor(51, 85, 51),
+                        "-" => format!(" {}", eline)
+                            .truecolor(255, 0, 0)
+                            .on_truecolor(85, 51, 51),
+                        _ => format!(" {}", eline).normal(),
                     },
 
-                    None => eline.normal(),
+                    None => format!(" {}", eline).normal(),
                 }
             }
         } else {
@@ -125,14 +143,14 @@ fn show_diff(output: &Vec<u8>, width: &usize, vlabel: &str, staged: bool) -> () 
                 if staged {
                     "   ".truecolor(255, 0, 255).on_truecolor(81, 51, 81)
                 } else {
-                    "   ".truecolor(0, 255, 0).on_truecolor(51, 81, 51)
+                    "   ".truecolor(0, 255, 255).on_truecolor(51, 81, 81)
                 }
             }
             "-" => {
                 if staged {
                     " \u{2503} ".truecolor(255, 0, 255).on_truecolor(81, 51, 81)
                 } else {
-                    " \u{2503} ".truecolor(0, 255, 0).on_truecolor(51, 81, 51)
+                    " \u{2503} ".truecolor(0, 255, 255).on_truecolor(51, 81, 81)
                 }
             }
             c => {
@@ -142,12 +160,12 @@ fn show_diff(output: &Vec<u8>, width: &usize, vlabel: &str, staged: bool) -> () 
                         .on_truecolor(81, 51, 81)
                 } else {
                     format!(" {} ", c)
-                        .truecolor(0, 255, 0)
-                        .on_truecolor(51, 81, 51)
+                        .truecolor(0, 255, 255)
+                        .on_truecolor(51, 81, 81)
                 }
             }
         };
-        println!("{} {:rwidth$}", vlabel_part, cline);
+        println!("{}{}{:rwidth$}", vlabel_part, divider, cline);
         i = (i + 1) % vlabel.len();
     }
 }
