@@ -17,6 +17,8 @@ s()
 	*)  user="l" ;;
 	esac
 
+	tmux rename-window "${user}@${host}"
+
 	case "${host}" in
 	w0)
 		ssh -t "${user}@${host}" \"wsl.exe -d NixOS\"
@@ -25,4 +27,6 @@ s()
 		ssh -t "${user}@${host}"
 		;;
 	esac
+
+	tmux set -w automatic-rename on
 }
