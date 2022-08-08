@@ -25,9 +25,9 @@ pub struct GitRepoStats {
 
 impl GitRepoStats {
     pub fn oneline(&self) -> String {
-        // If the status is anything but finished, early exit with that status.
+        // If the status is anything but finished or loading, early exit with that status.
         match self.status.as_str() {
-            "FINISHED" => (),
+            "FINISHED" | "LOADING" => (),
             status => return status.to_string(),
         };
 

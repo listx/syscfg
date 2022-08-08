@@ -119,7 +119,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 let mut prompt_git = prompt.git_repo_stats.oneline();
                 prompt_git = match prompt.git_repo_stats.status.as_str() {
                     "FINISHED" => format!("[{}] ", prompt_git),
-                    "LOADING" => "[...] ".to_string(),
+                    "LOADING" => format!("[{}]* ", prompt_git),
                     _ => "".to_string(),
                 };
 
