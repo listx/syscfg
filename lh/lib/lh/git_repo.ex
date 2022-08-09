@@ -134,8 +134,13 @@ defmodule LH.GitRepo do
             {:ok, String.trim_trailing(output)}
 
           true ->
+            # This will never really execute; if there is no git repo then
+            # git-rev-parse will fail with code 128.
             {:error, :no_repo_id}
         end
+
+      {_, 128} ->
+        {:error, :no_repo_id}
 
       {_, code} ->
         {:error, "'git rev-parse --show-toplevel' failed with code #{code} for path '#{path}'"}
