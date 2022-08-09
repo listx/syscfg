@@ -7,4 +7,4 @@ StartLimitIntervalSec=0
 Type=simple
 Restart=always
 RestartSec=1
-ExecStart=/usr/bin/zsh -l %h/syscfg/lh/run.sh
+ExecStart=%h/.nix-profile/bin/zsh -l %h/syscfg/lh/run.sh
