@@ -83,10 +83,15 @@ defmodule LH.GitWatcher do
         # if HEAD moves, which is important when we (for example) modify the
         # HEAD of submodules.
         LH.Lightning.is_git_index_file(path) ->
-          if Enum.member?(events, :modified) do
-            {:ok, path}
-          else
-            {:error, :ignored}
+          cond do
+            events == [:modified] ->
+              {:ok, path}
+
+            # Ignore events such as [:modified, :closed] which can also happen
+            # with [:created] and [:deleted] whenever we invoke certain Git
+            # read-only operations (e.g., git status).
+            true ->
+              {:error, :ignored}
           end
 
         true ->
