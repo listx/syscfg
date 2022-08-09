@@ -19,6 +19,7 @@
     gnumake
     sqlite # emacs' org-roam needs it
     noweb # literate emacs configuration
+    direnv
 
     # C/ASM
     clang
@@ -200,6 +201,8 @@
   ];
 
   nixpkgs.overlays = [ (import ./overlay.nix) ];
+
+  services.lorri.enable = true;
 
   services.xserver = {
     enable = true;
