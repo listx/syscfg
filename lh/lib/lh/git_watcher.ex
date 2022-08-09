@@ -130,21 +130,27 @@ defmodule LH.GitWatcher do
         %{
           watcher_pid: _watcher_pid,
           repo_id: repo_id,
-          repo_stats: repo_stats,
-          stale: stale
+          repo_stats: _repo_stats,
+          stale: true
         } = state
       ) do
-    repo_stats =
-      if stale do
-        Logger.info("RE-EVALUATING git repo stats for #{repo_id}")
-        LH.GitRepo.repo_stats(repo_id)
-      else
-        repo_stats
-      end
+    Logger.info("RE-EVALUATING git repo stats for #{repo_id}")
+    repo_stats_new = LH.GitRepo.repo_stats(repo_id)
 
     # Continue ticking for the future.
     tick()
-    {:noreply, %{state | repo_stats: repo_stats, stale: false}}
+    {:noreply, %{state | repo_stats: repo_stats_new, stale: false}}
+  end
+
+  def handle_info(
+        :tick,
+        %{
+          stale: false
+        } = state
+      ) do
+    # Continue ticking for the future.
+    tick()
+    {:noreply, state}
   end
 
   @impl true
