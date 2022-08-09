@@ -3,7 +3,7 @@
 # for a discussion about getting a file system watcher working on Mac.
 
 { profile ? "default" }:
-with import <nixpkgs> { overlays = [ (import <rust-overlay>) ]; };
+with import <nixpkgs> { overlays = [ (import ~/.nix-defexpr/channels/rust-overlay) ]; };
 let
   # See available packages for darwin.apple_sdk.frameworks with
   #
