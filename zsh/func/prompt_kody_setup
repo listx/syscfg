@@ -93,7 +93,7 @@ get_day()
 get_user_host()
 {
 	local prompt_hostname="%m"
-	local prompt_hostname_short="$(cat ~/.hostname-short)"
+	local prompt_hostname_short="$([[ -f ~/.hostname-short ]] && cat ~/.hostname-short || hostname)"
 	if [[ -n "${prompt_hostname_short}" ]]; then
 		prompt_hostname="${prompt_hostname_short}"
 	fi
