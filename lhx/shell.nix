@@ -23,14 +23,8 @@ in pkgs.stdenv.mkDerivation {
   buildInputs = [
     ghc
     pkgs.cabal-install
+    pkgs.pkgconfig
     pkgs.zlib
-    # pkgs.gmp
-    # pkgs.libffi
-    # pkgs.pkgconfig
-    # pkgs.xlibsWrapper
-    # pkgs.xorg.libXinerama
-    # pkgs.xorg.libXScrnSaver
-    # pkgs.xorg.libXrandr
   ];
   shellHook = "eval $(egrep ^export ${ghc}/bin/ghc)";
 }
