@@ -119,10 +119,12 @@ fn show_diff(output: &Vec<u8>, width: &usize, vlabel: &str, staged: bool) -> () 
                     Some(w) => match &w[0..1] {
                         "+" => format!(" {}", eline)
                             .truecolor(0, 255, 0)
-                            .on_truecolor(51, 85, 51),
+                            .on_truecolor(51, 85, 51)
+                            .bold(),
                         "-" => format!(" {}", eline)
                             .truecolor(255, 0, 0)
-                            .on_truecolor(85, 51, 51),
+                            .on_truecolor(85, 51, 51)
+                            .bold(),
                         _ => format!(" {}", eline).normal(),
                     },
 
