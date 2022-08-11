@@ -1,19 +1,35 @@
-# https://stackoverflow.com/a/56180220/437583
+{ nixpkgs ? import <nixpkgs> { }, compiler ? "ghc924" }:
+let
+  inherit (nixpkgs) pkgs;
+  ghc = pkgs.haskell.packages.${compiler}.ghcWithPackages (ps:
+    with ps;
+    [
+      # If you want to use cached Haskell packages (instead of making cabal
+      # download them dynamically), you can list them here (e.g., "mtl"). But
+      # this only works if the nixpkgs cache has them built; it may be that
+      # nixpkgs does not have them yet (at least at the correct versions) which
+      # would mean that we would have to download and build these packages
+      # ourselves.
 
-with import (builtins.fetchGit {
-    url = "~/prog/foreign/nixpkgs";
-    # Known good commit for moving branch "nixos-21.05".
-    ref = "60cce7e5e1fdf62421ef6d4184ee399b46209366";
-}) {};
+      xmonad
+      xmonad-contrib
+    ]);
+in pkgs.stdenv.mkDerivation {
+  name = "my-haskell-env-0";
+  buildInputs = [
+    ghc
+    pkgs.cabal-install
+    pkgs.pkgconfig
+    pkgs.zlib
 
-haskell.lib.buildStackProject {
-    name = "my-project";
-    buildInputs = [
-      gmp
-      haskell.compiler.ghc8104
-      libffi
-      pkgconfig
-      x11
-      xorg.libXinerama
-      xorg.libXScrnSaver
-      xorg.libXrandr ]; }
+    pkgs.gmp
+    pkgs.libffi
+    pkgs.pkgconfig
+    pkgs.xlibsWrapper
+    pkgs.xorg.libXinerama
+    pkgs.xorg.libXScrnSaver
+    pkgs.xorg.libXrandr
+  ];
+  shellHook = "eval $(egrep ^export ${ghc}/bin/ghc)";
+}
+
