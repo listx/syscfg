@@ -1,2 +1,2 @@
 all:
-	nix-shell --command "LHX_ROOT=$(PWD) cabal install --overwrite-policy=always"
+	LHX_ROOT=$(PWD) cabal install --overwrite-policy=always

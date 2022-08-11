@@ -1,6 +1,6 @@
 # https://haskell4nix.readthedocs.io/nixpkgs-users-guide.html#how-to-create-ad-hoc-environments-for-nix-shell
 
-{ nixpkgs ? import <nixpkgs> { }, compiler ? "ghc921" }:
+{ nixpkgs ? import <nixpkgs> { }, compiler ? "ghc924" }:
 let
   inherit (nixpkgs) pkgs;
   ghc = pkgs.haskell.packages.${compiler}.ghcWithPackages (ps:
@@ -22,6 +22,7 @@ in pkgs.stdenv.mkDerivation {
   name = "my-haskell-env-0";
   buildInputs = [
     ghc
+    pkgs.cabal-install
     pkgs.zlib
     # pkgs.gmp
     # pkgs.libffi
