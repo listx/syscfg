@@ -242,7 +242,7 @@ impl GitRepoStats {
         let color_order_selection: [u8; 4] = possible_color_orders[color_order_idx as usize];
 
         let mut v = Vec::<&str>::new();
-        v.push("%F{black}");
+        v.push("%B%F{black}");
 
         let mut i: usize = 0;
         let mut j = 0;
@@ -267,7 +267,7 @@ impl GitRepoStats {
             i = i + group_size as usize;
         }
 
-        v.push(" %k%f");
+        v.push(" %k%f%b");
         v.join("")
     }
 
@@ -280,7 +280,7 @@ impl GitRepoStats {
         let fg2 = Self::white_or_black(bg2);
 
         format!(
-            "%K{{#{}}} %F{{{}}}{}%f%K{{#{}}}%F{{{}}}{}%f %k",
+            "%B%K{{#{}}} %F{{{}}}{}%f%K{{#{}}}%F{{{}}}{}%f %k%b",
             sha[34..40].to_string(),
             fg1,
             sha[0..4].to_string(),
