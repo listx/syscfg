@@ -37,6 +37,7 @@ main()
 	pane_mode="${2}"
 	client_key_table="${3}"
 
+	local session_format
 	local style1
 
 	if [[ "${pane_mode}" =~ (copy|view)-mode ]]; then
@@ -52,7 +53,14 @@ main()
 		style1=" #[bg=red fg=${L_TMUX_COLOR_TEXT}] <${client_key_table}> "
 	fi
 
-	echo " ${session_name} #[bg=${L_TMUX_COLOR_TEXT}]${style1}#[bg=${L_TMUX_COLOR_TEXT}] "
+	session_format=" ${session_name} "
+	# If we're SSH'ed into a nested tmux session, colorize the session name a
+	# bit differently.
+	if [[ -n "${SSH_CONNECTION:-}" ]]; then
+		session_format="#[bg=blue] ${session_name} "
+	fi
+
+	echo "${session_format}#[bg=${L_TMUX_COLOR_TEXT}]${style1}#[bg=${L_TMUX_COLOR_TEXT}] "
 }
 
 main "$@"
