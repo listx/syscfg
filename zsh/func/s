@@ -17,7 +17,7 @@ s()
 	*)  user="l" ;;
 	esac
 
-	tmux rename-window "${user}@${host}"
+	tmux rename-window "ssh->${user}@${host}"
 
 	case "${host}" in
 	w0)
