@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Usage: $0 <PANE_CURRENT_COMMAND> <PANE_CURRENT_PATH> <WINDOW_NAME> <WINDOW_ID> <PANE_ID> <WINDOW_FLAGS> <WINDOW_PANES>
+# Usage: $0 <PANE_CURRENT_COMMAND> <PANE_CURRENT_PATH> <WINDOW_NAME> <WINDOW_ID> <PANE_ID> <WINDOW_FLAGS> <WINDOW_PANES> <IS_CURRENT_WINDOW>
 #
 # Generate the window name and formatting/style/colors for all active and inactive windows.
 
