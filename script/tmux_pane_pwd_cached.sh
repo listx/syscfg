@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 #
-# Script used by tmux to figure out how to display the status baar for the
+# Script used by tmux to figure out how to display the status bar for the
 # current window. Note that this is different from setting the window name (aka
 # "#{window_name}", which we purposely avoid due to race conditions.
 #
 # The point of this script is to avoid spamming lh with too many requests.
 # Instead, we only ask lh to shorten a path for us if we detect that there is a
-# change in the curront path.
+# change in the current path.
 
 set -o errexit
 set -o nounset
@@ -17,7 +17,6 @@ pane_pwd_same()
 {
   local window_id
   local pane_id
-  local has_focus
 
   local pwd_new
 
