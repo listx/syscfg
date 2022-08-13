@@ -2,4 +2,13 @@
 
 set -euo pipefail
 
-emacsclient -e "(kill-emacs)"
+main()
+{
+	local session_name
+
+	session_name="${1:-default}"
+
+	emacsclient --socket-name="${session_name}" --eval "(kill-emacs)"
+}
+
+main "$@"

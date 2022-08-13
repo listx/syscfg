@@ -31,14 +31,17 @@ main()
 	local style1
 	local style2
 
-	if [[ "${pane_current_command}" == zsh ]]; then
-		window_name_generated="$(~/syscfg/script/tmux_pane_pwd_cached.sh "${window_id}" "${pane_id}" "${pane_current_path}")"
-		style1="#[bg=black fg=yellow]"
-		style2="#[bg=black fg=yellow]"
+	# Manually-named windows ("mnw").
+	if [[ -n "${window_name:-}" ]] && [[ "${window_name}" =~ mnw-\> ]]; then
+		window_name_generated="${window_name#mnw->}"
+		style1="#[bg=black fg=cyan]"
+		style2="#[bg=black fg=cyan]"
 		if ((is_current_window)); then
-			style1="#[bg=yellow]"
-			style2="#[bg=brightyellow fg=black]"
+			style1="#[bg=cyan]"
+			style2="#[bg=brightcyan fg=black]"
 		fi
+	# SSH sessions are named (and colored) specially because they almost always
+	# entail a nested tmux session.
 	elif [[ "${window_name}" =~ ^ssh-\> ]]; then
 		window_name_generated="${window_name}"
 		style1="#[bg=black fg=blue]"
@@ -47,6 +50,16 @@ main()
 			style1="#[bg=blue]"
 			style2="#[bg=brightblue fg=black]"
 		fi
+	# Plain shell session --- show the shortened $PWD.
+	elif [[ "${pane_current_command}" == zsh ]]; then
+		window_name_generated="$(~/syscfg/script/tmux_pane_pwd_cached.sh "${window_id}" "${pane_id}" "${pane_current_path}")"
+		style1="#[bg=black fg=yellow]"
+		style2="#[bg=black fg=yellow]"
+		if ((is_current_window)); then
+			style1="#[bg=yellow]"
+			style2="#[bg=brightyellow fg=black]"
+		fi
+	# Long-running command. Show the command name.
 	else
 		window_name_generated="${pane_current_command}"
 		style1="#[bg=black fg=green]"

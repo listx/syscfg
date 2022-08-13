@@ -2,6 +2,8 @@
 
 set -euo pipefail
 
+declare -a __args
+
 set_elisp()
 {
 	local file
@@ -13,12 +15,25 @@ set_elisp()
 	local line
 	local column
 
+	session_name=default
+
 	for arg; do
-		if [[ "${arg}" == +* ]] && (($# > 1)); then
-			position="${arg}"
-		else
+		case "${arg}" in
+		+*)
+			if (($# > 1)); then
+				position="${arg}"
+			fi
+			;;
+		-*=*)
+			__args+=("${arg}")
+			;;
+		-s=*)
+			session_name="${arg#*=}"
+			;;
+		*)
 			file="${arg}"
-		fi
+			;;
+		esac
 		shift
 	done
 
@@ -123,8 +138,10 @@ main()
 	# The (find-file ...) avoids showing "*scratch*" buffer on startup when
 	# invoking from emacsclient.
 	exec emacsclient \
+		--socket-name="${session_name}" \
 		--alternate-editor "" \
 		--tty \
+		"${__args[@]}" \
 		--eval "${__elisp}"
 }
 
