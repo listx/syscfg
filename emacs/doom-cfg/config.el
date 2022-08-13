@@ -218,7 +218,11 @@ Return an event vector."
 (setq user-full-name "Linus Arver"
       user-mail-address "linusarver@gmail.com")
 
-(setq doom-theme 'zenburn)
+(cond
+ ((string= "lo" (daemonp))
+  (setq doom-theme 'doom-challenger-deep))
+ (t
+  (setq doom-theme 'zenburn)))
 
 (map! :after dired
       :map dired-mode-map

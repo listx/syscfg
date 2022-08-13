@@ -1088,7 +1088,11 @@ First install the zenburn-theme package, then load it by setting =doom-theme= to
 
 #+name: theme
 #+begin_src emacs-lisp
-(setq doom-theme 'zenburn)
+(cond
+ ((string= "lo" (daemonp))
+  (setq doom-theme 'doom-challenger-deep))
+ (t
+  (setq doom-theme 'zenburn)))
 #+end_src
 
 #+name: colors-generator
