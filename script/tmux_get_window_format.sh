@@ -35,7 +35,7 @@ main()
 		window_name_generated="$(~/syscfg/script/tmux_pane_pwd_cached.sh "${window_id}" "${pane_id}" "${pane_current_path}")"
 		style1="#[bg=black fg=yellow]"
 		style2="#[bg=black fg=yellow]"
-		if (( is_current_window )); then
+		if ((is_current_window)); then
 			style1="#[bg=yellow]"
 			style2="#[bg=brightyellow fg=black]"
 		fi
@@ -43,7 +43,7 @@ main()
 		window_name_generated="${window_name}"
 		style1="#[bg=black fg=blue]"
 		style2="#[bg=black fg=blue]"
-		if (( is_current_window )); then
+		if ((is_current_window)); then
 			style1="#[bg=blue]"
 			style2="#[bg=brightblue fg=black]"
 		fi
@@ -51,14 +51,14 @@ main()
 		window_name_generated="${pane_current_command}"
 		style1="#[bg=black fg=green]"
 		style2="#[bg=black fg=green]"
-		if (( is_current_window )); then
+		if ((is_current_window)); then
 			style1="#[bg=green]"
 			style2="#[bg=brightgreen fg=black]"
 		fi
 	fi
 
-	if (( "${window_panes}" > 1 )); then
-		pane_count="$(( window_panes - 1 ))"
+	if (("${window_panes}" > 1)); then
+		pane_count="$((window_panes - 1))"
 	else
 		pane_count=" "
 	fi
