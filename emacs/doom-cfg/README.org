@@ -332,6 +332,7 @@ Note that this file is pretty much **required** and acts as the base for all oth
 <<org>>
 <<org-roam>>
 <<elixir>>
+<<shell>>
 
 <<line-numbers>>
 
@@ -1377,6 +1378,19 @@ In Org 9.2+, you can do =C-c C-,= to run org-insert-structure-template, and then
       :map alchemist-mode-map
       :mnvi "C-k" nil
       :mnvi "C-j" nil)
+#+end_src
+
+* Shell
+
+#+name: shell
+#+begin_src emacs-lisp
+(after! sh-script
+  (set-formatter! 'shfmt
+    '("shfmt"
+       "--binary-next-line"
+       "--func-next-line"
+      ("--indent" "%d" (unless indent-tabs-mode tab-width))
+      ("--language-dialect" "%s" (pcase sh-shell (`bash "bash") (`mksh "mksh") (_ "posix"))))))
 #+end_src
 
 * Org roam

@@ -323,6 +323,13 @@ Return an event vector."
       :map alchemist-mode-map
       :mnvi "C-k" nil
       :mnvi "C-j" nil)
+(after! sh-script
+  (set-formatter! 'shfmt
+    '("shfmt"
+       "--binary-next-line"
+       "--func-next-line"
+      ("--indent" "%d" (unless indent-tabs-mode tab-width))
+      ("--language-dialect" "%s" (pcase sh-shell (`bash "bash") (`mksh "mksh") (_ "posix"))))))
 
 (setq display-line-numbers-type nil)
 
