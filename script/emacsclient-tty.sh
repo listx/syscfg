@@ -14,7 +14,7 @@ set_elisp()
 	local column
 
 	for arg; do
-		if [[ "${arg}" == +* ]] && (( $# > 1 )); then
+		if [[ "${arg}" == +* ]] && (($# > 1)); then
 			position="${arg}"
 		else
 			file="${arg}"
@@ -23,16 +23,16 @@ set_elisp()
 	done
 
 	case "${position:-}" in
-		+*:*)
-			line="${position#+}"
-			line="${line%:*}"
-			column="${position#*:}"
-			maybe_goto_position="(evil-goto-line ${line}) (move-to-column ${column})"
-			;;
-		+*)
-			line="${position#+}"
-			maybe_goto_position="(evil-goto-line ${line})"
-			;;
+	+*:*)
+		line="${position#+}"
+		line="${line%:*}"
+		column="${position#*:}"
+		maybe_goto_position="(evil-goto-line ${line}) (move-to-column ${column})"
+		;;
+	+*)
+		line="${position#+}"
+		maybe_goto_position="(evil-goto-line ${line})"
+		;;
 	esac
 
 	buffer_filename="$(readlink -e "${file}")"
@@ -40,8 +40,8 @@ set_elisp()
 	# If Git is invoking this editor (for `git commit'), then manually set the
 	# line length to 72.
 	case "${buffer_filename}" in
-		*COMMIT_EDITMSG|*git-rebase-todo)
-			maybe_fill_72="(setq fill-column 72)"
+	*COMMIT_EDITMSG | *git-rebase-todo)
+		maybe_fill_72="(setq fill-column 72)"
 		;;
 	esac
 
@@ -72,7 +72,8 @@ set_elisp()
 		maybe_open_new_tab="(tab-new)"
 	fi
 
-	__elisp=$(cat << EOF
+	__elisp=$(
+		cat <<EOF
 	(prog1
 		${maybe_open_new_tab}
 		; Open the file.
