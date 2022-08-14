@@ -217,13 +217,7 @@ DOOM requires 3 configuration files in the =$DOOMDIR=:
        literate
        (default +bindings +smartparens))
 
-<<config-file-location>>
 <<leader-key>>
-#+end_src
-
-** Change the literate DOOM config file location
-#+begin_src emacs-lisp
-(setq +literate-config-file (concat doom-private-dir "README.org"))
 #+end_src
 
 ** Change DOOM's leader key from "SPC" to ","

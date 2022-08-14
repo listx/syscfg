@@ -187,7 +187,6 @@
        literate
        (default +bindings +smartparens))
 
-
 (setq doom-leader-key ","
       doom-leader-alt-key "C-,"
       doom-localleader-key ", m"
