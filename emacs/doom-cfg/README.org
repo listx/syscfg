@@ -1357,6 +1357,9 @@ If you use "org" and don't want your org files in the default location below, ch
 
 ;; Disable spellcheck.
 (remove-hook 'org-mode-hook #'flyspell-mode)
+
+;; See https://github.com/org-roam/org-roam/issues/2198#issuecomment-1208072780.
+(setq org-fold-core-style "overlays")
 #+end_src
 
 ** Notes
