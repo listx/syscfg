@@ -317,6 +317,11 @@ Return an event vector."
       :mnvi "C-j" nil)
 (setq org-roam-directory (concat org-directory "/note")
       +org-roam-open-buffer-on-find-file nil)
+(setq org-journal-date-prefix "#+TITLE: "
+      ; Make each entry start at the top level heading.
+      org-journal-time-prefix "* "
+      org-journal-date-format "%Y-%m-%d %a"
+      org-journal-file-format "%Y-%m-%d.org")
 (map! :after alchemist
       :map alchemist-mode-map
       :mnvi "C-k" nil

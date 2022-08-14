@@ -180,7 +180,7 @@ DOOM requires 3 configuration files in the =$DOOMDIR=:
        ;;nim               ; python + lisp at the speed of c
        nix               ; I hereby declare "nix geht mehr!"
        ;;ocaml             ; an objective camel
-       (org +roam2)              ; organize your plain life in plain text
+       (org +journal +roam2)              ; organize your plain life in plain text
        ;;php               ; perl's insecure younger brother
        ;;plantuml          ; diagrams for confusing people more
        ;;purescript        ; javascript, but functional
@@ -331,6 +331,7 @@ Note that this file is pretty much **required** and acts as the base for all oth
 <<magit>>
 <<org>>
 <<org-roam>>
+<<org-journal>>
 <<elixir>>
 <<shell>>
 
@@ -1395,6 +1396,17 @@ In Org 9.2+, you can do =C-c C-,= to run org-insert-structure-template, and then
       :mnvi "C-j" nil)
 (setq org-roam-directory (concat org-directory "/note")
       +org-roam-open-buffer-on-find-file nil)
+#+end_src
+
+* Org journal
+
+#+name: org-journal
+#+begin_src emacs-lisp
+(setq org-journal-date-prefix "#+TITLE: "
+      ; Make each entry start at the top level heading.
+      org-journal-time-prefix "* "
+      org-journal-date-format "%Y-%m-%d %a"
+      org-journal-file-format "%Y-%m-%d.org")
 #+end_src
 
 * Magit
