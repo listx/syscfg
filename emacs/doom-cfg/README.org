@@ -386,19 +386,7 @@ Here are some workarounds for upstream bugs that have not yet been fixed.
 
 #+name: doom-bug-workarounds
 #+begin_src emacs-lisp
-<<iedit-embark-conflict>>
 <<disable-company-ispell>>
-#+end_src
-
-** https://github.com/hlissner/doom-emacs/issues/5374 (Key-binding conflict between iedit and embark)
-#+name: iedit-embark-conflict
-#+begin_src emacs-lisp
-(use-package! iedit
-  :when (featurep! :completion vertico)
-  :defer t
-  :init
-  ;; Fix conflict with embark.
-  (setq iedit-toggle-key-default nil))
 #+end_src
 
 ** Disable company-ispell because it is almost useless (trying to complete every single word we type)

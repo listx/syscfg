@@ -1,11 +1,5 @@
 ;;; $DOOMDIR/config.el -*- lexical-binding: t; -*-
 
-(use-package! iedit
-  :when (featurep! :completion vertico)
-  :defer t
-  :init
-  ;; Fix conflict with embark.
-  (setq iedit-toggle-key-default nil))
 (use-package! company
   :config
   (setq +company-backend-alist (assq-delete-all 'text-mode +company-backend-alist))
