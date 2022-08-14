@@ -1394,8 +1394,7 @@ In Org 9.2+, you can do =C-c C-,= to run org-insert-structure-template, and then
       :map org-roam-mode-map
       :mnvi "C-k" nil
       :mnvi "C-j" nil)
-(setq org-roam-directory (concat org-directory "/note")
-      +org-roam-open-buffer-on-find-file nil)
+(setq org-roam-directory (concat org-directory "/note"))
 #+end_src
 
 * Org journal

@@ -315,8 +315,7 @@ Return an event vector."
       :map org-roam-mode-map
       :mnvi "C-k" nil
       :mnvi "C-j" nil)
-(setq org-roam-directory (concat org-directory "/note")
-      +org-roam-open-buffer-on-find-file nil)
+(setq org-roam-directory (concat org-directory "/note"))
 (setq org-journal-date-prefix "#+TITLE: "
       ; Make each entry start at the top level heading.
       org-journal-time-prefix "* "
