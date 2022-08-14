@@ -214,7 +214,7 @@ Return an event vector."
 
 (cond
  ((string= "lo" (daemonp))
-  (setq doom-theme 'doom-challenger-deep))
+  (setq doom-theme 'doom-one))
  (t
   (setq doom-theme 'zenburn)))
 

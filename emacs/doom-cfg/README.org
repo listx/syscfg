@@ -1079,7 +1079,7 @@ First install the zenburn-theme package, then load it by setting =doom-theme= to
 #+begin_src emacs-lisp
 (cond
  ((string= "lo" (daemonp))
-  (setq doom-theme 'doom-challenger-deep))
+  (setq doom-theme 'doom-one))
  (t
   (setq doom-theme 'zenburn)))
 #+end_src
