@@ -322,14 +322,9 @@ Return an event vector."
       org-roam-dailies-directory "journal/"
       org-roam-dailies-capture-templates
       '(("d" "default" entry
-         "* %<%H:%M>: %?"
+         "* %<%H:%M>\n\n%?"
          :target (file+head "%<%Y-%m-%d>.org"
-                            "#+title: %<%Y-%m-%d>\n"))))
-(setq org-journal-date-prefix "#+TITLE: "
-      ; Make each entry start at the top level heading.
-      org-journal-time-prefix "* "
-      org-journal-date-format "%Y-%m-%d %a"
-      org-journal-file-format "%Y-%m-%d.org")
+                            "#+title: %<%Y-%m-%d %a>\n"))))
 (map! :after alchemist
       :map alchemist-mode-map
       :mnvi "C-k" nil
