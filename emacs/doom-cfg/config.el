@@ -315,7 +315,13 @@ Return an event vector."
       :map org-roam-mode-map
       :mnvi "C-k" nil
       :mnvi "C-j" nil)
-(setq org-roam-directory (concat org-directory "/note/"))
+(setq org-roam-directory (concat org-directory "/note/")
+      org-roam-dailies-directory "journal/"
+      org-roam-dailies-capture-templates
+      '(("d" "default" entry
+         "* %<%H:%M>: %?"
+         :target (file+head "%<%Y-%m-%d>.org"
+                            "#+title: %<%Y-%m-%d>\n"))))
 (setq org-journal-date-prefix "#+TITLE: "
       ; Make each entry start at the top level heading.
       org-journal-time-prefix "* "
