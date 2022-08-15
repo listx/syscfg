@@ -809,14 +809,6 @@ Also add the number of windows in the window configuration."
   (setq git-gutter:added-sign " ")
   (setq git-gutter:deleted-sign " "))
 
-;; Highlight the entire expression when hovering over matching parentheses.
-(use-package! highlight-sexp
-  :hook ((lisp-mode emacs-lisp-mode) . highlight-sexp-mode)
-  :config
-  (custom-set-faces!
-    '(hl-sexp-face :extend t))
-  (setq hl-sexp-background-color "brightblack"))
-
 ;; Disable vertical bar cursor shape in terminal emacs.
 (setq evil-motion-state-cursor 'box)
 (setq evil-visual-state-cursor 'box)
