@@ -1401,6 +1401,7 @@ In Org 9.2+, you can do =C-c C-,= to run org-insert-structure-template, and then
       org-roam-dailies-capture-templates
       '(("d" "default" entry
          "* %<%H:%M>\n\n%?"
+         :empty-lines-before 1
          :target (file+head "%<%Y-%m-%d>.org"
                             "#+title: %<%Y-%m-%d %a>\n"))))
 #+end_src
