@@ -325,7 +325,29 @@ Return an event vector."
          "* %<%H:%M>\n\n%?"
          :empty-lines-before 1
          :target (file+head "%<%Y-%m-%d>.org"
-                            "#+title: %<%Y-%m-%d %a>\n"))))
+                            "#+title: %<%Y-%m-%d %a>\n")))
+      l/org-roam-default-template "#+title: ${title}\n\n* TODOs\n\n* Notes\n"
+      org-roam-capture-templates
+      `(("r" "reference" plain
+         "%?"
+         :target (file+head "reference/${slug}.org" ,l/org-roam-default-template)
+         :unnarrowed t)
+        ("c" "creche" plain
+         "%?"
+         :target (file+head "creche/${slug}.org" ,l/org-roam-default-template)
+         :unnarrowed t)
+        ("p" "proj-temp" plain
+         "%?"
+         :target (file+head "proj-temp/${slug}.org" ,l/org-roam-default-template)
+         :unnarrowed t)
+        ("P" "proj-perm" plain
+         "%?"
+         :target (file+head "proj-perm/${slug}.org" ,l/org-roam-default-template)
+         :unnarrowed t)
+        ("x" "pub" plain
+         "%?"
+         :target (file+head "pub/${slug}.org" ,l/org-roam-default-template)
+         :unnarrowed t)))
 (map! :after alchemist
       :map alchemist-mode-map
       :mnvi "C-k" nil
