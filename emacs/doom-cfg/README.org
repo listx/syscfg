@@ -345,6 +345,7 @@ Note that this file is pretty much **required** and acts as the base for all oth
 <<navigation-buffer-intra>>
 <<navigation-buffer-inter>>
 <<vertico>>
+<<consult>>
 
 <<window-management>>
 
@@ -1247,6 +1248,16 @@ dhall text <<< "./listColorsForEmacs.dhall ./themes/PastelDark.dhall"
     (when (search-backward "/" (minibuffer-prompt-end) t)
       (delete-region (1+ (point)) (point-max))
       t)))
+#+end_src
+
+* Consult
+
+We have to manually load "consult" because otherwise the =consult--grep= function which we use in the =elisp:...= in our org-mode files don't work.
+They appear to be lazily loaded the first time we invoke =M-x consult-grep=.
+
+#+name: consult
+#+begin_src emacs-lisp
+(require 'consult)
 #+end_src
 
 * Org mode

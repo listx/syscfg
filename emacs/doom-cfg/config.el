@@ -404,6 +404,7 @@ Return an event vector."
     (when (search-backward "/" (minibuffer-prompt-end) t)
       (delete-region (1+ (point)) (point-max))
       t)))
+(require 'consult)
 
 (defun l/split-window-vertically ()
   "Split window verically."
