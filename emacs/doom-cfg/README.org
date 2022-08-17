@@ -1338,21 +1338,24 @@ If you use "org" and don't want your org files in the default location below, ch
       (nth 0 (split-string (getenv "L_ORG_AGENDA_DIRS"))))
 ;; List of directories to use for agenda files. Each directory is searched
 ;; recursively.
-(let*
-  ((files (mapcan
-           (lambda (dir) (directory-files-recursively dir "\\.org$"))
-           (split-string (getenv "L_ORG_AGENDA_DIRS"))))
-   (exclude-patterns (split-string (getenv "L_ORG_AGENDA_EXCLUDE_PATTERNS")))
-   (reduced
-     (seq-reduce
-       (lambda (fs exclude-pattern)
-         (seq-filter
-           (lambda (f)
-             (not (string-match-p (regexp-quote exclude-pattern) f)))
-           fs))
-       exclude-patterns
-       files)))
-  (setq org-agenda-files reduced))
+(defun l/reset-org-agenda-files ()
+  (interactive)
+  (let*
+    ((files (mapcan
+             (lambda (dir) (directory-files-recursively dir "\\.org$"))
+             (split-string (getenv "L_ORG_AGENDA_DIRS"))))
+     (exclude-patterns (split-string (getenv "L_ORG_AGENDA_EXCLUDE_PATTERNS")))
+     (reduced
+       (seq-reduce
+         (lambda (fs exclude-pattern)
+           (seq-filter
+             (lambda (f)
+               (not (string-match-p (regexp-quote exclude-pattern) f)))
+             fs))
+         exclude-patterns
+         files)))
+    (setq org-agenda-files reduced)))
+(l/reset-org-agenda-files)
 
 ;; Disable spellcheck.
 (remove-hook 'org-mode-hook #'flyspell-mode)
