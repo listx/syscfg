@@ -325,7 +325,7 @@ Return an event vector."
       org-roam-dailies-directory "journal/"
       org-roam-dailies-capture-templates
       '(("d" "default" entry
-         "* %<%H:%M>\n\n%?"
+         "* %<[%Y-%m-%d %a %H:%M]>\n\n%?"
          :empty-lines-before 1
          :target (file+head "%<%Y-%m-%d>.org"
                             "#+title: %<%Y-%m-%d %a>\n")))
