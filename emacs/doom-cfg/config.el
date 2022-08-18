@@ -331,7 +331,7 @@ Return an event vector."
          :empty-lines-before 1
          :target (file+head "%<%Y-%m-%d>.org"
                             "#+title: %<%Y-%m-%d %a>\n")))
-      l/org-roam-default-template "#+title: ${title}\n\n* TODOs\n\n* Notes\n"
+      l/org-roam-default-template "#+title: ${title}\n\n* TODOs\n\n* Notes\n:PROPERTIES:\n:VISIBILITY: folded\n:END:\n"
       org-roam-capture-templates
       `(("r" "reference" plain
          "%?"
