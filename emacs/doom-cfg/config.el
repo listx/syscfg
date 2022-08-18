@@ -253,6 +253,8 @@ Return an event vector."
   (setq org-startup-indented nil)
   (add-to-list 'org-todo-keywords
                '(sequence "TODO" "IN-PROGRESS" "WAITING" "|" "DONE" "CANCELED" "OBSOLETE"))
+  (add-to-list 'org-todo-keywords
+               '(sequence "ASK" "|" "ANSWERED"))
   (add-hook 'org-mode-hook 'l/org-colors))
 
 ;; Dim org-block face (source code blocks) separately, because they are not
