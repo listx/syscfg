@@ -1420,7 +1420,7 @@ In Org 9.2+, you can do =C-c C-,= to run org-insert-structure-template, and then
          :empty-lines-before 1
          :target (file+head "%<%Y-%m-%d>.org"
                             "#+title: %<%Y-%m-%d %a>\n")))
-      l/org-roam-default-template "#+title: ${title}\n\n* TODOs\n\n* Notes\n:PROPERTIES:\n:VISIBILITY: folded\n:END:\n"
+      l/org-roam-default-template "#+title: ${title}\n\n* TODOs\n\n* Notes\n:PROPERTIES:\n:VISIBILITY: children\n:END:\n"
       org-roam-capture-templates
       `(("r" "reference" plain
          "%?"
