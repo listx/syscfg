@@ -572,7 +572,6 @@ otherwise, close current tab."
 (setq tab-bar-show t
       tab-bar-new-button-show nil
       tab-bar-close-button-show nil
-      tab-bar-separator (propertize " " 'font-lock-face '(:background "black"))
       tab-bar-tab-name-function #'l/get-tab-name)
 
 ; Based on `tab-bar-tab-name-current-with-count', with some tweaks.
@@ -694,38 +693,37 @@ Also add the number of windows in the window configuration."
 
 (defun l/reset-faces ()
   (interactive)
+  (setq tab-bar-separator (propertize " " 'font-lock-face `(:background ,(doom-darken (doom-color 'bg-alt) 0.2))))
   (custom-set-faces!
-  `(vertical-border :background ,l/color-xDarkGreen :foreground ,l/color-xDarkGreen)
+  `(vertical-border :background ,(doom-color 'base0) :foreground ,(doom-color 'base0))
   '(highlight-numbers-number  :weight bold)
-  `(font-lock-builtin-face  :foreground ,l/color-xBrightOrange)
-  '(hl-line :background "black")
+  `(hl-line :background ,(doom-darken (doom-color 'bg-alt) 0.4))
   '(vim-empty-lines-face :weight bold)
 
-  '(auto-dim-other-buffers-face :foreground "white" :background "black")
+  `(auto-dim-other-buffers-face :foreground ,(doom-color 'base8) :background ,(doom-darken (doom-color 'bg-alt) 0.6))
   ; Use bright visuals for coloring regions and interactive search hits.
   '(lazy-highlight  :foreground "pink" :background "dark red" :weight normal)
   '(isearch  :foreground "dark red" :background "pink" :weight bold)
   '(region  :foreground "dark red" :background "pink" :weight bold)
 
-  '(tab-bar
-      :background "black")
+  `(tab-bar :background ,(doom-darken (doom-color 'bg-alt) 0.2))
   `(tab-bar-tab
-      :background ,l/color-xAvocado
-      :foreground ,l/color-xLime
+      :background ,(doom-color 'base8)
+      :foreground ,(doom-color 'base0)
       :weight bold
       :box nil)
   `(tab-bar-tab-inactive
-      :background ,l/color-xDarkGreen
-      :foreground ,l/color-xMoss
+      :background ,(doom-color 'base0)
+      :foreground ,(doom-color 'base8)
       :box nil)
 
   `(mode-line
       :weight bold
-      :background ,l/color-xAvocado
-      :foreground ,l/color-xLime)
+      :background ,(doom-color 'base8)
+      :foreground ,(doom-color 'base0))
   `(mode-line-inactive
-      :background ,l/color-xDarkGreen
-      :foreground ,l/color-xMoss)
+      :background ,(doom-color 'base0)
+      :foreground ,(doom-color 'base8))
 
   `(git-gutter:modified :foreground ,l/color-xUltraBrightMagenta)
   `(git-gutter:added :foreground ,l/color-xUltraBrightGreen)
@@ -733,11 +731,11 @@ Also add the number of windows in the window configuration."
   ;; Fix ugly colors for diffs. Prevalent because of git comit message buffers
   ;; like COMMIT_EDITMSG.
   '(git-commit-summary  :foreground "brightwhite" :weight bold)
-  '(diff-added        :foreground "brightgreen" :weight bold)
-  '(diff-removed      :foreground "brightred" :weight bold)
+  '(diff-added        :foreground "#00ff00" :background "#335533" :weight bold)
+  '(diff-removed      :foreground "#ff0000" :background "#553333" :weight bold)
   '(diff-context      :foreground "brightwhite")
   '(diff-function     :foreground "brightmagenta")
-  '(diff-header       :foreground "brightyellow" :weight bold)
+  '(diff-header       :foreground "#ffff00" :background "#555533" :weight bold)
   '(diff-file-header  :foreground "brightyellow")
   '(diff-hunk-header  :foreground "brightcyan")
   '(git-commit-keyword  :foreground "brightmagenta" :weight bold))
@@ -745,7 +743,7 @@ Also add the number of windows in the window configuration."
   ;; Make all doom-modeline-* faces have a uniform foreground, to make them easier
   ;; to read with our custom mode-line background. This way we don't have to spell
   ;; out each font one at a time.
-  (eval `(l/custom-set-faces-matching! "doom-modeline-" :foreground ,l/color-xLime)))
+  (eval `(l/custom-set-faces-matching! "doom-modeline-" :foreground ,(doom-color 'base0))))
 
 (use-package! rainbow-mode
   :hook (prog-mode text-mode))
