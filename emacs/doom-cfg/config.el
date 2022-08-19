@@ -212,12 +212,6 @@ Return an event vector."
 (setq user-full-name "Linus Arver"
       user-mail-address "linusarver@gmail.com")
 
-(cond
- ((string= "lo" (daemonp))
-  (setq doom-theme 'doom-one))
- (t
-  (setq doom-theme 'zenburn)))
-
 (map! :after dired
       :map dired-mode-map
       ;; "H" is by default bound to dired-do-hardlink.
@@ -753,10 +747,14 @@ Also add the number of windows in the window configuration."
   ;; out each font one at a time.
   (eval `(l/custom-set-faces-matching! "doom-modeline-" :foreground ,l/color-xLime)))
 
-(l/reset-faces)
-
 (use-package! rainbow-mode
   :hook (prog-mode text-mode))
+(cond
+ ((string= "lo" (daemonp))
+  (setq doom-theme 'doom-one))
+ (t
+  (setq doom-theme 'zenburn)))
+(l/reset-faces)
 ;; Enable soft word-wrap almost everywhere (including elisp).
 (+global-word-wrap-mode +1)
 

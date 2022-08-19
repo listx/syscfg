@@ -322,8 +322,6 @@ Note that this file is pretty much **required** and acts as the base for all oth
 
 <<name-and-email>>
 
-<<theme>>
-
 <<dired>>
 <<magit>>
 <<org>>
@@ -355,6 +353,7 @@ Note that this file is pretty much **required** and acts as the base for all oth
 <<scratch>>
 
 <<colors>>
+<<theme>>
 <<misc-ui>>
 
 ;; Here are some additional functions/macros that could help you configure Doom:
@@ -1079,6 +1078,7 @@ First install the zenburn-theme package, then load it by setting =doom-theme= to
   (setq doom-theme 'doom-one))
  (t
   (setq doom-theme 'zenburn)))
+(l/reset-faces)
 #+end_src
 
 #+name: colors-generator
@@ -1195,8 +1195,6 @@ dhall text <<< "./listColorsForEmacs.dhall ./themes/PastelDark.dhall"
   ;; to read with our custom mode-line background. This way we don't have to spell
   ;; out each font one at a time.
   (eval `(l/custom-set-faces-matching! "doom-modeline-" :foreground ,l/color-xLime)))
-
-(l/reset-faces)
 
 (use-package! rainbow-mode
   :hook (prog-mode text-mode))
