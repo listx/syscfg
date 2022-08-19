@@ -58,7 +58,8 @@ main()
     # Otherwise the second rg invocation will think that the input is a binary
     # stream and not work the way we expect it to.
     args+=(--text)
-    if [[ "${pattern}" =~ ^[[:lower:]]+$ ]]; then
+    # Ignore case sensitivity if all characters in the pattern are lowercase.
+    if ! [[ "${pattern}" =~ [[:upper:]] ]]; then
         args+=("--ignore-case")
     fi
 

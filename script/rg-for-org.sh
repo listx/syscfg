@@ -33,7 +33,8 @@ main()
     args+=(--color=never)
     # Always use "/" as path separator.
     args+=(--path-separator /)
-    if [[ "${pattern}" =~ ^[[:lower:]]+$ ]]; then
+    # Ignore case sensitivity if all characters in the pattern are lowercase.
+    if ! [[ "${pattern}" =~ [[:upper:]] ]]; then
         args+=("--ignore-case")
     fi
 
