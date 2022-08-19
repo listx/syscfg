@@ -51,8 +51,5 @@
 (package! vim-empty-lines-mode)
 (package! git-gutter)
 (package! auto-dim-other-buffers)
-(package! kakapo-mode)
-(package! highlight-sexp
-  :recipe (:host github :repo "daimrod/highlight-sexp"))
 (package! solaire-mode :disable t)
 (package! zenburn-theme)
