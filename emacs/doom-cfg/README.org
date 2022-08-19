@@ -304,7 +304,6 @@ In order to use =C-,= from terminal Emacs, you have to make your terminal (e.g.,
 (package! git-gutter)
 (package! auto-dim-other-buffers)
 (package! solaire-mode :disable t)
-<<package-zenburn-theme>>
 #+end_src
 
 * $DOOMDIR/config.el
@@ -1064,21 +1063,16 @@ We don't have any code for deleting a tab because we only delete windows instead
 
 * Colors
 
-First install the zenburn-theme package, then load it by setting =doom-theme= to it.
-
-#+name: package-zenburn-theme
-#+begin_src emacs-lisp
-(package! zenburn-theme)
-#+end_src
-
 #+name: theme
 #+begin_src emacs-lisp
-(cond
- ((string= "lo" (daemonp))
-  (setq doom-theme 'doom-one))
- (t
-  (setq doom-theme 'zenburn)))
-(l/reset-faces)
+(use-package! doom-themes
+  :config
+  (cond
+   ((string= "lo" (daemonp))
+    (load-theme 'doom-one t))
+   (t
+    (load-theme 'doom-zenburn t)))
+  (l/reset-faces))
 #+end_src
 
 #+name: colors-generator
@@ -1584,9 +1578,9 @@ Before we started using Doom Emacs, we used to rely heavily on kakapo-mode to al
   ; Update git-gutter every time we lose/regain focus to the frame. See
   ; https://emacs.stackexchange.com/a/60971/13006.
   (add-function :after after-focus-change-function (lambda () (when (frame-focus-state) (git-gutter:update-all-windows))))
-  (setq git-gutter:modified-sign " ")
-  (setq git-gutter:added-sign " ")
-  (setq git-gutter:deleted-sign " "))
+  (setq git-gutter:modified-sign "█")
+  (setq git-gutter:added-sign "█")
+  (setq git-gutter:deleted-sign "█"))
 
 ;; Disable vertical bar cursor shape in terminal emacs.
 (setq evil-motion-state-cursor 'box)

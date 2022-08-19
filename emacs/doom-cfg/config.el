@@ -749,12 +749,14 @@ Also add the number of windows in the window configuration."
 
 (use-package! rainbow-mode
   :hook (prog-mode text-mode))
-(cond
- ((string= "lo" (daemonp))
-  (setq doom-theme 'doom-one))
- (t
-  (setq doom-theme 'zenburn)))
-(l/reset-faces)
+(use-package! doom-themes
+  :config
+  (cond
+   ((string= "lo" (daemonp))
+    (load-theme 'doom-one t))
+   (t
+    (load-theme 'doom-zenburn t)))
+  (l/reset-faces))
 ;; Enable soft word-wrap almost everywhere (including elisp).
 (+global-word-wrap-mode +1)
 
@@ -832,9 +834,9 @@ Also add the number of windows in the window configuration."
   ; Update git-gutter every time we lose/regain focus to the frame. See
   ; https://emacs.stackexchange.com/a/60971/13006.
   (add-function :after after-focus-change-function (lambda () (when (frame-focus-state) (git-gutter:update-all-windows))))
-  (setq git-gutter:modified-sign " ")
-  (setq git-gutter:added-sign " ")
-  (setq git-gutter:deleted-sign " "))
+  (setq git-gutter:modified-sign "█")
+  (setq git-gutter:added-sign "█")
+  (setq git-gutter:deleted-sign "█"))
 
 ;; Disable vertical bar cursor shape in terminal emacs.
 (setq evil-motion-state-cursor 'box)

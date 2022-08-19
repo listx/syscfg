@@ -52,4 +52,3 @@
 (package! git-gutter)
 (package! auto-dim-other-buffers)
 (package! solaire-mode :disable t)
-(package! zenburn-theme)
