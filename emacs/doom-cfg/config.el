@@ -244,6 +244,7 @@ Return an event vector."
       :mnv "M-L" #'org-shiftmetaright)
 
 (after! org
+  (setq org-export-with-toc nil)
   (setq org-startup-indented nil)
   (add-to-list 'org-todo-keywords
                '(sequence "TODO" "IN-PROGRESS" "WAITING" "|" "DONE" "CANCELED" "OBSOLETE"))
