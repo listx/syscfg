@@ -317,6 +317,12 @@ Return an event vector."
       :map org-roam-mode-map
       :mnvi "C-k" nil
       :mnvi "C-j" nil)
+(after! org-roam
+  (setq
+        org-roam-node-display-template
+        (format "%s %s ${doom-hierarchy}"
+                (propertize "${doom-type:20}" 'face 'font-lock-keyword-face)
+                (propertize "${doom-tags:20}" 'face 'org-tag))))
 (setq org-roam-directory (concat org-directory "/note/")
       org-roam-dailies-directory "journal/"
       org-roam-dailies-capture-templates
