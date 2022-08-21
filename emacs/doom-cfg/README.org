@@ -1284,6 +1284,7 @@ Note that we have to use =M-J= to encode =M-S-j=. This appears to be Emacs conve
                '(sequence "TODO" "IN-PROGRESS" "WAITING" "|" "DONE" "CANCELED" "OBSOLETE"))
   (add-to-list 'org-todo-keywords
                '(sequence "ASK" "|" "ANSWERED"))
+  (add-hook 'org-mode-hook (lambda () (vim-empty-lines-mode -1)))
   (add-hook 'org-mode-hook 'l/org-colors))
 
 ;; Dim org-block face (source code blocks) separately, because they are not
@@ -1533,7 +1534,6 @@ Before we started using Doom Emacs, we used to rely heavily on kakapo-mode to al
 
 (use-package! vim-empty-lines-mode
   :config
-  (add-hook 'org-mode-hook 'vim-empty-lines-mode)
   (add-hook 'prog-mode-hook 'vim-empty-lines-mode)
   (add-hook 'text-mode-hook 'vim-empty-lines-mode))
 

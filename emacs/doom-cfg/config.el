@@ -250,6 +250,7 @@ Return an event vector."
                '(sequence "TODO" "IN-PROGRESS" "WAITING" "|" "DONE" "CANCELED" "OBSOLETE"))
   (add-to-list 'org-todo-keywords
                '(sequence "ASK" "|" "ANSWERED"))
+  (add-hook 'org-mode-hook (lambda () (vim-empty-lines-mode -1)))
   (add-hook 'org-mode-hook 'l/org-colors))
 
 ;; Dim org-block face (source code blocks) separately, because they are not
@@ -782,7 +783,6 @@ Also add the number of windows in the window configuration."
 
 (use-package! vim-empty-lines-mode
   :config
-  (add-hook 'org-mode-hook 'vim-empty-lines-mode)
   (add-hook 'prog-mode-hook 'vim-empty-lines-mode)
   (add-hook 'text-mode-hook 'vim-empty-lines-mode))
 
