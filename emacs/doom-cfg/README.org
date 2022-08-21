@@ -1294,7 +1294,7 @@ Note that we have to use =M-J= to encode =M-S-j=. This appears to be Emacs conve
   <<l/org-export-as-markdown-to-clipboard>>
   ; Make calendars in agenda start on Monday.
   (setq calendar-week-start-day 1)
-  (setq org-startup-indented nil)
+  (setq org-startup-indented t)
   (add-to-list 'org-todo-keywords
                '(sequence "TODO" "IN-PROGRESS" "WAITING" "|" "DONE" "CANCELED" "OBSOLETE"))
   (add-to-list 'org-todo-keywords

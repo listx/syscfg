@@ -351,7 +351,7 @@ Return an event vector."
           (kill-buffer buffer)))))
   ; Make calendars in agenda start on Monday.
   (setq calendar-week-start-day 1)
-  (setq org-startup-indented nil)
+  (setq org-startup-indented t)
   (add-to-list 'org-todo-keywords
                '(sequence "TODO" "IN-PROGRESS" "WAITING" "|" "DONE" "CANCELED" "OBSOLETE"))
   (add-to-list 'org-todo-keywords
