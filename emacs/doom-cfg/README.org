@@ -1277,8 +1277,22 @@ Note that we have to use =M-J= to encode =M-S-j=. This appears to be Emacs conve
       :mnv "M-H" #'org-shiftmetaleft
       :mnv "M-L" #'org-shiftmetaright)
 
+(map! :after org
+      :map org-mode-map
+      :localleader
+      "e" #'l/org-export-as-markdown-to-clipboard
+      ; Rebind "org-export-dispatch" to "E".
+      "E" #'org-export-dispatch)
+
+<<l/org-export-md-scrub-invalid-links>>
+(after! ox
+  (add-to-list 'org-export-filter-link-functions
+                 'l/org-export-md-scrub-invalid-links))
+
 (after! org
-  (setq org-export-with-toc nil)
+  <<l/org-export-as-markdown-to-clipboard>>
+  ; Make calendars in agenda start on Monday.
+  (setq calendar-week-start-day 1)
   (setq org-startup-indented nil)
   (add-to-list 'org-todo-keywords
                '(sequence "TODO" "IN-PROGRESS" "WAITING" "|" "DONE" "CANCELED" "OBSOLETE"))
@@ -1295,6 +1309,96 @@ Note that we have to use =M-J= to encode =M-S-j=. This appears to be Emacs conve
 
 <<org-misc>>
 <<org-agenda>>
+#+end_src
+
+** Scrub invalid links during Markdown export
+
+#+name: l/org-export-md-scrub-invalid-links
+#+begin_src emacs-lisp
+;; See https://emacs.stackexchange.com/a/22398/13006. Detect poorly-converted
+;; links (those that have two or more parentheses, which can happen if we have
+;; an elisp link).
+;;
+;; That is, if we have
+;;
+;;      [[elisp:(foo)][link-name]]
+;;
+;; in the raw orgmode text, the default Markdown export converts this to
+;;
+;;      [link-name]((foo))
+;;
+;; which is not what we want. So we detect any link that is defined in Markdown
+;; with "((..." and if so, scrub the link location with an error message, so
+;; that the above becomes
+;;
+;;      [link-name](MARKDOWN-LINK-EXPORT-ERROR)
+;;
+;; Note that links written as
+;;
+;;      [[elisp:foo][link-name]]
+;;
+;; which is valid for calling `foo` directly, won't be caught by this function
+;; because it will get exported as
+;;
+;;      [link-name](foo)
+;;
+;; by the Markdown exporter, erasing information that the link was a broken
+;; "elisp" type to begin with.
+;;
+;; In addition, unfortunately it appears that the input `link' can end in a
+;; number of space characters. So we have to preserve these extraneous
+;; characters as well (hence the second capture group).
+(defun l/org-export-md-scrub-invalid-links (link backend info)
+  "Scrub invalid Markdown links of the form `[LINK-NAME]((...)' with just LINK-NAME."
+  (if (eq backend 'md)
+    (replace-regexp-in-string "\\(\\[[^]]*\\]\\)((.+?)\\(\s*\\)$" "\\1(MARKDOWN-LINK-EXPORT-ERROR)\\2" link)
+   link))
+#+end_src
+
+** Export to clipboard
+
+#+name: l/org-export-as-markdown-to-clipboard
+#+begin_src emacs-lisp
+(defun l/org-export-as-markdown-to-clipboard ()
+  "Like doom's +org/export-to-clipboard, but (1) always exports to markdown, (2)
+always processes only the current subtree around point, and (3) pipes to a
+hardcoded clipboard script to perform the copy. The unwind-protect stuff was
+copy/pasted from the example given at
+https://www.gnu.org/software/emacs/manual/html_node/elisp/Cleanups.html. It's
+interesting to see that doom has a slightly different version with
+(unwind-protect (with-current-buffer ...) (kill-buffer buffer))."
+  (interactive)
+  (require 'ox)
+  (let* ((org-export-with-toc nil)
+         (org-export-show-temporary-export-buffer nil)
+         (ASYNC nil)
+         (SUBTREEP t)
+         (VISIBLE-ONLY t)
+         (BODY-ONLY t)
+         ; Temporary buffer to hold exported contents.
+         (buffer (save-window-excursion
+                   (org-export-to-buffer 'md "*Formatted Copy*" ASYNC SUBTREEP VISIBLE-ONLY BODY-ONLY))))
+    (with-current-buffer buffer
+      ;; Delete leading newline from org-export-to-buffer.
+      (goto-line 1)
+      (flush-lines "^$")
+      (unwind-protect
+        ; "Kill" locally ("copy") into emacs. The word "kill" here is
+        ; unfortunate because it is overloaded with the "kill" in "kill-buffer"
+        ; below. Anyway we also send the buffer to an external "copy" program.
+        (progn
+          (call-shell-region (point-min) (point-max) "~/syscfg/script/copy-clipboard.sh" nil 0)
+          (message (concat "Exported children of subtree starting with `"
+                           (if (> (length (buffer-string)) 20)
+                             (concat
+                              (string-trim-left
+                                (substring (buffer-string) 0 20))
+                              "...")
+                             (buffer-string))
+                           "' as Markdown into clipboard."))
+          (kill-new (buffer-string)))
+        ; Always make sure to kill (close) this temporary buffer.
+        (kill-buffer buffer)))))
 #+end_src
 
 ** Agenda
