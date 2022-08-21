@@ -1280,9 +1280,10 @@ Note that we have to use =M-J= to encode =M-S-j=. This appears to be Emacs conve
 (map! :after org
       :map org-mode-map
       :localleader
-      "e" #'l/org-export-as-markdown-to-clipboard
-      ; Rebind "org-export-dispatch" to "E".
-      "E" #'org-export-dispatch)
+      (:prefix ("e" . "export")
+        :desc "subtree (children only)" "s" (cmd! (l/org-export-as-markdown-to-clipboard nil))
+        :desc "subtree (children + parent)" "S" (cmd! (l/org-export-as-markdown-to-clipboard 't))
+        "d" #'org-export-dispatch))
 
 <<l/org-export-md-scrub-invalid-links>>
 (after! ox
@@ -1359,7 +1360,7 @@ Note that we have to use =M-J= to encode =M-S-j=. This appears to be Emacs conve
 
 #+name: l/org-export-as-markdown-to-clipboard
 #+begin_src emacs-lisp
-(defun l/org-export-as-markdown-to-clipboard ()
+(defun l/org-export-as-markdown-to-clipboard (include-parent-heading)
   "Like doom's +org/export-to-clipboard, but (1) always exports to markdown, (2)
 always processes only the current subtree around point, and (3) pipes to a
 hardcoded clipboard script to perform the copy. The unwind-protect stuff was
@@ -1371,33 +1372,48 @@ interesting to see that doom has a slightly different version with
   (require 'ox)
   (let* ((org-export-with-toc nil)
          (org-export-show-temporary-export-buffer nil)
-         (ASYNC nil)
-         (SUBTREEP t)
-         (VISIBLE-ONLY t)
-         (BODY-ONLY t)
+         ;; If point is above the topmost heading, then export the whole buffer.
+         (export-whole-buffer
+          ;; If we don't use this if condition, the (save-excursion ...) will
+          ;; always return a truthy value.
+          (if (not (save-excursion (condition-case nil (org-back-to-heading) (error nil))))
+              t
+              nil))
+         (async nil)
+         (visible-only t)
+         (body-only t)
          ; Temporary buffer to hold exported contents.
          (buffer (save-window-excursion
-                   (org-export-to-buffer 'md "*Formatted Copy*" ASYNC SUBTREEP VISIBLE-ONLY BODY-ONLY))))
+                   (cond (export-whole-buffer (org-export-to-buffer 'md "*Formatted Copy*" async nil visible-only body-only))
+                         (include-parent-heading
+                            (save-restriction
+                              (org-narrow-to-subtree)
+                              (org-export-to-buffer 'md "*Formatted Copy*" async nil visible-only body-only)))
+                         (t (org-export-to-buffer 'md "*Formatted Copy*" async 't visible-only body-only))))))
     (with-current-buffer buffer
-      ;; Delete leading newline from org-export-to-buffer.
-      (goto-line 1)
-      (flush-lines "^$")
       (unwind-protect
-        ; "Kill" locally ("copy") into emacs. The word "kill" here is
-        ; unfortunate because it is overloaded with the "kill" in "kill-buffer"
-        ; below. Anyway we also send the buffer to an external "copy" program.
-        (progn
-          (call-shell-region (point-min) (point-max) "~/syscfg/script/copy-clipboard.sh" nil 0)
-          (message (concat "Exported children of subtree starting with `"
-                           (if (> (length (buffer-string)) 20)
-                             (concat
-                              (string-trim-left
-                                (substring (buffer-string) 0 20))
-                              "...")
-                             (buffer-string))
-                           "' as Markdown into clipboard."))
-          (kill-new (buffer-string)))
-        ; Always make sure to kill (close) this temporary buffer.
+        (let ((bufstr (buffer-string)))
+             (if (= 0 (length bufstr))
+                 (message "Nothing to copy.")
+                 (progn
+                   ;; Delete leading newline from org-export-to-buffer.
+                   (goto-line 1)
+                   (flush-lines "^$")
+                   (call-shell-region (point-min) (point-max) "~/syscfg/script/copy-clipboard.sh" nil 0)
+                   (message (concat "Exported children of subtree starting with `"
+                                    (if (> (length bufstr) 20)
+                                        (concat
+                                         (string-trim-left
+                                            (substring bufstr 0 20))
+                                         "...")
+                                      bufstr
+                                     "' as Markdown into clipboard.")))
+                   ;; "Kill" locally ("copy") into emacs. The word "kill" here
+                   ;; is unfortunate because it is overloaded with the "kill" in
+                   ;; "kill-buffer" below. Anyway we also send the buffer to an
+                   ;; external "copy" program.
+                   (kill-new (buffer-string)))))
+        ;; Always make sure to kill (close) this temporary buffer.
         (kill-buffer buffer)))))
 #+end_src
 
