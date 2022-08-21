@@ -20,6 +20,7 @@
     sqlite # emacs' org-roam needs it
     noweb # literate emacs configuration
     direnv
+    gcal
 
     # C/ASM
     clang
