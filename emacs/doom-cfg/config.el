@@ -355,7 +355,7 @@ Return an event vector."
   (add-to-list 'org-todo-keywords
                '(sequence "TODO" "IN-PROGRESS" "WAITING" "|" "DONE" "CANCELED" "OBSOLETE"))
   (add-to-list 'org-todo-keywords
-               '(sequence "ASK" "|" "ANSWERED"))
+               '(sequence "ASK" "ASKED" "|" "ANSWERED"))
   (add-hook 'org-mode-hook (lambda () (vim-empty-lines-mode -1)))
   (add-hook 'org-mode-hook 'l/org-colors))
 
