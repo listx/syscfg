@@ -118,11 +118,11 @@ fn show_diff(output: &Vec<u8>, width: &usize, vlabel: &str, staged: bool) -> () 
                     // first letter.
                     Some(w) => match &w[0..1] {
                         "+" => format!(" {}", eline)
-                            .truecolor(0, 255, 0)
+                            .truecolor(204, 255, 204)
                             .on_truecolor(51, 85, 51)
                             .bold(),
                         "-" => format!(" {}", eline)
-                            .truecolor(255, 0, 0)
+                            .truecolor(255, 204, 204)
                             .on_truecolor(85, 51, 51)
                             .bold(),
                         _ => format!(" {}", eline).normal(),
