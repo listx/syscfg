@@ -846,8 +846,8 @@ Also add the number of windows in the window configuration."
   ;; Fix ugly colors for diffs. Prevalent because of git comit message buffers
   ;; like COMMIT_EDITMSG.
   '(git-commit-summary  :foreground "brightwhite" :weight bold)
-  '(diff-added        :foreground "#00ff00" :background "#335533" :weight bold)
-  '(diff-removed      :foreground "#ff0000" :background "#553333" :weight bold)
+  '(diff-added        :foreground "#ccffcc" :background "#335533" :weight bold)
+  '(diff-removed      :foreground "#ffcccc" :background "#553333" :weight bold)
   '(diff-context      :foreground "brightwhite")
   '(diff-function     :foreground "brightmagenta")
   '(diff-header       :foreground "#ffff00" :background "#555533" :weight bold)
