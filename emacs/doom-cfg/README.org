@@ -1434,22 +1434,101 @@ interesting to see that doom has a slightly different version with
 ; org-agenda: Add weekly review view.
 ; https://emacs.stackexchange.com/a/8163/13006
 (setq org-agenda-custom-commands
-  '(("w" "Weekly review" agenda ""
-     ((org-agenda-span 10)
-      (org-agenda-start-day "-10d")
-      (org-agenda-start-with-log-mode '(closed clock state))
-      (org-agenda-skip-function
-        '(org-agenda-skip-entry-if 'nottodo 'done))))
-    ; Export as HTML.
-    ("X" "Export HTML" agenda ""
-      ((htmlize-head-tags
-        (concat
-         "    <meta"
-         " http-equiv=\"refresh\""
-                       ; Refresh every 60 seconds.
-         " content=\"60\""
-         ">\n")))
-      ("~/agenda.html"))))
+      '(("w" "Weekly review"
+         ((agenda ""))
+         ((org-agenda-buffer-name "*REVIEW*")
+          (org-agenda-span 15)
+          (org-agenda-start-day "-15d")
+          (org-agenda-start-with-log-mode '(closed clock state))
+          (org-agenda-skip-function
+           ;; Skip unfinished entries.
+           '(org-agenda-skip-entry-if 'nottodo 'done))))
+        ("c" "Composite view"
+         ;; We only show P0 TODO items if the have been scheduled, and their
+         ;; scheduled date is today or in the past. This way we only concern
+         ;; ourselves with tasks that we can actually work on.
+         ((tags "PRIORITY=\"0\""
+                ((org-agenda-skip-function
+                  '(or
+                    ;; Skip entries if they haven't been scheduled yet.
+                    (l/org-agenda-skip-if-scheduled-later)
+                    ;; Skip entries if they are DONE (or CANCELED, etc).
+                    (org-agenda-skip-entry-if 'todo 'done)))
+                 (org-agenda-overriding-header "P0 tasks from today or the past")))
+          ;; See 7 days from today. It's like the opposite of "Weekly review".
+          (agenda ""
+                  ((org-agenda-span 7)
+                   (org-agenda-start-day "-0d")))
+          ;; List all global TODO items that have not yet been scheduled or
+          ;; deadlined.
+          (alltodo ""
+                   ((org-agenda-skip-function
+                     '(or (l/org-skip-subtree-if-priority ?0)
+                          (org-agenda-skip-if nil '(scheduled deadline)))))))
+         ((org-agenda-buffer-name "*QUEUE*")
+          (org-agenda-compact-blocks t)))
+        ; Export as HTML.
+        ("X" "Export HTML" agenda ""
+          ((htmlize-head-tags
+            (concat
+             "    <meta"
+             " http-equiv=\"refresh\""
+                           ; Refresh every 60 seconds.
+             " content=\"60\""
+             ">\n")))
+          ("~/agenda.html"))))
+
+(defun l/org-agenda (key)
+  "Open customized org-agenda."
+  (interactive)
+  (let* ((bufname (cond
+                   ((string= "c" key) "*QUEUE*")
+                   ((string= "w" key) "*REVIEW*")
+                   (t "*UNKNOWN AGENDA TYPE*")))
+         (buf (get-buffer bufname)))
+    (tab-bar-new-tab)
+    ;; Avoid re-generating the buffer from scratch if we already generated one
+    ;; earlier. This makes it fast.
+    (if buf
+        (switch-to-buffer buf)
+        (org-agenda nil key))
+    (org-agenda-redo)
+    (message (concat
+              "Opened agenda view `"
+              key
+              "' with bufname `"
+              bufname
+              "' and buffer `"
+              (prin1-to-string buf)
+              "'."))))
+
+;; Adapted from https://blog.aaronbieber.com/2016/09/24/an-agenda-for-life-with-org-mode.html.
+(defun l/org-skip-subtree-if-priority (priority)
+  "Skip an agenda subtree if it has a priority of PRIORITY.
+
+PRIORITY may be one of the characters ?0, ?1, or ?2."
+  (let ((subtree-end (save-excursion (org-end-of-subtree t)))
+        (pri-value (* 1000 (- org-lowest-priority priority)))
+        (pri-current (org-get-priority (thing-at-point 'line t))))
+    (if (= pri-value pri-current)
+        subtree-end
+      nil)))
+
+;; Adapted from https://emacs.stackexchange.com/a/29838/13006.
+(defun l/org-agenda-skip-if-scheduled-later ()
+ "If this function returns nil, the current match should not be skipped.
+Otherwise, the function must return a position from where the search
+should be continued."
+  (ignore-errors
+    (let ((subtree-end (save-excursion (org-end-of-subtree t)))
+          (scheduled-seconds
+            (time-to-seconds
+              (org-time-string-to-time
+                (org-entry-get nil "SCHEDULED"))))
+          (now (time-to-seconds (current-time))))
+       (and scheduled-seconds
+            (>= scheduled-seconds now)
+            subtree-end))))
 #+end_src
 
 ** Misc
