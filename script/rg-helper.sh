@@ -1,12 +1,16 @@
 #!/usr/bin/env bash
 
-# Usage: $0 <DIR> <MULTILINE_PATTERN> <PATTERN> [OPTS...]
+# Usage: $0 <DIR> <MODE> [<MULTILINE_PATTERN>] <PATTERN> [OPTS...]
 #
-# Search with ripgrep for multiline strings. Namely, we call rg twice, first to
-# find multiline matches and then a second time to filter within those matches.
-# This is because sometimes we have too many lines from a single match. This is
-# used for searching source code blocks in org-mode files, which can potentially
-# have hundreds of lines in them.
+# Search with ripgrep. MODE can be either "all" or "regions". If "regions" is
+# given, the DIR is searched for text regions defined in MULTILINE_PATTERN, and
+# these regions are in turn searched by PATTERN. If MODE is "all", we do a plain
+# ripgrep search for PATTERN.
+#
+# For "region" mode, we call rg twice, first to find multiline matches and then
+# a second time to filter within those matches.  This is useful for searching
+# source code blocks in org-mode files, which can potentially have hundreds of
+# lines in them.
 #
 # The [OPTS...] is treated specially. Namely, it's difficult to tell which
 # options are meant for the first invocation of rg vs the second. So each
@@ -16,18 +20,8 @@
 exec 2>&1
 set -euo pipefail
 
-main()
+search_regions()
 {
-    local dir
-    local pattern_multiline
-    local pattern
-
-    dir="${1}"
-    pattern_multiline="${2}"
-    pattern="${3}"
-
-    shift 3
-
     declare -a args_multiline
     declare -a args
     # Enable negative lookahead.
@@ -72,6 +66,55 @@ main()
     done
 
     rg "${args_multiline[@]}" -e "${pattern_multiline}" "${dir}" | rg "${args[@]}" -e "${pattern}"
+}
+
+search_all()
+{
+    declare -a args
+    # Enable negative lookahead.
+    args+=(--pcre2)
+    # Show line numbers.
+    args+=(--line-number)
+    # Terminate filename with NUL byte.
+    args+=(--null)
+    # Disable buffering (recommended for scripts).
+    args+=(--line-buffered)
+    # Do not group matches by each file.
+    args+=(--no-heading)
+    # Do not colorize.
+    args+=(--color=never)
+    # Always use "/" as path separator.
+    args+=(--path-separator /)
+    # Ignore case sensitivity if all characters in the pattern are lowercase.
+    if ! [[ "${pattern}" =~ [[:upper:]] ]]; then
+        args+=("--ignore-case")
+    fi
+
+    for arg in "$@"; do
+        args+=("${arg}")
+    done
+
+    rg "${args[@]}" -e "${pattern}" "${dir}"
+
+}
+
+main()
+{
+    local mode
+
+    dir="${1}"
+    mode="${2}"
+
+    if [[ "${mode:-}" == "regions" ]]; then
+        pattern_multiline="${3}"
+        pattern="${4}"
+        shift 4
+        search_regions "$@"
+    else
+        pattern="${3}"
+        shift 3
+        search_all "$@"
+    fi
 }
 
 main "$@"
