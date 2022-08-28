@@ -139,7 +139,7 @@ DOOM requires 3 configuration files in the =$DOOMDIR=:
 
        :os
        (:if IS-MAC macos)  ; improve compatibility with macOS
-       (tty +osc)               ; improve the terminal Emacs experience
+       tty               ; improve the terminal Emacs experience
 
        :lang
        ;;agda              ; types of types of types of types...
@@ -317,6 +317,7 @@ Note that this file is pretty much **required** and acts as the base for all oth
 
 <<doom-bug-workarounds>>
 
+<<copy-to-clipboard>>
 <<CSI-u-mode-support>>
 
 <<name-and-email>>
@@ -1037,6 +1038,30 @@ We don't have any code for deleting a tab because we only delete windows instead
   (forward-line -1))
 #+end_src
 
+** Copy to clipboard
+
+Because we use tmux everywhere (and always use terminal emacs), and because tmux already takes care of syncing whatever is copied into the tmux "buffers" (tmux's own clipboard), all we have to do is copy the text into tmux. We already have a script that does this at =~/syscfg/script/copy-clipboard.sh=, so we use that directly.
+
+Here are the steps we need to do:
+
+1. write copied contents to a temporary file
+2. (shell command) send the contents to =copy-clipboard.sh=, which should take care of all combinations of SSH_TTY, non-ssh, nested tmux, etc.
+3. (shell command) delete the temporary file
+
+#+name: copy-to-clipboard
+#+begin_src emacs-lisp
+(defun l/copy-to-clipboard (orig-fun string)
+  "Copy killed text or region into the system clipboard, by shelling out to a
+script which knows what to do depending on the environment."
+  (let ((tmp-file (make-temp-file "l-copy-clipboard")))
+   (let ((inhibit-message t))
+    (write-region string nil tmp-file))
+   (shell-command-to-string (format "<%s ~/syscfg/script/copy-clipboard.sh" tmp-file))
+   (shell-command-to-string (format "rm -f %s" tmp-file))
+   (funcall orig-fun string)))
+
+(advice-add 'gui-select-text :around #'l/copy-to-clipboard)
+#+end_src
 * Code
 
 #+name: code

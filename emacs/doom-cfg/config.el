@@ -5,6 +5,17 @@
   (setq +company-backend-alist (assq-delete-all 'text-mode +company-backend-alist))
   (add-to-list '+company-backend-alist '(text-mode (:separate company-dabbrev company-yasnippet))))
 
+(defun l/copy-to-clipboard (orig-fun string)
+  "Copy killed text or region into the system clipboard, by shelling out to a
+script which knows what to do depending on the environment."
+  (let ((tmp-file (make-temp-file "l-copy-clipboard")))
+   (let ((inhibit-message t))
+    (write-region string nil tmp-file))
+   (shell-command-to-string (format "<%s ~/syscfg/script/copy-clipboard.sh" tmp-file))
+   (shell-command-to-string (format "rm -f %s" tmp-file))
+   (funcall orig-fun string)))
+
+(advice-add 'gui-select-text :around #'l/copy-to-clipboard)
 ;; Enable `CSI u` support. See https://emacs.stackexchange.com/a/59225.  xterm
 ;; with the resource ?.VT100.modifyOtherKeys: 1 GNU Emacs >=24.4 sets xterm in
 ;; this mode and define some of the escape sequences but not all of them.  xterm
