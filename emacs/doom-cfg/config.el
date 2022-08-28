@@ -8,11 +8,8 @@
 (defun l/copy-to-clipboard (orig-fun string)
   "Copy killed text or region into the system clipboard, by shelling out to a
 script which knows what to do depending on the environment."
-  (let ((tmp-file (make-temp-file "l-copy-clipboard")))
-   (let ((inhibit-message t))
-    (write-region string nil tmp-file))
-   (shell-command-to-string (format "<%s ~/syscfg/script/copy-clipboard.sh" tmp-file))
-   (shell-command-to-string (format "rm -f %s" tmp-file))
+  (let ((b64 (base64-encode-string (encode-coding-string string 'no-conversion) t)))
+   (start-process-shell-command "copy" nil (format "printf %s | ~/syscfg/script/copy-clipboard.sh --base64" b64))
    (funcall orig-fun string)))
 
 (advice-add 'gui-select-text :around #'l/copy-to-clipboard)
