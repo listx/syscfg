@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Usage: $0 <DIR> <MODE> [<MULTILINE_PATTERN>] <PATTERN> [OPTS...]
+# Usage: $0 <DIR> <MODE> <PATTERN> [<MULTILINE_PATTERN>] [OPTS...]
 #
 # Search with ripgrep. MODE can be either "all" or "regions". If "regions" is
 # given, the DIR is searched for text regions defined in MULTILINE_PATTERN, and
@@ -106,8 +106,8 @@ main()
     mode="${2}"
 
     if [[ "${mode:-}" == "regions" ]]; then
-        pattern_multiline="${3}"
-        pattern="${4}"
+        pattern="${3}"
+        pattern_multiline="${4}"
         shift 4
         search_regions "$@"
     else

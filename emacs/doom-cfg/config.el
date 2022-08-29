@@ -509,6 +509,56 @@ should be continued."
        (and scheduled-seconds
             (>= scheduled-seconds now)
             subtree-end))))
+(defun l/org-roam-goto-day (day)
+  "Open a new tab and show the day's journal file."
+  (interactive)
+  (tab-bar-new-tab)
+  (cond
+   ((eq day 'yesterday) (org-roam-dailies-goto-tomorrow (- 1)))
+   ((eq day 'today) (org-roam-dailies-goto-today))
+   (t (org-roam-dailies-goto-tomorrow 1)))
+  (goto-char (point-max)))
+
+(defun l/org-roam-open-node (&optional initial-input)
+  "Search for org-roam nodes and open in a new tab."
+  (interactive)
+  (let ((node (org-roam-node-read initial-input)))
+    (if node (progn (tab-bar-new-tab) (org-roam-node-open node)))))
+
+(defun l/org-roam-capture (key subdir)
+  (interactive)
+  (org-roam-capture nil key
+                    :filter-fn (lambda (node) (string-equal subdir (org-roam-node-doom-type node)))))
+
+(defun l/rg-search (dir pat &rest args)
+  "Use rg-helper.sh to search DIR for pat. See rg-helper.sh for
+details."
+  (interactive)
+  (tab-bar-new-tab)
+  (consult--grep "rg" (l/rg-search-mk-builder dir args) dir pat))
+
+(defun l/rg-search-mk-builder (dir args)
+  "Returns a lambda that can fill in the `pat' variable. The explicit use of
+`list' here is required because we want to do 2 levels of substitution. We
+substitute in `dir' and `args' at the time we build the list. We then put in a
+`backquote' so that the `pat' can be substituted in when the lambda is called by
+consult--grep."
+  (let ((invocation (append (list "rg-helper.sh" dir "all" ',pat) args)))
+    (list 'lambda (list 'pat) (list 'backquote (list ':command invocation)))))
+
+(defun l/rg-search-blocks (dir pat &rest args)
+  "Use rg-helper.sh to search DIR for pat in org-mode's code blocks."
+  (interactive)
+  (tab-bar-new-tab)
+  (consult--grep "rg(blocks)" (l/rg-search-blocks-mk-builder dir args) dir pat))
+
+(defun l/rg-search-blocks-mk-builder (dir args)
+  "Like l/rg-search-mk-builder, but uses rg-helper.sh's 'regions' mode to search
+between begin_WORD ... end_WORD blocks."
+  (let ((invocation (append (list "rg-helper.sh" dir "regions"
+                             ',(concat "(\\x00)(\\d+):\\s*(?:(?!#\\+(begin|end)_\\w+?)).*?(" pat ")")
+                             ',(concat "^\\s*#\\+begin_\\w+\[^\\n\]*$((?!^\\s*#\\+end_\\w+$).)*(" pat ").*?(?!^\\s*#\\+end_\\w+$)")) args)))
+    (list 'lambda (list 'pat) (list 'backquote (list ':command invocation)))))
 (map! :after org-roam
       :map org-roam-mode-map
       :mnvi "C-k" nil
