@@ -471,3 +471,11 @@ key_bindings:
   - { key: Space,   mods: Control|Shift,     chars: "\x1b[32;6u" } # C-S-Space
   - { key: Space,   mods: Control|Alt,       chars: "\x1b[32;7u" } # C-M-Space
   - { key: Space,   mods: Control|Alt|Shift, chars: "\x1b[32;8u" } # C-M-S-Space
+
+  # On Mac, make CMD+N create a new window, not a new instance. This avoids the
+  # issue described at https://github.com/alacritty/alacritty/issues/5824
+  # (Logging of "Unable to store text in clipboard: NSPasteboard#writeObjects:
+  # returned false" which I have to click "X" on manually to make it go away).
+  # While this is not ideal, it is still less painfful than the default
+  # situation.
+  - { key: N,       mods: Command,           action: CreateNewWindow }
