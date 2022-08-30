@@ -578,26 +578,30 @@ between begin_WORD ... end_WORD blocks."
          :target (file+head "%<%Y-%m-%d>.org"
                             "#+title: %<%Y-%m-%d %a>\n")))
       l/org-roam-default-template "#+title: ${title}\n\n* TODOs\n\n* Notes\n:PROPERTIES:\n:VISIBILITY: children\n:END:\n"
+      ;; Would be nice to make point position itself after the same line as the
+      ;; "TODO" heading itself. Currently we have to press Backspace twice to
+      ;; finish setting up the capture template.
+      l/org-roam-default-olp '("TODOs" "TODO")
       org-roam-capture-templates
       `(("r" "reference" plain
          "%?"
-         :target (file+head "reference/${slug}.org" ,l/org-roam-default-template)
+         :target (file+head+olp "reference/${slug}.org" ,l/org-roam-default-template ,l/org-roam-default-olp)
          :unnarrowed t)
         ("c" "creche" plain
          "%?"
-         :target (file+head "creche/${slug}.org" ,l/org-roam-default-template)
+         :target (file+head+olp "creche/${slug}.org" ,l/org-roam-default-template ,l/org-roam-default-olp)
          :unnarrowed t)
         ("p" "proj-temp" plain
          "%?"
-         :target (file+head "proj-temp/${slug}.org" ,l/org-roam-default-template)
+         :target (file+head+olp "proj-temp/${slug}.org" ,l/org-roam-default-template ,l/org-roam-default-olp)
          :unnarrowed t)
         ("P" "proj-perm" plain
          "%?"
-         :target (file+head "proj-perm/${slug}.org" ,l/org-roam-default-template)
+         :target (file+head+olp "proj-perm/${slug}.org" ,l/org-roam-default-template ,l/org-roam-default-olp)
          :unnarrowed t)
         ("x" "pub" plain
          "%?"
-         :target (file+head "pub/${slug}.org" ,l/org-roam-default-template)
+         :target (file+head+olp "pub/${slug}.org" ,l/org-roam-default-template ,l/org-roam-default-olp)
          :unnarrowed t)))
 (map! :after alchemist
       :map alchemist-mode-map
