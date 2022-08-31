@@ -1311,6 +1311,7 @@ Note that we have to use =M-J= to encode =M-S-j=. This appears to be Emacs conve
 
 (after! org
   <<l/org-export-as-markdown-to-clipboard>>
+  <<l/org-rename-buffer>>
   ; Make calendars in agenda start on Monday.
   (setq calendar-week-start-day 1)
   (setq org-startup-indented t)
@@ -1652,6 +1653,20 @@ This inserts a timestamp in square brackets with the hour and minute. Using squa
   (interactive)
   (org-time-stamp-inactive '(16)))
 #+end_src
+
+** Rename buffer
+#+name: l/org-rename-buffer
+#+begin_src emacs-lisp
+(defun l/org-rename-buffer ()
+  (interactive)
+  (let* ((bufname (buffer-name))
+         (bufname-short (string-remove-suffix ".org" bufname)))
+    (cond ((string= bufname "dashboard.org") (rename-buffer "DASHBOARD"))
+          (t (rename-buffer bufname-short)))))
+
+(add-hook 'org-mode-hook #'l/org-rename-buffer)
+#+end_src
+
 ** Notes
 
 In Org 9.2+, you can do =C-c C-,= to run org-insert-structure-template, and then press =e= to insert a ~#+begin_example\n#+end_example~ template. See https://emacs.stackexchange.com/a/46992/13006.

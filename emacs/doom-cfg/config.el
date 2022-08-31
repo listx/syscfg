@@ -362,6 +362,14 @@ Return an event vector."
                      (kill-new (buffer-string)))))
           ;; Always make sure to kill (close) this temporary buffer.
           (kill-buffer buffer)))))
+  (defun l/org-rename-buffer ()
+    (interactive)
+    (let* ((bufname (buffer-name))
+           (bufname-short (string-remove-suffix ".org" bufname)))
+      (cond ((string= bufname "dashboard.org") (rename-buffer "DASHBOARD"))
+            (t (rename-buffer bufname-short)))))
+  
+  (add-hook 'org-mode-hook #'l/org-rename-buffer)
   ; Make calendars in agenda start on Monday.
   (setq calendar-week-start-day 1)
   (setq org-startup-indented t)
