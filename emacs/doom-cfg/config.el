@@ -458,7 +458,7 @@ Return an event vector."
              ">\n")))
           ("~/agenda.html"))))
 
-(defun l/org-agenda (key)
+(defun l/org-agenda (key &optional open-in-new-tab)
   "Open customized org-agenda."
   (interactive)
   (let* ((bufname (cond
@@ -466,7 +466,7 @@ Return an event vector."
                    ((string= "w" key) "*REVIEW*")
                    (t "*UNKNOWN AGENDA TYPE*")))
          (buf (get-buffer bufname)))
-    (tab-bar-new-tab)
+    (when open-in-new-tab (tab-bar-new-tab))
     ;; Avoid re-generating the buffer from scratch if we already generated one
     ;; earlier. This makes it fast.
     (if buf
