@@ -254,11 +254,16 @@ Return an event vector."
 (map! :after org
       :map org-mode-map
       :localleader
+      (:prefix ("d" . "date/deadline")
+         "t" #'l/org-insert-timestamp-inactive)
       (:prefix ("e" . "export")
         :desc "subtree (children only)" "s" (cmd! (l/org-export-as-markdown-to-clipboard nil))
         :desc "subtree (children + parent)" "S" (cmd! (l/org-export-as-markdown-to-clipboard 't))
         "d" #'org-export-dispatch))
 
+(defun l/org-insert-timestamp-inactive ()
+  (interactive)
+  (org-time-stamp-inactive '(16)))
 ;; See https://emacs.stackexchange.com/a/22398/13006. Detect poorly-converted
 ;; links (those that have two or more parentheses, which can happen if we have
 ;; an elisp link).

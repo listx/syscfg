@@ -1296,11 +1296,14 @@ Note that we have to use =M-J= to encode =M-S-j=. This appears to be Emacs conve
 (map! :after org
       :map org-mode-map
       :localleader
+      (:prefix ("d" . "date/deadline")
+         "t" #'l/org-insert-timestamp-inactive)
       (:prefix ("e" . "export")
         :desc "subtree (children only)" "s" (cmd! (l/org-export-as-markdown-to-clipboard nil))
         :desc "subtree (children + parent)" "S" (cmd! (l/org-export-as-markdown-to-clipboard 't))
         "d" #'org-export-dispatch))
 
+<<l/org-insert-timestamp-inactive>>
 <<l/org-export-md-scrub-invalid-links>>
 (after! ox
   (add-to-list 'org-export-filter-link-functions
@@ -1639,6 +1642,16 @@ between begin_WORD ... end_WORD blocks."
     (list 'lambda (list 'pat) (list 'backquote (list ':command invocation)))))
 #+end_src
 
+** Insert time stamp without prompting
+
+This inserts a timestamp in square brackets with the hour and minute. Using square brackets instead of angle brackets makes org-agenda ignore this timestamp. This is useful for taking minute-by-minute notes or just adding notes-to-self in general.
+
+#+name: l/org-insert-timestamp-inactive
+#+begin_src emacs-lisp
+(defun l/org-insert-timestamp-inactive ()
+  (interactive)
+  (org-time-stamp-inactive '(16)))
+#+end_src
 ** Notes
 
 In Org 9.2+, you can do =C-c C-,= to run org-insert-structure-template, and then press =e= to insert a ~#+begin_example\n#+end_example~ template. See https://emacs.stackexchange.com/a/46992/13006.
