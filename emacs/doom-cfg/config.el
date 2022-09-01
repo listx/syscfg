@@ -365,11 +365,27 @@ Return an event vector."
   (defun l/org-rename-buffer ()
     (interactive)
     (let* ((bufname (buffer-name))
-           (bufname-short (string-remove-suffix ".org" bufname)))
+           (bufname-short (string-remove-suffix ".org" bufname))
+           (buf-date-match (string-match "^[[:digit:]]\\{4\\}-[[:digit:]]\\{2\\}-[[:digit:]]\\{2\\}$" bufname-short))
+           (buf-is-date (eq 0 buf-date-match)))
       (cond ((string= bufname "dashboard.org") (rename-buffer "DASHBOARD"))
+            (buf-is-date (rename-buffer (l/append-relative-date-suffix bufname-short)))
             (t (rename-buffer bufname-short)))))
   
   (add-hook 'org-mode-hook #'l/org-rename-buffer)
+  
+  (defun l/append-relative-date-suffix (date-str)
+    ;; We use `org-time-stamp-to-now', but reverse the sign. This follows a simple
+    ;; "number line" model where we have the present day at day "0", with old days
+    ;; on the left (negative numbers) and future days on the right (positive
+    ;; numbers).
+    (let* ((day-diff (org-time-stamp-to-now date-str))
+           (sign (if (< day-diff 0) "" "+"))
+           (suffix (concat " [" sign (number-to-string day-diff) "]")))
+     (cond ((= day-diff 0) (concat date-str " [TODAY]"))
+           ((= day-diff 1) (concat date-str " [TOMORROW]"))
+           ((= day-diff -1) (concat date-str " [YESTERDAY]"))
+           (t (concat date-str suffix)))))
   ; Make calendars in agenda start on Monday.
   (setq calendar-week-start-day 1)
   (setq org-startup-indented t)
