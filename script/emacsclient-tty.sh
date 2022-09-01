@@ -14,6 +14,7 @@ set_elisp()
 	local position
 	local line
 	local column
+	local additional_eval
 
 	session_name=default
 
@@ -24,11 +25,14 @@ set_elisp()
 				position="${arg}"
 			fi
 			;;
+		--eval=*)
+			additional_eval="${arg#*=}"
+			;;
+		-s=*|--socket-name=*)
+			session_name="${arg#*=}"
+			;;
 		-*=*)
 			__args+=("${arg}")
-			;;
-		-s=*)
-			session_name="${arg#*=}"
 			;;
 		*)
 			file="${arg}"
@@ -89,7 +93,7 @@ set_elisp()
 
 	__elisp=$(
 		cat <<EOF
-	(prog1
+	(progn
 		${maybe_open_new_tab}
 		; Open the file.
 		(find-file "${buffer_filename}")
@@ -103,6 +107,7 @@ set_elisp()
 		(menu-bar-mode 0)
 		; Kill any keyboard prompts.
 		(keyboard-escape-quit)
+		${additional_eval:-}
 	)
 EOF
 	)
