@@ -981,50 +981,50 @@ Also add the number of windows in the window configuration."
   (interactive)
   (setq tab-bar-separator (propertize " " 'font-lock-face `(:background ,(doom-darken (doom-color 'bg-alt) 0.2))))
   (custom-set-faces!
-  `(vertical-border :background ,(doom-color 'base0) :foreground ,(doom-color 'base0))
-  '(highlight-numbers-number  :weight bold)
-  `(hl-line :background ,(doom-darken (doom-color 'bg-alt) 0.4))
-  '(vim-empty-lines-face :weight bold)
+    `(vertical-border :background ,(doom-color 'base0) :foreground ,(doom-color 'base0))
+    '(highlight-numbers-number  :weight bold)
+    `(hl-line :background ,(doom-darken (doom-color 'bg-alt) 0.4))
+    '(vim-empty-lines-face :weight bold)
 
-  `(auto-dim-other-buffers-face :foreground ,(doom-color 'base8) :background ,(doom-darken (doom-color 'bg-alt) 0.6))
-  ; Use bright visuals for coloring regions and interactive search hits.
-  '(lazy-highlight  :foreground "pink" :background "dark red" :weight normal)
-  '(isearch  :foreground "dark red" :background "pink" :weight bold)
-  '(region  :foreground "dark red" :background "pink" :weight bold)
+    `(auto-dim-other-buffers-face :foreground ,(doom-color 'base8) :background ,(doom-darken (doom-color 'bg-alt) 0.6))
+                                        ; Use bright visuals for coloring regions and interactive search hits.
+    '(lazy-highlight  :foreground "pink" :background "dark red" :weight normal)
+    '(isearch  :foreground "dark red" :background "pink" :weight bold)
+    '(region  :foreground "dark red" :background "pink" :weight bold)
 
-  `(tab-bar :background ,(doom-darken (doom-color 'bg-alt) 0.2))
-  `(tab-bar-tab
-      :background ,(doom-color 'base8)
-      :foreground ,(doom-color 'base0)
-      :weight bold
-      :box nil)
-  `(tab-bar-tab-inactive
-      :background ,(doom-color 'base6)
-      :foreground ,(doom-color 'base0)
-      :box nil)
+    `(tab-bar :background ,(doom-darken (doom-color 'bg-alt) 0.2))
+    `(tab-bar-tab
+       :background ,(doom-color 'base8)
+       :foreground ,(doom-color 'base0)
+       :weight bold
+       :box nil)
+    `(tab-bar-tab-inactive
+       :background ,(doom-color 'base6)
+       :foreground ,(doom-color 'base0)
+       :box nil)
 
-  `(mode-line
-      :weight bold
-      :background ,(doom-color 'base8)
-      :foreground ,(doom-color 'base0))
-  `(mode-line-inactive
-      :background ,(doom-color 'base6)
-      :foreground ,(doom-color 'base0))
+    `(mode-line
+       :weight bold
+       :background ,(doom-color 'base8)
+       :foreground ,(doom-color 'base0))
+    `(mode-line-inactive
+       :background ,(doom-color 'base6)
+       :foreground ,(doom-color 'base0))
 
-  `(git-gutter:modified :foreground ,l/color-xUltraBrightMagenta)
-  `(git-gutter:added :foreground ,l/color-xUltraBrightGreen)
-  `(git-gutter:deleted :foreground ,l/color-xUltraBrightRed)
-  ;; Fix ugly colors for diffs. Prevalent because of git comit message buffers
-  ;; like COMMIT_EDITMSG.
-  '(git-commit-summary  :foreground "brightwhite" :weight bold)
-  '(diff-added        :foreground "#ccffcc" :background "#335533" :weight bold)
-  '(diff-removed      :foreground "#ffcccc" :background "#553333" :weight bold)
-  '(diff-context      :foreground "brightwhite")
-  '(diff-function     :foreground "brightmagenta")
-  '(diff-header       :foreground "#ffff00" :background "#555533" :weight bold)
-  '(diff-file-header  :foreground "brightyellow")
-  '(diff-hunk-header  :foreground "brightcyan")
-  '(git-commit-keyword  :foreground "brightmagenta" :weight bold))
+    `(git-gutter:modified :foreground ,l/color-xUltraBrightMagenta)
+    `(git-gutter:added :foreground ,l/color-xUltraBrightGreen)
+    `(git-gutter:deleted :foreground ,l/color-xUltraBrightRed)
+    ;; Fix ugly colors for diffs. Prevalent because of git comit message buffers
+    ;; like COMMIT_EDITMSG.
+    '(git-commit-summary  :foreground "brightwhite" :weight bold)
+    '(diff-added        :foreground "#ccffcc" :background "#335533" :weight bold)
+    '(diff-removed      :foreground "#ffcccc" :background "#553333" :weight bold)
+    '(diff-context      :foreground "brightwhite")
+    '(diff-function     :foreground "brightmagenta")
+    '(diff-header       :foreground "#ffff00" :background "#555533" :weight bold)
+    '(diff-file-header  :foreground "brightyellow")
+    '(diff-hunk-header  :foreground "brightcyan")
+    '(git-commit-keyword  :foreground "brightmagenta" :weight bold))
 
   ;; Make all doom-modeline-* faces have a uniform foreground, to make them easier
   ;; to read with our custom mode-line background. This way we don't have to spell
