@@ -999,8 +999,8 @@ Also add the number of windows in the window configuration."
       :weight bold
       :box nil)
   `(tab-bar-tab-inactive
-      :background ,(doom-color 'base0)
-      :foreground ,(doom-color 'base8)
+      :background ,(doom-color 'base6)
+      :foreground ,(doom-color 'base0)
       :box nil)
 
   `(mode-line
@@ -1008,8 +1008,8 @@ Also add the number of windows in the window configuration."
       :background ,(doom-color 'base8)
       :foreground ,(doom-color 'base0))
   `(mode-line-inactive
-      :background ,(doom-color 'base0)
-      :foreground ,(doom-color 'base8))
+      :background ,(doom-color 'base6)
+      :foreground ,(doom-color 'base0))
 
   `(git-gutter:modified :foreground ,l/color-xUltraBrightMagenta)
   `(git-gutter:added :foreground ,l/color-xUltraBrightGreen)
