@@ -954,11 +954,49 @@ Make =C-{j,k}= cycle through windows, and =C-S-{j,k}=.
   "Generate tab name from the buffer of the selected window.
 Also add the number of windows in the window configuration."
   (interactive)
-  (let ((count (length (window-list-1 nil 'nomini)))
-        (name (window-buffer (minibuffer-selected-window))))
+  (let* ((count (length (window-list-1 nil 'nomini)))
+         (buffer (window-buffer (minibuffer-selected-window)))
+         (stylized-name (l/get-stylized-buffer-name buffer)))
     (if (> count 1)
-        (format " ◩ %d %s " (- count 1) name)
-        (format " %s " name))))
+        (format " ◩ %d %s " (- count 1) stylized-name)
+        (format " %s " stylized-name))))
+
+<<l/get-stylized-buffer-name>>
+#+end_src
+
+**** Stylized buffer name
+
+Generate a simpler, "stylized" buffer name for some specially-named buffers, such as =dashboard.org= and journal entries in the form =YYYY-MM-DD.org=.
+
+For =dashboard.org=, we just style it as =DASHBOARD= because it's that important.
+
+For journal entries, we append a =[...]= suffix to it, depending on the relative date of it. If the date in the filename matches today's date, we add a =[TODAY]= suffix. For days in the past and future, we add a =[-N]= or =[+N]= suffix where =N= denotes the number of days that it is away from today, with negative numbers denoting days in the past. We use =[YESTERDAY]= and =[TOMORROW]= as aliases for =[-1]= and =[+1]=, respectively.
+
+#+name: l/get-stylized-buffer-name
+#+begin_src emacs-lisp
+(defun l/get-stylized-buffer-name (buffer)
+  "Return a stylized buffer name."
+  (interactive)
+  (let* ((bufname (buffer-name buffer))
+         (bufname-short (string-remove-suffix ".org" bufname))
+         (buf-date-match (string-match "^[[:digit:]]\\{4\\}-[[:digit:]]\\{2\\}-[[:digit:]]\\{2\\}$" bufname-short))
+         (buf-is-date (eq 0 buf-date-match)))
+    (cond ((string= bufname "dashboard.org") "DASHBOARD")
+          (buf-is-date (l/append-relative-date-suffix bufname-short))
+          (t bufname-short))))
+
+(defun l/append-relative-date-suffix (date-str)
+  ;; We use `org-time-stamp-to-now', but reverse the sign. This follows a simple
+  ;; "number line" model where we have the present day at day "0", with old days
+  ;; on the left (negative numbers) and future days on the right (positive
+  ;; numbers).
+  (let* ((day-diff (org-time-stamp-to-now date-str))
+         (sign (if (< day-diff 0) "" "+"))
+         (suffix (concat " [" sign (number-to-string day-diff) "]")))
+   (cond ((= day-diff 0) (concat date-str " [TODAY]"))
+         ((= day-diff 1) (concat date-str " [TOMORROW]"))
+         ((= day-diff -1) (concat date-str " [YESTERDAY]"))
+         (t (concat date-str suffix)))))
 #+end_src
 
 *** Creation
@@ -1311,7 +1349,6 @@ Note that we have to use =M-J= to encode =M-S-j=. This appears to be Emacs conve
 
 (after! org
   <<l/org-export-as-markdown-to-clipboard>>
-  <<l/org-rename-buffer>>
   ; Make calendars in agenda start on Monday.
   (setq calendar-week-start-day 1)
   (setq org-startup-indented t)
@@ -1653,44 +1690,6 @@ This inserts a timestamp in square brackets with the hour and minute. Using squa
 (defun l/org-insert-timestamp-inactive ()
   (interactive)
   (org-time-stamp-inactive '(16)))
-#+end_src
-
-** Rename buffer
-
-Rename some "special" buffers, such as =dashboard.org= and journal entries in the form =YYYY-MM-DD.org=.
-
-For =dashboard.org=, we just rename it to =DASHBOARD= because it's that important.
-
-For journal entries, we appen a =[...]= suffix to it, depending on the relative date of it. If the date in the filename matches today's date, we add a =[TODAY]= suffix. For days in the past and future, we add a =[-N]= or =[+N]= suffix where =N= denotes the number of days that it is away from today, with negative numbers denoting days in the past. We use =[YESTERDAY]= and =[TOMORROW]= as aliases for =[-1]= and =[+1]=, respectively.
-
-Unfortunately, it appears that we cannot use the file name as a source of truth because it is =nil= when this function is executed (it would be nice to use the file name because it is a reliable, mostly-immmutable source of truth).
-
-#+name: l/org-rename-buffer
-#+begin_src emacs-lisp
-(defun l/org-rename-buffer ()
-  (interactive)
-  (let* ((bufname (buffer-name))
-         (bufname-short (string-remove-suffix ".org" bufname))
-         (buf-date-match (string-match "^[[:digit:]]\\{4\\}-[[:digit:]]\\{2\\}-[[:digit:]]\\{2\\}$" bufname-short))
-         (buf-is-date (eq 0 buf-date-match)))
-    (cond ((string= bufname "dashboard.org") (rename-buffer "DASHBOARD"))
-          (buf-is-date (rename-buffer (l/append-relative-date-suffix bufname-short)))
-          (t (rename-buffer bufname-short)))))
-
-(add-hook 'org-mode-hook #'l/org-rename-buffer)
-
-(defun l/append-relative-date-suffix (date-str)
-  ;; We use `org-time-stamp-to-now', but reverse the sign. This follows a simple
-  ;; "number line" model where we have the present day at day "0", with old days
-  ;; on the left (negative numbers) and future days on the right (positive
-  ;; numbers).
-  (let* ((day-diff (org-time-stamp-to-now date-str))
-         (sign (if (< day-diff 0) "" "+"))
-         (suffix (concat " [" sign (number-to-string day-diff) "]")))
-   (cond ((= day-diff 0) (concat date-str " [TODAY]"))
-         ((= day-diff 1) (concat date-str " [TOMORROW]"))
-         ((= day-diff -1) (concat date-str " [YESTERDAY]"))
-         (t (concat date-str suffix)))))
 #+end_src
 
 ** Show prompt when closing items as DONE

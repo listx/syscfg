@@ -362,30 +362,6 @@ Return an event vector."
                      (kill-new (buffer-string)))))
           ;; Always make sure to kill (close) this temporary buffer.
           (kill-buffer buffer)))))
-  (defun l/org-rename-buffer ()
-    (interactive)
-    (let* ((bufname (buffer-name))
-           (bufname-short (string-remove-suffix ".org" bufname))
-           (buf-date-match (string-match "^[[:digit:]]\\{4\\}-[[:digit:]]\\{2\\}-[[:digit:]]\\{2\\}$" bufname-short))
-           (buf-is-date (eq 0 buf-date-match)))
-      (cond ((string= bufname "dashboard.org") (rename-buffer "DASHBOARD"))
-            (buf-is-date (rename-buffer (l/append-relative-date-suffix bufname-short)))
-            (t (rename-buffer bufname-short)))))
-  
-  (add-hook 'org-mode-hook #'l/org-rename-buffer)
-  
-  (defun l/append-relative-date-suffix (date-str)
-    ;; We use `org-time-stamp-to-now', but reverse the sign. This follows a simple
-    ;; "number line" model where we have the present day at day "0", with old days
-    ;; on the left (negative numbers) and future days on the right (positive
-    ;; numbers).
-    (let* ((day-diff (org-time-stamp-to-now date-str))
-           (sign (if (< day-diff 0) "" "+"))
-           (suffix (concat " [" sign (number-to-string day-diff) "]")))
-     (cond ((= day-diff 0) (concat date-str " [TODAY]"))
-           ((= day-diff 1) (concat date-str " [TOMORROW]"))
-           ((= day-diff -1) (concat date-str " [YESTERDAY]"))
-           (t (concat date-str suffix)))))
   ; Make calendars in agenda start on Monday.
   (setq calendar-week-start-day 1)
   (setq org-startup-indented t)
@@ -865,11 +841,36 @@ otherwise, close current tab."
   "Generate tab name from the buffer of the selected window.
 Also add the number of windows in the window configuration."
   (interactive)
-  (let ((count (length (window-list-1 nil 'nomini)))
-        (name (window-buffer (minibuffer-selected-window))))
+  (let* ((count (length (window-list-1 nil 'nomini)))
+         (buffer (window-buffer (minibuffer-selected-window)))
+         (stylized-name (l/get-stylized-buffer-name buffer)))
     (if (> count 1)
-        (format " ◩ %d %s " (- count 1) name)
-        (format " %s " name))))
+        (format " ◩ %d %s " (- count 1) stylized-name)
+        (format " %s " stylized-name))))
+
+(defun l/get-stylized-buffer-name (buffer)
+  "Return a stylized buffer name."
+  (interactive)
+  (let* ((bufname (buffer-name buffer))
+         (bufname-short (string-remove-suffix ".org" bufname))
+         (buf-date-match (string-match "^[[:digit:]]\\{4\\}-[[:digit:]]\\{2\\}-[[:digit:]]\\{2\\}$" bufname-short))
+         (buf-is-date (eq 0 buf-date-match)))
+    (cond ((string= bufname "dashboard.org") "DASHBOARD")
+          (buf-is-date (l/append-relative-date-suffix bufname-short))
+          (t bufname-short))))
+
+(defun l/append-relative-date-suffix (date-str)
+  ;; We use `org-time-stamp-to-now', but reverse the sign. This follows a simple
+  ;; "number line" model where we have the present day at day "0", with old days
+  ;; on the left (negative numbers) and future days on the right (positive
+  ;; numbers).
+  (let* ((day-diff (org-time-stamp-to-now date-str))
+         (sign (if (< day-diff 0) "" "+"))
+         (suffix (concat " [" sign (number-to-string day-diff) "]")))
+   (cond ((= day-diff 0) (concat date-str " [TODAY]"))
+         ((= day-diff 1) (concat date-str " [TOMORROW]"))
+         ((= day-diff -1) (concat date-str " [YESTERDAY]"))
+         (t (concat date-str suffix)))))
 (map! :after evil-org
       :map evil-org-mode-map
       :ni "C-S-h" nil
