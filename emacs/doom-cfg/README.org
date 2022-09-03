@@ -1585,6 +1585,7 @@ If you use "org" and don't want your org files in the default location below, ch
 
 ;; See https://github.com/org-roam/org-roam/issues/2198#issuecomment-1208072780.
 (setq org-fold-core-style "overlays")
+<<org-mark-done-with-note>>
 #+end_src
 
 ** Wrappers for common operations
@@ -1690,6 +1691,15 @@ Unfortunately, it appears that we cannot use the file name as a source of truth 
          ((= day-diff 1) (concat date-str " [TOMORROW]"))
          ((= day-diff -1) (concat date-str " [YESTERDAY]"))
          (t (concat date-str suffix)))))
+#+end_src
+
+** Show prompt when closing items as DONE
+
+In the prompt, if we cancel with =C-c C-k=, this is the equivalent of =(setq org-log-done 'time)= which just inserts a timestamp next to when we marked the item as DONE. If we press =C-c C-c=, then we can save a note explaining how/why the item was closed (useful!).
+
+#+name: org-mark-done-with-note
+#+begin_src emacs-lisp
+(setq org-log-done 'note)
 #+end_src
 
 ** Notes

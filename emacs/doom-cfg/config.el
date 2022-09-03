@@ -430,6 +430,7 @@ Return an event vector."
 
 ;; See https://github.com/org-roam/org-roam/issues/2198#issuecomment-1208072780.
 (setq org-fold-core-style "overlays")
+(setq org-log-done 'note)
 (map! :after evil-org-agenda
       :map evil-org-agenda-mode-map
       :mnv "C-k" nil
