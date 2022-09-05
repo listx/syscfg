@@ -583,6 +583,33 @@ between begin_WORD ... end_WORD blocks."
                              ',(concat "(\\x00)(\\d+):\\s*(?:(?!#\\+(begin|end)_\\w+?)).*?(" pat ")")
                              ',(concat "^\\s*#\\+begin_\\w+\[^\\n\]*$((?!^\\s*#\\+end_\\w+$).)*(" pat ").*?(?!^\\s*#\\+end_\\w+$)")) args)))
     (list 'lambda (list 'pat) (list 'backquote (list ':command invocation)))))
+(defun l/org-roam-get-nearby-dailies ()
+  "Return a list of absolute filenames of all dailies files from the current
+  week."
+  (interactive)
+  (let ((journal-files (seq-filter
+                        (lambda (f) (string-match "journal" f))
+                        (org-agenda-files))))
+    (seq-filter 'l/select-nearby-dailies journal-files)))
+
+(defun l/select-nearby-dailies (f)
+  "Given filename `f', determine if it has a substring that matches a date from
+  `l/nearby-dates'."
+  (let ((matches (mapcar (lambda (rgx) (string-match rgx f)) (l/nearby-dates))))
+    (cl-some (lambda (m) m) matches)))
+
+(defun l/nearby-dates ()
+  "Return a list of dates near today."
+  (mapcar (lambda (x) (org-read-date nil nil x))
+          '("-7d"
+            "-6d"
+            "-5d"
+            "-4d"
+            "-3d"
+            "-2d"
+            "-1d"
+            "0d"
+            "+1d")))
 (map! :after org-roam
       :map org-roam-mode-map
       :mnvi "C-k" nil

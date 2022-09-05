@@ -1365,6 +1365,7 @@ Note that we have to use =M-J= to encode =M-S-j=. This appears to be Emacs conve
 <<org-misc>>
 <<org-agenda>>
 <<org-wrappers>>
+<<l/org-roam-get-nearby-dailies>>
 #+end_src
 
 ** org-todo-keywords
@@ -1393,6 +1394,41 @@ Note that we have to use =M-J= to encode =M-S-j=. This appears to be Emacs conve
         ("ANSWERED"   . +org-todo-cancel)
         ("CANCELED"   . +org-todo-cancel)
         ("OBSOLETE" . +org-todo-cancel)))
+#+end_src
+
+** Select all org-roam dailies journals that exist in the current week
+
+This just goes through all org-agenda-files entries and only selects those ones that match a date range. We just need to figure out the last 7 days in YYYY-MM-DD format, then gather these entries in a list, and then loop through all org-agenda-files entries, and for each one only keep it if it matches of the 7 days we precomputed.
+
+#+name: l/org-roam-get-nearby-dailies
+#+begin_src emacs-lisp
+(defun l/org-roam-get-nearby-dailies ()
+  "Return a list of absolute filenames of all dailies files from the current
+  week."
+  (interactive)
+  (let ((journal-files (seq-filter
+                        (lambda (f) (string-match "journal" f))
+                        (org-agenda-files))))
+    (seq-filter 'l/select-nearby-dailies journal-files)))
+
+(defun l/select-nearby-dailies (f)
+  "Given filename `f', determine if it has a substring that matches a date from
+  `l/nearby-dates'."
+  (let ((matches (mapcar (lambda (rgx) (string-match rgx f)) (l/nearby-dates))))
+    (cl-some (lambda (m) m) matches)))
+
+(defun l/nearby-dates ()
+  "Return a list of dates near today."
+  (mapcar (lambda (x) (org-read-date nil nil x))
+          '("-7d"
+            "-6d"
+            "-5d"
+            "-4d"
+            "-3d"
+            "-2d"
+            "-1d"
+            "0d"
+            "+1d")))
 #+end_src
 
 ** Scrub invalid links during Markdown export
