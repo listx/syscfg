@@ -365,10 +365,28 @@ Return an event vector."
   ; Make calendars in agenda start on Monday.
   (setq calendar-week-start-day 1)
   (setq org-startup-indented t)
-  (add-to-list 'org-todo-keywords
-               '(sequence "TODO" "IN-PROGRESS" "WAITING" "|" "DONE" "CANCELED" "OBSOLETE"))
-  (add-to-list 'org-todo-keywords
-               '(sequence "ASK" "ASKED" "|" "ANSWERED"))
+  (setq org-todo-keywords
+        '((sequence
+           "TODO(t)"
+           "IN-PROGRESS(i)"
+           "WAITING(w)"
+           "|"
+           "DONE(d)"
+           "CANCELED(c)"
+           "OBSOLETE(o)")
+          (sequence
+           "ASK(a)"                     ; A question to ask
+           "ASKED(e)"                   ; Question was asked, but we're waiting for them to respond
+           "|"
+           "ANSWERED(r)"))
+        org-todo-keyword-faces
+        '(("ASK"  . +org-todo-active)
+          ("IN-PROGRESS" . +org-todo-active)
+          ("WAITING" . +org-todo-onhold)
+          ("ASKED" . +org-todo-onhold)
+          ("ANSWERED"   . +org-todo-cancel)
+          ("CANCELED"   . +org-todo-cancel)
+          ("OBSOLETE" . +org-todo-cancel)))
   (add-hook 'org-mode-hook (lambda () (vim-empty-lines-mode -1)))
   (add-hook 'org-mode-hook 'l/org-colors))
 

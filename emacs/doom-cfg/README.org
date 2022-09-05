@@ -1352,10 +1352,7 @@ Note that we have to use =M-J= to encode =M-S-j=. This appears to be Emacs conve
   ; Make calendars in agenda start on Monday.
   (setq calendar-week-start-day 1)
   (setq org-startup-indented t)
-  (add-to-list 'org-todo-keywords
-               '(sequence "TODO" "IN-PROGRESS" "WAITING" "|" "DONE" "CANCELED" "OBSOLETE"))
-  (add-to-list 'org-todo-keywords
-               '(sequence "ASK" "ASKED" "|" "ANSWERED"))
+  <<org-todo-keywords>>
   (add-hook 'org-mode-hook (lambda () (vim-empty-lines-mode -1)))
   (add-hook 'org-mode-hook 'l/org-colors))
 
@@ -1368,6 +1365,34 @@ Note that we have to use =M-J= to encode =M-S-j=. This appears to be Emacs conve
 <<org-misc>>
 <<org-agenda>>
 <<org-wrappers>>
+#+end_src
+
+** org-todo-keywords
+
+#+name: org-todo-keywords
+#+begin_src emacs-lisp
+(setq org-todo-keywords
+      '((sequence
+         "TODO(t)"
+         "IN-PROGRESS(i)"
+         "WAITING(w)"
+         "|"
+         "DONE(d)"
+         "CANCELED(c)"
+         "OBSOLETE(o)")
+        (sequence
+         "ASK(a)"                     ; A question to ask
+         "ASKED(e)"                   ; Question was asked, but we're waiting for them to respond
+         "|"
+         "ANSWERED(r)"))
+      org-todo-keyword-faces
+      '(("ASK"  . +org-todo-active)
+        ("IN-PROGRESS" . +org-todo-active)
+        ("WAITING" . +org-todo-onhold)
+        ("ASKED" . +org-todo-onhold)
+        ("ANSWERED"   . +org-todo-cancel)
+        ("CANCELED"   . +org-todo-cancel)
+        ("OBSOLETE" . +org-todo-cancel)))
 #+end_src
 
 ** Scrub invalid links during Markdown export
