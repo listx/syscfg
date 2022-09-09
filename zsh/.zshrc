@@ -116,6 +116,12 @@ __l_prepend_path ~/.mix/escripts
 # Add system scripts to the PATH.
 __l_prepend_path ~/syscfg/script
 
+# ghcup-env. This is a workaround for the Nix bug for GHC documented here:
+# https://github.com/NixOS/nixpkgs/pull/149942. That bug breaks Haskell
+# development on MacOS + Nix. As a workaround we just install GHCup and use that
+# development environment instead.
+[[ -f "/Users/linusa/.ghcup/env" ]] && source "/Users/linusa/.ghcup/env"
+
 # stop zsh from eating space before pipe symbol
 export ZLE_REMOVE_SUFFIX_CHARS=""
 
