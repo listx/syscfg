@@ -110,6 +110,9 @@ __l_prepend_path ~/.local/bin
 # Load executables for "cabal v2-install".
 __l_prepend_path ~/.cabal/bin
 
+# Load Elixir escripts.
+__l_prepend_path ~/.mix/escripts
+
 # Add system scripts to the PATH.
 __l_prepend_path ~/syscfg/script
 
