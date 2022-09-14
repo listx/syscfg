@@ -84,13 +84,13 @@ config.bind("<backspace>", "scroll-page 0 -0.5")
 
 # URL navigation.
 config.bind("O", "set-cmd-text :open {url}")
-config.bind("t", "set-cmd-text -s :open -t")
-config.bind("T", "set-cmd-text :open -t {url}")
+config.bind("t", "set-cmd-text -s :open -rt")
+config.bind("T", "set-cmd-text :open -rt {url}")
 config.bind("f", "hint all tab-bg")
 config.bind("F", "hint")
-config.bind("<ctrl-p>", "open -t -- {clipboard}")
+config.bind("<ctrl-p>", "open -rt -- {clipboard}")
 config.bind("<ctrl-shift-p>", "open -- {clipboard}")
-config.bind("p", "open -t -- {primary}")
+config.bind("p", "open -rt -- {primary}")
 config.bind("P", "open -- {primary}")
 
 # Other.
