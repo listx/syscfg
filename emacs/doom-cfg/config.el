@@ -558,8 +558,9 @@ should be continued."
   "Use rg-helper.sh to search DIR for pat. See rg-helper.sh for
 details."
   (interactive)
-  (tab-bar-new-tab)
-  (consult--grep "rg" (l/rg-search-mk-builder dir args) dir pat))
+  (let ((dir-expanded (expand-file-name dir)))
+    (tab-bar-new-tab)
+    (consult--grep "rg" (l/rg-search-mk-builder dir-expanded args) dir-expanded pat)))
 
 (defun l/rg-search-mk-builder (dir args)
   "Returns a lambda that can fill in the `pat' variable. The explicit use of
