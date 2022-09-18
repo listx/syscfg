@@ -31,6 +31,9 @@
       # k8s master (otherwise we get "cert: failed to fetch remote CA: failed to
       # parse rootCA certs" error)
       8888
+
+      4369 # epmd (erlang port mapper daemon)
+      33001 # mools
     ];
   };
 
