@@ -20,6 +20,25 @@
 exec 2>&1
 set -euo pipefail
 
+main()
+{
+    local mode
+
+    dir="${1}"
+    mode="${2}"
+
+    if [[ "${mode:-}" == "regions" ]]; then
+        pattern="${3}"
+        pattern_multiline="${4}"
+        shift 4
+        search_regions "$@"
+    else
+        pattern="${3}"
+        shift 3
+        search_all "$@"
+    fi
+}
+
 search_regions()
 {
     declare -a args_multiline
@@ -96,25 +115,6 @@ search_all()
 
     rg "${args[@]}" -e "${pattern}" "${dir}"
 
-}
-
-main()
-{
-    local mode
-
-    dir="${1}"
-    mode="${2}"
-
-    if [[ "${mode:-}" == "regions" ]]; then
-        pattern="${3}"
-        pattern_multiline="${4}"
-        shift 4
-        search_regions "$@"
-    else
-        pattern="${3}"
-        shift 3
-        search_all "$@"
-    fi
 }
 
 main "$@"
