@@ -76,6 +76,8 @@ config.bind("<ctrl-h>", "tab-move -")
 config.bind("<ctrl-l>", "tab-move +")
 config.bind("h", "tab-prev")
 config.bind("l", "tab-next")
+config.unbind("J")
+config.unbind("K")
 config.bind(",N", "tab-clone")
 
 # GUI - Page navigation.
