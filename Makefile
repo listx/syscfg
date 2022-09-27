@@ -140,6 +140,8 @@ vim:
 	ln -fs ${C}/vim/cfg                                 ${H}/.gvimrc
 vimpc:
 	ln -fs ${C}/vimpc/.vimpcrc                          ${H}
+wezterm:
+	ln -fs ${C}/wezterm/.wezterm.lua                    ${H}
 xdefaults:
 	ln -fs ${C}/xdefaults/cfg                           ${H}/.Xdefaults
 xmonad:
@@ -193,6 +195,7 @@ zsh:
 	uim \
 	vim \
 	vimpc \
+	wezterm \
 	xdefaults \
 	xmonad \
 	xorg \
