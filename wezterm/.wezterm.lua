@@ -1,6 +1,30 @@
 local wezterm = require 'wezterm'
 local act = wezterm.action
-return {
+
+-- See https://stackoverflow.com/a/71433446/437583.
+local merge = function(a, b)
+    local c = {}
+    for k,v in pairs(a) do c[k] = v end
+    for k,v in pairs(b) do c[k] = v end
+    return c
+end
+local hostname = wezterm.hostname()
+local my_font
+if hostname == 'k0' then
+  my_font = {
+    harfbuzz_features = {"calt=0", "clig=0", "liga=0"},
+    line_height = 0.9,
+    font_size = 10.0,
+  }
+else
+  my_font = {
+    font = wezterm.font_with_fallback {
+      "Hack"
+    },
+    font_size = 14.0,
+  }
+end
+local general_config = {
   enable_tab_bar = false,
   check_for_updates = false,
   window_padding = {
@@ -11,8 +35,6 @@ return {
   },
   initial_cols = 163,
   initial_rows = 102,
-  font = wezterm.font "Hack",
-  font_size = 14.0,
   colors = {
     -- The default text color
     foreground = '#e5e7ea',
@@ -417,3 +439,5 @@ return {
     { key = "~",  mods = "CTRL|ALT|SHIFT", action = act.SendString "\x1b[96;8u" }, -- C-M-~ (C-M-S-`)
   },
 }
+
+return merge(general_config, my_font)

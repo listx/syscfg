@@ -6,10 +6,13 @@
 
 #+begin_src lua :tangle .wezterm.lua
 <<boilerplate>>
-return {
+<<font>>
+local general_config = {
   <<appearance>>
   <<keybindings>>
 }
+
+return merge(general_config, my_font)
 #+end_src
 
 * Appearance
@@ -19,7 +22,6 @@ return {
 <<disable-update-check>>
 <<window-padding>>
 <<window-size>>
-<<font>>
 <<colors>>
 #+end_src
 
@@ -65,8 +67,22 @@ initial_rows = 102,
 
 #+name: font
 #+begin_src lua
-font = wezterm.font "Hack",
-font_size = 14.0,
+local hostname = wezterm.hostname()
+local my_font
+if hostname == 'k0' then
+  my_font = {
+    harfbuzz_features = {"calt=0", "clig=0", "liga=0"},
+    line_height = 0.9,
+    font_size = 10.0,
+  }
+else
+  my_font = {
+    font = wezterm.font_with_fallback {
+      "Hack"
+    },
+    font_size = 14.0,
+  }
+end
 #+end_src
 
 ** Colors
@@ -644,4 +660,12 @@ S-Space is useful to just send the Space character, because we can type capital 
 #+begin_src lua
 local wezterm = require 'wezterm'
 local act = wezterm.action
+
+-- See https://stackoverflow.com/a/71433446/437583.
+local merge = function(a, b)
+    local c = {}
+    for k,v in pairs(a) do c[k] = v end
+    for k,v in pairs(b) do c[k] = v end
+    return c
+end
 #+end_src
