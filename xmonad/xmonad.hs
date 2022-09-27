@@ -1120,7 +1120,7 @@ l_term hostname wantRawShell = case hostname of
   where
   invocation = if wantRawShell
     then "alacritty --config-file ~/syscfg/alacritty/alacritty_raw_shell.yml"
-    else "alacritty"
+    else "wezterm"
 
 l_isPortraitMonitorLayout :: String -> Bool
 l_isPortraitMonitorLayout givenHost = any (`isPrefixOf` givenHost) portraitHosts
@@ -1528,6 +1528,7 @@ l_resetMouse alwaysReset = do
       else return s
   windowPropToDest =
     [ (ClassName "Alacritty", LowerLeft)
+    , (ClassName "org.wezfurlong.wezterm", LowerLeft)
     , (ClassName "Emacs", LowerLeft)
     , (ClassName "qutebrowser", UpperLeft)
     , (ClassName "Chromium-browser", UpperLeft)
@@ -1555,7 +1556,7 @@ main = do
     else xmonad $ myconf hostname numScreens
   where
   myconf hostname numScreens = def
-    { terminal           = "alacritty"
+    { terminal           = "wezterm"
     , focusFollowsMouse  = True
     , clickJustFocuses   = True
     , borderWidth        = 1
