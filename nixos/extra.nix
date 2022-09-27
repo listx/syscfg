@@ -5,7 +5,8 @@
 
   environment.systemPackages = with pkgs; [
     # Essentials
-    alacritty
+    alacritty # deprecated
+    wezterm
     tmux
     zsh
     git
