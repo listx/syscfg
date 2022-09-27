@@ -57,6 +57,7 @@
     # from the `cabal` binary with this package.
     cabal-install
     hlint
+    stack
 
     # HTML
     html-tidy
@@ -117,6 +118,7 @@
     openssl
     pinentry
     cryptsetup
+    pass
 
     # Net
     bind # dig
@@ -155,6 +157,8 @@
     geeqie
     gimp
     imagemagick
+    inkscape
+    pdf2svg
 
     # Audio/Video
     mpv
