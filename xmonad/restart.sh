@@ -2,4 +2,4 @@
 
 set -ex
 
-nix-shell --command "./xmonad --restart"
+./xmonad --restart
