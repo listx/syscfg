@@ -488,8 +488,8 @@ For information on how xterm does it, see https://invisible-island.net/xterm/ctl
 (eval-after-load "xterm" '(l/csi-u-support))
 <<disambiguate-problematic-keys>>
 
-;; Load xterm-specific settings for TERM=alacritty-xtermlike.
-(add-to-list 'term-file-aliases '("alacritty-xtermlike" . "xterm-256color"))
+;; Load xterm-specific settings for TERM=wezterm.
+(add-to-list 'term-file-aliases '("wezterm" . "xterm-256color"))
 #+end_src
 
 *** Disambiguate typically-problematic keys

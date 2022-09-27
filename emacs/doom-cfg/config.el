@@ -214,8 +214,8 @@ Return an event vector."
   :keymap l-disambiguation-mode-map)
 (add-hook 'l-disambiguation-mode-on-hook 'l/disambiguate-problematic-keys)
 
-;; Load xterm-specific settings for TERM=alacritty-xtermlike.
-(add-to-list 'term-file-aliases '("alacritty-xtermlike" . "xterm-256color"))
+;; Load xterm-specific settings for TERM=wezterm.
+(add-to-list 'term-file-aliases '("wezterm" . "xterm-256color"))
 
 (setq user-full-name "Linus Arver"
       user-mail-address "linusarver@gmail.com")

@@ -20,5 +20,5 @@ __l_prepend_path ~/.nix-profile/bin
 
 case "$(hostname)" in
 	w0) export TERM=xterm-24bit  ;;
-	*) export TERM=alacritty-xtermlike ;;
+	*) export TERM=wezterm ;;
 esac

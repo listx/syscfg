@@ -121,10 +121,9 @@ ifeq ($(wildcard ~/.ssh/.),)
 endif
 	ln -fs ${C}/ssh/config.home.conf                    ${H}/.ssh/config
 terminfo:
-	git -C ${C} submodule update --init ${C}/alacritty/upstream
-	tic -x -o ~/.terminfo ${C}/alacritty/upstream/extra/alacritty.info
+	git -C ${C} submodule update --init ${C}/wezterm/upstream
+	tic -x -o ~/.terminfo ${C}/wezterm/upstream/termwiz/data/wezterm.terminfo
 	tic -x -o ~/.terminfo ${C}/terminfo/xterm-24bit.terminfo
-	tic -x -o ~/.terminfo ${C}/terminfo/alacritty-xtermlike.terminfo
 tig:
 	ln -fs ${C}/tig/.tigrc                              ${H}
 tmux:

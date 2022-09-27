@@ -19,3 +19,6 @@
 [submodule "doom-upstream"]
 	path = emacs/doom-upstream
 	url = https://github.com/doomemacs/doomemacs
+[submodule "wezterm/upstream"]
+	path = wezterm/upstream
+	url = https://github.com/wez/wezterm

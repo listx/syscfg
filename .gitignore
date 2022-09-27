@@ -32,6 +32,7 @@ vim/.VimballRecord
 vim/.netrwhist
 vim/colors
 vim/sessions
+wezterm/upstream
 xmonad/.cabal-sandbox
 xmonad/cabal.sandbox.config
 xmonad/dist
