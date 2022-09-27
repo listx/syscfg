@@ -181,6 +181,8 @@
     # Fonts
     kreative-square-fonts
     raleway
+    noto-fonts
+    noto-fonts-cjk
 
     # Data analysis
     graphviz
