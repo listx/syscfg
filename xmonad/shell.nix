@@ -19,12 +19,11 @@ in pkgs.stdenv.mkDerivation {
   buildInputs = [
     ghc
     pkgs.cabal-install
-    pkgs.pkgconfig
+    pkgs.pkg-config
     pkgs.zlib
 
     pkgs.gmp
     pkgs.libffi
-    pkgs.pkgconfig
     pkgs.xlibsWrapper
     pkgs.xorg.libXinerama
     pkgs.xorg.libXScrnSaver
