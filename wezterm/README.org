@@ -173,6 +173,29 @@ keys = {
 #+name: basic-bindings
 #+begin_src lua
 { key = "y", mods = "SUPER", action = act.ActivateCopyMode },
+{ key = "y", mods = "SUPER|CTRL", action = act.QuickSelect },
+<<open-url>>
+#+end_src
+
+** Open URL
+
+Taken from https://wezfurlong.org/wezterm/config/lua/keyassignment/QuickSelectArgs.html as that appears to be the only upstream page detailing how to quickly open a URL using the keyboard. It appears to be first mentioned in https://github.com/wez/wezterm/issues/1362#issuecomment-1000457693.
+
+#+name: open-url
+#+begin_src lua
+{ key = "y", mods = "SUPER|SHIFT",
+  action = wezterm.action.QuickSelectArgs {
+    label = "open url",
+    patterns = {
+      "https?://\\S+",
+    },
+    action = wezterm.action_callback(function(window, pane)
+      local url = window:get_selection_text_for_pane(pane)
+      wezterm.log_info("opening: " .. url)
+      wezterm.open_with(url)
+    end),
+  },
+},
 #+end_src
 
 ** CSI-u mode

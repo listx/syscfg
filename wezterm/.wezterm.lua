@@ -104,6 +104,20 @@ local general_config = {
   },
   keys = {
     { key = "y", mods = "SUPER", action = act.ActivateCopyMode },
+    { key = "y", mods = "SUPER|CTRL", action = act.QuickSelect },
+    { key = "y", mods = "SUPER|SHIFT",
+      action = wezterm.action.QuickSelectArgs {
+        label = "open url",
+        patterns = {
+          "https?://\\S+",
+        },
+        action = wezterm.action_callback(function(window, pane)
+          local url = window:get_selection_text_for_pane(pane)
+          wezterm.log_info('opening: ' .. url)
+          wezterm.open_with(url)
+        end),
+      },
+    },
     { key = "a", mods = "ALT", action = act.SendString "\x1ba" },
     { key = "b", mods = "ALT", action = act.SendString "\x1bb" },
     { key = "c", mods = "ALT", action = act.SendString "\x1bc" },
