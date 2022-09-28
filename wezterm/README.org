@@ -20,6 +20,7 @@ return merge(general_config, my_font)
 #+begin_src lua
 <<disable-tab-bar>>
 <<disable-update-check>>
+<<disable-BEL-sound>>
 <<window-padding>>
 <<window-size>>
 <<colors>>
@@ -41,6 +42,13 @@ Disable automated check of newer Wezterm versions because we install Wezterm thr
 #+name: disable-update-check
 #+begin_src lua
 check_for_updates = false,
+#+end_src
+
+** Disable BEL ascii sequence (alarm sound)
+
+#+name: disable-BEL-sound
+#+begin_src lua
+audible_bell = "Disabled",
 #+end_src
 
 ** Window padding

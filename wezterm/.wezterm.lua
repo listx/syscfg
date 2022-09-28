@@ -27,6 +27,7 @@ end
 local general_config = {
   enable_tab_bar = false,
   check_for_updates = false,
+  audible_bell = "Disabled",
   window_padding = {
     left = 0,
     right = 0,
