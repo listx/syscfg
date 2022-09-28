@@ -22,3 +22,6 @@ case "$(hostname)" in
 	w0) export TERM=xterm-24bit  ;;
 	*) export TERM=wezterm ;;
 esac
+
+# Let emacs and other applications know that our terminal supports 24-bit colors.
+export COLORTERM=truecolor
