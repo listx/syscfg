@@ -427,8 +427,9 @@ add-zsh-hook precmd __l_command_not_found
 
 # Load fzf bindings (upstream) to ZSH.
 if [[ -n "${commands[fzf-share]}" ]]; then
-  # Try to use fzf-tmux to use tmux split panes (if we are inside tmux).
-  export FZF_TMUX=1
+  # Use a tmux popup instead of a pane.
+  FZF_TMUX_OPTS=" -p 90%,90% "
+  export FZF_TMUX_OPTS
 
   source "$(fzf-share)/completion.zsh"
   source "$(fzf-share)/key-bindings.zsh"
