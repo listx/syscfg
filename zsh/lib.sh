@@ -165,9 +165,26 @@ __l_get_tmux_sessions()
     | sort
 }
 
+__l_get_tmux_sessions_attached()
+{
+  local _hostname
+
+  _hostname="${1}"
+
+  tmux list-clients \
+    | cut -d' ' -f2 \
+    | grep "^${_hostname}-[0-9]\+\$" \
+    | sort
+}
+
 # Return the smallest free available session ID for tmux, using the template
 # <HOSTNAME>-<NUMBER>. This is the "parking lot" problem described at
 # https://funloop.org/post/2016-09-24-parking-lot-problem-revisited.html.
+#
+# One slight tweak is that instead of always creating a "next highest number"
+# desired_id, we prioritize the sessions that are not connected by a terminal.
+# This way we never "abandon" a tmux session by creating a new session. We
+# basically never want to have unattached sessions.
 __l_find_free_tmux_session_id()
 {
   local desired_id=0
@@ -176,11 +193,11 @@ __l_find_free_tmux_session_id()
 
   _hostname="${1}"
 
-  # Collect all existing session names to try to pick the first free
-  # session id.
+  # Collect all existing attached session names to try to pick the first free
+  # (unattached) session id.
   #
   # (f) causes the output to be split on newlines.
-  session_ids=(${(f)"$(__l_get_tmux_sessions ${_hostname})"})
+  session_ids=(${(f)"$(__l_get_tmux_sessions_attached ${_hostname})"})
 
   # Note that in Zsh, arrays indices start from 1, not 0.
   if [[ -n "${session_ids[1]:-}" ]]; then
@@ -246,10 +263,6 @@ __l_tmux_command()
     return
   fi
 
-  # If it's not an SSH connection, then create a brand new session. This way, if
-  # we open multiple terminal windows locally, each window gets its own unique
-  # tmux session.
-  #
   desired_id="$(__l_find_free_tmux_session_id "${_hostname}")"
   __l_new_tmux_session_command "${_hostname}" "${desired_id}"
 }
