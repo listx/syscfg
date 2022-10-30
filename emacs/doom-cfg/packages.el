@@ -50,5 +50,6 @@
 (package! auto-dim-other-buffers)
 (package! git-gutter)
 (package! hl-line+)
+(package! protobuf-mode)
 (package! solaire-mode :disable t)
 (package! vim-empty-lines-mode)

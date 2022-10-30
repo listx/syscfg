@@ -302,6 +302,7 @@ In order to use =C-,= from terminal Emacs, you have to make your terminal (e.g.,
 (package! auto-dim-other-buffers)
 (package! git-gutter)
 (package! hl-line+)
+(package! protobuf-mode)
 (package! solaire-mode :disable t)
 (package! vim-empty-lines-mode)
 #+end_src
