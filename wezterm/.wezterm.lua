@@ -114,7 +114,31 @@ local general_config = {
         },
         action = wezterm.action_callback(function(window, pane)
           local url = window:get_selection_text_for_pane(pane)
-          wezterm.log_info('opening: ' .. url)
+          -- Remove any suspicious-looking trailing punctuation character from the
+          -- URL, because 99.99% of the time, this is just carried over from the
+          -- surrounding text and is not actually part of the URL. We have to escape
+          -- some characters with a percent sign (%) because they are considered
+          -- magic characters in Lua.
+          local suspicious_chars = {
+            {char=")", is_magic=true},
+            {char="]", is_magic=true},
+            {char="}", is_magic=false},
+            {char=",", is_magic=false},
+            {char=".", is_magic=true},
+            {char=":", is_magic=false},
+            {char=";", is_magic=false}}
+          for k, v in ipairs(suspicious_chars) do
+            if string.sub(url, -1) == v.char then
+              wezterm.log_info("deleting trailing character " .. v.char .. " from url")
+              if v.is_magic then
+                url = string.gsub(url, "%" .. v.char .. "$", "")
+              else
+                url = string.gsub(url, v.char .. "$", "")
+              end
+              break
+            end
+          end
+          wezterm.log_info("opening: " .. url)
           wezterm.open_with(url)
         end),
       },
