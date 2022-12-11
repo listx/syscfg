@@ -173,9 +173,15 @@ colors = {
 #+name: keybindings
 #+begin_src lua
 keys = {
+  <<clear-specific-default-bindings>>
   <<basic-bindings>>
   <<csi-u-mode>>
 },
+#+end_src
+
+#+name: clear-specific-default-bindings
+#+begin_src lua
+{ key = "t", mods = "SUPER", action = act.DisableDefaultAssignment },
 #+end_src
 
 #+name: basic-bindings

@@ -104,6 +104,7 @@ local general_config = {
     quick_select_match_fg = { Color = '#ffffff' },
   },
   keys = {
+    { key = "t", mods = "SUPER", action = act.DisableDefaultAssignment },
     { key = "y", mods = "SUPER", action = act.ActivateCopyMode },
     { key = "y", mods = "SUPER|CTRL", action = act.QuickSelect },
     { key = "y", mods = "SUPER|SHIFT",
