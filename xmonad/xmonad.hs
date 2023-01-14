@@ -1530,9 +1530,10 @@ l_resetMouse alwaysReset = do
     [ (ClassName "Alacritty", LowerLeft)
     , (ClassName "org.wezfurlong.wezterm", LowerLeft)
     , (ClassName "Emacs", LowerLeft)
-    , (ClassName "qutebrowser", UpperLeft)
-    , (ClassName "Chromium-browser", UpperLeft)
-    , (ClassName "Firefox", UpperLeft)
+    , (ClassName "qutebrowser", UpperRight)
+    , (ClassName "Chromium-browser", UpperRight)
+    , (ClassName "Firefox", UpperRight)
+    , (ClassName "firefox", UpperRight)
     ]
 
 -- Reset the focused window by running l_manageHook against it. This way, we can
