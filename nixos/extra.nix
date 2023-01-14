@@ -50,7 +50,7 @@
     # Compiler versions can be discovered with:
     #
     #   nix-env -f "<nixpkgs>" -qaP -A haskell.compiler
-    haskell.compiler.ghc922
+    haskell.compiler.ghc942
     cabal2nix
     # For invoking, e.g., `cabal2nix cabal://some-package`, because cabal2nix
     # depends on `cabal update`. We also get `cabal repl` and other commands

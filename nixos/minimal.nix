@@ -43,7 +43,7 @@
   # Avoid "lacks a valid signature" error from using nix-copy-closures from
   # another machine on the local LAN. See
   # https://github.com/NixOS/nix/issues/2330#issuecomment-451650296.
-  nix.trustedUsers = [ "root" "@wheel" ];
+  nix.settings.trusted-users = [ "root" "@wheel" ];
 
   # Create a /etc/zshenv and other things to make Zsh work properly. Among
   # other things, this allows us to perform a "git pull <this machine's IP>"
