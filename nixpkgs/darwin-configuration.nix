@@ -63,4 +63,8 @@
 
   # Disable default "walters" prompt, which adds an annoying green PWD string at the far right hand side of the terminal.
   programs.zsh.promptInit = "";
+
+  environment.loginShell = "${pkgs.zsh}/bin/zsh -l";
+  environment.variables.SHELL = "${pkgs.zsh}/bin/zsh";
+  environment.variables.LANG = "en_US.UTF-8";
 }
