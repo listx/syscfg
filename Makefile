@@ -93,7 +93,7 @@ else
 	ln -fs ${C}/nixos/${T}/hardware-configuration.nix   /etc/nixos
 endif
 nixpkgs:
-	ln -fns ${C}/nixpkgs                                ${H}/.config/nixpkgs
+	ln -fns ${C}/nixpkgs                                ${H}/.nixpkgs
 notmuch:
 	ln -fs ${C}/notmuch/notmuch-config                  ${H}/.notmuch-config
 nvim:
