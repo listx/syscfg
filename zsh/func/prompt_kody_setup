@@ -59,10 +59,10 @@ set_zsh_keymap_indicator()
 
 	case "${KEYMAP}" in
 	vicmd)
-		global_keymap_indicator="%B%K{blue}%F{black} <N> %f%k%b "
+		global_keymap_indicator="N"
 	;;
 	main|viins)
-		global_keymap_indicator="%B <I> %b "
+		global_keymap_indicator="I"
 	;;
 	esac
 }
@@ -100,6 +100,7 @@ get_user_host()
 	echo "%n@${prompt_hostname} "
 }
 
+# FIXME: send this info over to mools for rendering
 get_exit_status()
 {
 	if (( $global_exit_status )); then
@@ -107,20 +108,40 @@ get_exit_status()
 	fi
 }
 
-get_lh_info()
+get_mool_info()
 {
-	# TODO: make gsts match lhc output for git information.
-	if ! lhc prompt-info --path-aliases ~/syscfg/zsh/path-aliases "${PWD}" 2>/dev/null; then
+	echo $$ > ~/"shell$$"
+	if ! HOST="$(cat ~/.hostname-short || hostname)" \
+		 MOOL_ZSH_KEYMAP_INDICATOR="${global_keymap_indicator}" \
+		 MOOL_LAST_CMD_EXIT_STATUS="${global_exit_status}" \
+		 moolc view ~/.mool/mool.lua --shell-pid "$$" 2>/dev/null; then
 		cat <<EOF
 global_prompt_path_short="%B%F{cyan}$(~/syscfg/lhc/doc/code/simplify_path.sh ${PWD})%f%b"
 global_prompt_git="$(gsts for_prompt)"
+MOOL_PS1=
 EOF
 	fi
 }
 
+# Set global variables used for prompt generation. This function is only
+# executed once. That is, even in cases where we press ESC to enter "Normal"
+# mode, we do _not_ call this function.
 set_globals()
 {
-	source <(get_lh_info)
+	source <(get_mool_info)
+
+	# Arrays cannot be exported (this is true at least for Bash and Zsh). So we
+	# must consume it here.
+	local m
+	if (( $#MOOL_SHELL_MESSAGES != 0 )); then
+		# Pad some newlines to move past the " $ " PS1 substring.
+		echo
+		echo
+		for m in "${MOOL_SHELL_MESSAGES[@]}"; do
+			echo "${m}"
+		done
+		echo
+	fi
 
 	# These bits are very "close" to the shell and so we just get the info from
 	# the shell directly instead of asking lhc for it.
@@ -140,18 +161,25 @@ set_globals()
 # do not recalculate the other globals.
 construct_prompt()
 {
-	# Set global variables used for prompt generation. This function is only
-	# executed once. That is, even in cases where we press ESC to enter "Normal"
-	# mode, we do _not_ call this function.
 	set_globals
 
-	# Date, time, Zsh keymap indicator, exit code, Git, and VirtualEnv.
-	local prompt_line_1="${global_timestamp}${global_keymap_indicator}${global_venv_info}${global_cmd_exit_status}${global_prompt_git}${global_user_host}${global_prompt_path_short}"
+	if [[ -n "${MOOL_PS1:-}" ]]; then
+		# We have to put the MOOL_PS1 value inside "%{..%}" because this tells
+		# Zsh to interpret the ANSI escape sequences inside the MOOL_PS1
+		# variable.
+		# See https://stackoverflow.com/a/30581694/437583.
+		PS1="%{${MOOL_PS1}%}${prompt_newline} \$ "
+     	local prompt_line_2=" "
+	else
+		# Date, time, Zsh keymap indicator, exit code, Git, and VirtualEnv.
+		local prompt_line_1="${global_timestamp}${global_keymap_indicator}${global_venv_info}${global_cmd_exit_status}${global_prompt_git}${global_user_host}${global_prompt_path_short}"
 
-	local prompt_line_2=" "
+		local prompt_line_2=" "
 
-	# PS1 -> what you see by default.
-	PS1="${prompt_line_1}${prompt_newline}${prompt_line_2}\$ "
+		# PS1 -> what you see by default.
+		PS1="${prompt_line_1}${prompt_newline}${prompt_line_2}\$ "
+	fi
+
 	# PS2 -> what you see when you enter a multi-line shell command.
 	PS2="${prompt_line_2}..%_ > "
 	# PS3 -> what you see when you are given a selection option screen (e.g.,

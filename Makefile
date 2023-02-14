@@ -67,6 +67,8 @@ lesskey:
 	lesskey
 lhc:
 	make -C ${C}/lhc
+mool:
+	ln -fns ${C}/mool                                   ${H}/.mool
 mpd:
 	ln -fns ${C}/mpd                                    ${H}/.config/mpd
 mpv:
@@ -176,6 +178,7 @@ zsh:
 	kube \
 	lesskey \
 	lhc \
+	mool \
 	mpd \
 	mpv \
 	mupen \

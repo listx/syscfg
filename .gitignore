@@ -19,6 +19,8 @@ gpg
 karabiner/assets
 karabiner/automatic_backups
 lh/target
+mool/cookie
+mool/tzdata
 mpv/mpv.conf
 nvim/.netrwhist
 openvpn/*.ovpn
