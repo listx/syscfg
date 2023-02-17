@@ -49,6 +49,7 @@
       xz
       youtube-dl
       zsh
+      zstd
     ];
 
   # Auto upgrade nix package and the daemon service.
