@@ -34,6 +34,7 @@
       nodejs
       pass
       pdf2svg
+      procps
       rtorrent
       ripgrep
       rustfmt
