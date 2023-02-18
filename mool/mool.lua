@@ -1,1 +1,0 @@
-/home/l/.nix-profile/share/mool/sample/mool.lua

@@ -1,5 +1,9 @@
 { config, pkgs, ... }:
 
+let
+  mool-release = import ../prog/mool/package/build.nix;
+  HOME = builtins.getEnv "HOME";
+in
 {
   # List packages installed in system profile. To search by name, run:
   # $ nix-env -qaP | grep wget
@@ -29,6 +33,8 @@
       inkscape
       less
       lorri
+      mool-release.mool-server
+      mool-release.mool-client
       mpv
       neovim
       nodejs
@@ -51,6 +57,20 @@
       zsh
       zstd
     ];
+
+  # Enable mools with launchd.
+  launchd.user.agents.mools = {
+    script = "${mool-release.mool-server}/bin/mools start";
+    environment = {
+      RELEASE_COOKIE = "${HOME}/.mool/cookie";
+      LUA_PATH = "${HOME}/.mool/?.lua";
+    };
+    #path = [ mool-release.mool-server ];
+    serviceConfig = {
+      KeepAlive = true;
+      RunAtLoad = true;
+    };
+  };
 
   # Auto upgrade nix package and the daemon service.
   services.nix-daemon.enable = true;

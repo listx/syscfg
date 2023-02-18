@@ -100,7 +100,6 @@ get_user_host()
 	echo "%n@${prompt_hostname} "
 }
 
-# FIXME: send this info over to mools for rendering
 get_exit_status()
 {
 	if (( $global_exit_status )); then
@@ -110,7 +109,6 @@ get_exit_status()
 
 get_mool_info()
 {
-	echo $$ > ~/"shell$$"
 	if ! HOST="$(cat ~/.hostname-short || hostname)" \
 		 MOOL_ZSH_KEYMAP_INDICATOR="${global_keymap_indicator}" \
 		 MOOL_LAST_CMD_EXIT_STATUS="${global_exit_status}" \

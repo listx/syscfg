@@ -21,6 +21,8 @@ karabiner/automatic_backups
 lh/target
 mool/cookie
 mool/tzdata
+mool/*.lua
+mool/*.sh
 mpv/mpv.conf
 nvim/.netrwhist
 openvpn/*.ovpn

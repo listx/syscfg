@@ -1,1 +1,0 @@
-/home/l/.nix-profile/share/mool/sample/git_staged_bytes.sh
