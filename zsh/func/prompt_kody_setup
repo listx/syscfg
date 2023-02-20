@@ -115,7 +115,7 @@ get_mool_info()
 		 MOOL_PATH_ALIASES_FILE="${HOME}/.zsh/path-aliases" \
 		 moolc view ~/.mool/mool.lua --shell-pid "$$" 2>/dev/null; then
 		cat <<EOF
-global_prompt_path_short="%B%F{cyan}$(~/syscfg/lhc/doc/code/simplify_path.sh ${PWD})%f%b"
+global_prompt_path_short="%B%F{cyan}$(~/syscfg/script/simplify_path.sh ${PWD})%f%b"
 global_prompt_git="$(gsts for_prompt)"
 MOOL_PS1=
 EOF
@@ -142,8 +142,6 @@ set_globals()
 		echo
 	fi
 
-	# These bits are very "close" to the shell and so we just get the info from
-	# the shell directly instead of asking lhc for it.
 	global_timestamp="%B%K{214}%F{16} %D{%d} $(get_day) %D{%H:%M:%S %Z} %f%k%b "
 	global_user_host="$(get_user_host)"
 	global_cmd_exit_status="$(get_exit_status)"

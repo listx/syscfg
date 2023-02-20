@@ -65,8 +65,6 @@ kube:
 lesskey:
 	ln -fs ${C}/lesskey/cfg                             ${H}/.lesskey
 	lesskey
-lhc:
-	make -C ${C}/lhc
 mool:
 	ln -fns ${C}/mool                                   ${H}/.mool
 	set -e && \
@@ -181,7 +179,6 @@ zsh:
 	karabiner \
 	kube \
 	lesskey \
-	lhc \
 	mool \
 	mpd \
 	mpv \
