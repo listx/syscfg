@@ -47,7 +47,6 @@
 ;(unpin! pinned-package another-pinned-package)
 ;; ...Or *all* packages (NOT RECOMMENDED; will likely break things)
 ;(unpin! t)
-(package! auto-dim-other-buffers)
 (package! git-gutter)
 (package! hl-line+)
 (package! protobuf-mode)
