@@ -188,25 +188,6 @@ stty start undef
 # you'd ever want to use 'cd -$n'
 alias ds=' dirs -v ; echo -n "\nSelect directory: " ; read n ; cd +$n && ll'
 
-# Useful change dirs (first change to the directory, and then list the contents
-# within; notice how you can use aliases within aliases! (the "l" is an alias
-# here defined below)
-
-alias k=" cd ..;ll"
-alias kk=" cd ../../;ll"
-alias kkk=" cd ../../../;ll"
-alias kkkk=" cd ../../../../;ll"
-alias kkkkk=" cd ../../../../../;ll"
-alias kkkkkk=" cd ../../../../../../;ll"
-alias kkkkkkk=" cd ../../../../../../../;ll"
-alias kkkkkkkk=" cd ../../../../../../../../;ll"
-alias kkkkkkkkk=" cd ../../../../../../../../../;ll"
-alias kkkkkkkkkk=" cd ../../../../../../../../../../;ll"
-alias kkkkkkkkkkk=" cd ../../../../../../../../../../../;ll"
-alias kkkkkkkkkkkk=" cd ../../../../../../../../../../../../;ll"
-alias kkkkkkkkkkkkk=" cd ../../../../../../../../../../../../../;ll"
-alias kkkkkkkkkkkkkk=" cd ../../../../../../../../../../../../../../;ll"
-
 alias c="color_cycle next"
 alias C="color_cycle prev"
 alias cls="echo -ne '\x1bc'" # clear the screen buffer (don't just hide it like CTRL-L)
@@ -388,7 +369,7 @@ bindkey -s '^l' ' dirs_navigate next\n'
 # Move up a directory. This is slightly faster than typing 'k' then 'Enter'. We
 # can't bind C-j, because it is interpreted by Zsh to be the same thing as a
 # newline. So binding it is the same thing as rebinding the newline character.
-bindkey -s '^K' ' k\n'
+bindkey -s '^K' ' cd ..;ll\n'
 
 zmodload zsh/complist # for the 'menuselect' keymap
 # Just execute the command when selecting from a menu and pressing <enter>.
