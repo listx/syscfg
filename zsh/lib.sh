@@ -88,19 +88,14 @@ __l_maybe_load_completions()
   # https://stackoverflow.com/a/3352015.
   case "${BUFFER#"${BUFFER%%[![:space:]]*}"}" in
   kl)
-    if ! [[ $commands[kubectl] ]]; then
-      return
-    fi
-
-    # The _kubectl is defined only if we've already sourced the
-    # completions.
-    if (( $+functions[_kubectl] )); then
+    if (( "${__l_already_loaded_kl_comps:-0}" )); then
       return
     fi
 
     source <(command kubectl completion zsh)
     # Pass through the default kubectl completions to kl (zsh/func/kl).
     compdef kl=kubectl
+    __l_already_loaded_kl_comps=1
     ;;
   *)
     ;;
