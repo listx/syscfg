@@ -81,21 +81,29 @@ __l_command_not_found () {
   fi
 }
 
-__l_maybe_load_completions()
+__l_maybe_load_completions_and_autocorrect()
 {
   # Remove leading whitespace from BUFFER, to catch cases where we enter some
   # spaces or tabs before actually typing the command name. See
   # https://stackoverflow.com/a/3352015.
-  case "${BUFFER#"${BUFFER%%[![:space:]]*}"}" in
+  local leading_whitespace
+  leading_whitespace="${BUFFER%%[![:space:]]*}"
+  case "${BUFFER#"${leading_whitespace}"}" in
   kl)
+    # Replace "kl" with "kubectl" because it's more explicit and better
+    # for copy-pasting to others who may not use the same abbreviations as us.
+    BUFFER="${leading_whitespace=}"kubectl
+    zle end-of-line
+
     if (( "${__l_already_loaded_kl_comps:-0}" )); then
       return
     fi
 
     source <(command kubectl completion zsh)
-    # Pass through the default kubectl completions to kl (zsh/func/kl).
-    compdef kl=kubectl
     __l_already_loaded_kl_comps=1
+    ;;
+  "watch kl")
+    BUFFER="${leading_whitespace}watch kubectl"
     ;;
   *)
     ;;
@@ -104,7 +112,7 @@ __l_maybe_load_completions()
 
 __l_lazy_load_completions()
 {
-  __l_maybe_load_completions
+  __l_maybe_load_completions_and_autocorrect
   # Now invoke the vanilla zle widget that was supposed to have been called
   # from viins mode.
   case "${KEYS[-1]}" in

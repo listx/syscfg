@@ -1,7 +1,0 @@
-#!/usr/bin/env zsh
-
-# Shortcut for "kubectl".
-kl()
-{
-	kubectl "$@"
-}
