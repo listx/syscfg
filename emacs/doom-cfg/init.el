@@ -184,7 +184,8 @@
        ;;twitter           ; twitter client https://twitter.com/vnought
 
        :config
-       literate
+       ;; Disable literate mode until https://github.com/doomemacs/doomemacs/issues/6902 is fixed. We just manually tangle with "C-c C-v t" for now.
+       ;;literate
        (default +bindings +smartparens))
 
 (setq doom-leader-key ","
