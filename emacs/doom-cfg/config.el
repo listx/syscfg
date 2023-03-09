@@ -1033,7 +1033,9 @@ Also add the number of windows in the window configuration."
     `(hl-line :background ,(doom-darken (doom-color 'bg-alt) 0.4))
     '(vim-empty-lines-face :weight bold)
 
-                                        ; Use bright visuals for coloring regions and interactive search hits.
+    '(org-headline-done        :foreground "#aaaaaa" :weight bold)
+
+    ; Use bright visuals for coloring regions and interactive search hits.
     '(lazy-highlight  :foreground "pink" :background "dark red" :weight normal)
     '(isearch  :foreground "dark red" :background "pink" :weight bold)
     '(region  :foreground "dark red" :background "pink" :weight bold)
