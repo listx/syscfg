@@ -944,6 +944,16 @@ Also add the number of windows in the window configuration."
   (set-buffer-modified-p nil)
   (l/kill-this-buffer))
 
+(map! :after notmuch
+      :map notmuch-show-mode-map
+      :mnv "C-k" nil
+      :mnv "C-j" nil
+      :mnv "H" #'previous-buffer)
+(setq notmuch-saved-searches
+      '((:name "inbox" :query "tag:inbox" :count-query "tag:inbox AND tag:unread" :key "i")
+        (:name "git" :query "tag:git and (not tag:spam)" :count-query "tag:git AND tag:unread" :key "g")
+        (:name "sent" :query "tag:sent" :key "s")))
+
 (map! :mi "C-o" #'l/insert-newline-below
       :mi "C-S-o" #'l/insert-newline-above)
 
@@ -1058,6 +1068,11 @@ Also add the number of windows in the window configuration."
     `(mode-line-inactive
        :background ,(doom-color 'base6)
        :foreground ,(doom-color 'base0))
+
+    `(notmuch-message-summary-face :foreground ,l/color-foreground)
+    `(notmuch-search-count :foreground ,l/color-foreground)
+    `(notmuch-tree-no-match-subject-face :foreground ,l/color-foreground)
+    `(notmuch-wash-cited-text :foreground ,l/color-foreground)
 
     `(git-gutter:modified :foreground ,l/color-xUltraBrightMagenta)
     `(git-gutter:added :foreground ,l/color-xUltraBrightGreen)

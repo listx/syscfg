@@ -202,7 +202,7 @@ DOOM requires 3 configuration files in the =$DOOMDIR=:
 
        :email
        ;;(mu4e +org +gmail)
-       ;;notmuch
+       notmuch
        ;;(wanderlust +gmail)
 
        :app
@@ -342,6 +342,8 @@ Note that this file is pretty much **required** and acts as the base for all oth
 <<tab-management>>
 
 <<buffer-management>>
+
+<<notmuch>>
 
 <<editing>>
 <<code>>
@@ -1218,6 +1220,11 @@ dhall text <<< "./listColorsForEmacs.dhall ./themes/PastelDark.dhall"
        :background ,(doom-color 'base6)
        :foreground ,(doom-color 'base0))
 
+    `(notmuch-message-summary-face :foreground ,l/color-foreground)
+    `(notmuch-search-count :foreground ,l/color-foreground)
+    `(notmuch-tree-no-match-subject-face :foreground ,l/color-foreground)
+    `(notmuch-wash-cited-text :foreground ,l/color-foreground)
+
     `(git-gutter:modified :foreground ,l/color-xUltraBrightMagenta)
     `(git-gutter:added :foreground ,l/color-xUltraBrightGreen)
     `(git-gutter:deleted :foreground ,l/color-xUltraBrightRed)
@@ -1771,6 +1778,35 @@ In Org 9.2+, you can do =C-c C-,= to run org-insert-structure-template, and then
       :map alchemist-mode-map
       :mnvi "C-k" nil
       :mnvi "C-j" nil)
+#+end_src
+
+* Notmuch
+
+#+name: notmuch
+#+begin_src emacs-lisp
+<<notmuch-bindings>>
+<<notmuch-saved-searches>>
+#+end_src
+
+** Remove conflicting bindings
+
+#+name: notmuch-bindings
+#+begin_src emacs-lisp
+(map! :after notmuch
+      :map notmuch-show-mode-map
+      :mnv "C-k" nil
+      :mnv "C-j" nil
+      :mnv "H" #'previous-buffer)
+#+end_src
+
+** Saved searches
+
+#+name: notmuch-saved-searches
+#+begin_src emacs-lisp
+(setq notmuch-saved-searches
+      '((:name "inbox" :query "tag:inbox" :count-query "tag:inbox AND tag:unread" :key "i")
+        (:name "git" :query "tag:git and (not tag:spam)" :count-query "tag:git AND tag:unread" :key "g")
+        (:name "sent" :query "tag:sent" :key "s")))
 #+end_src
 
 * Shell

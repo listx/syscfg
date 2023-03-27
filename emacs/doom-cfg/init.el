@@ -172,7 +172,7 @@
 
        :email
        ;;(mu4e +org +gmail)
-       ;;notmuch
+       notmuch
        ;;(wanderlust +gmail)
 
        :app
