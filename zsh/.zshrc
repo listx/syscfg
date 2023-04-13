@@ -477,6 +477,9 @@ zcomet load "smeagol74/zsh-fzf-pass"
 autoload -U compinit
 compinit
 
+source <(jj debug completion --zsh | head -n -1)
+compdef _jj jj
+
 # Instead of using "qoomon/zsh-lazyload", we simply examine the letters that are
 # already inserted into the zle buffer. If it is "kl" and we press either the
 # Space or Tab key, we invoke our custom widget which loads completions for
