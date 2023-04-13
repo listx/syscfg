@@ -9,6 +9,7 @@ hash -d   kt=${HOME}/go/src/k8s.io/test-infra
 hash -d  cip=${HOME}/go/src/sigs.k8s.io/k8s-container-image-promoter
 hash -d    l=${HOME}/lo
 hash -d    s=${HOME}/syscfg
+hash -d  git=${HOME}/prog/foreign/git
 
 hash -d nixp=${HOME}/.nix-profile
 hash -d nix=/nix/var/nix
