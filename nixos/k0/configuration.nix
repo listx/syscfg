@@ -1,7 +1,11 @@
 { config, pkgs, ... }:
 
 {
-  imports = [ ../extra.nix ./hardware-configuration.nix ../k8s-master.nix ];
+  imports =
+    [
+      ../extra.nix
+      ./hardware-configuration.nix
+    ];
 
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;

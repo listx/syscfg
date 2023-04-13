@@ -52,16 +52,6 @@ gtk:
 karabiner:
 	mkdir -p ${H}/.config/karabiner
 	ln -fns ${C}/karabiner/karabiner.json               ${H}/.config/karabiner
-kube:
-	mkdir -p ${C}/kube
-	cp -f  /etc/kubernetes/cluster-admin.kubeconfig     ${C}/kube/config
-	ln -fns ${C}/kube                                   ${H}/.kube
-	# Give normal user cluster-admin rights. This is required for invoking
-	# kubectl against the local cluster. It is by default set to root
-	# read-access only "so that you cannot gain cluster-admin rights just by
-	# being a normal user (by default)", according to
-	# https://logs.nix.samueldr.com/nixos-kubernetes/2018-09-07.
-	sudo chmod go+r /var/lib/kubernetes/secrets/cluster-admin-key.pem
 lesskey:
 	ln -fs ${C}/lesskey/cfg                             ${H}/.lesskey
 	lesskey
@@ -177,7 +167,6 @@ zsh:
 	gpg \
 	gtk \
 	karabiner \
-	kube \
 	lesskey \
 	mool \
 	mpd \
