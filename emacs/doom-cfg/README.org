@@ -299,6 +299,7 @@ In order to use =C-,= from terminal Emacs, you have to make your terminal (e.g.,
 (package! protobuf-mode)
 (package! solaire-mode :disable t)
 (package! vim-empty-lines-mode)
+(package! ztree)
 #+end_src
 
 * $DOOMDIR/config.el
