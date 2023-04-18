@@ -949,6 +949,10 @@ Also add the number of windows in the window configuration."
       :mnv "C-k" nil
       :mnv "C-j" nil
       :mnv "H" #'previous-buffer)
+(map! :after notmuch
+      :map notmuch-tree-mode-map
+      :mnv "C-k" nil
+      :mnv "C-j" nil)
 (setq notmuch-saved-searches
       '((:name "inbox" :query "tag:inbox" :count-query "tag:inbox AND tag:unread" :key "i")
         (:name "git" :query "tag:git and (not tag:spam)" :count-query "tag:git AND tag:unread" :key "g")

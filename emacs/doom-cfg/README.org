@@ -1798,6 +1798,10 @@ In Org 9.2+, you can do =C-c C-,= to run org-insert-structure-template, and then
       :mnv "C-k" nil
       :mnv "C-j" nil
       :mnv "H" #'previous-buffer)
+(map! :after notmuch
+      :map notmuch-tree-mode-map
+      :mnv "C-k" nil
+      :mnv "C-j" nil)
 #+end_src
 
 ** Saved searches
