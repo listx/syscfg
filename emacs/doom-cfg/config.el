@@ -1098,6 +1098,8 @@ Also add the number of windows in the window configuration."
 
 (use-package! rainbow-mode
   :hook (prog-mode text-mode))
+;; Disable rainbow-mode (because "#def" in "#define" gets interpreted as a hex color.)
+(add-hook 'c-mode-hook (lambda () (rainbow-turn-off)))
 (use-package! doom-themes
   :config
   (cond
