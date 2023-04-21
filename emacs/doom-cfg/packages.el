@@ -47,6 +47,7 @@
 ;(unpin! pinned-package another-pinned-package)
 ;; ...Or *all* packages (NOT RECOMMENDED; will likely break things)
 ;(unpin! t)
+(package! citeproc)
 (package! git-gutter)
 (package! protobuf-mode)
 (package! solaire-mode :disable t)
