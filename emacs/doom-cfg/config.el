@@ -1114,18 +1114,6 @@ Also add the number of windows in the window configuration."
 ; Enable only left-side fringe.
 (set-fringe-mode '(10 . 0))
 
-; Disable hl-line mode, because it is extremely slow. We want to use hl-line+
-; mode instead, which is much faster because it only highlights the line when
-; idle.
-(remove-hook 'doom-first-buffer-hook #'global-hl-line-mode)
-
-(use-package! hl-line+
-  :config
-  ; Only highlight when idle.
-  (toggle-hl-line-when-idle)
-  (setq global-hl-line-mode nil)
-  (hl-line-when-idle-interval 0.5))
-
 (use-package! vim-empty-lines-mode
   :config
   (add-hook 'prog-mode-hook 'vim-empty-lines-mode)
@@ -1159,7 +1147,6 @@ Also add the number of windows in the window configuration."
   (evil-scroll-line-to-center nil))
 
 (use-package! git-gutter
-  :after (hl-line+)
   :config
   ; Git diff +/- marks.
   (global-git-gutter-mode +1)
@@ -1173,9 +1160,6 @@ Also add the number of windows in the window configuration."
       (when (frame-focus-state)
         (git-gutter:update-all-windows))))
   (advice-add 'select-window :around #'l/git-gutter-refresh)
-  ; Make git-gutter refresh based on a timer (abuse the fact that
-  ; hl-line-highlight-now is called whenever we're idle).
-  (advice-add 'hl-line-highlight-now :around #'l/git-gutter-refresh)
   ; Update git-gutter every time we lose/regain focus to the frame. See
   ; https://emacs.stackexchange.com/a/60971/13006.
   (add-function :after after-focus-change-function (lambda () (when (frame-focus-state) (git-gutter:update-all-windows))))
