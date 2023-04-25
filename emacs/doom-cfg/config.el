@@ -13,11 +13,11 @@ script which knows what to do depending on the environment."
    (funcall orig-fun string)))
 
 (advice-add 'gui-select-text :around #'l/copy-to-clipboard)
-;; Enable `CSI u` support. See https://emacs.stackexchange.com/a/59225.  xterm
-;; with the resource ?.VT100.modifyOtherKeys: 1 GNU Emacs >=24.4 sets xterm in
-;; this mode and define some of the escape sequences but not all of them.  xterm
-;; with the resource ?.VT100.modifyOtherKeys: 1 GNU Emacs >=24.4 sets xterm in
-;; this mode and define some of the escape sequences but not all of them.
+;; Enable `CSI u` support. See https://emacs.stackexchange.com/a/59225.
+;;
+;; xterm with the resource ?.VT100.modifyOtherKeys: 1
+;; GNU Emacs >=24.4 sets xterm in this mode and define
+;; some of the escape sequences but not all of them.
 (defun l/csi-u-support ()
   (interactive)
   (when (and (boundp 'xterm-extra-capabilities) (boundp 'xterm-function-map))
