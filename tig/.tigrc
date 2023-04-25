@@ -25,5 +25,8 @@ bind generic } parent
 bind generic y !@bash -c "git rev-parse %(commit) \
 	| head -c -1 \
 	| ~/syscfg/script/copy-clipboard.sh"
+bind generic Y !@bash -c "git show --no-patch --pretty=reference %(commit) \
+	| head -c -1 \
+	| ~/syscfg/script/copy-clipboard.sh"
 bind main    R !git rebase -i %(commit)
 bind generic <Backspace> move-page-up
