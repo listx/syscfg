@@ -1114,6 +1114,10 @@ Also add the number of windows in the window configuration."
 ; Enable only left-side fringe.
 (set-fringe-mode '(10 . 0))
 
+; Disable hl-line mode, because it can be surprisingly disorienting. Besides, we
+; can always use "v" or "V" to get a visual queue easily enough.
+(remove-hook 'doom-first-buffer-hook #'global-hl-line-mode)
+
 (use-package! vim-empty-lines-mode
   :config
   (add-hook 'prog-mode-hook 'vim-empty-lines-mode)
