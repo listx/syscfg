@@ -141,7 +141,7 @@ DOOM requires 3 configuration files in the =$DOOMDIR=:
        :lang
        ;;agda              ; types of types of types of types...
        ;;beancount         ; mind the GAAP
-       ;;cc                ; C > C++ == 1
+       cc                ; C > C++ == 1
        ;;clojure           ; java with a lisp
        common-lisp       ; if you've seen one lisp, you've seen them all
        ;;coq               ; proofs-as-programs
@@ -323,6 +323,7 @@ Note that this file is pretty much **required** and acts as the base for all oth
 <<org>>
 <<org-roam>>
 <<elixir>>
+<<c-clang-format>>
 <<shell>>
 
 <<line-numbers>>
@@ -1776,6 +1777,26 @@ In Org 9.2+, you can do =C-c C-,= to run org-insert-structure-template, and then
 #+begin_src emacs-lisp
 (map! :after alchemist
       :map alchemist-mode-map
+      :mnvi "C-k" nil
+      :mnvi "C-j" nil)
+#+end_src
+
+* C (C, C++, Objective-C, etc)
+
+** Disable automatic formatting on save
+
+This is useful for legacy C projects that do not have agreed rules on automatic formatting based on =clang-format= (https://clang.llvm.org/docs/ClangFormat.html), which is what =format-all-mode= uses for C-based languages. See https://github.com/doomemacs/doomemacs/issues/2027#issuecomment-551962591 for the JS-based version of this.
+
+#+name: c-clang-format
+#+begin_src emacs-lisp
+(add-hook! 'c-mode-hook
+  (unless (locate-dominating-file default-directory ".clang-format")
+    (format-all-mode -1)))
+
+(map! :after ccls
+      :map (c-mode-map c++-mode-map)
+      :mnvi "C-h" nil
+      :mnvi "C-l" nil
       :mnvi "C-k" nil
       :mnvi "C-j" nil)
 #+end_src
