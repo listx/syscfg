@@ -393,6 +393,10 @@ Return an event vector."
   (setq org-cycle-separator-lines 0)
   ; Introduce unordered bulleted list hierarchy. We flip-flop between "-" and "+" as we continue to nest. This helps keep track of nesting.
   (setq org-list-demote-modify-bullet '(("-" . "+") ("+" . "-")))
+  ; Enable habits (see https://orgmode.org/manual/Tracking-your-habits.html).
+  (add-to-list 'org-modules 'org-habit t)
+  ; Show daily habits in the agenda even if they have already been completed for today. This is useful for the consistency graph being displayed even for completed items.
+  (setq org-habit-show-all-today t)
   (add-hook 'org-mode-hook 'l/org-colors))
 
 ;; Dim org-block face (source code blocks) separately, because they are not
