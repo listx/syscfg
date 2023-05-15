@@ -1360,6 +1360,12 @@ Note that we have to use =M-J= to encode =M-S-j=. This appears to be Emacs conve
   (setq calendar-week-start-day 1)
   (setq org-startup-indented t)
   <<org-todo-keywords>>
+  ; When editing text near hidden text (e.g., the "..." ellipses after folded headings), expand it so that we are forced to only edit text around hidden text when it is un-hidden.
+  (setq org-catch-invisible-edits 'show-and-error)
+  ; Never make trees' trailing empty lines visible from collapsed view.
+  (setq org-cycle-separator-lines 0)
+  ; Introduce unordered bulleted list hierarchy. We flip-flop between "-" and "+" as we continue to nest. This helps keep track of nesting.
+  (setq org-list-demote-modify-bullet '(("-" . "+") ("+" . "-")))
   (add-hook 'org-mode-hook 'l/org-colors))
 
 ;; Dim org-block face (source code blocks) separately, because they are not
@@ -1688,6 +1694,7 @@ If you use "org" and don't want your org files in the default location below, ch
 (remove-hook 'org-mode-hook #'flyspell-mode)
 
 <<org-mark-done-with-note>>
+<<org-mark-done-when-rescheduling>>
 #+end_src
 
 ** Wrappers for common operations
@@ -1765,6 +1772,14 @@ In the prompt, if we cancel with =C-c C-k=, this is the equivalent of =(setq org
 #+name: org-mark-done-with-note
 #+begin_src emacs-lisp
 (setq org-log-done 'note)
+#+end_src
+
+Similarly, create a note whenever we reschedule or change the deadline of an item.
+
+#+name: org-mark-done-when-rescheduling
+#+begin_src emacs-lisp
+(setq org-log-redeadline 'note)
+(setq org-log-reschedule 'note)
 #+end_src
 
 ** Notes

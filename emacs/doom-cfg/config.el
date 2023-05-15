@@ -387,6 +387,12 @@ Return an event vector."
           ("ANSWERED"   . +org-todo-cancel)
           ("CANCELED"   . +org-todo-cancel)
           ("OBSOLETE" . +org-todo-cancel)))
+  ; When editing text near hidden text (e.g., the "..." ellipses after folded headings), expand it so that we are forced to only edit text around hidden text when it is un-hidden.
+  (setq org-catch-invisible-edits 'show-and-error)
+  ; Never make trees' trailing empty lines visible from collapsed view.
+  (setq org-cycle-separator-lines 0)
+  ; Introduce unordered bulleted list hierarchy. We flip-flop between "-" and "+" as we continue to nest. This helps keep track of nesting.
+  (setq org-list-demote-modify-bullet '(("-" . "+") ("+" . "-")))
   (add-hook 'org-mode-hook 'l/org-colors))
 
 ;; Dim org-block face (source code blocks) separately, because they are not
@@ -422,6 +428,8 @@ Return an event vector."
 (remove-hook 'org-mode-hook #'flyspell-mode)
 
 (setq org-log-done 'note)
+(setq org-log-redeadline 'note)
+(setq org-log-reschedule 'note)
 (map! :after evil-org-agenda
       :map evil-org-agenda-mode-map
       :mnv "C-k" nil
