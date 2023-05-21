@@ -1139,6 +1139,12 @@ Also add the number of windows in the window configuration."
 ; can always use "v" or "V" to get a visual queue easily enough.
 (remove-hook 'doom-first-buffer-hook #'global-hl-line-mode)
 
+; Add visual cue on 80th column.
+(use-package! column-enforce-mode
+  :config
+  (add-hook 'org-mode-hook 'column-enforce-mode)
+  (global-column-enforce-mode t))
+
 (use-package! vim-empty-lines-mode
   :config
   (add-hook 'org-mode-hook 'vim-empty-lines-mode)

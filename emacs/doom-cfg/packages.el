@@ -48,6 +48,7 @@
 ;; ...Or *all* packages (NOT RECOMMENDED; will likely break things)
 ;(unpin! t)
 (package! citeproc)
+(package! column-enforce-mode)
 (package! git-gutter)
 (package! protobuf-mode)
 (package! solaire-mode :disable t)

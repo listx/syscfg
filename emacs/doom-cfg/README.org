@@ -295,6 +295,7 @@ In order to use =C-,= from terminal Emacs, you have to make your terminal (e.g.,
 ;; ...Or *all* packages (NOT RECOMMENDED; will likely break things)
 ;(unpin! t)
 (package! citeproc)
+(package! column-enforce-mode)
 (package! git-gutter)
 (package! protobuf-mode)
 (package! solaire-mode :disable t)
@@ -2000,6 +2001,12 @@ Before we started using Doom Emacs, we used to rely heavily on kakapo-mode to al
 ; Disable hl-line mode, because it can be surprisingly disorienting. Besides, we
 ; can always use "v" or "V" to get a visual queue easily enough.
 (remove-hook 'doom-first-buffer-hook #'global-hl-line-mode)
+
+; Add visual cue on 80th column.
+(use-package! column-enforce-mode
+  :config
+  (add-hook 'org-mode-hook 'column-enforce-mode)
+  (global-column-enforce-mode t))
 
 (use-package! vim-empty-lines-mode
   :config
