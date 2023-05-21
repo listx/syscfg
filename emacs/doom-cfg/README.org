@@ -1480,6 +1480,7 @@ convention.
   ; today. This is useful for the consistency graph being displayed even for
   ; completed items.
   (setq org-habit-show-all-today t)
+  <<set-auto-fill-mode>>
   (add-hook 'org-mode-hook 'l/org-colors))
 
 ;; Dim org-block face (source code blocks) separately, because they are not
@@ -1840,6 +1841,16 @@ change org-directory. It must be set before org loads!
 
 <<org-mark-done-with-note>>
 <<org-mark-done-when-rescheduling>>
+#+end_src
+
+** Auto-fill mode
+
+Automatically insert newlines after 80 characters as we type.
+
+#+name: set-auto-fill-mode
+#+begin_src emacs-lisp
+(add-hook 'org-mode-hook #'(lambda () (setq fill-column 80)))
+(add-hook 'org-mode-hook 'turn-on-auto-fill)
 #+end_src
 
 ** Wrappers for common operations

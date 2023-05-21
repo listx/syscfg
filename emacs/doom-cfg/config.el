@@ -429,6 +429,8 @@ LINK-NAME."
   ; today. This is useful for the consistency graph being displayed even for
   ; completed items.
   (setq org-habit-show-all-today t)
+  (add-hook 'org-mode-hook #'(lambda () (setq fill-column 80)))
+  (add-hook 'org-mode-hook 'turn-on-auto-fill)
   (add-hook 'org-mode-hook 'l/org-colors))
 
 ;; Dim org-block face (source code blocks) separately, because they are not
