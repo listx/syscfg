@@ -4,26 +4,48 @@
 
 * Introduction
 
-We use DOOM emacs (insert link) as a base configuration, and further customize it here in literate form.
+We use DOOM emacs (insert link) as a base configuration, and further customize
+it here in literate form.
 
 ** About the top-level PROPERTY settings for this buffer
-- These property settings take effect when the buffer is loaded. So that means if you change these settings, you have to reload the buffer for them to take effect.
-- We set =:tangle no-export= by default for all source code blocks. This is because the =literate= DOOM module by default tangles all emacs-lisp source code blocks to config.el, which defeats the purpose of literate programming (where the raw order of how things are defined do **not** dictate how the end result looks like).
-- We set =:noweb no-export= to enable Noweb's =<<LINK>>= syntax in all source code blocks during **tangling** (=config.el= generation) and **evaluation** (when running a code snippet from org-mode with =C-c C-c=). However when we export this org-mode file (e.g., publish it to HTML), we do **NOT** expand it because we want to reveal the underlying noweb structure to the reader. Anyway, turning on noweb for tangling and evaluating allows us to inject source code anywhere and also define them freely.
+- These property settings take effect when the buffer is loaded. So that means
+  if you change these settings, you have to reload the buffer for them to take
+  effect.
+- We set =:tangle no-export= by default for all source code blocks. This is
+  because the =literate= DOOM module by default tangles all emacs-lisp source
+  code blocks to config.el, which defeats the purpose of literate programming
+  (where the raw order of how things are defined do **not** dictate how the end
+  result looks like).
+- We set =:noweb no-export= to enable Noweb's =<<LINK>>= syntax in all source
+  code blocks during **tangling** (=config.el= generation) and **evaluation**
+  (when running a code snippet from org-mode with =C-c C-c=). However when we
+  export this org-mode file (e.g., publish it to HTML), we do **NOT** expand it
+  because we want to reveal the underlying noweb structure to the reader.
+  Anyway, turning on noweb for tangling and evaluating allows us to inject
+  source code anywhere and also define them freely.
 
 ** Guiding principles
 
-- **Modular output**: We make sure that the output file(s) that are "tangled" out of here stay nice and clean in a modular way. We do **NOT** want to have a giant 2000 line file with everything in it with no modularity, because it hurts readability for the case where we want to debug our configuration at the raw Emacs lisp level.
+- **Modular output** :: We make sure that the output file(s) that are "tangled"
+  out of here stay nice and clean in a modular way. We do **NOT** want to have a
+  giant 2000 line file with everything in it with no modularity, because it
+  hurts readability for the case where we want to debug our configuration at the
+  raw Emacs lisp level.
 
-- **Bird's eye view**: We discuss the most important high-level topics first, and leave the finer details at the end.
+- **Bird's eye view** :: We discuss the most important high-level topics first,
+  and leave the finer details at the end.
 
 * How DOOM loads configs
 
 DOOM requires 3 configuration files in the =$DOOMDIR=:
 
-- =init.el=: This is where DOOM "modules" are loaded; modules are just collections of Emacs packages and configurations. This file is pretty small and straightforward.
-- =packages.el=: This is where additional packages are installed (or disabled if they are pulled in by DOOM).
-- =config.el=: This is where all of our custom configuration goes. Note that this file can pull in other =*.el= files as well if we want to.
+- =init.el=: This is where DOOM "modules" are loaded; modules are just
+  collections of Emacs packages and configurations. This file is pretty small
+  and straightforward.
+- =packages.el=: This is where additional packages are installed (or disabled if
+  they are pulled in by DOOM).
+- =config.el=: This is where all of our custom configuration goes. Note that
+  this file can pull in other =*.el= files as well if we want to.
 
 * $DOOMDIR/init.el
 
@@ -65,7 +87,6 @@ DOOM requires 3 configuration files in the =$DOOMDIR=:
        hl-todo           ; highlight TODO/FIXME/NOTE/DEPRECATED/HACK/REVIEW
        hydra
        ;;indent-guides     ; highlighted indent columns
-       ;;ligatures         ; ligatures and symbols to make your code pretty again
        ;;minimap           ; show a map of the code on the side
        modeline         ; snazzy, Atom-inspired modeline, plus API
        ;;nav-flash         ; blink cursor line after big motions
@@ -214,7 +235,9 @@ DOOM requires 3 configuration files in the =$DOOMDIR=:
        ;;twitter           ; twitter client https://twitter.com/vnought
 
        :config
-       ;; Disable literate mode until https://github.com/doomemacs/doomemacs/issues/6902 is fixed. We just manually tangle with "C-c C-v t" for now.
+       ;; Disable literate mode until
+       ;; https://github.com/doomemacs/doomemacs/issues/6902 is fixed. We just
+       ;; manually tangle with "C-c C-v t" for now.
        ;;literate
        (default +bindings +smartparens))
 
@@ -225,14 +248,22 @@ DOOM requires 3 configuration files in the =$DOOMDIR=:
 
 Here's a rundown of these all-important leader keys:
 
-- =doom-leader-key=: Global leader key for global functions that should work regardless of whatever major mode is active.
-- =doom-leader-alt-key=: Same as =doom-leader-key=, but accessible from Evil's Insert and Emacs states.
-- =doom-localleader-key=: Major-mode-specific leader key. Brings up lots of commands that are specific to the current major mode.
-- =doom-localleader-alt-key=: Same as =doom-localleader-alt-key=, but accessible from Evil's Insert and Emacs states.
+- =doom-leader-key= :: Global leader key for global functions that should work
+  regardless of whatever major mode is active.
+- =doom-leader-alt-key= :: Same as =doom-leader-key=, but accessible from Evil's
+  Insert and Emacs states.
+- =doom-localleader-key= :: Major-mode-specific leader key. Brings up lots of
+  commands that are specific to the current major mode.
+- =doom-localleader-alt-key= :: Same as =doom-localleader-alt-key=, but
+  accessible from Evil's Insert and Emacs states.
 
-NOTE: For all of DOOM's bindings, you can just press the keys and pause, and the minibuffer will tell you what keys are available. So you can explore what options are available interactively!
+NOTE: For all of DOOM's bindings, you can just press the keys and pause, and the
+minibuffer will tell you what keys are available. So you can explore what
+options are available interactively!
 
-In order to use =C-,= from terminal Emacs, you have to make your terminal (e.g., Alacritty) send a special sequence (such as the =CSI u= scheme) and also make Emacs understand that sequence.
+In order to use =C-,= from terminal Emacs, you have to make your terminal (e.g.,
+Alacritty) send a special sequence (such as the =CSI u= scheme) and also make
+Emacs understand that sequence.
 
 #+name: leader-key
 #+begin_src emacs-lisp
@@ -305,9 +336,13 @@ In order to use =C-,= from terminal Emacs, you have to make your terminal (e.g.,
 
 * $DOOMDIR/config.el
 
-This is the final structured output of =$DOOMDIR/config.el=, which is a special file that DOOM recognizes. Because of the way it acts as the "main" configuration file, you can think of it as =init.el= in the traditional Emacs sense. DOOM has its own =init.el= but that is another matter.
+This is the final structured output of =$DOOMDIR/config.el=, which is a special
+file that DOOM recognizes. Because of the way it acts as the "main"
+configuration file, you can think of it as =init.el= in the traditional Emacs
+sense. DOOM has its own =init.el= but that is another matter.
 
-Note that this file is pretty much **required** and acts as the base for all other configurations that are pulled in. And so we define it first here.
+Note that this file is pretty much **required** and acts as the base for all
+other configurations that are pulled in. And so we define it first here.
 
 #+begin_src emacs-lisp :tangle config.el
 ;;; $DOOMDIR/config.el -*- lexical-binding: t; -*-
@@ -386,20 +421,32 @@ Here are some workarounds for upstream bugs that have not yet been fixed.
 <<disable-company-ispell>>
 #+end_src
 
-** Disable company-ispell because it is almost useless (trying to complete every single word we type)
+** Disable company-ispell because it is almost useless
+
+This mode tries to complete every single word we type.
+
 #+name: disable-company-ispell
 #+begin_src emacs-lisp
 (use-package! company
   :config
-  (setq +company-backend-alist (assq-delete-all 'text-mode +company-backend-alist))
-  (add-to-list '+company-backend-alist '(text-mode (:separate company-dabbrev company-yasnippet))))
+  (setq +company-backend-alist
+        (assq-delete-all 'text-mode +company-backend-alist))
+  (add-to-list '+company-backend-alist
+               '(text-mode
+                (:separate company-dabbrev company-yasnippet))))
 #+end_src
 
 * Global key-bindings
 ** CSI u mode support
-See https://emacs.stackexchange.com/questions/1020/problems-with-keybindings-when-using-terminal/13957#13957 for a discussion of ~CSI u~ mode. Basically for us it allows us to use =C-S-= bindings from terminal emacs. It also allows us to specify many special keys in an unambiguous manner, so that we can, e.g., make =C-i= be recognized as =C-i= in terminal emacs (and not simply as =TAB= as is the default behavior).
 
-For information on how xterm does it, see https://invisible-island.net/xterm/ctlseqs/ctlseqs.html and search for ~modifyOtherKeys~.
+See [[https://emacs.stackexchange.com/questions/1020/problems-with-keybindings-when-using-terminal/13957#13957][this]] for a discussion of ~CSI u~ mode. Basically for us it allows us to use
+=C-S-= bindings from terminal emacs. It also allows us to specify many special
+keys in an unambiguous manner, so that we can, e.g., make =C-i= be recognized as
+=C-i= in terminal emacs (and not simply as =TAB= as is the default behavior).
+
+For information on how xterm does it, see
+https://invisible-island.net/xterm/ctlseqs/ctlseqs.html and search for
+~modifyOtherKeys~.
 
 #+name: CSI-u-mode-support
 #+begin_src emacs-lisp
@@ -548,7 +595,8 @@ because Emacs will equate these keys with other keys (e.g., C-i with C-S-i)."
   (l/bind-placeholder '(105 C M S))  ; C-M-S-i
 
   ;; C-j and C-S-j are already bound for window navigation.
-  ;; C-M-j and C-M-S-j are already bound from tmux, so no point in binding them here (we'll never see them).
+  ;; C-M-j and C-M-S-j are already bound from tmux, so no point in binding them
+  ;; here (we'll never see them).
 
   ;; ASCII 109 ('m')
   (l/bind-placeholder '(109 C))     ; C-m
@@ -603,7 +651,8 @@ Return an event vector."
   (if (memq 'S modifiers) (setq c (logior (lsh 1 25) c)))
   (vector c))
 
-(defvar l-disambiguation-mode-map (make-keymap) "Keymap for disambiguating keys in terminal Emacs.")
+(defvar l-disambiguation-mode-map (make-keymap)
+  "Keymap for disambiguating keys in terminal Emacs.")
 (define-minor-mode l-disambiguation-mode
    "A mode for binding key sequences so that we can see them with `M-x
   describe-key'."
@@ -642,7 +691,8 @@ Make "kj" behave as ESC key.
 
 **** Intra-buffer navigation
 
-We remap Backspace and Space keys because they are by default aliases to =h= and =l= keys, respectively, making them redundant.
+We remap Backspace and Space keys because they are by default aliases to =h= and
+=l= keys, respectively, making them redundant.
 
 #+name: navigation-buffer-intra
 #+begin_src emacs-lisp
@@ -659,7 +709,8 @@ We remap Backspace and Space keys because they are by default aliases to =h= and
 
 **** Intra-buffer navigation
 
-We remap H and L keys because they do almost-useless things (go to the top and bottom of the current window).
+We remap H and L keys because they do almost-useless things (go to the top and
+bottom of the current window).
 
 #+name: navigation-buffer-inter
 #+begin_src emacs-lisp
@@ -669,7 +720,10 @@ We remap H and L keys because they do almost-useless things (go to the top and b
 
 *** Restore old "s" key behavior in Evil normal mode
 
-Remap =s= back to =evil-substitute=, instead of =evil-snipe-s=. However, map =S= to evil-snipe-s because it can't hurt and we never use =S= in vanilla Vim anyway.
+Remap =s= back to =evil-substitute=, instead of =evil-snipe-s=. However, map =S=
+to evil-snipe-s because it can't hurt and we never use =S= in vanilla Vim
+anyway.
+
 #+name: remap-s
 #+begin_src emacs-lisp
 (remove-hook 'doom-first-input-hook #'evil-snipe-mode)
@@ -687,7 +741,9 @@ Remap =s= back to =evil-substitute=, instead of =evil-snipe-s=. However, map =S=
 
 **** Org
 
-~evil-org-mode~ overrides the =gj= and =gk= bindings so we have to reinstate them here in a tweaked way.
+~evil-org-mode~ overrides the =gj= and =gk= bindings so we have to reinstate
+them here in a tweaked way.
+
 #+name: visual-line-movement
 #+begin_src emacs-lisp
 (map! :after evil-org
@@ -698,7 +754,9 @@ Remap =s= back to =evil-substitute=, instead of =evil-snipe-s=. However, map =S=
 
 *** Remap the "+notes" function from ", n" to ", N"
 
-The "+notes" is a ~:prefix-map~ binding, which means that it creates a ~doom-leader-<description>-map~ keymap. In order to rebind this thing, we just need to refer to it by its map.
+The "+notes" is a ~:prefix-map~ binding, which means that it creates a
+~doom-leader-<description>-map~ keymap. In order to rebind this thing, we just
+need to refer to it by its map.
 
 See https://github.com/hlissner/doom-emacs/issues/4569#issuecomment-777861333.
 
@@ -720,7 +778,8 @@ See https://github.com/hlissner/doom-emacs/issues/4569#issuecomment-777861333.
 
 *** Splits (window creation)
 
-Splitting windows happens so frequently that we put these bindings at the top level just after the leader key.
+Splitting windows happens so frequently that we put these bindings at the top
+level just after the leader key.
 
 #+name: window-splits
 #+begin_src emacs-lisp
@@ -753,7 +812,9 @@ Splitting windows happens so frequently that we put these bindings at the top le
 
 **** Dead code
 
-We used to use this to always split and rebalance. However in practice the need to rebalance does not arise that frequently because by default the initial split will be balanced.
+We used to use this to always split and rebalance. However in practice the need
+to rebalance does not arise that frequently because by default the initial split
+will be balanced.
 
 #+begin_src emacs-lisp
 (defun l/split-vertically ()
@@ -770,9 +831,11 @@ We used to use this to always split and rebalance. However in practice the need 
 
 *** Deletion
 
-If there are multiple windows, close the current window. Otherwise close the current tab if there are mulitple tabs. Otherwise, try to exit emacs.
+If there are multiple windows, close the current window. Otherwise close the
+current tab if there are mulitple tabs. Otherwise, try to exit emacs.
 
-We take care to tread around so-called "auxiliary" buffers, which are auto-generated buffers from various emacs modes/packages.
+We take care to tread around so-called "auxiliary" buffers, which are
+auto-generated buffers from various emacs modes/packages.
 
 #+name: window-deletion
 #+begin_src emacs-lisp
@@ -804,12 +867,16 @@ window management issues."
       (progn
         (if (bound-and-true-p with-editor-mode)
           (if (buffer-modified-p)
-            ; If there are any unsaved changes, either discard those changes or do
-            ; nothing.
-            (if (y-or-n-p "l/quit-buffer: Invoke (with-editor-cancel) to cancel the editing of this buffer?")
+            ; If there are any unsaved changes, either discard those changes or
+            ; do nothing.
+            (if
+              (y-or-n-p
+               (concat "l/quit-buffer: Invoke (with-editor-cancel) "
+                       "to cancel the editing of this buffer?"))
               (with-editor-cancel t)
               ; Use catch/throw to stop execution.
-              (throw 'my-catch (message "l/quit-buffer: Aborting (doing nothing).")))
+              (throw 'my-catch
+                     (message "l/quit-buffer: Aborting (doing nothing).")))
             (with-editor-finish t)))
         ; Close the current view (or exit the editor entirely), but only if we
         ; originally tried to close a non-"auxiliary" buffer. An "auxiliary"
@@ -828,12 +895,14 @@ window management issues."
             (catch 'buffer-cycle-detected
               (while
                 (string-match "^ *\*.+\*$" (buffer-name))
-                ; Break loop if somehow our aux-buffer-rgx failed to account for all
-                ; hidden/aux buffers and we are just looping over and over among the
-                ; same list of actual auxiliary buffers.
+                ; Break loop if somehow our aux-buffer-rgx failed to account for
+                ; all hidden/aux buffers and we are just looping over and over
+                ; among the same list of actual auxiliary buffers.
                 (if (string= original-bufname (buffer-name))
                   (throw 'buffer-cycle-detected
-                    (message "l/quit-buffer: Buffer cycle detected among auxiliary buffers; invoking `l/gc-views'."))
+                    (message
+                     (concat "l/quit-buffer: Buffer cycle detected among "
+                             "auxiliary buffers; invoking `l/gc-views'.")))
                   (previous-buffer))))
               ; If we've broken the loop (due to a cycle), run (l/gc-views) as
               ; it is better than doing nothing.
@@ -866,14 +935,15 @@ otherwise, close current tab."
           (if (display-graphic-p)
             (progn
               ; Minibuffers can create their own frames --- but they can linger
-              ; around as an invisible frame even after they are deleted. Delete all
-              ; other frames whenever we exit from a single visible daemon frame,
-              ; because there is no point in keeping them around. If anything they
-              ; can hinder detection of "is there a visible frame?" logic from the
-              ; shell.
+              ; around as an invisible frame even after they are deleted. Delete
+              ; all other frames whenever we exit from a single visible daemon
+              ; frame, because there is no point in keeping them around. If
+              ; anything they can hinder detection of "is there a visible
+              ; frame?" logic from the shell.
               (delete-other-frames)
-              ; While we're at it, also close all buffers, because it's annoying to
-              ; have things like Helm minibuffers and the like sitting around.
+              ; While we're at it, also close all buffers, because it's annoying
+              ; to have things like Helm minibuffers and the like sitting
+              ; around.
               (mapc
                 'kill-buffer
                 (seq-filter
@@ -966,11 +1036,18 @@ Also add the number of windows in the window configuration."
 
 **** Stylized buffer name
 
-Generate a simpler, "stylized" buffer name for some specially-named buffers, such as =dashboard.org= and journal entries in the form =YYYY-MM-DD.org=.
+Generate a simpler, "stylized" buffer name for some specially-named buffers,
+such as =dashboard.org= and journal entries in the form =YYYY-MM-DD.org=.
 
-For =dashboard.org=, we just style it as =DASHBOARD= because it's that important.
+For =dashboard.org=, we just style it as =DASHBOARD= because it's that
+important.
 
-For journal entries, we append a =[...]= suffix to it, depending on the relative date of it. If the date in the filename matches today's date, we add a =[TODAY]= suffix. For days in the past and future, we add a =[-N]= or =[+N]= suffix where =N= denotes the number of days that it is away from today, with negative numbers denoting days in the past. We use =[YESTERDAY]= and =[TOMORROW]= as aliases for =[-1]= and =[+1]=, respectively.
+For journal entries, we append a =[...]= suffix to it, depending on the relative
+date of it. If the date in the filename matches today's date, we add a =[TODAY]=
+suffix. For days in the past and future, we add a =[-N]= or =[+N]= suffix where
+=N= denotes the number of days that it is away from today, with negative numbers
+denoting days in the past. We use =[YESTERDAY]= and =[TOMORROW]= as aliases for
+=[-1]= and =[+1]=, respectively.
 
 #+name: l/get-stylized-buffer-name
 #+begin_src emacs-lisp
@@ -979,7 +1056,10 @@ For journal entries, we append a =[...]= suffix to it, depending on the relative
   (interactive)
   (let* ((bufname (buffer-name buffer))
          (bufname-short (string-remove-suffix ".org" bufname))
-         (buf-date-match (string-match "^[[:digit:]]\\{4\\}-[[:digit:]]\\{2\\}-[[:digit:]]\\{2\\}$" bufname-short))
+         (buf-date-match
+          (string-match
+           "^[[:digit:]]\\{4\\}-[[:digit:]]\\{2\\}-[[:digit:]]\\{2\\}$"
+           bufname-short))
          (buf-is-date (eq 0 buf-date-match)))
     (cond ((string= bufname "dashboard.org") "DASHBOARD")
           (buf-is-date (l/append-relative-date-suffix bufname-short))
@@ -1001,7 +1081,10 @@ For journal entries, we append a =[...]= suffix to it, depending on the relative
 
 *** Creation
 
-We don't have any code for deleting a tab because we only delete windows instead (and only delete the tab when the tab has only one window in it). This is so that we don't accidentally close a tab with a bunch of window splits, which can be laborious to reconstruct.
+We don't have any code for deleting a tab because we only delete windows instead
+(and only delete the tab when the tab has only one window in it). This is so
+that we don't accidentally close a tab with a bunch of window splits, which can
+be laborious to reconstruct.
 
 #+name: tab-creation
 #+begin_src emacs-lisp
@@ -1078,15 +1161,23 @@ We don't have any code for deleting a tab because we only delete windows instead
 
 ** Copy to clipboard
 
-Because we use tmux everywhere (and always use terminal emacs), and because tmux already takes care of syncing whatever is copied into the tmux "buffers" (tmux's own clipboard), all we have to do is copy the text into tmux. We already have a script that does this at =~/syscfg/script/copy-clipboard.sh=, so we use that directly. The main trick is to use base64 encoding so that we can pass in arbitrary bytes via STDIN for the script.
+Because we use tmux everywhere (and always use terminal emacs), and because tmux
+already takes care of syncing whatever is copied into the tmux "buffers" (tmux's
+own clipboard), all we have to do is copy the text into tmux. We already have a
+script that does this at =~/syscfg/script/copy-clipboard.sh=, so we use that
+directly. The main trick is to use base64 encoding so that we can pass in
+arbitrary bytes via STDIN for the script.
 
 #+name: copy-to-clipboard
 #+begin_src emacs-lisp
 (defun l/copy-to-clipboard (orig-fun string)
   "Copy killed text or region into the system clipboard, by shelling out to a
 script which knows what to do depending on the environment."
-  (let ((b64 (base64-encode-string (encode-coding-string string 'no-conversion) t)))
-   (start-process-shell-command "copy" nil (format "printf %s | ~/syscfg/script/copy-clipboard.sh --base64" b64))
+  (let ((b64
+         (base64-encode-string (encode-coding-string string 'no-conversion) t)))
+   (start-process-shell-command
+    "copy" nil
+    (format "printf %s | ~/syscfg/script/copy-clipboard.sh --base64" b64))
    (funcall orig-fun string)))
 
 (advice-add 'gui-select-text :around #'l/copy-to-clipboard)
@@ -1190,9 +1281,13 @@ dhall text <<< "./listColorsForEmacs.dhall ./themes/PastelDark.dhall"
 
 (defun l/reset-faces ()
   (interactive)
-  (setq tab-bar-separator (propertize " " 'font-lock-face `(:background ,(doom-darken (doom-color 'bg-alt) 0.2))))
+  (setq tab-bar-separator
+        (propertize " "
+                    'font-lock-face
+                    `(:background ,(doom-darken (doom-color 'bg-alt) 0.2))))
   (custom-set-faces!
-    `(vertical-border :background ,(doom-color 'base0) :foreground ,(doom-color 'base0))
+    `(vertical-border
+      :background ,(doom-color 'base0) :foreground ,(doom-color 'base0))
     '(highlight-numbers-number  :weight bold)
     `(hl-line :background ,(doom-darken (doom-color 'bg-alt) 0.4))
     '(vim-empty-lines-face :weight bold)
@@ -1243,14 +1338,16 @@ dhall text <<< "./listColorsForEmacs.dhall ./themes/PastelDark.dhall"
     '(diff-hunk-header  :foreground "brightcyan")
     '(git-commit-keyword  :foreground "brightmagenta" :weight bold))
 
-  ;; Make all doom-modeline-* faces have a uniform foreground, to make them easier
-  ;; to read with our custom mode-line background. This way we don't have to spell
-  ;; out each font one at a time.
-  (eval `(l/custom-set-faces-matching! "doom-modeline-" :foreground ,(doom-color 'base0))))
+  ;; Make all doom-modeline-* faces have a uniform foreground, to make them
+  ;; easier to read with our custom mode-line background. This way we don't have
+  ;; to spell out each font one at a time.
+  (eval `(l/custom-set-faces-matching! "doom-modeline-"
+                                       :foreground ,(doom-color 'base0))))
 
 (use-package! rainbow-mode
   :hook (prog-mode text-mode))
-;; Disable rainbow-mode (because "#def" in "#define" gets interpreted as a hex color.)
+;; Disable rainbow-mode (because "#def" in "#define" gets interpreted as a hex
+;; color.)
 (add-hook 'c-mode-hook (lambda () (rainbow-turn-off)))
 #+end_src
 
@@ -1301,8 +1398,9 @@ dhall text <<< "./listColorsForEmacs.dhall ./themes/PastelDark.dhall"
 
 * Consult
 
-We have to manually load "consult" because otherwise the =consult--grep= function which we use in the =elisp:...= in our org-mode files don't work.
-They appear to be lazily loaded the first time we invoke =M-x consult-grep=.
+We have to manually load "consult" because otherwise the =consult--grep=
+function which we use in the =elisp:...= in our org-mode files don't work. They
+appear to be lazily loaded the first time we invoke =M-x consult-grep=.
 
 #+name: consult
 #+begin_src emacs-lisp
@@ -1311,9 +1409,13 @@ They appear to be lazily loaded the first time we invoke =M-x consult-grep=.
 
 * Org mode
 
-By default evil-org-mode makes =M-j= move the subtree (bound to ~org-forward-element~). But instead we change things so that =M-<letter>= nondestructively navigates, and =M-S-<letter>= moves things around. This is more intuitive to me, at least.
+By default evil-org-mode makes =M-j= move the subtree (bound to
+~org-forward-element~). But instead we change things so that =M-<letter>=
+nondestructively navigates, and =M-S-<letter>= moves things around. This is more
+intuitive to me, at least.
 
-Note that we have to use =M-J= to encode =M-S-j=. This appears to be Emacs convention.
+Note that we have to use =M-J= to encode =M-S-j=. This appears to be Emacs
+convention.
 
 #+name: org
 #+begin_src emacs-lisp
@@ -1345,8 +1447,10 @@ Note that we have to use =M-J= to encode =M-S-j=. This appears to be Emacs conve
       (:prefix ("d" . "date/deadline")
          "t" #'l/org-insert-timestamp-inactive)
       (:prefix ("e" . "export")
-        :desc "subtree (children only)" "s" (cmd! (l/org-export-as-markdown-to-clipboard nil))
-        :desc "subtree (children + parent)" "S" (cmd! (l/org-export-as-markdown-to-clipboard 't))
+        :desc "subtree (children only)" "s"
+          (cmd! (l/org-export-as-markdown-to-clipboard nil))
+        :desc "subtree (children + parent)" "S"
+          (cmd! (l/org-export-as-markdown-to-clipboard 't))
         "d" #'org-export-dispatch))
 
 <<l/org-insert-timestamp-inactive>>
@@ -1361,23 +1465,34 @@ Note that we have to use =M-J= to encode =M-S-j=. This appears to be Emacs conve
   (setq calendar-week-start-day 1)
   (setq org-startup-indented t)
   <<org-todo-keywords>>
-  ; When editing text near hidden text (e.g., the "..." ellipses after folded headings), expand it so that we are forced to only edit text around hidden text when it is un-hidden.
+  ; When editing text near hidden text (e.g., the "..." ellipses after folded
+  ; headings), expand it so that we are forced to only edit text around hidden
+  ; text when it is un-hidden.
   (setq org-catch-invisible-edits 'show-and-error)
   ; Never make trees' trailing empty lines visible from collapsed view.
   (setq org-cycle-separator-lines 0)
-  ; Introduce unordered bulleted list hierarchy. We flip-flop between "-" and "+" as we continue to nest. This helps keep track of nesting.
+  ; Introduce unordered bulleted list hierarchy. We flip-flop between "-" and
+  ; "+" as we continue to nest. This helps keep track of nesting.
   (setq org-list-demote-modify-bullet '(("-" . "+") ("+" . "-")))
   ; Enable habits (see https://orgmode.org/manual/Tracking-your-habits.html).
   (add-to-list 'org-modules 'org-habit t)
-  ; Show daily habits in the agenda even if they have already been completed for today. This is useful for the consistency graph being displayed even for completed items.
+  ; Show daily habits in the agenda even if they have already been completed for
+  ; today. This is useful for the consistency graph being displayed even for
+  ; completed items.
   (setq org-habit-show-all-today t)
   (add-hook 'org-mode-hook 'l/org-colors))
 
 ;; Dim org-block face (source code blocks) separately, because they are not
 ;; dimmed by default. Also dim org-hide as well.
 (defun l/org-colors ()
-  (add-to-list 'face-remapping-alist `(org-hide (:filtered (:window adob--dim t) (:foreground ,l/color-xGrey1)) org-hide))
-  (add-to-list 'face-remapping-alist `(org-block (:filtered (:window adob--dim t) (:background ,l/color-xGrey2)) org-block)))
+  (add-to-list 'face-remapping-alist
+               `(org-hide (:filtered
+                           (:window adob--dim t)
+                           (:foreground ,l/color-xGrey1)) org-hide))
+  (add-to-list 'face-remapping-alist
+               `(org-block (:filtered
+                            (:window adob--dim t)
+                            (:background ,l/color-xGrey2)) org-block)))
 
 <<org-misc>>
 <<org-agenda>>
@@ -1399,8 +1514,10 @@ Note that we have to use =M-J= to encode =M-S-j=. This appears to be Emacs conve
          "CANCELED(c)"
          "OBSOLETE(o)")
         (sequence
-         "ASK(a)"                     ; A question to ask
-         "ASKED(e)"                   ; Question was asked, but we're waiting for them to respond
+         ; A question to ask
+         "ASK(a)"
+         ; Question was asked, but we're waiting for them to respond
+         "ASKED(e)"
          "|"
          "ANSWERED(r)"))
       org-todo-keyword-faces
@@ -1415,7 +1532,11 @@ Note that we have to use =M-J= to encode =M-S-j=. This appears to be Emacs conve
 
 ** Select all org-roam dailies journals that exist in the current week
 
-This just goes through all org-agenda-files entries and only selects those ones that match a date range. We just need to figure out the last 7 days in YYYY-MM-DD format, then gather these entries in a list, and then loop through all org-agenda-files entries, and for each one only keep it if it matches of the 7 days we precomputed.
+This just goes through all org-agenda-files entries and only selects those ones
+that match a date range. We just need to figure out the last 7 days in
+YYYY-MM-DD format, then gather these entries in a list, and then loop through
+all org-agenda-files entries, and for each one only keep it if it matches of the
+7 days we precomputed.
 
 #+name: l/org-roam-get-nearby-dailies
 #+begin_src emacs-lisp
@@ -1486,9 +1607,13 @@ This just goes through all org-agenda-files entries and only selects those ones 
 ;; number of space characters. So we have to preserve these extraneous
 ;; characters as well (hence the second capture group).
 (defun l/org-export-md-scrub-invalid-links (link backend info)
-  "Scrub invalid Markdown links of the form `[LINK-NAME]((...)' with just LINK-NAME."
+  "Scrub invalid Markdown links of the form `[LINK-NAME]((...)' with just
+LINK-NAME."
   (if (eq backend 'md)
-    (replace-regexp-in-string "\\(\\[[^]]*\\]\\)((.+?)\\(\s*\\)$" "\\1(MARKDOWN-LINK-EXPORT-ERROR)\\2" link)
+    (replace-regexp-in-string
+     "\\(\\[[^]]*\\]\\)((.+?)\\(\s*\\)$"
+     "\\1(MARKDOWN-LINK-EXPORT-ERROR)\\2"
+     link)
    link))
 #+end_src
 
@@ -1512,7 +1637,8 @@ interesting to see that doom has a slightly different version with
          (export-whole-buffer
           ;; If we don't use this if condition, the (save-excursion ...) will
           ;; always return a truthy value.
-          (if (not (save-excursion (condition-case nil (org-back-to-heading) (error nil))))
+          (if (not (save-excursion
+                     (condition-case nil (org-back-to-heading) (error nil))))
               t
               nil))
          (async nil)
@@ -1520,12 +1646,19 @@ interesting to see that doom has a slightly different version with
          (body-only t)
          ; Temporary buffer to hold exported contents.
          (buffer (save-window-excursion
-                   (cond (export-whole-buffer (org-export-to-buffer 'md "*Formatted Copy*" async nil visible-only body-only))
+                   (cond (export-whole-buffer
+                          (org-export-to-buffer
+                              'md "*Formatted Copy*" async nil
+                              visible-only body-only))
                          (include-parent-heading
                             (save-restriction
                               (org-narrow-to-subtree)
-                              (org-export-to-buffer 'md "*Formatted Copy*" async nil visible-only body-only)))
-                         (t (org-export-to-buffer 'md "*Formatted Copy*" async 't visible-only body-only))))))
+                              (org-export-to-buffer
+                                  'md "*Formatted Copy*" async nil
+                                  visible-only body-only)))
+                         (t (org-export-to-buffer
+                                'md "*Formatted Copy*" async 't
+                                visible-only body-only))))))
     (with-current-buffer buffer
       (unwind-protect
         (let ((bufstr (buffer-string)))
@@ -1535,15 +1668,18 @@ interesting to see that doom has a slightly different version with
                    ;; Delete leading newline from org-export-to-buffer.
                    (goto-line 1)
                    (flush-lines "^$")
-                   (call-shell-region (point-min) (point-max) "~/syscfg/script/copy-clipboard.sh" nil 0)
-                   (message (concat "Exported children of subtree starting with `"
-                                    (if (> (length bufstr) 20)
-                                        (concat
-                                         (string-trim-left
-                                            (substring bufstr 0 20))
-                                         "...")
-                                      bufstr
-                                     "' as Markdown into clipboard.")))
+                   (call-shell-region
+                    (point-min)
+                    (point-max) "~/syscfg/script/copy-clipboard.sh" nil 0)
+                   (message (concat
+                             "Exported children of subtree starting with `"
+                             (if (> (length bufstr) 20)
+                                 (concat
+                                  (string-trim-left
+                                     (substring bufstr 0 20))
+                                  "...")
+                               bufstr
+                              "' as Markdown into clipboard.")))
                    ;; "Kill" locally ("copy") into emacs. The word "kill" here
                    ;; is unfortunate because it is overloaded with the "kill" in
                    ;; "kill-buffer" below. Anyway we also send the buffer to an
@@ -1583,14 +1719,15 @@ interesting to see that doom has a slightly different version with
          ;; We only show P0 TODO items if the have been scheduled, and their
          ;; scheduled date is today or in the past. This way we only concern
          ;; ourselves with tasks that we can actually work on.
-         ((tags "PRIORITY=\"0\""
-                ((org-agenda-skip-function
-                  '(or
-                    ;; Skip entries if they haven't been scheduled yet.
-                    (l/org-agenda-skip-if-scheduled-later)
-                    ;; Skip entries if they are DONE (or CANCELED, etc).
-                    (org-agenda-skip-entry-if 'todo 'done)))
-                 (org-agenda-overriding-header "P0 tasks from today or the past")))
+         ((tags
+           "PRIORITY=\"0\""
+           ((org-agenda-skip-function
+             '(or
+               ;; Skip entries if they haven't been scheduled yet.
+               (l/org-agenda-skip-if-scheduled-later)
+               ;; Skip entries if they are DONE (or CANCELED, etc).
+               (org-agenda-skip-entry-if 'todo 'done)))
+            (org-agenda-overriding-header "P0 tasks from today or the past")))
           ;; See 7 days from today. It's like the opposite of "Weekly review".
           (agenda ""
                   ((org-agenda-span 7)
@@ -1638,7 +1775,8 @@ interesting to see that doom has a slightly different version with
               (prin1-to-string buf)
               "'."))))
 
-;; Adapted from https://blog.aaronbieber.com/2016/09/24/an-agenda-for-life-with-org-mode.html.
+;; Adapted from
+;; https://blog.aaronbieber.com/2016/09/24/an-agenda-for-life-with-org-mode.html.
 (defun l/org-skip-subtree-if-priority (priority)
   "Skip an agenda subtree if it has a priority of PRIORITY.
 
@@ -1669,7 +1807,9 @@ should be continued."
 
 ** Misc
 
-If you use "org" and don't want your org files in the default location below, change org-directory. It must be set before org loads!
+If you use "org" and don't want your org files in the default location below,
+change org-directory. It must be set before org loads!
+
 #+name: org-misc
 #+begin_src emacs-lisp
 (setq org-directory
@@ -1724,8 +1864,10 @@ If you use "org" and don't want your org files in the default location below, ch
 
 (defun l/org-roam-capture (key subdir)
   (interactive)
-  (org-roam-capture nil key
-                    :filter-fn (lambda (node) (string-equal subdir (org-roam-node-doom-type node)))))
+  (org-roam-capture
+   nil key
+   :filter-fn (lambda (node)
+                (string-equal subdir (org-roam-node-doom-type node)))))
 
 (defun l/rg-search (dir pat &rest args)
   "Use rg-helper.sh to search DIR for pat. See rg-helper.sh for
@@ -1733,7 +1875,9 @@ details."
   (interactive)
   (let ((dir-expanded (expand-file-name dir)))
     (tab-bar-new-tab)
-    (consult--grep "rg" (l/rg-search-mk-builder dir-expanded args) dir-expanded pat)))
+    (consult--grep
+     "rg"
+     (l/rg-search-mk-builder dir-expanded args) dir-expanded pat)))
 
 (defun l/rg-search-mk-builder (dir args)
   "Returns a lambda that can fill in the `pat' variable. The explicit use of
@@ -1753,15 +1897,22 @@ consult--grep."
 (defun l/rg-search-blocks-mk-builder (dir args)
   "Like l/rg-search-mk-builder, but uses rg-helper.sh's 'regions' mode to search
 between begin_WORD ... end_WORD blocks."
-  (let ((invocation (append (list "rg-helper.sh" dir "regions"
-                             ',(concat "(\\x00)(\\d+):\\s*(?:(?!#\\+(begin|end)_\\w+?)).*?(" pat ")")
-                             ',(concat "^\\s*#\\+begin_\\w+\[^\\n\]*$((?!^\\s*#\\+end_\\w+$).)*(" pat ").*?(?!^\\s*#\\+end_\\w+$)")) args)))
+  (let ((invocation
+         (append
+          (list "rg-helper.sh" dir "regions"
+          ',(concat "(\\x00)(\\d+):\\s*(?:(?!#\\+(begin|end)_\\w+?)).*?("
+                    pat ")")
+          ',(concat "^\\s*#\\+begin_\\w+\[^\\n\]*$((?!^\\s*#\\+end_\\w+$).)*("
+                    pat ").*?(?!^\\s*#\\+end_\\w+$)")) args)))
     (list 'lambda (list 'pat) (list 'backquote (list ':command invocation)))))
 #+end_src
 
 ** Insert time stamp without prompting
 
-This inserts a timestamp in square brackets with the hour and minute. Using square brackets instead of angle brackets makes org-agenda ignore this timestamp. This is useful for taking minute-by-minute notes or just adding notes-to-self in general.
+This inserts a timestamp in square brackets with the hour and minute. Using
+square brackets instead of angle brackets makes org-agenda ignore this
+timestamp. This is useful for taking minute-by-minute notes or just adding
+notes-to-self in general.
 
 #+name: l/org-insert-timestamp-inactive
 #+begin_src emacs-lisp
@@ -1772,14 +1923,18 @@ This inserts a timestamp in square brackets with the hour and minute. Using squa
 
 ** Show prompt when closing items as DONE
 
-In the prompt, if we cancel with =C-c C-k=, this is the equivalent of =(setq org-log-done 'time)= which just inserts a timestamp next to when we marked the item as DONE. If we press =C-c C-c=, then we can save a note explaining how/why the item was closed (useful!).
+In the prompt, if we cancel with =C-c C-k=, this is the equivalent of =(setq
+org-log-done 'time)= which just inserts a timestamp next to when we marked the
+item as DONE. If we press =C-c C-c=, then we can save a note explaining how/why
+the item was closed (useful!).
 
 #+name: org-mark-done-with-note
 #+begin_src emacs-lisp
 (setq org-log-done 'note)
 #+end_src
 
-Similarly, create a note whenever we reschedule or change the deadline of an item.
+Similarly, create a note whenever we reschedule or change the deadline of an
+item.
 
 #+name: org-mark-done-when-rescheduling
 #+begin_src emacs-lisp
@@ -1789,7 +1944,9 @@ Similarly, create a note whenever we reschedule or change the deadline of an ite
 
 ** Notes
 
-In Org 9.2+, you can do =C-c C-,= to run org-insert-structure-template, and then press =e= to insert a ~#+begin_example\n#+end_example~ template. See https://emacs.stackexchange.com/a/46992/13006.
+In Org 9.2+, you can do =C-c C-,= to run org-insert-structure-template, and then
+press =e= to insert a ~#+begin_example\n#+end_example~ template. See
+https://emacs.stackexchange.com/a/46992/13006.
 
 * Elixir
 
@@ -1805,7 +1962,12 @@ In Org 9.2+, you can do =C-c C-,= to run org-insert-structure-template, and then
 
 ** Disable automatic formatting on save
 
-This is useful for legacy C projects that do not have agreed rules on automatic formatting based on =clang-format= (https://clang.llvm.org/docs/ClangFormat.html), which is what =format-all-mode= uses for C-based languages. See https://github.com/doomemacs/doomemacs/issues/2027#issuecomment-551962591 for the JS-based version of this.
+This is useful for legacy C projects that do not have agreed rules on automatic
+formatting based on =clang-format=
+(https://clang.llvm.org/docs/ClangFormat.html), which is what =format-all-mode=
+uses for C-based languages. See
+https://github.com/doomemacs/doomemacs/issues/2027#issuecomment-551962591 for
+the JS-based version of this.
 
 #+name: c-clang-format
 #+begin_src emacs-lisp
@@ -1849,8 +2011,10 @@ This is useful for legacy C projects that do not have agreed rules on automatic 
 #+name: notmuch-saved-searches
 #+begin_src emacs-lisp
 (setq notmuch-saved-searches
-      '((:name "inbox" :query "tag:inbox" :count-query "tag:inbox AND tag:unread" :key "i")
-        (:name "git" :query "tag:git and (not tag:spam)" :count-query "tag:git AND tag:unread" :key "g")
+      '((:name "inbox" :query "tag:inbox"
+         :count-query "tag:inbox AND tag:unread" :key "i")
+        (:name "git" :query "tag:git and (not tag:spam)"
+         :count-query "tag:git AND tag:unread" :key "g")
         (:name "sent" :query "tag:sent" :key "s")))
 #+end_src
 
@@ -1864,7 +2028,8 @@ This is useful for legacy C projects that do not have agreed rules on automatic 
        "--binary-next-line"
        "--func-next-line"
       ("--indent" "%d" (unless indent-tabs-mode tab-width))
-      ("--language-dialect" "%s" (pcase sh-shell (`bash "bash") (`mksh "mksh") (_ "posix"))))))
+      ("--language-dialect" "%s"
+       (pcase sh-shell (`bash "bash") (`mksh "mksh") (_ "posix"))))))
 #+end_src
 
 * Org roam
@@ -1884,7 +2049,9 @@ This is useful for legacy C projects that do not have agreed rules on automatic 
          :empty-lines-before 1
          :target (file+head "%<%Y-%m-%d>.org"
                             "#+title: %<%Y-%m-%d %a>\n")))
-      l/org-roam-default-template "#+title: ${title}\n\n* TODOs\n\n* Notes\n:PROPERTIES:\n:VISIBILITY: children\n:END:\n"
+      l/org-roam-default-template
+      (concat "#+title: ${title}\n\n* TODOs\n\n"
+              "* Notes\n:PROPERTIES:\n:VISIBILITY: children\n:END:\n")
       ;; Would be nice to make point position itself after the same line as the
       ;; "TODO" heading itself. Currently we have to press Backspace twice to
       ;; finish setting up the capture template.
@@ -1892,23 +2059,33 @@ This is useful for legacy C projects that do not have agreed rules on automatic 
       org-roam-capture-templates
       `(("r" "reference" plain
          "%?"
-         :target (file+head+olp "reference/${slug}.org" ,l/org-roam-default-template ,l/org-roam-default-olp)
+         :target (file+head+olp "reference/${slug}.org"
+                                ,l/org-roam-default-template
+                                ,l/org-roam-default-olp)
          :unnarrowed t)
         ("c" "creche" plain
          "%?"
-         :target (file+head+olp "creche/${slug}.org" ,l/org-roam-default-template ,l/org-roam-default-olp)
+         :target (file+head+olp "creche/${slug}.org"
+                                ,l/org-roam-default-template
+                                ,l/org-roam-default-olp)
          :unnarrowed t)
         ("p" "proj-temp" plain
          "%?"
-         :target (file+head+olp "proj-temp/${slug}.org" ,l/org-roam-default-template ,l/org-roam-default-olp)
+         :target (file+head+olp "proj-temp/${slug}.org"
+                                ,l/org-roam-default-template
+                                ,l/org-roam-default-olp)
          :unnarrowed t)
         ("P" "proj-perm" plain
          "%?"
-         :target (file+head+olp "proj-perm/${slug}.org" ,l/org-roam-default-template ,l/org-roam-default-olp)
+         :target (file+head+olp "proj-perm/${slug}.org"
+                                ,l/org-roam-default-template
+                                ,l/org-roam-default-olp)
          :unnarrowed t)
         ("x" "pub" plain
          "%?"
-         :target (file+head+olp "pub/${slug}.org" ,l/org-roam-default-template ,l/org-roam-default-olp)
+         :target (file+head+olp "pub/${slug}.org"
+                                ,l/org-roam-default-template
+                                ,l/org-roam-default-olp)
          :unnarrowed t)))
 #+end_src
 
@@ -1937,14 +2114,18 @@ This is useful for legacy C projects that do not have agreed rules on automatic 
 
 ** Personal information
 
-Some functionality uses this to identify you, e.g. GPG configuration, email clients, file templates and snippets.
+Some functionality uses this to identify you, e.g. GPG configuration, email
+clients, file templates and snippets.
+
 #+name: name-and-email
 #+begin_src emacs-lisp
 (setq user-full-name "Linus Arver"
       user-mail-address "linusarver@gmail.com")
 #+end_src
 
-This determines the style of line numbers in effect. If set to "nil", line numbers are disabled. For relative line numbers, set this to "relative".
+This determines the style of line numbers in effect. If set to "nil", line
+numbers are disabled. For relative line numbers, set this to "relative".
+
 #+name: line-numbers
 #+begin_src emacs-lisp
 (setq display-line-numbers-type nil)
@@ -1962,7 +2143,11 @@ In doom, the scratch buffer is persistent and can be visited with =, x=.
 
 ** Dead code
 
-Before we started using Doom Emacs, we used to rely heavily on kakapo-mode to always insert either a tab or space character with the =TAB= key. However nowadays most languages have automated formatters that takes the guesswork around tabs/spaces out of the way. We could still enable kakapo-mode for some of the simpler modes that do not have a formatter, but for now we don't bother.
+Before we started using Doom Emacs, we used to rely heavily on kakapo-mode to
+always insert either a tab or space character with the =TAB= key. However
+nowadays most languages have automated formatters that takes the guesswork
+around tabs/spaces out of the way. We could still enable kakapo-mode for some of
+the simpler modes that do not have a formatter, but for now we don't bother.
 
 #+name: kakapo
 #+begin_src emacs-lisp
@@ -2024,7 +2209,8 @@ Before we started using Doom Emacs, we used to rely heavily on kakapo-mode to al
 
 (map! :after (git-gutter magit)
       :map doom-leader-git-map
-      ; BUG: For some reason the "hunk" description does not show up in which-key.
+      ; BUG: For some reason the "hunk" description does not show up in
+      ; which-key.
       (:prefix-map ("h" . "hunk")
        "n" #'l/git-gutter:next-hunk
        "N" #'l/git-gutter:prev-hunk
@@ -2057,7 +2243,9 @@ Before we started using Doom Emacs, we used to rely heavily on kakapo-mode to al
   (advice-add 'select-window :around #'l/git-gutter-refresh)
   ; Update git-gutter every time we lose/regain focus to the frame. See
   ; https://emacs.stackexchange.com/a/60971/13006.
-  (add-function :after after-focus-change-function (lambda () (when (frame-focus-state) (git-gutter:update-all-windows))))
+  (add-function :after after-focus-change-function
+                (lambda ()
+                  (when (frame-focus-state) (git-gutter:update-all-windows))))
   (setq git-gutter:modified-sign "█")
   (setq git-gutter:added-sign "█")
   (setq git-gutter:deleted-sign "█"))

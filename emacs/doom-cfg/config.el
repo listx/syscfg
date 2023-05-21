@@ -2,14 +2,20 @@
 
 (use-package! company
   :config
-  (setq +company-backend-alist (assq-delete-all 'text-mode +company-backend-alist))
-  (add-to-list '+company-backend-alist '(text-mode (:separate company-dabbrev company-yasnippet))))
+  (setq +company-backend-alist
+        (assq-delete-all 'text-mode +company-backend-alist))
+  (add-to-list '+company-backend-alist
+               '(text-mode
+                (:separate company-dabbrev company-yasnippet))))
 
 (defun l/copy-to-clipboard (orig-fun string)
   "Copy killed text or region into the system clipboard, by shelling out to a
 script which knows what to do depending on the environment."
-  (let ((b64 (base64-encode-string (encode-coding-string string 'no-conversion) t)))
-   (start-process-shell-command "copy" nil (format "printf %s | ~/syscfg/script/copy-clipboard.sh --base64" b64))
+  (let ((b64
+         (base64-encode-string (encode-coding-string string 'no-conversion) t)))
+   (start-process-shell-command
+    "copy" nil
+    (format "printf %s | ~/syscfg/script/copy-clipboard.sh --base64" b64))
    (funcall orig-fun string)))
 
 (advice-add 'gui-select-text :around #'l/copy-to-clipboard)
@@ -148,7 +154,8 @@ because Emacs will equate these keys with other keys (e.g., C-i with C-S-i)."
   (l/bind-placeholder '(105 C M S))  ; C-M-S-i
 
   ;; C-j and C-S-j are already bound for window navigation.
-  ;; C-M-j and C-M-S-j are already bound from tmux, so no point in binding them here (we'll never see them).
+  ;; C-M-j and C-M-S-j are already bound from tmux, so no point in binding them
+  ;; here (we'll never see them).
 
   ;; ASCII 109 ('m')
   (l/bind-placeholder '(109 C))     ; C-m
@@ -203,7 +210,8 @@ Return an event vector."
   (if (memq 'S modifiers) (setq c (logior (lsh 1 25) c)))
   (vector c))
 
-(defvar l-disambiguation-mode-map (make-keymap) "Keymap for disambiguating keys in terminal Emacs.")
+(defvar l-disambiguation-mode-map (make-keymap)
+  "Keymap for disambiguating keys in terminal Emacs.")
 (define-minor-mode l-disambiguation-mode
    "A mode for binding key sequences so that we can see them with `M-x
   describe-key'."
@@ -257,8 +265,10 @@ Return an event vector."
       (:prefix ("d" . "date/deadline")
          "t" #'l/org-insert-timestamp-inactive)
       (:prefix ("e" . "export")
-        :desc "subtree (children only)" "s" (cmd! (l/org-export-as-markdown-to-clipboard nil))
-        :desc "subtree (children + parent)" "S" (cmd! (l/org-export-as-markdown-to-clipboard 't))
+        :desc "subtree (children only)" "s"
+          (cmd! (l/org-export-as-markdown-to-clipboard nil))
+        :desc "subtree (children + parent)" "S"
+          (cmd! (l/org-export-as-markdown-to-clipboard 't))
         "d" #'org-export-dispatch))
 
 (defun l/org-insert-timestamp-inactive ()
@@ -298,9 +308,13 @@ Return an event vector."
 ;; number of space characters. So we have to preserve these extraneous
 ;; characters as well (hence the second capture group).
 (defun l/org-export-md-scrub-invalid-links (link backend info)
-  "Scrub invalid Markdown links of the form `[LINK-NAME]((...)' with just LINK-NAME."
+  "Scrub invalid Markdown links of the form `[LINK-NAME]((...)' with just
+LINK-NAME."
   (if (eq backend 'md)
-    (replace-regexp-in-string "\\(\\[[^]]*\\]\\)((.+?)\\(\s*\\)$" "\\1(MARKDOWN-LINK-EXPORT-ERROR)\\2" link)
+    (replace-regexp-in-string
+     "\\(\\[[^]]*\\]\\)((.+?)\\(\s*\\)$"
+     "\\1(MARKDOWN-LINK-EXPORT-ERROR)\\2"
+     link)
    link))
 (after! ox
   (add-to-list 'org-export-filter-link-functions
@@ -323,7 +337,8 @@ Return an event vector."
            (export-whole-buffer
             ;; If we don't use this if condition, the (save-excursion ...) will
             ;; always return a truthy value.
-            (if (not (save-excursion (condition-case nil (org-back-to-heading) (error nil))))
+            (if (not (save-excursion
+                       (condition-case nil (org-back-to-heading) (error nil))))
                 t
                 nil))
            (async nil)
@@ -331,12 +346,19 @@ Return an event vector."
            (body-only t)
            ; Temporary buffer to hold exported contents.
            (buffer (save-window-excursion
-                     (cond (export-whole-buffer (org-export-to-buffer 'md "*Formatted Copy*" async nil visible-only body-only))
+                     (cond (export-whole-buffer
+                            (org-export-to-buffer
+                                'md "*Formatted Copy*" async nil
+                                visible-only body-only))
                            (include-parent-heading
                               (save-restriction
                                 (org-narrow-to-subtree)
-                                (org-export-to-buffer 'md "*Formatted Copy*" async nil visible-only body-only)))
-                           (t (org-export-to-buffer 'md "*Formatted Copy*" async 't visible-only body-only))))))
+                                (org-export-to-buffer
+                                    'md "*Formatted Copy*" async nil
+                                    visible-only body-only)))
+                           (t (org-export-to-buffer
+                                  'md "*Formatted Copy*" async 't
+                                  visible-only body-only))))))
       (with-current-buffer buffer
         (unwind-protect
           (let ((bufstr (buffer-string)))
@@ -346,15 +368,18 @@ Return an event vector."
                      ;; Delete leading newline from org-export-to-buffer.
                      (goto-line 1)
                      (flush-lines "^$")
-                     (call-shell-region (point-min) (point-max) "~/syscfg/script/copy-clipboard.sh" nil 0)
-                     (message (concat "Exported children of subtree starting with `"
-                                      (if (> (length bufstr) 20)
-                                          (concat
-                                           (string-trim-left
-                                              (substring bufstr 0 20))
-                                           "...")
-                                        bufstr
-                                       "' as Markdown into clipboard.")))
+                     (call-shell-region
+                      (point-min)
+                      (point-max) "~/syscfg/script/copy-clipboard.sh" nil 0)
+                     (message (concat
+                               "Exported children of subtree starting with `"
+                               (if (> (length bufstr) 20)
+                                   (concat
+                                    (string-trim-left
+                                       (substring bufstr 0 20))
+                                    "...")
+                                 bufstr
+                                "' as Markdown into clipboard.")))
                      ;; "Kill" locally ("copy") into emacs. The word "kill" here
                      ;; is unfortunate because it is overloaded with the "kill" in
                      ;; "kill-buffer" below. Anyway we also send the buffer to an
@@ -375,8 +400,10 @@ Return an event vector."
            "CANCELED(c)"
            "OBSOLETE(o)")
           (sequence
-           "ASK(a)"                     ; A question to ask
-           "ASKED(e)"                   ; Question was asked, but we're waiting for them to respond
+           ; A question to ask
+           "ASK(a)"
+           ; Question was asked, but we're waiting for them to respond
+           "ASKED(e)"
            "|"
            "ANSWERED(r)"))
         org-todo-keyword-faces
@@ -387,23 +414,34 @@ Return an event vector."
           ("ANSWERED"   . +org-todo-cancel)
           ("CANCELED"   . +org-todo-cancel)
           ("OBSOLETE" . +org-todo-cancel)))
-  ; When editing text near hidden text (e.g., the "..." ellipses after folded headings), expand it so that we are forced to only edit text around hidden text when it is un-hidden.
+  ; When editing text near hidden text (e.g., the "..." ellipses after folded
+  ; headings), expand it so that we are forced to only edit text around hidden
+  ; text when it is un-hidden.
   (setq org-catch-invisible-edits 'show-and-error)
   ; Never make trees' trailing empty lines visible from collapsed view.
   (setq org-cycle-separator-lines 0)
-  ; Introduce unordered bulleted list hierarchy. We flip-flop between "-" and "+" as we continue to nest. This helps keep track of nesting.
+  ; Introduce unordered bulleted list hierarchy. We flip-flop between "-" and
+  ; "+" as we continue to nest. This helps keep track of nesting.
   (setq org-list-demote-modify-bullet '(("-" . "+") ("+" . "-")))
   ; Enable habits (see https://orgmode.org/manual/Tracking-your-habits.html).
   (add-to-list 'org-modules 'org-habit t)
-  ; Show daily habits in the agenda even if they have already been completed for today. This is useful for the consistency graph being displayed even for completed items.
+  ; Show daily habits in the agenda even if they have already been completed for
+  ; today. This is useful for the consistency graph being displayed even for
+  ; completed items.
   (setq org-habit-show-all-today t)
   (add-hook 'org-mode-hook 'l/org-colors))
 
 ;; Dim org-block face (source code blocks) separately, because they are not
 ;; dimmed by default. Also dim org-hide as well.
 (defun l/org-colors ()
-  (add-to-list 'face-remapping-alist `(org-hide (:filtered (:window adob--dim t) (:foreground ,l/color-xGrey1)) org-hide))
-  (add-to-list 'face-remapping-alist `(org-block (:filtered (:window adob--dim t) (:background ,l/color-xGrey2)) org-block)))
+  (add-to-list 'face-remapping-alist
+               `(org-hide (:filtered
+                           (:window adob--dim t)
+                           (:foreground ,l/color-xGrey1)) org-hide))
+  (add-to-list 'face-remapping-alist
+               `(org-block (:filtered
+                            (:window adob--dim t)
+                            (:background ,l/color-xGrey2)) org-block)))
 
 (setq org-directory
       (nth 0 (split-string (getenv "L_ORG_AGENDA_DIRS"))))
@@ -460,14 +498,15 @@ Return an event vector."
          ;; We only show P0 TODO items if the have been scheduled, and their
          ;; scheduled date is today or in the past. This way we only concern
          ;; ourselves with tasks that we can actually work on.
-         ((tags "PRIORITY=\"0\""
-                ((org-agenda-skip-function
-                  '(or
-                    ;; Skip entries if they haven't been scheduled yet.
-                    (l/org-agenda-skip-if-scheduled-later)
-                    ;; Skip entries if they are DONE (or CANCELED, etc).
-                    (org-agenda-skip-entry-if 'todo 'done)))
-                 (org-agenda-overriding-header "P0 tasks from today or the past")))
+         ((tags
+           "PRIORITY=\"0\""
+           ((org-agenda-skip-function
+             '(or
+               ;; Skip entries if they haven't been scheduled yet.
+               (l/org-agenda-skip-if-scheduled-later)
+               ;; Skip entries if they are DONE (or CANCELED, etc).
+               (org-agenda-skip-entry-if 'todo 'done)))
+            (org-agenda-overriding-header "P0 tasks from today or the past")))
           ;; See 7 days from today. It's like the opposite of "Weekly review".
           (agenda ""
                   ((org-agenda-span 7)
@@ -515,7 +554,8 @@ Return an event vector."
               (prin1-to-string buf)
               "'."))))
 
-;; Adapted from https://blog.aaronbieber.com/2016/09/24/an-agenda-for-life-with-org-mode.html.
+;; Adapted from
+;; https://blog.aaronbieber.com/2016/09/24/an-agenda-for-life-with-org-mode.html.
 (defun l/org-skip-subtree-if-priority (priority)
   "Skip an agenda subtree if it has a priority of PRIORITY.
 
@@ -560,8 +600,10 @@ should be continued."
 
 (defun l/org-roam-capture (key subdir)
   (interactive)
-  (org-roam-capture nil key
-                    :filter-fn (lambda (node) (string-equal subdir (org-roam-node-doom-type node)))))
+  (org-roam-capture
+   nil key
+   :filter-fn (lambda (node)
+                (string-equal subdir (org-roam-node-doom-type node)))))
 
 (defun l/rg-search (dir pat &rest args)
   "Use rg-helper.sh to search DIR for pat. See rg-helper.sh for
@@ -569,7 +611,9 @@ details."
   (interactive)
   (let ((dir-expanded (expand-file-name dir)))
     (tab-bar-new-tab)
-    (consult--grep "rg" (l/rg-search-mk-builder dir-expanded args) dir-expanded pat)))
+    (consult--grep
+     "rg"
+     (l/rg-search-mk-builder dir-expanded args) dir-expanded pat)))
 
 (defun l/rg-search-mk-builder (dir args)
   "Returns a lambda that can fill in the `pat' variable. The explicit use of
@@ -589,9 +633,13 @@ consult--grep."
 (defun l/rg-search-blocks-mk-builder (dir args)
   "Like l/rg-search-mk-builder, but uses rg-helper.sh's 'regions' mode to search
 between begin_WORD ... end_WORD blocks."
-  (let ((invocation (append (list "rg-helper.sh" dir "regions"
-                             ',(concat "(\\x00)(\\d+):\\s*(?:(?!#\\+(begin|end)_\\w+?)).*?(" pat ")")
-                             ',(concat "^\\s*#\\+begin_\\w+\[^\\n\]*$((?!^\\s*#\\+end_\\w+$).)*(" pat ").*?(?!^\\s*#\\+end_\\w+$)")) args)))
+  (let ((invocation
+         (append
+          (list "rg-helper.sh" dir "regions"
+          ',(concat "(\\x00)(\\d+):\\s*(?:(?!#\\+(begin|end)_\\w+?)).*?("
+                    pat ")")
+          ',(concat "^\\s*#\\+begin_\\w+\[^\\n\]*$((?!^\\s*#\\+end_\\w+$).)*("
+                    pat ").*?(?!^\\s*#\\+end_\\w+$)")) args)))
     (list 'lambda (list 'pat) (list 'backquote (list ':command invocation)))))
 (defun l/org-roam-get-nearby-dailies ()
   "Return a list of absolute filenames of all dailies files from the current
@@ -638,7 +686,9 @@ between begin_WORD ... end_WORD blocks."
          :empty-lines-before 1
          :target (file+head "%<%Y-%m-%d>.org"
                             "#+title: %<%Y-%m-%d %a>\n")))
-      l/org-roam-default-template "#+title: ${title}\n\n* TODOs\n\n* Notes\n:PROPERTIES:\n:VISIBILITY: children\n:END:\n"
+      l/org-roam-default-template
+      (concat "#+title: ${title}\n\n* TODOs\n\n"
+              "* Notes\n:PROPERTIES:\n:VISIBILITY: children\n:END:\n")
       ;; Would be nice to make point position itself after the same line as the
       ;; "TODO" heading itself. Currently we have to press Backspace twice to
       ;; finish setting up the capture template.
@@ -646,23 +696,33 @@ between begin_WORD ... end_WORD blocks."
       org-roam-capture-templates
       `(("r" "reference" plain
          "%?"
-         :target (file+head+olp "reference/${slug}.org" ,l/org-roam-default-template ,l/org-roam-default-olp)
+         :target (file+head+olp "reference/${slug}.org"
+                                ,l/org-roam-default-template
+                                ,l/org-roam-default-olp)
          :unnarrowed t)
         ("c" "creche" plain
          "%?"
-         :target (file+head+olp "creche/${slug}.org" ,l/org-roam-default-template ,l/org-roam-default-olp)
+         :target (file+head+olp "creche/${slug}.org"
+                                ,l/org-roam-default-template
+                                ,l/org-roam-default-olp)
          :unnarrowed t)
         ("p" "proj-temp" plain
          "%?"
-         :target (file+head+olp "proj-temp/${slug}.org" ,l/org-roam-default-template ,l/org-roam-default-olp)
+         :target (file+head+olp "proj-temp/${slug}.org"
+                                ,l/org-roam-default-template
+                                ,l/org-roam-default-olp)
          :unnarrowed t)
         ("P" "proj-perm" plain
          "%?"
-         :target (file+head+olp "proj-perm/${slug}.org" ,l/org-roam-default-template ,l/org-roam-default-olp)
+         :target (file+head+olp "proj-perm/${slug}.org"
+                                ,l/org-roam-default-template
+                                ,l/org-roam-default-olp)
          :unnarrowed t)
         ("x" "pub" plain
          "%?"
-         :target (file+head+olp "pub/${slug}.org" ,l/org-roam-default-template ,l/org-roam-default-olp)
+         :target (file+head+olp "pub/${slug}.org"
+                                ,l/org-roam-default-template
+                                ,l/org-roam-default-olp)
          :unnarrowed t)))
 (map! :after alchemist
       :map alchemist-mode-map
@@ -684,7 +744,8 @@ between begin_WORD ... end_WORD blocks."
        "--binary-next-line"
        "--func-next-line"
       ("--indent" "%d" (unless indent-tabs-mode tab-width))
-      ("--language-dialect" "%s" (pcase sh-shell (`bash "bash") (`mksh "mksh") (_ "posix"))))))
+      ("--language-dialect" "%s"
+       (pcase sh-shell (`bash "bash") (`mksh "mksh") (_ "posix"))))))
 
 (setq display-line-numbers-type nil)
 
@@ -782,12 +843,16 @@ window management issues."
       (progn
         (if (bound-and-true-p with-editor-mode)
           (if (buffer-modified-p)
-            ; If there are any unsaved changes, either discard those changes or do
-            ; nothing.
-            (if (y-or-n-p "l/quit-buffer: Invoke (with-editor-cancel) to cancel the editing of this buffer?")
+            ; If there are any unsaved changes, either discard those changes or
+            ; do nothing.
+            (if
+              (y-or-n-p
+               (concat "l/quit-buffer: Invoke (with-editor-cancel) "
+                       "to cancel the editing of this buffer?"))
               (with-editor-cancel t)
               ; Use catch/throw to stop execution.
-              (throw 'my-catch (message "l/quit-buffer: Aborting (doing nothing).")))
+              (throw 'my-catch
+                     (message "l/quit-buffer: Aborting (doing nothing).")))
             (with-editor-finish t)))
         ; Close the current view (or exit the editor entirely), but only if we
         ; originally tried to close a non-"auxiliary" buffer. An "auxiliary"
@@ -806,12 +871,14 @@ window management issues."
             (catch 'buffer-cycle-detected
               (while
                 (string-match "^ *\*.+\*$" (buffer-name))
-                ; Break loop if somehow our aux-buffer-rgx failed to account for all
-                ; hidden/aux buffers and we are just looping over and over among the
-                ; same list of actual auxiliary buffers.
+                ; Break loop if somehow our aux-buffer-rgx failed to account for
+                ; all hidden/aux buffers and we are just looping over and over
+                ; among the same list of actual auxiliary buffers.
                 (if (string= original-bufname (buffer-name))
                   (throw 'buffer-cycle-detected
-                    (message "l/quit-buffer: Buffer cycle detected among auxiliary buffers; invoking `l/gc-views'."))
+                    (message
+                     (concat "l/quit-buffer: Buffer cycle detected among "
+                             "auxiliary buffers; invoking `l/gc-views'.")))
                   (previous-buffer))))
               ; If we've broken the loop (due to a cycle), run (l/gc-views) as
               ; it is better than doing nothing.
@@ -844,14 +911,15 @@ otherwise, close current tab."
           (if (display-graphic-p)
             (progn
               ; Minibuffers can create their own frames --- but they can linger
-              ; around as an invisible frame even after they are deleted. Delete all
-              ; other frames whenever we exit from a single visible daemon frame,
-              ; because there is no point in keeping them around. If anything they
-              ; can hinder detection of "is there a visible frame?" logic from the
-              ; shell.
+              ; around as an invisible frame even after they are deleted. Delete
+              ; all other frames whenever we exit from a single visible daemon
+              ; frame, because there is no point in keeping them around. If
+              ; anything they can hinder detection of "is there a visible
+              ; frame?" logic from the shell.
               (delete-other-frames)
-              ; While we're at it, also close all buffers, because it's annoying to
-              ; have things like Helm minibuffers and the like sitting around.
+              ; While we're at it, also close all buffers, because it's annoying
+              ; to have things like Helm minibuffers and the like sitting
+              ; around.
               (mapc
                 'kill-buffer
                 (seq-filter
@@ -918,7 +986,10 @@ Also add the number of windows in the window configuration."
   (interactive)
   (let* ((bufname (buffer-name buffer))
          (bufname-short (string-remove-suffix ".org" bufname))
-         (buf-date-match (string-match "^[[:digit:]]\\{4\\}-[[:digit:]]\\{2\\}-[[:digit:]]\\{2\\}$" bufname-short))
+         (buf-date-match
+          (string-match
+           "^[[:digit:]]\\{4\\}-[[:digit:]]\\{2\\}-[[:digit:]]\\{2\\}$"
+           bufname-short))
          (buf-is-date (eq 0 buf-date-match)))
     (cond ((string= bufname "dashboard.org") "DASHBOARD")
           (buf-is-date (l/append-relative-date-suffix bufname-short))
@@ -973,8 +1044,10 @@ Also add the number of windows in the window configuration."
       :mnv "C-k" nil
       :mnv "C-j" nil)
 (setq notmuch-saved-searches
-      '((:name "inbox" :query "tag:inbox" :count-query "tag:inbox AND tag:unread" :key "i")
-        (:name "git" :query "tag:git and (not tag:spam)" :count-query "tag:git AND tag:unread" :key "g")
+      '((:name "inbox" :query "tag:inbox"
+         :count-query "tag:inbox AND tag:unread" :key "i")
+        (:name "git" :query "tag:git and (not tag:spam)"
+         :count-query "tag:git AND tag:unread" :key "g")
         (:name "sent" :query "tag:sent" :key "s")))
 
 (map! :mi "C-o" #'l/insert-newline-below
@@ -1059,9 +1132,13 @@ Also add the number of windows in the window configuration."
 
 (defun l/reset-faces ()
   (interactive)
-  (setq tab-bar-separator (propertize " " 'font-lock-face `(:background ,(doom-darken (doom-color 'bg-alt) 0.2))))
+  (setq tab-bar-separator
+        (propertize " "
+                    'font-lock-face
+                    `(:background ,(doom-darken (doom-color 'bg-alt) 0.2))))
   (custom-set-faces!
-    `(vertical-border :background ,(doom-color 'base0) :foreground ,(doom-color 'base0))
+    `(vertical-border
+      :background ,(doom-color 'base0) :foreground ,(doom-color 'base0))
     '(highlight-numbers-number  :weight bold)
     `(hl-line :background ,(doom-darken (doom-color 'bg-alt) 0.4))
     '(vim-empty-lines-face :weight bold)
@@ -1112,14 +1189,16 @@ Also add the number of windows in the window configuration."
     '(diff-hunk-header  :foreground "brightcyan")
     '(git-commit-keyword  :foreground "brightmagenta" :weight bold))
 
-  ;; Make all doom-modeline-* faces have a uniform foreground, to make them easier
-  ;; to read with our custom mode-line background. This way we don't have to spell
-  ;; out each font one at a time.
-  (eval `(l/custom-set-faces-matching! "doom-modeline-" :foreground ,(doom-color 'base0))))
+  ;; Make all doom-modeline-* faces have a uniform foreground, to make them
+  ;; easier to read with our custom mode-line background. This way we don't have
+  ;; to spell out each font one at a time.
+  (eval `(l/custom-set-faces-matching! "doom-modeline-"
+                                       :foreground ,(doom-color 'base0))))
 
 (use-package! rainbow-mode
   :hook (prog-mode text-mode))
-;; Disable rainbow-mode (because "#def" in "#define" gets interpreted as a hex color.)
+;; Disable rainbow-mode (because "#def" in "#define" gets interpreted as a hex
+;; color.)
 (add-hook 'c-mode-hook (lambda () (rainbow-turn-off)))
 (use-package! doom-themes
   :config
@@ -1161,7 +1240,8 @@ Also add the number of windows in the window configuration."
 
 (map! :after (git-gutter magit)
       :map doom-leader-git-map
-      ; BUG: For some reason the "hunk" description does not show up in which-key.
+      ; BUG: For some reason the "hunk" description does not show up in
+      ; which-key.
       (:prefix-map ("h" . "hunk")
        "n" #'l/git-gutter:next-hunk
        "N" #'l/git-gutter:prev-hunk
@@ -1194,7 +1274,9 @@ Also add the number of windows in the window configuration."
   (advice-add 'select-window :around #'l/git-gutter-refresh)
   ; Update git-gutter every time we lose/regain focus to the frame. See
   ; https://emacs.stackexchange.com/a/60971/13006.
-  (add-function :after after-focus-change-function (lambda () (when (frame-focus-state) (git-gutter:update-all-windows))))
+  (add-function :after after-focus-change-function
+                (lambda ()
+                  (when (frame-focus-state) (git-gutter:update-all-windows))))
   (setq git-gutter:modified-sign "█")
   (setq git-gutter:added-sign "█")
   (setq git-gutter:deleted-sign "█"))
