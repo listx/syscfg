@@ -24,7 +24,6 @@ in pkgs.stdenv.mkDerivation {
 
     pkgs.gmp
     pkgs.libffi
-    pkgs.xlibsWrapper
     pkgs.xorg.libXinerama
     pkgs.xorg.libXScrnSaver
     pkgs.xorg.libXrandr

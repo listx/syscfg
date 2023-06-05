@@ -96,9 +96,6 @@ export GCC_COLORS=1
 # path to local nixpkgs git repo
 export NIXPKGS=~/prog/foreign/nixpkgs
 
-__l_prepend_path /run/current-system/sw/bin
-__l_prepend_path ~/.nix-profile/bin
-
 # Add Golang binaries to the PATH.
 __l_prepend_path ~/go/bin
 
