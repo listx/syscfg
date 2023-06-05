@@ -90,10 +90,10 @@ main()
 
 	__elisp=$(cat << EOF
 	(progn
-		; Load theme. This makes the HTML output colorized.
-		(load-theme 'zenburn t)
+		(l/org-agenda "c" t) ; QUEUE
+		(tab-bar-select-tab 2) ; Select 2nd tab (QUEUE)
 		; Export agenda as HTML file.
-		(org-store-agenda-views)
+		(org-batch-store-agenda-views)
 	)
 EOF
 	)
@@ -101,11 +101,18 @@ EOF
 	# Strip comments.
 	__elisp="$(echo -e "${__elisp}" | sed '/^\s\+\?;/d;s/;.\+//')"
 
+	pushd ~/lo/note
+
 	timeout -k 30 20 \
 		emacs \
 		--batch \
-		--load ~/syscfg/zzz/doom-emacs/init.el \
-		--eval "${__elisp}"
+		--load ~/syscfg/emacs/doom-upstream/early-init.el \
+		--load ~/syscfg/emacs/doom-upstream/lisp/doom-start.el \
+		--load ~/syscfg/emacs/doom-cfg/config.el \
+		--eval "${__elisp}" \
+		dashboard.org
+
+	popd
 }
 
 main "$@"
