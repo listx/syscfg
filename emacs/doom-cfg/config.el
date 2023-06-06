@@ -1223,7 +1223,10 @@ Also add the number of windows in the window configuration."
 ; Add visual cue on 80th column.
 (use-package! column-enforce-mode
   :config
-  (add-hook 'org-mode-hook 'column-enforce-mode)
+  (add-hook 'org-mode-hook
+            (lambda ()
+              (column-enforce-mode
+               (if (boundp 'l/disable-column-enforce-mode) -1 1))))
   (global-column-enforce-mode t))
 
 (use-package! vim-empty-lines-mode

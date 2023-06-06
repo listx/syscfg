@@ -2201,7 +2201,7 @@ the simpler modes that do not have a formatter, but for now we don't bother.
 ; Add visual cue on 80th column.
 (use-package! column-enforce-mode
   :config
-  (add-hook 'org-mode-hook 'column-enforce-mode)
+  <<l/disable-column-enforce-mode>>
   (global-column-enforce-mode t))
 
 (use-package! vim-empty-lines-mode
@@ -2267,6 +2267,26 @@ the simpler modes that do not have a formatter, but for now we don't bother.
 (setq evil-normal-state-cursor 'box)
 (setq evil-insert-state-cursor 'box)
 (setq evil-emacs-state-cursor  'box)
+#+end_src
+
+*** Org
+
+**** Optionally disable column-enforce-mode
+
+For some Org-mode files (notably those used for TODO tracking), we don't
+want to enable column-enforce mode because oftentimes there are HTTP
+URLs and these can get quite long. For such files, use the
+=l/disable-column-enforce-mode= variable. This will override the default
+behavior which is to enable =column-enforce-mode= (which is the case for Org
+files that are written with Literate Programming or general-purpose
+documentation in mind).
+
+#+name: l/disable-column-enforce-mode
+#+begin_src emacs-lisp
+(add-hook 'org-mode-hook
+          (lambda ()
+            (column-enforce-mode
+             (if (boundp 'l/disable-column-enforce-mode) -1 1))))
 #+end_src
 
 * Reference
