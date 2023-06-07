@@ -100,7 +100,16 @@
     home = { config = builtins.readFile ../openvpn/home.ovpn; };
   };
 
-  hardware.pulseaudio.enable = true;
+  # PipeWire
+  # rtkit is optional but recommended
+  security.rtkit.enable = true;
+  services.pipewire = {
+    enable = true;
+    alsa.enable = true;
+    alsa.support32Bit = true;
+    pulse.enable = true;
+    wireplumber.enable = true;
+  };
 
   users.groups.l = { gid = 1000; };
 
