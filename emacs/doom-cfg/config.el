@@ -734,16 +734,29 @@ between begin_WORD ... end_WORD blocks."
       :map alchemist-mode-map
       :mnvi "C-k" nil
       :mnvi "C-j" nil)
-(add-hook! 'c-mode-hook
-  (unless (locate-dominating-file default-directory ".clang-format")
-    (format-all-mode -1)))
-
 (map! :after ccls
       :map (c-mode-map c++-mode-map)
       :mnvi "C-h" nil
       :mnvi "C-l" nil
       :mnvi "C-k" nil
       :mnvi "C-j" nil)
+(defvar l/c-like-modes '(c-mode))
+(defvar l/banned-auto-format-dirs '("prog/foreign/git"))
+
+(defun l/auto-format-buffer-p ()
+  (interactive)
+  (and (or (not (member major-mode l/c-like-modes))
+           (locate-dominating-file default-directory ".clang-format"))
+       (buffer-file-name)
+       (save-match-data
+         (let ((dir (file-name-directory (buffer-file-name))))
+           (not (cl-some (lambda (regexp) (string-match regexp dir))
+                    l/banned-auto-format-dirs))))))
+
+(defun l/after-change-major-mode ()
+  (format-all-mode (if (l/auto-format-buffer-p) 1 -1)))
+
+(add-hook! 'after-change-major-mode-hook 'l/after-change-major-mode)
 (after! sh-script
   (set-formatter! 'shfmt
     '("shfmt"

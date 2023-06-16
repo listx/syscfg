@@ -106,7 +106,7 @@ DOOM requires 3 configuration files in the =$DOOMDIR=:
        (evil +everywhere); come to the dark side, we have cookies
        file-templates    ; auto-snippets for empty files
        fold              ; (nigh) universal code folding
-       (format +onsave)  ; automated prettiness
+       ;(format +onsave)  ; automated prettiness
        ;;god               ; run Emacs commands without modifier keys
        ;;lispy             ; vim for lisp, for people who don't like vim
        multiple-cursors  ; editing in many places at once
@@ -327,6 +327,7 @@ Emacs understand that sequence.
 ;(unpin! t)
 (package! citeproc)
 (package! column-enforce-mode)
+(package! format-all)
 (package! git-gutter)
 (package! protobuf-mode)
 (package! solaire-mode :disable t)
@@ -359,7 +360,8 @@ other configurations that are pulled in. And so we define it first here.
 <<org>>
 <<org-roam>>
 <<elixir>>
-<<c-clang-format>>
+<<c-keybindings>>
+<<format-onsave>>
 <<shell>>
 
 <<line-numbers>>
@@ -1182,6 +1184,7 @@ script which knows what to do depending on the environment."
 
 (advice-add 'gui-select-text :around #'l/copy-to-clipboard)
 #+end_src
+
 * Code
 
 #+name: code
@@ -1203,6 +1206,40 @@ script which knows what to do depending on the environment."
   (evil-scroll-line-to-center nil))
 
 <<lsp>>
+#+end_src
+
+** Enable automatic code formatting
+
+This is generally useful. Doom by default sets this with the =(format +onsave)=
+setting which enables =format-all-mode= everywhere, but this is too simplistic
+and not useful for us. For example, for the Git project, although it has a
+=.clang-format= (https://clang.llvm.org/docs/ClangFormat.html) file checked in,
+it only uses it as a reference and the rules there are not actually enforced for
+existing code.
+
+Here we turn on format-all-mode everywhere, and also disable it for certain
+directories. The overall structure here is based on the example given in
+=format-all-mode='s documentation.
+
+#+name: format-onsave
+#+begin_src emacs-lisp
+(defvar l/c-like-modes '(c-mode))
+(defvar l/banned-auto-format-dirs '("prog/foreign/git"))
+
+(defun l/auto-format-buffer-p ()
+  (interactive)
+  (and (or (not (member major-mode l/c-like-modes))
+           (locate-dominating-file default-directory ".clang-format"))
+       (buffer-file-name)
+       (save-match-data
+         (let ((dir (file-name-directory (buffer-file-name))))
+           (not (cl-some (lambda (regexp) (string-match regexp dir))
+                    l/banned-auto-format-dirs))))))
+
+(defun l/after-change-major-mode ()
+  (format-all-mode (if (l/auto-format-buffer-p) 1 -1)))
+
+(add-hook! 'after-change-major-mode-hook 'l/after-change-major-mode)
 #+end_src
 
 * Colors
@@ -1975,21 +2012,10 @@ https://emacs.stackexchange.com/a/46992/13006.
 
 * C (C, C++, Objective-C, etc)
 
-** Disable automatic formatting on save
+** Keybindings
 
-This is useful for legacy C projects that do not have agreed rules on automatic
-formatting based on =clang-format=
-(https://clang.llvm.org/docs/ClangFormat.html), which is what =format-all-mode=
-uses for C-based languages. See
-https://github.com/doomemacs/doomemacs/issues/2027#issuecomment-551962591 for
-the JS-based version of this.
-
-#+name: c-clang-format
+#+name: c-keybindings
 #+begin_src emacs-lisp
-(add-hook! 'c-mode-hook
-  (unless (locate-dominating-file default-directory ".clang-format")
-    (format-all-mode -1)))
-
 (map! :after ccls
       :map (c-mode-map c++-mode-map)
       :mnvi "C-h" nil

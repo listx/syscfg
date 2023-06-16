@@ -49,6 +49,7 @@
 ;(unpin! t)
 (package! citeproc)
 (package! column-enforce-mode)
+(package! format-all)
 (package! git-gutter)
 (package! protobuf-mode)
 (package! solaire-mode :disable t)
