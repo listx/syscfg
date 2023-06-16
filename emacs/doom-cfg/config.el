@@ -429,6 +429,10 @@ LINK-NAME."
   ; today. This is useful for the consistency graph being displayed even for
   ; completed items.
   (setq org-habit-show-all-today t)
+  ; Set 4AM as the true "ending time" of a day, and make it so that any task
+  ; completed between 12AM and 4AM are recored as 23:59 of the previous day.
+  (setq org-extend-today-until 4
+        org-use-effective-time t)
   (add-hook 'org-mode-hook #'(lambda () (setq fill-column 80)))
   (add-hook 'org-mode-hook 'turn-on-auto-fill)
   (add-hook 'org-mode-hook 'l/org-colors))
