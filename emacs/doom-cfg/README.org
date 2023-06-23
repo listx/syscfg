@@ -1517,6 +1517,16 @@ convention.
   ; today. This is useful for the consistency graph being displayed even for
   ; completed items.
   (setq org-habit-show-all-today t)
+  ; Disable doom's habit graph resizing code, because it right-aligns the
+  ; consistency graph. This makes the graph's rows hard to line up with the text
+  ; on the left describing the actual habits (on widescreen monitors, the
+  ; detriment to usabilitiy is especially pronounced).
+  (defun +org-habit-resize-graph-h nil)
+  ; Set the absolute starting point for the consistency graph. Our habit
+  ; descriptions are short enough that this works fine. The effect is that the
+  ; graph is now left-aligned, closer to the habit descriptions. This improves
+  ; readability.
+  (setq org-habit-graph-column 50)
   ; Set 4AM as the true "ending time" of a day, and make it so that any task
   ; completed between 12AM and 4AM are recored as 23:59 of the previous day.
   (setq org-extend-today-until 4
