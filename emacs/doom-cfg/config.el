@@ -438,7 +438,9 @@ LINK-NAME."
   ; descriptions are short enough that this works fine. The effect is that the
   ; graph is now left-aligned, closer to the habit descriptions. This improves
   ; readability.
-  (setq org-habit-graph-column 50)
+  (setq org-habit-graph-column 41)
+  ; Show the past 35 days of history.
+  (setq org-habit-preceding-days 35)
   ; Set 4AM as the true "ending time" of a day, and make it so that any task
   ; completed between 12AM and 4AM are recored as 23:59 of the previous day.
   (setq org-extend-today-until 4
