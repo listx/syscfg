@@ -447,6 +447,23 @@ LINK-NAME."
         org-use-effective-time t)
   (add-hook 'org-mode-hook #'(lambda () (setq fill-column 80)))
   (add-hook 'org-mode-hook 'turn-on-auto-fill)
+  (setq org-priority-highest 0
+        org-priority-default 2
+        org-priority-lowest 4)
+  (setq org-fancy-priorities-list '(
+                                    (?0 . "[P0]")
+                                    (?1 . "[P1]")
+                                    (?2 . "[P2]")
+                                    (?3 . "[P3]")
+                                    (?4 . "[P4]"))
+  
+        org-priority-faces '((?0 :foreground "#f00")
+                             (?1 :foreground "#ff0")
+                             (?2 :foreground "#0f0")
+                             (?3 :foreground "#0ff")
+                             (?4 :foreground "#ccc")))
+  
+  (add-hook 'org-mode-hook 'org-fancy-priorities-mode)
   (add-hook 'org-mode-hook 'l/org-colors))
 
 ;; Dim org-block face (source code blocks) separately, because they are not
@@ -686,21 +703,6 @@ between begin_WORD ... end_WORD blocks."
             "-1d"
             "0d"
             "+1d")))
-(setq org-priority-highest 0
-      org-priority-default 2
-      org-priority-lowest 4)
-(setq org-fancy-priorities-list '(
-                                  (?0 . "[P0]")
-                                  (?1 . "[P1]")
-                                  (?2 . "[P2]")
-                                  (?3 . "[P3]")
-                                  (?4 . "[P4]"))
-
-      org-priority-faces '((?0 :foreground "DarkRed" :background "LightPink")
-                           (?1 :foreground "DarkOrange4" :background "LightGoldenrod")
-                           (?2 :foreground "gray20" :background "gray")
-                           (?3 :foreground "gray20" :background "gray")
-                           (?4 :foreground "gray20" :background "gray")))
 (map! :after org-roam
       :map org-roam-mode-map
       :mnvi "C-k" nil

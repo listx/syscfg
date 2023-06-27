@@ -359,7 +359,6 @@ other configurations that are pulled in. And so we define it first here.
 <<dired>>
 <<magit>>
 <<org>>
-<<org-fancy-priorities>>
 <<org-roam>>
 <<elixir>>
 <<c-keybindings>>
@@ -1536,6 +1535,7 @@ convention.
   (setq org-extend-today-until 4
         org-use-effective-time t)
   <<set-auto-fill-mode>>
+  <<org-fancy-priorities>>
   (add-hook 'org-mode-hook 'l/org-colors))
 
 ;; Dim org-block face (source code blocks) separately, because they are not
@@ -2030,11 +2030,13 @@ https://github.com/harrybournis/org-fancy-priorities.
                                   (?3 . "[P3]")
                                   (?4 . "[P4]"))
 
-      org-priority-faces '((?0 :foreground "DarkRed" :background "LightPink")
-                           (?1 :foreground "DarkOrange4" :background "LightGoldenrod")
-                           (?2 :foreground "gray20" :background "gray")
-                           (?3 :foreground "gray20" :background "gray")
-                           (?4 :foreground "gray20" :background "gray")))
+      org-priority-faces '((?0 :foreground "#f00")
+                           (?1 :foreground "#ff0")
+                           (?2 :foreground "#0f0")
+                           (?3 :foreground "#0ff")
+                           (?4 :foreground "#ccc")))
+
+(add-hook 'org-mode-hook 'org-fancy-priorities-mode)
 #+end_src
 
 ** Notes
