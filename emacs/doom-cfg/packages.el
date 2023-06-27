@@ -51,6 +51,7 @@
 (package! column-enforce-mode)
 (package! format-all)
 (package! git-gutter)
+(package! org-fancy-priorities)
 (package! protobuf-mode)
 (package! solaire-mode :disable t)
 (package! vim-empty-lines-mode)
