@@ -25,13 +25,6 @@
 
       8080 # lh (linus's helper)
 
-      # k8s master API server port
-      6443
-      # k8s master cfssl service; required for the node to fetch certs from the
-      # k8s master (otherwise we get "cert: failed to fetch remote CA: failed to
-      # parse rootCA certs" error)
-      8888
-
       4369 # epmd (erlang port mapper daemon)
       33001 # mools
     ];

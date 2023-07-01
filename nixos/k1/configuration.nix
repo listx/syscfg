@@ -2,7 +2,7 @@
 { config, pkgs, ... }:
 
 {
-  imports = [ ../extra.nix ./hardware-configuration.nix ../k8s-node.nix ];
+  imports = [ ../extra.nix ./hardware-configuration.nix ];
 
   boot.loader.grub.enable = true;
   boot.loader.grub.version = 2;
