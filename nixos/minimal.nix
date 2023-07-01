@@ -5,22 +5,22 @@
   i18n.defaultLocale = "en_US.UTF-8";
 
   networking = {
-    # 192.168.0.1 router
-    # 192.168.0.2 printer
+    # 10.0.0.1 router
+    # 10.0.0.2 printer
     extraHosts = ''
-      192.168.0.3 m0
-      192.168.0.4 k0
-      192.168.0.5 k1
-      192.168.0.6 w0
-      192.168.0.7 macp
+      10.0.0.3 m0
+      10.0.0.4 k0
+      10.0.0.5 k1
+      10.0.0.6 w0
+      10.0.0.7 macp
     '';
     # Port 22 is opened automatically if SSH daemon is enabled (no need to specify it here).
     firewall.allowedTCPPorts = [
-      8000 # hledger -R web -- --serve --host=192.168.0.4 --port=8000
-      8001 # hledger    web -- --serve --host=192.168.0.4 --port=8001
+      8000 # hledger -R web -- --serve --host=10.0.0.4 --port=8000
+      8001 # hledger    web -- --serve --host=10.0.0.4 --port=8001
       8010 # org-roam-server-mode
       8011 # ~/syscfg/script/serve-org-agenda.py
-      8020 # stack exec -- blog watch --host=192.168.0.4 --port=8020
+      8020 # stack exec -- blog watch --host=10.0.0.4 --port=8020
       8030 # mpd HTTP stream
 
       8080 # lh (linus's helper)

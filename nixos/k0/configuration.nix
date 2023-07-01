@@ -31,7 +31,7 @@
     hostName = "k0";
     extraHosts = "";
 
-    defaultGateway = "192.168.0.1";
+    defaultGateway = "10.0.0.1";
     nameservers = [ "8.8.8.8" ];
 
     # Use the USB Wifi adapter "ALFA AWUS036ACHM". See
@@ -39,11 +39,11 @@
     # This enables wireless support via /etc/wpa_supplicant.conf.
     wireless.enable = true;
     # Assign static IP manually. The other half of this trick to make it work
-    # is to tell the Motorola router to start its DHCP lease assignment address
-    # from 192.168.0.240+, and then use the addresses 192.168.0.2-192.168.0.239
-    # statically (192.168.0.1 is reserved for the router itself).
+    # is to tell the router to start its DHCP lease assignment address
+    # from 10.0.0.240+, and then use the addresses 10.0.0.2-10.0.0.239
+    # statically (10.0.0.1 is reserved for the router itself).
     interfaces.wlp0s20u4u3.ipv4.addresses = [{
-      address = "192.168.0.4";
+      address = "10.0.0.4";
       prefixLength = 24;
     }];
   };
@@ -79,7 +79,7 @@
   # settings are:
   #
   # Driver:       HP LaserJet Pro MFP m125nw, hpcups 3.20.5 (color)
-  # Connection:   http://192.168.0.2:631/ipp
+  # Connection:   http://10.0.0.2:631/ipp
   #
   # Use the sudo username and password for adding the printer (last step).
   services.printing = {

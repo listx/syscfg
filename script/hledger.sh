@@ -12,7 +12,7 @@ get_ip_addr()
 {
     case "$(hostname)" in
 	k0)
-		echo 192.168.0.4 ;;
+		echo 10.0.0.4 ;;
 	*)
 		echo 127.0.0.1 ;;
 	esac
