@@ -99,3 +99,4 @@ config.bind(",Q", "quit")
 config.bind(",x", "wq")
 config.unbind("th", mode="normal")
 config.unbind("tl", mode="normal")
+c.scrolling.smooth = True
