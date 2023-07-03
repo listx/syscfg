@@ -4,7 +4,7 @@
 
 * Introduction
 
-We use DOOM emacs (insert link) as a base configuration, and further customize
+We use [[https://github.com/doomemacs/doomemacs][Doom Emacs]] as a base configuration, and further customize
 it here in literate form.
 
 ** About the top-level PROPERTY settings for this buffer
