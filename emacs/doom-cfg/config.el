@@ -534,7 +534,7 @@ LINK-NAME."
          ;; scheduled date is today or in the past. This way we only concern
          ;; ourselves with tasks that we can actually work on.
          ((tags
-           "PRIORITY=\"0\""
+           "PRIORITY>=\"0\""
            ((org-agenda-skip-function
              '(or
                ;; Skip entries if they haven't been scheduled yet.
