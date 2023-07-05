@@ -541,7 +541,7 @@ LINK-NAME."
                (l/org-agenda-skip-if-scheduled-later)
                ;; Skip entries if they are DONE (or CANCELED, etc).
                (org-agenda-skip-entry-if 'todo 'done)))
-            (org-agenda-overriding-header "P0 tasks from today or the past")))
+            (org-agenda-overriding-header "Prioritized tasks from today or the past")))
           ;; See 7 days from today. It's like the opposite of "Weekly review".
           (agenda ""
                   ((org-agenda-span 7)
