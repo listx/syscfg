@@ -103,6 +103,7 @@ local general_config = {
     quick_select_match_bg = { AnsiColor = 'Navy' },
     quick_select_match_fg = { Color = '#ffffff' },
   },
+  cursor_blink_rate = 0,
   keys = {
     { key = "t", mods = "SUPER", action = act.DisableDefaultAssignment },
     { key = "y", mods = "SUPER", action = act.ActivateCopyMode },

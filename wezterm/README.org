@@ -24,6 +24,7 @@ return merge(general_config, my_font)
 <<window-padding>>
 <<window-size>>
 <<colors>>
+<<cursor>>
 #+end_src
 
 ** Disable tab bar
@@ -166,6 +167,13 @@ colors = {
   quick_select_match_bg = { AnsiColor = 'Navy' },
   quick_select_match_fg = { Color = '#ffffff' },
 },
+#+end_src
+
+** Cursor
+
+#+name: cursor
+#+begin_src lua
+cursor_blink_rate = 0,
 #+end_src
 
 * Keybindings
