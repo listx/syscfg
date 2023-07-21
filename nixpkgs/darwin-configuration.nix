@@ -15,12 +15,12 @@ in
       dhall
       direnv
       dos2unix
-      elixir_1_14
       emacs
       fd
       ffmpeg
       findutils
       fzf
+      gcal
       git
       gnugrep
       gnumake
@@ -28,9 +28,9 @@ in
       gnused
       gnutar
       graphviz
-      html-tidy
       htop
       inkscape
+      jujutsu
       less
       lorri
       mool-release.mool-server
