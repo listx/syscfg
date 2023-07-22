@@ -1415,11 +1415,8 @@ l_manageHook numScreens = composeOne $
   , className =? "Blender:Render"     -?> doFloat
   , resource  =? "Browser"            -?> doFloat
   , className =? "Xsane"              -?> doFloat
-  , className =? "Spektra"            -?> doFloat
   , className =? "Glade"              -?> doFloat
   , className =? "Anki"               -?> doFloat
-  , className =? "Qcp"                -?> doFloat
-  , className =? "mupen64plus"        -?> doFloat
   ]
   ++
   -- This is useful for auto-moving a terminal screen we spawn elsewhere in

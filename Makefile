@@ -71,8 +71,6 @@ else ifeq ('${P}','Darwin')
 else
 	ln -fs mpv.linux.conf                               mpv/mpv.conf
 endif
-mupen:
-	ln -fs ${C}/mupen/InputAutoCfg.ini                  /usr/share/mupen64plus
 nix:
 	ln -fns ${C}/nix                                    ${H}/.config/nix
 nixos:
@@ -173,7 +171,6 @@ zsh:
 	mool \
 	mpd \
 	mpv \
-	mupen \
 	nix \
 	nixos \
 	nixpkgs \
