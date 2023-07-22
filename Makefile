@@ -73,6 +73,8 @@ else
 endif
 mupen:
 	ln -fs ${C}/mupen/InputAutoCfg.ini                  /usr/share/mupen64plus
+nix:
+	ln -fns ${C}/nix                                    ${H}/.config/nix
 nixos:
 ifeq ('${T}','w0')
 	ln -fs ${C}/nixos/${T}/configuration.nix            /etc/nixos
@@ -172,6 +174,7 @@ zsh:
 	mpd \
 	mpv \
 	mupen \
+	nix \
 	nixos \
 	nixpkgs \
 	notmuch \
