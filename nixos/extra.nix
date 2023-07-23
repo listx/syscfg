@@ -11,6 +11,7 @@
     zsh
     git
     tig
+    jujutsu
     (emacsWithPackages (with pkgs.emacsPackagesNg; [ vterm ]))
     neovim
     editorconfig-core-c
@@ -23,6 +24,17 @@
     direnv
     gcal
 
+    # Dev tools
+    parallel
+    unixtools.xxd
+    dos2unix
+    jq
+    dhall
+    dhall-json
+    protobuf
+    tokei
+    util-linux
+
     # C/ASM
     clang
     gcc
@@ -33,6 +45,7 @@
     # Elixir
     elixir
     elixir_ls # Elixir Language Server
+    erlang
 
     # Go
     go
@@ -72,6 +85,7 @@
 
     # Nix
     alejandra # nix formatter
+    niv
 
     # Python
     pipenv
@@ -80,6 +94,8 @@
     python39Packages.flake8
 
     # Rust
+    cargo
+    rustc
     rustup
     rust-analyzer
     wasm-pack
@@ -191,6 +207,8 @@
     # Containerization
     docker
     kubectl
+    kind
+    ko
 
     # Finance
     hledger
@@ -198,14 +216,6 @@
     ledger
     hledger-ui
     hledger-web
-
-    # Other
-    parallel
-    unixtools.xxd
-    dos2unix
-    jq
-    dhall
-    dhall-json
   ];
 
   nixpkgs.overlays = [ (import ./overlay.nix) ];
