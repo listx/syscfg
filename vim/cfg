@@ -53,8 +53,8 @@ set incsearch
 autocmd CursorHold,CursorHoldI * let v:hlsearch = 0 | redraw
 
 set background=dark
-" Force 256 colors.
-set t_Co=256
+" Use 24-bit colors (aka "true color" support).
+set termguicolors
 
 " Explicitly set default colorscheme.
 colorscheme default
