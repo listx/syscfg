@@ -14,6 +14,9 @@ set tabstop=4
 set shiftwidth=4
 set expandtab
 
+" Linux Kernel style indentation.
+au FileType c,cpp set noexpandtab shiftwidth=8 softtabstop=8 tabstop=8
+
 " Backspace works in Insert mode (e.g. not inserting a ^?), but won't delete
 " over line breaks, or automatically-inserted indentation, or the place where
 " insert mode started. Use backspace=2 to solve this from
