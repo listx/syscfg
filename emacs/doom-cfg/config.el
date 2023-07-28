@@ -763,6 +763,10 @@ between begin_WORD ... end_WORD blocks."
       :map alchemist-mode-map
       :mnvi "C-k" nil
       :mnvi "C-j" nil)
+(add-hook 'c-mode-hook 'l/customize-c-mode)
+(defun l/customize-c-mode ()
+  (interactive)
+  (setq tab-width 8))
 (map! :after ccls
       :map (c-mode-map c++-mode-map)
       :mnvi "C-h" nil

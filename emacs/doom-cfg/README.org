@@ -361,6 +361,7 @@ other configurations that are pulled in. And so we define it first here.
 <<org>>
 <<org-roam>>
 <<elixir>>
+<<c-indentation>>
 <<c-keybindings>>
 <<format-onsave>>
 <<shell>>
@@ -2056,6 +2057,18 @@ https://emacs.stackexchange.com/a/46992/13006.
 #+end_src
 
 * C (C, C++, Objective-C, etc)
+
+** Indentation
+
+We use Linux Kernel style indentation with tabs understood to be 8 characters wide.
+
+#+name: c-indentation
+#+begin_src emacs-lisp
+(add-hook 'c-mode-hook 'l/customize-c-mode)
+(defun l/customize-c-mode ()
+  (interactive)
+  (setq tab-width 8))
+#+end_src
 
 ** Keybindings
 
