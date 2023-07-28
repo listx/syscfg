@@ -52,8 +52,6 @@ set incsearch
 " https://stackoverflow.com/questions/22798473/vim-how-to-turn-off-search-highlight-after-timeout-x-seconds
 autocmd CursorHold,CursorHoldI * let v:hlsearch = 0 | redraw
 
-" Highlight cursor horizontally.
-set cursorline
 set background=dark
 " Force 256 colors.
 set t_Co=256
