@@ -80,23 +80,6 @@ let mapleader = ","
 " ~/.vimrc).
 if !exists("autocommands_loaded")
     let autocommands_loaded = 1
-    " Integration with my "nox" program.
-    au BufEnter * nmap <leader>c !!nox<cr>
-    au BufEnter * vmap <leader>c !nox<cr>
-    au BufEnter * nmap <leader>C !!nox -u<cr>
-    au BufEnter * vmap <leader>C !nox -u<cr>
-    au BufEnter *.c,*.cpp,*.h,*.hpp nmap <leader>c1 !!nox -l c<cr>
-    au BufEnter *.c,*.cpp,*.h,*.hpp vmap <leader>c1 !nox -l c<cr>
-    au BufEnter *.c,*.cpp,*.h,*.hpp nmap <leader>CC !!nox -l c -u<cr>
-    au BufEnter *.c,*.cpp,*.h,*.hpp vmap <leader>CC !nox -l c -u<cr>
-    au BufEnter *.ly,*.tex nmap <leader>c1 !!nox -l tex<cr>
-    au BufEnter *.ly,*.tex vmap <leader>c1 !nox -l tex<cr>
-    au BufEnter *.ly,*.tex nmap <leader>CC !!nox -l tex -u<cr>
-    au BufEnter *.ly,*.tex vmap <leader>CC !nox -l tex -u<cr>
-    au BufEnter *.hs nmap <leader>c1 !!nox -l hs<cr>
-    au BufEnter *.hs vmap <leader>c1 !nox -l hs<cr>
-    au BufEnter *.hs nmap <leader>CC !!nox -l hs -u<cr>
-    au BufEnter *.hs vmap <leader>CC !nox -l hs -u<cr>
 
     " Highlight red any trailing whitespace.
     highlight ExtraWhitespace ctermbg=red guibg=red
