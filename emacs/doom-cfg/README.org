@@ -2065,8 +2065,9 @@ We use Linux Kernel style indentation with tabs understood to be 8 characters wi
 (add-hook 'c-mode-hook 'l/customize-c-mode)
 (defun l/customize-c-mode ()
   (interactive)
-  (setq c-basic-offset 8)
-  (setq tab-width 8))
+  (setq c-default-style "linux"
+        c-basic-offset 8
+        tab-width 8))
 #+end_src
 
 ** Keybindings

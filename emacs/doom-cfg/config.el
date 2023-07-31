@@ -766,8 +766,9 @@ between begin_WORD ... end_WORD blocks."
 (add-hook 'c-mode-hook 'l/customize-c-mode)
 (defun l/customize-c-mode ()
   (interactive)
-  (setq c-basic-offset 8)
-  (setq tab-width 8))
+  (setq c-default-style "linux"
+        c-basic-offset 8
+        tab-width 8))
 (map! :after ccls
       :map (c-mode-map c++-mode-map)
       :mnvi "C-h" nil
