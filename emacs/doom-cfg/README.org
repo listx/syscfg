@@ -80,7 +80,7 @@ DOOM requires 3 configuration files in the =$DOOMDIR=:
 
        :ui
        deft              ; notational velocity for Emacs
-       doom              ; what makes DOOM look the way it does
+       ;doom              ; what makes DOOM look the way it does
        ;;doom-dashboard    ; a nifty splash screen for Emacs
        ;;doom-quit         ; DOOM quit-message prompts when you quit Emacs
        ;;(emoji +unicode)  ; 🙂
@@ -327,6 +327,7 @@ Emacs understand that sequence.
 ;(unpin! t)
 (package! citeproc)
 (package! column-enforce-mode)
+(package! doom-themes)
 (package! format-all)
 (package! git-gutter)
 (package! org-fancy-priorities)
@@ -1250,11 +1251,6 @@ directories. The overall structure here is based on the example given in
 #+begin_src emacs-lisp
 (use-package! doom-themes
   :config
-  (cond
-   ((string= "lo" (daemonp))
-    (load-theme 'doom-one t))
-   (t
-    (load-theme 'doom-zenburn t)))
   (l/reset-faces))
 #+end_src
 
