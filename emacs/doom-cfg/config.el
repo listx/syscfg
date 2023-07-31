@@ -1226,6 +1226,8 @@ Also add the number of windows in the window configuration."
     `(notmuch-tree-no-match-subject-face :foreground ,l/color-foreground)
     `(notmuch-wash-cited-text :foreground ,l/color-foreground)
 
+    `(org-hide :foreground ,l/color-background)
+
     `(git-gutter:modified :foreground ,l/color-xUltraBrightMagenta)
     `(git-gutter:added :foreground ,l/color-xUltraBrightGreen)
     `(git-gutter:deleted :foreground ,l/color-xUltraBrightRed)
