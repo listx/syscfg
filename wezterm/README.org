@@ -176,6 +176,18 @@ colors = {
 cursor_blink_rate = 0,
 #+end_src
 
+** (Disabled) Help poorly-written TUI programs flicker less
+
+See https://github.com/zed-industries/wezterm/commit/7caaf136e49c7f1785be69403c54a734a6ce6f27.
+
+This doesn't appear to help terminal emacs much (flicker caused by using a
+different background color than the one used by default in the terminal).
+
+#+name: flicker_reduction
+#+begin_src lua
+mux_output_parser_coalesce_delay_ms = 100,
+#+end_src
+
 * Keybindings
 
 #+name: keybindings
