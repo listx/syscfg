@@ -1256,6 +1256,11 @@ Also add the number of windows in the window configuration."
 (add-hook 'c-mode-hook (lambda () (rainbow-turn-off)))
 (use-package! doom-themes
   :config
+  (cond
+   ((string= "lo" (daemonp))
+    (load-theme 'doom-one t))
+   (t
+    (load-theme 'doom-zenburn t)))
   (l/reset-faces))
 ;; Enable soft word-wrap almost everywhere (including elisp).
 (+global-word-wrap-mode +1)

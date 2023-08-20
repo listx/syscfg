@@ -49,7 +49,6 @@
 ;(unpin! t)
 (package! citeproc)
 (package! column-enforce-mode)
-(package! doom-themes)
 (package! format-all)
 (package! git-gutter)
 (package! org-fancy-priorities)
