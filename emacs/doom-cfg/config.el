@@ -1197,6 +1197,7 @@ Also add the number of windows in the window configuration."
     `(hl-line :background ,(doom-darken (doom-color 'bg-alt) 0.4))
     '(vim-empty-lines-face :weight bold)
 
+    `(auto-dim-other-buffers-face :foreground ,(doom-color 'base8) :background ,(doom-darken (doom-color 'bg-alt) 0.6))
     '(org-headline-done        :foreground "#aaaaaa" :weight bold)
 
     ; Use bright visuals for coloring regions and interactive search hits.
@@ -1288,6 +1289,11 @@ Also add the number of windows in the window configuration."
   (add-hook 'text-mode-hook 'vim-empty-lines-mode))
 
 (use-package! doom-modeline)
+
+; Dim buffers in inactive windows to make the current one "pop".
+(use-package! auto-dim-other-buffers
+ :config
+ (auto-dim-other-buffers-mode))
 
 ; Always enable the tab bar, even if there is just one buffer showing (such as
 ; when we open a single buffer).
