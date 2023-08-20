@@ -1256,12 +1256,12 @@ Also add the number of windows in the window configuration."
 (add-hook 'c-mode-hook (lambda () (rainbow-turn-off)))
 (use-package! doom-themes
   :config
+  (advice-add 'doom-init-theme-h :after #'l/reset-faces)
   (cond
    ((string= "lo" (daemonp))
     (load-theme 'doom-one t))
    (t
-    (load-theme 'doom-zenburn t)))
-  (l/reset-faces))
+    (load-theme 'doom-zenburn t))))
 ;; Enable soft word-wrap almost everywhere (including elisp).
 (+global-word-wrap-mode +1)
 
@@ -1287,9 +1287,7 @@ Also add the number of windows in the window configuration."
   (add-hook 'prog-mode-hook 'vim-empty-lines-mode)
   (add-hook 'text-mode-hook 'vim-empty-lines-mode))
 
-(use-package! doom-modeline
-  :config
-  (l/reset-faces))
+(use-package! doom-modeline)
 
 ; Always enable the tab bar, even if there is just one buffer showing (such as
 ; when we open a single buffer).

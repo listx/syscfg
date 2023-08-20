@@ -1250,12 +1250,12 @@ directories. The overall structure here is based on the example given in
 #+begin_src emacs-lisp
 (use-package! doom-themes
   :config
+  (advice-add 'doom-init-theme-h :after #'l/reset-faces)
   (cond
    ((string= "lo" (daemonp))
     (load-theme 'doom-one t))
    (t
-    (load-theme 'doom-zenburn t)))
-  (l/reset-faces))
+    (load-theme 'doom-zenburn t))))
 #+end_src
 
 #+name: colors-generator
@@ -2300,9 +2300,7 @@ the simpler modes that do not have a formatter, but for now we don't bother.
   (add-hook 'prog-mode-hook 'vim-empty-lines-mode)
   (add-hook 'text-mode-hook 'vim-empty-lines-mode))
 
-(use-package! doom-modeline
-  :config
-  (l/reset-faces))
+(use-package! doom-modeline)
 
 ; Always enable the tab bar, even if there is just one buffer showing (such as
 ; when we open a single buffer).
