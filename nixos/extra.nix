@@ -12,7 +12,7 @@
     git
     tig
     jujutsu
-    (emacsWithPackages (with pkgs.emacsPackagesNg; [ vterm ]))
+    emacs29
     neovim
     editorconfig-core-c
     ripgrep
