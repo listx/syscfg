@@ -10,24 +10,21 @@ local merge = function(a, b)
 end
 local hostname = wezterm.hostname()
 local my_font
-if hostname == 'k0' then
-  my_font = {
-    -- These are also known as OpenType features. The "cv06" here is defined in
-    -- the font's website in the "Customize" section; it makes the "6" and "9"
-    -- numerals have a straight, not curved, tail.
-    harfbuzz_features = {"cv06=1"},
-    font = wezterm.font_with_fallback {
-      "Commit Mono"
-    },
-    font_size = 10.5,
+my_font = {
+  -- These are also known as OpenType features. The "cv06" here is defined in
+  -- the font's website in the "Customize" section; it makes the "6" and "9"
+  -- numerals have a straight, not curved, tail.
+  harfbuzz_features = {"cv06=1"},
+  font = wezterm.font_with_fallback {
+    "Commit Mono"
+  },
+  font_size = 10.5,
+}
+if hostname ~= 'k0' then
+  my_font.font = wezterm.font_with_fallback {
+    "CommitMono"
   }
-else
-  my_font = {
-    font = wezterm.font_with_fallback {
-      "Hack"
-    },
-    font_size = 14.0,
-  }
+  my_font.font_size = 14.0
 end
 local general_config = {
   enable_tab_bar = false,
