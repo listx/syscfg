@@ -12,9 +12,14 @@ local hostname = wezterm.hostname()
 local my_font
 if hostname == 'k0' then
   my_font = {
-    harfbuzz_features = {"calt=0", "clig=0", "liga=0"},
-    line_height = 0.9,
-    font_size = 10.0,
+    -- These are also known as OpenType features. The "cv06" here is defined in
+    -- the font's website in the "Customize" section; it makes the "6" and "9"
+    -- numerals have a straight, not curved, tail.
+    harfbuzz_features = {"cv06=1"},
+    font = wezterm.font_with_fallback {
+      "Commit Mono"
+    },
+    font_size = 10.5,
   }
 else
   my_font = {
