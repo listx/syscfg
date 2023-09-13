@@ -464,6 +464,7 @@ LINK-NAME."
                              (?4 :foreground "#ccc")))
   
   (add-hook 'org-mode-hook 'org-fancy-priorities-mode)
+  (add-hook 'org-mode-hook (lambda () (org-indent-mode -1)))
   (add-hook 'org-mode-hook 'l/org-colors))
 
 ;; Dim org-block face (source code blocks) separately, because they are not

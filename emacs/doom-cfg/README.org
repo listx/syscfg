@@ -1539,6 +1539,7 @@ convention.
         org-use-effective-time t)
   <<set-auto-fill-mode>>
   <<org-fancy-priorities>>
+  (add-hook 'org-mode-hook (lambda () (org-indent-mode -1)))
   (add-hook 'org-mode-hook 'l/org-colors))
 
 ;; Dim org-block face (source code blocks) separately, because they are not
