@@ -30,8 +30,6 @@ else
 endif
 bash:
 	ln -fs ${C}/bash/.bashrc                            ${H}
-cmus:
-	ln -fns ${C}/cmus                                   ${H}/.cmus
 emacs:
 	git -C ${C} submodule update --init ${C}/emacs/doom-upstream
 	# Point .emacs.d to upstream doom code.
@@ -161,7 +159,6 @@ zsh:
 .PHONY: \
 	alacritty \
 	bash \
-	cmus \
 	emacs \
 	git \
 	gpg \
