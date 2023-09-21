@@ -106,7 +106,7 @@ DOOM requires 3 configuration files in the =$DOOMDIR=:
        (evil +everywhere); come to the dark side, we have cookies
        file-templates    ; auto-snippets for empty files
        fold              ; (nigh) universal code folding
-       ;(format +onsave)  ; automated prettiness
+       (format +onsave)  ; automated prettiness
        ;;god               ; run Emacs commands without modifier keys
        ;;lispy             ; vim for lisp, for people who don't like vim
        multiple-cursors  ; editing in many places at once
@@ -328,7 +328,6 @@ Emacs understand that sequence.
 (package! auto-dim-other-buffers)
 (package! citeproc)
 (package! column-enforce-mode)
-(package! format-all)
 (package! git-gutter)
 (package! org-fancy-priorities)
 (package! protobuf-mode)
@@ -1211,18 +1210,12 @@ script which knows what to do depending on the environment."
 <<lsp>>
 #+end_src
 
-** Enable automatic code formatting
+** Customize automatic code formatting
 
-This is generally useful. Doom by default sets this with the =(format +onsave)=
-setting which enables =format-all-mode= everywhere, but this is too simplistic
-and not useful for us. For example, for the Git project, although it has a
-=.clang-format= (https://clang.llvm.org/docs/ClangFormat.html) file checked in,
-it only uses it as a reference and the rules there are not actually enforced for
-existing code.
-
-Here we turn on format-all-mode everywhere, and also disable it for certain
-directories. The overall structure here is based on the example given in
-=format-all-mode='s documentation.
+We have to disable formatting for certain conditions. For example, for the Git
+project, although it has a =.clang-format=
+(https://clang.llvm.org/docs/ClangFormat.html) file checked in, it only uses it
+as a reference and the rules there are not actually enforced for existing code.
 
 #+name: format-onsave
 #+begin_src emacs-lisp
@@ -1240,7 +1233,7 @@ directories. The overall structure here is based on the example given in
                     l/banned-auto-format-dirs))))))
 
 (defun l/after-change-major-mode ()
-  (format-all-mode (if (l/auto-format-buffer-p) 1 -1)))
+  (apheleia-mode (if (l/auto-format-buffer-p) 1 -1)))
 
 (add-hook! 'after-change-major-mode-hook 'l/after-change-major-mode)
 #+end_src

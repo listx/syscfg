@@ -50,7 +50,6 @@
 (package! auto-dim-other-buffers)
 (package! citeproc)
 (package! column-enforce-mode)
-(package! format-all)
 (package! git-gutter)
 (package! org-fancy-priorities)
 (package! protobuf-mode)

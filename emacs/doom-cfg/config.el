@@ -790,7 +790,7 @@ between begin_WORD ... end_WORD blocks."
                     l/banned-auto-format-dirs))))))
 
 (defun l/after-change-major-mode ()
-  (format-all-mode (if (l/auto-format-buffer-p) 1 -1)))
+  (apheleia-mode (if (l/auto-format-buffer-p) 1 -1)))
 
 (add-hook! 'after-change-major-mode-hook 'l/after-change-major-mode)
 (after! sh-script
