@@ -1206,6 +1206,11 @@ Also add the number of windows in the window configuration."
     '(isearch  :foreground "dark red" :background "pink" :weight bold)
     '(region  :foreground "dark red" :background "pink" :weight bold)
 
+    ; vertico
+    `(vertico-multiline       :foreground ,l/color-foreground)
+    `(vertico-group-title     :foreground ,l/color-xBrightOrange)
+    `(vertico-group-separator :foreground ,l/color-xBrightOrange :strike-through t)
+
     `(tab-bar :background ,(doom-darken (doom-color 'bg-alt) 0.2))
     `(tab-bar-tab
        :background ,(doom-color 'base8)
