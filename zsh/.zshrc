@@ -486,7 +486,6 @@ compdef _jj jj
 # because even the initially-attempted invocation will get completions.
 bindkey -M viins " " __l_lazy_load_completions
 bindkey -M viins "^I" __l_lazy_load_completions # ^I is the TAB key
-zle -N __l_maybe_load_completions
 zle -N __l_lazy_load_completions
 
 # Uncomment to profile.

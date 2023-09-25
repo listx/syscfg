@@ -86,14 +86,43 @@ __l_maybe_load_completions_and_autocorrect()
   # Remove leading whitespace from BUFFER, to catch cases where we enter some
   # spaces or tabs before actually typing the command name. See
   # https://stackoverflow.com/a/3352015.
+
+  # The BUFFER may be something that we type from scratch (where it may have
+  # some leading whitespace), or it may be something we load in from C-r
+  # which already has many words in it. In both cases we want to (1) remove any
+  # leading whitespace, and (2) isolate the first word found. This
+  # whitespace-free first word is the name of the command we want to complete
+  # (and check completions for).
   local leading_whitespace
+  local cmd_all_words
+  local cmd_first_word
+  local cmd_remaining_words
   leading_whitespace="${BUFFER%%[![:space:]]*}"
-  case "${BUFFER#"${leading_whitespace}"}" in
-  kl)
-    # Replace "kl" with "kubectl" because it's more explicit and better
-    # for copy-pasting to others who may not use the same abbreviations as us.
-    BUFFER="${leading_whitespace=}"kubectl
-    zle end-of-line
+  # Remove leading whitespace.
+  cmd_all_words="${BUFFER#${leading_whitespace}}"
+  # Get the first word without the leading whitespace (if any).
+  cmd_first_word="${cmd_all_words%%[[:space:]]*}"
+  # Get remaining words.
+  cmd_remaining_words="${cmd_all_words#${leading_whitespace}${cmd_first_word}}"
+  case "${cmd_first_word}" in
+  kl|kubectl)
+    # The first word could be either "kl " or "kubectl". For "kl", expand it out
+    # to "kubectl" because it's more explicit and better for copy-pasting to
+    # others who may not use the same abbreviations as us.  Preserve any leading
+    # whitespace and trailing words.
+    if [[ "${cmd_first_word}" == "kl" ]]; then
+      BUFFER="${leading_whitespace=}kubectl${cmd_remaining_words=}"
+      # Move to the end of the line because our cursor is at the end of "l" in
+      # "kl" and we just put in the longer "kubectl".
+      zle end-of-line
+    fi
+
+    # For the "kubectl" case, we'll see this case if we are doing
+    # C-r and going back through history where we typed in "kl" but it was
+    # replaced (by us) with "kubectl" when we pressed TAB or space after "kl"
+    # earlier, but in another shell process (history is saved across
+    # processes). There is nothing extra to do because "kubectl" is already what
+    # we want.
 
     if (( "${__l_already_loaded_kl_comps:-0}" )); then
       return
