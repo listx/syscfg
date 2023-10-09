@@ -169,7 +169,7 @@ construct_prompt()
      	local prompt_line_2=" "
 	else
 		# Date, time, Zsh keymap indicator, exit code, Git, and VirtualEnv.
-		local prompt_line_1="${global_timestamp}${global_keymap_indicator}${global_venv_info}${global_cmd_exit_status}${global_prompt_git}${global_user_host}${global_prompt_path_short}"
+		local prompt_line_1="${global_timestamp}<${global_keymap_indicator}> ${global_venv_info}${global_cmd_exit_status}${global_prompt_git}${global_user_host}${global_prompt_path_short}"
 
 		local prompt_line_2=" "
 
