@@ -19,9 +19,10 @@ set main-options = -n500
 set show-changes = no
 
 # Keybindings.
-bind generic ) next
-bind generic ( previous
-bind generic } parent
+bind generic h parent
+bind generic l back
+bind generic <Ctrl-h> view-help
+bind generic o view-log
 bind generic y !@bash -c "git rev-parse %(commit) \
 	| head -c -1 \
 	| ~/syscfg/script/copy-clipboard.sh"
