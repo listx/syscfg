@@ -1198,7 +1198,7 @@ Also add the number of windows in the window configuration."
     `(hl-line :background ,(doom-darken (doom-color 'bg-alt) 0.4))
     '(vim-empty-lines-face :weight bold)
 
-    `(auto-dim-other-buffers-face :foreground ,(doom-color 'base8) :background ,(doom-darken (doom-color 'bg-alt) 0.6))
+    `(auto-dim-other-buffers-face :background ,(doom-darken (doom-color 'bg-alt) 0.6))
     '(org-headline-done        :foreground "#aaaaaa" :weight bold)
 
     ; Use bright visuals for coloring regions and interactive search hits.
