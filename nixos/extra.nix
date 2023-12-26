@@ -35,6 +35,11 @@
     tokei
     util-linux
 
+    # The various language-specific packages here are meant to help make Emacs'
+    # Flycheck work better. This is not a perfect solution because ideally the
+    # version of Elixir, Rust, etc. is exactly the same as the version used in
+    # the project at hand.
+
     # C/ASM
     clang
     gcc
@@ -72,9 +77,6 @@
     hlint
     stack
 
-    # HTML
-    html-tidy
-
     # JavaScript
     nodejs
     nodePackages.js-beautify
@@ -89,9 +91,9 @@
 
     # Python
     pipenv
-    python39
-    python39Packages.pylint
-    python39Packages.flake8
+    python3
+    python3Packages.pylint
+    python3Packages.flake8
 
     # Rust
     cargo

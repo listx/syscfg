@@ -32,6 +32,7 @@
 
   # allow installation of 'ati_unfree' video driver and also Firefox with Flash
   nixpkgs.config.allowUnfree = true;
+  nixpkgs.config.nvidia.acceptLicense = true;
 
   # Avoid "lacks a valid signature" error from using nix-copy-closures from
   # another machine on the local LAN. See
@@ -67,7 +68,7 @@
   fonts = {
     fontDir.enable = true;
     enableGhostscriptFonts = true;
-    fonts = with pkgs; [
+    packages = with pkgs; [
       baekmuk-ttf
       corefonts
       dejavu_fonts
