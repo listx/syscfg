@@ -394,6 +394,7 @@ other configurations that are pulled in. And so we define it first here.
 <<colors>>
 <<theme>>
 <<misc-ui>>
+<<known-emacs-bugs>>
 
 ;; Here are some additional functions/macros that could help you configure Doom:
 ;;
@@ -2349,6 +2350,37 @@ the simpler modes that do not have a formatter, but for now we don't bother.
 (setq evil-insert-state-cursor 'box)
 (setq evil-emacs-state-cursor  'box)
 #+end_src
+
+*** TTY buffers and flickering
+
+[[https://github.com/emacs-mirror/emacs/commit/cbac94b4aeecdf57e2a1f3e95e27ec76505ae964][Emacs 29.1 introduced]] =tty--set-output-buffer-size= which allows you to increase
+the default buffer size. By default this is system-dependent, but can be as low
+as 512 on some systems. It depends on the value of =BUFSIZ= in
+=/usr/include/stdio.h=. For example, it could look like
+
+#+begin_src c
+#define BUFSIZ 8192
+#+end_src
+
+Setting a higher buffer size will make the underlying I/O buffering system
+perform fewer "flushing" of the terminal display, resulting in less flickering.
+The original author of the patch that introduced =tty--set-output-buffer-size=
+setting suggested [[https://lists.gnu.org/archive/html/bug-gnu-emacs/2022-09/msg00904.html][64KB]]. Unfortunately, invoking this function results in the TTY
+being suspended and resumed (in order to pick up the new setting), and makes it
+unusable because it makes =emacsclient= get suspended as a background job,
+breaking the display completely in the process.
+
+#+name: known-emacs-bugs
+#+begin_src emacs-lisp
+;; Broken. See README.org for discussion.
+;; (tty--set-output-buffer-size (* 128 1024))
+#+end_src
+
+On a related note, there is [[https://www.reddit.com/r/emacs/comments/q2r3sc/comment/hglcbhq/?utm_source=share&utm_medium=web2x&context=3][an idea]] to use "DEC private mode 2026" to achieve
+even better buffering (essentially "double buffering"). However, this has not
+been upstreamed yet. For reference [[https://github.com/wez/wezterm/blob/6c7aa8159f8072ff3afdcb7dfa6852665f7ab58d/docs/escape-sequences.md?plain=1#L355][WezTerm supports mode 2026]]. See [[https://gist.github.com/Patryk27/c7b9dac8113f4ccdb2ef74e0083d9d41][this patch]]
+for how it would work in Emacs (using a different code than 2026 but the idea is
+the same).
 
 *** Org
 

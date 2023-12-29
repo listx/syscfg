@@ -1341,6 +1341,8 @@ Also add the number of windows in the window configuration."
 (setq evil-normal-state-cursor 'box)
 (setq evil-insert-state-cursor 'box)
 (setq evil-emacs-state-cursor  'box)
+;; Broken. See README.org for discussion.
+;; (tty--set-output-buffer-size (* 128 1024))
 
 ;; Here are some additional functions/macros that could help you configure Doom:
 ;;
