@@ -23,11 +23,13 @@ copy_clipboard()
 
 main()
 {
+	local input
+	input=$(</dev/stdin)
 	if [[ "${1:-}" == "--base64" ]]; then
-		base64 --decode | copy_prefer_tmux
-	else
-		copy_prefer_tmux
+		input="$(echo -n "${input}" | base64 --decode)"
 	fi
+	echo -n "${input}" | copy_prefer_tmux
+	echo "${input}"
 }
 
 main "$@"
