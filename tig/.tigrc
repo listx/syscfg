@@ -18,16 +18,33 @@ set main-options = -n500
 # changes).
 set show-changes = no
 
+# Disable conflicting keybindings (otherwise tig complains).
+bind generic <Ctrl-Y> none
+
 # Keybindings.
 bind generic h parent
 bind generic l back
 bind generic <Ctrl-h> view-help
 bind generic o view-log
-bind generic y !@bash -c "git rev-parse %(commit) \
+
+# Copy 40-char hex string of commit.
+bind generic y +bash -c "git rev-parse %(commit) \
 	| head -c -1 \
 	| ~/syscfg/script/copy-clipboard.sh"
-bind generic Y !@bash -c "git show --no-patch --pretty=reference %(commit) \
+
+# Copy human-readable description (short hex string, commit title, date).
+bind generic Y +bash -c "git show --no-patch --pretty=reference %(commit) \
 	| head -c -1 \
 	| ~/syscfg/script/copy-clipboard.sh"
+
+# Copy commit message.
+bind generic <Ctrl-y> +bash -c "git cat-file commit %(commit) \
+	| sed -e '1,/^$/d' \
+	| ~/syscfg/script/copy-clipboard.sh"
+
+# Force branch to point to current commit.
+bind main    B ?@git branch -f "%(prompt Force branch to point here: )" %(commit)
+
+bind main    <Ctrl-r> refresh
 bind main    R !git rebase -i %(commit)
 bind generic <Backspace> move-page-up
