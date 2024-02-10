@@ -75,8 +75,11 @@
       ipafont
       libertine
       source-code-pro
-      source-sans-pro
-      source-serif-pro
+      source-sans
+      source-serif
+      source-han-sans
+      source-han-serif
+      source-han-mono
       terminus_font
       ubuntu_font_family
     ];
