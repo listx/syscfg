@@ -20,10 +20,16 @@ set show-changes = no
 
 # Disable conflicting keybindings (otherwise tig complains).
 bind generic <Ctrl-Y> none
+bind generic J none
+bind generic K none
+bind generic <Ctrl-j> none
+bind generic <Ctrl-k> none
 
 # Keybindings.
 bind generic h parent
 bind generic l back
+bind generic <Ctrl-j> next
+bind generic <Ctrl-k> previous
 bind generic <Ctrl-h> view-help
 bind generic o view-log
 
