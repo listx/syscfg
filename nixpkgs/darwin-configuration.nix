@@ -1,7 +1,7 @@
 { config, pkgs, ... }:
 
 let
-  mool-release = import ../prog/mool/package/build.nix;
+  mool-release = import ../../prog/mool/package/build.nix;
   HOME = builtins.getEnv "HOME";
 in
 {
