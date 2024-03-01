@@ -474,7 +474,7 @@ zcomet load "smeagol74/zsh-fzf-pass"
 autoload -U compinit
 compinit
 
-source <(jj util completion --zsh)
+source <(jj util completion zsh)
 compdef _jj jj
 
 # Instead of using "qoomon/zsh-lazyload", we simply examine the letters that are
