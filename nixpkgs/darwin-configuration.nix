@@ -41,12 +41,10 @@ in
       pass
       pdf2svg
       procps
-      rtorrent
       ripgrep
       rustfmt
       source-serif
       stack
-      texlive.combined.scheme-full
       tig
       tmux
       tree
