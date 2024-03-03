@@ -10,7 +10,6 @@ in
   environment.systemPackages = with pkgs;
     [ alacritty
       bashInteractive
-      clang
       coreutils
       dhall
       direnv
