@@ -96,6 +96,8 @@ export GCC_COLORS=1
 # path to local nixpkgs git repo
 export NIXPKGS=~/prog/foreign/nixpkgs
 
+export KUBECONFIG=~/.kube/config
+
 # Add Golang binaries to the PATH.
 __l_prepend_path ~/go/bin
 

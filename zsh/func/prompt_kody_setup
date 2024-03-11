@@ -160,6 +160,7 @@ construct_prompt()
 {
 	set_globals
 
+	# Older mool version.
 	if [[ -n "${MOOL_PS1:-}" ]]; then
 		# We have to put the MOOL_PS1 value inside "%{..%}" because this tells
 		# Zsh to interpret the ANSI escape sequences inside the MOOL_PS1
@@ -167,6 +168,14 @@ construct_prompt()
 		# See https://stackoverflow.com/a/30581694/437583.
 		PS1="%{${MOOL_PS1}%}${prompt_newline} \$ "
      	local prompt_line_2=" "
+	# Newer mool version with 2-line style.
+	elif [[ -n "${MOOL_PS1_LINE1:-}" ]]; then
+		if [[ -n "${MOOL_PS1_LINE2:-}" ]]; then
+			PS1="%{${MOOL_PS1_LINE1}%}${prompt_newline}%{${MOOL_PS1_LINE2}%}${prompt_newline} \$ "
+		else
+			PS1="%{${MOOL_PS1_LINE1}%}${prompt_newline} \$ "
+		fi
+		local prompt_line_2=" "
 	else
 		# Date, time, Zsh keymap indicator, exit code, Git, and VirtualEnv.
 		local prompt_line_1="${global_timestamp}<${global_keymap_indicator}> ${global_venv_info}${global_cmd_exit_status}${global_prompt_git}${global_user_host}${global_prompt_path_short}"
