@@ -10,6 +10,8 @@ in
   environment.systemPackages = with pkgs;
     [ alacritty
       bashInteractive
+      clojure
+      clojure-lsp
       coreutils
       dhall
       difftastic

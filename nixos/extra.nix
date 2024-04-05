@@ -48,6 +48,10 @@
     cmake
     cppcheck
 
+    # Clojure
+    clojure
+    clojure-lsp
+
     # Elixir
     elixir
     elixir_ls # Elixir Language Server
