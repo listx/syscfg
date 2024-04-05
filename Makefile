@@ -40,6 +40,7 @@ emacs:
 	cd ${C}/script && ln -fs ../emacs/doom-upstream/bin/doom
 git:
 	ln -fs ${C}/git/cfg.personal.conf                   ${H}/.gitconfig
+	ln -fs ${C}/git/gitignore                           ${H}/.gitignore
 	ln -fns ${C}/git/template                           ${H}/.git-templates
 	ln -fs ${C}/git/sendemail-aliases                   ${H}/.git-sendemail-aliases
 gpg:
