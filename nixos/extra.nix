@@ -43,6 +43,7 @@
 
     # C/ASM
     clang
+    clang-tools # clangd LSP
     gcc
     binutils
     cmake

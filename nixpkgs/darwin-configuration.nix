@@ -10,6 +10,7 @@ in
   environment.systemPackages = with pkgs;
     [ alacritty
       bashInteractive
+      clang-tools
       clojure
       clojure-lsp
       coreutils
