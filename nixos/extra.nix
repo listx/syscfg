@@ -10,6 +10,7 @@
     tmux
     zsh
     git
+    difftastic
     tig
     jujutsu
     emacs29

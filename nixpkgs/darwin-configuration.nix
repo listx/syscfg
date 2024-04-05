@@ -12,6 +12,7 @@ in
       bashInteractive
       coreutils
       dhall
+      difftastic
       direnv
       dos2unix
       emacs
