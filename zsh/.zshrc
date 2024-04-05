@@ -222,7 +222,7 @@ alias rsm="rand_open norecurse mpv m3u $ft_mov"
 alias rsmm="rand_open recurse mpv\ --loop-file=inf\ \ --playlist m3u $ft_mov"
 
 alias g='git'
-alias gbr='git branch --sort=authordate'
+alias gbr='git branch --sort=committerdate'
 alias gc='git commit'
 alias gca='git commit --amend'
 alias gcan='git commit --amend --no-edit'
