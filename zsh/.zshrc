@@ -66,6 +66,9 @@ for t in $ft_pic; do LS_COLORS+="*.$t=35:"; done
 for t in $ft_mov; do LS_COLORS+="*.$t=1;35:"; done
 for t in $ft_snd; do LS_COLORS+="*.$t=34:"; done
 export LS_COLORS
+# Make "ls" show dotfiles first.
+# E.g., show ".a .b .c A B C" instead of ".a A .b B .c C".
+export LC_COLLATE=C
 
 # colors for the 'less' pager
 export LESS_TERMCAP_md=$'\x1b[1;34m'      # begin bold
