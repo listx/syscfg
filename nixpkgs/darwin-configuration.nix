@@ -1,7 +1,6 @@
 { config, pkgs, ... }:
 
 let
-  mool-release = import "${HOME}/prog/mool/package/build.nix";
   HOME = builtins.getEnv "HOME";
 in
 {
@@ -36,8 +35,6 @@ in
       jujutsu
       less
       lorri
-      mool-release.mool-server
-      mool-release.mool-client
       mpv
       neovim
       nodejs
@@ -58,20 +55,6 @@ in
       zsh
       zstd
     ];
-
-  # Enable mools with launchd.
-  launchd.user.agents.mools = {
-    script = "${mool-release.mool-server}/bin/mools start";
-    environment = {
-      RELEASE_COOKIE = "${HOME}/.mool/cookie";
-      LUA_PATH = "${HOME}/.mool/?.lua";
-    };
-    #path = [ mool-release.mool-server ];
-    serviceConfig = {
-      KeepAlive = true;
-      RunAtLoad = true;
-    };
-  };
 
   # Enable Karabiner-Elements.
   services.karabiner-elements.enable = true;

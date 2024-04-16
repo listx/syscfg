@@ -26,7 +26,6 @@
       8080 # lh (linus's helper)
 
       4369 # epmd (erlang port mapper daemon)
-      33001 # mools
     ];
   };
 

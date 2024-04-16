@@ -54,11 +54,6 @@ karabiner:
 lesskey:
 	ln -fs ${C}/lesskey/cfg                             ${H}/.lesskey
 	lesskey
-mool:
-	ln -fns ${C}/mool                                   ${H}/.mool
-	set -e && \
-		mool_location=$$(readlink $$(which mools)) && \
-		cp -f $${mool_location%/bin/mools}/share/mool/sample/* ${H}/.mool
 mpd:
 	ln -fns ${C}/mpd                                    ${H}/.config/mpd
 mpv:
@@ -166,7 +161,6 @@ zsh:
 	gtk \
 	karabiner \
 	lesskey \
-	mool \
 	mpd \
 	mpv \
 	nix \
