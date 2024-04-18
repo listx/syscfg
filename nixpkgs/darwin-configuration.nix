@@ -34,10 +34,12 @@ in
       inkscape
       jujutsu
       less
+      lieer
       lorri
       mpv
       neovim
       nodejs
+      notmuch
       pass
       pdf2svg
       procps
