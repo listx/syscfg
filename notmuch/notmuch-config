@@ -1,18 +1,15 @@
 # .notmuch-config - Configuration file for the notmuch mail system
 #
 # For more information about notmuch, see https://notmuchmail.org
-
 # Database configuration
 #
 # The only value supported here is 'path' which should be the top-level
 # directory where your mail currently exists and to where mail will be
 # delivered in the future. Files should be individual email messages.
-# Notmuch will store its database within a sub-directory of the path configured
-# here named ".notmuch".
-# NOTE: According to notmuch-config(1), it is either $MAILDIR or $HOME/mail.
+# Notmuch will store its database within a sub-directory of the path
+# configured here named ".notmuch".
 #
 [database]
-
 # User configuration
 #
 # Here is where you can let notmuch know how you would like to be
@@ -32,7 +29,6 @@
 name=Linus Arver
 primary_email=linusarver@gmail.com
 other_email=linus@ucla.edu
-
 # Configuration for "notmuch new"
 #
 # The following options are supported here:
@@ -48,9 +44,6 @@ other_email=linus@ucla.edu
 #		in the mail store.
 #
 [new]
-tags=unread;inbox;
-ignore=
-
 # Search configuration
 #
 # The following option is supported here:
@@ -62,7 +55,6 @@ ignore=
 #
 [search]
 exclude_tags=trash;spam;
-
 # Maildir compatibility configuration
 #
 # The following option is supported here:
@@ -85,4 +77,3 @@ exclude_tags=trash;spam;
 #	commands will notice tag changes and update flags in filenames
 #
 [maildir]
-synchronize_flags=true
