@@ -1104,6 +1104,7 @@ Also add the number of windows in the window configuration."
         (:name "git" :query "tag:git and (not tag:spam)"
          :count-query "tag:git AND tag:unread" :key "g")
         (:name "sent" :query "tag:sent" :key "s")))
+(defun +notmuch-get-sync-command () "~/syscfg/script/mail-sync.sh")
 (setq sendmail-program "gmi")
 (setq message-sendmail-extra-arguments '("send" "--quiet" "-t" "-C" "~/mail/linusarver@gmail.com"))
 

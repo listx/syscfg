@@ -2092,6 +2092,7 @@ We use Linux Kernel style indentation with tabs understood to be 8 characters wi
 #+begin_src emacs-lisp
 <<notmuch-bindings>>
 <<notmuch-saved-searches>>
+<<notmuch-sync>>
 <<notmuch-send-email-with-lieer>>
 #+end_src
 
@@ -2120,6 +2121,20 @@ We use Linux Kernel style indentation with tabs understood to be 8 characters wi
         (:name "git" :query "tag:git and (not tag:spam)"
          :count-query "tag:git AND tag:unread" :key "g")
         (:name "sent" :query "tag:sent" :key "s")))
+#+end_src
+
+** Sync Gmail with local database
+
+By default this function will check which options are available and run the
+associated command (e.g., "gmi" or "afew" or "mbsync"). Here we just return the
+path to our script which does it all for us.
+
+This way we can use the default ~, m u~ binding to sync manually (and don't need
+to spam the cronjob so much).
+
+#+name: notmuch-sync
+#+begin_src emacs-lisp
+(defun +notmuch-get-sync-command () "~/syscfg/script/mail-sync.sh")
 #+end_src
 
 ** Sending email
