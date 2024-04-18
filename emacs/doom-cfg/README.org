@@ -2092,6 +2092,7 @@ We use Linux Kernel style indentation with tabs understood to be 8 characters wi
 #+begin_src emacs-lisp
 <<notmuch-bindings>>
 <<notmuch-saved-searches>>
+<<notmuch-send-email-with-lieer>>
 #+end_src
 
 ** Remove conflicting bindings
@@ -2119,6 +2120,17 @@ We use Linux Kernel style indentation with tabs understood to be 8 characters wi
         (:name "git" :query "tag:git and (not tag:spam)"
          :count-query "tag:git AND tag:unread" :key "g")
         (:name "sent" :query "tag:sent" :key "s")))
+#+end_src
+
+** Sending email
+
+Note that =lieer= uses a script called =gmi= (odd how it isn't just called
+=lieer=, but it is what it is).
+
+#+name: notmuch-send-email-with-lieer
+#+begin_src emacs-lisp
+(setq sendmail-program "gmi")
+(setq message-sendmail-extra-arguments '("send" "--quiet" "-t" "-C" "~/mail/linusarver@gmail.com"))
 #+end_src
 
 * Shell

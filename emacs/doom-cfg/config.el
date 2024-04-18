@@ -1104,6 +1104,8 @@ Also add the number of windows in the window configuration."
         (:name "git" :query "tag:git and (not tag:spam)"
          :count-query "tag:git AND tag:unread" :key "g")
         (:name "sent" :query "tag:sent" :key "s")))
+(setq sendmail-program "gmi")
+(setq message-sendmail-extra-arguments '("send" "--quiet" "-t" "-C" "~/mail/linusarver@gmail.com"))
 
 (map! :mi "C-o" #'l/insert-newline-below
       :mi "C-S-o" #'l/insert-newline-above)
