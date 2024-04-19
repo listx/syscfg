@@ -42,6 +42,7 @@
     # the project at hand.
 
     # C/ASM
+    bear
     clang
     clang-tools # clangd LSP
     gcc
