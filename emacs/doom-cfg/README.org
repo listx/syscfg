@@ -1253,6 +1253,9 @@ as a reference and the rules there are not actually enforced for existing code.
     (load-theme 'doom-zenburn t))))
 #+end_src
 
+The colors loaded by doom-themes can be inspected with the =doom-themes--colors=
+variable.
+
 #+name: colors-generator
 #+header: :exports code
 #+header: :results output
