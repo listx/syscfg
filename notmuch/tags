@@ -1,0 +1,19 @@
+# Handle unprocessed ("raw") emails, tagging them as them "inbox" and "unread";
+# but if they are filtered out of the inbox (aka "Skip the Inbox"), do not tag
+# them as "inbox" because that will put them back into the Inbox, going against
+# the intent of the Gmail filters.
+
+# Tag all messages related to the git mailing list. Gmail filters will tag these
+# with "git" and "git/ci" and so on. Here we additionally give them a "list" tag
+# so that we can search across all emails related to the mailing list at once.
++list +git          -- tag:raw and to:git@vger.kernel.org
++list +git/ci       -- tag:raw and cc:ci_activity@noreply.github.com and (to:gitgitgadget/git or to:listx/git)
++list +git/ggg      -- tag:raw and from:gitgitgadget
+
+# Tag all raw mailing list messages as being unread. It's important that we do
+# not tag it as "inbox" because that'll put it into the Inbox in Gmail the next
+# time lieer syncs.
++unread -raw        -- tag:raw and tag:list
+
+# Tag all raw non-mailing-list messages as "inbox" and "unread".
++unread -raw +inbox -- tag:raw and (not tag:list)

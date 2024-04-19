@@ -11,14 +11,21 @@ export NOTMUCH_CONFIG="${HOME}/.notmuch-config"
 # Nixpkgs. Enable them here.
 export PATH="${HOME}/.nix-profile/bin:/run/current-system/sw/bin:${PATH}"
 
+NOTMUCH_TAGS_FILE="${HOME}/syscfg/notmuch/tags"
+
 main()
 {
     cd ~/mail/linusarver@gmail.com
+
     # "gmi" is a script provided by the "lieer" package. It fetches mail from
     # Gmail to disk.
     gmi sync
+
     # Re-index new emails.
     notmuch new
+
+    # Tag emails.
+    notmuch tag --batch --input="${NOTMUCH_TAGS_FILE}"
 }
 
 main "$@"

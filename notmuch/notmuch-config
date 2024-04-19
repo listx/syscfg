@@ -44,6 +44,8 @@ other_email=linus@ucla.edu
 #		in the mail store.
 #
 [new]
+# Tag all new mails as "raw" (unprocessed).
+tags=raw;
 # Search configuration
 #
 # The following option is supported here:
