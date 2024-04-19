@@ -1225,6 +1225,11 @@ Also add the number of windows in the window configuration."
        :foreground ,(doom-color 'base0)
        :box nil)
 
+    ; LSP-related faces.
+    `(lsp-lens-face      :foreground  ,(doom-lighten (doom-color 'grey) 0.3))
+    `(lsp-details-face   :foreground  ,(doom-lighten (doom-color 'grey) 0.3))
+    `(lsp-signature-face :foreground  ,(doom-lighten (doom-color 'grey) 0.3))
+
     `(mode-line
        :weight bold
        :background ,(doom-color 'base8)
