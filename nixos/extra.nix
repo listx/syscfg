@@ -43,6 +43,7 @@
 
     # C/ASM
     bear
+    ccls
     clang
     clang-tools # clangd LSP
     gcc

@@ -10,6 +10,7 @@ in
     [ alacritty
       bashInteractive
       bear
+      ccls
       clang-tools
       clojure
       clojure-lsp
