@@ -3,6 +3,11 @@
 # them as "inbox" because that will put them back into the Inbox, going against
 # the intent of the Gmail filters.
 
+# Process all spam emails first (by making them ineligible for further
+# processing). In particular, this makes the "+unread -raw +inbox" rule avoid
+# considering them, keeping them out of the inbox.
+-raw                -- tag:raw and tag:spam
+
 # Tag all messages related to the git mailing list. Gmail filters will tag these
 # with "git" and "git/ci" and so on. Here we additionally give them a "list" tag
 # so that we can search across all emails related to the mailing list at once.
