@@ -52,8 +52,10 @@
     cppcheck
 
     # Clojure
+    clj-kondo
     clojure
     clojure-lsp
+    neil
 
     # Elixir
     elixir

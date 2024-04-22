@@ -14,6 +14,7 @@ in
       bear
       ccls
       clang-tools
+      clj-kondo
       clojure
       clojure-lsp
       coreutils
@@ -43,6 +44,7 @@ in
       melby-release.melby-daemon
       melby-release.melby-client-rust
       mpv
+      neil
       neovim
       nodejs
       notmuch
