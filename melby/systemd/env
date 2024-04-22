@@ -1,0 +1,3 @@
+PATH=/home/l/.nix-profile/bin:/run/wrappers/bin:/etc/profiles/per-user/l/bin:/nix/var/nix/profiles/default/bin:/run/current-system/sw/bin
+# Disable debug logs. To enable them, use MIX_ENV=dev.
+MIX_ENV=prod

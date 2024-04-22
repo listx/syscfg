@@ -1,6 +1,7 @@
 { config, pkgs, ... }:
 
 let
+  melby-release = import "${HOME}/prog/melby/package/build.nix";
   HOME = builtins.getEnv "HOME";
 in
 {
@@ -38,6 +39,8 @@ in
       less
       lieer
       lorri
+      melby-release.melby-daemon
+      melby-release.melby-client-rust
       mpv
       neovim
       nodejs
@@ -59,6 +62,19 @@ in
       zsh
       zstd
     ];
+
+  # Enable melbyd with launchd.
+  launchd.user.agents.melbyd = {
+    script = "${melby-release.melby-daemon}/bin/melbyd start";
+    environment = {
+      RELEASE_COOKIE = "${HOME}/.melby/cookie";
+      LUA_PATH = "${HOME}/.melby/?.lua";
+    };
+    serviceConfig = {
+      KeepAlive = true;
+      RunAtLoad = true;
+    };
+  };
 
   # Auto upgrade nix package and the daemon service.
   services.nix-daemon.enable = true;

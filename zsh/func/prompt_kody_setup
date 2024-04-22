@@ -107,17 +107,46 @@ get_exit_status()
 	fi
 }
 
+get_melby_info()
+{
+	if ! HOST="$(cat ~/.hostname-short || hostname)" \
+		 MELBY_ZSH_KEYMAP_INDICATOR="${global_keymap_indicator}" \
+		 MELBY_LAST_CMD_EXIT_STATUS="${global_exit_status}" \
+		 MELBY_PATH_ALIASES_FILE="${HOME}/.zsh/path-aliases" \
+		 MELBY_DIR="${HOME}/.melby" \
+		 melbyc-rust --config ~/.melby/melby.lua view --shell-pid "$$" 2>/dev/null; then
+		cat <<EOF
+global_prompt_path_short="%B%F{cyan}$(~/syscfg/script/simplify_path.sh ${PWD})%f%b"
+global_prompt_git="$(gsts for_prompt)"
+MELBY_PS1=
+EOF
+	fi
+}
+
 # Set global variables used for prompt generation. This function is only
 # executed once. That is, even in cases where we press ESC to enter "Normal"
 # mode, we do _not_ call this function.
 set_globals()
 {
+	source <(get_melby_info)
+
+	# Arrays cannot be exported (this is true at least for Bash and Zsh). So we
+	# must consume it here.
+	local m
+	if (( $#MELBY_SHELL_MESSAGES != 0 )); then
+		# Pad some newlines to move past the " $ " PS1 substring.
+		echo
+		echo
+		for m in "${MELBY_SHELL_MESSAGES[@]}"; do
+			echo "${m}"
+		done
+		echo
+	fi
+
 	global_timestamp="%B%K{214}%F{16} %D{%d} $(get_day) %D{%H:%M:%S %Z} %f%k%b "
 	global_user_host="$(get_user_host)"
 	global_cmd_exit_status="$(get_exit_status)"
 	global_venv_info="$(get_venv_info)"
-	global_prompt_git="$(gsts for_prompt)"
-	global_prompt_path_short="%B%F{cyan}$(~/syscfg/script/simplify_path.sh ${PWD})%f%b"
 }
 
 # The actual prompt. This does mostly pure string manipulation as all of the
@@ -132,13 +161,26 @@ construct_prompt()
 {
 	set_globals
 
-	# Date, time, Zsh keymap indicator, exit code, Git, and VirtualEnv.
-	local prompt_line_1="${global_timestamp}<${global_keymap_indicator}> ${global_venv_info}${global_cmd_exit_status}${global_prompt_git}${global_user_host}${global_prompt_path_short}"
+	if [[ -n "${MELBY_PS1_LINE1:-}" ]]; then
+		if [[ -n "${MELBY_PS1_LINE2:-}" ]]; then
+			# We have to put the MELBY_PS1 value inside "%{..%}" because this
+			# tells Zsh to interpret the ANSI escape sequences inside the
+			# MELBY_PS1 variable. See
+			# https://stackoverflow.com/a/30581694/437583.
+			PS1="%{${MELBY_PS1_LINE1}%}${prompt_newline}%{${MELBY_PS1_LINE2}%}${prompt_newline} \$ "
+		else
+			PS1="%{${MELBY_PS1_LINE1}%}${prompt_newline} \$ "
+		fi
+		local prompt_line_2=" "
+	else
+		# Date, time, Zsh keymap indicator, exit code, Git, and VirtualEnv.
+		local prompt_line_1="${global_timestamp}<${global_keymap_indicator}> ${global_venv_info}${global_cmd_exit_status}${global_prompt_git}${global_user_host}${global_prompt_path_short}"
 
-	local prompt_line_2=" "
+		local prompt_line_2=" "
 
-	# PS1 -> what you see by default.
-	PS1="${prompt_line_1}${prompt_newline}${prompt_line_2}\$ "
+		# PS1 -> what you see by default.
+		PS1="${prompt_line_1}${prompt_newline}${prompt_line_2}\$ "
+	fi
 
 	# PS2 -> what you see when you enter a multi-line shell command.
 	PS2="${prompt_line_2}..%_ > "

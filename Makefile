@@ -54,6 +54,11 @@ karabiner:
 lesskey:
 	ln -fs ${C}/lesskey/cfg                             ${H}/.lesskey
 	lesskey
+melby:
+	ln -fns ${C}/melby                                   ${H}/.melby
+	set -e && \
+		melby_location=$$(readlink $$(which melbyd)) && \
+		cp -f $${melby_location%/bin/melbyd}/share/melby/sample/* ${H}/.melby
 mpd:
 	ln -fns ${C}/mpd                                    ${H}/.config/mpd
 mpv:
@@ -161,6 +166,7 @@ zsh:
 	gtk \
 	karabiner \
 	lesskey \
+	melby \
 	mpd \
 	mpv \
 	nix \
