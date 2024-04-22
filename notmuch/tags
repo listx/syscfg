@@ -3,6 +3,11 @@
 # them as "inbox" because that will put them back into the Inbox, going against
 # the intent of the Gmail filters.
 
+# Mark deleted emails to be moved to the trash. We work with the "deleted" tag
+# because the default "d" keybinding in Emacs for notmuch adds the "deleted" tag
+# (and we don't want to bother customizing that).
++trash -inbox -deleted -- tag:deleted
+
 # Process all spam emails first (by making them ineligible for further
 # processing). In particular, this makes the "+unread -raw +inbox" rule avoid
 # considering them, keeping them out of the inbox.
