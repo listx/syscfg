@@ -59,7 +59,7 @@
                                 },
                                 "to": [
                                     {
-                                        "shell_command": "/run/current-system/sw/bin/emacsclient --eval '(emacs-everywhere)'"
+                                        "shell_command": "/run/current-system/sw/bin/emacsclient --alternate-editor='' --eval '(emacs-everywhere)'"
                                     }
                                 ],
                                 "type": "basic"

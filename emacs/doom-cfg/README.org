@@ -2455,6 +2455,18 @@ documentation in mind).
              (if (boundp 'l/disable-column-enforce-mode) -1 1))))
 #+end_src
 
+** emacs-everywhere
+
+In karabiner we've made a hotkey to invoke =(emacs-everywhere)=. See
+https://github.com/tecosaur/emacs-everywhere.
+
+The way to use it is to copy the current contents of the text box (in a browser,
+for example), and then invoke =(emacs-everywhere)=. When we leave that text box
+we'll paste back whatever we have there back to the browser's text box.
+
+If we don't want to paste back to the original window, ~C-c C-k~ still copies
+the contents of the entire buffer to the clipboard (but doesn't paste).
+
 * Reference
 
 #  LocalWords:  iedit ESC kj LocalWords DOOM's SPC Evil's minibuffer
