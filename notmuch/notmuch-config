@@ -56,7 +56,7 @@ tags=raw;
 #		query will override that exclusion.
 #
 [search]
-exclude_tags=trash;spam;
+exclude_tags=deleted;trash;spam;
 # Maildir compatibility configuration
 #
 # The following option is supported here:
