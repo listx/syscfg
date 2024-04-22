@@ -9,6 +9,7 @@ in
   # $ nix-env -qaP | grep wget
   environment.systemPackages = with pkgs;
     [ alacritty
+      autoconf
       bashInteractive
       bear
       ccls
