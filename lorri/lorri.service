@@ -4,7 +4,7 @@ After=lorri.socket
 Requires=lorri.socket
 
 [Service]
-ExecStart=%h/.nix-profile/bin/lorri daemon
+ExecStart=/run/current-system/sw/bin/lorri daemon
 PrivateTmp=true
 ProtectSystem=strict
 ProtectHome=read-only

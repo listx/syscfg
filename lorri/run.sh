@@ -6,4 +6,6 @@ SCRIPT_ROOT="$(dirname "$(realpath "$0")")"
 
 cd "${SCRIPT_ROOT}"
 
-"${HOME}"/.nix-profile/bin/lorri daemon
+export PATH="${HOME}/.nix-profile/bin:/run/current-system/sw/bin:${PATH}"
+
+lorri daemon

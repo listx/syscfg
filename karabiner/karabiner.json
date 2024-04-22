@@ -59,7 +59,7 @@
                                 },
                                 "to": [
                                     {
-                                        "shell_command": "~/.nix-profile/bin/emacsclient --eval '(emacs-everywhere)'"
+                                        "shell_command": "/run/current-system/sw/bin/emacsclient --eval '(emacs-everywhere)'"
                                     }
                                 ],
                                 "type": "basic"
