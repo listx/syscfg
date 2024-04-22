@@ -361,6 +361,7 @@ other configurations that are pulled in. And so we define it first here.
 <<org>>
 <<org-roam>>
 <<elixir>>
+<<clojure>>
 <<c-indentation>>
 <<c-keybindings>>
 <<format-onsave>>
@@ -2055,6 +2056,23 @@ https://github.com/harrybournis/org-fancy-priorities.
 In Org 9.2+, you can do =C-c C-,= to run org-insert-structure-template, and then
 press =e= to insert a ~#+begin_example\n#+end_example~ template. See
 https://emacs.stackexchange.com/a/46992/13006.
+
+* Clojure
+
+#+name: clojure
+#+begin_src emacs-lisp
+(map! :after cider
+      :map cider-repl-mode-map
+      ; Use M-{k,j} instead of M-{p,n} for cycling through history.
+      :mnvi "M-k" #'cider-repl-previous-input
+      :mnvi "M-j" #'cider-repl-next-input
+
+      ; Disable some conflicting keybindings in =cider-stacktrace-mode=, which
+      ; pops up if we hit an exception inside a CIDER session.
+      :map cider-stacktrace-mode-map
+      :mnvi "C-k" nil
+      :mnvi "C-j" nil)
+#+end_src
 
 * Elixir
 

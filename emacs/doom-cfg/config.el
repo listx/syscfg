@@ -764,6 +764,17 @@ between begin_WORD ... end_WORD blocks."
       :map alchemist-mode-map
       :mnvi "C-k" nil
       :mnvi "C-j" nil)
+(map! :after cider
+      :map cider-repl-mode-map
+      ; Use M-{k,j} instead of M-{p,n} for cycling through history.
+      :mnvi "M-k" #'cider-repl-previous-input
+      :mnvi "M-j" #'cider-repl-next-input
+
+      ; Disable some conflicting keybindings in =cider-stacktrace-mode=, which
+      ; pops up if we hit an exception inside a CIDER session.
+      :map cider-stacktrace-mode-map
+      :mnvi "C-k" nil
+      :mnvi "C-j" nil)
 (add-hook 'c-mode-hook 'l/customize-c-mode)
 (defun l/customize-c-mode ()
   (interactive)
