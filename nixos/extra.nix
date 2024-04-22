@@ -117,6 +117,10 @@
 
     # ----------
 
+    # Email
+    notmuch
+    lieer
+
     # Web
     firefox
     chromium
