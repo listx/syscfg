@@ -17,7 +17,7 @@
 # with "git" and "git/ci" and so on. Here we additionally give them a "list" tag
 # so that we can search across all emails related to the mailing list at once.
 +list +git          -- tag:raw and to:git@vger.kernel.org
-+list +git/ci       -- tag:raw and cc:ci_activity@noreply.github.com and (to:gitgitgadget/git or to:listx/git)
++list +git/ci       -- tag:raw and to:ci_activity@noreply.github.com and (to:gitgitgadget/git or to:listx/git)
 +list +git/ggg      -- tag:raw and from:gitgitgadget
 
 # Tag all raw mailing list messages as being unread. It's important that we do
