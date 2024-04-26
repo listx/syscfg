@@ -23,7 +23,7 @@
 # Tag all raw mailing list messages as being unread. It's important that we do
 # not tag it as "inbox" because that'll put it into the Inbox in Gmail the next
 # time lieer syncs.
-+unread -raw        -- tag:raw and tag:list
++unread -raw -inbox -- tag:raw and tag:list
 
 # Tag all raw non-mailing-list messages as "inbox" and "unread".
 +unread -raw +inbox -- tag:raw and (not tag:list)
