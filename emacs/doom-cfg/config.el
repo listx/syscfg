@@ -775,6 +775,10 @@ between begin_WORD ... end_WORD blocks."
       :map cider-stacktrace-mode-map
       :mnvi "C-k" nil
       :mnvi "C-j" nil)
+(add-hook 'clojure-mode-hook 'l/customize-clojure-mode)
+(defun l/customize-clojure-mode ()
+  (interactive)
+  (setq cider-preferred-build-tool 'clojure-cli))
 (add-hook 'c-mode-hook 'l/customize-c-mode)
 (defun l/customize-c-mode ()
   (interactive)

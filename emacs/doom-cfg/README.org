@@ -2061,6 +2061,12 @@ https://emacs.stackexchange.com/a/46992/13006.
 
 #+name: clojure
 #+begin_src emacs-lisp
+<<clojure-bindings>>
+<<clojure-preferences>>
+#+end_src
+
+#+name: clojure-bindings
+#+begin_src emacs-lisp
 (map! :after cider
       :map cider-repl-mode-map
       ; Use M-{k,j} instead of M-{p,n} for cycling through history.
@@ -2072,6 +2078,17 @@ https://emacs.stackexchange.com/a/46992/13006.
       :map cider-stacktrace-mode-map
       :mnvi "C-k" nil
       :mnvi "C-j" nil)
+#+end_src
+
+Choose =clojure-cli= if there are multiple build systems available and
+=cider-jack-in= doesn't know which one it should use.
+
+#+name: clojure-preferences
+#+begin_src emacs-lisp
+(add-hook 'clojure-mode-hook 'l/customize-clojure-mode)
+(defun l/customize-clojure-mode ()
+  (interactive)
+  (setq cider-preferred-build-tool 'clojure-cli))
 #+end_src
 
 * Elixir
