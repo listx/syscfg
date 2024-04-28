@@ -48,6 +48,7 @@ in
       neovim
       nodejs
       notmuch
+      openjdk
       pass
       pdf2svg
       procps

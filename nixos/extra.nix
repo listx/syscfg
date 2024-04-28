@@ -56,6 +56,7 @@
     clojure
     clojure-lsp
     neil
+    openjdk
 
     # Elixir
     elixir
