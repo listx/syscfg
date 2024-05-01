@@ -12,6 +12,8 @@
 # processing). In particular, this makes the "+unread -raw +inbox" rule avoid
 # considering them, keeping them out of the inbox.
 -raw                -- tag:raw and tag:spam
+# Do the same for sent emails (skip processing them).
+-raw                -- tag:raw and tag:sent
 
 # Tag all messages related to the git mailing list. Gmail filters will tag these
 # with "git" and "git/ci" and so on. Here we additionally give them a "list" tag
