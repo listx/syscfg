@@ -1328,6 +1328,9 @@ Also add the number of windows in the window configuration."
 ; when we open a single buffer).
 (tab-bar-mode)
 
+; Enable the mouse in terminal Emacs
+(add-hook 'tty-setup-hook #'xterm-mouse-mode)
+
 (map! :after (git-gutter magit)
       :map doom-leader-git-map
       ; BUG: For some reason the "hunk" description does not show up in
