@@ -226,7 +226,7 @@ Return an event vector."
 (add-to-list 'term-file-aliases '("wezterm" . "xterm-256color"))
 
 (setq user-full-name "Linus Arver"
-      user-mail-address "linusarver@gmail.com")
+      user-mail-address "linus@ucla.edu")
 
 (map! :after dired
       :map dired-mode-map

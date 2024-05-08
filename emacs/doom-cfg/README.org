@@ -2293,7 +2293,7 @@ clients, file templates and snippets.
 #+name: name-and-email
 #+begin_src emacs-lisp
 (setq user-full-name "Linus Arver"
-      user-mail-address "linusarver@gmail.com")
+      user-mail-address "linus@ucla.edu")
 #+end_src
 
 This determines the style of line numbers in effect. If set to "nil", line
