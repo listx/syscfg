@@ -1154,6 +1154,11 @@ Also add the number of windows in the window configuration."
   (evil-scroll-line-to-center nil))
 
 (after! lsp-mode
+  ;; Disable some cosmetics because of an annoying "Error processing message
+  ;; (args-out-of-range ..." error that happens every time we eval a buffer.
+  ;; See
+  ;; https://github.com/emacs-lsp/lsp-mode/issues/3586#issuecomment-1166620517.
+  (setq lsp-enable-symbol-highlighting nil)
   ;; Disable autoformatting of YAML files, because it can result in huge
   ;; indentation (whitespace) changes with no semantic difference.
   (setq lsp-yaml-format-enable nil)
