@@ -2138,10 +2138,23 @@ We use Linux Kernel style indentation with tabs understood to be 8 characters wi
 
 #+name: notmuch
 #+begin_src emacs-lisp
+<<notmuch-hooks>>
 <<notmuch-bindings>>
 <<notmuch-saved-searches>>
 <<notmuch-sync>>
 <<notmuch-send-email-with-lieer>>
+#+end_src
+
+** Disable useless minor modes during message composition
+
+#+name: notmuch-hooks
+#+begin_src emacs-lisp
+(add-hook 'notmuch-message-mode-hook 'l/customize-notmuch-message-mode)
+(defun l/customize-notmuch-message-mode ()
+  (interactive)
+  (flycheck-mode -1)
+  (git-gutter-mode -1)
+  (smartparens-mode -1))
 #+end_src
 
 ** Remove conflicting bindings

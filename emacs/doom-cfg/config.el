@@ -1104,6 +1104,12 @@ Also add the number of windows in the window configuration."
   (set-buffer-modified-p nil)
   (l/kill-this-buffer))
 
+(add-hook 'notmuch-message-mode-hook 'l/customize-notmuch-message-mode)
+(defun l/customize-notmuch-message-mode ()
+  (interactive)
+  (flycheck-mode -1)
+  (git-gutter-mode -1)
+  (smartparens-mode -1))
 (map! :after notmuch
       :map notmuch-show-mode-map
       :mnv "C-k" nil
