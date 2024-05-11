@@ -30,5 +30,8 @@
 # time lieer syncs.
 +unread -raw -inbox -- tag:raw and tag:list
 
+# Process read emails (don't tag already-read emails as unread).
+-raw                -- tag:raw and (not tag:unread)
+
 # Tag all raw non-mailing-list messages as "inbox" and "unread".
 +unread -raw +inbox -- tag:raw and (not tag:list)
