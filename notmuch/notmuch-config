@@ -27,8 +27,8 @@
 #
 [user]
 name=Linus Arver
-primary_email=linusarver@gmail.com
-other_email=linus@ucla.edu
+primary_email=linus@ucla.edu
+other_email=linusarver@gmail.com
 # Configuration for "notmuch new"
 #
 # The following options are supported here:
