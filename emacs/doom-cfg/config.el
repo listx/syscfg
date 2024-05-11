@@ -1119,6 +1119,14 @@ Also add the number of windows in the window configuration."
       :map notmuch-tree-mode-map
       :mnv "C-k" nil
       :mnv "C-j" nil)
+(map! :after notmuch
+      :map notmuch-show-mode-map
+      ;; Swap "cr" and "cR". `notmuch-show-reply' is "reply all" and is the more
+      ;; common one we use in mailing list discussions (you would almost never
+      ;; only reply to the sender only, which is what
+      ;; `notmuch-show-reply-sender' does), so give it the simpler "cr" binding.
+      :mnv "cr" #'notmuch-show-reply
+      :mnv "cR" #'notmuch-show-reply-sender)
 (setq notmuch-saved-searches
       '((:name "inbox" :query "tag:inbox"
          :count-query "tag:inbox AND tag:unread" :key "i")

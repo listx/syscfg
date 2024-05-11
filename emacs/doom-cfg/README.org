@@ -2159,7 +2159,7 @@ We use Linux Kernel style indentation with tabs understood to be 8 characters wi
 
 ** Remove conflicting bindings
 
-#+name: notmuch-bindings
+#+header: :noweb-ref notmuch-bindings
 #+begin_src emacs-lisp
 (map! :after notmuch
       :map notmuch-show-mode-map
@@ -2170,6 +2170,20 @@ We use Linux Kernel style indentation with tabs understood to be 8 characters wi
       :map notmuch-tree-mode-map
       :mnv "C-k" nil
       :mnv "C-j" nil)
+#+end_src
+
+** Additional bindings
+
+#+header: :noweb-ref notmuch-bindings
+#+begin_src emacs-lisp
+(map! :after notmuch
+      :map notmuch-show-mode-map
+      ;; Swap "cr" and "cR". `notmuch-show-reply' is "reply all" and is the more
+      ;; common one we use in mailing list discussions (you would almost never
+      ;; only reply to the sender only, which is what
+      ;; `notmuch-show-reply-sender' does), so give it the simpler "cr" binding.
+      :mnv "cr" #'notmuch-show-reply
+      :mnv "cR" #'notmuch-show-reply-sender)
 #+end_src
 
 ** Saved searches
