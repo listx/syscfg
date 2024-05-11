@@ -90,8 +90,6 @@ notmuch:
 	ln -fs ${C}/notmuch/notmuch-config                  ${H}/.notmuch-config
 nvim:
 	ln -fns ${C}/nvim                                   ${H}/.config/nvim
-offlineimap:
-	ln -fs ${C}/offlineimap/offlineimaprc               ${H}/.offlineimaprc
 pulse:
 	rm -rf ${H}/.config/pulse
 	rm -rf ${H}/.pulse
@@ -174,7 +172,6 @@ zsh:
 	nixpkgs \
 	notmuch \
 	nvim \
-	offlineimap \
 	pulse \
 	qutebrowser \
 	rtorrent \
