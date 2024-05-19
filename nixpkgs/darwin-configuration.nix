@@ -52,6 +52,7 @@ in
       pass
       pdf2svg
       procps
+      qutebrowser
       ripgrep
       rustfmt
       source-serif
