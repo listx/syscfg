@@ -40,6 +40,7 @@ c.fonts.completion.category = "10pt default_family"
 c.fonts.completion.entry = "10pt default_family"
 c.fonts.debug_console = "10pt default_family"
 c.fonts.default_family = [
+    "CommitMono",
     "Terminus",
     "Input Mono",
     "Monospace",
