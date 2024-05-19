@@ -60,9 +60,8 @@ c.fonts.web.family.standard = "Source Serif Pro"
 
 c.url.searchengines = {
     "DEFAULT": "https://www.google.com/search?hl=en&q={}",
-    "aw": "https://wiki.archlinux.org/?search={}",
-    "d": "https://duckduckgo.com/?q={}",
     "w": "https://en.wikipedia.org/w/index.php?search={}",
+    "d": "https://duckduckgo.com/?q={}",
     "h": "http://hackage.haskell.org/packages/search?terms={}",
     "hh": "https://hoogle.haskell.org/?hoogle={}",
     "de": "http://www.dictionary.com/browse/{}"}
