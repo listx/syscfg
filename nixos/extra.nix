@@ -1,5 +1,8 @@
 { config, pkgs, ... }:
 
+let
+  melby-release = import "/home/l/prog/melby/package/build.nix";
+in
 {
   imports = [ ./minimal.nix ];
 
@@ -24,6 +27,8 @@
     noweb # literate emacs configuration
     direnv
     gcal
+    melby-release.melby-daemon
+    melby-release.melby-client-rust
 
     # Dev tools
     parallel
