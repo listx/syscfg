@@ -6,4 +6,4 @@ map [normal] h navigate previous
 map [normal] l navigate next
 map [normal] <BackSpace> scroll full-up
 
-set font "Terminus 9"
+set font "CommitMono 9"
