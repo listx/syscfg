@@ -26,6 +26,9 @@ if hostname ~= 'k0' then
   }
   my_font.font_size = 14.0
 end
+if hostname == 'm0' then
+  my_font.font_size = 10
+end
 local general_config = {
   enable_tab_bar = false,
   check_for_updates = false,
