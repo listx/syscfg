@@ -4,7 +4,6 @@
   imports = [ ../extra.nix ./hardware-configuration.nix ];
 
   boot.loader.grub.enable = true;
-  boot.loader.grub.version = 2;
   boot.loader.grub.device =
     "/dev/disk/by-id/ata-KINGSTON_SVP100S296G_X0NA40R9K0KK";
 
