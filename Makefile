@@ -102,7 +102,11 @@ else
 	cp ${C}/pulse/default.pa                            ${H}/.pulse/default.pa
 endif
 qutebrowser:
+ifeq ('${P}','Darwin')
+	ln -fns ${C}/qutebrowser                            ${H}/.qutebrowser
+else
 	ln -fns ${C}/qutebrowser                            ${H}/.config
+endif
 rtorrent:
 	ln -fs ${C}/rtorrent/cfg                            ${H}/.rtorrent.rc
 ssh:

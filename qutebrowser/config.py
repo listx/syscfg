@@ -1,6 +1,9 @@
 # pylint: disable=undefined-variable,missing-docstring
 # flake8: noqa
 
+# FIXME: Add host-specific variable. Then we can have conditional configuration
+# based on the host (e.g., different font sizes for different displays).
+
 # Load settings configured via the GUI (autoconfig.yml).
 config.load_autoconfig()
 
@@ -36,9 +39,12 @@ c.hints.chars = "aieuwhjkln"
 
 # Fonts; prefer 10pt monospace everywhere; the "default_family" here is defined
 # by `c.fonts.default_family'.
-c.fonts.completion.category = "10pt default_family"
-c.fonts.completion.entry = "10pt default_family"
-c.fonts.debug_console = "10pt default_family"
+font_size = "14pt "
+c.fonts.tabs.selected = font_size + "default_family"
+c.fonts.tabs.unselected = font_size + "default_family"
+c.fonts.completion.category = font_size + "default_family"
+c.fonts.completion.entry =  font_size + "default_family"
+c.fonts.debug_console =  font_size + "default_family"
 c.fonts.default_family = [
     "CommitMono",
     "Terminus",
@@ -46,14 +52,14 @@ c.fonts.default_family = [
     "Monospace",
     "DejaVu Sans Mono",
     "Liberation Mono"]
-c.fonts.downloads = "10pt default_family"
-c.fonts.hints = "bold 10pt default_family"
-c.fonts.keyhint = "10pt default_family"
-c.fonts.messages.error = "10pt default_family"
-c.fonts.messages.info = "10pt default_family"
-c.fonts.messages.warning = "10pt default_family"
-c.fonts.prompts = "10pt default_family"
-c.fonts.statusbar = "10pt default_family"
+c.fonts.downloads =  font_size + "default_family"
+c.fonts.hints = font_size + "bold default_family"
+c.fonts.keyhint = font_size + "default_family"
+c.fonts.messages.error = font_size + "default_family"
+c.fonts.messages.info = font_size + "default_family"
+c.fonts.messages.warning = font_size + "default_family"
+c.fonts.prompts = font_size + "default_family"
+c.fonts.statusbar = font_size + "default_family"
 c.fonts.web.family.fixed = "Liberation Mono"
 c.fonts.web.family.serif = "Source Serif Pro"
 c.fonts.web.family.standard = "Source Serif Pro"
