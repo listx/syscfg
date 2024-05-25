@@ -72,11 +72,11 @@ __l_accept_line () {
 }
 
 __l_command_not_found () {
-  # $exit_status is set by the prompt. If we simply use "$?" as the variable
+  # $global_exit_status is set by the prompt. If we simply use "$?" as the variable
   # to check, unfortunately it does not get cleared when we (1) invoke an
-  # known command, then (2) delete the contents of BUFFER loaded by `hist -fs
+  # unknown command, then (2) delete the contents of BUFFER loaded by `hist -fs
   # f -1'.
-  if (( exit_status == 127 )) ; then
+  if (( global_exit_status == 127 )) ; then
     hist -fs f -1 || echo "\`hist' is not installed"
   fi
 }
