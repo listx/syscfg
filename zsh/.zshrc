@@ -192,7 +192,8 @@ alias ds=' dirs -v ; echo -n "\nSelect directory: " ; read n ; cd +$n && ll'
 
 alias c="color_cycle next"
 alias C="color_cycle prev"
-alias cls="echo -ne '\x1bc'" # clear the screen buffer (don't just hide it like CTRL-L)
+# Clear the screen buffer (don't just hide it like CTRL-L)
+alias cls="echo -ne '\x1bc'"
 alias fiv='~/syscfg/script/fiv.sh'
 alias aex='~/syscfg/script/aex.sh'
 alias cascade='~/syscfg/script/cascade.sh'
