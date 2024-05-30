@@ -219,13 +219,6 @@ alias  lk=' dir_info verbose-by-date'
 alias n=' alacritty-raw-shell.sh & disown'
 alias q=' exit'
 
-alias rsa="rand_open norecurse 'mpv -vo null -playlist' '' $ft_snd"
-alias rsaa="rand_open recurse 'mpv -vo null -playlist' '' $ft_snd"
-alias rsp="rand_open norecurse 'feh --auto-zoom --fullscreen --draw-filename --filelist' '' $ft_pic"
-alias rspp="rand_open recurse 'feh --auto-zoom --fullscreen --draw-filename --filelist' '' $ft_pic"
-alias rsm="rand_open norecurse mpv m3u $ft_mov"
-alias rsmm="rand_open recurse mpv\ --loop-file=inf\ \ --playlist m3u $ft_mov"
-
 alias g='git'
 alias gbr='git branch --sort=committerdate'
 alias gc='git commit'
