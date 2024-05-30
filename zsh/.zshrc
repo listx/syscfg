@@ -192,8 +192,9 @@ alias ds=' dirs -v ; echo -n "\nSelect directory: " ; read n ; cd +$n && ll'
 
 alias c="color_cycle next"
 alias C="color_cycle prev"
-# Clear the screen buffer (don't just hide it like CTRL-L)
-alias cls="echo -ne '\x1bc'"
+# Clear the screen buffer (don't just hide it like CTRL-L), and also clear the
+# TMUX buffer history if (if TMUX is running).
+alias cls="echo -ne '\x1bc'; tmux clear-history || true"
 alias fiv='~/syscfg/script/fiv.sh'
 alias aex='~/syscfg/script/aex.sh'
 alias cascade='~/syscfg/script/cascade.sh'
