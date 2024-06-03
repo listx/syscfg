@@ -60,9 +60,9 @@ c.fonts.messages.info = font_size + "default_family"
 c.fonts.messages.warning = font_size + "default_family"
 c.fonts.prompts = font_size + "default_family"
 c.fonts.statusbar = font_size + "default_family"
-c.fonts.web.family.fixed = "Liberation Mono"
-c.fonts.web.family.serif = "Source Serif Pro"
-c.fonts.web.family.standard = "Source Serif Pro"
+c.fonts.web.family.fixed = "CommitMono"
+c.fonts.web.family.serif = "Source Serif 4 Variable"
+c.fonts.web.family.standard = "Source Serif 4 Variable"
 
 c.url.searchengines = {
     "DEFAULT": "https://www.google.com/search?hl=en&q={}",
