@@ -96,6 +96,10 @@ config.bind("<ctrl-shift-p>", "open -- {clipboard}")
 config.bind("p", "open -rt -- {primary}")
 config.bind("P", "open -- {primary}")
 
+# Autocomplete navigation.
+config.bind("<ctrl-j>", "completion-item-focus next", mode="command")
+config.bind("<ctrl-k>", "completion-item-focus prev", mode="command")
+
 # Other.
 config.bind("yy", "yank -s")
 config.bind("yY", "yank")
