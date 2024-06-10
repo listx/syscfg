@@ -64,10 +64,12 @@ c.fonts.web.family.fixed = "CommitMono"
 c.fonts.web.family.serif = "Source Serif 4 Variable"
 c.fonts.web.family.standard = "Source Serif 4 Variable"
 
+# Filter out low-quality search results.
+search_filter = "+-site:geeksforgeeks.org+-site:baeldung.com"
 c.url.searchengines = {
-    "DEFAULT": "https://www.google.com/search?hl=en&q={}",
+    "DEFAULT": "https://www.google.com/search?hl=en&q={}" + search_filter,
     "w": "https://en.wikipedia.org/w/index.php?search={}",
-    "d": "https://duckduckgo.com/?q={}",
+    "d": "https://duckduckgo.com/?q={}" + search_filter,
     "h": "http://hackage.haskell.org/packages/search?terms={}",
     "hh": "https://hoogle.haskell.org/?hoogle={}",
     "de": "http://www.dictionary.com/browse/{}"}
