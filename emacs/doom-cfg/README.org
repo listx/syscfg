@@ -1959,35 +1959,14 @@ details."
   (let ((dir-expanded (expand-file-name dir)))
     (tab-bar-new-tab)
     (consult--grep
+     ;; Prompt
      "rg"
-     (l/rg-search-mk-builder dir-expanded args) dir-expanded pat)))
-
-(defun l/rg-search-mk-builder (dir args)
-  "Returns a lambda that can fill in the `pat' variable. The explicit use of
-`list' here is required because we want to do 2 levels of substitution. We
-substitute in `dir' and `args' at the time we build the list. We then put in a
-`backquote' so that the `pat' can be substituted in when the lambda is called by
-consult--grep."
-  (let ((invocation (append (list "rg-helper.sh" dir "all" ',pat) args)))
-    (list 'lambda (list 'pat) (list 'backquote (list ':command invocation)))))
-
-(defun l/rg-search-blocks (dir pat &rest args)
-  "Use rg-helper.sh to search DIR for pat in org-mode's code blocks."
-  (interactive)
-  (tab-bar-new-tab)
-  (consult--grep "rg(blocks)" (l/rg-search-blocks-mk-builder dir args) dir pat))
-
-(defun l/rg-search-blocks-mk-builder (dir args)
-  "Like l/rg-search-mk-builder, but uses rg-helper.sh's 'regions' mode to search
-between begin_WORD ... end_WORD blocks."
-  (let ((invocation
-         (append
-          (list "rg-helper.sh" dir "regions"
-          ',(concat "(\\x00)(\\d+):\\s*(?:(?!#\\+(begin|end)_\\w+?)).*?("
-                    pat ")")
-          ',(concat "^\\s*#\\+begin_\\w+\[^\\n\]*$((?!^\\s*#\\+end_\\w+$).)*("
-                    pat ").*?(?!^\\s*#\\+end_\\w+$)")) args)))
-    (list 'lambda (list 'pat) (list 'backquote (list ':command invocation)))))
+     ;; Make-builder
+     #'consult--ripgrep-make-builder
+     ;; Dir
+     dir-expanded
+     ;; Initial input
+     pat)))
 #+end_src
 
 ** Insert time stamp without prompting
