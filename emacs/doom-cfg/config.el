@@ -1115,6 +1115,11 @@ Also add the number of windows in the window configuration."
 (defun +notmuch-get-sync-command () "~/syscfg/script/mail-sync.sh")
 (setq sendmail-program "gmi")
 (setq message-sendmail-extra-arguments '("send" "--quiet" "-t" "-C" "~/mail/linusarver@gmail.com"))
+(defun notmuch-mua-reply-guess-sender (orig-fun query-string &optional sender reply-all duplicate)
+  (let ((sender (or sender
+                    "Linus Arver <linus@ucla.edu>")))
+    (funcall orig-fun query-string sender reply-all duplicate)))
+(advice-add 'notmuch-mua-reply :around 'notmuch-mua-reply-guess-sender)
 
 (map! :mi "C-o" #'l/insert-newline-below
       :mi "C-S-o" #'l/insert-newline-above)

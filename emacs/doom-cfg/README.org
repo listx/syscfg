@@ -2122,6 +2122,7 @@ We use Linux Kernel style indentation with tabs understood to be 8 characters wi
 <<notmuch-saved-searches>>
 <<notmuch-sync>>
 <<notmuch-send-email-with-lieer>>
+<<notmuch-overwrite-from>>
 #+end_src
 
 ** Disable useless minor modes during message composition
@@ -2134,6 +2135,17 @@ We use Linux Kernel style indentation with tabs understood to be 8 characters wi
   (flycheck-mode -1)
   (git-gutter-mode -1)
   (smartparens-mode -1))
+#+end_src
+
+** Overwrite FROM field (sender)
+
+#+name: notmuch-overwrite-from
+#+begin_src emacs-lisp
+(defun notmuch-mua-reply-guess-sender (orig-fun query-string &optional sender reply-all duplicate)
+  (let ((sender (or sender
+                    "Linus Arver <linus@ucla.edu>")))
+    (funcall orig-fun query-string sender reply-all duplicate)))
+(advice-add 'notmuch-mua-reply :around 'notmuch-mua-reply-guess-sender)
 #+end_src
 
 ** Remove conflicting bindings
