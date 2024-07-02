@@ -721,15 +721,9 @@ details."
                                 ,l/org-roam-default-template
                                 ,l/org-roam-default-olp)
          :unnarrowed t)
-        ("p" "proj-temp" plain
+        ("p" "proj" plain
          "%?"
-         :target (file+head+olp "proj-temp/${slug}.org"
-                                ,l/org-roam-default-template
-                                ,l/org-roam-default-olp)
-         :unnarrowed t)
-        ("P" "proj-perm" plain
-         "%?"
-         :target (file+head+olp "proj-perm/${slug}.org"
+         :target (file+head+olp "proj/${slug}.org"
                                 ,l/org-roam-default-template
                                 ,l/org-roam-default-olp)
          :unnarrowed t)
