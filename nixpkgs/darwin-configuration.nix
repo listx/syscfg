@@ -14,6 +14,7 @@ in
       bear
       ccls
       clang-tools
+      cljfmt
       clj-kondo
       clojure
       clojure-lsp
@@ -37,6 +38,7 @@ in
       graphviz
       htop
       inkscape
+      jq
       jujutsu
       less
       lieer
@@ -55,6 +57,7 @@ in
       qutebrowser
       ripgrep
       rustfmt
+      scc
       source-serif
       stack
       tig
