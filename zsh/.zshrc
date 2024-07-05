@@ -380,6 +380,7 @@ zmodload zsh/complist # for the 'menuselect' keymap
 bindkey -M menuselect '' .accept-line
 
 # Use the kody theme.
+autoload -Uz add-zsh-hook
 prompt_kody_setup
 
 # Set theme name. This should match the colors used by Alacritty on startup. We
@@ -402,7 +403,6 @@ bindkey '^x' autosuggest-execute
 
 # Prevent command typos from cluttering up history.
 # See https://stackoverflow.com/a/66060510/437583.
-autoload -Uz add-zsh-hook
 add-zsh-hook precmd __l_command_not_found
 
 # Load fzf bindings (upstream) to ZSH.
