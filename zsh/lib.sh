@@ -327,19 +327,6 @@ __l_prepend_path()
   export PATH=${dir}:$PATH
 }
 
-# The following are functions that are meant to be invoked interactively by the
-# user.
-
-mp()
-{
-  mpv --vo=null --loop-playlist --playlist="${1}"
-}
-
-mps()
-{
-  mpv --vo=null --loop-playlist --shuffle --playlist="${1}"
-}
-
 # Start a new tmux session in the background, then switch to it. Note that this
 # is different than using `tmux attach-session ...` because we do *NOT* start a
 # nested tmux session.
