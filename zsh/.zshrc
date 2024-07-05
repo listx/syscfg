@@ -472,8 +472,21 @@ ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=2,bold"
 # Pass utility completions. This brings in the "fzp" shell alias.
 zcomet load "smeagol74/zsh-fzf-pass"
 
-autoload -U compinit
-compinit
+# On slow systems, checking the cached .zcompdump file to see if it must be
+# regenerated adds a noticable delay to zsh startup.  This little hack restricts
+# it to once a day.  It should be pasted into your own completion file.
+#
+# The globbing is a little complicated here:
+# - '#q' is an explicit glob qualifier that makes globbing work within zsh's [[ ]] construct.
+# - 'N' makes the glob pattern evaluate to nothing when it doesn't match (rather than throw a globbing error)
+# - '.' matches "regular files"
+# - 'mh+24' matches files (or directories or whatever) that are older than 24 hours.
+autoload -Uz compinit
+if [[ -n ${ZDOTDIR}/.zcompdump(#qN.mh+24) ]]; then
+	compinit
+else
+	compinit -C
+fi
 
 source <(jj util completion zsh)
 compdef _jj jj
