@@ -333,6 +333,9 @@ LINK-NAME."
     (require 'ox)
     (let* ((org-export-with-toc nil)
            (org-export-show-temporary-export-buffer nil)
+           (org-export-with-smart-quotes nil)
+           (org-export-with-special-strings nil)
+           (org-export-with-fixed-width t)
            ;; If point is above the topmost heading, then export the whole buffer.
            (export-whole-buffer
             ;; If we don't use this if condition, the (save-excursion ...) will
@@ -342,7 +345,7 @@ LINK-NAME."
                 t
                 nil))
            (async nil)
-           (visible-only t)
+           (visible-only nil)
            (body-only t)
            ; Temporary buffer to hold exported contents.
            (buffer (save-window-excursion
@@ -367,10 +370,9 @@ LINK-NAME."
                    (progn
                      ;; Delete leading newline from org-export-to-buffer.
                      (goto-line 1)
-                     (flush-lines "^$")
-                     (call-shell-region
+                     (evil-yank
                       (point-min)
-                      (point-max) "~/syscfg/script/copy-clipboard.sh" nil 0)
+                      (point-max))
                      (message (concat
                                "Exported children of subtree starting with `"
                                (if (> (length bufstr) 20)
