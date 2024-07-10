@@ -1,10 +1,5 @@
 #!/usr/bin/env zsh
 
-__l_get_mem()
-{
-  ps -o rss= -p $$
-}
-
 # Don't redraw the prompt if we are in the middle of a completion widget. See
 # https://stackoverflow.com/a/30456173/437583.
 __l_prompt_tick ()
@@ -35,14 +30,6 @@ __l_prompt_tick ()
     # Multi-line input with "\" character at the end.
     accept-line) (( $#BUFFER > 0 )) && return ;;
   esac
-
-  # There seems to be a memory leak in zsh 5.8 (x86_64-apple-darwin17.7.0),
-  # where constantly resetting the prompt eats up memory. We've observed the
-  # shell ballooning to over 1GiB in memory usage after several days.
-  #
-  # As a temporary workaround, do not reset the prompt if our memory usage is
-  # too high (>50MB).
-  (( $(__l_get_mem) > 50000 )) && return
 
   construct_prompt
   zle reset-prompt
