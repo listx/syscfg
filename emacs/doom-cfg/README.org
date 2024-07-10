@@ -260,7 +260,7 @@ minibuffer will tell you what keys are available. So you can explore what
 options are available interactively!
 
 In order to use =C-,= from terminal Emacs, you have to make your terminal (e.g.,
-Alacritty) send a special sequence (such as the =CSI u= scheme) and also make
+WezTerm) send a special sequence (such as the =CSI u= scheme) and also make
 Emacs understand that sequence.
 
 #+name: leader-key
