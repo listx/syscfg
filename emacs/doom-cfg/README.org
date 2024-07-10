@@ -271,6 +271,13 @@ Emacs understand that sequence.
       doom-localleader-alt-key "C-, m")
 #+end_src
 
+** DOOM's prefix key
+
+Emacs has a concept of [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Prefix-Command-Arguments.html][Prefix Command Arguments]], which is accessible by ~C-u~ in
+Emacs by default. However in DOOM ~C-u~ is mapped to scrolling up half a page.
+So instead you have to type ~, u~ to [[https://docs.doomemacs.org/v21.12/#/users/concepts/emacs-terminology/keybinds/prefix-key][access it]]. Otherwise it's the same (you can
+still type a ~,~ to access the leader key after typing ~, u~).
+
 * $DOOMDIR/packages.el
 
 #+begin_src emacs-lisp :tangle packages.el
