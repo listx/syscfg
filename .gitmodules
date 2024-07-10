@@ -22,3 +22,6 @@
 [submodule "wezterm/upstream"]
 	path = wezterm/upstream
 	url = https://github.com/wez/wezterm
+[submodule "clojure"]
+	path = clojure
+	url = https://github.com/practicalli/clojure-cli-config

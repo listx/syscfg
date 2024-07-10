@@ -30,6 +30,8 @@ else
 endif
 bash:
 	ln -fs ${C}/bash/.bashrc                            ${H}
+clojure:
+	ln -fns ${C}/clojure                                ${H}/.config/clojure
 emacs:
 	git -C ${C} submodule update --init ${C}/emacs/doom-upstream
 	# Point .emacs.d to upstream doom code.
@@ -162,6 +164,7 @@ zsh:
 .PHONY: \
 	alacritty \
 	bash \
+	clojure \
 	emacs \
 	git \
 	gpg \
