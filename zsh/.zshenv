@@ -25,3 +25,9 @@ esac
 
 # Let emacs and other applications know that our terminal supports 24-bit colors.
 export COLORTERM=truecolor
+
+# Tell clojure CLI to look into ~/.config/clojure to look for cross-project
+# configuration files.
+if [[ -z "${XDG_CONFIG_HOME:-}" ]]; then
+	export XDG_CONFIG_HOME="$HOME/.config"
+fi
