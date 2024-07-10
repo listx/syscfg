@@ -25,5 +25,3 @@ esac
 
 # Let emacs and other applications know that our terminal supports 24-bit colors.
 export COLORTERM=truecolor
-
-export MOOL_DIR="$HOME/.mool"
