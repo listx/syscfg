@@ -190,8 +190,6 @@ stty start undef
 # you'd ever want to use 'cd -$n'
 alias ds=' dirs -v ; echo -n "\nSelect directory: " ; read n ; cd +$n && ll'
 
-alias c="color_cycle next"
-alias C="color_cycle prev"
 # Clear the screen buffer (don't just hide it like CTRL-L), and also clear the
 # TMUX buffer history if (if TMUX is running).
 alias cls="echo -ne '\x1bc'; tmux clear-history || true"
