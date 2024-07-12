@@ -29,7 +29,8 @@ return merge(general_config, my_font)
 
 ** Disable tab bar
 
-Disable the tab bar because we already get everything we need with tmux windows and panes.
+Disable the tab bar because we already get everything we need with tmux windows
+and panes.
 
 #+name: disable-tab-bar
 #+begin_src lua
@@ -38,7 +39,8 @@ enable_tab_bar = false,
 
 ** Disable update check
 
-Disable automated check of newer Wezterm versions because we install Wezterm through a package manager.
+Disable automated check of newer Wezterm versions because we install Wezterm
+through a package manager.
 
 #+name: disable-update-check
 #+begin_src lua
@@ -218,7 +220,11 @@ keys = {
 
 ** Open URL
 
-Taken from https://wezfurlong.org/wezterm/config/lua/keyassignment/QuickSelectArgs.html as that appears to be the only upstream page detailing how to quickly open a URL using the keyboard. It appears to be first mentioned in https://github.com/wez/wezterm/issues/1362#issuecomment-1000457693.
+Taken from
+https://wezfurlong.org/wezterm/config/lua/keyassignment/QuickSelectArgs.html as
+that appears to be the only upstream page detailing how to quickly open a URL
+using the keyboard. It appears to be first mentioned in
+https://github.com/wez/wezterm/issues/1362#issuecomment-1000457693.
 
 #+name: open-url
 #+begin_src lua
@@ -263,9 +269,12 @@ Taken from https://wezfurlong.org/wezterm/config/lua/keyassignment/QuickSelectAr
 
 ** CSI-u mode
 
-Distinguish between problematic keys (such as ~C-<key>~ and ~C-S-<key>~) via manual ~CSI u~ support. See https://iterm2.com/documentation-csiu.html for a background around ~CSI u~ aka ~libtickit~.
+Distinguish between problematic keys (such as ~C-<key>~ and ~C-S-<key>~) via
+manual ~CSI u~ support. See https://iterm2.com/documentation-csiu.html for a
+background around ~CSI u~ aka ~libtickit~.
 
-The list here is originally drawn from https://github.com/alexherbo2/alacritty-extended-keys/blob/bc08749ae8fd9f8e00d0c93f96d5c67c244c6480/keys.yml#L16.
+The list here is originally drawn from
+https://github.com/alexherbo2/alacritty-extended-keys/blob/bc08749ae8fd9f8e00d0c93f96d5c67c244c6480/keys.yml#L16.
 
 #+name: csi-u-mode
 #+begin_src lua
@@ -282,7 +291,10 @@ The list here is originally drawn from https://github.com/alexherbo2/alacritty-e
 
 *** M-{a-z}
 
-We cannot use ~CSI u~ mode bindings for plain ~M-{a-z}~ combinations because then we break legacy programs (e.g., Zsh). The same thing goes for ~M-{A-Z}~, ~C-{a-z}~, and ~C-M-{a-z}~ combinations. By default these keys should already be "bound" this way in Wezterm, but we list them here for sake of completeness.
+We cannot use ~CSI u~ mode bindings for plain ~M-{a-z}~ combinations because
+then we break legacy programs (e.g., Zsh). The same thing goes for ~M-{A-Z}~,
+~C-{a-z}~, and ~C-M-{a-z}~ combinations. By default these keys should already be
+"bound" this way in Wezterm, but we list them here for sake of completeness.
 
 #+name: csi-u-mode-M-a-z
 #+begin_src lua
@@ -411,7 +423,9 @@ We cannot use ~CSI u~ mode bindings for plain ~M-{a-z}~ combinations because the
 #+end_src
 
 *** C-M-{a-z}
-Alt is interpreted as a leading ESC, and the Control modifier shifts the ASCII codepoint by -64. This is why, e.g., 'A' (ASCII codepoint 65) becomes codepoint 1.
+Alt is interpreted as a leading ESC, and the Control modifier shifts the ASCII
+codepoint by -64. This is why, e.g., 'A' (ASCII codepoint 65) becomes
+codepoint 1.
 
 #+name: csi-u-mode-C-M-a-z
 #+begin_src lua
@@ -445,7 +459,10 @@ Alt is interpreted as a leading ESC, and the Control modifier shifts the ASCII c
 
 *** C-M-S-{a-z}
 
-Note that as a convention we reserve C-M-S- (as well as C-M-) to tmux keybindings. So these bindings rarely get used by other CLI programs that we use (because we don't like having the same bindings do different things based on whether we're running inside tmux or not).
+Note that as a convention we reserve C-M-S- (as well as C-M-) to tmux
+keybindings. So these bindings rarely get used by other CLI programs that we use
+(because we don't like having the same bindings do different things based on
+whether we're running inside tmux or not).
 
 #+name: csi-u-mode-C-M-S-a-z
 #+begin_src lua
@@ -481,9 +498,12 @@ Note that as a convention we reserve C-M-S- (as well as C-M-) to tmux keybinding
 
 (Normally) dead keys. Bring them back to life with ~CSI u~ sequences!
 
-Note that these bindings are limited to what tmux is able to understand. For example, we cannot send ~\x1b[34;5u~ (C-") because tmux is unable to parse it. So we instead send ~\x1b[39;6u~ (C-S-') instead.
+Note that these bindings are limited to what tmux is able to understand. For
+example, we cannot send ~\x1b[34;5u~ (C-") because tmux is unable to parse it.
+So we instead send ~\x1b[39;6u~ (C-S-') instead.
 
-For more information about the underlying decimal codes used here, see =man ascii= in Linux or Mac.
+For more information about the underlying decimal codes used here, see =man
+ascii= in Linux or Mac.
 
 #+name: csi-u-mode-exotic
 #+begin_src lua
@@ -554,9 +574,12 @@ For more information about the underlying decimal codes used here, see =man asci
 
 **** Left bracket
 
-Don't make ~C-[~ map to ESC, because we never use it that way. Again, we rebind this from tmux to be the ~CSI u~ encoded version. (This is the same method we use to map ~C-i~ (to be different from ~TAB~)).
+Don't make ~C-[~ map to ESC, because we never use it that way. Again, we rebind
+this from tmux to be the ~CSI u~ encoded version. (This is the same method we
+use to map ~C-i~ (to be different from ~TAB~)).
 
-For simplicity we handle all variations of the problematic ~[~ key here (usually conflicts with Escape).
+For simplicity we handle all variations of the problematic ~[~ key here (usually
+conflicts with Escape).
 
 #+name: csi-u-mode-exotic-lbracket
 #+begin_src lua
@@ -570,7 +593,10 @@ For simplicity we handle all variations of the problematic ~[~ key here (usually
 
 **** Escape
 
-Disambiguate various ~ESC~ + modifier key chords. We have to use a combination of other keys (=\x1d=, =\x1e=, =\x1f=) in order to avoid buggy overlap with other logic somehwere down the terminal-emulation-key-sequencing-parsing rabbit hole.
+Disambiguate various ~ESC~ + modifier key chords. We have to use a combination
+of other keys (=\x1d=, =\x1e=, =\x1f=) in order to avoid buggy overlap with
+other logic somehwere down the terminal-emulation-key-sequencing-parsing rabbit
+hole.
 
 #+name: csi-u-mode-exotic-escape
 #+begin_src lua
@@ -585,11 +611,14 @@ Disambiguate various ~ESC~ + modifier key chords. We have to use a combination o
 
 **** Tab
 
-Don't map S-TAB because most terminals (including Alacritty) send ~\x1b[Z~ for this, and many existing programs interpret this as S-TAB. In Emacs it interprets it as ~<backtab>~.
+Don't map S-TAB because most terminals (including Alacritty) send ~\x1b[Z~ for
+this, and many existing programs interpret this as S-TAB. In Emacs it interprets
+it as ~<backtab>~.
 
 ~M-TAB~ is =\x1b\x09= (ESC followed by TAB), so don't map this either.
 
-For some reason ~C-S-TAB~ sends "\x19" (EM (end of medium)), which can already be sent via C-y, so remap it here.
+For some reason ~C-S-TAB~ sends "\x19" (EM (end of medium)), which can already
+be sent via C-y, so remap it here.
 
 #+name: csi-u-mode-exotic-tab
 #+begin_src lua
@@ -615,9 +644,12 @@ For some reason ~C-S-TAB~ sends "\x19" (EM (end of medium)), which can already b
 
 **** Enter
 
-Because tmux has another bug where Enter (=0x0a=, or decimal codepoint 10) is indistinguishable from ~C-j~, even if we use ~CSI u~ encodings, we have to use =0x0d= instead (decimal codepoint 13 or =\r=).
+Because tmux has another bug where Enter (=0x0a=, or decimal codepoint 10) is
+indistinguishable from ~C-j~, even if we use ~CSI u~ encodings, we have to use
+=0x0d= instead (decimal codepoint 13 or =\r=).
 
-For ~S-Enter~ we use the same trick of sending F12 (=\x1b[24~=) first to enter our tmux's =virt= key table as we've done elsewhere in this config.
+For ~S-Enter~ we use the same trick of sending F12 (=\x1b[24~=) first to enter
+our tmux's =virt= key table as we've done elsewhere in this config.
 
 #+name: csi-u-mode-exotic-enter
 #+begin_src lua
@@ -632,9 +664,13 @@ For ~S-Enter~ we use the same trick of sending F12 (=\x1b[24~=) first to enter o
 
 **** Space
 
-C-Space sends the NUL byte ("\x00") in Alacritty, but in tmux it just sends the regular Space character. So it looks like there is no consensus in terminal programs, so we rebind it here.
+C-Space sends the NUL byte ("\x00") in Alacritty, but in tmux it just sends the
+regular Space character. So it looks like there is no consensus in terminal
+programs, so we rebind it here.
 
-S-Space is useful to just send the Space character, because we can type capital letters with spaces in-between them without having to lift the Shift key, so we don't rebind it.
+S-Space is useful to just send the Space character, because we can type capital
+letters with spaces in-between them without having to lift the Shift key, so we
+don't rebind it.
 
 #+name: csi-u-mode-exotic-space
 #+begin_src lua
