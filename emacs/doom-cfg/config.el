@@ -780,7 +780,10 @@ details."
                     l/banned-auto-format-dirs))))))
 
 (defun l/after-change-major-mode ()
-  (apheleia-mode (if (l/auto-format-buffer-p) 1 -1)))
+  (progn
+    (when (string-match "_test\\.\\w+$" (or (buffer-file-name) ""))
+      (column-enforce-mode -1))
+    (apheleia-mode (if (l/auto-format-buffer-p) 1 -1))))
 
 (add-hook! 'after-change-major-mode-hook 'l/after-change-major-mode)
 (after! sh-script
