@@ -1308,6 +1308,9 @@ Also add the number of windows in the window configuration."
             (lambda ()
               (column-enforce-mode
                (if (boundp 'l/disable-column-enforce-mode) -1 1))))
+  ;; Disable column-enforce-mode for comment text (sometimes comments can have
+  ;; long URLs and such that exceed 80 columns).
+  (setq column-enforce-comments nil)
   (global-column-enforce-mode t))
 
 (use-package! vim-empty-lines-mode
