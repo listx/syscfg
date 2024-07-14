@@ -1258,6 +1258,10 @@ extension.
   (column-enforce-mode -1))
 #+end_src
 
+For some reason using =(buffer-file-name)= on its own appears to hang
+Doom on startup (presumably because it returns =nil=). So we wrap it with =(or
+... "")= to avoid hanging Doom.
+
 * Colors
 
 #+name: theme
