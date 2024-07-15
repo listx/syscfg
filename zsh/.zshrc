@@ -236,7 +236,6 @@ alias gau='git add --update'
 alias gu='gau && gcu && gp' # Useful for saving work immediately in note-taking repos.
 alias gr='git rebase'
 alias grc='git rebase --continue'
-alias gri='git rebase --interactive'
 alias gp='git push'
 alias grv='git remote --verbose'
 alias gtag='~/syscfg/script/gtag.sh'
