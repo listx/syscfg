@@ -240,7 +240,6 @@ alias gp='git push'
 alias grv='git remote --verbose'
 alias gtag='~/syscfg/script/gtag.sh'
 
-alias e='emacs_open'
 alias ekb='emacs_kill_buffer'
 alias elb='emacs_list_buffers'
 alias v='nvim -p'
