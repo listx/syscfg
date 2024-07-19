@@ -4,14 +4,15 @@
 # waiting on input (which will never come, because it is hanging).
 emacs_kill_buffer()
 {
-	if (( $# != 1 )); then
-		echo >&2 "usage: $0 <EMACS_BUFFER>"
+	if (( $# != 2 )); then
+		>&2 echo "usage: $0 <SOCKET> <EMACS_BUFFER>"
 		return 1
 	fi
 
+	local socket="${1}"
 	local buffer
 	local elisp
-	buffer="${1}"
+	buffer="${2}"
 	elisp=$(cat << EOF
 	(let*
 		(
@@ -27,5 +28,5 @@ emacs_kill_buffer()
 EOF
 	)
 
-	emacsclient -e "${elisp}"
+	emacsclient --socket "${socket}" -e "${elisp}"
 }
