@@ -1322,7 +1322,11 @@ Also add the number of windows in the window configuration."
   (add-hook 'prog-mode-hook 'vim-empty-lines-mode)
   (add-hook 'text-mode-hook 'vim-empty-lines-mode))
 
-(use-package! doom-modeline)
+(use-package! doom-modeline
+  :config
+  ;; If the window width is 100 or less, start truncating certain things (e.g.,
+  ;; overly long file path names for Java/Clojure codebases).
+  (setq doom-modeline-window-width-limit 100))
 
 ; Dim buffers in inactive windows to make the current one "pop".
 (use-package! auto-dim-other-buffers
