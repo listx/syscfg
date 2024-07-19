@@ -3,6 +3,7 @@
 emacs_list_buffers()
 {
 	local buffers
+	local socket="${1:-default}"
 	elisp=$(cat << EOF
 	(let*
 		(
@@ -15,7 +16,7 @@ EOF
 	)
 
 	# Get list of all buffers.
-	buffers=$(emacsclient -e "${elisp}")
+	buffers="$(emacsclient --socket "${socket}" -e "${elisp}")"
 	# Remove leading and trailing quotations.
 	buffers="${buffers:1:-1}"
 	# Change into an array.
