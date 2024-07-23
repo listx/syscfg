@@ -24,12 +24,27 @@ bind generic J none
 bind generic K none
 bind generic <Ctrl-j> none
 bind generic <Ctrl-k> none
+# Disable unused bindings. Otherwise they clutter up the [help] view.
+bind generic - none
+bind generic <Ctrl-e> none
+bind generic <Insert> none
+bind generic <Delete> none
+bind generic <Ctrl-c> none
+bind generic s none
 
 # Keybindings.
+bind generic , none
 bind generic h parent
+
+bind generic <LessThan> none
 bind generic l back
+
+bind generic <Ctrl-n> none
 bind generic <Ctrl-j> next
+
+bind generic <Ctrl-p> none
 bind generic <Ctrl-k> previous
+
 bind generic <Ctrl-h> view-help
 bind generic o view-log
 
