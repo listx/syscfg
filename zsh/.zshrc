@@ -331,6 +331,10 @@ fi
 # invocations).
 bindkey -v
 
+# Yank to the system clipboard inside vi-cmd-mode.
+zle -N __l_vi_yank_system_clipboard
+bindkey -M vicmd 'y' __l_vi_yank_system_clipboard
+
 # Make "kj" in viins mode enter vi-cmd-mode (same as pressing ESC).
 bindkey -M viins "kj" vi-cmd-mode
 # 0.1s for ESC key vs ALT+... disambiguation. This is required for the "kj"

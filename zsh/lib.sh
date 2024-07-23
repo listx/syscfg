@@ -330,3 +330,11 @@ t()
   tmux new-session -d -s "${session_id}"
   tmux switch-client -t "${session_id}"
 }
+
+# Yank to the system clipboard.
+__l_vi_yank_system_clipboard() {
+  # Execute the normal copying widget to copy to Zsh's own register.
+  zle vi-yank
+  # Also copy to the system clipboard.
+  echo "$CUTBUFFER" | >/dev/null ~/syscfg/script/copy-clipboard.sh
+}
