@@ -64,7 +64,7 @@ bind generic <Ctrl-y> +bash -c "git cat-file commit %(commit) \
 	| ~/syscfg/script/copy-clipboard.sh"
 
 # Force branch to point to current commit.
-bind main    B ?@git branch -f "%(prompt Force branch to point here: )" %(commit)
+bind main    B ?+git branch -f "%(prompt Force branch to point here: )" %(commit)
 
 bind generic R none
 bind generic <F5> none
