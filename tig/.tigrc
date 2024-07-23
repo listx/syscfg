@@ -51,6 +51,9 @@ bind generic <Ctrl-y> +bash -c "git cat-file commit %(commit) \
 # Force branch to point to current commit.
 bind main    B ?@git branch -f "%(prompt Force branch to point here: )" %(commit)
 
-bind main    <Ctrl-r> refresh
+bind generic R none
+bind generic <F5> none
+bind generic <Ctrl-r> refresh
+
 bind main    R !git rebase -i %(commit)
 bind generic <Backspace> move-page-up
