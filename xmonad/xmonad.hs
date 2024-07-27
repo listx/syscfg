@@ -1113,14 +1113,12 @@ l_workspaceIsEmpty xzy = do
     ]
 
 -- Terminals.
-l_term :: String -> Bool ->  String
-l_term hostname wantRawShell = case hostname of
+l_term :: String -> String
+l_term hostname = case hostname of
   "k1" -> "LIBGL_ALWAYS_SOFTWARE=1 " <> invocation
   _ -> invocation
   where
-  invocation = if wantRawShell
-    then "alacritty --config-file ~/syscfg/alacritty/alacritty_raw_shell.yml"
-    else "wezterm"
+  invocation = "wezterm"
 
 l_isPortraitMonitorLayout :: String -> Bool
 l_isPortraitMonitorLayout givenHost = any (`isPrefixOf` givenHost) portraitHosts
@@ -1286,7 +1284,7 @@ l_keyBindings hostname numScreens conf@XConfig {XMonad.modMask = hypr}
   ++
   -- Launch apps.
   [ ((hypr,   xK_i            ), spawnSelected def ["qutebrowser", "firefox", "chromium"])
-  , ((hypr,   xK_e            ), spawnSelected def [l_term hostname False, l_term hostname True, "xterm"])
+  , ((hypr,   xK_e            ), spawnSelected def [l_term hostname, l_term hostname, "xterm"])
   -- Backup binding to launch a terminal in case our Hyper key (hypr) is
   -- unavailable. This happens whenever we unplug/replug our keyboard, and a
   -- terminal isn't already showing in a window somewhere to be able to call
@@ -1294,7 +1292,7 @@ l_keyBindings hostname numScreens conf@XConfig {XMonad.modMask = hypr}
   -- Hyper key is used exclusively to maneuver around Xmonad, we need a
   -- non-Hyper-key binding to launch a terminal to bootstrap ourselves back in
   -- with initkeys.sh.
-  , ((altS,   xK_e            ), spawnSelected def [l_term hostname False, l_term hostname True, "xterm"])
+  , ((altS,   xK_e            ), spawnSelected def [l_term hostname, l_term hostname, "xterm"])
   , ((hypr,   xK_u            ), spawnSelected def ["emacsclient", "emacs"])
   ]
   where
@@ -1456,7 +1454,7 @@ l_startupHook hostname = do
   -- Each of these terminals also spawn a tmux client instance.
   mapM_
     (\xzy -> whenX (l_workspaceIsEmpty xzy)
-      (spawn $ l_term hostname False ++ " --class atWorkspace_" ++ show xzy))
+      (spawn $ l_term hostname ++ " --class atWorkspace_" ++ show xzy))
     $ l_XZYsFrom numScreens ZGWork (take 1) y
   -- The emacs daemon also starts up org-roam-server-mode, which turns on an
   -- HTTP server to serve org-roam files over port 8010.
@@ -1524,8 +1522,7 @@ l_resetMouse alwaysReset = do
       then return (w, destNew)
       else return s
   windowPropToDest =
-    [ (ClassName "Alacritty", LowerLeft)
-    , (ClassName "org.wezfurlong.wezterm", LowerLeft)
+    [ (ClassName "org.wezfurlong.wezterm", LowerLeft)
     , (ClassName "Emacs", LowerLeft)
     , (ClassName "qutebrowser", UpperRight)
     , (ClassName "Chromium-browser", UpperRight)

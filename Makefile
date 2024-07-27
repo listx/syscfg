@@ -12,22 +12,6 @@ S := $(shell cat ${H}/.hostname-short)
 # Add the -n flag for directories, as otherwise, stray symlinks will be created
 # inside the C (config) directory itself.
 
-alacritty:
-	ln -fns ${C}/alacritty                              ${H}/.config/alacritty
-	ln -fs colors_PastelDark.yml                        alacritty/colors.yml
-ifeq ('${T}','k1')
-	ln -fs k1_tmux.yml                                  alacritty/alacritty.yml
-	ln -fs k1_shell.yml                                 alacritty/alacritty_raw_shell.yml
-else ifeq ('${T}','m0')
-	ln -fs k1_tmux.yml                                  alacritty/alacritty.yml
-	ln -fs k1_shell.yml                                 alacritty/alacritty_raw_shell.yml
-else ifeq ('${P}','Linux')
-	ln -fs linux_tmux.yml                               alacritty/alacritty.yml
-	ln -fs linux_shell.yml                              alacritty/alacritty_raw_shell.yml
-else
-	ln -fs mac_tmux.yml                                 alacritty/alacritty.yml
-	ln -fs mac_shell.yml                                alacritty/alacritty_raw_shell.yml
-endif
 bash:
 	ln -fs ${C}/bash/.bashrc                            ${H}
 clojure:
@@ -162,7 +146,6 @@ zsh:
 	ln -fns ${C}/zsh/zcomet                             ${H}/.zcomet
 
 .PHONY: \
-	alacritty \
 	bash \
 	clojure \
 	emacs \

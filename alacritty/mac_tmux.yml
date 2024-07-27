@@ -1,8 +1,0 @@
-# See https://github.com/alacritty/alacritty/blob/master/alacritty.yml for a
-# canonical reference.
-
-import:
-  - "~/syscfg/alacritty/base.yml"
-  - "~/syscfg/alacritty/mac.yml"
-  - "~/syscfg/alacritty/colors.yml"
-  - "~/syscfg/alacritty/key_bindings_tmux.yml"

@@ -9,9 +9,6 @@
 *.DS_Store
 *~
 *.zwc
-alacritty/alacritty.yml
-alacritty/alacritty_raw_shell.yml
-alacritty/upstream
 cache
 cmus/*
 emacs/doom-cfg/custom.el

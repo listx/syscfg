@@ -8,7 +8,6 @@ in
 
   environment.systemPackages = with pkgs; [
     # Essentials
-    alacritty # deprecated
     wezterm
     tmux
     zsh

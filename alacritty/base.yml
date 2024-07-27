@@ -1,5 +1,0 @@
-# See https://github.com/alacritty/alacritty/blob/master/alacritty.yml for a
-# canonical reference.
-
-env:
-  TERM: alacritty-xtermlike
