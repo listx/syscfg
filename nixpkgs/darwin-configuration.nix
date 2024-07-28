@@ -45,7 +45,6 @@ in
       jujutsu
       less
       lieer
-      lorri
       melby-release.melby-daemon
       melby-release.melby-client-rust
       mpv
@@ -88,6 +87,9 @@ in
   # Auto upgrade nix package and the daemon service.
   services.nix-daemon.enable = true;
   nix.package = pkgs.nix;
+
+  # Enable Lorri daemon.
+  services.lorri.enable = true;
 
   # Create /etc/zshrc that loads the nix-darwin environment.
   programs.zsh.enable = true;  # default shell on catalina
