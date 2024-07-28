@@ -129,7 +129,7 @@ DOOM requires 3 configuration files in the =$DOOMDIR=:
 
        :checkers
        syntax              ; tasing you for every semicolon you forget
-       ;(spell +flyspell) ; tasing you for misspelling mispelling
+       (spell +aspell +everywhere) ; tasing you for misspelling mispelling
        ;;grammar           ; tasing grammar mistake every you make
 
        :tools
@@ -401,6 +401,7 @@ other configurations that are pulled in. And so we define it first here.
 <<theme>>
 <<misc-ui>>
 <<known-emacs-bugs>>
+<<spelling>>
 
 ;; Here are some additional functions/macros that could help you configure Doom:
 ;;
@@ -2535,6 +2536,34 @@ we'll paste back whatever we have there back to the browser's text box.
 If we don't want to paste back to the original window, ~C-c C-k~ still copies
 the contents of the entire buffer to the clipboard (but doesn't paste).
 
-* Reference
+** Spelling
 
-#  LocalWords:  iedit ESC kj LocalWords DOOM's SPC Evil's minibuffer
+#+name: spelling
+#+begin_src emacs-lisp
+(setq
+ spell-fu-directory "~/syscfg/emacs/spell-fu"
+ ispell-library-directory "~/syscfg/emacs/spell-fu"
+ ispell-dictionary "en"
+ ispell-personal-dictionary "~/syscfg/emacs/spell-fu/custom-dict.txt")
+#+end_src
+
+Interestingly, setting =ispell-dictionary= to ="en"= appears to bring in Australian
+English on top of American English. Compare it against the "default" one that
+gets created automatically with
+
+#+begin_src bash
+cd ~/syscfg/emacs/spell-fu
+diff -u words_spell-fu-ispell-words-default.txt words_spell-fu-ispell-words-en.txt
+#+end_src
+
+Also, although we set =ispell-personal-dictionary= to a custom file path (and
+doing ~z g~ (=+spell/add-word=) indeed inserts the new word into this file), on
+Emacs startup the contents of that file appears to get merged into
+
+#+begin_example
+~/syscfg/emacs/spell-fu/words_spell-fu-ispell-personal-default.txt
+#+end_example
+
+and it's not clear if that's a bug or if everything is WAI. Either way, for our
+use case we just keep track of =custom-dict.txt= in version control as the other
+files are generated automatically.

@@ -12,6 +12,8 @@
 cache
 cmus/*
 emacs/doom-cfg/custom.el
+emacs/spell-fu/*.data
+emacs/spell-fu/*.txt
 gpg
 karabiner/assets
 karabiner/automatic_backups

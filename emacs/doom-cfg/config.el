@@ -1378,6 +1378,11 @@ Also add the number of windows in the window configuration."
 (setq evil-emacs-state-cursor  'box)
 ;; Broken. See README.org for discussion.
 ;; (tty--set-output-buffer-size (* 128 1024))
+(setq
+ spell-fu-directory "~/syscfg/emacs/spell-fu"
+ ispell-library-directory "~/syscfg/emacs/spell-fu"
+ ispell-dictionary "en"
+ ispell-personal-dictionary "~/syscfg/emacs/spell-fu/custom-dict.txt")
 
 ;; Here are some additional functions/macros that could help you configure Doom:
 ;;

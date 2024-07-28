@@ -1,14 +1,18 @@
-{ config, pkgs, ... }:
+{ config, lib, pkgs, ... }:
 
 let
   melby-release = import "${HOME}/prog/melby/package/build.nix";
   HOME = builtins.getEnv "HOME";
 in
 {
+  nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
+    "aspell-dict-en-science"
+  ];
   # List packages installed in system profile. To search by name, run:
   # $ nix-env -qaP | grep wget
   environment.systemPackages = with pkgs;
-    [ autoconf
+    [ (aspellWithDicts (dicts: with dicts; [ en en-computers en-science ]))
+      autoconf
       bashInteractive
       bear
       ccls
