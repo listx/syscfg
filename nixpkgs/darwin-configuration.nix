@@ -47,7 +47,6 @@ in
       lieer
       melby-release.melby-daemon
       melby-release.melby-client-rust
-      mpv
       neil
       neovim
       nodejs
