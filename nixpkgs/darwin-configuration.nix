@@ -68,7 +68,6 @@ in
       util-linux
       wezterm
       xz
-      youtube-dl
       zsh
       zstd
     ];
