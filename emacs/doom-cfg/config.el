@@ -544,7 +544,8 @@ LINK-NAME."
                (l/org-agenda-skip-if-scheduled-later)
                ;; Skip entries if they are DONE (or CANCELED, etc).
                (org-agenda-skip-entry-if 'todo 'done)))
-            (org-agenda-overriding-header "Prioritized tasks from today or the past")))
+            (org-agenda-overriding-header
+             "Prioritized tasks from today or the past")))
           ;; See 7 days from today. It's like the opposite of "Weekly review".
           (agenda ""
                   ((org-agenda-span 7)
@@ -1113,8 +1114,10 @@ Also add the number of windows in the window configuration."
         (:name "sent" :query "tag:sent" :key "s")))
 (defun +notmuch-get-sync-command () "~/syscfg/script/mail-sync.sh")
 (setq sendmail-program "gmi")
-(setq message-sendmail-extra-arguments '("send" "--quiet" "-t" "-C" "~/mail/linusarver@gmail.com"))
-(defun notmuch-mua-reply-guess-sender (orig-fun query-string &optional sender reply-all duplicate)
+(setq message-sendmail-extra-arguments
+      '("send" "--quiet" "-t" "-C" "~/mail/linusarver@gmail.com"))
+(defun notmuch-mua-reply-guess-sender (orig-fun query-string &optional sender
+                                                reply-all duplicate)
   (let ((sender (or sender
                     "Linus Arver <linus@ucla.edu>")))
     (funcall orig-fun query-string sender reply-all duplicate)))
@@ -1218,7 +1221,8 @@ Also add the number of windows in the window configuration."
     `(hl-line :background ,(doom-darken (doom-color 'bg-alt) 0.4))
     '(vim-empty-lines-face :weight bold)
 
-    `(auto-dim-other-buffers-face :background ,(doom-darken (doom-color 'bg-alt) 0.6))
+    `(auto-dim-other-buffers-face
+      :background ,(doom-darken (doom-color 'bg-alt) 0.6))
     '(org-headline-done        :foreground "#aaaaaa" :weight bold)
 
     ; Use bright visuals for coloring regions and interactive search hits.
@@ -1229,7 +1233,8 @@ Also add the number of windows in the window configuration."
     ; vertico
     `(vertico-multiline       :foreground ,l/color-foreground)
     `(vertico-group-title     :foreground ,l/color-xBrightOrange)
-    `(vertico-group-separator :foreground ,l/color-xBrightOrange :strike-through t)
+    `(vertico-group-separator :foreground ,l/color-xBrightOrange
+                              :strike-through t)
 
     `(tab-bar :background ,(doom-darken (doom-color 'bg-alt) 0.2))
     `(tab-bar-tab
@@ -1266,11 +1271,14 @@ Also add the number of windows in the window configuration."
     ;; Fix ugly colors for diffs. Prevalent because of git comit message buffers
     ;; like COMMIT_EDITMSG.
     '(git-commit-summary  :foreground "brightwhite" :weight bold)
-    '(diff-added        :foreground "#ccffcc" :background "#335533" :weight bold)
-    '(diff-removed      :foreground "#ffcccc" :background "#553333" :weight bold)
+    '(diff-added        :foreground "#ccffcc" :background "#335533"
+                        :weight bold)
+    '(diff-removed      :foreground "#ffcccc" :background "#553333"
+                        :weight bold)
     '(diff-context      :foreground "brightwhite")
     '(diff-function     :foreground "brightmagenta")
-    '(diff-header       :foreground "#ffff00" :background "#555533" :weight bold)
+    '(diff-header       :foreground "#ffff00" :background "#555533"
+                        :weight bold)
     '(diff-file-header  :foreground "brightyellow")
     '(diff-hunk-header  :foreground "brightcyan")
     '(git-commit-keyword  :foreground "brightmagenta" :weight bold))

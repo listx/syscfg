@@ -1353,7 +1353,8 @@ dhall text <<< "./listColorsForEmacs.dhall ./themes/PastelDark.dhall"
     `(hl-line :background ,(doom-darken (doom-color 'bg-alt) 0.4))
     '(vim-empty-lines-face :weight bold)
 
-    `(auto-dim-other-buffers-face :background ,(doom-darken (doom-color 'bg-alt) 0.6))
+    `(auto-dim-other-buffers-face
+      :background ,(doom-darken (doom-color 'bg-alt) 0.6))
     '(org-headline-done        :foreground "#aaaaaa" :weight bold)
 
     ; Use bright visuals for coloring regions and interactive search hits.
@@ -1364,7 +1365,8 @@ dhall text <<< "./listColorsForEmacs.dhall ./themes/PastelDark.dhall"
     ; vertico
     `(vertico-multiline       :foreground ,l/color-foreground)
     `(vertico-group-title     :foreground ,l/color-xBrightOrange)
-    `(vertico-group-separator :foreground ,l/color-xBrightOrange :strike-through t)
+    `(vertico-group-separator :foreground ,l/color-xBrightOrange
+                              :strike-through t)
 
     `(tab-bar :background ,(doom-darken (doom-color 'bg-alt) 0.2))
     `(tab-bar-tab
@@ -1401,11 +1403,14 @@ dhall text <<< "./listColorsForEmacs.dhall ./themes/PastelDark.dhall"
     ;; Fix ugly colors for diffs. Prevalent because of git comit message buffers
     ;; like COMMIT_EDITMSG.
     '(git-commit-summary  :foreground "brightwhite" :weight bold)
-    '(diff-added        :foreground "#ccffcc" :background "#335533" :weight bold)
-    '(diff-removed      :foreground "#ffcccc" :background "#553333" :weight bold)
+    '(diff-added        :foreground "#ccffcc" :background "#335533"
+                        :weight bold)
+    '(diff-removed      :foreground "#ffcccc" :background "#553333"
+                        :weight bold)
     '(diff-context      :foreground "brightwhite")
     '(diff-function     :foreground "brightmagenta")
-    '(diff-header       :foreground "#ffff00" :background "#555533" :weight bold)
+    '(diff-header       :foreground "#ffff00" :background "#555533"
+                        :weight bold)
     '(diff-file-header  :foreground "brightyellow")
     '(diff-hunk-header  :foreground "brightcyan")
     '(git-commit-keyword  :foreground "brightmagenta" :weight bold))
@@ -1488,8 +1493,8 @@ appear to be lazily loaded the first time we invoke =M-x consult-grep=.
 
 By default evil-org-mode makes =M-j= move the subtree (bound to
 ~org-forward-element~). But instead we change things so that =M-<letter>=
-non-destructively navigates, and =M-S-<letter>= moves things around. This is more
-intuitive to me, at least.
+non-destructively navigates, and =M-S-<letter>= moves things around. This is
+more intuitive to me, at least.
 
 Note that we have to use =M-J= to encode =M-S-j=. This appears to be Emacs
 convention.
@@ -1825,7 +1830,8 @@ interesting to see that doom has a slightly different version with
                (l/org-agenda-skip-if-scheduled-later)
                ;; Skip entries if they are DONE (or CANCELED, etc).
                (org-agenda-skip-entry-if 'todo 'done)))
-            (org-agenda-overriding-header "Prioritized tasks from today or the past")))
+            (org-agenda-overriding-header
+             "Prioritized tasks from today or the past")))
           ;; See 7 days from today. It's like the opposite of "Weekly review".
           (agenda ""
                   ((org-agenda-span 7)
@@ -2114,7 +2120,8 @@ Choose =clojure-cli= if there are multiple build systems available and
 
 ** Indentation
 
-We use Linux Kernel style indentation with tabs understood to be 8 characters wide.
+We use Linux Kernel style indentation with tabs understood to be 8 characters
+wide.
 
 #+name: c-indentation
 #+begin_src emacs-lisp
@@ -2166,7 +2173,8 @@ We use Linux Kernel style indentation with tabs understood to be 8 characters wi
 
 #+name: notmuch-overwrite-from
 #+begin_src emacs-lisp
-(defun notmuch-mua-reply-guess-sender (orig-fun query-string &optional sender reply-all duplicate)
+(defun notmuch-mua-reply-guess-sender (orig-fun query-string &optional sender
+                                                reply-all duplicate)
   (let ((sender (or sender
                     "Linus Arver <linus@ucla.edu>")))
     (funcall orig-fun query-string sender reply-all duplicate)))
@@ -2236,7 +2244,8 @@ Note that =lieer= uses a script called =gmi= (odd how it isn't just called
 #+name: notmuch-send-email-with-lieer
 #+begin_src emacs-lisp
 (setq sendmail-program "gmi")
-(setq message-sendmail-extra-arguments '("send" "--quiet" "-t" "-C" "~/mail/linusarver@gmail.com"))
+(setq message-sendmail-extra-arguments
+      '("send" "--quiet" "-t" "-C" "~/mail/linusarver@gmail.com"))
 #+end_src
 
 * Shell
@@ -2550,13 +2559,14 @@ the contents of the entire buffer to the clipboard (but doesn't paste).
  ispell-personal-dictionary "~/syscfg/emacs/spell-fu/custom-dict.txt")
 #+end_src
 
-Interestingly, setting =ispell-dictionary= to ="en"= appears to bring in Australian
-English on top of American English. Compare it against the "default" one that
-gets created automatically with
+Interestingly, setting =ispell-dictionary= to ="en"= appears to bring in
+Australian English on top of American English. Compare it against the "default"
+one that gets created automatically with
 
 #+begin_src bash
 cd ~/syscfg/emacs/spell-fu
-diff -u words_spell-fu-ispell-words-default.txt words_spell-fu-ispell-words-en.txt
+diff -u words_spell-fu-ispell-words-default.txt \
+    words_spell-fu-ispell-words-en.txt
 #+end_src
 
 Also, although we set =ispell-personal-dictionary= to a custom file path (and
