@@ -1,8 +1,9 @@
-personal_ws-1.1 en 47
+personal_ws-1.1 en 50
 arver
 async
 autocomplete
 codebases
+codepoint
 config
 configs
 cronjob
@@ -10,6 +11,7 @@ customizations
 deps
 dired
 elisp
+encodings
 ffffff
 formatter
 formatters
@@ -46,3 +48,4 @@ truthy
 upstreamed
 vertico
 wezterm
+zsh

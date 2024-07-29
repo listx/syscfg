@@ -2,7 +2,7 @@
 #+AUTHOR: Linus Arver
 #+PROPERTY: header-args :noweb no-export
 
-* Toplevel configuration
+* Top-level configuration
 
 #+begin_src lua :tangle .wezterm.lua
 <<boilerplate>>
@@ -494,7 +494,7 @@ whether we're running inside tmux or not).
 { key = "z", mods = "CTRL|ALT|SHIFT", action = act.SendString "\x1b[24~\x1b[122;8u" },
 #+end_src
 
-*** Exotic keybinds
+*** Exotic keybindings
 
 (Normally) dead keys. Bring them back to life with ~CSI u~ sequences!
 
@@ -595,7 +595,7 @@ conflicts with Escape).
 
 Disambiguate various ~ESC~ + modifier key chords. We have to use a combination
 of other keys (=\x1d=, =\x1e=, =\x1f=) in order to avoid buggy overlap with
-other logic somehwere down the terminal-emulation-key-sequencing-parsing rabbit
+other logic somewhere down the terminal-emulation-key-sequencing-parsing rabbit
 hole.
 
 #+name: csi-u-mode-exotic-escape
@@ -611,7 +611,7 @@ hole.
 
 **** Tab
 
-Don't map S-TAB because most terminals (including Alacritty) send ~\x1b[Z~ for
+Don't map S-TAB because most terminals (including =Alacritty=) send ~\x1b[Z~ for
 this, and many existing programs interpret this as S-TAB. In Emacs it interprets
 it as ~<backtab>~.
 
@@ -664,8 +664,8 @@ our tmux's =virt= key table as we've done elsewhere in this config.
 
 **** Space
 
-C-Space sends the NUL byte ("\x00") in Alacritty, but in tmux it just sends the
-regular Space character. So it looks like there is no consensus in terminal
+C-Space sends the NUL byte ("\x00") in =Alacritty=, but in tmux it just sends
+the regular Space character. So it looks like there is no consensus in terminal
 programs, so we rebind it here.
 
 S-Space is useful to just send the Space character, because we can type capital
@@ -682,7 +682,7 @@ don't rebind it.
 { key = "Space", mods = "CTRL|ALT|SHIFT", action = act.SendString "\x1b[32;8u" }, -- C-M-S-Space
 #+end_src
 
-*** Exotic keybinds (M)
+*** Exotic keybindings (M)
 
 #+name: csi-u-mode-exotic-M
 #+begin_src lua
@@ -730,7 +730,7 @@ don't rebind it.
 { key = "~",  mods = "ALT|SHIFT", action = act.SendString "\x1b[96;4u" }, -- M-~ (M-S-`)
 #+end_src
 
-*** Exotic keybinds (C-M)
+*** Exotic keybindings (C-M)
 
 #+name: csi-u-mode-exotic-C-M
 #+begin_src lua
