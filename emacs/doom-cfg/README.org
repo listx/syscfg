@@ -421,9 +421,6 @@ other configurations that are pulled in. And so we define it first here.
 ;; they are implemented.
 #+end_src
 
-#+RESULTS:
-: tab-new
-
 * DOOM bug workarounds
 
 Here are some workarounds for upstream bugs that have not yet been fixed.
@@ -693,9 +690,6 @@ Make =kj= behave as ESC key.
   :config
   (setq evil-escape-key-sequence "kj"))
 #+end_src
-
-#+RESULTS: easy-esc
-: evil-substitute
 
 ** Override default DOOM bindings
 
@@ -984,9 +978,6 @@ otherwise, close current tab."
     (lambda (rgx) (string-match rgx bufname)) regexes))))
 #+end_src
 
-#+RESULTS: window-deletion
-: l/buffer-looks-like
-
 *** Navigation
 
 Make =C-{j,k}= cycle through windows, and =C-S-{j,k}=.
@@ -1011,8 +1002,6 @@ Make =C-{j,k}= cycle through windows, and =C-S-{j,k}=.
   (window-swap-states)
   (other-window -1))
 #+end_src
-
-#+RESULTS: window-navigation
 
 ** Tabs
 
