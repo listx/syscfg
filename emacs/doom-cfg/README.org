@@ -2506,22 +2506,25 @@ the same).
 
 *** Org
 
-**** Optionally disable column-enforce-mode
+**** Disable column-enforce-mode
 
-For some Org-mode files (notably those used for TODO tracking), we don't
-want to enable column-enforce mode because oftentimes there are HTTP
-URLs and these can get quite long. For such files, use the
-=l/disable-column-enforce-mode= variable. This will override the default
-behavior which is to enable =column-enforce-mode= (which is the case for Org
-files that are written with Literate Programming or general-purpose
-documentation in mind).
+Disable column-enforce mode because we often have Org links (hyperlinks, etc)
+which are pretty-printed as shorter strings than they actually are, and it
+confuses column-enforce-mode. That is, column-enforce-mode may colorize a line
+as being too long when instead the line is well within the =fill-column= value
+as long as it is pretty-printed (which it always is, at least if we are using
+Emacs with Org mode turned on).
+
+So instead of column-enforce-mode, use =display-fill-column-indicator-mode=
+which draws a vertical line down the buffer (at the =fill-column=, which is
+typically 80, instead).
 
 #+name: l/disable-column-enforce-mode
 #+begin_src emacs-lisp
 (add-hook 'org-mode-hook
           (lambda ()
-            (column-enforce-mode
-             (if (boundp 'l/disable-column-enforce-mode) -1 1))))
+            (column-enforce-mode -1)
+            (display-fill-column-indicator-mode 1)))
 #+end_src
 
 ** emacs-everywhere

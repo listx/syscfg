@@ -1309,8 +1309,8 @@ Also add the number of windows in the window configuration."
   :config
   (add-hook 'org-mode-hook
             (lambda ()
-              (column-enforce-mode
-               (if (boundp 'l/disable-column-enforce-mode) -1 1))))
+              (column-enforce-mode -1)
+              (display-fill-column-indicator-mode 1)))
   ;; Disable column-enforce-mode for comment text (sometimes comments can have
   ;; long URLs and such that exceed 80 columns).
   (setq column-enforce-comments nil)
