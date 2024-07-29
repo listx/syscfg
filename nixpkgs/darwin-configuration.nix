@@ -8,8 +8,10 @@ in
   nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
     "aspell-dict-en-science"
   ];
-  # List packages installed in system profile. To search by name, run:
-  # $ nix-env -qaP | grep wget
+  # List packages installed in system profile.
+  #
+  # FIXME: Remove tooling that can be project-specific and placed into
+  # "<PROJECT_ROOT>/.envrc".
   environment.systemPackages = with pkgs;
     [ (aspellWithDicts (dicts: with dicts; [ en en-computers en-science ]))
       autoconf
@@ -24,7 +26,6 @@ in
       coreutils
       dhall
       difftastic
-      direnv
       dos2unix
       emacs
       fd
@@ -87,8 +88,19 @@ in
   services.nix-daemon.enable = true;
   nix.package = pkgs.nix;
 
-  # Enable Lorri daemon.
-  services.lorri.enable = true;
+  # nix-direnv
+  # See https://github.com/nix-community/nix-direnv.
+  programs.direnv = {
+    enable = true;
+    package = pkgs.direnv;
+    silent = false;
+    loadInNixShell = true;
+    direnvrcExtra = "";
+    nix-direnv = {
+      enable = true;
+      package = pkgs.nix-direnv;
+    };
+  };
 
   # Create /etc/zshrc that loads the nix-darwin environment.
   programs.zsh.enable = true;  # default shell on catalina
