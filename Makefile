@@ -24,6 +24,7 @@ emacs:
 	ln -fns ${C}/emacs/doom-cfg                         ${H}/.doom.d
 	# Bring 'doom' script into $$PATH.
 	cd ${C}/script && ln -fs ../emacs/doom-upstream/bin/doom
+	ln -sf ${H}/lo/custom-dict.txt                      ${C}/emacs/spell-fu
 git:
 	ln -fs ${C}/git/cfg.personal.conf                   ${H}/.gitconfig
 	ln -fs ${C}/git/gitignore                           ${H}/.gitignore
