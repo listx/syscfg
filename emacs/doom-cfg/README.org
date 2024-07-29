@@ -13,7 +13,7 @@ it here in literate form.
   effect.
 - We set =:tangle no-export= by default for all source code blocks. This is
   because the =literate= DOOM module by default tangles all emacs-lisp source
-  code blocks to config.el, which defeats the purpose of literate programming
+  code blocks to =config.el=, which defeats the purpose of literate programming
   (where the raw order of how things are defined do **not** dictate how the end
   result looks like).
 - We set =:noweb no-export= to enable Noweb's =<<LINK>>= syntax in all source
@@ -47,7 +47,7 @@ DOOM requires 3 configuration files in the =$DOOMDIR=:
 - =config.el=: This is where all of our custom configuration goes. Note that
   this file can pull in other =*.el= files as well if we want to.
 
-* $DOOMDIR/init.el
+* =$DOOMDIR/init.el=
 
 #+begin_src emacs-lisp :tangle init.el
 ;;; init.el -*- lexical-binding: t; -*-
@@ -278,7 +278,7 @@ Emacs by default. However in DOOM ~C-u~ is mapped to scrolling up half a page.
 So instead you have to type ~, u~ to [[https://docs.doomemacs.org/v21.12/#/users/concepts/emacs-terminology/keybinds/prefix-key][access it]]. Otherwise it's the same (you can
 still type a ~,~ to access the leader key after typing ~, u~).
 
-* $DOOMDIR/packages.el
+* =$DOOMDIR/packages.el=
 
 #+begin_src emacs-lisp :tangle packages.el
 ;; -*- no-byte-compile: t; -*-
@@ -341,7 +341,7 @@ still type a ~,~ to access the leader key after typing ~, u~).
 (package! ztree)
 #+end_src
 
-* $DOOMDIR/config.el
+* =$DOOMDIR/config.el=
 
 This is the final structured output of =$DOOMDIR/config.el=, which is a special
 file that DOOM recognizes. Because of the way it acts as the "main"
@@ -686,7 +686,7 @@ Return an event vector."
 
 *** Enter Evil normal state quickly (default: "ESC" key)
 
-Make "kj" behave as ESC key.
+Make =kj= behave as ESC key.
 #+name: easy-esc
 #+begin_src emacs-lisp
 (use-package! evil-escape
@@ -844,7 +844,7 @@ will be balanced.
 *** Deletion
 
 If there are multiple windows, close the current window. Otherwise close the
-current tab if there are mulitple tabs. Otherwise, try to exit emacs.
+current tab if there are multiple tabs. Otherwise, try to exit emacs.
 
 We take care to tread around so-called "auxiliary" buffers, which are
 auto-generated buffers from various emacs modes/packages.
@@ -1488,7 +1488,7 @@ appear to be lazily loaded the first time we invoke =M-x consult-grep=.
 
 By default evil-org-mode makes =M-j= move the subtree (bound to
 ~org-forward-element~). But instead we change things so that =M-<letter>=
-nondestructively navigates, and =M-S-<letter>= moves things around. This is more
+non-destructively navigates, and =M-S-<letter>= moves things around. This is more
 intuitive to me, at least.
 
 Note that we have to use =M-J= to encode =M-S-j=. This appears to be Emacs
@@ -2217,7 +2217,7 @@ We use Linux Kernel style indentation with tabs understood to be 8 characters wi
 ** Sync Gmail with local database
 
 By default this function will check which options are available and run the
-associated command (e.g., "gmi" or "afew" or "mbsync"). Here we just return the
+associated command (e.g., =gmi= or =afew= or =mbsync=). Here we just return the
 path to our script which does it all for us.
 
 This way we can use the default ~, m u~ binding to sync manually (and don't need
