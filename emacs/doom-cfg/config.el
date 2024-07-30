@@ -1391,6 +1391,21 @@ Also add the number of windows in the window configuration."
  ispell-library-directory "~/syscfg/emacs/spell-fu"
  ispell-dictionary "en"
  ispell-personal-dictionary "~/syscfg/emacs/spell-fu/custom-dict.txt")
+;; Extra faces we want to avoid spellchecking for, grouped by major mode.
+(setq l/spell-excluded-faces-alist
+  '(;; This mode is empty, but it's good to have it still to make it easier to
+    ;; see the shape of the data.
+    (latex-mode
+     . ())
+    (org-mode
+     . (
+        ;; Disable spellchecking for text inside tables.
+        org-table))))
+
+(after! spell-fu
+  (dolist (major-mode '(latex-mode org-mode))
+    (dolist (face (alist-get major-mode l/spell-excluded-faces-alist))
+      (cl-pushnew face (alist-get major-mode +spell-excluded-faces-alist)))))
 
 ;; Here are some additional functions/macros that could help you configure Doom:
 ;;
