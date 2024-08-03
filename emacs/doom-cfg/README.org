@@ -1583,6 +1583,9 @@ convention.
         org-use-effective-time t)
   <<set-auto-fill-mode>>
   <<org-fancy-priorities>>
+  (add-hook 'org-babel-post-tangle-hook (lambda ()
+                                          (delete-trailing-whitespace)
+                                          (save-buffer)))
   (add-hook 'org-mode-hook (lambda () (org-indent-mode -1)))
   (add-hook 'org-mode-hook 'l/org-colors))
 

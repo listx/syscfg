@@ -459,14 +459,17 @@ LINK-NAME."
                                     (?2 . "[P2]")
                                     (?3 . "[P3]")
                                     (?4 . "[P4]"))
-  
+
         org-priority-faces '((?0 :foreground "#f00")
                              (?1 :foreground "#ff0")
                              (?2 :foreground "#0f0")
                              (?3 :foreground "#0ff")
                              (?4 :foreground "#ccc")))
-  
+
   (add-hook 'org-mode-hook 'org-fancy-priorities-mode)
+  (add-hook 'org-babel-post-tangle-hook (lambda ()
+                                          (delete-trailing-whitespace)
+                                          (save-buffer)))
   (add-hook 'org-mode-hook (lambda () (org-indent-mode -1)))
   (add-hook 'org-mode-hook 'l/org-colors))
 
@@ -1075,17 +1078,17 @@ Also add the number of windows in the window configuration."
            :query "tag:inbox"
            :count-query "tag:inbox AND tag:unread"
            :key "i")
-  
+
           (:name "git-me"
            :query "tag:git and \"Linus Arver\""
            :count-query "tag:git AND tag:unread"
            :key "g")
-  
+
           (:name "git-cook"
            :query "tag:git and \"Cooking\""
            :count-query "tag:git AND tag:unread and Cooking"
            :key "G")
-  
+
           (:name "sent"
            :query "tag:sent"
            :key "s")))
