@@ -1587,7 +1587,6 @@ convention.
 <<org-misc>>
 <<org-agenda>>
 <<org-wrappers>>
-<<l/org-roam-get-nearby-dailies>>
 #+end_src
 
 ** org-todo-keywords
@@ -1618,45 +1617,6 @@ convention.
         ("ANSWERED"   . +org-todo-cancel)
         ("CANCELED"   . +org-todo-cancel)
         ("OBSOLETE" . +org-todo-cancel)))
-#+end_src
-
-** Select all org-roam dailies journals that exist in the current week
-
-This just goes through all org-agenda-files entries and only selects those ones
-that match a date range. We just need to figure out the last 7 days in
-YYYY-MM-DD format, then gather these entries in a list, and then loop through
-all org-agenda-files entries, and for each one only keep it if it matches of the
-7 days we precomputed.
-
-#+name: l/org-roam-get-nearby-dailies
-#+begin_src emacs-lisp
-(defun l/org-roam-get-nearby-dailies ()
-  "Return a list of absolute filenames of all dailies files from the current
-  week."
-  (interactive)
-  (let ((journal-files (seq-filter
-                        (lambda (f) (string-match "journal" f))
-                        (org-agenda-files))))
-    (seq-filter 'l/select-nearby-dailies journal-files)))
-
-(defun l/select-nearby-dailies (f)
-  "Given filename `f', determine if it has a substring that matches a date from
-  `l/nearby-dates'."
-  (let ((matches (mapcar (lambda (rgx) (string-match rgx f)) (l/nearby-dates))))
-    (cl-some (lambda (m) m) matches)))
-
-(defun l/nearby-dates ()
-  "Return a list of dates near today."
-  (mapcar (lambda (x) (org-read-date nil nil x))
-          '("-7d"
-            "-6d"
-            "-5d"
-            "-4d"
-            "-3d"
-            "-2d"
-            "-1d"
-            "0d"
-            "+1d")))
 #+end_src
 
 ** Scrub invalid links during Markdown export
@@ -1949,16 +1909,6 @@ Automatically insert newlines after 80 characters as we type.
 
 #+name: org-wrappers
 #+begin_src emacs-lisp
-(defun l/org-roam-goto-day (day)
-  "Open a new tab and show the day's journal file."
-  (interactive)
-  (tab-bar-new-tab)
-  (cond
-   ((eq day 'yesterday) (org-roam-dailies-goto-tomorrow (- 1)))
-   ((eq day 'today) (org-roam-dailies-goto-today))
-   (t (org-roam-dailies-goto-tomorrow 1)))
-  (goto-char (point-max)))
-
 (defun l/org-roam-open-node (&optional initial-input)
   "Search for org-roam nodes and open in a new tab."
   (interactive)
@@ -2261,13 +2211,6 @@ Note that =lieer= uses a script called =gmi= (odd how it isn't just called
       :mnvi "C-j" nil)
 <<doom-org-roam>>
 (setq org-roam-directory (concat org-directory "/note/")
-      org-roam-dailies-directory "journal/"
-      org-roam-dailies-capture-templates
-      '(("d" "default" entry
-         "* %<[%Y-%m-%d %a %H:%M]> %?"
-         :empty-lines-before 1
-         :target (file+head "%<%Y-%m-%d>.org"
-                            "#+title: %<%Y-%m-%d %a>\n")))
       l/org-roam-default-template
       (concat "#+title: ${title}\n\n* TODOs\n\n"
               "* Notes\n:PROPERTIES:\n:VISIBILITY: children\n:END:\n")
