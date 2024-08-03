@@ -511,6 +511,8 @@ LINK-NAME."
 (setq org-log-done 'note)
 (setq org-log-redeadline 'note)
 (setq org-log-reschedule 'note)
+(use-package! org-auto-tangle
+  :hook (org-mode . org-auto-tangle-mode))
 (map! :after evil-org-agenda
       :map evil-org-agenda-mode-map
       :mnv "C-k" nil

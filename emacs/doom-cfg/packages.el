@@ -51,6 +51,7 @@
 (package! citeproc)
 (package! column-enforce-mode)
 (package! git-gutter)
+(package! org-auto-tangle)
 (package! org-fancy-priorities)
 (package! protobuf-mode)
 (package! solaire-mode :disable t)

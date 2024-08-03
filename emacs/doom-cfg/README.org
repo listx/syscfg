@@ -1,6 +1,7 @@
 #+TITLE: Literate Emacs configuration
 #+AUTHOR: Linus Arver
 #+PROPERTY: header-args :tangle no :noweb no-export
+#+auto_tangle: t
 
 * Introduction
 
@@ -334,6 +335,7 @@ still type a ~,~ to access the leader key after typing ~, u~).
 (package! citeproc)
 (package! column-enforce-mode)
 (package! git-gutter)
+(package! org-auto-tangle)
 (package! org-fancy-priorities)
 (package! protobuf-mode)
 (package! solaire-mode :disable t)
@@ -1893,6 +1895,7 @@ change org-directory. It must be set before org loads!
 
 <<org-mark-done-with-note>>
 <<org-mark-done-when-rescheduling>>
+<<org-auto-tangle>>
 #+end_src
 
 ** Auto-fill mode
@@ -2003,6 +2006,16 @@ https://github.com/harrybournis/org-fancy-priorities.
                            (?4 :foreground "#ccc")))
 
 (add-hook 'org-mode-hook 'org-fancy-priorities-mode)
+#+end_src
+
+** org-auto-tangle
+
+Automatically tangle Org files if it has =#+auto_tangle: t= in it.
+
+#+name: org-auto-tangle
+#+begin_src emacs-lisp
+(use-package! org-auto-tangle
+  :hook (org-mode . org-auto-tangle-mode))
 #+end_src
 
 ** Notes
