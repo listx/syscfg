@@ -1207,6 +1207,7 @@ script which knows what to do depending on the environment."
   (evil-scroll-line-to-center nil))
 
 <<lsp>>
+<<comment>>
 #+end_src
 
 ** Customize automatic code formatting
@@ -1253,6 +1254,17 @@ extension.
 For some reason using =(buffer-file-name)= on its own appears to hang
 Doom on startup (presumably because it returns =nil=). So we wrap it with =(or
 ... "")= to avoid hanging Doom.
+
+** Comment lines
+
+The default binding of ~C-x C-;~ is painful, so use ~,c,~ instead.
+
+#+name: comment
+#+begin_src emacs-lisp
+(map! :after evil-nerd-commenter
+      :leader
+      :mnv "c," #'evilnc-comment-or-uncomment-lines)
+#+end_src
 
 * Colors
 

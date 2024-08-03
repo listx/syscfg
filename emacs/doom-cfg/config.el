@@ -1141,6 +1141,9 @@ Also add the number of windows in the window configuration."
   (setq lsp-yaml-format-enable nil)
   (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]bazel-.*\\'")
   (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\.cache\\'"))
+(map! :after evil-nerd-commenter
+      :leader
+      :mnv "c," #'evilnc-comment-or-uncomment-lines)
 ;; Use text-mode for scratch buffer.
 (setq-default doom-scratch-initial-major-mode 'text-mode)
 
