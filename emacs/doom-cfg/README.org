@@ -2113,12 +2113,14 @@ wide.
 
 #+name: notmuch
 #+begin_src emacs-lisp
-<<notmuch-hooks>>
-<<notmuch-bindings>>
-<<notmuch-saved-searches>>
-<<notmuch-sync>>
-<<notmuch-send-email-with-lieer>>
-<<notmuch-overwrite-from>>
+(use-package! notmuch
+  :config
+  <<notmuch-hooks>>
+  <<notmuch-bindings>>
+  <<notmuch-saved-searches>>
+  <<notmuch-sync>>
+  <<notmuch-send-email-with-lieer>>
+  <<notmuch-overwrite-from>>)
 #+end_src
 
 ** Disable useless minor modes during message composition
@@ -2178,27 +2180,25 @@ wide.
 
 #+name: notmuch-saved-searches
 #+begin_src emacs-lisp
-(use-package! notmuch
-  :config
-  (setq notmuch-saved-searches
-        '((:name "inbox"
-           :query "tag:inbox"
-           :count-query "tag:inbox AND tag:unread"
-           :key "i")
+(setq notmuch-saved-searches
+      '((:name "inbox"
+         :query "tag:inbox"
+         :count-query "tag:inbox AND tag:unread"
+         :key "i")
 
-          (:name "git-me"
-           :query "tag:git and \"Linus Arver\""
-           :count-query "tag:git AND tag:unread"
-           :key "g")
+        (:name "git-me"
+         :query "tag:git and \"Linus Arver\""
+         :count-query "tag:git AND tag:unread"
+         :key "g")
 
-          (:name "git-cook"
-           :query "tag:git and \"Cooking\""
-           :count-query "tag:git AND tag:unread and Cooking"
-           :key "G")
+        (:name "git-cook"
+         :query "tag:git and \"Cooking\""
+         :count-query "tag:git AND tag:unread and Cooking"
+         :key "G")
 
-          (:name "sent"
-           :query "tag:sent"
-           :key "s"))))
+        (:name "sent"
+         :query "tag:sent"
+         :key "s")))
 #+end_src
 
 ** Sync Gmail with local database

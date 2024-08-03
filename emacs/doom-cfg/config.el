@@ -1045,60 +1045,60 @@ Also add the number of windows in the window configuration."
   (set-buffer-modified-p nil)
   (l/kill-this-buffer))
 
-(add-hook 'notmuch-message-mode-hook 'l/customize-notmuch-message-mode)
-(defun l/customize-notmuch-message-mode ()
-  (interactive)
-  (flycheck-mode -1)
-  (git-gutter-mode -1)
-  (smartparens-mode -1))
-(map! :after notmuch
-      :map notmuch-show-mode-map
-      :mnv "C-k" nil
-      :mnv "C-j" nil
-      :mnv "H" #'previous-buffer)
-(map! :after notmuch
-      :map notmuch-tree-mode-map
-      :mnv "C-k" nil
-      :mnv "C-j" nil)
-(map! :after notmuch
-      :map notmuch-show-mode-map
-      ;; Swap "cr" and "cR". `notmuch-show-reply' is "reply all" and is the more
-      ;; common one we use in mailing list discussions (you would almost never
-      ;; only reply to the sender only, which is what
-      ;; `notmuch-show-reply-sender' does), so give it the simpler "cr" binding.
-      :mnv "cr" #'notmuch-show-reply
-      :mnv "cR" #'notmuch-show-reply-sender)
 (use-package! notmuch
   :config
+  (add-hook 'notmuch-message-mode-hook 'l/customize-notmuch-message-mode)
+  (defun l/customize-notmuch-message-mode ()
+    (interactive)
+    (flycheck-mode -1)
+    (git-gutter-mode -1)
+    (smartparens-mode -1))
+  (map! :after notmuch
+        :map notmuch-show-mode-map
+        :mnv "C-k" nil
+        :mnv "C-j" nil
+        :mnv "H" #'previous-buffer)
+  (map! :after notmuch
+        :map notmuch-tree-mode-map
+        :mnv "C-k" nil
+        :mnv "C-j" nil)
+  (map! :after notmuch
+        :map notmuch-show-mode-map
+        ;; Swap "cr" and "cR". `notmuch-show-reply' is "reply all" and is the more
+        ;; common one we use in mailing list discussions (you would almost never
+        ;; only reply to the sender only, which is what
+        ;; `notmuch-show-reply-sender' does), so give it the simpler "cr" binding.
+        :mnv "cr" #'notmuch-show-reply
+        :mnv "cR" #'notmuch-show-reply-sender)
   (setq notmuch-saved-searches
         '((:name "inbox"
            :query "tag:inbox"
            :count-query "tag:inbox AND tag:unread"
            :key "i")
-
+  
           (:name "git-me"
            :query "tag:git and \"Linus Arver\""
            :count-query "tag:git AND tag:unread"
            :key "g")
-
+  
           (:name "git-cook"
            :query "tag:git and \"Cooking\""
            :count-query "tag:git AND tag:unread and Cooking"
            :key "G")
-
+  
           (:name "sent"
            :query "tag:sent"
-           :key "s"))))
-(defun +notmuch-get-sync-command () "~/syscfg/script/mail-sync.sh")
-(setq sendmail-program "gmi")
-(setq message-sendmail-extra-arguments
-      '("send" "--quiet" "-t" "-C" "~/mail/linusarver@gmail.com"))
-(defun notmuch-mua-reply-guess-sender (orig-fun query-string &optional sender
-                                                reply-all duplicate)
-  (let ((sender (or sender
-                    "Linus Arver <linus@ucla.edu>")))
-    (funcall orig-fun query-string sender reply-all duplicate)))
-(advice-add 'notmuch-mua-reply :around 'notmuch-mua-reply-guess-sender)
+           :key "s")))
+  (defun +notmuch-get-sync-command () "~/syscfg/script/mail-sync.sh")
+  (setq sendmail-program "gmi")
+  (setq message-sendmail-extra-arguments
+        '("send" "--quiet" "-t" "-C" "~/mail/linusarver@gmail.com"))
+  (defun notmuch-mua-reply-guess-sender (orig-fun query-string &optional sender
+                                                  reply-all duplicate)
+    (let ((sender (or sender
+                      "Linus Arver <linus@ucla.edu>")))
+      (funcall orig-fun query-string sender reply-all duplicate)))
+  (advice-add 'notmuch-mua-reply :around 'notmuch-mua-reply-guess-sender))
 
 (map! :mi "C-o" #'l/insert-newline-below
       :mi "C-S-o" #'l/insert-newline-above)
