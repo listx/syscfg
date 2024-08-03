@@ -362,7 +362,6 @@ other configurations that are pulled in. And so we define it first here.
 <<name-and-email>>
 
 <<dired>>
-<<magit>>
 <<org>>
 <<org-roam>>
 <<elixir>>
@@ -2264,14 +2263,7 @@ Note that =lieer= uses a script called =gmi= (odd how it isn't just called
                 (propertize "${doom-tags:20}" 'face 'org-tag))))
 #+end_src
 
-* Magit
-
-** Disable spellcheck in commit message buffers.
-
-#+name: magit
-#+begin_src emacs-lisp
-(add-hook 'git-commit-setup-hook #'(lambda () (flyspell-mode -1)))
-#+end_src
+* Git
 
 * Misc settings
 

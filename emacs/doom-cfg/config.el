@@ -236,7 +236,6 @@ Return an event vector."
       :mnv "L" #'next-buffer
       :mnv "h" #'dired-up-directory
       :mnv "l" #'dired-find-file)
-(add-hook 'git-commit-setup-hook #'(lambda () (flyspell-mode -1)))
 (map! :after evil-org
       :map org-read-date-minibuffer-local-map
       "h" (cmd! (org-eval-in-calendar '(calendar-backward-day 1)))
