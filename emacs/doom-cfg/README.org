@@ -2166,12 +2166,27 @@ wide.
 
 #+name: notmuch-saved-searches
 #+begin_src emacs-lisp
-(setq notmuch-saved-searches
-      '((:name "inbox" :query "tag:inbox"
-         :count-query "tag:inbox AND tag:unread" :key "i")
-        (:name "git" :query "tag:git and (not tag:spam)"
-         :count-query "tag:git AND tag:unread" :key "g")
-        (:name "sent" :query "tag:sent" :key "s")))
+(use-package! notmuch
+  :config
+  (setq notmuch-saved-searches
+        '((:name "inbox"
+           :query "tag:inbox"
+           :count-query "tag:inbox AND tag:unread"
+           :key "i")
+
+          (:name "git-me"
+           :query "tag:git and \"Linus Arver\""
+           :count-query "tag:git AND tag:unread"
+           :key "g")
+
+          (:name "git-cook"
+           :query "tag:git and \"Cooking\""
+           :count-query "tag:git AND tag:unread and Cooking"
+           :key "G")
+
+          (:name "sent"
+           :query "tag:sent"
+           :key "s"))))
 #+end_src
 
 ** Sync Gmail with local database

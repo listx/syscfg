@@ -1068,12 +1068,27 @@ Also add the number of windows in the window configuration."
       ;; `notmuch-show-reply-sender' does), so give it the simpler "cr" binding.
       :mnv "cr" #'notmuch-show-reply
       :mnv "cR" #'notmuch-show-reply-sender)
-(setq notmuch-saved-searches
-      '((:name "inbox" :query "tag:inbox"
-         :count-query "tag:inbox AND tag:unread" :key "i")
-        (:name "git" :query "tag:git and (not tag:spam)"
-         :count-query "tag:git AND tag:unread" :key "g")
-        (:name "sent" :query "tag:sent" :key "s")))
+(use-package! notmuch
+  :config
+  (setq notmuch-saved-searches
+        '((:name "inbox"
+           :query "tag:inbox"
+           :count-query "tag:inbox AND tag:unread"
+           :key "i")
+
+          (:name "git-me"
+           :query "tag:git and \"Linus Arver\""
+           :count-query "tag:git AND tag:unread"
+           :key "g")
+
+          (:name "git-cook"
+           :query "tag:git and \"Cooking\""
+           :count-query "tag:git AND tag:unread and Cooking"
+           :key "G")
+
+          (:name "sent"
+           :query "tag:sent"
+           :key "s"))))
 (defun +notmuch-get-sync-command () "~/syscfg/script/mail-sync.sh")
 (setq sendmail-program "gmi")
 (setq message-sendmail-extra-arguments
