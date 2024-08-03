@@ -1,6 +1,7 @@
 #+TITLE: Literate Wezterm configuration
 #+AUTHOR: Linus Arver
 #+PROPERTY: header-args :noweb no-export
+#+auto_tangle: t
 
 * Top-level configuration
 
