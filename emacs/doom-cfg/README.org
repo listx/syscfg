@@ -2248,8 +2248,12 @@ Note that =lieer= uses a script called =gmi= (odd how it isn't just called
          :unnarrowed t)))
 #+end_src
 
-** doom customizations
-*** make "type" string longer (default is 12 characters)
+** Doom customizations
+
+*** Make "type" string longer (default is 12 characters)
+
+=type= here is the subdirectory underneath =org-roam-directory=.
+
 #+name: doom-org-roam
 #+begin_src emacs-lisp
 (after! org-roam
