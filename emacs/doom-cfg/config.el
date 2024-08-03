@@ -661,8 +661,11 @@ details."
                 (propertize "${doom-tags:20}" 'face 'org-tag))))
 (setq org-roam-directory (concat org-directory "/note/")
       l/org-roam-default-template
-      (concat "#+title: ${title}\n\n* TODOs\n\n"
-              "* Notes\n:PROPERTIES:\n:VISIBILITY: children\n:END:\n")
+      (concat "#+title: ${title}\n"
+              "#+startup: showeverything\n"
+              "#+filetags: UNTAGGED\n"
+              "\n"
+              "* FOO")
       ;; Would be nice to make point position itself after the same line as the
       ;; "TODO" heading itself. Currently we have to press Backspace twice to
       ;; finish setting up the capture template.
