@@ -236,6 +236,8 @@ Return an event vector."
       :mnv "L" #'next-buffer
       :mnv "h" #'dired-up-directory
       :mnv "l" #'dired-find-file)
+(after! magit
+  (setq git-commit-major-mode #'org-mode))
 (map! :after evil-org
       :map org-read-date-minibuffer-local-map
       "h" (cmd! (org-eval-in-calendar '(calendar-backward-day 1)))

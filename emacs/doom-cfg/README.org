@@ -362,6 +362,7 @@ other configurations that are pulled in. And so we define it first here.
 <<name-and-email>>
 
 <<dired>>
+<<magit>>
 <<org>>
 <<org-roam>>
 <<elixir>>
@@ -2263,7 +2264,15 @@ Note that =lieer= uses a script called =gmi= (odd how it isn't just called
                 (propertize "${doom-tags:20}" 'face 'org-tag))))
 #+end_src
 
-* Git
+* Magit
+
+** Use Org-mode for commit message buffers
+
+#+name: magit
+#+begin_src emacs-lisp
+(after! magit
+  (setq git-commit-major-mode #'org-mode))
+#+end_src
 
 * Misc settings
 
