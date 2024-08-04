@@ -2271,7 +2271,6 @@ Note that =lieer= uses a script called =gmi= (odd how it isn't just called
 (setq org-roam-directory (concat org-directory "/note/")
       l/org-roam-default-template
         (concat "#+title: ${title}\n"
-                "#+startup: showeverything\n"
                 "#+filetags: UNTAGGED\n"
                 "\n"
                 "* FOO")

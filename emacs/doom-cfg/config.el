@@ -683,7 +683,6 @@ details."
 (setq org-roam-directory (concat org-directory "/note/")
       l/org-roam-default-template
         (concat "#+title: ${title}\n"
-                "#+startup: showeverything\n"
                 "#+filetags: UNTAGGED\n"
                 "\n"
                 "* FOO")
