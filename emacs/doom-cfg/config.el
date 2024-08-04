@@ -688,7 +688,7 @@ details."
                 "* FOO")
       l/org-roam-zk-template
         (concat "#+title: ${title}\n"
-                "#+filetags: UNTAGGED\n")
+                "#+filetags: UNTAGGED\n\n")
       l/org-roam-default-olp '("FOO")
       org-roam-capture-templates
       `(("r" "raw" plain
