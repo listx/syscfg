@@ -334,6 +334,7 @@ still type a ~,~ to access the leader key after typing ~, u~).
 (package! auto-dim-other-buffers)
 (package! citeproc)
 (package! column-enforce-mode)
+(package! hyperbole)
 (package! git-gutter)
 (package! org-auto-tangle)
 (package! org-fancy-priorities)
@@ -367,6 +368,7 @@ other configurations that are pulled in. And so we define it first here.
 <<magit>>
 <<org>>
 <<org-roam>>
+<<hyperbole>>
 <<elixir>>
 <<clojure>>
 <<c-indentation>>
@@ -2326,6 +2328,19 @@ Note that =lieer= uses a script called =gmi= (odd how it isn't just called
         (format "%s %s ${doom-hierarchy}"
                 (propertize "${doom-type:20}" 'face 'font-lock-keyword-face)
                 (propertize "${doom-tags:20}" 'face 'org-tag))))
+#+end_src
+
+
+* Hyperbole
+
+Hyperbole is a minor mode that can add implicit buttons (links) to existing text
+by recognizing special patterns. Turn it on globally.
+
+#+name: hyperbole
+#+begin_src emacs-lisp
+(use-package! hyperbole
+  :init
+  (hyperbole-mode 1))
 #+end_src
 
 * Magit

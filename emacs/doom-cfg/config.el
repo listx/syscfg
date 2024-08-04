@@ -717,6 +717,9 @@ details."
                                 ,l/org-roam-default-template
                                 ,l/org-roam-default-olp)
          :unnarrowed t)))
+(use-package! hyperbole
+  :init
+  (hyperbole-mode 1))
 (map! :after alchemist
       :map alchemist-mode-map
       :mnvi "C-k" nil

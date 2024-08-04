@@ -50,6 +50,7 @@
 (package! auto-dim-other-buffers)
 (package! citeproc)
 (package! column-enforce-mode)
+(package! hyperbole)
 (package! git-gutter)
 (package! org-auto-tangle)
 (package! org-fancy-priorities)
