@@ -270,7 +270,22 @@ Return an event vector."
           (cmd! (l/org-export-as-markdown-to-clipboard nil))
         :desc "subtree (children + parent)" "S"
           (cmd! (l/org-export-as-markdown-to-clipboard 't))
-        "d" #'org-export-dispatch))
+        "d" #'org-export-dispatch)
+      (:prefix ("p" . "priority")
+         :desc "Set priority to 0"
+         "0" (cmd! (org-priority 0))
+
+         :desc "Set priority to 1"
+         "1" (cmd! (org-priority 1))
+
+         :desc "Set priority to 2"
+         "2" (cmd! (org-priority 2))
+
+         :desc "Set priority to 3"
+         "3" (cmd! (org-priority 3))
+
+         :desc "Set priority to 4"
+         "4" (cmd! (org-priority 4))))
 
 (defun l/org-insert-timestamp-inactive ()
   (interactive)
