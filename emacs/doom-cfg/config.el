@@ -690,9 +690,6 @@ details."
       l/org-roam-zk-template
         (concat "#+title: ${title}\n"
                 "#+filetags: UNTAGGED\n")
-      ;; Would be nice to make point position itself after the same line as the
-      ;; "TODO" heading itself. Currently we have to press Backspace twice to
-      ;; finish setting up the capture template.
       l/org-roam-default-olp '("FOO")
       org-roam-capture-templates
       `(("r" "raw" plain
