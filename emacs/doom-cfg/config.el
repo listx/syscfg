@@ -445,7 +445,7 @@ LINK-NAME."
   ; Show the past 35 days of history.
   (setq org-habit-preceding-days 35)
   ; Set 4AM as the true "ending time" of a day, and make it so that any task
-  ; completed between 12AM and 4AM are recored as 23:59 of the previous day.
+  ; completed between 12AM and 4AM are recorded as 23:59 of the previous day.
   (setq org-extend-today-until 4
         org-use-effective-time t)
   (add-hook 'org-mode-hook #'(lambda () (setq fill-column 80)))
