@@ -707,7 +707,7 @@ details."
 
         ("z" "zk" plain
          "%?"
-         :target (file+head "zk/%<%Y%m%d%H%M%S>-${slug}.org"
+         :target (file+head "zk/${slug}-%<%Y%m%d%H%M%S>.org"
                                 ,l/org-roam-zk-template)
          :unnarrowed t)
 
