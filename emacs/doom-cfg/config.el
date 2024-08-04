@@ -705,6 +705,7 @@ details."
                                 ,l/org-roam-default-template
                                 ,l/org-roam-default-olp)
          :unnarrowed t)
+
         ("z" "zk" plain
          "%?"
          :target (file+head "zk/%<%Y%m%d%H%M%S>-${slug}.org"
