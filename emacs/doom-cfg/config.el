@@ -677,27 +677,22 @@ details."
       ;; finish setting up the capture template.
       l/org-roam-default-olp '("TODOs" "TODO")
       org-roam-capture-templates
-      `(("r" "reference" plain
+      `(("r" "raw" plain
          "%?"
-         :target (file+head+olp "reference/${slug}.org"
+         :target (file+head+olp "raw/${slug}.org"
                                 ,l/org-roam-default-template
                                 ,l/org-roam-default-olp)
          :unnarrowed t)
-        ("c" "creche" plain
+
+        ("p" "personal" plain
          "%?"
-         :target (file+head+olp "creche/${slug}.org"
+         :target (file+head+olp "personal/${slug}.org"
                                 ,l/org-roam-default-template
                                 ,l/org-roam-default-olp)
          :unnarrowed t)
-        ("p" "proj" plain
+        ("z" "zk" plain
          "%?"
-         :target (file+head+olp "proj/${slug}.org"
-                                ,l/org-roam-default-template
-                                ,l/org-roam-default-olp)
-         :unnarrowed t)
-        ("x" "pub" plain
-         "%?"
-         :target (file+head+olp "pub/${slug}.org"
+         :target (file+head+olp "zk/%<%Y%m%d%H%M%S>-${slug}.org"
                                 ,l/org-roam-default-template
                                 ,l/org-roam-default-olp)
          :unnarrowed t)))
