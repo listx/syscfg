@@ -710,6 +710,13 @@ details."
          "%?"
          :target (file+head "zk/%<%Y%m%d%H%M%S>-${slug}.org"
                                 ,l/org-roam-zk-template)
+         :unnarrowed t)
+
+        ("Z" "zk-join" plain
+         "%?"
+         :target (file+head+olp "zk-join/${slug}.org"
+                                ,l/org-roam-default-template
+                                ,l/org-roam-default-olp)
          :unnarrowed t)))
 (map! :after alchemist
       :map alchemist-mode-map
