@@ -1259,6 +1259,11 @@ Also add the number of windows in the window configuration."
        :background ,(doom-color 'base6)
        :foreground ,(doom-color 'base0))
 
+    `(org-roam-header-line
+       :background ,(doom-color 'base7)
+       :foreground ,(doom-color 'base0)
+       :weight bold)
+
     `(notmuch-message-summary-face :foreground ,l/color-foreground)
     `(notmuch-search-count :foreground ,l/color-foreground)
     `(notmuch-tree-no-match-subject-face :foreground ,l/color-foreground)
