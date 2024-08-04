@@ -675,7 +675,7 @@ details."
       ;; Would be nice to make point position itself after the same line as the
       ;; "TODO" heading itself. Currently we have to press Backspace twice to
       ;; finish setting up the capture template.
-      l/org-roam-default-olp '("TODOs" "TODO")
+      l/org-roam-default-olp '("FOO")
       org-roam-capture-templates
       `(("r" "raw" plain
          "%?"
