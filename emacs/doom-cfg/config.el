@@ -667,11 +667,15 @@ details."
                 (propertize "${doom-tags:20}" 'face 'org-tag))))
 (setq org-roam-directory (concat org-directory "/note/")
       l/org-roam-default-template
-      (concat "#+title: ${title}\n"
-              "#+startup: showeverything\n"
-              "#+filetags: UNTAGGED\n"
-              "\n"
-              "* FOO")
+        (concat "#+title: ${title}\n"
+                "#+startup: showeverything\n"
+                "#+filetags: UNTAGGED\n"
+                "\n"
+                "* FOO")
+      l/org-roam-zk-template
+        (concat "#+title: ${title}\n"
+                "#+startup: showeverything\n"
+                "#+filetags: UNTAGGED\n")
       ;; Would be nice to make point position itself after the same line as the
       ;; "TODO" heading itself. Currently we have to press Backspace twice to
       ;; finish setting up the capture template.
@@ -692,9 +696,8 @@ details."
          :unnarrowed t)
         ("z" "zk" plain
          "%?"
-         :target (file+head+olp "zk/%<%Y%m%d%H%M%S>-${slug}.org"
-                                ,l/org-roam-default-template
-                                ,l/org-roam-default-olp)
+         :target (file+head "zk/%<%Y%m%d%H%M%S>-${slug}.org"
+                                ,l/org-roam-zk-template)
          :unnarrowed t)))
 (map! :after alchemist
       :map alchemist-mode-map
