@@ -689,7 +689,6 @@ details."
                 "* FOO")
       l/org-roam-zk-template
         (concat "#+title: ${title}\n"
-                "#+startup: showeverything\n"
                 "#+filetags: UNTAGGED\n")
       ;; Would be nice to make point position itself after the same line as the
       ;; "TODO" heading itself. Currently we have to press Backspace twice to
