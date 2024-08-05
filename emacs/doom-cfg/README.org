@@ -2340,7 +2340,66 @@ by recognizing special patterns. Turn it on globally.
 #+begin_src emacs-lisp
 (use-package! hyperbole
   :init
-  (hyperbole-mode 1))
+  (hyperbole-mode 1)
+  :config
+  <<jira-ticket>>
+  )
+#+end_src
+
+** JIRA ticket recognition
+
+Adapted from [[https://www.beorgapp.com/blog/hyperbole-implicit-buttons/][this blog post]]. In order to use this button, you have to define
+in your environment the =L_JIRA_BASE_URL= environment variable.
+
+#+name: jira-ticket
+#+begin_src emacs-lisp
+(let ((l/jira-base-url (getenv "L_JIRA_BASE_URL")))
+  (when l/jira-base-url
+    ;; Define action for button.
+    <<l/browse-jira-ticket>>
+    ;; Define text pattern for button.
+    <<l/open-jira-ticket-at-point>>))
+#+end_src
+
+First define how to recognize a JIRA ticket reference. We expect such references
+to be of the form =<ALLCAPS>-<NUMBER>=, such as
+
+#+begin_example
+FOO-123
+QUUX-9102
+#+end_example
+
+As we want to let the user have the cursor anywhere along such a string, we have
+to first move the cursor to the beginning of the word. Then we parse the string
+with a regex, and call =l/browse-jira-ticket= if we find a match. This is what
+=l/open-jira-ticket-at-point= does below.
+
+#+name: l/open-jira-ticket-at-point
+#+begin_src emacs-lisp
+(defib l/open-jira-ticket-at-point ()
+  "Get the Jira ticket identifier at point and load ticket in browser."
+  (let ((case-fold-search t)
+        (ticket nil)
+        (regex "\\([A-Z]+-[0-9]+\\)"))
+    (when (save-excursion
+            (skip-chars-backward "A-Z0-9-")
+            (looking-at regex))
+      (setq ticket (match-string-no-properties 1))
+      (ibut:label-set ticket
+                      (match-beginning 1)
+                      (match-end 1))
+      (hact 'l/browse-jira-ticket ticket))))
+#+end_src
+
+Now, =l/browse-jira-ticket= just concatenates the ticket string with
+=l/jira-base-url=.
+
+#+name: l/browse-jira-ticket
+#+begin_src emacs-lisp
+(defun l/browse-jira-ticket (ticket)
+  "Open ticket in JIRA."
+  (let ((url (concat l/jira-base-url ticket)))
+    (browse-url-default-browser url)))
 #+end_src
 
 * Magit

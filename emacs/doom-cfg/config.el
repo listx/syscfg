@@ -719,7 +719,30 @@ details."
          :unnarrowed t)))
 (use-package! hyperbole
   :init
-  (hyperbole-mode 1))
+  (hyperbole-mode 1)
+  :config
+  (let ((l/jira-base-url (getenv "L_JIRA_BASE_URL")))
+    (when l/jira-base-url
+      ;; Define action for button.
+      (defun l/browse-jira-ticket (ticket)
+        "Open ticket in JIRA."
+        (let ((url (concat l/jira-base-url ticket)))
+          (browse-url-default-browser url)))
+      ;; Define text pattern for button.
+      (defib l/open-jira-ticket-at-point ()
+        "Get the Jira ticket identifier at point and load ticket in browser."
+        (let ((case-fold-search t)
+              (ticket nil)
+              (regex "\\([A-Z]+-[0-9]+\\)"))
+          (when (save-excursion
+                  (skip-chars-backward "A-Z0-9-")
+                  (looking-at regex))
+            (setq ticket (match-string-no-properties 1))
+            (ibut:label-set ticket
+                            (match-beginning 1)
+                            (match-end 1))
+            (hact 'l/browse-jira-ticket ticket))))))
+  )
 (map! :after alchemist
       :map alchemist-mode-map
       :mnvi "C-k" nil
