@@ -678,8 +678,8 @@ details."
   (setq
         org-roam-node-display-template
         (format "%s %s ${doom-hierarchy}"
-                (propertize "${doom-type:20}" 'face 'font-lock-keyword-face)
-                (propertize "${doom-tags:20}" 'face 'org-tag))))
+                (propertize "${doom-type:10}" 'face 'font-lock-keyword-face)
+                (propertize "${doom-tags:50}" 'face 'org-tag))))
 (setq org-roam-directory (concat org-directory "/note/")
       l/org-roam-default-template
         (concat "#+title: ${title}\n"
