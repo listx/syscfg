@@ -1608,6 +1608,7 @@ convention.
   (add-hook 'org-babel-post-tangle-hook (lambda ()
                                           (delete-trailing-whitespace)
                                           (save-buffer)))
+  <<closing-note-simplicity>>
   (add-hook 'org-mode-hook (lambda () (org-indent-mode -1)))
   (add-hook 'org-mode-hook 'l/org-colors))
 
@@ -2012,6 +2013,40 @@ item.
 #+begin_src emacs-lisp
 (setq org-log-redeadline 'note)
 (setq org-log-reschedule 'note)
+#+end_src
+
+*** CLOSING NOTE simplicity
+
+When closing a TODO, we're prompted to enter a =CLOSING NOTE= because of
+[[org-mark-done-with-note]]. The only issue with this workflow is that we need to
+remember to choose either ~C-c C-c~ or ~C-c C-k~. This can lead to problems:
+
+1. If we enter a note but hit ~C-c C-k~ by mistake, we'll lose the note. Org
+   will auto-delete the buffer so we can't retrieve it. We've lost work!
+2. If we don't enter a note but hit ~C-c C-c~ by mistake, we'll end up entering
+   a blank note. We have to clean (delete) this empty note because it doesn't
+   add any information and is just messy.
+
+We can tell Orgmode to choose the behavior of ~C-c C-c~ or ~C-c C-k~ for us in a
+somewhat intelligent manner. If there is any text that was added into the
+buffer, save it with ~C-c C-c~. Otherwise, call ~C-c C-k~. This is a data-driven
+approach and does the right thing all the time; from a user's perspective we can
+always choose ~C-c C-c~ without having to think explicitly about how to close
+the note.
+
+See https://emacs.stackexchange.com/a/81877/13006.
+
+#+name: closing-note-simplicity
+#+begin_src emacs-lisp
+(defun l/org-log-note-buffer-empty-p ()
+  "Is current buffer empty except for the boilerplate template at the top?"
+  (eq (point-max) 85))
+
+(defun l/org-store-log-note (orig-fun)
+  (let ((org-note-abort (l/org-log-note-buffer-empty-p)))
+    (apply orig-fun nil)))
+
+(advice-add 'org-store-log-note :around #'l/org-store-log-note)
 #+end_src
 
 ** org-fancy-priorities (programmer priorities)

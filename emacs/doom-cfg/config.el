@@ -485,6 +485,15 @@ LINK-NAME."
   (add-hook 'org-babel-post-tangle-hook (lambda ()
                                           (delete-trailing-whitespace)
                                           (save-buffer)))
+  (defun l/org-log-note-buffer-empty-p ()
+    "Is current buffer empty except for the boilerplate template at the top?"
+    (eq (point-max) 85))
+
+  (defun l/org-store-log-note (orig-fun)
+    (let ((org-note-abort (l/org-log-note-buffer-empty-p)))
+      (apply orig-fun nil)))
+
+  (advice-add 'org-store-log-note :around #'l/org-store-log-note)
   (add-hook 'org-mode-hook (lambda () (org-indent-mode -1)))
   (add-hook 'org-mode-hook 'l/org-colors))
 
