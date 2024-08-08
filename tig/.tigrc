@@ -70,5 +70,5 @@ bind generic R none
 bind generic <F5> none
 bind generic <Ctrl-r> refresh
 
-bind main    R !git rebase -i %(commit)
+bind main    R !git -c commit.verbose=true rebase -i %(commit)
 bind generic <Backspace> move-page-up
