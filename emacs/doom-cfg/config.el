@@ -734,17 +734,15 @@ details."
       ;; Define text pattern for button.
       (defib l/open-jira-ticket-at-point ()
         "Get the Jira ticket identifier at point and load ticket in browser."
-        (let ((case-fold-search t)
-              (ticket nil)
-              (regex "\\([A-Z]+-[0-9]+\\)"))
-          (when (save-excursion
-                  (skip-chars-backward "A-Z0-9-")
-                  (looking-at regex))
-            (setq ticket (match-string-no-properties 1))
-            (ibut:label-set ticket
-                            (match-beginning 1)
-                            (match-end 1))
-            (hact 'l/browse-jira-ticket ticket))))))
+        (when-let ((regex "\\([A-Z]+-[0-9]+\\)")
+                   (ticket (save-excursion
+                             (skip-chars-backward "A-Z0-9-")
+                             (looking-at regex)
+                             (match-string-no-properties 1))))
+          (ibut:label-set ticket
+                          (match-beginning 1)
+                          (match-end 1))
+          (hact 'l/browse-jira-ticket ticket)))))
   )
 (map! :after alchemist
       :map alchemist-mode-map
