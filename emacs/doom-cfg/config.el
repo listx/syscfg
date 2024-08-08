@@ -1,12 +1,6 @@
 ;;; $DOOMDIR/config.el -*- lexical-binding: t; -*-
 
-(use-package! company
-  :config
-  (setq +company-backend-alist
-        (assq-delete-all 'text-mode +company-backend-alist))
-  (add-to-list '+company-backend-alist
-               '(text-mode
-                (:separate company-dabbrev company-yasnippet))))
+
 
 (defun l/copy-to-clipboard (orig-fun string)
   "Copy killed text or region into the system clipboard, by shelling out to a

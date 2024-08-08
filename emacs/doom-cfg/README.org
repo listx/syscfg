@@ -56,7 +56,7 @@ DOOM requires 3 configuration files in the =$DOOMDIR=:
 (doom! :input
 
        :completion
-       company
+       corfu
        vertico
 
        :ui
@@ -328,22 +328,6 @@ Here are some workarounds for upstream bugs that have not yet been fixed.
 
 #+name: doom-bug-workarounds
 #+begin_src emacs-lisp
-<<disable-company-ispell>>
-#+end_src
-
-** Disable company-ispell because it is almost useless
-
-This mode tries to complete every single word we type.
-
-#+name: disable-company-ispell
-#+begin_src emacs-lisp
-(use-package! company
-  :config
-  (setq +company-backend-alist
-        (assq-delete-all 'text-mode +company-backend-alist))
-  (add-to-list '+company-backend-alist
-               '(text-mode
-                (:separate company-dabbrev company-yasnippet))))
 #+end_src
 
 * Global key-bindings
