@@ -240,6 +240,13 @@ Return an event vector."
 (after! magit
   (setq git-commit-major-mode #'org-mode))
 (map! :after evil-org
+      :map evil-org-mode-map
+      ;; Remove conflicting bindings.
+      :i "C-j" nil
+      :i "C-k" nil
+      :i "C-h" nil
+      :i "C-l" nil
+
       :map org-read-date-minibuffer-local-map
       "h" (cmd! (org-eval-in-calendar '(calendar-backward-day 1)))
       "l" (cmd! (org-eval-in-calendar '(calendar-forward-day 1)))
