@@ -581,17 +581,7 @@ LINK-NAME."
                      '(or (l/org-skip-subtree-if-priority ?0)
                           (org-agenda-skip-if nil '(scheduled deadline)))))))
          ((org-agenda-buffer-name "*QUEUE*")
-          (org-agenda-compact-blocks t)))
-        ; Export as HTML.
-        ("X" "Export HTML" agenda ""
-          ((htmlize-head-tags
-            (concat
-             "    <meta"
-             " http-equiv=\"refresh\""
-                           ; Refresh every 60 seconds.
-             " content=\"60\""
-             ">\n")))
-          ("~/agenda.html"))))
+          (org-agenda-compact-blocks t)))))
 
 (defun l/org-agenda (key &optional open-in-new-tab)
   "Open customized org-agenda."

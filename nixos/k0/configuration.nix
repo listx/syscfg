@@ -52,8 +52,6 @@
   services.cron = {
     enable = true;
     systemCronJobs = [
-      "* * * * *      l     2>&1 zsh -l -c ~/syscfg/script/export-agenda.sh | tee -a ~/agenda.cron.log.txt"
-      "5 0 * * *      l     rm -f ~/agenda.cron.log.txt"
     ];
   };
 
