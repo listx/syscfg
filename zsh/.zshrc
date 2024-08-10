@@ -46,7 +46,7 @@
 # ca=CAPABILITY (file with capability)
 # tw=STICKY_OTHER_WRITABLE (dir that is sticky and other-writable (+t,o+w))
 # ow=OTHER_WRITABLE (dir that is other-writable (o+w) and not sticky
-# st=STICKY (dir wit hthe sticky bit set (+t) and not other-writable)
+# st=STICKY (dir with the sticky bit set (+t) and not other-writable)
 # ex=EXEC (files with +x execute permission)
 
 # Load custom functions.
@@ -56,7 +56,7 @@
 LS_COLORS='rs=0:di=01;33:mh=00:pi=01;32:so=01;34:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:su=37;41:sg=30;43:ca=30;41:st=37;44:'
 # special file types (different than the ones from 'dircolors -b')
 LS_COLORS+='ln=36:ex=31:tw=1;34;42:ow=1;7;34:'
-# various common filetypes (archives, pictures, movies, and sounds)
+# various common file types (archives, pictures, movies, and sounds)
 ft_ark=(tar tgz arj taz lzh lzma tlz txz zip z Z dz gz lz xz bz2 bz tbz tbz2 tz deb rpm jar rar ace zoo cpio 7z rz)
 ft_pic=(jpg jpeg gif bmp pbm pgm ppm tga xbm xpm tif tiff png svg svgz mng pcx xcf)
 ft_mov=(mov mpg mpeg m2v mkv ogm mp4 m4v mp4v vob qt nuv wmv asf rm rmvb flc avi fli flv gl dl xwd yuv cgm emf axv anx ogv ogx webm)
@@ -474,7 +474,7 @@ ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=2,bold"
 zcomet load "smeagol74/zsh-fzf-pass"
 
 # On slow systems, checking the cached .zcompdump file to see if it must be
-# regenerated adds a noticable delay to zsh startup.  This little hack restricts
+# regenerated adds a noticeable delay to zsh startup.  This little hack restricts
 # it to once a day.  It should be pasted into your own completion file.
 #
 # The globbing is a little complicated here:

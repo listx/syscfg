@@ -44,7 +44,7 @@ f_files()
 	fi
 
 	# We skip the leading first character of each line `^.', which is the
-	# filetype output classified by the `find' command below. The remaiing '.*?'
+	# filetype output classified by the `find' command below. The remaining '.*?'
 	# part and the '\K' is to remove from the match any characters that do not
 	# match the given pattern, which are in-between the pattern and the very
 	# beginning of the line. If we don't have this "buffer" zone, then the
