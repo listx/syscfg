@@ -59,7 +59,6 @@
        (haskell +lsp)
        (json +lsp)
        (latex +lsp)
-       ledger
        (lua +lsp)
        markdown
        nix

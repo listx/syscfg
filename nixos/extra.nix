@@ -230,13 +230,6 @@ in
     kubectl
     kind
     ko
-
-    # Finance
-    hledger
-    # "ledger" is required for "ledger-mode" in emacs.
-    ledger
-    hledger-ui
-    hledger-web
   ];
 
   nixpkgs.overlays = [ (import ./overlay.nix) ];

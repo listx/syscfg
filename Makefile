@@ -33,8 +33,6 @@ git:
 gpg:
 	ln -fns ${C}/gpg                                    ${H}/.gnupg
 	ln -fs ${C}/gpg/gpg-agent.nixos.conf                ${H}/.gnupg/gpg-agent.conf
-gtk:
-	ln -fs ${C}/gtk/cfg                                 ${H}/.gtkrc-2.0.mine
 karabiner:
 	mkdir -p ${H}/.config/karabiner
 	ln -fns ${C}/karabiner/karabiner.json               ${H}/.config/karabiner
@@ -122,8 +120,6 @@ vimpc:
 	ln -fs ${C}/vimpc/.vimpcrc                          ${H}
 wezterm:
 	ln -fs ${C}/wezterm/.wezterm.lua                    ${H}
-xdefaults:
-	ln -fs ${C}/xdefaults/cfg                           ${H}/.Xdefaults
 xmonad:
 	ln -fns ${C}/xmonad                                 ${H}/.xmonad
 	# xsession is relied on by NixOS hosts that use xmonad (basically the
@@ -152,7 +148,6 @@ zsh:
 	emacs \
 	git \
 	gpg \
-	gtk \
 	karabiner \
 	lesskey \
 	melby \
@@ -174,7 +169,6 @@ zsh:
 	vim \
 	vimpc \
 	wezterm \
-	xdefaults \
 	xmonad \
 	xorg \
 	zathura \

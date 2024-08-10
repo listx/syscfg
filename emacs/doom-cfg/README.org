@@ -112,7 +112,6 @@ DOOM requires 3 configuration files in the =$DOOMDIR=:
        (haskell +lsp)
        (json +lsp)
        (latex +lsp)
-       ledger
        (lua +lsp)
        markdown
        nix

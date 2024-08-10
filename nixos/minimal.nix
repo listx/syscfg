@@ -17,16 +17,9 @@
     '';
     # Port 22 is opened automatically if SSH daemon is enabled (no need to specify it here).
     firewall.allowedTCPPorts = [
-      8000 # hledger -R web -- --serve --host=10.0.0.4 --port=8000
-      8001 # hledger    web -- --serve --host=10.0.0.4 --port=8001
       8010 # org-roam-server-mode
-      8011 # ~/syscfg/script/serve-org-agenda.py
       8020 # stack exec -- blog watch --host=10.0.0.4 --port=8020
       8030 # mpd HTTP stream
-
-      8080 # lh (linus's helper)
-
-      4369 # epmd (erlang port mapper daemon)
     ];
   };
 

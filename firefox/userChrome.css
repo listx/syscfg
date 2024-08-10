@@ -1,8 +1,0 @@
-# in userChrome.css from ~/.mozilla/..../chrome
-* {
-    font-family: "Terminus";
-    font-size: 10pt;
-}
-
-/* for removing "List all tabs" button */
-.tabs-container > stack  {display:none!important}
