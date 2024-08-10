@@ -1,1 +1,4 @@
-.*
+# Global gitignore.
+#
+# NOTE: This file is read by "fd", and is used to ignore results even for
+# *tracked* files in Git if they match any of these patterns.
