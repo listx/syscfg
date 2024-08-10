@@ -2303,9 +2303,28 @@ Now, =l/browse-jira-ticket= just concatenates the ticket string with
 
 * Magit
 
+#+name: magit
+#+begin_src emacs-lisp
+<<magit-bindings>>
+<<magit-commit-message-use-org-mode>>
+#+end_src
+
+** Rebind keys
+
+#+name: magit-bindings
+#+begin_src emacs-lisp
+(map! :after magit
+      :map magit-mode-map
+      ;; Remap C-{j,k} bindings.
+      :mnvi "C-k" nil
+      :mnvi "C-j" nil
+      :mnvi "M-k" #'magit-section-backward
+      :mnvi "M-j" #'magit-section-forward)
+#+end_src
+
 ** Use Org-mode for commit message buffers
 
-#+name: magit
+#+name: magit-commit-message-use-org-mode
 #+begin_src emacs-lisp
 (after! magit
   (setq git-commit-major-mode #'org-mode))

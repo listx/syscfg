@@ -230,6 +230,13 @@ Return an event vector."
       :mnv "L" #'next-buffer
       :mnv "h" #'dired-up-directory
       :mnv "l" #'dired-find-file)
+(map! :after magit
+      :map magit-mode-map
+      ;; Remap C-{j,k} bindings.
+      :mnvi "C-k" nil
+      :mnvi "C-j" nil
+      :mnvi "M-k" #'magit-section-backward
+      :mnvi "M-j" #'magit-section-forward)
 (after! magit
   (setq git-commit-major-mode #'org-mode))
 (map! :after evil-org
