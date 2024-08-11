@@ -2053,7 +2053,8 @@ wide.
   <<notmuch-saved-searches>>
   <<notmuch-sync>>
   <<notmuch-send-email-with-lieer>>
-  <<notmuch-overwrite-from>>)
+  <<notmuch-overwrite-from>>
+  <<notmuch-set-current-magit-directory>>)
 #+end_src
 
 ** Disable useless minor modes during message composition
@@ -2158,6 +2159,30 @@ Note that =lieer= uses a script called =gmi= (odd how it isn't just called
 (setq sendmail-program "gmi")
 (setq message-sendmail-extra-arguments
       '("send" "--quiet" "-t" "-C" "~/mail/linusarver@gmail.com"))
+#+end_src
+
+** Set current Git (magit) directory
+
+The Git mailing list (and perhaps all other mailing-list-driven development
+communities) frequently refer to commits in the =master= or =main= branch by
+their commit SHA. We want to be able to use =magit-show-commit= (~,gfc~) on them
+while reading the message inside =notmuch-show-mode=. The problem here is that
+=notmuch-show-mode= isn't a typical buffer where Magit can deduce which repo
+it needs to look at to search the commit SHA. So we have to teach Magit which
+repo it should use to do the lookups.
+
+See [[https://emacs.stackexchange.com/a/36279/13006][this post]] from 2017 which explains how Magit relies on the buffer-local
+=default-directory=.
+
+#+name: notmuch-set-current-magit-directory
+#+begin_src emacs-lisp
+(after! (notmuch magit)
+  (add-hook 'notmuch-show-hook 'l/set-current-magit-directory))
+(defun l/set-current-magit-directory ()
+  (interactive)
+  (let ((tags (notmuch-show-get-tags)))
+    (cond
+      ((member "git" tags) (setq-local default-directory "~/prog/foreign/git")))))
 #+end_src
 
 * Shell

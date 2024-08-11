@@ -1153,7 +1153,14 @@ Also add the number of windows in the window configuration."
     (let ((sender (or sender
                       "Linus Arver <linus@ucla.edu>")))
       (funcall orig-fun query-string sender reply-all duplicate)))
-  (advice-add 'notmuch-mua-reply :around 'notmuch-mua-reply-guess-sender))
+  (advice-add 'notmuch-mua-reply :around 'notmuch-mua-reply-guess-sender)
+  (after! (notmuch magit)
+    (add-hook 'notmuch-show-hook 'l/set-current-magit-directory))
+  (defun l/set-current-magit-directory ()
+    (interactive)
+    (let ((tags (notmuch-show-get-tags)))
+      (cond
+        ((member "git" tags) (setq-local default-directory "~/prog/foreign/git"))))))
 
 (map! :mi "C-o" #'l/insert-newline-below
       :mi "C-S-o" #'l/insert-newline-above)
