@@ -1139,7 +1139,7 @@ The default binding of ~C-x C-;~ is painful, so use ~,c,~ instead.
 
 #+name: comment
 #+begin_src emacs-lisp
-(map! :after evil-nerd-commenter
+(map! :after evil
       :leader
       :mnv "c," #'evilnc-comment-or-uncomment-lines)
 #+end_src
