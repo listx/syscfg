@@ -238,6 +238,11 @@ Return an event vector."
       :mnvi "M-k" #'magit-section-backward
       :mnvi "M-j" #'magit-section-forward)
 (after! magit
+  (setq magit-repository-directories
+      `(("~/prog" . 1)
+        ("~/prog/foreign" . 1)
+        ("~/syscfg" . 0))))
+(after! magit
   (setq git-commit-major-mode #'org-mode))
 (map! :after evil-org
       :map evil-org-mode-map

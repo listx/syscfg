@@ -2313,6 +2313,7 @@ Now, =l/browse-jira-ticket= just concatenates the ticket string with
 #+name: magit
 #+begin_src emacs-lisp
 <<magit-bindings>>
+<<magit-set-repositories>>
 <<magit-commit-message-use-org-mode>>
 #+end_src
 
@@ -2327,6 +2328,17 @@ Now, =l/browse-jira-ticket= just concatenates the ticket string with
       :mnvi "C-j" nil
       :mnvi "M-k" #'magit-section-backward
       :mnvi "M-j" #'magit-section-forward)
+#+end_src
+
+** Set repositories
+
+#+name: magit-set-repositories
+#+begin_src emacs-lisp
+(after! magit
+  (setq magit-repository-directories
+      `(("~/prog" . 1)
+        ("~/prog/foreign" . 1)
+        ("~/syscfg" . 0))))
 #+end_src
 
 ** Use Org-mode for commit message buffers
