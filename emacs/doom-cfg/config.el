@@ -237,6 +237,63 @@ Return an event vector."
       :mnvi "C-j" nil
       :mnvi "M-k" #'magit-section-backward
       :mnvi "M-j" #'magit-section-forward)
+(map! :after magit
+      :map global-map
+      :leader
+      :prefix ("g" . "git")
+      ;; Unbind the existing key.
+      "y" nil
+      (:prefix
+       ("y" . "copy")
+       (:desc "commit desc (Git ML style)" "d" (cmd! (l/copy-git 'commit-desc)))
+       (:desc "commit message (raw)"       "m" (cmd! (l/copy-git 'commit-msg)))
+       (:desc "commit SHA (raw)"           "s" (cmd! (l/copy-git 'commit-sha)))
+       (:desc "file/region (URL)"          "y" (cmd! (l/copy-git 'file-url)))
+       (:desc "commit (URL)"               "Y" (cmd! (l/copy-git 'commit-url)))))
+(defun l/get-sha ()
+  "Get Git SHA underneath point. Checks that the SHA is valid (that
+the object exists locally)."
+  (interactive)
+  (when-let ((regex "\\([a-f0-9]+\\)")
+             (sha (save-excursion
+                    (skip-chars-backward "a-f0-9")
+                    (looking-at regex)
+                    (match-string-no-properties 1)))
+             (sha-validated (magit-git-string "rev-parse" sha)))
+    sha-validated))
+
+(defun l/copy-git (mode)
+  "Copy Git revision under point. Use `mode' to determine what to
+ copy."
+  (interactive)
+  (let* ((sha (l/get-sha))
+         (copytext
+          (pcase mode
+            ;; Copy commit SHA (40 chars).
+            ('commit-sha sha)
+            ;; Copy commit description (Git mailing list style).
+            ('commit-desc
+             (magit-git-string "show"
+                               "--no-patch"
+                               "--pretty=reference"
+                               sha))
+            ;; Copy the commit message. Useful for populating PR
+            ;; descriptions.
+            ('commit-msg
+             (with-temp-buffer
+               (magit-git-insert "cat-file" "commit" sha)
+               (goto-char (point-min))
+               ;; Go down 5 lines to skip the tree, parent,
+               ;; author, committer, and blank line just before
+               ;; the title.
+               (forward-line 5)
+               (buffer-substring-no-properties (point) (point-max))))
+            ('commit-url (browse-at-remote--commit-url sha))
+            ;; Copy a URL to the file (typically a GitHub link to the file).
+            ;; If a region is active, highlight that region.
+            ('file-url (browse-at-remote-get-url)))))
+    (kill-new copytext)
+    (message copytext)))
 (after! magit
   (setq magit-repository-directories
       `(("~/prog" . 1)
