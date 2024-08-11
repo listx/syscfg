@@ -230,6 +230,9 @@ still type a ~,~ to access the leader key after typing ~, u~).
 (package! hyperbole)
 (package! git-gutter)
 (package! org-auto-tangle)
+(package! org-fc
+  :recipe (:host github :repo "l3kn/org-fc"
+           :files (:defaults "awk" "demo.org")))
 (package! protobuf-mode)
 (package! solaire-mode :disable t)
 (package! vim-empty-lines-mode)
@@ -260,6 +263,7 @@ other configurations that are pulled in. And so we define it first here.
 <<magit>>
 <<org>>
 <<org-roam>>
+<<org-fc>>
 <<hyperbole>>
 <<elixir>>
 <<clojure>>
@@ -2263,6 +2267,15 @@ See [[https://emacs.stackexchange.com/a/36279/13006][this post]] from 2017 which
                 (propertize "${doom-tags:50}" 'face 'org-tag))))
 #+end_src
 
+* =org-fc= (flashcards)
+
+#+name: org-fc
+#+begin_src emacs-lisp
+(use-package! org-fc
+  :custom (org-fc-directories '("~/lo/note/"))
+  :config
+  (require 'org-fc-hydra))
+#+end_src
 
 * Hyperbole
 

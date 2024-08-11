@@ -786,6 +786,10 @@ details."
                                 ,l/org-roam-default-template
                                 ,l/org-roam-default-olp)
          :unnarrowed t)))
+(use-package! org-fc
+  :custom (org-fc-directories '("~/lo/note/"))
+  :config
+  (require 'org-fc-hydra))
 (use-package! hyperbole
   :init
   (hyperbole-mode 1)

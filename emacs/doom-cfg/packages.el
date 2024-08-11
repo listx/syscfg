@@ -53,6 +53,9 @@
 (package! hyperbole)
 (package! git-gutter)
 (package! org-auto-tangle)
+(package! org-fc
+  :recipe (:host github :repo "l3kn/org-fc"
+           :files (:defaults "awk" "demo.org")))
 (package! protobuf-mode)
 (package! solaire-mode :disable t)
 (package! vim-empty-lines-mode)
