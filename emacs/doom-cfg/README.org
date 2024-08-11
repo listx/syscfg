@@ -1,6 +1,7 @@
 #+TITLE: Literate Emacs configuration
 #+AUTHOR: Linus Arver
 #+PROPERTY: header-args :tangle no :noweb no-export
+#+startup: num
 #+auto_tangle: t
 
 * Introduction
