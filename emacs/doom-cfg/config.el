@@ -786,10 +786,50 @@ details."
                                 ,l/org-roam-default-template
                                 ,l/org-roam-default-olp)
          :unnarrowed t)))
-(use-package! org-fc
-  :custom (org-fc-directories '("~/lo/note/"))
+
+(use-package org-fc
+  :after org
+
+  :custom
+  (org-fc-directories '("~/lo/note"))
+
   :config
-  (require 'org-fc-hydra))
+  (require 'org-fc-keymap-hint)
+
+  :init
+  ;; Set keys that were overridden by evil-mode.
+
+  ;; Keys while viewing a prompt.
+  (evil-define-minor-mode-key 'normal 'org-fc-review-flip-mode
+    (kbd "RET") 'org-fc-review-flip
+    (kbd "n") 'org-fc-review-flip
+    (kbd "p") 'org-fc-review-edit
+    (kbd "s") 'org-fc-review-suspend-card
+    (kbd "q") 'org-fc-review-quit)
+  ;; Keys while evaluating the result.
+  (evil-define-minor-mode-key 'normal 'org-fc-review-rate-mode
+    (kbd "a") 'org-fc-review-rate-again
+    (kbd "h") 'org-fc-review-rate-hard
+    (kbd "g") 'org-fc-review-rate-good
+    (kbd "e") 'org-fc-review-rate-easy
+    (kbd "s") 'org-fc-review-suspend-card
+    (kbd "q") 'org-fc-review-quit)
+  ;; Keys while in the dashboard.
+  (evil-define-key 'normal org-fc-dashboard-mode-map
+    (kbd "q") 'kill-current-buffer
+    (kbd "r") 'org-fc-dashboard-review)
+
+  ;; Keys to invoke org-fc.
+  (map! :leader
+       (:prefix ("r" . "Flashcards")
+        :desc "Dashboard"     "R" #'org-fc-dashboard
+        :desc "Review"        "r" #'org-fc-review
+        (:prefix ("n" . "New Flashcard")
+         :desc "Normal"        "i" #'org-fc-type-normal-init
+         :desc "Normal"        "n" #'org-fc-type-normal-init
+         :desc "Cloze"         "c" #'org-fc-type-cloze-init
+         :desc "Double"        "d" #'org-fc-type-double-init
+         :desc "Text-Input"    "t" #'org-fc-type-text-input-init))))
 (use-package! hyperbole
   :init
   (hyperbole-mode 1)
