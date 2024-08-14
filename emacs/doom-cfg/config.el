@@ -910,8 +910,8 @@ details."
     '("shfmt"
        "--binary-next-line"
        "--func-next-line"
-      ("--indent" "%d" (unless indent-tabs-mode tab-width))
-      ("--language-dialect" "%s"
+      (format "--indent=%d" (or tab-width 2))
+      (format "--language-dialect=%s"
        (pcase sh-shell (`bash "bash") (`mksh "mksh") (_ "posix"))))))
 
 (setq display-line-numbers-type nil)
