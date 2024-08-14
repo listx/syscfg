@@ -59,6 +59,8 @@ in
       ripgrep
       rustfmt
       scc
+      shellcheck
+      shfmt
       source-serif
       stack
       tig
