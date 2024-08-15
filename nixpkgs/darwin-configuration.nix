@@ -15,6 +15,7 @@ in
   environment.systemPackages = with pkgs;
     [ (aspellWithDicts (dicts: with dicts; [ en en-computers en-science ]))
       autoconf
+      babashka
       bashInteractive
       bear
       ccls
