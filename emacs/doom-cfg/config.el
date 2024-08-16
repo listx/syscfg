@@ -535,23 +535,46 @@ LINK-NAME."
         org-use-effective-time t)
   (add-hook 'org-mode-hook #'(lambda () (setq fill-column 80)))
   (add-hook 'org-mode-hook 'turn-on-auto-fill)
-  (setq org-priority-highest 0
-        org-priority-default 2
-        org-priority-lowest 4)
-  (setq org-fancy-priorities-list '(
-                                    (?0 . "[P0]")
-                                    (?1 . "[P1]")
-                                    (?2 . "[P2]")
-                                    (?3 . "[P3]")
-                                    (?4 . "[P4]"))
+  (use-package! org-appear
+    :config
+    ;; Hide emphasis markers (e.g., *foo*, /foo/, =foo=).
+    (setq org-hide-emphasis-markers t)
+    ;; Toggle emphasis markers.
+    (setq org-appear-autoemphasis t)
 
-        org-priority-faces '((?0 :foreground "#f00")
-                             (?1 :foreground "#ff0")
-                             (?2 :foreground "#0f0")
-                             (?3 :foreground "#0ff")
-                             (?4 :foreground "#ccc")))
+    ;; Toggle links (relies on org-link-descriptive).
+    (setq org-appear-autolinks t)
 
-  (add-hook 'org-mode-hook 'org-fancy-priorities-mode)
+    ;; Trigger the unhiding of things based on whether we enter or leave insert
+    ;; mode in evil-mode.
+    (setq org-appear-trigger 'manual)
+    (add-hook 'org-mode-hook (lambda ()
+                               (add-hook 'evil-insert-state-entry-hook
+                                         #'org-appear-manual-start
+                                         nil
+                                         t)
+                               (add-hook 'evil-insert-state-exit-hook
+                                         #'org-appear-manual-stop
+                                         nil
+                                         t))))
+  (after! (org org-fancy-priorities)
+    (setq org-priority-highest 0
+          org-priority-default 2
+          org-priority-lowest 4)
+    (setq org-fancy-priorities-list '(
+                                      (?0 . "[P0]")
+                                      (?1 . "[P1]")
+                                      (?2 . "[P2]")
+                                      (?3 . "[P3]")
+                                      (?4 . "[P4]"))
+
+          org-priority-faces '((?0 :foreground "#f00")
+                               (?1 :foreground "#ff0")
+                               (?2 :foreground "#0f0")
+                               (?3 :foreground "#0ff")
+                               (?4 :foreground "#ccc")))
+
+    (add-hook 'org-mode-hook 'org-fancy-priorities-mode))
   (add-hook 'org-babel-post-tangle-hook (lambda ()
                                           (delete-trailing-whitespace)
                                           (save-buffer)))

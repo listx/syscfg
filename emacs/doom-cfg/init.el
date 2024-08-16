@@ -62,7 +62,7 @@
        (lua +lsp)
        markdown
        nix
-       (org +roam2)
+       (org +pretty +roam2)
        (python +lsp)
        rest
        (rust +lsp)
