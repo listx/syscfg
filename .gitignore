@@ -1,8 +1,11 @@
 *#
 *.aes
+.clj-kondo
 *.elc
 *.log
 *.hi
+.lsp
+.nrepl-port
 *.o
 *.pyc
 *.swp
