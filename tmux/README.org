@@ -6,109 +6,44 @@
 * Top-level configuration
 
 #+begin_src conf :tangle .tmux.conf
+<<global-variables>>
+<<keybindings>>
+<<appearance>>
+<<misc>>
+<<plugins>>
+#+end_src
+
+* Global variables
+
+#+name: global-variables
+#+begin_src conf
 # Predicate to check if the current window_name is either emacs, emacsclient, or
 # git. We include git because "automatic-rename" sets the name to "git" if we
 # run "git commit --amend". We also include "tig" because we can invoke git
 # interactive rebases (which invokes our emacs editor) from tig.
 EMACSLIKE="#{m/r:emacs.*|git|tig,#{window_name}}"
+#+end_src
 
-<<keybindings>>
+* Keybindings
 
-# Make messages appear for 4 seconds by default.
-set -g display-time 4000
-
-# Automatically re-balance panes after they are created and/or deleted.
-set-hook -g after-split-window  "select-layout -E"
-set-hook -g pane-exited         "select-layout -E"
-
-# Use 24-bit colors.
-set -g default-terminal "wezterm"
-
-# Source colors and styles.
-source-file ~/.tmux/colors.conf
-
-# Ask terminal if focus events are supported and if so, pass focus events to
-# applications. This makes terminal emacs aware that it loses focus when we
-# switch away from it from tmux (e.g., when we move to a different pane).
-set -g focus-events on
-
-# Explicitly set status line height, where "on" means 1 row. This can be "2, 3,
-# 4 or 5". In the future if we want to show more information we can set this to
-# "2". See https://stackoverflow.com/a/56215242/437583.
-set -g status on
-
-set -g window-status-separator " "
-
-# Don't set limits on status line portion lengths. This way, if either
-# status-left or status-right gets too long, they don't get truncated by tmux.
-set -g status-left-length 0
-set -g status-right-length 0
-# When detaching, change back the keymap to 'root', so that when we reattach,
-# we start out with 'root' (<I>).
-set-hook -g client-detached[0] "set key-table root"
-
-# Automatically renumber windows if one is closed, so that there are no "gaps"
-# in between. See https://unix.stackexchange.com/a/51879/72230.
-set -g renumber-windows on
-
+#+name: keybindings
+#+begin_src conf
 # Allow binding of mouse events as keys. As a side effect, this also changes
 # the behavior of the mouse wheel from scrolling through the command history to
 # scrolling back into the buffer (copy-mode).
 set -gw mouse on
 
-# Turn off wrapping when searching in copy-mode (mimic behavior in less(1)).
-set -g wrap-search off
-
-# Set history to 10K lines.
-set -g history-limit 10000
-
-# Do not lag after ESC key is pressed.
-set -s escape-time 0
-
 # Vi mode (this enables copy-mode-vi bindings in copy-mode; see "tmux
 # list-keys").
 set -gw mode-keys vi
 
-# Avoid "clipetty--emit: Opening output file: Permission denied, /dev/pts/0".
-# See https://github.com/hlissner/doom-emacs/issues/3674#issuecomment-670840781
-# and
-# https://github.com/spudlyo/clipetty/blame/01b39044b9b65fa4ea7d3166f8b1ffab6f740362/README.md#L160.
-set -ag update-environment "SSH_TTY"
+# Do not lag after ESC key is pressed.
+set -s escape-time 0
 
-# Allow OSC52 to set the clipboard.
-set -g set-clipboard on
+# When detaching, change back the keymap to 'root', so that when we reattach,
+# we start out with 'root' (<I>).
+set-hook -g client-detached[0] "set key-table root"
 
-# List of plugins.
-set -g @plugin "tmux-plugins/tpm"
-# Save tmux sessions manually with `prefix + C-s` (save) and `prefix + C-r`
-# (restore) .
-set -g @plugin "tmux-plugins/tmux-resurrect"
-	# Restore what was readable in each pane.
-	set -g @resurrect-capture-pane-contents 'on'
-# Fuzzy-find words in tmux buffer. Replaces our previous use of tmux-thumbs.
-set -g @plugin 'laktak/extrakto'
-	# Set the key chord (in the root key-table) used to call extrakto. The
-	# "upstream recommended" way is to just set the setting like this:
-	#
-	#   set -g @extrakto_key <KEY>
-	#
-	# but this in turn sets the binding in the `prefix` key table, which is not
-	# what we want. So we set our own binding here directly.
-	set -g @extrakto_key none
-	bind-key -T root         C-M-y      run-shell "~/.tmux/plugins/extrakto/scripts/open.sh \"#{pane_id}\""
-	# Force using a split (so that we don't obscure what we want to grab).
-	set -g @extrakto_split_direction 'v'
-	set -g @extrakto_copy_key "tab"      # use tab to copy to clipboard
-	set -g @extrakto_insert_key "enter"  # use enter to insert selection
-	set -g @extrakto_clip_tool_run "fg"
-	set -g @extrakto_clip_tool "~/syscfg/script/osc52"
-# Initialize TMUX plugin manager (keep this line at the very bottom of tmux.conf)
-run "~/.tmux/plugins/tpm/tpm"
-#+end_src
-
-* Keybindings
-#+name: keybindings
-#+begin_src conf
 # Make TMUX modal. Adaptation of
 # https://alexherbo2.github.io/config/tmux/make-tmux-modal/.
 #
@@ -537,4 +472,95 @@ bind-key -T copy-mode-vi DoubleClick1Pane     run-shell '~/syscfg/script/tmux_mo
 # Disable mouse wheel in status bar. See https://superuser.com/a/1492302.
 unbind-key -T root WheelUpStatus
 unbind-key -T root WheelDownStatus
+#+end_src
+
+* Appearance
+
+#+name: appearance
+#+begin_src conf
+# Make messages appear for 4 seconds by default.
+set -g display-time 4000
+
+# Automatically re-balance panes after they are created and/or deleted.
+set-hook -g after-split-window  "select-layout -E"
+set-hook -g pane-exited         "select-layout -E"
+
+# Use 24-bit colors.
+set -g default-terminal "wezterm"
+
+# Source colors and styles.
+source-file ~/.tmux/colors.conf
+
+# Ask terminal if focus events are supported and if so, pass focus events to
+# applications. This makes terminal emacs aware that it loses focus when we
+# switch away from it from tmux (e.g., when we move to a different pane).
+set -g focus-events on
+
+# Explicitly set status line height, where "on" means 1 row. This can be "2, 3,
+# 4 or 5". In the future if we want to show more information we can set this to
+# "2". See https://stackoverflow.com/a/56215242/437583.
+set -g status on
+
+set -g window-status-separator " "
+
+# Don't set limits on status line portion lengths. This way, if either
+# status-left or status-right gets too long, they don't get truncated by tmux.
+set -g status-left-length 0
+set -g status-right-length 0
+
+# Automatically renumber windows if one is closed, so that there are no "gaps"
+# in between. See https://unix.stackexchange.com/a/51879/72230.
+set -g renumber-windows on
+#+end_src
+
+* Miscellaneous
+
+#+name: misc
+#+begin_src conf
+# Turn off wrapping when searching in copy-mode (mimic behavior in less(1)).
+set -g wrap-search off
+
+# Set history to 10K lines.
+set -g history-limit 10000
+
+# Avoid "clipetty--emit: Opening output file: Permission denied, /dev/pts/0".
+# See https://github.com/hlissner/doom-emacs/issues/3674#issuecomment-670840781
+# and
+# https://github.com/spudlyo/clipetty/blame/01b39044b9b65fa4ea7d3166f8b1ffab6f740362/README.md#L160.
+set -ag update-environment "SSH_TTY"
+
+# Allow OSC52 to set the clipboard.
+set -g set-clipboard on
+#+end_src
+
+* Plugins
+
+#+name: plugins
+#+begin_src conf
+# List of plugins.
+set -g @plugin "tmux-plugins/tpm"
+# Save tmux sessions manually with `prefix + C-s` (save) and `prefix + C-r`
+# (restore) .
+set -g @plugin "tmux-plugins/tmux-resurrect"
+	# Restore what was readable in each pane.
+	set -g @resurrect-capture-pane-contents 'on'
+# Fuzzy-find words in tmux buffer. Replaces our previous use of tmux-thumbs.
+set -g @plugin 'laktak/extrakto'
+	# Set the key chord (in the root key-table) used to call extrakto. The
+	# "upstream recommended" way is to just set the setting like this:
+	#
+	#   set -g @extrakto_key <KEY>
+	#
+	# but this in turn sets the binding in the `prefix` key table, which is not
+	# what we want. So we set our own binding here directly.
+	set -g @extrakto_key none
+	bind-key -T root         C-M-y      run-shell "~/.tmux/plugins/extrakto/scripts/open.sh \"#{pane_id}\""
+	# Force using a split (so that we don't obscure what we want to grab).
+	set -g @extrakto_split_direction 'v'
+	set -g @extrakto_copy_key "tab"      # use tab to copy to clipboard
+	set -g @extrakto_insert_key "enter"  # use enter to insert selection
+	set -g @extrakto_clip_tool_run "fg"
+	set -g @extrakto_clip_tool "~/syscfg/script/osc52"
+# Initialize TMUX plugin manager (keep this line at the very bottom of tmux.conf)
+run "~/.tmux/plugins/tpm/tpm"
 #+end_src
