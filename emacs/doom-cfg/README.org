@@ -19,7 +19,7 @@ it here in literate form.
   result looks like).
 - We set =:noweb no-export= to enable Noweb's =<<LINK>>= syntax in all source
   code blocks during **tangling** (=config.el= generation) and **evaluation**
-  (when running a code snippet from org-mode with =C-c C-c=). However when we
+  (when running a code snippet from org-mode with ~C-c C-c~). However when we
   export this org-mode file (e.g., publish it to HTML), we do **NOT** expand it
   because we want to reveal the underlying noweb structure to the reader.
   Anyway, turning on noweb for tangling and evaluating allows us to inject
@@ -152,7 +152,7 @@ NOTE: For all of DOOM's bindings, you can just press the keys and pause, and the
 minibuffer will tell you what keys are available. So you can explore what
 options are available interactively!
 
-In order to use =C-,= from terminal Emacs, you have to make your terminal (e.g.,
+In order to use ~C-,~ from terminal Emacs, you have to make your terminal (e.g.,
 WezTerm) send a special sequence (such as the =CSI u= scheme) and also make
 Emacs understand that sequence.
 
@@ -332,9 +332,9 @@ Here are some workarounds for upstream bugs that have not yet been fixed.
 ** CSI u mode support
 
 See [[https://emacs.stackexchange.com/questions/1020/problems-with-keybindings-when-using-terminal/13957#13957][this]] for a discussion of ~CSI u~ mode. Basically for us it allows us to use
-=C-S-= bindings from terminal emacs. It also allows us to specify many special
-keys in an unambiguous manner, so that we can, e.g., make =C-i= be recognized as
-=C-i= in terminal emacs (and not simply as =TAB= as is the default behavior).
+~C-S-~ bindings from terminal emacs. It also allows us to specify many special
+keys in an unambiguous manner, so that we can, e.g., make ~C-i~ be recognized as
+~C-i~ in terminal emacs (and not simply as ~TAB~ as is the default behavior).
 
 For information on how xterm does it, see
 https://invisible-island.net/xterm/ctlseqs/ctlseqs.html and search for
@@ -863,7 +863,7 @@ otherwise, close current tab."
 
 *** Navigation
 
-Make =C-{j,k}= cycle through windows, and =C-S-{j,k}=.
+Make ~C-{j,k}~ cycle through windows, and ~C-S-{j,k}~.
 
 #+name: window-navigation
 #+begin_src emacs-lisp
@@ -1877,9 +1877,9 @@ notes-to-self in general.
 
 ** Show prompt when closing items as DONE
 
-In the prompt, if we cancel with =C-c C-k=, this is the equivalent of =(setq
+In the prompt, if we cancel with ~C-c C-k~, this is the equivalent of =(setq
 org-log-done 'time)= which just inserts a timestamp next to when we marked the
-item as DONE. If we press =C-c C-c=, then we can save a note explaining how/why
+item as DONE. If we press ~C-c C-c~, then we can save a note explaining how/why
 the item was closed (useful!).
 
 #+name: org-mark-done-with-note
@@ -2066,8 +2066,8 @@ Automatically tangle Org files if it has =#+auto_tangle: t= in it.
 
 ** Notes
 
-In Org 9.2+, you can do =C-c C-,= to run org-insert-structure-template, and then
-press =e= to insert a ~#+begin_example\n#+end_example~ template. See
+In Org 9.2+, you can do ~C-c C-,~ to run org-insert-structure-template, and then
+press =e= to insert a =#+begin_example\n#+end_example= template. See
 https://emacs.stackexchange.com/a/46992/13006.
 
 * Clojure
