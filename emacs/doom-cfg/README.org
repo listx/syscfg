@@ -1,7 +1,6 @@
 #+TITLE: Literate Emacs configuration
 #+AUTHOR: Linus Arver
 #+PROPERTY: header-args :tangle no :noweb no-export
-#+startup: num
 #+auto_tangle: t
 
 * Introduction
@@ -1492,6 +1491,10 @@ convention.
         org-use-effective-time t)
   <<set-auto-fill-mode>>
   <<org-appear>>
+  ;; Turn on dynamic headline numbering (org-num-mode) because it helps us
+  ;; understand roughly where we are in the headline hierarchy.
+  (setq org-startup-numerated t)
+  <<org-superstar>>
   <<org-fancy-priorities>>
   (add-hook 'org-babel-post-tangle-hook (lambda ()
                                           (delete-trailing-whitespace)
@@ -1961,6 +1964,62 @@ generally only need to examine the markup for a single link).
                                        #'org-appear-manual-stop
                                        nil
                                        t))))
+#+end_src
+
+** org-superstar
+
+Customize how heading line bullets look like. Below are the unicode codepoints
+we've looked at and are interesting enough, where the glyph lies more or less
+centered (between the parentheses) using Commit Mono inside terminal Emacs.
+
+| Hex    | Glyph | Description                                  | Category           |
+|--------+-------+----------------------------------------------+--------------------|
+| #x00A7 | (§)   | SECTION SIGN                                 | Punctuation, Other |
+| #x2055 | (⁕)   | FLOWER PUNCTUATION MARK                      | Punctuation, Other |
+| #x2192 | (→)   | RIGHT ARROW                                  | Symbol, Math       |
+| #x21AA | (↪)   | RIGHT ARROW WITH HOOK                        | Symbol, Other      |
+| #x25A0 | (■)   | BLACK SQUARE                                 | Symbol, Other      |
+| #x25A3 | (▣)   | WHITE SQUARE CONTAINING BLACK SMALL SQUARE   | Symbol, Other      |
+| #x25AC | (▬)   | BLACK RECTANGLE                              | Symbol, Other      |
+| #x25B6 | (▶)   | BLACK RIGHT POINTING TRIANGLE                | Symbol, Other      |
+| #x25C6 | (◆)   | BLACK DIAMOND                                | Symbol, Other      |
+| #x25C8 | (◈)   | WHITE DIAMOND CONTAINING BLACK SMALL DIAMOND | Symbol, Other      |
+| #x25CF | (●)   | BLACK CIRCLE                                 | Symbol, Other      |
+| #x25EF | (◯)   | LARGE CIRCLE                                 | Symbol, Other      |
+| #x2605 | (★)   | BLACK STAR                                   | Symbol, Other      |
+| #x2606 | (☆)   | WHITE STAR                                   | Symbol, Other      |
+| #x2738 | (✸)   | HEAVY EIGHT POINTED RECTILINEAR BLACK STAR   | Symbol, Other      |
+| #x27A1 | (➡)   | BLACK RIGHT ARROW                            | Symbol, Other      |
+| #x27F6 | (⟶)   | LONG RIGHTWARDS ARROW                        | Symbol, Math       |
+| #x29EB | (⧫)   | BLACK LOZENGE                                | Symbol, Math       |
+| #x2B58 | (⭘)   | HEAVY CIRCLE                                 | Symbol, Other      |
+
+You can use =insert-char= to search for these unicode codepoints by their official
+names. The table above was created by copying out the minibuffer area into an
+Org table.
+
+#+name: org-superstar
+#+begin_src emacs-lisp
+(after! org-superstar
+  ;; Custom bullets for heading bullets. We use the same symbol across all
+  ;; levels (similar to default Org behavior of using '*' across all levels).
+  (setq org-superstar-headline-bullets-list '(#x25A0))
+
+  ;; Hide leading stars entirely. This way headings are never indented. We
+  ;; already get automatic numbering which tells us how deeply nested we are
+  ;; anyway with `org-num-mode' above, so we don't really lose any contextual
+  ;; information by doing this.
+  (setq org-superstar-remove-leading-stars t)
+
+  ;; Custom bullets for plain lists. Unlike headings, the customization here is
+  ;; not about nesting levels at all. Instead it is just a direct 1:1
+  ;; replacement of which other character to use for the usual characters "-+*"
+  ;; that Org cycles when calling `org-cycle-list-bullet' on a plain list item.
+  (setq org-superstar-prettify-item-bullets t)
+  (setq org-superstar-item-bullet-alist
+        '((?- . #x25CF)    ;; ● BLACK CIRCLE
+          (?+ . #x21AA)    ;; ↪ RIGHT ARROW WITH HOOK
+          (?* . #x2738)))) ;; ✸ HEAVY EIGHT POINTED RECTILINEAR BLACK STAR
 #+end_src
 
 ** org-fancy-priorities (programmer priorities)

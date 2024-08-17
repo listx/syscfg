@@ -557,6 +557,29 @@ LINK-NAME."
                                          #'org-appear-manual-stop
                                          nil
                                          t))))
+  ;; Turn on dynamic headline numbering (org-num-mode) because it helps us
+  ;; understand roughly where we are in the headline hierarchy.
+  (setq org-startup-numerated t)
+  (after! org-superstar
+    ;; Custom bullets for heading bullets. We use the same symbol across all
+    ;; levels (similar to default Org behavior of using '*' across all levels).
+    (setq org-superstar-headline-bullets-list '(#x25A0))
+
+    ;; Hide leading stars entirely. This way headings are never indented. We
+    ;; already get automatic numbering which tells us how deeply nested we are
+    ;; anyway with `org-num-mode' above, so we don't really lose any contextual
+    ;; information by doing this.
+    (setq org-superstar-remove-leading-stars t)
+
+    ;; Custom bullets for plain lists. Unlike headings, the customization here is
+    ;; not about nesting levels at all. Instead it is just a direct 1:1
+    ;; replacement of which other character to use for the usual characters "-+*"
+    ;; that Org cycles when calling `org-cycle-list-bullet' on a plain list item.
+    (setq org-superstar-prettify-item-bullets t)
+    (setq org-superstar-item-bullet-alist
+          '((?- . #x25CF)    ;; ● BLACK CIRCLE
+            (?+ . #x21AA)    ;; ↪ RIGHT ARROW WITH HOOK
+            (?* . #x2738)))) ;; ✸ HEAVY EIGHT POINTED RECTILINEAR BLACK STAR
   (after! (org org-fancy-priorities)
     (setq org-priority-highest 0
           org-priority-default 2
