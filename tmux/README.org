@@ -1,0 +1,540 @@
+#+TITLE: Literate tmux configuration
+#+AUTHOR: Linus Arver
+#+PROPERTY: header-args :noweb no-export
+#+auto_tangle: t
+
+* Top-level configuration
+
+#+begin_src conf :tangle .tmux.conf
+# Predicate to check if the current window_name is either emacs, emacsclient, or
+# git. We include git because "automatic-rename" sets the name to "git" if we
+# run "git commit --amend". We also include "tig" because we can invoke git
+# interactive rebases (which invokes our emacs editor) from tig.
+EMACSLIKE="#{m/r:emacs.*|git|tig,#{window_name}}"
+
+<<keybindings>>
+
+# Make messages appear for 4 seconds by default.
+set -g display-time 4000
+
+# Automatically re-balance panes after they are created and/or deleted.
+set-hook -g after-split-window  "select-layout -E"
+set-hook -g pane-exited         "select-layout -E"
+
+# Use 24-bit colors.
+set -g default-terminal "wezterm"
+
+# Source colors and styles.
+source-file ~/.tmux/colors.conf
+
+# Ask terminal if focus events are supported and if so, pass focus events to
+# applications. This makes terminal emacs aware that it loses focus when we
+# switch away from it from tmux (e.g., when we move to a different pane).
+set -g focus-events on
+
+# Explicitly set status line height, where "on" means 1 row. This can be "2, 3,
+# 4 or 5". In the future if we want to show more information we can set this to
+# "2". See https://stackoverflow.com/a/56215242/437583.
+set -g status on
+
+set -g window-status-separator " "
+
+# Don't set limits on status line portion lengths. This way, if either
+# status-left or status-right gets too long, they don't get truncated by tmux.
+set -g status-left-length 0
+set -g status-right-length 0
+# When detaching, change back the keymap to 'root', so that when we reattach,
+# we start out with 'root' (<I>).
+set-hook -g client-detached[0] "set key-table root"
+
+# Automatically renumber windows if one is closed, so that there are no "gaps"
+# in between. See https://unix.stackexchange.com/a/51879/72230.
+set -g renumber-windows on
+
+# Allow binding of mouse events as keys. As a side effect, this also changes
+# the behavior of the mouse wheel from scrolling through the command history to
+# scrolling back into the buffer (copy-mode).
+set -gw mouse on
+
+# Turn off wrapping when searching in copy-mode (mimic behavior in less(1)).
+set -g wrap-search off
+
+# Set history to 10K lines.
+set -g history-limit 10000
+
+# Do not lag after ESC key is pressed.
+set -s escape-time 0
+
+# Vi mode (this enables copy-mode-vi bindings in copy-mode; see "tmux
+# list-keys").
+set -gw mode-keys vi
+
+# Avoid "clipetty--emit: Opening output file: Permission denied, /dev/pts/0".
+# See https://github.com/hlissner/doom-emacs/issues/3674#issuecomment-670840781
+# and
+# https://github.com/spudlyo/clipetty/blame/01b39044b9b65fa4ea7d3166f8b1ffab6f740362/README.md#L160.
+set -ag update-environment "SSH_TTY"
+
+# Allow OSC52 to set the clipboard.
+set -g set-clipboard on
+
+# List of plugins.
+set -g @plugin "tmux-plugins/tpm"
+# Save tmux sessions manually with `prefix + C-s` (save) and `prefix + C-r`
+# (restore) .
+set -g @plugin "tmux-plugins/tmux-resurrect"
+	# Restore what was readable in each pane.
+	set -g @resurrect-capture-pane-contents 'on'
+# Fuzzy-find words in tmux buffer. Replaces our previous use of tmux-thumbs.
+set -g @plugin 'laktak/extrakto'
+	# Set the key chord (in the root key-table) used to call extrakto. The
+	# "upstream recommended" way is to just set the setting like this:
+	#
+	#   set -g @extrakto_key <KEY>
+	#
+	# but this in turn sets the binding in the `prefix` key table, which is not
+	# what we want. So we set our own binding here directly.
+	set -g @extrakto_key none
+	bind-key -T root         C-M-y      run-shell "~/.tmux/plugins/extrakto/scripts/open.sh \"#{pane_id}\""
+	# Force using a split (so that we don't obscure what we want to grab).
+	set -g @extrakto_split_direction 'v'
+	set -g @extrakto_copy_key "tab"      # use tab to copy to clipboard
+	set -g @extrakto_insert_key "enter"  # use enter to insert selection
+	set -g @extrakto_clip_tool_run "fg"
+	set -g @extrakto_clip_tool "~/syscfg/script/osc52"
+# Initialize TMUX plugin manager (keep this line at the very bottom of tmux.conf)
+run "~/.tmux/plugins/tpm/tpm"
+#+end_src
+
+* Keybindings
+#+name: keybindings
+#+begin_src conf
+# Make TMUX modal. Adaptation of
+# https://alexherbo2.github.io/config/tmux/make-tmux-modal/.
+#
+# By default, we are in "insert" mode which is the "root" key-table. we still
+# re-use the existing C-b prefix key as-is to enter the "prefix" key-table, or
+# "normal" mode.
+
+# These bindings exit "normal" mode by setting the key table back to the root or
+# "insert" mode. The Enter key here is aliased for convenience.
+bind-key -T prefix       i          set key-table root
+bind-key -T prefix       q          set key-table root
+bind-key -T prefix       Enter      set key-table root
+
+# Use "j/k" to switch to the next/previous panes. The command to run here was
+# derived from the default configuration from `tmux list-keys' and the "special
+# tokens" discussion in the "COMMANDS" section of the manpage.
+bind-key -T root         C-M-j      select-pane -Z -t :.+
+bind-key -T root         C-M-k      select-pane -Z -t :.-
+
+# Change layout. Useful for converting horizontal splits into vertical splits
+# (if we're switching from/to a display in portrait mode).
+bind-key -T virt         C-M-m      next-layout \; set key-table root
+
+# Move pane up/down.
+bind-key -T virt         C-M-S-j    swap-pane -Z -D \; set key-table root
+bind-key -T virt         C-M-S-k    swap-pane -Z -U \; set key-table root
+# Spawn a new shell (and create a horizontal split --- Tmux calls this a
+# "vertical" split but I like to think of it the other way because I imagine a
+# sword running horizontally across the screen to create the split border).
+bind-key -T root         C-M-e      split-window -c "#{pane_current_path}"
+bind-key -T virt         C-M-S-e    split-window -h -c "#{pane_current_path}" \; set key-table root
+bind-key -T root         C-M-o      new-window -a -c "#{pane_current_path}"
+bind-key -T virt         C-M-S-o    break-pane -a -t : \; set key-table root
+
+# Reload config. C-b r.
+bind-key -T prefix       r          source-file ~/.tmux.conf \; display-message "\~/tmux.conf reloaded."
+
+# Copy-mode commands.
+bind-key -T copy-mode-vi y          send-keys -X copy-selection
+bind-key -T copy-mode-vi v          send-keys -X begin-selection
+bind-key -T copy-mode-vi Escape     send-keys -X clear-selection
+bind-key -T copy-mode-vi BSpace     send-keys -X -N 10 cursor-up
+bind-key -T copy-mode-vi Space      send-keys -X -N 10 cursor-down
+
+# Make tmux encode C-S-{a-z} sequences with the `CSI u` scheme. Otherwise,
+# applications that do support it like terminal emacs don't even get these
+# events (for reasons unknown). This is pretty hacky and may break, but at least
+# we can tie down the tmux and emacs versions down if necessary.
+#
+# As an example, the following two bindings are equivalent:
+#
+#   bind-key -T root         C-S-l      send-keys -H 1b 5b 37 36 3b 36 75
+#   bind-key -T root         C-S-l      send-keys Escape "[76;6u"
+#
+# Using the raw hex version may be easier to debug.
+#
+# Note that there are some regressions and funny behaviors from tmux. For
+# example, C-[ cannot be bound (it is indistinguishable from ESC). The same goes
+# for C-j/Enter and C-i/TAB. For a discussion about this regression, see
+# https://github.com/tmux/tmux/issues/2705.
+#
+# Also, C-# is allowed (notice that it is not defined as C-S-3), but C-$ is not
+# allowed and we have to use C-S-4 (this is a cosmetic oddity for our
+# configuration and does not materially affect us).
+#
+# To get around some of tmux's quirks, we have to use a `virt` key-table.
+# This makes it so that we can distinguish, e.g., Tab vs C-i from the root
+# key-table. C-i from the root actually sends `F12 Tab` from wezterm, which
+# activates the `virt` key-table, and from there the Tab key sends the
+# `CSI u`-encoded form of C-i.
+
+bind-key -T root         F12        set key-table virt
+bind-key -T virt         F12        set key-table root
+
+# Passthrough mode. This allows sending keys directly to a nested tmux instance
+# using all of our existing root key-table bindings. This is because any
+# unrecognized binding (in the "passthrough" key-table) is sent as-is by tmux to
+# the pane which has the nested instance.
+#
+# Now we can use, e.g., C-M-b followed by C-M-h or C-M-l to move across windows.
+bind-key -T root         C-M-b      {
+										set key-table passthrough
+										set prefix None
+										set -F status-style "bg=cyan fg=#{L_TMUX_COLOR_CURSOR} none"
+									}
+bind-key -T passthrough  C-M-b      {
+										set key-table root
+										set prefix C-b
+										set -F status-style "bg=#{L_TMUX_COLOR_TEXT} fg=#{L_TMUX_COLOR_CURSOR} none"
+									}
+
+# These bindings are here so that C-S-... and C-M-S-... bindings work properly.
+# The basic idea is that we want to re-encode the just-decoded CSI-u sequence
+# back into a CSI-u encoded sequence for the inner (nested) tmux session.
+#
+# For example, currently we have wezterm set up so that, C-M-S-j actually
+# sends F12 followed by CSI-u encoded C-M-S-j; we simply drop the leading F12
+# key in this case. (The F12 is for the `virt` key table, to help us distinguish
+# between Tab and C-i, among other things.) Anyway, without this F12 key, the
+# inner (nested) tmux session can receive C-M-S-j as-is. The same idea applies
+# to the C-S-... bindings, so that we continue to use CSI-u encoding (instead of
+# letting tmux figure out how to send, e.g., C-S-i based on its own logic).
+bind-key -T passthrough  C-S-a      send-keys Escape "[97;6u"
+bind-key -T passthrough  C-S-b      send-keys Escape "[98;6u"
+bind-key -T passthrough  C-S-c      send-keys Escape "[99;6u"
+bind-key -T passthrough  C-S-d      send-keys Escape "[100;6u"
+bind-key -T passthrough  C-S-e      send-keys Escape "[101;6u"
+bind-key -T passthrough  C-S-f      send-keys Escape "[102;6u"
+bind-key -T passthrough  C-S-g      send-keys Escape "[103;6u"
+bind-key -T passthrough  C-S-h      send-keys Escape "[104;6u"
+bind-key -T passthrough  C-S-i      send-keys Escape "[105;6u"
+bind-key -T passthrough  C-S-j      send-keys Escape "[106;6u"
+bind-key -T passthrough  C-S-k      send-keys Escape "[107;6u"
+bind-key -T passthrough  C-S-l      send-keys Escape "[108;6u"
+bind-key -T passthrough  C-S-m      send-keys Escape "[109;6u"
+bind-key -T passthrough  C-S-n      send-keys Escape "[110;6u"
+bind-key -T passthrough  C-S-o      send-keys Escape "[111;6u"
+bind-key -T passthrough  C-S-p      send-keys Escape "[112;6u"
+bind-key -T passthrough  C-S-q      send-keys Escape "[113;6u"
+bind-key -T passthrough  C-S-r      send-keys Escape "[114;6u"
+bind-key -T passthrough  C-S-s      send-keys Escape "[115;6u"
+bind-key -T passthrough  C-S-t      send-keys Escape "[116;6u"
+bind-key -T passthrough  C-S-u      send-keys Escape "[117;6u"
+bind-key -T passthrough  C-S-v      send-keys Escape "[118;6u"
+bind-key -T passthrough  C-S-w      send-keys Escape "[119;6u"
+bind-key -T passthrough  C-S-x      send-keys Escape "[120;6u"
+bind-key -T passthrough  C-S-y      send-keys Escape "[121;6u"
+bind-key -T passthrough  C-S-z      send-keys Escape "[122;6u"
+bind-key -T passthrough  C-M-S-a    send-keys Escape "[97;8u"
+bind-key -T passthrough  C-M-S-b    send-keys Escape "[98;8u"
+bind-key -T passthrough  C-M-S-c    send-keys Escape "[99;8u"
+bind-key -T passthrough  C-M-S-d    send-keys Escape "[100;8u"
+bind-key -T passthrough  C-M-S-e    send-keys Escape "[101;8u"
+bind-key -T passthrough  C-M-S-f    send-keys Escape "[102;8u"
+bind-key -T passthrough  C-M-S-g    send-keys Escape "[103;8u"
+bind-key -T passthrough  C-M-S-h    send-keys Escape "[104;8u"
+bind-key -T passthrough  C-M-S-i    send-keys Escape "[105;8u"
+bind-key -T passthrough  C-M-S-j    send-keys Escape "[106;8u"
+bind-key -T passthrough  C-M-S-k    send-keys Escape "[107;8u"
+bind-key -T passthrough  C-M-S-l    send-keys Escape "[108;8u"
+bind-key -T passthrough  C-M-S-m    send-keys Escape "[109;8u"
+bind-key -T passthrough  C-M-S-n    send-keys Escape "[110;8u"
+bind-key -T passthrough  C-M-S-o    send-keys Escape "[111;8u"
+bind-key -T passthrough  C-M-S-p    send-keys Escape "[112;8u"
+bind-key -T passthrough  C-M-S-q    send-keys Escape "[113;8u"
+bind-key -T passthrough  C-M-S-r    send-keys Escape "[114;8u"
+bind-key -T passthrough  C-M-S-s    send-keys Escape "[115;8u"
+bind-key -T passthrough  C-M-S-t    send-keys Escape "[116;8u"
+bind-key -T passthrough  C-M-S-u    send-keys Escape "[117;8u"
+bind-key -T passthrough  C-M-S-v    send-keys Escape "[118;8u"
+bind-key -T passthrough  C-M-S-w    send-keys Escape "[119;8u"
+bind-key -T passthrough  C-M-S-x    send-keys Escape "[120;8u"
+bind-key -T passthrough  C-M-S-y    send-keys Escape "[121;8u"
+bind-key -T passthrough  C-M-S-z    send-keys Escape "[122;8u"
+# Send various control+punctuation keys as-is. These are typically used by
+# emacs.
+bind-key -T passthrough  C-,        send-keys Escape "[44;5u"
+bind-key -T passthrough  C-.        send-keys Escape "[46;5u"
+bind-key -T passthrough  C-\;       send-keys Escape "[59;5u"
+
+bind-key -T root         C-!        send-keys Escape "[33;5u"
+# tmux cannot parse C-", so we send C-S-' from wezterm.
+bind-key -T root         C-S-\'     send-keys Escape "[39;6u"
+bind-key -T root         C-\#       send-keys Escape "[35;5u"
+bind-key -T root         C-S-4      send-keys Escape "[52;6u"
+bind-key -T root         C-S-5      send-keys Escape "[53;6u"
+bind-key -T root         C-S-7      send-keys Escape "[55;6u"
+bind-key -T root         C-\'       send-keys Escape "[39;5u"
+bind-key -T root         C-(        send-keys Escape "[40;5u"
+bind-key -T root         C-)        send-keys Escape "[41;5u"
+bind-key -T root         C-S-8      send-keys Escape "[56;6u"
+bind-key -T root         C-+        send-keys Escape "[43;5u"
+bind-key -T root         C-,        send-keys Escape "[44;5u"
+bind-key -T root         C--        send-keys Escape "[45;5u"
+bind-key -T root         C-.        send-keys Escape "[46;5u"
+bind-key -T root         C-/        send-keys Escape "[47;5u"
+bind-key -T root         C-0        send-keys Escape "[48;5u"
+bind-key -T root         C-1        send-keys Escape "[49;5u"
+bind-key -T root         C-2        send-keys Escape "[50;5u"
+bind-key -T root         C-3        send-keys Escape "[51;5u"
+bind-key -T root         C-4        send-keys Escape "[52;5u"
+bind-key -T root         C-5        send-keys Escape "[53;5u"
+bind-key -T root         C-6        send-keys Escape "[54;5u"
+bind-key -T root         C-7        send-keys Escape "[55;5u"
+bind-key -T root         C-8        send-keys Escape "[56;5u"
+bind-key -T root         C-9        send-keys Escape "[57;5u"
+bind-key -T root         C-:        send-keys Escape "[58;5u"
+bind-key -T root         C-\;       send-keys Escape "[59;5u"
+bind-key -T root         C-<        send-keys Escape "[60;5u"
+bind-key -T root         C-=        send-keys Escape "[61;5u"
+bind-key -T root         C->        send-keys Escape "[62;5u"
+bind-key -T root         C-S-/      send-keys Escape "[47;6u"
+bind-key -T root         C-@        send-keys Escape "[64;5u"
+bind-key -T root         C-\\       send-keys Escape "[92;5u"
+bind-key -T root         C-]        send-keys Escape "[93;5u"
+bind-key -T root         C-^        send-keys Escape "[94;5u"
+bind-key -T root         C-_        send-keys Escape "[95;5u"
+bind-key -T root         C-`        send-keys Escape "[96;5u"
+bind-key -T root         C-S-[      send-keys Escape "[91;6u"
+bind-key -T root         C-S-\\     send-keys Escape "[92;6u"
+bind-key -T root         C-S-]      send-keys Escape "[93;6u"
+bind-key -T root         C-S-`      send-keys Escape "[96;6u"
+
+bind-key -T root         M-!        send-keys Escape "[33;3u"
+bind-key -T root         M-S-\'     send-keys Escape "[39;4u"
+bind-key -T root         M-\#       send-keys Escape "[35;3u"
+bind-key -T root         M-S-4      send-keys Escape "[52;4u"
+bind-key -T root         M-S-5      send-keys Escape "[53;4u"
+bind-key -T root         M-S-7      send-keys Escape "[55;4u"
+bind-key -T root         M-\'       send-keys Escape "[39;3u"
+bind-key -T root         M-(        send-keys Escape "[40;3u"
+bind-key -T root         M-)        send-keys Escape "[41;3u"
+bind-key -T root         M-S-8      send-keys Escape "[56;4u"
+bind-key -T root         M-+        send-keys Escape "[43;3u"
+bind-key -T root         M-,        send-keys Escape "[44;3u"
+bind-key -T root         M--        send-keys Escape "[45;3u"
+bind-key -T root         M-.        send-keys Escape "[46;3u"
+bind-key -T root         M-/        send-keys Escape "[47;3u"
+bind-key -T root         M-0        send-keys Escape "[48;3u"
+bind-key -T root         M-1        send-keys Escape "[49;3u"
+bind-key -T root         M-2        send-keys Escape "[50;3u"
+bind-key -T root         M-3        send-keys Escape "[51;3u"
+bind-key -T root         M-4        send-keys Escape "[52;3u"
+bind-key -T root         M-5        send-keys Escape "[53;3u"
+bind-key -T root         M-6        send-keys Escape "[54;3u"
+bind-key -T root         M-7        send-keys Escape "[55;3u"
+bind-key -T root         M-8        send-keys Escape "[56;3u"
+bind-key -T root         M-9        send-keys Escape "[57;3u"
+bind-key -T root         M-:        send-keys Escape "[58;3u"
+bind-key -T root         M-\;       send-keys Escape "[59;3u"
+bind-key -T root         M-<        send-keys Escape "[60;3u"
+bind-key -T root         M-=        send-keys Escape "[61;3u"
+bind-key -T root         M->        send-keys Escape "[62;3u"
+bind-key -T root         M-S-/      send-keys Escape "[47;4u"
+bind-key -T root         M-@        send-keys Escape "[64;3u"
+bind-key -T root         M-[        send-keys Escape "[91;3u"
+bind-key -T root         M-\\       send-keys Escape "[92;3u"
+bind-key -T root         M-]        send-keys Escape "[93;3u"
+bind-key -T root         M-^        send-keys Escape "[94;3u"
+bind-key -T root         M-_        send-keys Escape "[95;3u"
+bind-key -T root         M-`        send-keys Escape "[96;3u"
+bind-key -T root         M-S-\\     send-keys Escape "[92;4u"
+bind-key -T root         M-S-]      send-keys Escape "[93;4u"
+bind-key -T root         M-S-`      send-keys Escape "[96;4u"
+
+bind-key -T root         C-M-!      send-keys Escape "[33;7u"
+bind-key -T root         C-M-S-\'   send-keys Escape "[39;8u"
+bind-key -T root         C-M-\#     send-keys Escape "[35;7u"
+bind-key -T root         C-M-S-4    send-keys Escape "[52;8u"
+bind-key -T root         C-M-S-5    send-keys Escape "[53;8u"
+bind-key -T root         C-M-S-7    send-keys Escape "[55;8u"
+bind-key -T root         C-M-\'     send-keys Escape "[39;7u"
+bind-key -T root         C-M-(      send-keys Escape "[40;7u"
+bind-key -T root         C-M-)      send-keys Escape "[41;7u"
+bind-key -T root         C-M-S-8    send-keys Escape "[56;8u"
+bind-key -T root         C-M-+      send-keys Escape "[43;7u"
+bind-key -T root         C-M-,      send-keys Escape "[44;7u"
+bind-key -T root         C-M--      send-keys Escape "[45;7u"
+bind-key -T root         C-M-.      send-keys Escape "[46;7u"
+bind-key -T root         C-M-/      send-keys Escape "[47;7u"
+bind-key -T root         C-M-0      send-keys Escape "[48;7u"
+bind-key -T root         C-M-1      send-keys Escape "[49;7u"
+bind-key -T root         C-M-2      send-keys Escape "[50;7u"
+bind-key -T root         C-M-3      send-keys Escape "[51;7u"
+bind-key -T root         C-M-4      send-keys Escape "[52;7u"
+bind-key -T root         C-M-5      send-keys Escape "[53;7u"
+bind-key -T root         C-M-6      send-keys Escape "[54;7u"
+bind-key -T root         C-M-7      send-keys Escape "[55;7u"
+bind-key -T root         C-M-8      send-keys Escape "[56;7u"
+bind-key -T root         C-M-9      send-keys Escape "[57;7u"
+bind-key -T root         C-M-:      send-keys Escape "[58;7u"
+bind-key -T root         C-M-\;     send-keys Escape "[59;7u"
+bind-key -T root         C-M-<      send-keys Escape "[60;7u"
+bind-key -T root         C-M-=      send-keys Escape "[61;7u"
+bind-key -T root         C-M->      send-keys Escape "[62;7u"
+bind-key -T root         C-M-S-/    send-keys Escape "[47;8u"
+bind-key -T root         C-M-@      send-keys Escape "[64;7u"
+bind-key -T root         C-M-\\     send-keys Escape "[92;7u"
+bind-key -T root         C-M-]      send-keys Escape "[93;7u"
+bind-key -T root         C-M-^      send-keys Escape "[94;7u"
+bind-key -T root         C-M-_      send-keys Escape "[95;7u"
+bind-key -T root         C-M-`      send-keys Escape "[96;7u"
+bind-key -T root         C-M-S-\\   send-keys Escape "[92;8u"
+bind-key -T root         C-M-S-]    send-keys Escape "[93;8u"
+bind-key -T root         C-M-S-`    send-keys Escape "[96;8u"
+
+bind-key -T root         M-Tab      send-keys Escape "[9;3u"
+bind-key -T root         M-S-Tab    send-keys Escape "[9;4u"
+bind-key -T root         C-Tab      send-keys Escape "[9;5u"
+bind-key -T root         C-S-Tab    send-keys Escape "[9;6u"
+bind-key -T root         C-M-Tab    send-keys Escape "[9;7u"
+bind-key -T root         C-M-S-Tab  send-keys Escape "[9;8u"
+
+bind-key -T virt         C-y          if-shell -F $EMACSLIKE "send-keys Escape '[127;2u'" "send-keys BSpace" \; set key-table root
+bind-key -T root         M-BSpace     send-keys Escape "[127;3u"
+bind-key -T root         M-S-BSpace   send-keys Escape "[127;4u"
+bind-key -T root         C-BSpace     send-keys Escape "[127;5u"
+bind-key -T root         C-S-BSpace   send-keys Escape "[127;6u"
+bind-key -T root         C-M-BSpace   send-keys Escape "[127;7u"
+bind-key -T root         C-M-S-BSpace send-keys Escape "[127;8u"
+
+# NOTE: tmux has a regression regarding `CSI u` support:
+# https://github.com/tmux/tmux/issues/2705. This is one reason why we use code
+# 13 (\r) instead of 10 (\n) for RET, because \r does not collide with C-j.
+#
+# C-z is ASCII 0x1a, which is what we send from wezterm for S-Enter.
+bind-key -T virt         C-z         send-keys Escape "[13;2u" \; set key-table root
+bind-key -T root         M-Enter     send-keys Escape "[13;3u"
+bind-key -T root         M-S-Enter   send-keys Escape "[13;4u"
+bind-key -T root         C-Enter     send-keys Escape "[13;5u"
+bind-key -T root         C-S-Enter   send-keys Escape "[13;6u"
+bind-key -T root         C-M-Enter   send-keys Escape "[13;7u"
+bind-key -T root         C-M-S-Enter send-keys Escape "[13;8u"
+
+bind-key -T root         M-Space     send-keys Escape "[32;3u"
+bind-key -T root         M-S-Space   send-keys Escape "[32;4u"
+bind-key -T root         C-Space     send-keys Escape "[32;5u"
+bind-key -T root         C-S-Space   send-keys Escape "[32;6u"
+bind-key -T root         C-M-Space   send-keys Escape "[32;7u"
+bind-key -T root         C-M-S-Space send-keys Escape "[32;8u"
+
+# Special handling of "Escape" to avoid conflicting with itself.
+bind-key -T virt         C-]         send-keys Escape "[27;2u" \; set key-table root  # S-ESC
+bind-key -T virt         C-^         send-keys Escape "[27;3u" \; set key-table root  # M-ESC
+bind-key -T virt         C-_         send-keys Escape "[27;4u" \; set key-table root  # M-S-ESC
+bind-key -T virt         C-Escape     send-keys Escape "[27;5u" \; set key-table root
+bind-key -T virt         C-S-Escape   send-keys Escape "[27;6u" \; set key-table root
+bind-key -T virt         C-M-Escape   send-keys Escape "[27;7u" \; set key-table root
+bind-key -T virt         C-M-S-Escape send-keys Escape "[27;8u" \; set key-table root
+
+# Special handling of "C-@" to map it to something other than the traditional
+# NUL "\x00" byte.
+bind-key -T virt         C-@        send-keys Escape "[64;5u" \; set key-table root
+
+# Special handling of "[" to avoid conflicting with Escape key.
+bind-key -T virt         M-[        send-keys Escape "[91;3u" \; set key-table root
+bind-key -T virt         M-S-[      send-keys Escape "[91;4u" \; set key-table root
+bind-key -T virt         C-[        send-keys Escape "[91;5u" \; set key-table root
+bind-key -T virt         C-S-[      send-keys Escape "[91;6u" \; set key-table root
+bind-key -T virt         C-M-[      send-keys Escape "[91;7u" \; set key-table root
+bind-key -T virt         C-M-S-[    send-keys Escape "[91;8u" \; set key-table root
+
+# Special handling of "i" to avoid conflicting with Tab key.
+bind-key -T virt         C-M-i      send-keys Escape "[105;7u" \; set key-table root
+bind-key -T virt         C-M-S-i    send-keys Escape "[105;8u" \; set key-table root
+
+# Special handling of "m" to avoid conflicting with Enter key.
+bind-key -T virt         C-M-S-m    send-keys Escape "[109;8u" \; set key-table root
+
+# Buggy keys in tmux where there is no way to disambiguate these keys from TAB or RET.
+bind-key -T virt         C-i        if-shell -F $EMACSLIKE "send-keys Escape '[105;5u'" "send-keys -H 09" \; set key-table root
+bind-key -T virt         C-m        if-shell -F $EMACSLIKE "send-keys Escape '[109;5u'" "send-keys -H 0d" \; set key-table root
+
+bind-key -T root         C-S-a      send-keys Escape  "[97;6u"
+bind-key -T root         C-S-b      send-keys Escape  "[97;6u"
+bind-key -T root         C-S-c      send-keys Escape  "[99;6u"
+bind-key -T root         C-S-d      send-keys Escape  "[100;6u"
+bind-key -T root         C-S-e      send-keys Escape  "[101;6u"
+bind-key -T root         C-S-f      send-keys Escape  "[102;6u"
+bind-key -T root         C-S-g      send-keys Escape  "[103;6u"
+bind-key -T root         C-S-h      send-keys Escape  "[104;6u"
+bind-key -T root         C-S-i      send-keys Escape  "[105;6u"
+bind-key -T root         C-S-j      send-keys Escape  "[106;6u"
+bind-key -T root         C-S-k      send-keys Escape  "[107;6u"
+bind-key -T root         C-S-l      send-keys Escape  "[108;6u"
+bind-key -T root         C-S-m      send-keys Escape  "[109;6u"
+bind-key -T root         C-S-n      send-keys Escape  "[110;6u"
+bind-key -T root         C-S-o      send-keys Escape  "[111;6u"
+bind-key -T root         C-S-p      send-keys Escape  "[112;6u"
+bind-key -T root         C-S-q      send-keys Escape  "[113;6u"
+bind-key -T root         C-S-r      send-keys Escape  "[114;6u"
+bind-key -T root         C-S-s      send-keys Escape  "[115;6u"
+bind-key -T root         C-S-t      send-keys Escape  "[116;6u"
+bind-key -T root         C-S-u      send-keys Escape  "[117;6u"
+bind-key -T root         C-S-v      send-keys Escape  "[118;6u"
+bind-key -T root         C-S-w      send-keys Escape  "[119;6u"
+bind-key -T root         C-S-x      send-keys Escape  "[120;6u"
+bind-key -T root         C-S-y      send-keys Escape  "[121;6u"
+bind-key -T root         C-S-z      send-keys Escape  "[122;6u"
+
+# Switch to left/right window.
+bind-key -T root         C-M-h      previous-window
+bind-key -T root         C-M-l      next-window
+
+# Move window left/right. We have to take care when we are at the edge
+# (wraparound) to make the movement more intuitive.
+#
+# E.g., for C-M-S-h, if we're already at the leftmost window, we cannot just
+# swap with the "-1" target window because now the last window is at the front,
+# when ideally it would be the second-to-last window.
+bind-key -T virt         C-M-S-h    run-shell '~/syscfg/script/tmux_move_pane.sh \
+	"#{session_name}" \
+	"#{window_index}" \
+	"LEFT"'
+bind-key -T virt         C-M-S-l    run-shell '~/syscfg/script/tmux_move_pane.sh \
+	"#{session_name}" \
+	"#{window_index}" \
+	"RIGHT"'
+
+# Move across sessions.
+bind-key -T root         C-M-n      switch-client -n
+
+# Show all windows in the current session in a tree view. Think of
+# this as a "vertical window list" alternative to the horizontal window list in
+# the status bar, which can get difficult to determine just how many windows
+# there actually are in the current session.
+bind-key -T root         C-M-w      run-shell -C "choose-tree -Z -w -f'##{==:##{session_name},#{session_name}}'"
+
+# Copy things into the tmux buffer.
+bind-key -T virt         C-M-S-y    copy-mode \; set key-table root
+
+# Paste from the the tmux buffer.
+bind-key -T root         C-M-p      paste-buffer
+
+# Open double-clicked word. See tmux_mouse_word_handler.sh for more information.
+bind-key -T root         DoubleClick1Pane     run-shell '~/syscfg/script/tmux_mouse_word_handler.sh \
+	"#{pane_id}" \
+	"#{pane_current_path}" \
+	"#{mouse_word}"'
+bind-key -T copy-mode-vi DoubleClick1Pane     run-shell '~/syscfg/script/tmux_mouse_word_handler.sh \
+	"#{pane_id}" \
+	"#{pane_current_path}" \
+	"#{mouse_word}" \
+	exit-copy-mode '
+
+# Disable mouse wheel in status bar. See https://superuser.com/a/1492302.
+unbind-key -T root WheelUpStatus
+unbind-key -T root WheelDownStatus
+#+end_src
