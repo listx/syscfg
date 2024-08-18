@@ -268,6 +268,7 @@ other configurations that are pulled in. And so we define it first here.
 <<clojure>>
 <<c-indentation>>
 <<c-keybindings>>
+<<makefile>>
 <<format-onsave>>
 <<shell>>
 
@@ -2159,6 +2160,23 @@ wide.
       :mnvi "C-j" nil)
 #+end_src
 
+* Makefiles
+
+Set indentation to 8.
+
+#+header: :noweb-ref makefile
+#+begin_src emacs-lisp
+(defun l/set-tab-width-to-8 ()
+  (interactive)
+  (setq tab-width 8)
+  (setq c-basic-offset 8)
+  (setq sh-basic-offset 8))
+(add-hook 'makefile-mode-hook #'l/set-tab-width-to-8)
+(add-hook 'makefile-automake-mode-hook #'l/set-tab-width-to-8)
+(add-hook 'makefile-gmake-mode-hook #'l/set-tab-width-to-8)
+(add-hook 'makefile-bsdmake-mode-hook #'l/set-tab-width-to-8)
+#+end_src
+
 * Notmuch
 
 #+name: notmuch
@@ -2304,7 +2322,7 @@ See [[https://emacs.stackexchange.com/a/36279/13006][this post]] from 2017 which
 
 * Shell
 
-#+name: shell
+#+header: :noweb-ref shell
 #+begin_src emacs-lisp
 (after! sh-script
   (set-formatter! 'shfmt
@@ -2314,6 +2332,13 @@ See [[https://emacs.stackexchange.com/a/36279/13006][this post]] from 2017 which
       (format "--indent=%d" (or tab-width 2))
       (format "--language-dialect=%s"
        (pcase sh-shell (`bash "bash") (`mksh "mksh") (_ "posix"))))))
+#+end_src
+
+Set indentation to 8.
+
+#+header: :noweb-ref shell
+#+begin_src emacs-lisp
+(add-hook 'sh-mode-hook #'l/set-tab-width-to-8)
 #+end_src
 
 * Org roam

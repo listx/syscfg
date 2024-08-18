@@ -940,6 +940,15 @@ details."
       :mnvi "C-l" nil
       :mnvi "C-k" nil
       :mnvi "C-j" nil)
+(defun l/set-tab-width-to-8 ()
+  (interactive)
+  (setq tab-width 8)
+  (setq c-basic-offset 8)
+  (setq sh-basic-offset 8))
+(add-hook 'makefile-mode-hook #'l/set-tab-width-to-8)
+(add-hook 'makefile-automake-mode-hook #'l/set-tab-width-to-8)
+(add-hook 'makefile-gmake-mode-hook #'l/set-tab-width-to-8)
+(add-hook 'makefile-bsdmake-mode-hook #'l/set-tab-width-to-8)
 (defvar l/c-like-modes '(c-mode))
 (defvar l/banned-auto-format-dirs '("prog/foreign/git"))
 
@@ -968,6 +977,7 @@ details."
       (format "--indent=%d" (or tab-width 2))
       (format "--language-dialect=%s"
        (pcase sh-shell (`bash "bash") (`mksh "mksh") (_ "posix"))))))
+(add-hook 'sh-mode-hook #'l/set-tab-width-to-8)
 
 (setq display-line-numbers-type nil)
 
