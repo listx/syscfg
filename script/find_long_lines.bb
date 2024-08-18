@@ -67,18 +67,6 @@
     ""
     line))
 
-(defn truncate-emphasis-markers
-  "Some lines have words with emphasis markers in them. Detect such markers and
-  remove them. This is a guesstimate as it has no knowledge of Org. It also does
-  not bother with forward slashes (italics) because they are often used for file
-  paths, and we do want to count the slashes for them."
-  [line]
-  (-> line
-      (str/replace #"\b=([A-Za-z0-9-_ ]+)=\b" "$1")
-      (str/replace #"\b~([A-Za-z0-9-_ ]+)~\b" "$1")
-      (str/replace #"\b\*([A-Za-z0-9-_ ]+)\*\b" "$1")
-      (str/replace #"\b_([A-Za-z0-9- ]+)_\b" "$1")))
-
 (defn check-long-line
   "Print the line if it exceeds max-line-length. Perform transformations
   before doing the length check."
@@ -92,7 +80,6 @@
        truncate-long-paths
        truncate-tangle-paths
        truncate-long-contiguous-text
-       truncate-emphasis-markers
        (#(when (< max-line-length (count %))
            (println (format "%s:%s:[%d] %s" filename (inc index) (count line) line))))))
 
