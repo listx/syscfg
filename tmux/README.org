@@ -939,8 +939,6 @@ bind-key -T passthrough  C-M-S-z    send-keys Escape "[122;8u"
 
 #+header: :noweb-ref keybindings-passthrough-mode
 #+begin_src conf
-# Send various control+punctuation keys as-is. These are typically used by
-# emacs.
 bind-key -T passthrough  C-,        send-keys Escape "[44;5u"
 bind-key -T passthrough  C-.        send-keys Escape "[46;5u"
 bind-key -T passthrough  C-\;       send-keys Escape "[59;5u"
@@ -948,26 +946,125 @@ bind-key -T passthrough  C-\;       send-keys Escape "[59;5u"
 
 * Appearance
 
-#+name: appearance
+Use 24-bit colors by setting the =TERM= environment variable for newly spawned
+shells to =wezterm=.
+
+#+header: :noweb-ref appearance
 #+begin_src conf
-# Make messages appear for 4 seconds by default.
-set -g display-time 4000
-
-# Automatically re-balance panes after they are created and/or deleted.
-set-hook -g after-split-window  "select-layout -E"
-set-hook -g pane-exited         "select-layout -E"
-
-# Use 24-bit colors.
 set -g default-terminal "wezterm"
+#+end_src
 
-# Set background color for status bar.
+** Messages
+
+Make messages appear for 4 seconds by default.
+
+#+header: :noweb-ref appearance
+#+begin_src conf
+set -g display-time 4000
+#+end_src
+
+** Status bar
+
+Explicitly set status line height, where "on" means 1 row. This can be "2, 3, 4
+or 5". In the future if we want to show more information we can set this to "2".
+See https://stackoverflow.com/a/56215242/437583.
+
+#+header: :noweb-ref appearance
+#+begin_src conf
+set -g status on
+#+end_src
+
+Don't set limits on status line portion lengths. This way, if either =status-left=
+or =status-right= gets too long, they don't get truncated by tmux.
+
+#+header: :noweb-ref appearance
+#+begin_src conf
+set -g status-left-length 0
+set -g status-right-length 0
+#+end_src
+
+Set status bar contents.
+
+#+header: :noweb-ref appearance
+#+begin_src conf
+set -g status-left "#(~/syscfg/script/tmux_get_status.sh \
+    '#{session_name}'\
+    '#{pane_mode}'\
+    '#{client_key_table}')"
+set -g status-right ""
+#+end_src
+
+Set background color for status bar.
+
+#+header: :noweb-ref appearance
+#+begin_src conf
 set -gF status-style "bg=#{L_TMUX_COLOR_TEXT} fg=#{L_TMUX_COLOR_CURSOR} none"
+#+end_src
 
-# This sets the color for the name of the session (#{session_name}).
+Set the color for the name of the session (=#{session_name}= tmux variable).
+
+#+header: :noweb-ref appearance
+#+begin_src conf
 set -gF status-left-style "bg=#{L_TMUX_COLOR_CURSOR} fg=#{L_TMUX_COLOR_TEXT} bold"
+#+end_src
 
-# Colorize window names.
-set -gw window-status-current-format "#(~/syscfg/script/tmux_get_window_format.sh \
+*** Windows
+
+Automatically renumber windows if one is closed, so that there are no "gaps" in
+between. See https://unix.stackexchange.com/a/51879/72230. We don't actually use
+window numbers at all, but this makes things more consistent semantically
+underneath our appearance layer (for example, these numbers matter when we want
+to do refer to windows programmatically from a script).
+
+#+header: :noweb-ref appearance
+#+begin_src conf
+set -g renumber-windows on
+#+end_src
+
+Rename windows every second (both active and inactive) so that we get accurate
+window names depending on what the active pane in each window is doing.
+
+#+header: :noweb-ref appearance
+#+begin_src conf
+set -g status-interval 1
+#+end_src
+
+We have windows listed in the status bar. Separate them with the space
+character.
+
+#+header: :noweb-ref appearance
+#+begin_src conf
+set -g window-status-separator " "
+#+end_src
+
+Set window name contents by automatically renaming them. We use
+[[file:~/syscfg/script/tmux_get_window_format.sh]] for this, but basically if the
+current command is zsh (our usual shell), then use the current path as the name.
+Otherwise display the name of the running command.
+
+See https://stackoverflow.com/a/68043814/437583 for the inspiration.
+
+#+header: :noweb-ref appearance
+#+begin_src conf
+set -gw automatic-rename on
+set -g automatic-rename-format \
+    "#(~/syscfg/script/tmux_get_window_format.sh \
+    '#{pane_current_command}'\
+    '#{pane_current_path}'\
+    '#{window_name}'\
+    '#{window_id}'\
+    '#{pane_id}'\
+    '#{window_flags}'\
+    '#{window_panes}'\
+    0)"
+#+end_src
+
+Colorize window names, for active and inactive windows.
+
+#+header: :noweb-ref appearance
+#+begin_src conf
+set -gw window-status-current-format \
+    "#(~/syscfg/script/tmux_get_window_format.sh \
     '#{pane_current_command}'\
     '#{pane_current_path}'\
     '#{window_name}'\
@@ -976,7 +1073,8 @@ set -gw window-status-current-format "#(~/syscfg/script/tmux_get_window_format.s
     '#{window_flags}'\
     '#{window_panes}'\
     1)"
-set -gw window-status-format "#(~/syscfg/script/tmux_get_window_format.sh \
+set -gw window-status-format \
+    "#(~/syscfg/script/tmux_get_window_format.sh \
     '#{pane_current_command}'\
     '#{pane_current_path}'\
     '#{window_name}'\
@@ -985,73 +1083,71 @@ set -gw window-status-format "#(~/syscfg/script/tmux_get_window_format.sh \
     '#{window_flags}'\
     '#{window_panes}'\
     0)"
+#+end_src
 
-# Set window name to either the current path when at a shell prompt, or to the
-# name of the executable when running it.
-# See https://stackoverflow.com/a/68043814/437583.
-set -g status-interval 1
-set -gw automatic-rename on
-# If the current command is zsh (our usual shell), then use the current path as
-# the name. Otherwise just use the command name instead.
-set -g automatic-rename-format "#(~/syscfg/script/tmux_get_window_format.sh \
-    '#{pane_current_command}'\
-    '#{pane_current_path}'\
-    '#{window_name}'\
-    '#{window_id}'\
-    '#{pane_id}'\
-    '#{window_flags}'\
-    '#{window_panes}'\
-    0)"
+** Panes and borders
 
-# Set colors for window titles in general.
-set -gw window-status-style "fg=black"
+Ask terminal if focus events are supported and if so, pass focus events to
+applications. This makes terminal emacs aware that it loses focus when we switch
+away from it from tmux (e.g., when we move to a different pane).
 
-# Highlight current active window in the status bar. See
-# https://unix.stackexchange.com/q/210174/72230.
-set -gw window-status-current-style "fg=black bold"
+#+header: :noweb-ref appearance
+#+begin_src conf
+set -g focus-events on
+#+end_src
 
-# Set colors for pane split borders.
+When we attach into a remote tmux session, it may be the case that the local
+terminal size is smaller than the size of the terminal on the remote machine.
+The difference in these sizes are shown by tmux with the =fill-character=. By
+default it is a ".", but we change it here to "╳" (aka "BOX DRAWINGS LIGHT
+DIAGONAL CROSS", or Unicode codepoint 2573) because of the interesting quality
+it has where there is virtually no gap between these characters written in
+succession, next to each other:
+
+#+begin_example
+╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳
+╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳
+╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳
+#+end_example
+
+#+header: :noweb-ref appearance
+#+begin_src conf
+set -gw fill-character "╳"
+#+end_src
+
+Automatically re-balance panes after they are created and/or deleted.
+
+#+header: :noweb-ref appearance
+#+begin_src conf
+set-hook -g after-split-window  "select-layout -E"
+set-hook -g pane-exited         "select-layout -E"
+#+end_src
+
+Set colors for pane split borders.
+
+#+header: :noweb-ref appearance
+#+begin_src conf
 set -g pane-active-border-style "bg=white  fg=white"
 set -g pane-border-style        "bg=black  fg=white"
+#+end_src
 
-# Set colors for the active pane. For some reason this option is named
-# "window-active-style" but it actually only affects the active pane within a
-# window.
+Set colors for the active pane. For some reason this option is named
+"window-active-style" but it actually only affects the active pane within a
+window.
+
+#+header: :noweb-ref appearance
+#+begin_src conf
 set -gw window-active-style "bg=brightblack fg=white"
 set -gw window-style "bg=black fg=brightwhite"
+#+end_src
 
-set -g status-left "#(~/syscfg/script/tmux_get_status.sh \
-    '#{session_name}'\
-    '#{pane_mode}'\
-    '#{client_key_table}')"
-set -g status-right ""
+** Copy mode
 
-# Set colors for copy-mode selections.
+Set colors for copy-mode selections.
+
+#+header: :noweb-ref appearance
+#+begin_src conf
 set -gw mode-style "fg=black bg=brightgreen bold"
-
-# Change default unused space character from ".".
-set -gw fill-character "╳"
-
-# Ask terminal if focus events are supported and if so, pass focus events to
-# applications. This makes terminal emacs aware that it loses focus when we
-# switch away from it from tmux (e.g., when we move to a different pane).
-set -g focus-events on
-
-# Explicitly set status line height, where "on" means 1 row. This can be "2, 3,
-# 4 or 5". In the future if we want to show more information we can set this to
-# "2". See https://stackoverflow.com/a/56215242/437583.
-set -g status on
-
-set -g window-status-separator " "
-
-# Don't set limits on status line portion lengths. This way, if either
-# status-left or status-right gets too long, they don't get truncated by tmux.
-set -g status-left-length 0
-set -g status-right-length 0
-
-# Automatically renumber windows if one is closed, so that there are no "gaps"
-# in between. See https://unix.stackexchange.com/a/51879/72230.
-set -g renumber-windows on
 #+end_src
 
 * Miscellaneous
