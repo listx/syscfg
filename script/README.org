@@ -1,0 +1,19 @@
+#+TITLE: System scripts
+#+AUTHOR: Linus Arver
+#+PROPERTY: header-args :noweb no-export
+#+auto_tangle: t
+
+* Introduction
+
+This Org file houses various scripts we rely on. Each main heading holds a
+single script.
+
+** Literate style
+
+See the discussion for [[file:~/syscfg/tmux/README.org][the literate tmux configuration]] about how we use literate
+programming in this file. We use the same conventions used there.
+
+* Linters
+
+  - [[file:find-long-lines.org]] :: Detect long lines in Org mode files that could
+    probably be reflowed to be under 100 columns.

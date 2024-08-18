@@ -1,0 +1,392 @@
+#+TITLE: Find long lines
+#+AUTHOR: Linus Arver
+#+PROPERTY: header-args :noweb no-export
+#+auto_tangle: t
+
+* Description
+
+Find long lines in Org mode files.
+
+Overall the algorithm is pretty simple --- it just checks files line-by-line,
+reporting those lines that go over =max-line-length= (100 chars). But before it
+checks for the length, each line is transformed, doing things like
+
+  - expanding tab characters to spaces (so that a single tab character is
+    considered as 8 characters, for example), and
+
+  - truncating long stretches of contiguous text (with the assumption that they
+    cannot be shortened anyway, because the contiguous length is presumably
+    outside the author's control, for example URLs).
+
+* Motivation
+
+We want to check for long lines in Org mode files, so that we can lint them like
+we do for other programming languages. Coding standards, even for Org mode
+files, is important.
+
+* Implementation
+
+We use Babashka [fn:babashka] to leverage Clojure with a fast-enough startup time.
+
+#+header: :shebang #!/usr/bin/env bb
+#+header: :noweb-ref find-long-lines
+#+header: :tangle find_long_lines.bb
+#+begin_src clojure
+<<imports>>
+<<default-style>>
+<<transformations>>
+<<line-length-check>>
+<<main>>
+#+end_src
+
+** Imports
+
+We only need to import two libraries:
+
+  - =clojure.java.io= for reading files, and
+
+  - =clojure.string= for string manipulation.
+
+#+header: :noweb-ref imports
+#+begin_src clojure
+(ns find-long-lines
+  (:require [clojure.java.io :as io]
+            [clojure.string :as str]))
+#+end_src
+
+** Default style
+
+*** Maximum line length
+
+We set the maximum length to 100 so that this script only reports lines longer
+than 100 characters. This is the same limit used by the Linux
+Kernel[fn:kernel-line-length].
+
+Typically most Org files (at least the prose bits) should be written with an eye
+toward 80 columns, because narrower columns are easier to read for prose text.
+This gives us some breathing room between 80 and 100 characters before the tool
+starts to yell at us.
+
+#+header: :noweb-ref default-style
+#+begin_src clojure
+(def max-line-length 100)
+#+end_src
+
+*** Token threshold
+
+We use the word "token" here to mean any type of (usually contiguous) text that
+should not (or simply cannot) be broken up over multiple lines. Some examples
+include:
+
+  - URLs
+
+  - file paths
+
+  - log/error messages
+
+We want to /ignore/ such tokens only if they are too long --- because if they are
+short enough they could probably be reflowed to the next line to make the
+current line fall within the =max-line-length=. That is, we assume the author of
+the Org file has already done what they could to put such long tokens on their
+own line.
+
+#+header: :noweb-ref default-style
+#+begin_src clojure
+(def token-threshold 60)
+#+end_src
+
+In other words, if the token is less than about 60 characters, we don't ignore
+them (so that they contribute their full weight to the current line's total
+length), so that we can (hopefully) warn about them to remind the Org file
+author to try to reflow the text around them.
+
+*** Tab width
+
+When counting the length of a string, tab characters (in Clojure and in other
+languages) are treated just like other ASCII characters in the string --- they
+only count as "1" in length, just like a space character.
+
+But in practice, most computer programs /display/ tab characters are 4 or 8
+spaces. We follow the Linux Kernel here again (8-space tabs) and assume that
+tabs take up a width of 8 characters on the screen.
+
+So, if a line contains 10 tabs alone, that line is considered to have a length
+of 80, not 10.
+
+#+header: :noweb-ref default-style
+#+begin_src clojure
+(def tab-width 8)
+#+end_src
+
+** Transformations
+
+#+header: :noweb-ref transformations
+#+begin_src clojure
+<<expansions>>
+<<truncations>>
+#+end_src
+
+*** Expansions
+
+Tabs are the only things we "expand" to make the line longer than it is. We
+replace each tab with =tab-width= number of spaces.
+
+#+header: :noweb-ref expansions
+#+begin_src clojure
+(defn expand-tabs [line]
+  (str/replace line "\t" (apply str (repeat tab-width \space))))
+#+end_src
+
+*** Truncations
+
+It's worth mentioning that we are trying to detect long lines as they appear in
+Org mode (inside Emacs). Also, =org-fill-paragraph= itself computes line lengths
+on how they appear to the user in Org mode, /not/ how they appear in raw form.
+
+Truncations are needed to gauge the "true" (as displayed) length of a line as
+they are displayed by Org mode. There are two categories of truncations we
+perform:
+
+  1) truncation of the entire line when we detect things that we want to ignore,
+     and
+
+  2) truncations of parts of the line (parts of a token) to hide things that the
+     user cannot see when in Org mode.
+
+Most fall into the first category. Such truncations rule out certain type of
+lines from consideration entirely, for various reasons. The second category is
+not as important, but still useful in certain situations.
+
+**** URLs
+
+URLs can be rather long. Ignore a line if it has a long URL in it (because the
+Org author has probably already done what they could to put the URL on its own
+line).
+
+#+header: :noweb-ref truncations
+#+begin_src clojure
+(defn truncate-long-urls
+  [line]
+  (if (re-find #"https?://\S{60}" line)
+    ""
+    line))
+#+end_src
+
+**** File paths
+
+Truncate lines that have paths =that/look/like/this=. This is only a guess because
+it does not check file paths with spaces or other unusual characters in them.
+
+#+header: :noweb-ref truncations
+#+begin_src clojure
+(defn truncate-long-paths
+  "Truncate lines that have long paths in them."
+  [line]
+  (if (re-find #"[A-Za-z0-9-_./]{60}" line)
+    ""
+    line))
+#+end_src
+
+**** Long contiguous text
+
+By /contiguous/ text we mean a series of non-space characters.
+
+Sometimes a line contains some sort of data which cannot be broken up and must
+remain as a single contiguous sequence of non-space characters. Typically these
+are things like Docker image names with an included SHA-256 digest.
+
+Ignore lines with such contiguous text because there is no sensible way of
+breaking up such text (as they lack interspersed whitespace).
+
+#+header: :noweb-ref truncations
+#+begin_src clojure
+(defn truncate-long-contiguous-text
+  [line]
+  (if (re-find #"\S{60}" line)
+    ""
+    line))
+#+end_src
+
+**** Metadata
+
+Metadata can get pretty long in Org mode. These lines start with =#+...= and are
+generally hidden from view (when the document is tangled or exported). So
+there's no need to consider them (there's really little to no harm in
+readability for keeping these lines long).
+
+So ignore them entirely.
+
+#+header: :noweb-ref truncations
+#+begin_src clojure
+(defn truncate-org-metadata [line]
+  (let [l (str/lower-case line)
+        ignored-prefixes ["#+html_head: "
+                          "#+header: "
+                          "#+begin_src "]
+        ignorable (some #(str/starts-with? l %) ignored-prefixes)]
+    (if ignorable
+      ""
+      line)))
+#+end_src
+
+**** Tables
+
+Org mode supports ASCII-styled tables. Typically such tables can get fairly
+wide (certainly beyond 100 columns), so ignore them completely.
+
+#+header: :noweb-ref truncations
+#+begin_src clojure
+(defn truncate-org-table-rows [line]
+  (if (and
+       (str/starts-with? line "| ")
+       (str/ends-with? line " |"))
+    ""
+    line))
+#+end_src
+
+**** Links
+
+Org-style links that look like
+
+#+begin_src org
+[[link][display text]]
+#+end_src
+
+are contracted so that we are only left with the /display text/. This is because
+Org mode normally only shows the /display text/ part and hides the rest.
+
+We don't want to alert users about long Org mode file lines where most of the
+length is due to a very long URL embedded inside an Org-style link which remains
+hidden from the user. So ignore those hidden parts by removing them.
+
+#+header: :noweb-ref truncations
+#+begin_src clojure
+(defn truncate-org-links [line]
+  (str/replace line #"\[\[[^\]]+\]\[([^\]]+)\]\]" "$1"))
+#+end_src
+
+**** Strings
+
+This rule is in place to avoid linting long lines in source code blocks, where
+those lines are only long due to them containing log statements and error
+messages, which typically are double (or single)-quoted strings.
+
+We want to allow the Org author to keep such strings on a single line to let
+them write log and error messages that are grep-friendly.
+
+#+header: :noweb-ref truncations
+#+begin_src clojure
+(defn truncate-quoted-strings
+  [line]
+  (-> line
+      (str/replace #"\"([^\"]{60,})\"" "")
+      (str/replace #"'([^']{60,})'" "")))
+#+end_src
+
+** Line length check
+
+Below are all the transformations we've discussed above. Because of the way they
+are written, they can be threaded together with Clojure's =->>= (aka
+"thread-last") macro, as we shall see shortly.
+
+#+header: :noweb-ref all-transformations
+#+begin_src clojure
+expand-tabs
+truncate-long-urls
+truncate-long-paths
+truncate-long-contiguous-text
+truncate-org-metadata
+truncate-org-table-rows
+truncate-org-links
+truncate-quoted-strings
+#+end_src
+
+Checking the length of a line just means printing the line to the screen if it's
+deemed to be unnecessarily too long. We print the
+
+  - file name,
+
+  - line number,
+
+  - length of the line in square brackets, and
+
+  - the contents of the line.
+
+#+header: :noweb-ref offending-line-format
+#+begin_src clojure
+(println (format "%s:%s:[%d] %s"
+                 filename
+                 (inc index)
+                 (count (expand-tabs line))
+                 line))
+#+end_src
+
+Note that for the length of the line, we count the line in its expanded form (by
+calling =expand-tabs=). This is because otherwise we may end up printing a number
+that is below =max-line-length= (e.g., if a line has 10 tab indents and 1 "a", we
+want to print $(10 * 8) + 1 = 81$ here and not $10 + 1 = 11$ because it could be
+confusing to the user.
+
+Now we're ready to transform the line with our transformations to get the true
+length of the line, before checking if it exceeds =max-line-length=.
+
+#+header: :noweb-ref line-length-check
+#+begin_src clojure
+(defn check-line
+  "Print the line if it exceeds max-line-length. Perform transformations
+  before doing the length check."
+  [filename index line]
+  (->> line
+       <<all-transformations>>
+       (#(when (< max-line-length (count %))
+           <<offending-line-format>>))))
+#+end_src
+
+Now we can just wire everything up to check all the lines in a given file.
+
+#+header: :noweb-ref line-length-check
+#+begin_src clojure
+(defn check-lines
+  "Print out all lines that are over the max-line-length."
+  [filename]
+  (with-open [rdr (io/reader filename)]
+    (doseq [[index line] (map-indexed vector (line-seq rdr))]
+      (check-line filename index line))))
+#+end_src
+
+** Main
+
+The =-main= entrypoint is pretty bare-bones and accepts file names to read into
+=check-lines=. In the future we could put in CLI argument handling.
+
+#+header: :noweb-ref main
+#+begin_src clojure
+(defn -main [& args]
+  (run! check-lines args))
+#+end_src
+
+*** Pythonic main
+
+We use a trick (from the Babashka cookbook [fn:babashka-cookbook]) to make this
+script behave like Python's
+
+#+begin_src python
+__name__ == "__main__"
+#+end_src
+
+pattern; i.e., this script will only get invoked if we execute the file from the
+command line, not when we load it into a REPL.
+
+#+header: :noweb-ref main
+#+begin_src clojure
+(when (= *file* (System/getProperty "babashka.file"))
+  (apply -main *command-line-args*))
+#+end_src
+
+* Footnotes
+
+[fn:babashka] https://babashka.org/
+
+[fn:babashka-cookbook] https://github.com/babashka/book/blame/eea70f8cf5185eb65e87066ddaf36c66fe22bceb/src/recipes.adoc#L44-L73
+
+[fn:kernel-line-length] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=bdc48fa11e46f867ea4d75fa59ee87a7f48be144
