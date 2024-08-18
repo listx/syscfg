@@ -38,7 +38,6 @@ in the order that they appear, top-to-bottom, in this document.
 <<keybindings>>
 <<appearance>>
 <<misc>>
-<<plugins>>
 #+end_src
 
 * Global variables
@@ -398,7 +397,10 @@ or need to copy out for reference.
 
 #+header: :noweb-ref  keybindings-copy-mode
 #+begin_src conf
-bind-key -T virt         C-M-S-y    copy-mode \; set key-table root
+bind-key -T root C-M-y {
+  copy-mode
+  set key-table root
+}
 #+end_src
 
 *** Vi-mode bindings in copy-mode
@@ -1151,38 +1153,6 @@ set -ag update-environment "SSH_TTY"
 
 # Allow OSC52 to set the clipboard.
 set -g set-clipboard on
-#+end_src
-
-* Plugins
-
-#+name: plugins
-#+begin_src conf
-# List of plugins.
-set -g @plugin "tmux-plugins/tpm"
-# Save tmux sessions manually with `prefix + C-s` (save) and `prefix + C-r`
-# (restore) .
-set -g @plugin "tmux-plugins/tmux-resurrect"
-	# Restore what was readable in each pane.
-	set -g @resurrect-capture-pane-contents 'on'
-# Fuzzy-find words in tmux buffer. Replaces our previous use of tmux-thumbs.
-set -g @plugin 'laktak/extrakto'
-	# Set the key chord (in the root key-table) used to call extrakto. The
-	# "upstream recommended" way is to just set the setting like this:
-	#
-	#   set -g @extrakto_key <KEY>
-	#
-	# but this in turn sets the binding in the `prefix` key table, which is not
-	# what we want. So we set our own binding here directly.
-	set -g @extrakto_key none
-	bind-key -T root         C-M-y      run-shell "~/.tmux/plugins/extrakto/scripts/open.sh \"#{pane_id}\""
-	# Force using a split (so that we don't obscure what we want to grab).
-	set -g @extrakto_split_direction 'v'
-	set -g @extrakto_copy_key "tab"      # use tab to copy to clipboard
-	set -g @extrakto_insert_key "enter"  # use enter to insert selection
-	set -g @extrakto_clip_tool_run "fg"
-	set -g @extrakto_clip_tool "~/syscfg/script/osc52"
-# Initialize TMUX plugin manager (keep this line at the very bottom of tmux.conf)
-run "~/.tmux/plugins/tpm/tpm"
 #+end_src
 
 * Footnotes

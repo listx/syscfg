@@ -106,8 +106,7 @@ terminfo:
 tig:
 	ln -fs ${C}/tig/.tigrc                              ${H}
 tmux:
-	ln -fs ${C}/tmux/.tmux.conf                         ${H}
-	git -C ${C} submodule update --init ${C}/tmux/plugins
+	ln -fs ${C}/tmux/.tmux.conf                         ${H}/.tmux.conf
 	ln -fns ${C}/tmux                                   ${H}/.tmux
 uim:
 	ln -fns ${C}/uim/.uim                               ${H}/.uim
