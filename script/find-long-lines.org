@@ -137,6 +137,16 @@ replace each tab with =tab-width= number of spaces.
   (str/replace line "\t" (apply str (repeat tab-width \space))))
 #+end_src
 
+**** Test
+
+#+header: :noweb-ref tests
+#+begin_src clojure
+(deftest expand-tabs
+  (is (= "" (subject/expand-tabs "")))
+  (is (= "        foo" (subject/expand-tabs "\tfoo")))
+  (is (= "                foo" (subject/expand-tabs "\t\tfoo"))))
+#+end_src
+
 *** Truncations
 
 It's worth mentioning that we are trying to detect long lines as they appear in
@@ -172,6 +182,18 @@ line).
     line))
 #+end_src
 
+***** Test
+
+#+header: :noweb-ref tests
+#+begin_src clojure
+(deftest truncate-long-urls
+  (is (= "" (subject/truncate-long-urls "")))
+  (is (= "" (subject/truncate-long-urls
+             "http://aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")))
+  (is (= "" (subject/truncate-long-urls
+             "https://aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"))))
+#+end_src
+
 **** File paths
 
 Truncate lines that have paths =that/look/like/this=. This is only a guess because
@@ -185,6 +207,15 @@ it does not check file paths with spaces or other unusual characters in them.
   (if (re-find #"[A-Za-z0-9-_./]{60}" line)
     ""
     line))
+#+end_src
+
+***** Test
+
+#+header: :noweb-ref tests
+#+begin_src clojure
+(deftest truncate-long-paths
+  (is (= "" (subject/truncate-long-paths "")))
+  (is (= "" (subject/truncate-long-paths "aaaaaaa/aaaaaaa/aaaaaaaaaaa/aaaaaaaaaa/aaaaaaaaaaaaaaa/aaaaa"))))
 #+end_src
 
 **** Long contiguous text
@@ -205,6 +236,15 @@ breaking up such text (as they lack interspersed whitespace).
   (if (re-find #"\S{60}" line)
     ""
     line))
+#+end_src
+
+***** Test
+
+#+header: :noweb-ref tests
+#+begin_src clojure
+(deftest truncate-long-contiguous-test
+  (is (= "" (subject/truncate-long-contiguous-text "")))
+  (is (= "" (subject/truncate-long-contiguous-text ",,,,,,1,,2,,3,,,,,,,,,,oooo,,,,,,,,,,,,,,,;,,,,,?,,,,!,,,,,,"))))
 #+end_src
 
 **** Metadata
@@ -229,6 +269,18 @@ So ignore them entirely.
       line)))
 #+end_src
 
+***** Test
+
+#+header: :noweb-ref tests
+#+begin_src clojure
+(deftest truncate-org-metadata
+  (is (= "" (subject/truncate-org-metadata "")))
+  (is (= "" (subject/truncate-org-metadata "#+HTML_HEAD: foo")))
+  (is (= "" (subject/truncate-org-metadata "#+HEADER: foo")))
+  (is (= "" (subject/truncate-org-metadata "#+begin_src foo")))
+  (is (= " #+HEADER: foo" (subject/truncate-org-metadata " #+HEADER: foo"))))
+#+end_src
+
 **** Tables
 
 Org mode supports ASCII-styled tables. Typically such tables can get fairly
@@ -242,6 +294,16 @@ wide (certainly beyond 100 columns), so ignore them completely.
        (str/ends-with? line " |"))
     ""
     line))
+#+end_src
+
+***** Test
+
+#+header: :noweb-ref tests
+#+begin_src clojure
+(deftest truncate-org-table-rows
+  (is (= "" (subject/truncate-org-table-rows "")))
+  (is (= "" (subject/truncate-org-table-rows "| foo |")))
+  (is (= "" (subject/truncate-org-table-rows "| foo | bar |"))))
 #+end_src
 
 **** Links
@@ -265,6 +327,16 @@ hidden from the user. So ignore those hidden parts by removing them.
   (str/replace line #"\[\[[^\]]+\]\[([^\]]+)\]\]" "$1"))
 #+end_src
 
+***** Test
+
+#+header: :noweb-ref tests
+#+begin_src clojure
+(deftest truncate-org-links
+  (is (= "" (subject/truncate-org-links "")))
+  (is (= "bar" (subject/truncate-org-links "[[foo][bar]]")))
+  (is (= "[[foo][bar]" (subject/truncate-org-links "[[foo][bar]"))))
+#+end_src
+
 **** Strings
 
 This rule is in place to avoid linting long lines in source code blocks, where
@@ -281,6 +353,18 @@ them write log and error messages that are grep-friendly.
   (-> line
       (str/replace #"\"([^\"]{60,})\"" "")
       (str/replace #"'([^']{60,})'" "")))
+#+end_src
+
+***** Test
+
+#+header: :noweb-ref tests
+#+begin_src clojure
+(deftest truncate-quoted-strings
+  (is (= "" (subject/truncate-quoted-strings "")))
+  (is (= "" (subject/truncate-quoted-strings
+             "'foobar foobar foobar foobar foobar foobar foobar foobar foobar foobar'")))
+  (is (= "" (subject/truncate-quoted-strings
+             "\"foobar foobar foobar foobar 'foobar foobar foobar foobar foobar foobar'\""))))
 #+end_src
 
 ** Line length check
@@ -381,6 +465,19 @@ command line, not when we load it into a REPL.
 #+begin_src clojure
 (when (= *file* (System/getProperty "babashka.file"))
   (apply -main *command-line-args*))
+#+end_src
+
+* Tests
+
+The tests here are picked up by the [[file:test-runner.clj]].
+
+#+header: :noweb-ref find-long-lines-test
+#+header: :tangle find_long_lines_test.clj
+#+begin_src clojure
+(ns find-long-lines-test
+  (:require [clojure.test :refer [deftest is]]
+            [find-long-lines :as subject]))
+<<tests>>
 #+end_src
 
 * Footnotes

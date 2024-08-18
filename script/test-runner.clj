@@ -1,5 +1,4 @@
 #!/usr/bin/env bb
-
 (require '[clojure.test :refer [run-tests]]
          '[babashka.classpath :refer [add-classpath]])
 

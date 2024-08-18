@@ -17,3 +17,26 @@ programming in this file. We use the same conventions used there.
 
   - [[file:find-long-lines.org]] :: Detect long lines in Org mode files that could
     probably be reflowed to be under 100 columns.
+
+* Test runner
+
+This script just imports all Clojure test files and then runs them.
+
+#+header: :shebang #!/usr/bin/env bb
+#+header: :noweb-ref test-runner
+#+header: :tangle test-runner.clj
+#+begin_src clojure
+(require '[clojure.test :refer [run-tests]]
+         '[babashka.classpath :refer [add-classpath]])
+
+(add-classpath ".")
+
+(require 'find-long-lines-test)
+
+(def test-results
+  (run-tests 'find-long-lines-test))
+
+(let [{:keys [fail error]} test-results]
+  (when (pos? (+ fail error))
+    (System/exit 1)))
+#+end_src
