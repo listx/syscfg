@@ -7,6 +7,10 @@
   (:require [clojure.java.io :as io]
             [clojure.string :as str]))
 
+;; Though we set 100 here, ideally a line should be around 80 characters under
+;; normal circumstances.
+(def max-line-length 100)
+
 (defn expand-tabs [line]
   (str/replace line "\t" (apply str (repeat 8 \space))))
 
@@ -76,7 +80,7 @@
       (str/replace #"\b_([A-Za-z0-9- ]+)_\b" "$1")))
 
 (defn check-long-line
-  "Print the line if it exceeds 80 chars (81 or more). Perform transformations
+  "Print the line if it exceeds max-line-length. Perform transformations
   before doing the length check."
   [filename index line]
   (->> line
@@ -89,11 +93,11 @@
        truncate-tangle-paths
        truncate-long-contiguous-text
        truncate-emphasis-markers
-       (#(when (< 80 (count %))
-           (println (str filename ":" (inc index) ": " line))))))
+       (#(when (< max-line-length (count %))
+           (println (format "%s:%s:[%d] %s" filename (inc index) (count line) line))))))
 
 (defn check-long-lines
-  "Print out all lines that are over 80 chars in length."
+  "Print out all lines that are over the max-line-length."
   [filename]
   (with-open [rdr (io/reader filename)]
     (doseq [[index line] (map-indexed vector (line-seq rdr))]
