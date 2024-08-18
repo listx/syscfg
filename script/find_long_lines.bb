@@ -47,8 +47,6 @@
         (str/replace (rgx "\"") "")
         (str/replace (rgx "'") ""))))
 (defn check-line
-  "Print the line if it exceeds max-line-length. Perform transformations
-  before doing the length check."
   [filename index line]
   (->> line
        expand-tabs
@@ -66,7 +64,6 @@
                             (count (expand-tabs line))
                             line))))))
 (defn check-lines
-  "Print out all lines that are over the max-line-length."
   [filename]
   (with-open [rdr (io/reader filename)]
     (doseq [[index line] (map-indexed vector (line-seq rdr))]

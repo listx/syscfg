@@ -418,8 +418,6 @@ length of the line, before checking if it exceeds =max-line-length=.
 #+header: :noweb-ref line-length-check
 #+begin_src clojure
 (defn check-line
-  "Print the line if it exceeds max-line-length. Perform transformations
-  before doing the length check."
   [filename index line]
   (->> line
        <<all-transformations>>
@@ -432,7 +430,6 @@ Now we can just wire everything up to check all the lines in a given file.
 #+header: :noweb-ref line-length-check
 #+begin_src clojure
 (defn check-lines
-  "Print out all lines that are over the max-line-length."
   [filename]
   (with-open [rdr (io/reader filename)]
     (doseq [[index line] (map-indexed vector (line-seq rdr))]
