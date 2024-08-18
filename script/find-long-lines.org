@@ -177,7 +177,7 @@ line).
 #+begin_src clojure
 (defn truncate-long-urls
   [line]
-  (if (re-find #"https?://\S{60}" line)
+  (if (re-find (re-pattern (str "https?://\\S{" token-threshold "}")) line)
     ""
     line))
 #+end_src
@@ -204,7 +204,7 @@ it does not check file paths with spaces or other unusual characters in them.
 (defn truncate-long-paths
   "Truncate lines that have long paths in them."
   [line]
-  (if (re-find #"[A-Za-z0-9-_./]{60}" line)
+  (if (re-find (re-pattern (str "[A-Za-z0-9-_./]{" token-threshold "}")) line)
     ""
     line))
 #+end_src
@@ -233,7 +233,7 @@ breaking up such text (as they lack interspersed whitespace).
 #+begin_src clojure
 (defn truncate-long-contiguous-text
   [line]
-  (if (re-find #"\S{60}" line)
+  (if (re-find (re-pattern (str "\\S{" token-threshold "}")) line)
     ""
     line))
 #+end_src
@@ -350,9 +350,10 @@ them write log and error messages that are grep-friendly.
 #+begin_src clojure
 (defn truncate-quoted-strings
   [line]
-  (-> line
-      (str/replace #"\"([^\"]{60,})\"" "")
-      (str/replace #"'([^']{60,})'" "")))
+  (let [rgx #(re-pattern (str % "([^" % "]{" token-threshold ",})" %))]
+    (-> line
+        (str/replace (rgx "\"") "")
+        (str/replace (rgx "'") ""))))
 #+end_src
 
 ***** Test

@@ -9,18 +9,18 @@
   (str/replace line "\t" (apply str (repeat tab-width \space))))
 (defn truncate-long-urls
   [line]
-  (if (re-find #"https?://\S{60}" line)
+  (if (re-find (re-pattern (str "https?://\\S{" token-threshold "}")) line)
     ""
     line))
 (defn truncate-long-paths
   "Truncate lines that have long paths in them."
   [line]
-  (if (re-find #"[A-Za-z0-9-_./]{60}" line)
+  (if (re-find (re-pattern (str "[A-Za-z0-9-_./]{" token-threshold "}")) line)
     ""
     line))
 (defn truncate-long-contiguous-text
   [line]
-  (if (re-find #"\S{60}" line)
+  (if (re-find (re-pattern (str "\\S{" token-threshold "}")) line)
     ""
     line))
 (defn truncate-org-metadata [line]
@@ -42,9 +42,10 @@
   (str/replace line #"\[\[[^\]]+\]\[([^\]]+)\]\]" "$1"))
 (defn truncate-quoted-strings
   [line]
-  (-> line
-      (str/replace #"\"([^\"]{60,})\"" "")
-      (str/replace #"'([^']{60,})'" "")))
+  (let [rgx #(re-pattern (str % "([^" % "]{" token-threshold ",})" %))]
+    (-> line
+        (str/replace (rgx "\"") "")
+        (str/replace (rgx "'") ""))))
 (defn check-line
   "Print the line if it exceeds max-line-length. Perform transformations
   before doing the length check."
