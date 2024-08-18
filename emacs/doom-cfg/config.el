@@ -328,7 +328,16 @@ the object exists locally)."
       :mnv "M-K" #'org-metaup
       :mnv "M-J" #'org-metadown
       :mnv "M-H" #'org-shiftmetaleft
-      :mnv "M-L" #'org-shiftmetaright)
+      :mnv "M-L" #'org-shiftmetaright
+      :i "C-RET" #'l/org-insert-thing)
+
+(defun l/org-insert-thing ()
+  "Insert the next thing, depending on context."
+  (interactive)
+  (cond ((org-in-item-p)    (org-insert-item))
+        ((org-at-heading-p) (org-insert-heading))
+        ((org-at-table-p)   (org-table-insert-row 1))
+        (t                  (insert ?\n))))
 
 (map! :after org
       :map org-mode-map

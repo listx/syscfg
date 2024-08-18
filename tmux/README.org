@@ -927,6 +927,7 @@ bind-key -T passthrough  C-M-S-z    send-keys Escape "[122;8u"
 bind-key -T passthrough  C-,        send-keys Escape "[44;5u"
 bind-key -T passthrough  C-.        send-keys Escape "[46;5u"
 bind-key -T passthrough  C-\;       send-keys Escape "[59;5u"
+bind-key -T passthrough  C-Enter    send-keys Escape "[13;5u"
 #+end_src
 
 * Appearance
