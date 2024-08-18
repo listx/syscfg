@@ -88,23 +88,6 @@ EMACSLIKE="#{m/r:emacs.*|git|tig,#{window_name}}"
 <<keybindings-normal-mode>>
 <<keybindings-mouse>>
 <<keybindings-misc>>
-
-# DEPRECATED: Show all windows in the current session in a tree view. Think of
-# this as a "vertical window list" alternative to the horizontal window list in
-# the status bar, which can get difficult to determine just how many windows
-# there actually are in the current session.
-bind-key -T root         C-M-w      run-shell -C "choose-tree -Z -w -f'##{==:##{session_name},#{session_name}}'"
-
-# DEPRECATED: Open double-clicked word. See tmux_mouse_word_handler.sh for more information.
-bind-key -T root         DoubleClick1Pane     run-shell '~/syscfg/script/tmux_mouse_word_handler.sh \
-	"#{pane_id}" \
-	"#{pane_current_path}" \
-	"#{mouse_word}"'
-bind-key -T copy-mode-vi DoubleClick1Pane     run-shell '~/syscfg/script/tmux_mouse_word_handler.sh \
-	"#{pane_id}" \
-	"#{pane_current_path}" \
-	"#{mouse_word}" \
-	exit-copy-mode '
 #+end_src
 
 ** Reference information
