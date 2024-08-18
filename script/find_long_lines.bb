@@ -67,6 +67,15 @@
     ""
     line))
 
+(defn truncate-quoted-strings
+  "Ignore strings that are quoted and rather long. This usually happens for log
+  statements and error messages, which we want to keep on a single line to help
+  things like grep (i.e., line-oriented) search."
+  [line]
+  (-> line
+      (str/replace #"\"([^\"]{60,})\"" "")
+      (str/replace #"'([^']{60,})'" "")))
+
 (defn check-long-line
   "Print the line if it exceeds max-line-length. Perform transformations
   before doing the length check."
@@ -80,6 +89,7 @@
        truncate-long-paths
        truncate-tangle-paths
        truncate-long-contiguous-text
+       truncate-quoted-strings
        (#(when (< max-line-length (count %))
            (println (format "%s:%s:[%d] %s" filename (inc index) (count line) line))))))
 
