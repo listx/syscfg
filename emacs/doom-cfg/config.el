@@ -974,7 +974,9 @@ details."
     '("shfmt"
        "--binary-next-line"
        "--func-next-line"
-      (format "--indent=%d" (or tab-width 2))
+      (format "--indent=%d" (if indent-tabs-mode
+                                0
+                              2))
       (format "--language-dialect=%s"
        (pcase sh-shell (`bash "bash") (`mksh "mksh") (_ "posix"))))))
 (add-hook 'sh-mode-hook #'l/set-tab-width-to-8)

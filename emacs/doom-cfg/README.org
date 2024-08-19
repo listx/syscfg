@@ -2329,7 +2329,9 @@ See [[https://emacs.stackexchange.com/a/36279/13006][this post]] from 2017 which
     '("shfmt"
        "--binary-next-line"
        "--func-next-line"
-      (format "--indent=%d" (or tab-width 2))
+      (format "--indent=%d" (if indent-tabs-mode
+                                0
+                              2))
       (format "--language-dialect=%s"
        (pcase sh-shell (`bash "bash") (`mksh "mksh") (_ "posix"))))))
 #+end_src
