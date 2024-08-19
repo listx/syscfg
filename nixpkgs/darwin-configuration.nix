@@ -28,6 +28,7 @@ in
       dhall
       difftastic
       dos2unix
+      editorconfig-core-c
       emacs
       fd
       ffmpeg

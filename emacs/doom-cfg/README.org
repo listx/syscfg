@@ -92,6 +92,7 @@ DOOM requires 3 configuration files in the =$DOOMDIR=:
 
        :tools
        direnv
+       editorconfig
        (eval +overlay)
        lookup
        lsp

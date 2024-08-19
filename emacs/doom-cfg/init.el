@@ -39,6 +39,7 @@
 
        :tools
        direnv
+       editorconfig
        (eval +overlay)
        lookup
        lsp
