@@ -37,8 +37,8 @@ main()
 		style1="#[bg=black fg=cyan]"
 		style2="#[bg=black fg=cyan]"
 		if ((is_current_window)); then
-			style1="#[bg=cyan]"
-			style2="#[bg=brightcyan fg=black]"
+			style1="#[bold bg=cyan fg=black]"
+			style2="#[bold bg=brightcyan fg=black]"
 		fi
 	# SSH sessions are named (and colored) specially because they almost always
 	# entail a nested tmux session.
@@ -47,8 +47,8 @@ main()
 		style1="#[bg=black fg=blue]"
 		style2="#[bg=black fg=blue]"
 		if ((is_current_window)); then
-			style1="#[bg=blue]"
-			style2="#[bg=brightblue fg=black]"
+			style1="#[bold bg=blue fg=black]"
+			style2="#[bold bg=brightblue fg=black]"
 		fi
 	# Plain shell session --- show the shortened $PWD.
 	elif [[ "${pane_current_command}" == zsh ]]; then
@@ -56,8 +56,8 @@ main()
 		style1="#[bg=black fg=yellow]"
 		style2="#[bg=black fg=yellow]"
 		if ((is_current_window)); then
-			style1="#[bg=yellow]"
-			style2="#[bg=brightyellow fg=black]"
+			style1="#[bold bg=yellow fg=black]"
+			style2="#[bold bg=brightyellow fg=black]"
 		fi
 	# Long-running command. Show the command name.
 	else
@@ -65,8 +65,8 @@ main()
 		style1="#[bg=black fg=green]"
 		style2="#[bg=black fg=green]"
 		if ((is_current_window)); then
-			style1="#[bg=green]"
-			style2="#[bg=brightgreen fg=black]"
+			style1="#[bold bg=green fg=black]"
+			style2="#[bold bg=brightgreen fg=black]"
 		fi
 	fi
 
