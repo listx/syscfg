@@ -2282,7 +2282,8 @@ to spam the cronjob so much).
 
 #+name: notmuch-sync
 #+begin_src emacs-lisp
-(defun +notmuch-get-sync-command () "~/syscfg/script/mail-sync.sh")
+(defun l/+notmuch-get-sync-command (orig-fun) "~/syscfg/script/mail-sync.sh")
+(advice-add '+notmuch-get-sync-command :around #'l/+notmuch-get-sync-command)
 #+end_src
 
 ** Sending email

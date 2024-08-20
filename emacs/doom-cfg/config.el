@@ -1312,7 +1312,8 @@ Also add the number of windows in the window configuration."
           (:name "sent"
            :query "tag:sent"
            :key "s")))
-  (defun +notmuch-get-sync-command () "~/syscfg/script/mail-sync.sh")
+  (defun l/+notmuch-get-sync-command (orig-fun) "~/syscfg/script/mail-sync.sh")
+  (advice-add '+notmuch-get-sync-command :around #'l/+notmuch-get-sync-command)
   (setq sendmail-program "gmi")
   (setq message-sendmail-extra-arguments
         '("send" "--quiet" "-t" "-C" "~/mail/linusarver@gmail.com"))
