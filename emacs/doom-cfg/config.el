@@ -301,6 +301,19 @@ the object exists locally)."
         ("~/syscfg" . 0))))
 (after! magit
   (setq git-commit-major-mode #'org-mode))
+(defun l/git-commit-setup ()
+  (interactive)
+  (apheleia-mode -1)
+  (envrc-mode -1)
+  (flycheck-mode -1)
+  (git-gutter-mode -1)
+  (org-fancy-priorities-mode -1)
+  (org-superstar-mode -1)
+  (rainbow-mode -1)
+  (smartparens-mode -1)
+  (yas-minor-mode -1))
+(after! magit
+  (add-hook 'git-commit-setup-hook #'l/git-commit-setup))
 (map! :after evil-org
       :map evil-org-mode-map
       ;; Remove conflicting bindings.

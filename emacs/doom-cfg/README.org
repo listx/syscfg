@@ -2538,6 +2538,7 @@ Now, =l/browse-jira-ticket= just concatenates the ticket string with
 <<magit-bindings>>
 <<magit-set-repositories>>
 <<magit-commit-message-use-org-mode>>
+<<magit-commit-message-misc>>
 #+end_src
 
 ** Rebind keys
@@ -2651,6 +2652,29 @@ the object exists locally)."
 #+begin_src emacs-lisp
 (after! magit
   (setq git-commit-major-mode #'org-mode))
+#+end_src
+
+*** Disable slow minor modes
+
+Some modes can slow us down a lot in the =COMMIT_EDITMSG= buffer, so disable them.
+Probably the biggest offender is =smartparens-mode=, which can slow down a lot if
+there are many parentheses around.
+
+#+header: :noweb-ref magit-commit-message-misc
+#+begin_src emacs-lisp
+(defun l/git-commit-setup ()
+  (interactive)
+  (apheleia-mode -1)
+  (envrc-mode -1)
+  (flycheck-mode -1)
+  (git-gutter-mode -1)
+  (org-fancy-priorities-mode -1)
+  (org-superstar-mode -1)
+  (rainbow-mode -1)
+  (smartparens-mode -1)
+  (yas-minor-mode -1))
+(after! magit
+  (add-hook 'git-commit-setup-hook #'l/git-commit-setup))
 #+end_src
 
 * Misc settings
