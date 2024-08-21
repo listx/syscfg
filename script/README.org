@@ -40,3 +40,32 @@ This script just imports all Clojure test files and then runs them.
   (when (pos? (+ fail error))
     (System/exit 1)))
 #+end_src
+
+* Clojure project settings
+
+#+header: :tangle bb.edn
+#+begin_src clojure
+;; We don't need this per se; this is mainly to silence the error about not
+;; having a project when invoking CIDER's cider-jack-in-clj command.
+{
+ :deps
+ {
+ <<dependencies>>
+ }
+}
+#+end_src
+
+** Dependencies
+
+*** medley
+
+[[https://github.com/weavejester/medley][Medley]] is "[a] small collection of useful, mostly pure functions that might not
+look out of place in the clojure.core namespace".
+
+We don't use =medley= yet but it's there just as a demonstration of how
+dependencies can be declared in Clojure.
+
+#+header: :noweb-ref dependencies
+#+begin_src clojure
+dev.weavejester/medley {:mvn/version "1.8.1"}
+#+end_src
