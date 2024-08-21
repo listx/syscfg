@@ -13,10 +13,12 @@
              "https://aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"))))
 (deftest truncate-long-paths
   (is (= "" (subject/truncate-long-paths "")))
-  (is (= "" (subject/truncate-long-paths "aaaaaaa/aaaaaaa/aaaaaaaaaaa/aaaaaaaaaa/aaaaaaaaaaaaaaa/aaaaa"))))
+  (is (= "" (subject/truncate-long-paths
+             "aaaaaaa/aaaaaaa/aaaaaaaaaaa/aaaaaaaaaa/aaaaaaaaaaaaaaa/aaaaa"))))
 (deftest truncate-long-contiguous-test
   (is (= "" (subject/truncate-long-contiguous-text "")))
-  (is (= "" (subject/truncate-long-contiguous-text ",,,,,,1,,2,,3,,,,,,,,,,oooo,,,,,,,,,,,,,,,;,,,,,?,,,,!,,,,,,"))))
+  (is (= "" (subject/truncate-long-contiguous-text
+             ",,,,,,1,,2,,3,,,,,,,,,,oooo,,,,,,,,,,,,,,,;,,,,,?,,,,!,,,,,,"))))
 (deftest truncate-org-metadata
   (is (= "" (subject/truncate-org-metadata "")))
   (is (= "" (subject/truncate-org-metadata "#+HTML_HEAD: foo")))

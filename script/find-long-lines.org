@@ -215,7 +215,8 @@ it does not check file paths with spaces or other unusual characters in them.
 #+begin_src clojure
 (deftest truncate-long-paths
   (is (= "" (subject/truncate-long-paths "")))
-  (is (= "" (subject/truncate-long-paths "aaaaaaa/aaaaaaa/aaaaaaaaaaa/aaaaaaaaaa/aaaaaaaaaaaaaaa/aaaaa"))))
+  (is (= "" (subject/truncate-long-paths
+             "aaaaaaa/aaaaaaa/aaaaaaaaaaa/aaaaaaaaaa/aaaaaaaaaaaaaaa/aaaaa"))))
 #+end_src
 
 **** Long contiguous text
@@ -244,7 +245,8 @@ breaking up such text (as they lack interspersed whitespace).
 #+begin_src clojure
 (deftest truncate-long-contiguous-test
   (is (= "" (subject/truncate-long-contiguous-text "")))
-  (is (= "" (subject/truncate-long-contiguous-text ",,,,,,1,,2,,3,,,,,,,,,,oooo,,,,,,,,,,,,,,,;,,,,,?,,,,!,,,,,,"))))
+  (is (= "" (subject/truncate-long-contiguous-text
+             ",,,,,,1,,2,,3,,,,,,,,,,oooo,,,,,,,,,,,,,,,;,,,,,?,,,,!,,,,,,"))))
 #+end_src
 
 **** Metadata
