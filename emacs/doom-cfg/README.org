@@ -111,6 +111,7 @@ DOOM requires 3 configuration files in the =$DOOMDIR=:
        emacs-lisp
        (go +lsp)
        (haskell +lsp)
+       (javascript +lsp)
        (json +lsp)
        (latex +lsp)
        (lua +lsp)

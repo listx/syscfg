@@ -58,6 +58,7 @@
        emacs-lisp
        (go +lsp)
        (haskell +lsp)
+       (javascript +lsp)
        (json +lsp)
        (latex +lsp)
        (lua +lsp)
