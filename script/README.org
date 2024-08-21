@@ -31,10 +31,12 @@ This script just imports all Clojure test files and then runs them.
 
 (add-classpath ".")
 
-(require 'find-long-lines-test)
+(require 'find-long-lines-test
+         'prepare-commit-msg-test)
 
 (def test-results
-  (run-tests 'find-long-lines-test))
+  (run-tests 'find-long-lines-test
+             'prepare-commit-msg-test))
 
 (let [{:keys [fail error]} test-results]
   (when (pos? (+ fail error))
@@ -45,13 +47,15 @@ This script just imports all Clojure test files and then runs them.
 
 #+header: :tangle bb.edn
 #+begin_src clojure
-;; We don't need this per se; this is mainly to silence the error about not
-;; having a project when invoking CIDER's cider-jack-in-clj command.
 {
  :deps
  {
  <<dependencies>>
  }
+ :paths
+ [
+ <<paths>>
+ ]
 }
 #+end_src
 
@@ -68,4 +72,14 @@ dependencies can be declared in Clojure.
 #+header: :noweb-ref dependencies
 #+begin_src clojure
 dev.weavejester/medley {:mvn/version "1.8.1"}
+#+end_src
+
+** Paths
+
+We have to declare all paths where our Babashka files (and their tests) live.
+This is needed for running [[file:test-runner.clj]].
+
+#+header: :noweb-ref paths
+#+begin_src clojure
+"git/hooks"
 #+end_src

@@ -1,0 +1,299 @@
+#+TITLE: Git commit message hook
+#+AUTHOR: Linus Arver
+#+PROPERTY: header-args :noweb no-export
+#+auto_tangle: t
+
+* Description
+
+Prepare Git commit messages to be Org-mode friendly.
+
+* Motivation
+
+Since 6f8215a6 (git: personal: make commits verbose, 2017-01-19) we've had
+verbose commit messages where the diff of what's staged is shown in the
+(ignored) commit message footer area.
+
+We started using Org-mode as the major mode for commit message buffers in
+65800d22 (emacs commit message buffers: use smarter paragraph filling,
+2024-08-03).
+
+The problem is that the diff area that's displayed by 6f8215a6 can slow down Org
+mode because it will get confused by the diff text (perhaps it thinks line
+additions and deletions which begin with =+= and =-=, create plain list items).
+
+The solution is to just wrap the diff text inside a source code block, so that
+it gets ignored (for purposes of list parsing) by Org mode.
+
+* Implementation
+
+#+header: :shebang #!/bin/sh
+#+header: :noweb-ref prepare-commit-msg
+#+header: :tangle prepare-commit-msg.sh
+#+begin_src sh
+<<arguments>>
+
+<<wrap-diff-with-source-code-block>>
+#+end_src
+
+** Shell
+
+This isn't as portable as we'd like it to be because it requires GNU Sed.
+
+*** Arguments
+
+Git will call our script with the path of the special COMMIT_MSG file as the
+first argument.
+
+#+header: :noweb-ref arguments
+#+begin_src sh
+COMMIT_MSG_FILE=$1
+#+end_src
+
+*** Source code block wrapper
+
+Wrapping the diff part just means adding
+
+#+begin_src org
+,#+begin_src diff
+#+end_src
+
+and
+
+#+begin_src org
+,#+end_src
+#+end_src
+
+around the diff portion.
+
+**** Add =#+begin_src diff=
+
+The trick here is to tell =sed= (GNU sed)[fn:gnu-sed] to only concern itself with
+the area of the file where the =diff= word appears the first time. This is because
+the diff could have multiple hunks in it (each with its own =diff ...= section).
+That's what the =0,/^diff/= means below:
+
+#+header: :noweb-ref wrap-diff-with-source-code-block
+#+begin_src sh
+sed -i '0,/^diff/{s/^diff /#+begin_src diff\ndiff /}' "${COMMIT_MSG_FILE}"
+#+end_src
+
+We use =-i= to edit the file in-place.
+
+**** Add =#+end_src=
+
+Adding the =#+end_src= is easy because it just has to be at the end of the file.
+We use shell redirection =>>= (for appending) to do this.
+
+#+header: :noweb-ref wrap-diff-with-source-code-block
+#+begin_src sh
+echo '#+end_src' >> "${COMMIT_MSG_FILE}"
+#+end_src
+
+** Clojure (Babashka)
+
+Here's a version using Babashka.
+
+The tricky part is figuring out how to add a line to the middle of the file
+somewhere. For that we have to read the file into memory first, construct the
+new file contents in memory, then write it back out.
+
+#+header: :shebang #!/usr/bin/env bb
+#+header: :noweb-ref prepare-commit-msg
+#+header: :tangle prepare_commit_msg.bb
+#+begin_src clojure
+<<imports>>
+<<wrap-diff-portion>>
+<<main>>
+#+end_src
+
+*** Wrap diff portion
+
+The hard part is locating the "diff" string in the file. We can let =str/split= do
+most of the heavy lifting. Instead of reading the file and splitting
+line-by-line, we can slurp it into memory and then use =str/index-of= to find
+where the first "diff " string occurs in the file. Then we can extract the
+substrings before and after this bit.
+
+#+header: :noweb-ref wrap-diff-portion
+#+begin_src clojure
+(defn wrap-diff
+  [s]
+  (if-let [idx (str/index-of s "#\ndiff ")]
+    (let [before (subs s 0 (+ 2 idx))
+          after (subs s (+ 2 idx))
+          new-parts [before
+                     "#+begin_src diff\n"
+                     after
+                     "#+end_src\n"]]
+      (str/join new-parts))
+    s))
+#+end_src
+
+FIXME: Make this more robust by expecting the scissor line also. This way we can
+be resilient when rebasing (because rebases appear to call this script).
+
+We have to increment =idx= when taking the substring, because we want to skip past
+the newline just before the ="diff "=.
+
+We use =if-let= in case the input string doesn't have the ="\ndiff "= string in it,
+in which case we abort doing any mutations to it and return the original string
+unmodified.
+
+Now we can read the file, invoke our wrapper, and then write back out the
+result. We use =slurp= and =spit= for this.
+
+#+header: :noweb-ref wrap-diff-portion
+#+begin_src clojure
+(defn wrap-diff-portion
+  [file]
+  (->> (slurp file)
+       wrap-diff
+       (spit file)))
+#+end_src
+
+**** Tests
+
+#+header: :noweb-ref tests
+#+begin_src clojure
+<<pseudo-realistic-input>>
+
+(deftest wrap-diff
+  (is (= "" (sut/wrap-diff "")))
+  (is (= "foo" (sut/wrap-diff "foo")))
+  (is (= commit-msg-text-wrapped (sut/wrap-diff commit-msg-text))))
+#+end_src
+
+The =commit-msg-text= is somewhat realistic input, defined below. Note that
+the comma in =,#+begin_src= and =,#+end_src= are elided when the code block is
+tangled; i.e. the commas are only there because otherwise Org's parser will get
+confused during tangling.
+
+Anyway, the input itself has a scissor line and two ="diff"= strings because there
+are two hunks. We only expect to add the =#+begin_src= line for the first
+occurrence.
+
+#+header: :noweb-ref pseudo-realistic-input
+#+begin_src clojure
+(def commit-msg-text "
+
+
+# ------------------------ >8 ------------------------
+# Do not modify or remove the line above.
+# Everything below it will be ignored.
+#
+# On branch foo
+# Your branch and 'x/y' have diverged,
+# and have 7 and 1 different commits each, respectively.
+#
+# Changes to be committed:
+#	modified:   README.org
+#
+diff --git a/script/README.org b/script/README.org
+index c862589b..0f2cc942 100644
+--- a/script/README.org
++++ b/script/README.org
+@@ -29,31 +29,35 @@ This script just imports all Clojure test files and then
+ (require '[clojure.test :refer [run-tests]]
+          '[babashka.classpath :refer [add-classpath]])
+
+-(require 'find-long-lines-test)
++(require 'find-long-lines-test
++         'prepare-commit-msg-test)
+
+diff --git a/script/README.org b/script/README.org
+index c862589b..0f2cc942 100644
+--- a/script/README.org
++++ b/script/README.org
+@@ -29,31 +29,35 @@ This script just imports all Clojure test files and then
+ (require '[clojure.test :refer [run-tests]]
+          '[babashka.classpath :refer [add-classpath]])
+
+-(require 'find-long-lines-test)
++(require 'find-long-lines-test
++         'prepare-commit-msg-test)
+")
+
+(def commit-msg-text-wrapped "
+
+
+# ------------------------ >8 ------------------------
+# Do not modify or remove the line above.
+# Everything below it will be ignored.
+#
+# On branch foo
+# Your branch and 'x/y' have diverged,
+# and have 7 and 1 different commits each, respectively.
+#
+# Changes to be committed:
+#	modified:   README.org
+#
+,#+begin_src diff
+diff --git a/script/README.org b/script/README.org
+index c862589b..0f2cc942 100644
+--- a/script/README.org
++++ b/script/README.org
+@@ -29,31 +29,35 @@ This script just imports all Clojure test files and then
+ (require '[clojure.test :refer [run-tests]]
+          '[babashka.classpath :refer [add-classpath]])
+
+-(require 'find-long-lines-test)
++(require 'find-long-lines-test
++         'prepare-commit-msg-test)
+
+diff --git a/script/README.org b/script/README.org
+index c862589b..0f2cc942 100644
+--- a/script/README.org
++++ b/script/README.org
+@@ -29,31 +29,35 @@ This script just imports all Clojure test files and then
+ (require '[clojure.test :refer [run-tests]]
+          '[babashka.classpath :refer [add-classpath]])
+
+-(require 'find-long-lines-test)
++(require 'find-long-lines-test
++         'prepare-commit-msg-test)
+,#+end_src
+")
+#+end_src
+
+*** Imports
+
+#+header: :noweb-ref imports
+#+begin_src clojure
+(ns prepare-commit-msg
+  (:require [clojure.java.io :as io]
+            [clojure.string :as str]))
+#+end_src
+
+*** Main
+
+Git will pass in the path of the =COMMIT_MSG= file as the first argument; this
+file is what we want to modify. We ignore other arguments passed to us (=rst=).
+
+#+header: :noweb-ref main
+#+begin_src clojure
+(defn -main [& [file & rst]]
+  (wrap-diff-portion file))
+(when (= *file* (System/getProperty "babashka.file"))
+  (apply -main *command-line-args*))
+#+end_src
+
+The =-main= function just calls =wrap-diff-portion= with =file=. The
+=System/getProperty= stuff is from [[https://github.com/babashka/book/blame/eea70f8cf5185eb65e87066ddaf36c66fe22bceb/src/recipes.adoc#L44-L73][the Babashka book]] to make it nicer to interact
+with the file in the CLI and also the REPL.
+
+* Tests
+
+We only test the Clojure implementation, because it's so much easier.
+
+#+header: :noweb-ref prepare-commit-msg-test
+#+header: :tangle prepare_commit_msg_test.clj
+#+begin_src clojure
+(ns prepare-commit-msg-test
+  (:require [clojure.test :refer [deftest is]]
+            [prepare-commit-msg :as sut]))
+<<tests>>
+#+end_src
+
+* Footnotes
+
+[fn:gnu-sed] https://stackoverflow.com/a/9453461

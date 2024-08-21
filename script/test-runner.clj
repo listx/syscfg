@@ -4,10 +4,12 @@
 
 (add-classpath ".")
 
-(require 'find-long-lines-test)
+(require 'find-long-lines-test
+         'prepare-commit-msg-test)
 
 (def test-results
-  (run-tests 'find-long-lines-test))
+  (run-tests 'find-long-lines-test
+             'prepare-commit-msg-test))
 
 (let [{:keys [fail error]} test-results]
   (when (pos? (+ fail error))

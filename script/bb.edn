@@ -1,8 +1,10 @@
-;; We don't need this per se; this is mainly to silence the error about not
-;; having a project when invoking CIDER's cider-jack-in-clj command.
 {
  :deps
  {
  dev.weavejester/medley {:mvn/version "1.8.1"}
  }
+ :paths
+ [
+ "git/hooks"
+ ]
 }
