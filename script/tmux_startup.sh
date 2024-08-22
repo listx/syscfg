@@ -19,9 +19,11 @@ main()
 	local window_id
 
 	window_id="$(tmux new-window -c ~/lo -P)"
-	tmux send-keys -t "${window_id}" d Space note/index.org Enter
-	tmux new-window -c ~/lo
+	tmux send-keys -t "${window_id}" ./note/open.sh Space "${window_id}" Enter
+	tmux new-window -c ~/prog/foreign/git
 	tmux new-window -c ~/syscfg
+	tmux previous-window
+	tmux previous-window
 }
 
 main "$@"
