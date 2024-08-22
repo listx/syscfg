@@ -672,9 +672,16 @@ summarizes the (surprisingly similar) 1:1 analogy:
 
 | emacs                             | tmux                            |
 |-----------------------------------+---------------------------------|
+| daemon                            | server                          |
 | workspace                         | session                         |
 | tabs         (visible in tab bar) | windows (visible in status bar) |
 | windows  (smallest viewable unit) | panes  (smallest viewable unit) |
+
+Both Emacs and tmux support running multiple daemons and servers on the same
+machine, respectively. In practice we only need a single tmux server. On the
+Emacs side we do use multiple daemons, one for organizing notes and another for
+everything else; having multiple daemons allows us to easily have different
+colors for each daemon instance.
 
 #+name: workspaces
 #+begin_src emacs-lisp
