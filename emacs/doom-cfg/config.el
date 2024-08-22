@@ -1037,6 +1037,10 @@ details."
       t)))
 (require 'consult)
 
+(map! :after evil-common
+      :map evil-normal-state-map
+      "C-n" #'+workspace:switch-next)
+
 (defun l/split-window-vertically ()
   "Split window verically."
   (interactive)

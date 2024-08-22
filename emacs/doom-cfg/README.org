@@ -287,6 +287,8 @@ other configurations that are pulled in. And so we define it first here.
 <<vertico>>
 <<consult>>
 
+<<workspaces>>
+
 <<window-management>>
 
 <<tab-management>>
@@ -658,6 +660,34 @@ See https://github.com/hlissner/doom-emacs/issues/4569#issuecomment-777861333.
       :desc "notes"
       "N" doom-leader-notes-map)
 #+end_src
+
+** Workspaces
+
+*** Navigation
+
+Use ~C-n~ to cycle through to the next workspace. This shares the similar ~C-M-n~
+binding for cycling through tmux sessions. This is on purpose, because Emacs
+workspaces work in a very similar way to tmux sessions. The table below
+summarizes the (surprisingly similar) 1:1 analogy:
+
+| emacs                             | tmux                            |
+|-----------------------------------+---------------------------------|
+| workspace                         | session                         |
+| tabs         (visible in tab bar) | windows (visible in status bar) |
+| windows  (smallest viewable unit) | panes  (smallest viewable unit) |
+
+#+name: workspaces
+#+begin_src emacs-lisp
+(map! :after evil-common
+      :map evil-normal-state-map
+      "C-n" #'+workspace:switch-next)
+#+end_src
+
+The ~C-n~ binding overrides the default binding of ~C-n~ for =evil-paste-pop-next=,
+which we've basically never used. It appears to be a useful command if you want
+to change what you've just pasted to something else in the kill ring. But we
+already have =+default/yank-pop= ~,iy~ which covers the same use case (but is better
+because we get a preview of what we want to paste, with fuzzy search).
 
 ** Window management
 
