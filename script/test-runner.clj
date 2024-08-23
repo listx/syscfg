@@ -4,13 +4,13 @@
 
 (add-classpath ".")
 
-(require 'find-long-lines-test
-         'prepare-commit-msg-test)
+(def namespaces
+  ["find-long-lines"
+   "prepare-commit-msg"])
 
-(def test-results
-  (run-tests 'find-long-lines-test
-             'prepare-commit-msg-test))
-
-(let [{:keys [fail error]} test-results]
-  (when (pos? (+ fail error))
-    (System/exit 1)))
+(doseq [namespace namespaces]
+  (let [test-namespace (symbol (str namespace "-test"))
+        _ (require test-namespace)
+        {:keys [fail error]} (run-tests test-namespace)]
+    (when (pos? (+ fail error))
+      (System/exit 1))))
