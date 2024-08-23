@@ -56,6 +56,10 @@ This script just imports all Clojure test files and then runs them.
  [
  <<paths>>
  ]
+ :tasks
+ {
+ <<tasks>>
+ }
 }
 #+end_src
 
@@ -82,4 +86,23 @@ This is needed for running [[file:test-runner.clj]].
 #+header: :noweb-ref paths
 #+begin_src clojure
 "git/hooks"
+#+end_src
+
+** Tasks
+
+This adds a separate (alternative) test runner which has more options (and which
+discovers tests on its own, similar to Python's =python -m unittest discover=
+invocation.
+
+To run it, do =bb test= in [[file:~/syscfg/script][this directory]].
+
+#+header: :noweb-ref tasks
+#+begin_src clojure
+test {:extra-paths ["."]
+      :extra-deps {io.github.cognitect-labs/test-runner
+                   {:git/tag "v0.5.1" :git/sha "dfb30dd"}}
+      :task (exec 'cognitect.test-runner.api/test)
+      :exec-args {:dirs ["."]}
+      :org.babashka/cli {:coerce {:nses [:symbol]
+                                  :vars [:symbol]}}}
 #+end_src
