@@ -47,20 +47,12 @@ This script just imports all Clojure test files and then runs them.
 
 #+header: :tangle bb.edn
 #+begin_src clojure
-{
- :deps
- {
- <<dependencies>>
- }
- :paths
- [
- <<paths>>
- ]
- :tasks
- {
- <<tasks>>
- }
-}
+{:deps {
+    <<dependencies>>}
+ :paths [
+    <<paths>>]
+ :tasks {
+    <<tasks>>}}
 #+end_src
 
 ** Dependencies
