@@ -73,7 +73,7 @@ dev.weavejester/medley {:mvn/version "1.8.1"}
 ** Paths
 
 We have to declare all paths where our Babashka files (and their tests) live.
-This is needed for running [[file:test-runner.clj]].
+This is needed for running the [[*Test runner]] ([[file:test-runner.clj]]).
 
 #+header: :noweb-ref paths
 #+begin_src clojure
