@@ -4,8 +4,8 @@
 # current window. Note that this is different from setting the window name (aka
 # "#{window_name}", which we purposely avoid due to race conditions.
 #
-# The point of this script is to avoid spamming lh with too many requests.
-# Instead, we only ask lh to shorten a path for us if we detect that there is a
+# The point of this script is to avoid spamming melby with too many requests.
+# Instead, we only ask melby to shorten a path for us if we detect that there is a
 # change in the current path.
 
 set -o errexit
@@ -20,7 +20,6 @@ pane_pwd_same()
 
   local pwd_new
 
-
   window_id="${1}"
   pane_id="${2}"
   pwd_new="${3}"
@@ -32,7 +31,6 @@ pane_pwd_same()
   __pwd_old="${__pwd_old%;*}"
 
   __pwd_old_short="${__pwd_old_short#*;}"
-
 
   if [[ "${pwd_new}" == "${__pwd_old}" ]]; then
     return 0
@@ -71,7 +69,7 @@ main()
   pwd_shortened="$(~/syscfg/script/simplify_path.sh "${pwd_new}")"
   echo $pwd_shortened
 
-  # TODO: Garbage-collect these tmux evironment variables when the window is
+  # TODO: Garbage-collect these tmux environment variables when the window is
   # closed.
   #
   # Unfortunately as of tmux 3.2a (Nov 2021) there is no way to set a hook (with
