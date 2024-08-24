@@ -2,14 +2,10 @@
 # column (as the 4th whitespace-delimited column of text), then sort with `C-u 4
 # M-x sort-fields'.
 
-hash -d   ki=${HOME}/go/src/github.com/kubernetes/k8s.io
-hash -d   kk=${HOME}/go/src/k8s.io/kubernetes
-hash -d   kr=${HOME}/go/src/k8s.io/release
-hash -d   kt=${HOME}/go/src/k8s.io/test-infra
-hash -d  cip=${HOME}/go/src/sigs.k8s.io/k8s-container-image-promoter
-hash -d    l=${HOME}/lo
-hash -d    s=${HOME}/syscfg
-hash -d  git=${HOME}/prog/foreign/git
+hash -d  l=${HOME}/lo
+hash -d  s=${HOME}/syscfg
+hash -d  g=${HOME}/prog/foreign/git
+hash -d  m=${HOME}/prog/melby
 
 hash -d nixp=${HOME}/.nix-profile
 hash -d nix=/nix/var/nix
