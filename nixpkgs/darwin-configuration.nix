@@ -63,7 +63,12 @@ in
       scc
       shellcheck
       shfmt
+      source-code-pro
+      source-sans
       source-serif
+      source-han-sans
+      source-han-serif
+      source-han-mono
       stack
       tig
       tmux
