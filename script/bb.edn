@@ -3,7 +3,7 @@
  :paths [
     "git/hooks"]
  :tasks {
-    test {:extra-paths ["."]
+    test {:extra-paths [".", "tmux"]
           :extra-deps {io.github.cognitect-labs/test-runner
                        {:git/tag "v0.5.1" :git/sha "dfb30dd"}}
           :task (exec 'cognitect.test-runner.api/test)

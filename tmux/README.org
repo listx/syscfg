@@ -1023,6 +1023,8 @@ character.
 set -g window-status-separator " "
 #+end_src
 
+**** Automatic window renaming
+
 Set window name contents by automatically renaming them. We use
 [[file:~/syscfg/script/tmux_get_window_format.sh]] for this, but basically if the
 current command is zsh (our usual shell), then use the current path as the name.
@@ -1034,7 +1036,7 @@ See https://stackoverflow.com/a/68043814/437583 for the inspiration.
 #+begin_src conf
 set -gw automatic-rename on
 set -g automatic-rename-format \
-    "#(~/syscfg/script/tmux_get_window_format.sh \
+    "#(~/syscfg/script/tmux/get_window_format.bb \
     '#{pane_current_command}'\
     '#{pane_current_path}'\
     '#{window_name}'\
@@ -1050,7 +1052,7 @@ Colorize window names, for active and inactive windows.
 #+header: :noweb-ref appearance
 #+begin_src conf
 set -gw window-status-current-format \
-    "#(~/syscfg/script/tmux_get_window_format.sh \
+    "#(~/syscfg/script/tmux/get_window_format.bb \
     '#{pane_current_command}'\
     '#{pane_current_path}'\
     '#{window_name}'\
@@ -1060,7 +1062,7 @@ set -gw window-status-current-format \
     '#{window_panes}'\
     1)"
 set -gw window-status-format \
-    "#(~/syscfg/script/tmux_get_window_format.sh \
+    "#(~/syscfg/script/tmux/get_window_format.bb \
     '#{pane_current_command}'\
     '#{pane_current_path}'\
     '#{window_name}'\
@@ -1154,6 +1156,297 @@ set -ag update-environment "SSH_TTY"
 
 # Allow OSC52 to set the clipboard.
 set -g set-clipboard on
+#+end_src
+
+* Scripts
+
+** Window name and format
+
+This script is called by [[*Automatic window renaming]].
+
+We want to be able to name windows on the status bar a certain way. Each window
+can have more than one pane, and we only care about the current (active) pane
+and what's running in there. So we are getting pane-specific information;
+however for simplicity we just call this the window name here.
+
+#+header: :shebang #!/usr/bin/env bb
+#+header: :noweb-ref get-window-format
+#+header: :tangle ../script/tmux/get_window_format.bb
+#+begin_src clojure
+<<wf-imports>>
+<<wf-get-window-name-format>>
+<<wf-main>>
+#+end_src
+
+*** Get window name and format
+
+**** Window type
+
+There are 4 types of windows based on what the currently active pane inside
+that window is doing:
+
+  1) manually named (windows that were manually named (via =tmux rename-window=)
+     as =mnw->NAME= where the =mnw->= is our own magic prefix denoting such a
+     window),
+
+  2) ssh (typically a remote (nested) =tmux= session),
+
+  3) zsh (our interactive shell of choice), and
+
+  4) other (where the window is running some other command other than =ssh= or
+     =zsh=).
+
+#+header: :noweb-ref wf-get-window-name-format
+#+begin_src clojure
+(defn get-window-type
+  [window-name
+   pane-current-command]
+  (cond
+    (str/starts-with? window-name "mnw->") :manually-named
+    (str/starts-with? window-name "ssh") :ssh
+    (= pane-current-command "zsh") :zsh
+    :else :other-command))
+#+end_src
+
+***** Test
+
+#+header: :noweb-ref wf-tests
+#+begin_src clojure
+(deftest get-window-type
+  (is (= :other-command (sut/get-window-type "" "")))
+  (is (= :other-command (sut/get-window-type "" "some-command")))
+  (is (= :zsh (sut/get-window-type "" "zsh")))
+  (is (= :ssh (sut/get-window-type "ssh" "some-command")))
+  (is (= :manually-named (sut/get-window-type "mnw->foo" "some-command"))))
+#+end_src
+
+**** Shorten PWD
+
+This shells out to a shell script that does the path shortening. It's an
+external command, so we should probably mock it but we're too lazy.
+
+#+header: :noweb-ref wf-get-window-name-format
+#+begin_src clojure
+(defn- get-tmux-pane-pwd-cached
+  [window-id
+   pane-id
+   pane-current-path]
+  (-> (shell {:out :string
+              :err :string}
+             "tmux_pane_pwd_cached.sh"
+             window-id
+             pane-id
+             pane-current-path)
+      :out
+      str/trimr))
+#+end_src
+
+**** Get (modified) window name
+
+This is the final name of the window and is what will be most of what's
+displayed in the tmux status bar, other than some extra decorations around it.
+
+The default =window-name= in tmux is the name of the current command.
+
+#+header: :noweb-ref wf-get-window-name-format
+#+begin_src clojure
+(defn get-modified-window-name
+  [window-type
+   window-name
+   window-id
+   pane-id
+   pane-current-command
+   pane-current-path]
+  (case window-type
+    :manually-named (subs window-name 5)
+    :ssh window-name
+    :zsh (get-tmux-pane-pwd-cached window-id pane-id pane-current-path)
+    pane-current-command))
+#+end_src
+
+***** Test
+
+#+header: :noweb-ref wf-tests
+#+begin_src clojure
+(deftest get-modified-window-name
+  (is (= "foo" (sut/get-modified-window-name :manually-named "mnw->foo" "@1" "%2" "some-command" "/path/foo/bar")))
+  (is (= "ssh" (sut/get-modified-window-name :ssh "ssh" "@1" "%2" "some-command" "/path/foo/bar")))
+  (is (= "/path/foo/bar" (sut/get-modified-window-name :zsh "ssh" "@1" "%2" "some-command" "/path/foo/bar")))
+  (is (= "some-command" (sut/get-modified-window-name :other-command "" "@1" "%2" "some-command" "/path/foo/bar"))))
+#+end_src
+
+**** Colors for window types
+
+Note how the colors are inversed when the window becomes active. This makes it
+much easier to visually see which window is the current window in the status
+bar.
+
+#+header: :noweb-ref wf-get-window-name-format
+#+begin_src clojure
+(defn get-window-style
+  [window-type
+   is-current-window?]
+  (case window-type
+    :manually-named
+    (if is-current-window?
+      {:style1 "#[bold bg=cyan fg=black]"
+       :style2 "#[bold bg=brightcyan fg=black]"}
+      {:style1 "#[bg=black fg=cyan]"
+       :style2 "#[bg=black fg=cyan]"})
+
+    :ssh
+    (if is-current-window?
+      {:style1 "#[bold bg=blue fg=black]"
+       :style2 "#[bold bg=brightblue fg=black]"}
+      {:style1 "#[bg=black fg=blue]"
+       :style2 "#[bg=black fg=blue]"})
+
+    :zsh
+    (if is-current-window?
+      {:style1 "#[bold bg=yellow fg=black]"
+       :style2 "#[bold bg=brightyellow fg=black]"}
+      {:style1 "#[bg=black fg=yellow]"
+       :style2 "#[bg=black fg=yellow]"})
+
+    (if is-current-window?
+      {:style1 "#[bold bg=green fg=black]"
+       :style2 "#[bold bg=brightgreen fg=black]"}
+      {:style1 "#[bg=black fg=green]"
+       :style2 "#[bg=black fg=green]"})))
+#+end_src
+
+**** Bringing it all together
+
+The window name is augmented with additional formatting and colors. The trailing
+=#[default]= at the end is there to reset colors back to the default.
+
+Here's a description of the tmux variables that we send over from [[*Automatic
+window renaming]]:
+
+  - pane-current-command :: the command that's currently running in the pane
+
+  - pane-current-path :: the current working directory (aka =$PWD= in shell) of
+    the above command
+
+  - window-name :: the name of the window; by default this should match the
+    =pane-current-command= but we'll overwrite it with the output of
+    =get-window-name-format=
+
+  - window-id :: the unique ID of the window (e.g. =@1=)
+
+  - pane-id :: the unique ID of the pane (e.g. =%2=)
+
+  - window-flag :: a decorative string character that tmux uses to denote things
+    like whether the window is the current one (=*=) or if was the
+    previously-active one (=-=)
+
+  - window-panes :: the number of panes a window has (at least 1)
+
+The =is-current-window= is a boolean "1" or "0" we denote ourselves (to save
+=get-window-name-format= the trouble of figuring out what the active window is).
+
+#+header: :noweb-ref wf-get-window-name-format
+#+begin_src clojure
+(defn get-window-name-format
+  [pane-current-command
+    pane-current-path
+    window-name
+    window-id
+    pane-id
+    window-flags
+    window-panes
+    is-current-window]
+  (let [window-flags-str (if (= "" window-flags)
+                           " "
+                           window-flags)
+        window-weight (dec (Integer/parseInt window-panes))
+        window-weight-str (if (pos? window-weight)
+                            (str window-weight)
+                            " ")
+        window-type (get-window-type window-name pane-current-command)
+        current-window? (= "1" is-current-window)
+        {:keys [style1 style2]} (get-window-style window-type current-window?)
+        name (get-modified-window-name window-type
+                                       window-name
+                                       window-id
+                                       pane-id
+                                       pane-current-command
+                                       pane-current-path)]
+    (format "%s%s%s%s %s #[default]"
+            style1
+            window-flags-str
+            window-weight-str
+            style2
+            name)))
+#+end_src
+
+***** Test
+
+We don't really test things exhaustively because there are just too many
+combinations. We just test a few key examples.
+
+#+header: :noweb-ref wf-tests
+#+begin_src clojure
+(deftest get-window-name-format
+  (testing "manually named window"
+    (is (= "#[bold bg=cyan fg=black]*2#[bold bg=brightcyan fg=black] foo #[default]"
+           (sut/get-window-name-format "zsh" "/path/foo/bar" "mnw->foo" "@1" "%2" "*" "3" "1"))))
+  (testing "zsh shows path"
+    (is (= "#[bold bg=yellow fg=black]*2#[bold bg=brightyellow fg=black] /path #[default]"
+           (sut/get-window-name-format "zsh" "/path" "zsh" "@1" "%2" "*" "3" "1"))))
+  (testing "ssh"
+    (is (= "#[bold bg=blue fg=black]*2#[bold bg=brightblue fg=black] ssh #[default]"
+           (sut/get-window-name-format "ssh" "/path" "ssh" "@1" "%2" "*" "3" "1"))))
+  (testing "other-command"
+    (is (= "#[bold bg=green fg=black]*2#[bold bg=brightgreen fg=black] some-command #[default]"
+           (sut/get-window-name-format "some-command" "/path" "some-command" "@1" "%2" "*" "3" "1")))))
+#+end_src
+
+*** Imports
+
+#+header: :noweb-ref wf-imports
+#+begin_src clojure
+(ns get-window-format
+  (:require [clojure.string :as str]
+            [babashka.process :refer [shell]]))
+#+end_src
+
+*** Main
+
+We expect exactly 8 arguments:
+
+  1) pane-current-command
+  2) pane-current-path
+  3) window-name
+  4) window-id
+  5) pane-id
+  6) window-flags
+  7) window-panes
+  8) is-current-window
+
+#+header: :noweb-ref wf-main
+#+begin_src clojure
+(defn -main [& args]
+  (when (not= 8 (count args))
+    (println (format "Need exactly 8 arguments; got %d." (count args)))
+    (System/exit 1))
+  (println (apply get-window-name-format args)))
+(when (= *file* (System/getProperty "babashka.file"))
+  (apply -main *command-line-args*))
+#+end_src
+
+The =System/getProperty= stuff is from [[https://github.com/babashka/book/blame/eea70f8cf5185eb65e87066ddaf36c66fe22bceb/src/recipes.adoc#L44-L73][the Babashka book]] to make it nicer to
+interact with the file in the CLI and also the REPL.
+
+*** Tests
+
+#+header: :noweb-ref get-window-format-test
+#+header: :tangle ../script/tmux/get_window_format_test.clj
+#+begin_src clojure
+(ns get-window-format-test
+  (:require [clojure.test :refer [deftest is testing]]
+            [get-window-format :as sut]))
+<<wf-tests>>
 #+end_src
 
 * Footnotes
