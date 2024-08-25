@@ -6,10 +6,12 @@
   (is (= :other-command (sut/get-window-type "" "some-command")))
   (is (= :zsh (sut/get-window-type "" "zsh")))
   (is (= :ssh (sut/get-window-type "ssh" "some-command")))
+  (is (= :ssh (sut/get-window-type "" "ssh")))
   (is (= :manually-named (sut/get-window-type "mnw->foo" "some-command"))))
 (deftest get-modified-window-name
   (is (= "foo" (sut/get-modified-window-name :manually-named "mnw->foo" "@1" "%2" "some-command" "/path/foo/bar")))
   (is (= "ssh" (sut/get-modified-window-name :ssh "ssh" "@1" "%2" "some-command" "/path/foo/bar")))
+  (is (= "ssh->remote" (sut/get-modified-window-name :ssh "ssh->remote" "@1" "%2" "some-command" "/path/foo/bar")))
   (is (= "/path/foo/bar" (sut/get-modified-window-name :zsh "ssh" "@1" "%2" "some-command" "/path/foo/bar")))
   (is (= "some-command" (sut/get-modified-window-name :other-command "" "@1" "%2" "some-command" "/path/foo/bar"))))
 (deftest get-window-name-format

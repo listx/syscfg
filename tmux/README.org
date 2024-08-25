@@ -1203,7 +1203,8 @@ that window is doing:
    pane-current-command]
   (cond
     (str/starts-with? window-name "mnw->") :manually-named
-    (str/starts-with? window-name "ssh") :ssh
+    (or (str/starts-with? window-name "ssh")
+        (= pane-current-command "ssh")) :ssh
     (= pane-current-command "zsh") :zsh
     :else :other-command))
 #+end_src
@@ -1217,6 +1218,7 @@ that window is doing:
   (is (= :other-command (sut/get-window-type "" "some-command")))
   (is (= :zsh (sut/get-window-type "" "zsh")))
   (is (= :ssh (sut/get-window-type "ssh" "some-command")))
+  (is (= :ssh (sut/get-window-type "" "ssh")))
   (is (= :manually-named (sut/get-window-type "mnw->foo" "some-command"))))
 #+end_src
 
@@ -1259,7 +1261,7 @@ The default =window-name= in tmux is the name of the current command.
    pane-current-path]
   (case window-type
     :manually-named (subs window-name 5)
-    :ssh window-name
+    :ssh (if (str/starts-with? window-name "ssh") window-name "ssh")
     :zsh (get-tmux-pane-pwd-cached window-id pane-id pane-current-path)
     pane-current-command))
 #+end_src
@@ -1271,6 +1273,7 @@ The default =window-name= in tmux is the name of the current command.
 (deftest get-modified-window-name
   (is (= "foo" (sut/get-modified-window-name :manually-named "mnw->foo" "@1" "%2" "some-command" "/path/foo/bar")))
   (is (= "ssh" (sut/get-modified-window-name :ssh "ssh" "@1" "%2" "some-command" "/path/foo/bar")))
+  (is (= "ssh->remote" (sut/get-modified-window-name :ssh "ssh->remote" "@1" "%2" "some-command" "/path/foo/bar")))
   (is (= "/path/foo/bar" (sut/get-modified-window-name :zsh "ssh" "@1" "%2" "some-command" "/path/foo/bar")))
   (is (= "some-command" (sut/get-modified-window-name :other-command "" "@1" "%2" "some-command" "/path/foo/bar"))))
 #+end_src

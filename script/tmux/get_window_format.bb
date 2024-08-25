@@ -7,7 +7,8 @@
    pane-current-command]
   (cond
     (str/starts-with? window-name "mnw->") :manually-named
-    (str/starts-with? window-name "ssh") :ssh
+    (or (str/starts-with? window-name "ssh")
+        (= pane-current-command "ssh")) :ssh
     (= pane-current-command "zsh") :zsh
     :else :other-command))
 (defn- get-tmux-pane-pwd-cached
@@ -31,7 +32,7 @@
    pane-current-path]
   (case window-type
     :manually-named (subs window-name 5)
-    :ssh window-name
+    :ssh (if (str/starts-with? window-name "ssh") window-name "ssh")
     :zsh (get-tmux-pane-pwd-cached window-id pane-id pane-current-path)
     pane-current-command))
 (defn get-window-style
