@@ -26,72 +26,7 @@ it gets ignored (for purposes of list parsing) by Org mode.
 
 * Implementation
 
-#+header: :shebang #!/bin/sh
-#+header: :noweb-ref prepare-commit-msg
-#+header: :tangle prepare-commit-msg.sh
-#+begin_src sh
-<<arguments>>
-
-<<wrap-diff-with-source-code-block>>
-#+end_src
-
-** Shell
-
-This isn't as portable as we'd like it to be because it requires GNU Sed.
-
-*** Arguments
-
-Git will call our script with the path of the special COMMIT_MSG file as the
-first argument.
-
-#+header: :noweb-ref arguments
-#+begin_src sh
-COMMIT_MSG_FILE=$1
-#+end_src
-
-*** Source code block wrapper
-
-Wrapping the diff part just means adding
-
-#+begin_src org
-,#+begin_src diff
-#+end_src
-
-and
-
-#+begin_src org
-,#+end_src
-#+end_src
-
-around the diff portion.
-
-**** Add =#+begin_src diff=
-
-The trick here is to tell =sed= (GNU sed)[fn:gnu-sed] to only concern itself with
-the area of the file where the =diff= word appears the first time. This is because
-the diff could have multiple hunks in it (each with its own =diff ...= section).
-That's what the =0,/^diff/= means below:
-
-#+header: :noweb-ref wrap-diff-with-source-code-block
-#+begin_src sh
-sed -i '0,/^diff/{s/^diff /#+begin_src diff\ndiff /}' "${COMMIT_MSG_FILE}"
-#+end_src
-
-We use =-i= to edit the file in-place.
-
-**** Add =#+end_src=
-
-Adding the =#+end_src= is easy because it just has to be at the end of the file.
-We use shell redirection =>>= (for appending) to do this.
-
-#+header: :noweb-ref wrap-diff-with-source-code-block
-#+begin_src sh
-echo '#+end_src' >> "${COMMIT_MSG_FILE}"
-#+end_src
-
 ** Clojure (Babashka)
-
-Here's a version using Babashka.
 
 The tricky part is figuring out how to add a line to the middle of the file
 somewhere. For that we have to read the file into memory first, construct the
@@ -280,6 +215,72 @@ file is what we want to modify. We ignore other arguments passed to us (=rst=).
 The =-main= function just calls =wrap-diff-portion= with =file=. The
 =System/getProperty= stuff is from [[https://github.com/babashka/book/blame/eea70f8cf5185eb65e87066ddaf36c66fe22bceb/src/recipes.adoc#L44-L73][the Babashka book]] to make it nicer to interact
 with the file in the CLI and also the REPL.
+
+** Shell
+
+The shell implementation is only here as a point of comparison; it's not
+actually used.
+
+#+header: :shebang #!/bin/sh
+#+header: :noweb-ref prepare-commit-msg
+#+header: :tangle prepare-commit-msg.sh
+#+begin_src sh
+<<arguments>>
+
+<<wrap-diff-with-source-code-block>>
+#+end_src
+
+This isn't as portable as we'd like it to be because it requires GNU Sed.
+
+*** Arguments
+
+Git will call our script with the path of the special COMMIT_MSG file as the
+first argument.
+
+#+header: :noweb-ref arguments
+#+begin_src sh
+COMMIT_MSG_FILE=$1
+#+end_src
+
+*** Source code block wrapper
+
+Wrapping the diff part just means adding
+
+#+begin_src org
+,#+begin_src diff
+#+end_src
+
+and
+
+#+begin_src org
+,#+end_src
+#+end_src
+
+around the diff portion.
+
+**** Add =#+begin_src diff=
+
+The trick here is to tell =sed= (GNU sed)[fn:gnu-sed] to only concern itself with
+the area of the file where the =diff= word appears the first time. This is because
+the diff could have multiple hunks in it (each with its own =diff ...= section).
+That's what the =0,/^diff/= means below:
+
+#+header: :noweb-ref wrap-diff-with-source-code-block
+#+begin_src sh
+sed -i '0,/^diff/{s/^diff /#+begin_src diff\ndiff /}' "${COMMIT_MSG_FILE}"
+#+end_src
+
+We use =-i= to edit the file in-place.
+
+**** Add =#+end_src=
+
+Adding the =#+end_src= is easy because it just has to be at the end of the file.
+We use shell redirection =>>= (for appending) to do this.
+
+#+header: :noweb-ref wrap-diff-with-source-code-block
+#+begin_src sh
+echo '#+end_src' >> "${COMMIT_MSG_FILE}"
+#+end_src
 
 * Tests
 
