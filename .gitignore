@@ -1,6 +1,7 @@
 *#
 *.aes
 .clj-kondo
+.direnv
 *.elc
 *.log
 *.hi
