@@ -4,9 +4,12 @@
 # current window. Note that this is different from setting the window name (aka
 # "#{window_name}", which we purposely avoid due to race conditions.
 #
-# The point of this script is to avoid spamming melby with too many requests.
-# Instead, we only ask melby to shorten a path for us if we detect that there is a
-# change in the current path.
+# The point of this script is to avoid spamming melby with too many requests;
+# doing additional requests here would mean we would basically double the number
+# of requests because currently we already spam melby every second to get the
+# prompt. Ideally we could be feeding the shortened pwd information from melby
+# back to tmux, but we don't do that on purpose because we want to have a
+# separate implementation just in case melby is not working.
 
 set -o errexit
 set -o nounset
@@ -24,7 +27,7 @@ pane_pwd_same()
   pane_id="${2}"
   pwd_new="${3}"
 
-  # Format is L_TMUX_PANE_PWD_<WINDOW_ID>=<PWD_LONG>\n<PWD_SHORT>
+  # Format is L_TMUX_PANE_PWD_<WINDOW_ID>=<PWD_LONG>;<PWD_SHORT>
   __pwd_old="$(tmux show-environment L_TMUX_PANE_PWD_${window_id})"
   __pwd_old_short="${__pwd_old}"
   __pwd_old="${__pwd_old#*=}"
