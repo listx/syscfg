@@ -67,8 +67,8 @@ substrings before and after this bit.
 FIXME: Make this more robust by expecting the scissor line also. This way we can
 be resilient when rebasing (because rebases appear to call this script).
 
-We have to increment =idx= when taking the substring, because we want to skip past
-the newline just before the ="diff "=.
+We have to shift =idx= by two characters when taking the substring, because we want to
+skip past the =#\n= part just before the ="diff"=.
 
 We use =if-let= in case the input string doesn't have the ="\ndiff "= string in it,
 in which case we abort doing any mutations to it and return the original string
