@@ -442,6 +442,8 @@ if [[ -n "${commands[fzf-share]}" ]]; then
   FZF_CTRL_T_OPTS=" --preview '(cat {} || tree -C {}) 2> /dev/null | head -200'"
   FZF_CTRL_T_OPTS+=" --select-1 --exit-0"
   export FZF_CTRL_T_OPTS
+  # Use ALT-F binding instead of CTRL-T, because it's easier to reach.
+  bindkey '\ef' fzf-file-widget
 
   # Use ALT-D binding instead of the default ALT-C.
   bindkey '\ed' fzf-cd-widget

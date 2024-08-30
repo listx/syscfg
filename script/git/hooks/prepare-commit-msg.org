@@ -64,9 +64,6 @@ substrings before and after this bit.
     s))
 #+end_src
 
-FIXME: Make this more robust by expecting the scissor line also. This way we can
-be resilient when rebasing (because rebases appear to call this script).
-
 We have to shift =idx= by two characters when taking the substring, because we want to
 skip past the =#\n= part just before the ="diff"=.
 
