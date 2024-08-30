@@ -60,7 +60,11 @@ set background=dark
 set termguicolors
 
 " Explicitly set default colorscheme.
-colorscheme default
+if has('nvim')
+  colorscheme vim
+else
+  colorscheme default
+endif
 
 " Word-wrap based on words, not characters (would anyone on Earth want it the other
 " way?).
