@@ -439,8 +439,10 @@ if [[ -n "${commands[fzf-share]}" ]]; then
   export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 
   # Enable preview window for files.
-  FZF_CTRL_T_OPTS=" --preview '(cat {} || tree -C {}) 2> /dev/null | head -200'"
+  FZF_CTRL_T_OPTS=" --preview '(cat {} || tree -C {}) 2> /dev/null | head -1000'"
   FZF_CTRL_T_OPTS+=" --select-1 --exit-0"
+  # Faster preview navigation.
+  FZF_CTRL_T_OPTS+=" --bind=page-up:preview-half-page-up,page-down:preview-half-page-down"
   export FZF_CTRL_T_OPTS
   # Use ALT-F binding instead of CTRL-T, because it's easier to reach.
   bindkey '\ef' fzf-file-widget
