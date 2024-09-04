@@ -449,8 +449,11 @@ if [[ -n "${commands[fzf-share]}" ]]; then
   # from fzf, because typically we never need to select more than 1 file at a
   # time on the command line.
   fzf-file-and-enter-widget() {
+    local buf=${#BUFFER}
     fzf-file-widget
-    zle accept-line
+    if (( ${#BUFFER} > buf )); then
+      zle accept-line
+    fi
   }
   zle     -N    fzf-file-and-enter-widget
   bindkey '\ef' fzf-file-and-enter-widget
