@@ -444,8 +444,16 @@ if [[ -n "${commands[fzf-share]}" ]]; then
   # Faster preview navigation.
   FZF_CTRL_T_OPTS+=" --bind=page-up:preview-half-page-up,page-down:preview-half-page-down"
   export FZF_CTRL_T_OPTS
-  # Use ALT-F binding instead of CTRL-T, because it's easier to reach.
-  bindkey '\ef' fzf-file-widget
+  # Use ALT-F binding instead of CTRL-T, because it's easier to reach. Also
+  # press ENTER to execute the command immediately after selecting the entry
+  # from fzf, because typically we never need to select more than 1 file at a
+  # time on the command line.
+  fzf-file-and-enter-widget() {
+    fzf-file-widget
+    zle accept-line
+  }
+  zle     -N    fzf-file-and-enter-widget
+  bindkey '\ef' fzf-file-and-enter-widget
 
   # Use ALT-D binding instead of the default ALT-C.
   bindkey '\ed' fzf-cd-widget
