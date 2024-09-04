@@ -91,7 +91,13 @@ __l_maybe_load_completions_and_autocorrect()
   cmd_first_word="${cmd_all_words%%[[:space:]]*}"
   # Get remaining words.
   cmd_remaining_words="${cmd_all_words#${leading_whitespace}${cmd_first_word}}"
+  __l_run_fzf=0
   case "${cmd_first_word}" in
+  d)
+    if [[ "${BUFFER}" == "d " ]]; then
+      __l_run_fzf=1
+    fi
+    ;;
   kl|kubectl)
     # The first word could be either "kl " or "kubectl". For "kl", expand it out
     # to "kubectl" because it's more explicit and better for copy-pasting to
@@ -129,6 +135,11 @@ __l_maybe_load_completions_and_autocorrect()
 __l_lazy_load_completions()
 {
   __l_maybe_load_completions_and_autocorrect
+
+  if ((__l_run_fzf)); then
+    fzf-file-and-enter-widget
+    return
+  fi
   # Now invoke the vanilla zle widget that was supposed to have been called
   # from viins mode.
   case "${KEYS[-1]}" in
