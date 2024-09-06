@@ -28,7 +28,6 @@ emacs:
 git:
 	ln -fs ${C}/git/cfg.personal.conf                   ${H}/.gitconfig
 	ln -fs ${C}/git/gitignore                           ${H}/.gitignore
-	ln -fns ${C}/git/template                           ${H}/.git-templates
 	ln -fs ${C}/git/sendemail-aliases                   ${H}/.git-sendemail-aliases
 gpg:
 	ln -fns ${C}/gpg                                    ${H}/.gnupg
