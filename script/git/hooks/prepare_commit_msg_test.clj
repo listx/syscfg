@@ -81,7 +81,72 @@ index c862589b..0f2cc942 100644
 #+end_src
 ")
 
+(def commit-msg-text-2 "
+
+
+# ------------------------ >8 ------------------------
+# Do not modify or remove the line above.
+# Everything below it will be ignored.
+diff --git a/script/README.org b/script/README.org
+index c862589b..0f2cc942 100644
+--- a/script/README.org
++++ b/script/README.org
+@@ -29,31 +29,35 @@ This script just imports all Clojure test files and then
+ (require '[clojure.test :refer [run-tests]]
+          '[babashka.classpath :refer [add-classpath]])
+
+-(require 'find-long-lines-test)
++(require 'find-long-lines-test
++         'prepare-commit-msg-test)
+
+diff --git a/script/README.org b/script/README.org
+index c862589b..0f2cc942 100644
+--- a/script/README.org
++++ b/script/README.org
+@@ -29,31 +29,35 @@ This script just imports all Clojure test files and then
+ (require '[clojure.test :refer [run-tests]]
+          '[babashka.classpath :refer [add-classpath]])
+
+-(require 'find-long-lines-test)
++(require 'find-long-lines-test
++         'prepare-commit-msg-test)
+")
+
+(def commit-msg-text-wrapped-2 "
+
+
+# ------------------------ >8 ------------------------
+# Do not modify or remove the line above.
+# Everything below it will be ignored.
+#+begin_src diff
+diff --git a/script/README.org b/script/README.org
+index c862589b..0f2cc942 100644
+--- a/script/README.org
++++ b/script/README.org
+@@ -29,31 +29,35 @@ This script just imports all Clojure test files and then
+ (require '[clojure.test :refer [run-tests]]
+          '[babashka.classpath :refer [add-classpath]])
+
+-(require 'find-long-lines-test)
++(require 'find-long-lines-test
++         'prepare-commit-msg-test)
+
+diff --git a/script/README.org b/script/README.org
+index c862589b..0f2cc942 100644
+--- a/script/README.org
++++ b/script/README.org
+@@ -29,31 +29,35 @@ This script just imports all Clojure test files and then
+ (require '[clojure.test :refer [run-tests]]
+          '[babashka.classpath :refer [add-classpath]])
+
+-(require 'find-long-lines-test)
++(require 'find-long-lines-test
++         'prepare-commit-msg-test)
+#+end_src
+")
+
 (deftest wrap-diff
   (is (= "" (sut/wrap-diff "")))
   (is (= "foo" (sut/wrap-diff "foo")))
-  (is (= commit-msg-text-wrapped (sut/wrap-diff commit-msg-text))))
+  (is (= commit-msg-text-wrapped (sut/wrap-diff commit-msg-text)))
+  (is (= commit-msg-text-wrapped-2 (sut/wrap-diff commit-msg-text-2))))

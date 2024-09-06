@@ -51,11 +51,23 @@ substrings before and after this bit.
 
 #+header: :noweb-ref wrap-diff-portion
 #+begin_src clojure
+(def pats
+  ["#\ndiff "
+   "# Everything below it will be ignored.\ndiff "])
+
+(defn- search-pat
+  [s pat]
+  [(str/index-of s pat)
+   (str/index-of pat "diff")])
+
 (defn wrap-diff
   [s]
-  (if-let [idx (str/index-of s "#\ndiff ")]
-    (let [before (subs s 0 (+ 2 idx))
-          after (subs s (+ 2 idx))
+  (if-let [[idx offset] (->> pats
+                             (map #(search-pat s %))
+                             (some (fn [[idx _ :as tup]]
+                                     (when (some? idx) tup))))]
+    (let [before (subs s 0 (+ offset idx))
+          after (subs s (+ offset idx))
           new-parts [before
                      "#+begin_src diff\n"
                      after
@@ -64,12 +76,13 @@ substrings before and after this bit.
     s))
 #+end_src
 
-We have to shift =idx= by two characters when taking the substring, because we want to
-skip past the =#\n= part just before the ="diff"=.
+We have to shift =idx= by an offset when taking the substring, because we want to
+skip past the =#...\n= bits just before the ="diff"=. Note that we look for two
+different patterns (see =pats=) and use whichever one works.
 
-We use =if-let= in case the input string doesn't have the ="\ndiff "= string in it,
-in which case we abort doing any mutations to it and return the original string
-unmodified.
+We use =if-let= in case the input string doesn't have the ="\ndiff "= substring in
+it, in which case we abort doing any mutations to it and return the original
+string unmodified.
 
 Now we can read the file, invoke our wrapper, and then write back out the
 result. We use =slurp= and =spit= for this.
@@ -92,7 +105,8 @@ result. We use =slurp= and =spit= for this.
 (deftest wrap-diff
   (is (= "" (sut/wrap-diff "")))
   (is (= "foo" (sut/wrap-diff "foo")))
-  (is (= commit-msg-text-wrapped (sut/wrap-diff commit-msg-text))))
+  (is (= commit-msg-text-wrapped (sut/wrap-diff commit-msg-text)))
+  (is (= commit-msg-text-wrapped-2 (sut/wrap-diff commit-msg-text-2))))
 #+end_src
 
 The =commit-msg-text= is somewhat realistic input, defined below. Note that
@@ -159,6 +173,70 @@ index c862589b..0f2cc942 100644
 # Changes to be committed:
 #	modified:   README.org
 #
+,#+begin_src diff
+diff --git a/script/README.org b/script/README.org
+index c862589b..0f2cc942 100644
+--- a/script/README.org
++++ b/script/README.org
+@@ -29,31 +29,35 @@ This script just imports all Clojure test files and then
+ (require '[clojure.test :refer [run-tests]]
+          '[babashka.classpath :refer [add-classpath]])
+
+-(require 'find-long-lines-test)
++(require 'find-long-lines-test
++         'prepare-commit-msg-test)
+
+diff --git a/script/README.org b/script/README.org
+index c862589b..0f2cc942 100644
+--- a/script/README.org
++++ b/script/README.org
+@@ -29,31 +29,35 @@ This script just imports all Clojure test files and then
+ (require '[clojure.test :refer [run-tests]]
+          '[babashka.classpath :refer [add-classpath]])
+
+-(require 'find-long-lines-test)
++(require 'find-long-lines-test
++         'prepare-commit-msg-test)
+,#+end_src
+")
+
+(def commit-msg-text-2 "
+
+
+# ------------------------ >8 ------------------------
+# Do not modify or remove the line above.
+# Everything below it will be ignored.
+diff --git a/script/README.org b/script/README.org
+index c862589b..0f2cc942 100644
+--- a/script/README.org
++++ b/script/README.org
+@@ -29,31 +29,35 @@ This script just imports all Clojure test files and then
+ (require '[clojure.test :refer [run-tests]]
+          '[babashka.classpath :refer [add-classpath]])
+
+-(require 'find-long-lines-test)
++(require 'find-long-lines-test
++         'prepare-commit-msg-test)
+
+diff --git a/script/README.org b/script/README.org
+index c862589b..0f2cc942 100644
+--- a/script/README.org
++++ b/script/README.org
+@@ -29,31 +29,35 @@ This script just imports all Clojure test files and then
+ (require '[clojure.test :refer [run-tests]]
+          '[babashka.classpath :refer [add-classpath]])
+
+-(require 'find-long-lines-test)
++(require 'find-long-lines-test
++         'prepare-commit-msg-test)
+")
+
+(def commit-msg-text-wrapped-2 "
+
+
+# ------------------------ >8 ------------------------
+# Do not modify or remove the line above.
+# Everything below it will be ignored.
 ,#+begin_src diff
 diff --git a/script/README.org b/script/README.org
 index c862589b..0f2cc942 100644

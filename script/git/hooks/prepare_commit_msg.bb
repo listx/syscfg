@@ -2,11 +2,23 @@
 (ns prepare-commit-msg
   (:require [clojure.java.io :as io]
             [clojure.string :as str]))
+(def pats
+  ["#\ndiff "
+   "# Everything below it will be ignored.\ndiff "])
+
+(defn- search-pat
+  [s pat]
+  [(str/index-of s pat)
+   (str/index-of pat "diff")])
+
 (defn wrap-diff
   [s]
-  (if-let [idx (str/index-of s "#\ndiff ")]
-    (let [before (subs s 0 (+ 2 idx))
-          after (subs s (+ 2 idx))
+  (if-let [[idx offset] (->> pats
+                             (map #(search-pat s %))
+                             (some (fn [[idx _ :as tup]]
+                                     (when (some? idx) tup))))]
+    (let [before (subs s 0 (+ offset idx))
+          after (subs s (+ offset idx))
           new-parts [before
                      "#+begin_src diff\n"
                      after
