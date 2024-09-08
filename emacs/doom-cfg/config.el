@@ -342,6 +342,7 @@ the object exists locally)."
       :mnv "M-J" #'org-metadown
       :mnv "M-H" #'org-shiftmetaleft
       :mnv "M-L" #'org-shiftmetaright
+      :mnv "(" #'org-mark-ring-goto
       :i "C-RET" #'l/org-insert-thing)
 
 (defun l/org-insert-thing ()
