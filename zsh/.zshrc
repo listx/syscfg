@@ -493,9 +493,9 @@ zcomet load "smeagol74/zsh-fzf-pass"
 # - 'mh+24' matches files (or directories or whatever) that are older than 24 hours.
 autoload -Uz compinit
 if [[ -n ${ZDOTDIR}/.zcompdump(#qN.mh+24) ]]; then
-	compinit
+  compinit
 else
-	compinit -C
+  compinit -C
 fi
 
 source <(jj util completion zsh)
