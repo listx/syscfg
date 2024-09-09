@@ -297,7 +297,6 @@ the object exists locally)."
 (after! magit
   (setq magit-repository-directories
       `(("~/prog" . 1)
-        ("~/prog/foreign" . 1)
         ("~/syscfg" . 0))))
 (after! magit
   (setq git-commit-major-mode #'org-mode))
@@ -964,7 +963,7 @@ details."
 (add-hook 'makefile-gmake-mode-hook #'l/set-tab-width-to-8)
 (add-hook 'makefile-bsdmake-mode-hook #'l/set-tab-width-to-8)
 (defvar l/c-like-modes '(c-mode))
-(defvar l/banned-auto-format-dirs '("prog/foreign/git"))
+(defvar l/banned-auto-format-dirs '("prog/git"))
 
 (defun l/auto-format-buffer-p ()
   (interactive)
@@ -1347,7 +1346,7 @@ Also add the number of windows in the window configuration."
     (interactive)
     (let ((tags (notmuch-show-get-tags)))
       (cond
-        ((member "git" tags) (setq-local default-directory "~/prog/foreign/git"))))))
+        ((member "git" tags) (setq-local default-directory "~/prog/git"))))))
 
 (map! :mi "C-o" #'l/insert-newline-below
       :mi "C-S-o" #'l/insert-newline-above)

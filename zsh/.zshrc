@@ -97,7 +97,7 @@ export LEDGER_FILE=~/lo/finance/index.ledger
 export GCC_COLORS=1
 
 # path to local nixpkgs git repo
-export NIXPKGS=~/prog/foreign/nixpkgs
+export NIXPKGS=~/prog/nixpkgs
 
 export KUBECONFIG=~/.kube/config
 

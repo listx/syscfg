@@ -1141,7 +1141,7 @@ as a reference and the rules there are not actually enforced for existing code.
 #+name: format-onsave
 #+begin_src emacs-lisp
 (defvar l/c-like-modes '(c-mode))
-(defvar l/banned-auto-format-dirs '("prog/foreign/git"))
+(defvar l/banned-auto-format-dirs '("prog/git"))
 
 (defun l/auto-format-buffer-p ()
   (interactive)
@@ -2358,7 +2358,7 @@ See [[https://emacs.stackexchange.com/a/36279/13006][this post]] from 2017 which
   (interactive)
   (let ((tags (notmuch-show-get-tags)))
     (cond
-      ((member "git" tags) (setq-local default-directory "~/prog/foreign/git")))))
+      ((member "git" tags) (setq-local default-directory "~/prog/git")))))
 #+end_src
 
 * Shell
@@ -2680,7 +2680,6 @@ the object exists locally)."
 (after! magit
   (setq magit-repository-directories
       `(("~/prog" . 1)
-        ("~/prog/foreign" . 1)
         ("~/syscfg" . 0))))
 #+end_src
 
