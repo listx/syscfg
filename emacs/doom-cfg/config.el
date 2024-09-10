@@ -429,6 +429,10 @@ LINK-NAME."
                  'l/org-export-md-scrub-invalid-links))
 
 (after! org
+  (add-hook 'org-mode-hook
+            (lambda ()
+              (column-enforce-mode -1)
+              (display-fill-column-indicator-mode 1)))
   (defun l/org-export-as-markdown-to-clipboard (include-parent-heading)
     "Like doom's +org/export-to-clipboard, but (1) always exports to markdown, (2)
   always processes only the current subtree around point, and (3) pipes to a
@@ -977,8 +981,6 @@ details."
 
 (defun l/after-change-major-mode ()
   (progn
-    (when (string-match "_test\\.\\w+$" (or (buffer-file-name) ""))
-      (column-enforce-mode -1))
     (apheleia-mode (if (l/auto-format-buffer-p) 1 -1))))
 
 (add-hook! 'after-change-major-mode-hook 'l/after-change-major-mode)
@@ -1544,18 +1546,6 @@ Also add the number of windows in the window configuration."
 ; Disable hl-line mode, because it can be surprisingly disorienting. Besides, we
 ; can always use "v" or "V" to get a visual queue easily enough.
 (remove-hook 'doom-first-buffer-hook #'global-hl-line-mode)
-
-; Add visual cue on 80th column.
-(use-package! column-enforce-mode
-  :config
-  (add-hook 'org-mode-hook
-            (lambda ()
-              (column-enforce-mode -1)
-              (display-fill-column-indicator-mode 1)))
-  ;; Disable column-enforce-mode for comment text (sometimes comments can have
-  ;; long URLs and such that exceed 80 columns).
-  (setq column-enforce-comments nil)
-  (global-column-enforce-mode t))
 
 (use-package! vim-empty-lines-mode
   :config

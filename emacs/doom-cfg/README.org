@@ -227,7 +227,6 @@ still type a ~,~ to access the leader key after typing ~, u~).
 ;(unpin! t)
 (package! auto-dim-other-buffers)
 (package! citeproc)
-(package! column-enforce-mode)
 (package! hyperbole)
 (package! git-gutter)
 (package! org-auto-tangle)
@@ -1155,26 +1154,10 @@ as a reference and the rules there are not actually enforced for existing code.
 
 (defun l/after-change-major-mode ()
   (progn
-    <<undo-column-enforce-mode>>
     (apheleia-mode (if (l/auto-format-buffer-p) 1 -1))))
 
 (add-hook! 'after-change-major-mode-hook 'l/after-change-major-mode)
 #+end_src
-
-*** Disable highlighting long lines in test files
-
-Turn off =column-enforce-mode= for files that end in =_test= just before the
-extension.
-
-#+name: undo-column-enforce-mode
-#+begin_src emacs-lisp
-(when (string-match "_test\\.\\w+$" (or (buffer-file-name) ""))
-  (column-enforce-mode -1))
-#+end_src
-
-For some reason using =(buffer-file-name)= on its own appears to hang
-Doom on startup (presumably because it returns =nil=). So we wrap it with =(or
-... "")= to avoid hanging Doom.
 
 ** Comment lines
 
@@ -1497,6 +1480,7 @@ convention.
                  'l/org-export-md-scrub-invalid-links))
 
 (after! org
+  <<l/disable-column-enforce-mode>>
   <<l/org-export-as-markdown-to-clipboard>>
   ; Make calendars in agenda start on Monday.
   (setq calendar-week-start-day 1)
@@ -2790,15 +2774,6 @@ the simpler modes that do not have a formatter, but for now we don't bother.
 ; Disable hl-line mode, because it can be surprisingly disorienting. Besides, we
 ; can always use "v" or "V" to get a visual queue easily enough.
 (remove-hook 'doom-first-buffer-hook #'global-hl-line-mode)
-
-; Add visual cue on 80th column.
-(use-package! column-enforce-mode
-  :config
-  <<l/disable-column-enforce-mode>>
-  ;; Disable column-enforce-mode for comment text (sometimes comments can have
-  ;; long URLs and such that exceed 80 columns).
-  (setq column-enforce-comments nil)
-  (global-column-enforce-mode t))
 
 (use-package! vim-empty-lines-mode
   :config
