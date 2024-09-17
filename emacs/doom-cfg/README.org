@@ -775,19 +775,16 @@ auto-generated buffers from various emacs modes/packages.
 non-auxiliary buffer if possible). Calls `l/gc-views' to handle any sort of
 window management issues."
   (interactive)
-  (let*
-    (
-      (original-bufname (buffer-name))
-      (aux-buffer-rgx "^ *\*.+\*$")
-      (is-aux-buffer (l/buffer-looks-like original-bufname '("^ *\*.+\*$")))
-      (buffers (mapcar 'buffer-name (buffer-list)))
-      (primary-buffers-count
-        (length
-          (seq-filter
-            '(lambda (bufname) (not (string-match "^ *\*.+\*$" bufname)))
-            buffers)))
-      (primary-buffer-exists (> primary-buffers-count 0))
-    )
+  (let* ((original-bufname (buffer-name))
+         (aux-buffer-rgx "^ *\*.+\*$")
+         (is-aux-buffer (l/buffer-looks-like original-bufname '("^ *\*.+\*$")))
+         (buffers (mapcar 'buffer-name (buffer-list)))
+         (primary-buffers-count
+           (length
+             (seq-filter
+               '(lambda (bufname) (not (string-match "^ *\*.+\*$" bufname)))
+               buffers)))
+         (primary-buffer-exists (> primary-buffers-count 0)))
 
     ; If we're on a magit-controlled buffer, do what magit expects and simulate
     ; pressing C-c C-c (with-editor-finish).
@@ -832,9 +829,9 @@ window management issues."
                      (concat "l/quit-buffer: Buffer cycle detected among "
                              "auxiliary buffers; invoking `l/gc-views'.")))
                   (previous-buffer))))
-              ; If we've broken the loop (due to a cycle), run (l/gc-views) as
-              ; it is better than doing nothing.
-              (l/gc-views))
+            ; If we've broken the loop (due to a cycle), run (l/gc-views) as
+            ; it is better than doing nothing.
+            (l/gc-views))
           (l/gc-views))))))
 
 ; Either close the current window, or if only one windw, use the ":q" Evil
@@ -844,9 +841,8 @@ window management issues."
   "Vimlike ':q' behavior: close current window if there are split windows;
 otherwise, close current tab."
   (interactive)
-  (let
-    ( (one-tab (= 1 (length (tab-bar-tabs))))
-      (one-window (one-window-p)))
+  (let ((one-tab (= 1 (length (tab-bar-tabs))))
+        (one-window (one-window-p)))
     (cond
       ; If current tab has split windows in it, close the current live
       ; window.
@@ -877,19 +873,19 @@ otherwise, close current tab."
                 (seq-filter
                   (lambda (bufname)
                     (not (l/buffer-looks-like bufname
-                      '(
-                      ; Do not delete buffers that may be open which are for git
-                      ; rebasing and committing. This is in case these buffers
-                      ; are open in other clients which may still be working on
-                      ; these buffers.
-                      "^COMMIT_EDITMSG"
-                      "^git-rebase-todo"
-                      ; This catches buffers like 'addp-hunk-edit.diff' which is
-                      ; used during surgical edits of what to stage ('e' option
-                      ; to the 'git add -p' command).
-                      ".*hunk-edit.diff"
-                      ; Don't delete system buffers buffers.
-                      "^\*Messages\*"))))
+                          '(
+                            ; Do not delete buffers that may be open which are for git
+                            ; rebasing and committing. This is in case these buffers
+                            ; are open in other clients which may still be working on
+                            ; these buffers.
+                            "^COMMIT_EDITMSG"
+                            "^git-rebase-todo"
+                            ; This catches buffers like 'addp-hunk-edit.diff' which is
+                            ; used during surgical edits of what to stage ('e' option
+                            ; to the 'git add -p' command).
+                            ".*hunk-edit.diff"
+                            ; Don't delete system buffers buffers.
+                            "^\*Messages\*"))))
                   (mapcar 'buffer-name (buffer-list))))))
           (evil-quit)) nil))))
 
@@ -897,7 +893,7 @@ otherwise, close current tab."
   "Return t if the buffer name looks like any of the given regexes."
   (interactive)
   (eval (cons 'or (mapcar
-    (lambda (rgx) (string-match rgx bufname)) regexes))))
+                   (lambda (rgx) (string-match rgx bufname)) regexes))))
 #+end_src
 
 *** Navigation
