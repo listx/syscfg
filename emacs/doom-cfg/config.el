@@ -1047,11 +1047,13 @@ details."
   "Split window verically."
   (interactive)
   (split-window-vertically)
+  (balance-windows)
   (other-window 1))
 (defun l/split-window-horizontally ()
   "Split window horizontally."
   (interactive)
   (split-window-horizontally)
+  (balance-windows)
   (other-window 1))
 (map! :leader
       :desc "split-h" "h" #'l/split-window-vertically
@@ -1132,8 +1134,10 @@ window management issues."
                   (previous-buffer))))
             ; If we've broken the loop (due to a cycle), run (l/gc-views) as
             ; it is better than doing nothing.
-            (l/gc-views))
-          (l/gc-views))))))
+            (l/gc-views)
+            (balance-windows))
+          (l/gc-views)
+          (balance-windows))))))
 
 ; Either close the current window, or if only one windw, use the ":q" Evil
 ; command; this simulates the ":q" behavior of Vim when used with tabs to
