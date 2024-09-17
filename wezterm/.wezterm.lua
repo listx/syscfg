@@ -40,7 +40,7 @@ if hostname ~= 'k0' then
   my_font.font = wezterm.font_with_fallback {
     "CommitMono"
   }
-  my_font.font_size = 14.0
+  my_font.font_size = 16.0
 end
 if hostname == 'm0' then
   my_font.font_size = 10
