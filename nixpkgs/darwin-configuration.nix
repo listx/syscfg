@@ -57,6 +57,7 @@ in
       openjdk
       pass
       pdf2svg
+      nodePackages.prettier
       procps
       ripgrep
       rustfmt
