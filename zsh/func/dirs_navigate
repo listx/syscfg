@@ -6,9 +6,9 @@
 dirs_navigate()
 {
 	local direction="${1}"
-    if [[ "${direction}" == prev ]]; then
+	if [[ "${direction}" == prev ]]; then
 		dirs $(dirs -lp | awk 'NR==1{store=$0;next}1;END{print store}') && popd && dir_info brief
-    else
+	else
 		cd -0 && dir_info brief
-    fi
+	fi
 }
