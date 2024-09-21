@@ -72,11 +72,6 @@ univ_open() {
 		# script (so '$#' is the same as $ARGC)
 		if [[ $# -eq 1 ]]; then
 			cd $@ && dir_info brief
-			# If this is a git root directory, then show a list of all remotes.
-			if [[ -d .git ]]; then
-				git remote -v
-				echo
-			fi
 		else
 			# if the first argument was a valid directory, but there was more than 1 argument, then we ignore these
 			# trailing args but still cd into the first given directory

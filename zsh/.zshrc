@@ -362,7 +362,7 @@ bindkey -s '^l' ' dirs_navigate next\n'
 # Move up a directory. This is slightly faster than typing 'k' then 'Enter'. We
 # can't bind C-j, because it is interpreted by Zsh to be the same thing as a
 # newline. So binding it is the same thing as rebinding the newline character.
-bindkey -s '^K' ' cd ..;ll\n'
+bindkey -s '^K' ' d ..\n'
 
 zmodload zsh/complist # for the 'menuselect' keymap
 # Just execute the command when selecting from a menu and pressing <enter>.
