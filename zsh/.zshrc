@@ -260,6 +260,7 @@ alias smacp='s macp'
 # (useful for starting GUI apps as standalones, without arguments).
 alias -g D='& disown'
 alias -g L='| less'
+alias -g C='| copy-clipboard.sh'
 
 # scp alternative, with a progress bar
 alias rsy='rsync -ahP --no-whole-file --inplace'
