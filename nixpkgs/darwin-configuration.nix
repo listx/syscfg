@@ -34,6 +34,7 @@ in
       ffmpeg
       findutils
       fzf
+      gawk
       gcal
       git
       gnugrep
