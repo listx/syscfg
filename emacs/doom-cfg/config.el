@@ -431,7 +431,6 @@ LINK-NAME."
 (after! org
   (add-hook 'org-mode-hook
             (lambda ()
-              (column-enforce-mode -1)
               (display-fill-column-indicator-mode 1)))
   (defun l/org-export-as-markdown-to-clipboard (include-parent-heading)
     "Like doom's +org/export-to-clipboard, but (1) always exports to markdown, (2)

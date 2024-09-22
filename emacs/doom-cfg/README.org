@@ -1480,7 +1480,7 @@ convention.
                  'l/org-export-md-scrub-invalid-links))
 
 (after! org
-  <<l/disable-column-enforce-mode>>
+  <<l/display-fill-column-indicator-mode>>
   <<l/org-export-as-markdown-to-clipboard>>
   ; Make calendars in agenda start on Monday.
   (setq calendar-week-start-day 1)
@@ -2870,24 +2870,15 @@ the same).
 
 *** Org
 
-**** Disable column-enforce-mode
+**** Enable display-fill-column-indicator-mode
 
-Disable column-enforce mode because we often have Org links (hyperlinks, etc)
-which are pretty-printed as shorter strings than they actually are, and it
-confuses column-enforce-mode. That is, column-enforce-mode may colorize a line
-as being too long when instead the line is well within the =fill-column= value
-as long as it is pretty-printed (which it always is, at least if we are using
-Emacs with Org mode turned on).
+Use =display-fill-column-indicator-mode= which draws a vertical line down the
+buffer (at the =fill-column=, which is typically 80, instead).
 
-So instead of column-enforce-mode, use =display-fill-column-indicator-mode=
-which draws a vertical line down the buffer (at the =fill-column=, which is
-typically 80, instead).
-
-#+name: l/disable-column-enforce-mode
+#+name: l/display-fill-column-indicator-mode
 #+begin_src emacs-lisp
 (add-hook 'org-mode-hook
           (lambda ()
-            (column-enforce-mode -1)
             (display-fill-column-indicator-mode 1)))
 #+end_src
 
