@@ -61,8 +61,8 @@ dir_info()
 
 	# If this is a git root directory, then show a list of all remotes.
 	if [[ -d .git ]]; then
-		git remote -v
 		echo
+		git remote -v
 	fi
 
 	# Add a blank line between us and the shell prompt for legibility.
