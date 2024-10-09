@@ -591,13 +591,21 @@ We remap Backspace and Space keys because they are by default aliases to =h= and
 #+begin_src emacs-lisp
 (map! :m "SPC" (cmd!! #'l/scroll-jump 10)
       :mn "DEL" (cmd!! #'l/scroll-jump -10))
-;(map! :m (apply 'l/char-mods 32 '(C M S)) (cmd!! #'l/scroll-jump 20))
 
 (defun l/scroll-jump (cnt)
   "Scroll by CNT lines."
   (interactive "p")
   (forward-line cnt)
   (evil-scroll-line-to-center nil))
+#+end_src
+
+***** Alternate way to map a binding with modifiers
+
+We can map C-M-S-SPACE with the following binding. This may be useful if
+"C-M-S-SPC" doesn't work using the usual key binding notation in Emacs.
+
+#+begin_src emacs-lisp
+(map! :m (apply 'l/char-mods 32 '(C M S)) (cmd!! #'l/scroll-jump 20))
 #+end_src
 
 **** Intra-buffer navigation

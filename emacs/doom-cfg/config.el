@@ -1014,7 +1014,6 @@ details."
 
 (map! :m "SPC" (cmd!! #'l/scroll-jump 10)
       :mn "DEL" (cmd!! #'l/scroll-jump -10))
-;(map! :m (apply 'l/char-mods 32 '(C M S)) (cmd!! #'l/scroll-jump 20))
 
 (defun l/scroll-jump (cnt)
   "Scroll by CNT lines."
