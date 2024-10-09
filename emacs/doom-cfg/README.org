@@ -50,7 +50,7 @@ DOOM requires 3 configuration files in the =$DOOMDIR=:
 
 * =$DOOMDIR/init.el=
 
-#+begin_src emacs-lisp :tangle init.el
+#+begin_src elisp :tangle init.el
 ;;; init.el -*- lexical-binding: t; -*-
 
 (doom! :input
@@ -159,7 +159,7 @@ WezTerm) send a special sequence (such as the =CSI u= scheme) and also make
 Emacs understand that sequence.
 
 #+name: leader-key
-#+begin_src emacs-lisp
+#+begin_src elisp
 (setq doom-leader-key ","
       doom-leader-alt-key "C-,"
       doom-localleader-key ", m"
@@ -175,7 +175,7 @@ still type a ~,~ to access the leader key after typing ~, u~).
 
 * =$DOOMDIR/packages.el=
 
-#+begin_src emacs-lisp :tangle packages.el
+#+begin_src elisp :tangle packages.el
 ;; -*- no-byte-compile: t; -*-
 ;;; $DOOMDIR/packages.el
 
@@ -249,7 +249,7 @@ sense. DOOM has its own =init.el= but that is another matter.
 Note that this file is pretty much **required** and acts as the base for all
 other configurations that are pulled in. And so we define it first here.
 
-#+begin_src emacs-lisp :tangle config.el
+#+begin_src elisp :tangle config.el
 ;;; $DOOMDIR/config.el -*- lexical-binding: t; -*-
 
 <<doom-bug-workarounds>>
@@ -329,7 +329,7 @@ other configurations that are pulled in. And so we define it first here.
 Here are some workarounds for upstream bugs that have not yet been fixed.
 
 #+name: doom-bug-workarounds
-#+begin_src emacs-lisp
+#+begin_src elisp
 #+end_src
 
 * Global key-bindings
@@ -345,7 +345,7 @@ https://invisible-island.net/xterm/ctlseqs/ctlseqs.html and search for
 ~modifyOtherKeys~.
 
 #+name: CSI-u-mode-support
-#+begin_src emacs-lisp
+#+begin_src elisp
 ;; Enable `CSI u` support. See https://emacs.stackexchange.com/a/59225.
 ;;
 ;; xterm with the resource ?.VT100.modifyOtherKeys: 1
@@ -438,7 +438,7 @@ https://invisible-island.net/xterm/ctlseqs/ctlseqs.html and search for
 *** Disambiguate typically-problematic keys
 
 #+name: disambiguate-problematic-keys
-#+begin_src emacs-lisp
+#+begin_src elisp
 (defun l/disambiguate-problematic-keys ()
   "This doesn't really do anything special other than just create placeholder
 bindings for as-yet-unbound keys (determined manually). If we don't do this then
@@ -563,7 +563,7 @@ Return an event vector."
 ** Point navigation
 
 #+name: point-navigation
-#+begin_src emacs-lisp
+#+begin_src elisp
 <<easy-esc>>
 <<visual-line-movement>>
 #+end_src
@@ -572,7 +572,7 @@ Return an event vector."
 
 Make =kj= behave as ESC key.
 #+name: easy-esc
-#+begin_src emacs-lisp
+#+begin_src elisp
 (use-package! evil-escape
   :config
   (setq evil-escape-key-sequence "kj"))
@@ -588,7 +588,7 @@ We remap Backspace and Space keys because they are by default aliases to =h= and
 =l= keys, respectively, making them redundant.
 
 #+name: navigation-buffer-intra
-#+begin_src emacs-lisp
+#+begin_src elisp
 (map! :m "SPC" (cmd!! #'l/scroll-jump 10)
       :mn "DEL" (cmd!! #'l/scroll-jump -10))
 
@@ -604,7 +604,7 @@ We remap Backspace and Space keys because they are by default aliases to =h= and
 We can map C-M-S-SPACE with the following binding. This may be useful if
 "C-M-S-SPC" doesn't work using the usual key binding notation in Emacs.
 
-#+begin_src emacs-lisp
+#+begin_src elisp
 (map! :m (apply 'l/char-mods 32 '(C M S)) (cmd!! #'l/scroll-jump 20))
 #+end_src
 
@@ -614,7 +614,7 @@ We remap H and L keys because they do almost-useless things (go to the top and
 bottom of the current window).
 
 #+name: navigation-buffer-inter
-#+begin_src emacs-lisp
+#+begin_src elisp
 (map! :m "H" #'previous-buffer
       :m "L" #'next-buffer)
 #+end_src
@@ -626,7 +626,7 @@ to evil-snipe-s because it can't hurt and we never use =S= in vanilla Vim
 anyway.
 
 #+name: remap-s
-#+begin_src emacs-lisp
+#+begin_src elisp
 (remove-hook 'doom-first-input-hook #'evil-snipe-mode)
 (map! :n "S" #'evil-snipe-s)
 #+end_src
@@ -634,7 +634,7 @@ anyway.
 *** Remap the "+help" function from ", h" to ", H"
 
 #+name: remap-leader-h
-#+begin_src emacs-lisp
+#+begin_src elisp
 (map! :leader :desc "help" "H" help-map)
 #+end_src
 
@@ -646,7 +646,7 @@ anyway.
 them here in a tweaked way.
 
 #+name: visual-line-movement
-#+begin_src emacs-lisp
+#+begin_src elisp
 (map! :after evil-org
       :map evil-org-mode-map
       :m "gk" #'evil-previous-visual-line
@@ -662,7 +662,7 @@ need to refer to it by its map.
 See https://github.com/hlissner/doom-emacs/issues/4569#issuecomment-777861333.
 
 #+name: remap-leader-n
-#+begin_src emacs-lisp
+#+begin_src elisp
 (map! :leader
       :desc "notes"
       "N" doom-leader-notes-map)
@@ -691,7 +691,7 @@ everything else; having multiple daemons allows us to easily have different
 colors for each daemon instance.
 
 #+name: workspaces
-#+begin_src emacs-lisp
+#+begin_src elisp
 (map! :after evil-common
       :map evil-normal-state-map
       "C-n" #'+workspace:switch-next)
@@ -706,7 +706,7 @@ because we get a preview of what we want to paste, with fuzzy search).
 ** Window management
 
 #+name: window-management
-#+begin_src emacs-lisp
+#+begin_src elisp
 <<window-splits>>
 <<window-deletion>>
 <<window-navigation>>
@@ -718,7 +718,7 @@ Splitting windows happens so frequently that we put these bindings at the top
 level just after the leader key.
 
 #+name: window-splits
-#+begin_src emacs-lisp
+#+begin_src elisp
 (defun l/split-window-vertically ()
   "Split window verically."
   (interactive)
@@ -754,7 +754,7 @@ We used to use this to always split and rebalance. However in practice the need
 to rebalance does not arise that frequently because by default the initial split
 will be balanced.
 
-#+begin_src emacs-lisp
+#+begin_src elisp
 (defun l/split-vertically ()
   "Split window verically."
   (interactive)
@@ -776,7 +776,7 @@ We take care to tread around so-called "auxiliary" buffers, which are
 auto-generated buffers from various emacs modes/packages.
 
 #+name: window-deletion
-#+begin_src emacs-lisp
+#+begin_src elisp
 (map! :leader
       :desc "quit/session" "Q" doom-leader-quit/session-map
       :desc "l/quit-buffer" "q" #'l/quit-buffer)
@@ -913,7 +913,7 @@ otherwise, close current tab."
 Make ~C-{j,k}~ cycle through windows, and ~C-S-{j,k}~.
 
 #+name: window-navigation
-#+begin_src emacs-lisp
+#+begin_src elisp
 (map! :after evil-org
       :map evil-org-mode-map
       ;; The org lang module (doom's module) has some arcane bindings which we
@@ -936,7 +936,7 @@ Make ~C-{j,k}~ cycle through windows, and ~C-S-{j,k}~.
 ** Tabs
 
 #+name: tab-management
-#+begin_src emacs-lisp
+#+begin_src elisp
 <<tab-ui>>
 <<tab-navigation>>
 <<tab-creation>>
@@ -944,7 +944,7 @@ Make ~C-{j,k}~ cycle through windows, and ~C-S-{j,k}~.
 
 *** UI
 #+name: tab-ui
-#+begin_src emacs-lisp
+#+begin_src elisp
 (setq tab-bar-show t
       tab-bar-new-button-show nil
       tab-bar-close-button-show nil
@@ -981,7 +981,7 @@ denoting days in the past. We use =[YESTERDAY]= and =[TOMORROW]= as aliases for
 =[-1]= and =[+1]=, respectively.
 
 #+name: l/get-stylized-buffer-name
-#+begin_src emacs-lisp
+#+begin_src elisp
 (defun l/get-stylized-buffer-name (buffer)
   "Return a stylized buffer name."
   (interactive)
@@ -1018,13 +1018,13 @@ that we don't accidentally close a tab with a bunch of window splits, which can
 be laborious to reconstruct.
 
 #+name: tab-creation
-#+begin_src emacs-lisp
+#+begin_src elisp
 (map! :leader :desc "tab-new" "n" (cmd!! #'tab-bar-new-tab 1))
 #+end_src
 
 *** Navigation
 #+name: tab-navigation
-#+begin_src emacs-lisp
+#+begin_src elisp
 (map! :after evil-org
       :map evil-org-mode-map
       :ni "C-S-h" nil
@@ -1037,7 +1037,7 @@ be laborious to reconstruct.
 ** Buffer management
 
 #+name: buffer-management
-#+begin_src emacs-lisp
+#+begin_src elisp
 <<save-buffer>>
 <<kill-buffer>>
 #+end_src
@@ -1045,7 +1045,7 @@ be laborious to reconstruct.
 *** Map ", w" to "save buffer"
 
 #+name: save-buffer
-#+begin_src emacs-lisp
+#+begin_src elisp
 (map! :leader :desc "window" "W" evil-window-map)
 (map! :leader :desc "save-buffer" "w" #'save-buffer)
 #+end_src
@@ -1053,7 +1053,7 @@ be laborious to reconstruct.
 *** Kill buffers
 
 #+name: kill-buffer
-#+begin_src emacs-lisp
+#+begin_src elisp
 (map! :leader :desc "kill-buffer" "d" #'l/kill-this-buffer)
 (map! :leader :desc "kill-buffer!" "D" #'l/kill-this-buffer!)
 (defun l/kill-this-buffer ()
@@ -1073,7 +1073,7 @@ be laborious to reconstruct.
 * Editing
 
 #+name: editing
-#+begin_src emacs-lisp
+#+begin_src elisp
 (map! :mi "C-o" #'l/insert-newline-below
       :mi "C-S-o" #'l/insert-newline-above)
 
@@ -1100,7 +1100,7 @@ directly. The main trick is to use base64 encoding so that we can pass in
 arbitrary bytes via STDIN for the script.
 
 #+name: copy-to-clipboard
-#+begin_src emacs-lisp
+#+begin_src elisp
 (defun l/copy-to-clipboard (orig-fun string)
   "Copy killed text or region into the system clipboard, by shelling out to a
 script which knows what to do depending on the environment."
@@ -1117,7 +1117,7 @@ script which knows what to do depending on the environment."
 * Code
 
 #+name: code
-#+begin_src emacs-lisp
+#+begin_src elisp
 (map! :after flycheck
       :leader :desc "flycheck" "F" flycheck-command-map)
 (map! :after flycheck
@@ -1146,7 +1146,7 @@ project, although it has a =.clang-format=
 as a reference and the rules there are not actually enforced for existing code.
 
 #+name: format-onsave
-#+begin_src emacs-lisp
+#+begin_src elisp
 (defvar l/c-like-modes '(c-mode))
 (defvar l/banned-auto-format-dirs '("prog/git"))
 
@@ -1172,7 +1172,7 @@ as a reference and the rules there are not actually enforced for existing code.
 The default binding of ~C-x C-;~ is painful, so use ~,c,~ instead.
 
 #+name: comment
-#+begin_src emacs-lisp
+#+begin_src elisp
 (map! :after evil
       :leader
       :mnv "c," #'evilnc-comment-or-uncomment-lines)
@@ -1181,7 +1181,7 @@ The default binding of ~C-x C-;~ is painful, so use ~,c,~ instead.
 * Colors
 
 #+name: theme
-#+begin_src emacs-lisp
+#+begin_src elisp
 (use-package! doom-themes
   :config
   (advice-add 'doom-init-theme-h :after #'l/reset-faces)
@@ -1243,7 +1243,7 @@ dhall text <<< "./listColorsForEmacs.dhall ./themes/PastelDark.dhall"
 #+end_src
 
 #+name: colors
-#+begin_src emacs-lisp
+#+begin_src elisp
 <<colors-generated>>
 (defmacro l/custom-set-faces-matching! (regex &rest props)
   "Apply properties in bulk to all faces that match the regex."
@@ -1351,7 +1351,7 @@ dhall text <<< "./listColorsForEmacs.dhall ./themes/PastelDark.dhall"
 * Language Server Protocol (LSP)
 
 #+name: lsp
-#+begin_src emacs-lisp
+#+begin_src elisp
 (after! lsp-mode
   ;; Disable some cosmetics because of an annoying "Error processing message
   ;; (args-out-of-range ..." error that happens every time we eval a buffer.
@@ -1368,7 +1368,7 @@ dhall text <<< "./listColorsForEmacs.dhall ./themes/PastelDark.dhall"
 * Dired mode
 
 #+name: dired
-#+begin_src emacs-lisp
+#+begin_src elisp
 (map! :after dired
       :map dired-mode-map
       ;; "H" is by default bound to dired-do-hardlink.
@@ -1382,7 +1382,7 @@ dhall text <<< "./listColorsForEmacs.dhall ./themes/PastelDark.dhall"
 * Vertico
 
 #+name: vertico
-#+begin_src emacs-lisp
+#+begin_src elisp
 (after! vertico
   (map! :map vertico-map
          "S-DEL" #'l/vertico-directory-up))
@@ -1405,7 +1405,7 @@ function which we use in the =elisp:...= in our org-mode files don't work. They
 appear to be lazily loaded the first time we invoke =M-x consult-grep=.
 
 #+name: consult
-#+begin_src emacs-lisp
+#+begin_src elisp
 (require 'consult)
 #+end_src
 
@@ -1420,7 +1420,7 @@ Note that we have to use =M-J= to encode =M-S-j=. This appears to be Emacs
 convention.
 
 #+name: org
-#+begin_src emacs-lisp
+#+begin_src elisp
 (map! :after evil-org
       :map evil-org-mode-map
       ;; Remove conflicting bindings.
@@ -1559,7 +1559,7 @@ convention.
 ** l/org-insert-thing
 
 #+name: l/org-insert-thing
-#+begin_src emacs-lisp
+#+begin_src elisp
 (defun l/org-insert-thing ()
   "Insert the next thing, depending on context."
   (interactive)
@@ -1572,7 +1572,7 @@ convention.
 ** org-todo-keywords
 
 #+name: org-todo-keywords
-#+begin_src emacs-lisp
+#+begin_src elisp
 (setq org-todo-keywords
       '((sequence
          "TODO(t)"
@@ -1602,7 +1602,7 @@ convention.
 ** Scrub invalid links during Markdown export
 
 #+name: l/org-export-md-scrub-invalid-links
-#+begin_src emacs-lisp
+#+begin_src elisp
 ;; See https://emacs.stackexchange.com/a/22398/13006. Detect poorly-converted
 ;; links (those that have two or more parentheses, which can happen if we have
 ;; an elisp link).
@@ -1650,7 +1650,7 @@ LINK-NAME."
 ** Export to clipboard
 
 #+name: l/org-export-as-markdown-to-clipboard
-#+begin_src emacs-lisp
+#+begin_src elisp
 (defun l/org-export-as-markdown-to-clipboard (include-parent-heading)
   "Like doom's +org/export-to-clipboard, but (1) always exports to markdown, (2)
 always processes only the current subtree around point, and (3) pipes to a
@@ -1724,7 +1724,7 @@ interesting to see that doom has a slightly different version with
 ** Agenda
 
 #+name: org-agenda
-#+begin_src emacs-lisp
+#+begin_src elisp
 (map! :after evil-org-agenda
       :map evil-org-agenda-mode-map
       :mnv "C-k" nil
@@ -1834,7 +1834,7 @@ If you use "org" and don't want your org files in the default location below,
 change org-directory. It must be set before org loads!
 
 #+name: org-misc
-#+begin_src emacs-lisp
+#+begin_src elisp
 (setq org-directory
       (nth 0 (split-string (getenv "L_ORG_AGENDA_DIRS"))))
 ;; List of directories to use for agenda files. Each directory is searched
@@ -1871,7 +1871,7 @@ change org-directory. It must be set before org loads!
 Automatically insert newlines after 80 characters as we type.
 
 #+name: set-auto-fill-mode
-#+begin_src emacs-lisp
+#+begin_src elisp
 (add-hook 'org-mode-hook #'(lambda () (setq fill-column 80)))
 (add-hook 'org-mode-hook 'turn-on-auto-fill)
 #+end_src
@@ -1879,7 +1879,7 @@ Automatically insert newlines after 80 characters as we type.
 ** Wrappers for common operations
 
 #+name: org-wrappers
-#+begin_src emacs-lisp
+#+begin_src elisp
 (defun l/org-roam-open-node (&optional initial-input)
   "Search for org-roam nodes and open in a new tab."
   (interactive)
@@ -1918,7 +1918,7 @@ timestamp. This is useful for taking minute-by-minute notes or just adding
 notes-to-self in general.
 
 #+name: l/org-insert-timestamp-inactive
-#+begin_src emacs-lisp
+#+begin_src elisp
 (defun l/org-insert-timestamp-inactive ()
   (interactive)
   (org-time-stamp-inactive '(16)))
@@ -1932,7 +1932,7 @@ item as DONE. If we press ~C-c C-c~, then we can save a note explaining how/why
 the item was closed (useful!).
 
 #+name: org-mark-done-with-note
-#+begin_src emacs-lisp
+#+begin_src elisp
 (setq org-log-done 'note)
 #+end_src
 
@@ -1940,7 +1940,7 @@ Similarly, create a note whenever we reschedule or change the deadline of an
 item.
 
 #+name: org-mark-done-when-rescheduling
-#+begin_src emacs-lisp
+#+begin_src elisp
 (setq org-log-redeadline 'note)
 (setq org-log-reschedule 'note)
 #+end_src
@@ -1967,7 +1967,7 @@ the note.
 See https://emacs.stackexchange.com/a/81877/13006.
 
 #+name: closing-note-simplicity
-#+begin_src emacs-lisp
+#+begin_src elisp
 (defun l/org-log-note-buffer-empty-p ()
   "Is current buffer empty except for the boilerplate template at the top?"
   (eq (point-max) 85))
@@ -1990,7 +1990,7 @@ deprecates our reliance on =org-toggle-link-display= to examine the markup (as w
 generally only need to examine the markup for a single link).
 
 #+name: org-appear
-#+begin_src emacs-lisp
+#+begin_src elisp
 (use-package! org-appear
   :config
   ;; Hide emphasis markers (e.g., *foo*, /foo/, =foo=).
@@ -2048,7 +2048,7 @@ names. The table above was created by copying out the minibuffer area into an
 Org table.
 
 #+name: org-superstar
-#+begin_src emacs-lisp
+#+begin_src elisp
 (after! org-superstar
   ;; Custom bullets for heading bullets. We use the same symbol across all
   ;; levels (similar to default Org behavior of using '*' across all levels).
@@ -2082,7 +2082,7 @@ See https://christopherfin.com/emacs/programmer_priorities.html and
 https://github.com/harrybournis/org-fancy-priorities.
 
 #+name: org-fancy-priorities
-#+begin_src emacs-lisp
+#+begin_src elisp
 (after! (org org-fancy-priorities)
   (setq org-priority-highest 0
         org-priority-default 2
@@ -2108,7 +2108,7 @@ https://github.com/harrybournis/org-fancy-priorities.
 Automatically tangle Org files if it has =#+auto_tangle: t= in it.
 
 #+name: org-auto-tangle
-#+begin_src emacs-lisp
+#+begin_src elisp
 (use-package! org-auto-tangle
   :hook (org-mode . org-auto-tangle-mode))
 #+end_src
@@ -2122,13 +2122,13 @@ https://emacs.stackexchange.com/a/46992/13006.
 * Clojure
 
 #+name: clojure
-#+begin_src emacs-lisp
+#+begin_src elisp
 <<clojure-bindings>>
 <<clojure-preferences>>
 #+end_src
 
 #+name: clojure-bindings
-#+begin_src emacs-lisp
+#+begin_src elisp
 (map! :after cider
       :map cider-repl-mode-map
       ; Use M-{k,j} instead of M-{p,n} for cycling through history.
@@ -2146,7 +2146,7 @@ Choose =clojure-cli= if there are multiple build systems available and
 =cider-jack-in= doesn't know which one it should use.
 
 #+name: clojure-preferences
-#+begin_src emacs-lisp
+#+begin_src elisp
 (add-hook 'clojure-mode-hook 'l/customize-clojure-mode)
 (defun l/customize-clojure-mode ()
   (interactive)
@@ -2156,7 +2156,7 @@ Choose =clojure-cli= if there are multiple build systems available and
 * Elixir
 
 #+name: elixir
-#+begin_src emacs-lisp
+#+begin_src elisp
 (map! :after alchemist
       :map alchemist-mode-map
       :mnvi "C-k" nil
@@ -2171,7 +2171,7 @@ We use Linux Kernel style indentation with tabs understood to be 8 characters
 wide.
 
 #+name: c-indentation
-#+begin_src emacs-lisp
+#+begin_src elisp
 (add-hook 'c-mode-hook 'l/customize-c-mode)
 (defun l/customize-c-mode ()
   (interactive)
@@ -2183,7 +2183,7 @@ wide.
 ** Keybindings
 
 #+name: c-keybindings
-#+begin_src emacs-lisp
+#+begin_src elisp
 (map! :after ccls
       :map (c-mode-map c++-mode-map)
       :mnvi "C-h" nil
@@ -2197,7 +2197,7 @@ wide.
 Set indentation to 8.
 
 #+header: :noweb-ref makefile
-#+begin_src emacs-lisp
+#+begin_src elisp
 (defun l/set-tab-width-to-8 ()
   (interactive)
   (setq tab-width 8)
@@ -2212,7 +2212,7 @@ Set indentation to 8.
 * Notmuch
 
 #+name: notmuch
-#+begin_src emacs-lisp
+#+begin_src elisp
 (use-package! notmuch
   :config
   <<notmuch-hooks>>
@@ -2227,7 +2227,7 @@ Set indentation to 8.
 ** Disable useless minor modes during message composition
 
 #+name: notmuch-hooks
-#+begin_src emacs-lisp
+#+begin_src elisp
 (add-hook 'notmuch-message-mode-hook 'l/customize-notmuch-message-mode)
 (defun l/customize-notmuch-message-mode ()
   (interactive)
@@ -2239,7 +2239,7 @@ Set indentation to 8.
 ** Overwrite FROM field (sender)
 
 #+name: notmuch-overwrite-from
-#+begin_src emacs-lisp
+#+begin_src elisp
 (defun notmuch-mua-reply-guess-sender (orig-fun query-string &optional sender
                                                 reply-all duplicate)
   (let ((sender (or sender
@@ -2251,7 +2251,7 @@ Set indentation to 8.
 ** Remove conflicting bindings
 
 #+header: :noweb-ref notmuch-bindings
-#+begin_src emacs-lisp
+#+begin_src elisp
 (map! :after notmuch
       :map notmuch-show-mode-map
       :mnv "C-k" nil
@@ -2266,7 +2266,7 @@ Set indentation to 8.
 ** Additional bindings
 
 #+header: :noweb-ref notmuch-bindings
-#+begin_src emacs-lisp
+#+begin_src elisp
 (map! :after notmuch
       :map notmuch-show-mode-map
       ;; Swap "cr" and "cR". `notmuch-show-reply' is "reply all" and is the more
@@ -2280,7 +2280,7 @@ Set indentation to 8.
 ** Saved searches
 
 #+name: notmuch-saved-searches
-#+begin_src emacs-lisp
+#+begin_src elisp
 (setq notmuch-saved-searches
       '((:name "inbox"
          :query "tag:inbox"
@@ -2312,7 +2312,7 @@ This way we can use the default ~, m u~ binding to sync manually (and don't need
 to spam the cronjob so much).
 
 #+name: notmuch-sync
-#+begin_src emacs-lisp
+#+begin_src elisp
 (defun l/+notmuch-get-sync-command (orig-fun) "~/syscfg/script/mail-sync.sh")
 (advice-add '+notmuch-get-sync-command :around #'l/+notmuch-get-sync-command)
 #+end_src
@@ -2323,7 +2323,7 @@ Note that =lieer= uses a script called =gmi= (odd how it isn't just called
 =lieer=, but it is what it is).
 
 #+name: notmuch-send-email-with-lieer
-#+begin_src emacs-lisp
+#+begin_src elisp
 (setq sendmail-program "gmi")
 (setq message-sendmail-extra-arguments
       '("send" "--quiet" "-t" "-C" "~/mail/linusarver@gmail.com"))
@@ -2343,7 +2343,7 @@ See [[https://emacs.stackexchange.com/a/36279/13006][this post]] from 2017 which
 =default-directory=.
 
 #+name: notmuch-set-current-magit-directory
-#+begin_src emacs-lisp
+#+begin_src elisp
 (after! (notmuch magit)
   (add-hook 'notmuch-show-hook 'l/set-current-magit-directory))
 (defun l/set-current-magit-directory ()
@@ -2356,7 +2356,7 @@ See [[https://emacs.stackexchange.com/a/36279/13006][this post]] from 2017 which
 * Shell
 
 #+header: :noweb-ref shell
-#+begin_src emacs-lisp
+#+begin_src elisp
 (after! sh-script
   (set-formatter! 'shfmt
     '("shfmt"
@@ -2372,14 +2372,14 @@ See [[https://emacs.stackexchange.com/a/36279/13006][this post]] from 2017 which
 Set indentation to 8.
 
 #+header: :noweb-ref shell
-#+begin_src emacs-lisp
+#+begin_src elisp
 (add-hook 'sh-mode-hook #'l/set-tab-width-to-8)
 #+end_src
 
 * Org roam
 
 #+name: org-roam
-#+begin_src emacs-lisp
+#+begin_src elisp
 (map! :after org-roam
       :map org-roam-mode-map
       :mnvi "C-k" nil
@@ -2431,7 +2431,7 @@ Set indentation to 8.
 =type= here is the subdirectory underneath =org-roam-directory=.
 
 #+name: doom-org-roam
-#+begin_src emacs-lisp
+#+begin_src elisp
 (after! org-roam
   (setq
         org-roam-node-display-template
@@ -2445,7 +2445,7 @@ Set indentation to 8.
 The config was stolen from [[https://github.com/jokatzke/nixos-configuration/blob/1452a290f95a916a050668d2feb4660719d4cfa3/doom/config.el#L645-L698][here]].
 
 #+name: org-fc
-#+begin_src emacs-lisp
+#+begin_src elisp
 
 (use-package org-fc
   :after org
@@ -2498,7 +2498,7 @@ Hyperbole is a minor mode that can add implicit buttons (links) to existing text
 by recognizing special patterns. Turn it on globally.
 
 #+name: hyperbole
-#+begin_src emacs-lisp
+#+begin_src elisp
 (use-package! hyperbole
   :init
   (hyperbole-mode 1)
@@ -2513,7 +2513,7 @@ Adapted from [[https://www.beorgapp.com/blog/hyperbole-implicit-buttons/][this b
 in your environment the =L_JIRA_BASE_URL= environment variable.
 
 #+name: jira-ticket
-#+begin_src emacs-lisp
+#+begin_src elisp
 (let ((l/jira-base-url (getenv "L_JIRA_BASE_URL")))
   (when l/jira-base-url
     ;; Define action for button.
@@ -2536,7 +2536,7 @@ with a regex, and call =l/browse-jira-ticket= if we find a match. This is what
 =l/open-jira-ticket-at-point= does below.
 
 #+name: l/open-jira-ticket-at-point
-#+begin_src emacs-lisp
+#+begin_src elisp
 (defib l/open-jira-ticket-at-point ()
   "Get the Jira ticket identifier at point and load ticket in browser."
   (when-let ((regex "\\([A-Z]+-[0-9]+\\)")
@@ -2554,7 +2554,7 @@ Now, =l/browse-jira-ticket= just concatenates the ticket string with
 =l/jira-base-url=.
 
 #+name: l/browse-jira-ticket
-#+begin_src emacs-lisp
+#+begin_src elisp
 (defun l/browse-jira-ticket (ticket)
   "Open ticket in JIRA."
   (let ((url (concat l/jira-base-url ticket)))
@@ -2564,7 +2564,7 @@ Now, =l/browse-jira-ticket= just concatenates the ticket string with
 * Magit
 
 #+name: magit
-#+begin_src emacs-lisp
+#+begin_src elisp
 <<magit-bindings>>
 <<magit-set-repositories>>
 <<magit-commit-message-use-org-mode>>
@@ -2574,7 +2574,7 @@ Now, =l/browse-jira-ticket= just concatenates the ticket string with
 ** Rebind keys
 
 #+name: magit-bindings
-#+begin_src emacs-lisp
+#+begin_src elisp
 (map! :after magit
       :map magit-mode-map
       ;; Remap C-{j,k} bindings.
@@ -2594,7 +2594,7 @@ otherwise we get an error like "... starts with non-prefix key" when loading the
 config.
 
 #+header: :noweb-ref magit-enhanced-copy
-#+begin_src emacs-lisp
+#+begin_src elisp
 (map! :after magit
       :map global-map
       :leader
@@ -2618,7 +2618,7 @@ For the =file-url= mode, it copies a URL to the currently opened file (with an
 optional region).
 
 #+header: :noweb-ref magit-enhanced-copy
-#+begin_src emacs-lisp
+#+begin_src elisp
 (defun l/get-sha ()
   "Get Git SHA underneath point. Checks that the SHA is valid (that
 the object exists locally)."
@@ -2668,7 +2668,7 @@ the object exists locally)."
 ** Set repositories
 
 #+name: magit-set-repositories
-#+begin_src emacs-lisp
+#+begin_src elisp
 (after! magit
   (setq magit-repository-directories
       `(("~/prog" . 1)
@@ -2678,7 +2678,7 @@ the object exists locally)."
 ** Use Org-mode for commit message buffers
 
 #+name: magit-commit-message-use-org-mode
-#+begin_src emacs-lisp
+#+begin_src elisp
 (after! magit
   (setq git-commit-major-mode #'org-mode))
 #+end_src
@@ -2690,7 +2690,7 @@ Probably the biggest offender is =smartparens-mode=, which can slow down a lot i
 there are many parentheses around.
 
 #+header: :noweb-ref magit-commit-message-misc
-#+begin_src emacs-lisp
+#+begin_src elisp
 (defun l/git-commit-setup ()
   (interactive)
   (apheleia-mode -1)
@@ -2714,7 +2714,7 @@ Some functionality uses this to identify you, e.g. GPG configuration, email
 clients, file templates and snippets.
 
 #+name: name-and-email
-#+begin_src emacs-lisp
+#+begin_src elisp
 (setq user-full-name "Linus Arver"
       user-mail-address "linus@ucla.edu")
 #+end_src
@@ -2723,7 +2723,7 @@ This determines the style of line numbers in effect. If set to "nil", line
 numbers are disabled. For relative line numbers, set this to "relative".
 
 #+name: line-numbers
-#+begin_src emacs-lisp
+#+begin_src elisp
 (setq display-line-numbers-type nil)
 #+end_src
 
@@ -2732,7 +2732,7 @@ numbers are disabled. For relative line numbers, set this to "relative".
 In doom, the scratch buffer is persistent and can be visited with =, x=.
 
 #+name: scratch
-#+begin_src emacs-lisp
+#+begin_src elisp
 ;; Use text-mode for scratch buffer.
 (setq-default doom-scratch-initial-major-mode 'text-mode)
 #+end_src
@@ -2746,7 +2746,7 @@ around tabs/spaces out of the way. We could still enable kakapo-mode for some of
 the simpler modes that do not have a formatter, but for now we don't bother.
 
 #+name: kakapo
-#+begin_src emacs-lisp
+#+begin_src elisp
 (use-package! kakapo-mode
   :config
   (add-hook 'text-mode-hook #'kakapo-mode)
@@ -2759,7 +2759,7 @@ the simpler modes that do not have a formatter, but for now we don't bother.
 
 *** Describe face under point
 
-#+begin_src emacs-lisp
+#+begin_src elisp
 ;; From https://stackoverflow.com/a/1242366.
 (defun l/what-face (pos)
   (interactive "d")
@@ -2772,7 +2772,7 @@ the simpler modes that do not have a formatter, but for now we don't bother.
 ** UI
 
 #+name: misc-ui
-#+begin_src emacs-lisp
+#+begin_src elisp
 ;; Enable soft word-wrap almost everywhere (including elisp).
 (+global-word-wrap-mode +1)
 
@@ -2865,7 +2865,7 @@ unusable because it makes =emacsclient= get suspended as a background job,
 breaking the display completely in the process.
 
 #+name: known-emacs-bugs
-#+begin_src emacs-lisp
+#+begin_src elisp
 ;; Broken. See README.org for discussion.
 ;; (tty--set-output-buffer-size (* 128 1024))
 #+end_src
@@ -2884,7 +2884,7 @@ Use =display-fill-column-indicator-mode= which draws a vertical line down the
 buffer (at the =fill-column=, which is typically 80, instead).
 
 #+name: l/display-fill-column-indicator-mode
-#+begin_src emacs-lisp
+#+begin_src elisp
 (add-hook 'org-mode-hook
           (lambda ()
             (display-fill-column-indicator-mode 1)))
@@ -2905,7 +2905,7 @@ the contents of the entire buffer to the clipboard (but doesn't paste).
 ** Spelling
 
 #+name: spelling
-#+begin_src emacs-lisp
+#+begin_src elisp
 (setq
  spell-fu-directory "~/syscfg/emacs/spell-fu"
  ispell-library-directory "~/syscfg/emacs/spell-fu"
@@ -2939,7 +2939,7 @@ files are generated automatically.
 *** Ignore additional faces
 
 #+name: spell-ignore-addtional-faces
-#+begin_src emacs-lisp
+#+begin_src elisp
 ;; Extra faces we want to avoid spellchecking for, grouped by major mode.
 (setq l/spell-excluded-faces-alist
   '(;; This mode is empty, but it's good to have it still to make it easier to
