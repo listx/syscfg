@@ -994,6 +994,10 @@ details."
       (format "--language-dialect=%s"
        (pcase sh-shell (`bash "bash") (`mksh "mksh") (_ "posix"))))))
 (add-hook 'sh-mode-hook #'l/set-tab-width-to-8)
+(add-hook 'text-mode-hook
+          (lambda ()
+            (turn-on-auto-fill)
+            (display-fill-column-indicator-mode 1)))
 
 (setq display-line-numbers-type nil)
 

@@ -272,6 +272,7 @@ other configurations that are pulled in. And so we define it first here.
 <<makefile>>
 <<format-onsave>>
 <<shell>>
+<<text>>
 
 <<line-numbers>>
 
@@ -2374,6 +2375,16 @@ Set indentation to 8.
 #+header: :noweb-ref shell
 #+begin_src elisp
 (add-hook 'sh-mode-hook #'l/set-tab-width-to-8)
+#+end_src
+
+* Text
+
+#+header: :noweb-ref text
+#+begin_src elisp
+(add-hook 'text-mode-hook
+          (lambda ()
+            (turn-on-auto-fill)
+            (display-fill-column-indicator-mode 1)))
 #+end_src
 
 * Org roam
