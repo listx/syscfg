@@ -1565,7 +1565,7 @@ Also add the number of windows in the window configuration."
   :config
   (advice-add 'doom-init-theme-h :after #'l/reset-faces)
   (cond
-   ((string= "lo" (daemonp))
+   ((string= "l" (daemonp))
     (load-theme 'doom-one t))
    (t
     (load-theme 'doom-zenburn t))))
