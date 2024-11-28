@@ -2572,7 +2572,7 @@ Now, =l/browse-jira-ticket= just concatenates the ticket string with
     (browse-url-default-browser url)))
 #+end_src
 
-* Magit
+* Magit (and other Git-related things)
 
 #+name: magit
 #+begin_src elisp
@@ -2580,6 +2580,7 @@ Now, =l/browse-jira-ticket= just concatenates the ticket string with
 <<magit-set-repositories>>
 <<magit-commit-message-use-org-mode>>
 <<magit-commit-message-misc>>
+<<git-gutter>>
 #+end_src
 
 ** Rebind keys
@@ -2610,6 +2611,7 @@ config.
       :map global-map
       :leader
       :prefix ("g" . "git")
+      <<git-gutter-bindings>>
       ;; Unbind the existing key.
       "y" nil
       (:prefix
@@ -2717,6 +2719,46 @@ there are many parentheses around.
   (add-hook 'git-commit-setup-hook #'l/git-commit-setup))
 #+end_src
 
+** Git gutter
+
+The "git-gutter" is a simple package, but it provides a huge quality of life
+improvement for everyday development.
+
+#+name: git-gutter
+#+begin_src elisp
+(defun l/git-gutter:next-hunk ()
+  (interactive)
+  (git-gutter:next-hunk 1)
+  (evil-scroll-line-to-center nil))
+(defun l/git-gutter:prev-hunk ()
+  (interactive)
+  (git-gutter:previous-hunk 1)
+  (evil-scroll-line-to-center nil))
+
+(use-package! git-gutter
+  :config
+  ; Git diff +/- marks.
+  (global-git-gutter-mode +1)
+  ; Update the git-gutter automatically every second.
+  (setq git-gutter:update-interval 1)
+  (setq git-gutter:modified-sign "█")
+  (setq git-gutter:added-sign "█")
+  (setq git-gutter:deleted-sign "█"))
+#+end_src
+
+We add some bindings to make it easier to navigate to changed "hunks" (aka
+diffs).
+
+#+name: git-gutter-bindings
+#+begin_src elisp
+(:prefix
+ ("h" . "hunk")
+ (:desc "goto next hunk"     "n" #'l/git-gutter:next-hunk)
+ (:desc "goto previous hunk" "N" #'l/git-gutter:prev-hunk)
+ (:desc "revert hunk"        "r" #'git-gutter:revert-hunk)
+ (:desc "show hunk"          "s" #'git-gutter:popup-hunk))
+#+end_src
+
 * Misc settings
 
 ** Personal information
@@ -2817,36 +2859,6 @@ the simpler modes that do not have a formatter, but for now we don't bother.
 
 ; Enable the mouse in terminal Emacs
 (add-hook 'tty-setup-hook #'xterm-mouse-mode)
-
-(map! :after (git-gutter magit)
-      :map doom-leader-git-map
-      ; BUG: For some reason the "hunk" description does not show up in
-      ; which-key.
-      (:prefix-map ("h" . "hunk")
-       "n" #'l/git-gutter:next-hunk
-       "N" #'l/git-gutter:prev-hunk
-       "r" #'git-gutter:revert-hunk
-      ; "s" to mean "show hunk"
-       "s" #'git-gutter:popup-hunk))
-
-(defun l/git-gutter:next-hunk ()
-  (interactive)
-  (git-gutter:next-hunk 1)
-  (evil-scroll-line-to-center nil))
-(defun l/git-gutter:prev-hunk ()
-  (interactive)
-  (git-gutter:previous-hunk 1)
-  (evil-scroll-line-to-center nil))
-
-(use-package! git-gutter
-  :config
-  ; Git diff +/- marks.
-  (global-git-gutter-mode +1)
-  ; Update the git-gutter automatically every second.
-  (setq git-gutter:update-interval 1)
-  (setq git-gutter:modified-sign "█")
-  (setq git-gutter:added-sign "█")
-  (setq git-gutter:deleted-sign "█"))
 
 ;; Disable vertical bar cursor shape in terminal emacs.
 (setq evil-motion-state-cursor 'box)

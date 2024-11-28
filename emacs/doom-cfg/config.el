@@ -241,6 +241,12 @@ Return an event vector."
       :map global-map
       :leader
       :prefix ("g" . "git")
+      (:prefix
+       ("h" . "hunk")
+       (:desc "goto next hunk"     "n" #'l/git-gutter:next-hunk)
+       (:desc "goto previous hunk" "N" #'l/git-gutter:prev-hunk)
+       (:desc "revert hunk"        "r" #'git-gutter:revert-hunk)
+       (:desc "show hunk"          "s" #'git-gutter:popup-hunk))
       ;; Unbind the existing key.
       "y" nil
       (:prefix
@@ -313,6 +319,24 @@ the object exists locally)."
   (yas-minor-mode -1))
 (after! magit
   (add-hook 'git-commit-setup-hook #'l/git-commit-setup))
+(defun l/git-gutter:next-hunk ()
+  (interactive)
+  (git-gutter:next-hunk 1)
+  (evil-scroll-line-to-center nil))
+(defun l/git-gutter:prev-hunk ()
+  (interactive)
+  (git-gutter:previous-hunk 1)
+  (evil-scroll-line-to-center nil))
+
+(use-package! git-gutter
+  :config
+  ; Git diff +/- marks.
+  (global-git-gutter-mode +1)
+  ; Update the git-gutter automatically every second.
+  (setq git-gutter:update-interval 1)
+  (setq git-gutter:modified-sign "█")
+  (setq git-gutter:added-sign "█")
+  (setq git-gutter:deleted-sign "█"))
 (map! :after evil-org
       :map evil-org-mode-map
       ;; Remove conflicting bindings.
@@ -1572,36 +1596,6 @@ Also add the number of windows in the window configuration."
 
 ; Enable the mouse in terminal Emacs
 (add-hook 'tty-setup-hook #'xterm-mouse-mode)
-
-(map! :after (git-gutter magit)
-      :map doom-leader-git-map
-      ; BUG: For some reason the "hunk" description does not show up in
-      ; which-key.
-      (:prefix-map ("h" . "hunk")
-       "n" #'l/git-gutter:next-hunk
-       "N" #'l/git-gutter:prev-hunk
-       "r" #'git-gutter:revert-hunk
-      ; "s" to mean "show hunk"
-       "s" #'git-gutter:popup-hunk))
-
-(defun l/git-gutter:next-hunk ()
-  (interactive)
-  (git-gutter:next-hunk 1)
-  (evil-scroll-line-to-center nil))
-(defun l/git-gutter:prev-hunk ()
-  (interactive)
-  (git-gutter:previous-hunk 1)
-  (evil-scroll-line-to-center nil))
-
-(use-package! git-gutter
-  :config
-  ; Git diff +/- marks.
-  (global-git-gutter-mode +1)
-  ; Update the git-gutter automatically every second.
-  (setq git-gutter:update-interval 1)
-  (setq git-gutter:modified-sign "█")
-  (setq git-gutter:added-sign "█")
-  (setq git-gutter:deleted-sign "█"))
 
 ;; Disable vertical bar cursor shape in terminal emacs.
 (setq evil-motion-state-cursor 'box)
