@@ -247,6 +247,12 @@ Return an event vector."
        (:desc "goto previous hunk" "N" #'l/git-gutter:prev-hunk)
        (:desc "revert hunk"        "r" #'git-gutter:revert-hunk)
        (:desc "show hunk"          "s" #'git-gutter:popup-hunk))
+      (:desc "Update and push"
+             "u"
+             (cmd! (start-process-shell-command
+                    "update-and-push"
+                    nil
+                    "git add --update && git commit --message update && git push")))
       ;; Unbind the existing key.
       "y" nil
       (:prefix
