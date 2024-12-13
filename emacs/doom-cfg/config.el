@@ -665,6 +665,7 @@ LINK-NAME."
       (apply orig-fun nil)))
 
   (advice-add 'org-store-log-note :around #'l/org-store-log-note)
+  (add-hook 'org-mode-hook (lambda () (modify-syntax-entry ?= ".")))
   (add-hook 'org-mode-hook (lambda () (org-indent-mode -1)))
   (add-hook 'org-mode-hook 'l/org-colors))
 
