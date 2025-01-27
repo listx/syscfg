@@ -58,6 +58,12 @@ bind generic Y +bash -c "git show --no-patch --pretty=reference %(commit) \
 	| head -c -1 \
 	| ~/syscfg/script/copy-clipboard.sh"
 
+# Same as above, but as an Org-style link. <Esc>y means Alt+y (M-y in Emacs).
+bind generic <Esc>y +bash -c "git rev-parse %(commit) \
+	| head -c -1 \
+	| ~/syscfg/script/git/ref-to-org-link.sh \
+	| ~/syscfg/script/copy-clipboard.sh"
+
 # Copy commit message.
 bind generic <Ctrl-y> +bash -c "git cat-file commit %(commit) \
 	| sed -e '1,/^$/d' \
