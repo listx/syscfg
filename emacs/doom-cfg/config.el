@@ -732,7 +732,7 @@ LINK-NAME."
           (org-agenda-start-day "-15d")
           (org-agenda-start-with-log-mode '(closed clock state))
           (org-agenda-skip-function
-           ;; Skip unfinished entries.
+           ;; Skip entries that haven't been marked with any of "DONE" keywords.
            '(org-agenda-skip-entry-if 'nottodo 'done))))
         ("c" "Composite view"
          ;; We only show P0 TODO items if the have been scheduled, and their
