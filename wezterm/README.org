@@ -79,7 +79,6 @@ initial_rows = 102,
 
 #+name: font
 #+begin_src lua
-local hostname = wezterm.hostname()
 local my_font
 my_font = {
   -- These are also known as OpenType features. The "cv06" here is defined in
@@ -791,6 +790,7 @@ local CM = "CTRL|ALT"
 local CMS = "CTRL|ALT|SHIFT"
 local CS = "CTRL|SHIFT"
 local S = "SHIFT"
+local hostname = wezterm.hostname()
 
 local bind = function(key, mods, sequence)
   return {

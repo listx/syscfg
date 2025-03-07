@@ -8,6 +8,7 @@ local CM = "CTRL|ALT"
 local CMS = "CTRL|ALT|SHIFT"
 local CS = "CTRL|SHIFT"
 local S = "SHIFT"
+local hostname = wezterm.hostname()
 
 local bind = function(key, mods, sequence)
   return {
@@ -24,7 +25,6 @@ local merge = function(a, b)
     for k,v in pairs(b) do c[k] = v end
     return c
 end
-local hostname = wezterm.hostname()
 local my_font
 my_font = {
   -- These are also known as OpenType features. The "cv06" here is defined in
