@@ -17,7 +17,7 @@ local bind = function(key, mods, sequence)
     action = wezterm.action.SendString(sequence)
   }
 end
-local general_config = {
+local cfg = {
   enable_tab_bar = false,
   check_for_updates = false,
   audible_bell = "Disabled",
@@ -483,12 +483,12 @@ local general_config = {
 }
 
 if hostname == 'm0' then
-  general_config.font_size = 10
+  cfg.font_size = 10
 elseif hostname ~= 'k0' then
-  general_config.font = wezterm.font_with_fallback {
+  cfg.font = wezterm.font_with_fallback {
     "CommitMono"
   }
-  general_config.font_size = 16.0
+  cfg.font_size = 16.0
 end
 
-return general_config
+return cfg

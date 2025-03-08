@@ -7,14 +7,14 @@
 
 #+begin_src lua :tangle .wezterm.lua
 <<boilerplate>>
-local general_config = {
+local cfg = {
   <<appearance>>
   <<keybindings>>
 }
 
 <<font-by-host>>
 
-return general_config
+return cfg
 #+end_src
 
 * Appearance
@@ -98,12 +98,12 @@ Host-specific customisation.
 #+name: font-by-host
 #+begin_src lua
 if hostname == 'm0' then
-  general_config.font_size = 10
+  cfg.font_size = 10
 elseif hostname ~= 'k0' then
-  general_config.font = wezterm.font_with_fallback {
+  cfg.font = wezterm.font_with_fallback {
     "CommitMono"
   }
-  general_config.font_size = 16.0
+  cfg.font_size = 16.0
 end
 #+end_src
 
