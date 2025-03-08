@@ -7,13 +7,14 @@
 
 #+begin_src lua :tangle .wezterm.lua
 <<boilerplate>>
-<<font>>
 local general_config = {
   <<appearance>>
   <<keybindings>>
 }
 
-return merge(general_config, my_font)
+<<font-by-host>>
+
+return general_config
 #+end_src
 
 * Appearance
@@ -26,6 +27,7 @@ return merge(general_config, my_font)
 <<window-size>>
 <<colors>>
 <<cursor>>
+<<font>>
 #+end_src
 
 ** Disable tab bar
@@ -77,27 +79,31 @@ initial_rows = 102,
 
 ** Font
 
+Defaults.
+
 #+name: font
 #+begin_src lua
-local my_font
-my_font = {
-  -- These are also known as OpenType features. The "cv06" here is defined in
-  -- the font's website in the "Customize" section; it makes the "6" and "9"
-  -- numerals have a straight, not curved, tail.
-  harfbuzz_features = {"cv06=1"},
-  font = wezterm.font_with_fallback {
-    "Commit Mono"
-  },
-  font_size = 10.5,
-}
-if hostname ~= 'k0' then
-  my_font.font = wezterm.font_with_fallback {
+-- These are also known as OpenType features. The "cv06" here is defined in
+-- the font's website in the "Customize" section; it makes the "6" and "9"
+-- numerals have a straight, not curved, tail.
+harfbuzz_features = {"cv06=1"},
+font = wezterm.font_with_fallback {
+  "Commit Mono"
+},
+font_size = 10.5,
+#+end_src
+
+Host-specific customisation.
+
+#+name: font-by-host
+#+begin_src lua
+if hostname == 'm0' then
+  general_config.font_size = 10
+elseif hostname ~= 'k0' then
+  general_config.font = wezterm.font_with_fallback {
     "CommitMono"
   }
-  my_font.font_size = 16.0
-end
-if hostname == 'm0' then
-  my_font.font_size = 10
+  general_config.font_size = 16.0
 end
 #+end_src
 
@@ -798,13 +804,5 @@ local bind = function(key, mods, sequence)
     mods = mods,
     action = wezterm.action.SendString(sequence)
   }
-end
-
--- See https://stackoverflow.com/a/71433446/437583.
-local merge = function(a, b)
-    local c = {}
-    for k,v in pairs(a) do c[k] = v end
-    for k,v in pairs(b) do c[k] = v end
-    return c
 end
 #+end_src

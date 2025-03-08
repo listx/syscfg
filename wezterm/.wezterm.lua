@@ -17,34 +17,6 @@ local bind = function(key, mods, sequence)
     action = wezterm.action.SendString(sequence)
   }
 end
-
--- See https://stackoverflow.com/a/71433446/437583.
-local merge = function(a, b)
-    local c = {}
-    for k,v in pairs(a) do c[k] = v end
-    for k,v in pairs(b) do c[k] = v end
-    return c
-end
-local my_font
-my_font = {
-  -- These are also known as OpenType features. The "cv06" here is defined in
-  -- the font's website in the "Customize" section; it makes the "6" and "9"
-  -- numerals have a straight, not curved, tail.
-  harfbuzz_features = {"cv06=1"},
-  font = wezterm.font_with_fallback {
-    "Commit Mono"
-  },
-  font_size = 10.5,
-}
-if hostname ~= 'k0' then
-  my_font.font = wezterm.font_with_fallback {
-    "CommitMono"
-  }
-  my_font.font_size = 16.0
-end
-if hostname == 'm0' then
-  my_font.font_size = 10
-end
 local general_config = {
   enable_tab_bar = false,
   check_for_updates = false,
@@ -125,6 +97,14 @@ local general_config = {
     quick_select_match_fg = { Color = '#ffffff' },
   },
   cursor_blink_rate = 0,
+  -- These are also known as OpenType features. The "cv06" here is defined in
+  -- the font's website in the "Customize" section; it makes the "6" and "9"
+  -- numerals have a straight, not curved, tail.
+  harfbuzz_features = {"cv06=1"},
+  font = wezterm.font_with_fallback {
+    "Commit Mono"
+  },
+  font_size = 10.5,
   keys = {
     { key = "t", mods = "SUPER", action = act.DisableDefaultAssignment },
     { key = "y", mods = "SUPER", action = act.ActivateCopyMode },
@@ -502,4 +482,13 @@ local general_config = {
   },
 }
 
-return merge(general_config, my_font)
+if hostname == 'm0' then
+  general_config.font_size = 10
+elseif hostname ~= 'k0' then
+  general_config.font = wezterm.font_with_fallback {
+    "CommitMono"
+  }
+  general_config.font_size = 16.0
+end
+
+return general_config
