@@ -295,7 +295,7 @@ alias agi="sudo apt-get install"
 alias agr="sudo apt-get remove"
 alias acs="apt_cache_search"
 
-alias cal='gcal --starting-day=1 --calendar-dates=both --with-week-number --iso-week-number=yes .+'
+alias cal='gcal --starting-day=1 --with-week-number --iso-week-number=yes .'
 
 # Use python3 by default (python2 is EOL as of 2020)
 alias python=python3
