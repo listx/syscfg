@@ -1537,6 +1537,7 @@ convention.
                                           (delete-trailing-whitespace)
                                           (save-buffer)))
   <<closing-note-simplicity>>
+  <<org-id-link-to-org-use-id>>
   (add-hook 'org-mode-hook (lambda () (modify-syntax-entry ?= ".")))
   (add-hook 'org-mode-hook (lambda () (org-indent-mode -1)))
   (add-hook 'org-mode-hook 'l/org-colors))
@@ -2113,6 +2114,16 @@ Automatically tangle Org files if it has =#+auto_tangle: t= in it.
 #+begin_src elisp
 (use-package! org-auto-tangle
   :hook (org-mode . org-auto-tangle-mode))
+#+end_src
+
+** org-id-link-to-org-use-id
+
+Make Org use the IDs when running =org-insert-link=. See
+https://emacs.stackexchange.com/questions/64222/insert-link-to-a-heading-with-id.
+
+#+name: org-id-link-to-org-use-id
+#+begin_src elisp
+(setq org-id-link-to-org-use-id t)
 #+end_src
 
 ** Notes
