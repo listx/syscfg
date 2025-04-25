@@ -3,6 +3,8 @@
 let
   melby-release = import "${HOME}/prog/melby/package/build.nix";
   HOME = builtins.getEnv "HOME";
+  baseconfig = { allowUnfree = true; };
+  unstable = import <nixpkgs-unstable> { config = baseconfig; };
 in
 {
   nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
@@ -29,7 +31,8 @@ in
       difftastic
       dos2unix
       editorconfig-core-c
-      emacs
+      # Emacs is broken on Sequoia 15.4. See https://github.com/NixOS/nixpkgs/issues/395169#issuecomment-2769619888.
+      (emacs.override { withNativeCompilation = false; })
       fd
       ffmpeg
       findutils
@@ -46,7 +49,7 @@ in
       htop
       inkscape
       jq
-      jujutsu
+      unstable.jujutsu
       less
       lieer
       melby-release.melby-daemon
@@ -123,7 +126,6 @@ in
   # Disable default "walters" prompt, which adds an annoying green PWD string at the far right hand side of the terminal.
   programs.zsh.promptInit = "";
 
-  environment.loginShell = "${pkgs.zsh}/bin/zsh -l";
   environment.variables.SHELL = "${pkgs.zsh}/bin/zsh";
   environment.variables.LANG = "en_US.UTF-8";
 }
