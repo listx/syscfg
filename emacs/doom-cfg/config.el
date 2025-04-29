@@ -1054,8 +1054,11 @@ details."
 (defun l/scroll-jump (cnt)
   "Scroll by CNT lines."
   (interactive "p")
-  (forward-line cnt)
-  (evil-scroll-line-to-center nil))
+  (if (> 0 cnt)
+      (progn (evil-scroll-line-up (abs cnt))
+             (evil-previous-line (abs cnt)))
+      (progn (evil-scroll-line-down cnt)
+             (evil-next-line cnt))))
 (map! :m "H" #'previous-buffer
       :m "L" #'next-buffer)
 (after! vertico
