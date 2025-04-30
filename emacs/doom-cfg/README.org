@@ -2166,6 +2166,7 @@ Choose =clojure-cli= if there are multiple build systems available and
 (add-hook 'clojure-mode-hook 'l/customize-clojure-mode)
 (defun l/customize-clojure-mode ()
   (interactive)
+  (auto-fill-mode 1)
   (setq cider-preferred-build-tool 'clojure-cli))
 #+end_src
 

@@ -975,6 +975,7 @@ details."
 (add-hook 'clojure-mode-hook 'l/customize-clojure-mode)
 (defun l/customize-clojure-mode ()
   (interactive)
+  (auto-fill-mode 1)
   (setq cider-preferred-build-tool 'clojure-cli))
 (add-hook 'c-mode-hook 'l/customize-c-mode)
 (defun l/customize-c-mode ()
