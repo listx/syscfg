@@ -666,6 +666,7 @@ LINK-NAME."
 
   (advice-add 'org-store-log-note :around #'l/org-store-log-note)
   (setq org-id-link-to-org-use-id t)
+  (setq org-id-link-consider-parent-id t)
   (add-hook 'org-mode-hook (lambda () (modify-syntax-entry ?= ".")))
   (add-hook 'org-mode-hook (lambda () (org-indent-mode -1)))
   (add-hook 'org-mode-hook 'l/org-colors))
