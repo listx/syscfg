@@ -339,7 +339,7 @@ example).
 
 #+header: :noweb-ref keybindings-insert-mode
 #+begin_src conf
-bind-key -T virt         C-M-m      next-layout \; set key-table root
+bind-key -T root         C-M-m      next-layout
 #+end_src
 
 ** "Normal" mode bindings (=prefix= key-table)

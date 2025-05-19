@@ -262,7 +262,7 @@ local cfg = {
     bind("j", CM, "\x1b\x0a"),
     bind("k", CM, "\x1b\x0b"),
     bind("l", CM, "\x1b\x0c"),
-    bind("m", CM, "\x1b[24~\x1b\x0d"),
+    bind("m", CM, "\x1b[109;7u"),
     bind("n", CM, "\x1b\x0e"),
     bind("o", CM, "\x1b\x0f"),
     bind("p", CM, "\x1b\x10"),
