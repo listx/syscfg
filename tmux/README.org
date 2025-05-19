@@ -284,7 +284,7 @@ vertically.
 #+header: :noweb-ref keybindings-insert-mode
 #+begin_src conf
 bind-key -T root         C-M-e      split-window -c "#{pane_current_path}"
-bind-key -T virt         C-M-S-e    split-window -h -c "#{pane_current_path}" \; set key-table root
+bind-key -T root         C-M-S-e    split-window -h -c "#{pane_current_path}"
 #+end_src
 
 Use ~C-M-{j,k}~ to switch to the next/previous panes. The cryptic commands (":.+"
@@ -302,8 +302,8 @@ Move the current pane up/down inside the current window.
 
 #+header: :noweb-ref keybindings-insert-mode
 #+begin_src conf
-bind-key -T virt         C-M-S-j    swap-pane -Z -D \; set key-table root
-bind-key -T virt         C-M-S-k    swap-pane -Z -U \; set key-table root
+bind-key -T root         C-M-S-j    swap-pane -Z -D
+bind-key -T root         C-M-S-k    swap-pane -Z -U
 #+end_src
 
 Move the current pane to the window on the left or right. Note that this
@@ -313,11 +313,11 @@ moving the entire window (with all of its panes) over to the left/right.
 
 #+header: :noweb-ref keybindings-insert-mode
 #+begin_src conf
-bind-key -T virt         C-M-S-h  run-shell '~/syscfg/script/tmux_move_pane.sh \
+bind-key -T root         C-M-S-h  run-shell '~/syscfg/script/tmux_move_pane.sh \
 	"#{session_name}" \
 	"#{window_index}" \
 	"LEFT"'
-bind-key -T virt         C-M-S-l  run-shell '~/syscfg/script/tmux_move_pane.sh \
+bind-key -T root         C-M-S-l  run-shell '~/syscfg/script/tmux_move_pane.sh \
 	"#{session_name}" \
 	"#{window_index}" \
 	"RIGHT"'
@@ -330,7 +330,7 @@ This can be done to undo the effect of ~C-M-S-h~, to an extent.
 
 #+header: :noweb-ref keybindings-insert-mode
 #+begin_src conf
-bind-key -T virt         C-M-S-o    break-pane -a -t : \; set key-table root
+bind-key -T root         C-M-S-o    break-pane -a -t : \; set key-table root
 #+end_src
 
 Change the layout of the panes. This is useful for converting horizontal splits
@@ -716,8 +716,6 @@ Special handling of ~i~ to avoid conflicting with ~TAB~.
 #+header: :noweb-ref keybindings-insert-mode
 #+begin_src conf
 bind-key -T virt         C-i        if-shell -F $EMACSLIKE "send-keys Escape '[105;5u'" "send-keys -H 09" \; set key-table root
-bind-key -T virt         C-M-i      send-keys Escape "[105;7u" \; set key-table root
-bind-key -T virt         C-M-S-i    send-keys Escape "[105;8u" \; set key-table root
 #+end_src
 
 **** Enter (RET)
@@ -745,7 +743,6 @@ Special handling of "m" to avoid conflicting with Enter key.
 #+header: :noweb-ref keybindings-insert-mode
 #+begin_src conf
 bind-key -T virt         C-m        if-shell -F $EMACSLIKE "send-keys Escape '[109;5u'" "send-keys -H 0d" \; set key-table root
-bind-key -T virt         C-M-S-m    send-keys Escape "[109;8u" \; set key-table root
 #+end_src
 
 **** Backspace
