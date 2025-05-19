@@ -197,7 +197,6 @@ Vi.[fn:modal-tmux] The table below maps the key-tables to their modes:
 | root           | insert        | <I>               | yes     |
 | prefix         | normal        | <N>               | no      |
 | copy-mode      | visual        | <V>               | yes     |
-| virt           | N/A           | <virt>            | no      |
 | passthrough    | N/A           | <P>               | yes     |
 
 We display the current key-table with [[file:~/syscfg/script/tmux_get_status.sh][this bash script]] on the status bar. This
@@ -214,35 +213,9 @@ mode (=prefix= key-table). We treat =copy-mode= as Vim's visual selection mode,
 because the similarities are striking, at least with the additional
 customizations we have.
 
-The other modes virt and passthrough are there to address some shortcomings with
-tmux.
-
-** <<<virt>>> mode
-
-This key-table exists to deal with cases where =tmux= is unable to distinguish
-between two different keys. One such combination is ~C-i~ and ~TAB~. That is, by
-default, if you press either of these keys in WezTerm, although WezTerm sees
-these as two different keybindings, =tmux= only sees ~C-i~. To get around this, we
-make ~C-i~ enter the =virt= key-table by making WezTerm send ~F12~ (this key turns on
-the =virt= key-table in =tmux=), and then we are free to make some additional logic
-that only gets triggered for ~C-i~ (vs ~TAB~ which doesn't use the =virt= key-table).
-
-Another combination is shifted and unshifted keys (e.g., ~C-M-e~ vs ~C-M-S-e~). From
-WezTerm, for all keys with ~C-M-S-~ we first send the ~F12~ key to enter the virt
-key-table.
-
-Entering and leaving the =virt= key-table is simple --- just press ~F12~.
-
-#+header: :noweb-ref keybindings
-#+begin_src conf
-bind-key -T root         F12        set key-table virt
-bind-key -T virt         F12        set key-table root
-#+end_src
-
-This mode is only meant to be designed as a thin layer to be entered and exited
-automatically by our bindings. That is, it is not "sticky" and normally we
-wouldn't have this mode as our active key-table (unless we wanted to debug our
-bindings involving this mode).
+The passthrough mode allows us to work with nested tmux sessions more easily
+without hitting ~C-b~ twice every time we want to manipulate the inner tmux
+session.
 
 ** "Insert" mode bindings (=root= key-table)
 
@@ -522,8 +495,6 @@ Also, ~C-#~ is allowed (notice that it is not defined as ~C-S-3~), but ~C-$~ is 
 allowed and we have to use ~C-S-4~ (this is a cosmetic oddity for our
 configuration and does not materially affect us).
 
-To get around some of tmux's quirks, we have to use a virt key-table.
-
 *** Control+Shift and letters
 
 #+header: :noweb-ref keybindings-insert-mode
@@ -711,25 +682,11 @@ bind-key -T root         C-M-Tab    send-keys Escape "[9;7u"
 bind-key -T root         C-M-S-Tab  send-keys Escape "[9;8u"
 #+end_src
 
-Special handling of ~i~ to avoid conflicting with ~TAB~.
-
-#+header: :noweb-ref keybindings-insert-mode
-#+begin_src conf
-bind-key -T virt         C-i        if-shell -F $EMACSLIKE "send-keys Escape '[105;5u'" "send-keys -H 09" \; set key-table root
-#+end_src
-
 **** Enter (RET)
 
-NOTE: tmux has a [[https://github.com/tmux/tmux/issues/2705][regression]] regarding CSI-u support. This is why we
-use code 13 (\r) instead of 10 (\n) for ~RET~, because \r does not collide with
-~C-j~.
-
-For ~S-RET~, we send ~F12 C-z~ from WezTerm, which means ~C-z~ (=0x1a=) from the virt
-key-table.
-
 #+header: :noweb-ref keybindings-insert-mode
 #+begin_src conf
-bind-key -T virt         C-z         send-keys Escape "[13;2u" \; set key-table root
+bind-key -T root         S-Enter     send-keys Escape "[13;2u"
 bind-key -T root         M-Enter     send-keys Escape "[13;3u"
 bind-key -T root         M-S-Enter   send-keys Escape "[13;4u"
 bind-key -T root         C-Enter     send-keys Escape "[13;5u"
@@ -738,21 +695,20 @@ bind-key -T root         C-M-Enter   send-keys Escape "[13;7u"
 bind-key -T root         C-M-S-Enter send-keys Escape "[13;8u"
 #+end_src
 
-Special handling of "m" to avoid conflicting with Enter key.
+Special handling of "m" to avoid conflicting with Enter key. Only let Emacs
+handle the CSI-u binding of "C-m". For other applications, just send the usual
+"ENTER" key because they might not know how to deal with this.
 
 #+header: :noweb-ref keybindings-insert-mode
 #+begin_src conf
-bind-key -T virt         C-m        if-shell -F $EMACSLIKE "send-keys Escape '[109;5u'" "send-keys -H 0d" \; set key-table root
+bind-key -T root         C-m        if-shell -F $EMACSLIKE "send-keys Escape '[109;5u'" "send-keys -H 0d"
 #+end_src
 
 **** Backspace
 
-If memory serves, we use ~C-y~ in the virt key-table because we already used ~C-z~
-for ~S-RET~ (we decided to use ~C-z~ for ~S-RET~ because it's)
-
 #+header: :noweb-ref keybindings-insert-mode
 #+begin_src conf
-bind-key -T virt         C-y          if-shell -F $EMACSLIKE "send-keys Escape '[127;2u'" "send-keys BSpace" \; set key-table root
+bind-key -T root         S-BSpace     send-keys Escape "[127;2u"
 bind-key -T root         M-BSpace     send-keys Escape "[127;3u"
 bind-key -T root         M-S-BSpace   send-keys Escape "[127;4u"
 bind-key -T root         C-BSpace     send-keys Escape "[127;5u"
@@ -777,43 +733,6 @@ bind-key -T root         C-M-Space   send-keys Escape "[32;7u"
 bind-key -T root         C-M-S-Space send-keys Escape "[32;8u"
 #+end_src
 
-**** Escape
-
-Special handling of "Escape" to avoid conflicting with itself.
-
-#+header: :noweb-ref keybindings-insert-mode
-#+begin_src conf
-bind-key -T virt         C-]         send-keys Escape "[27;2u" \; set key-table root  # S-ESC
-bind-key -T virt         C-^         send-keys Escape "[27;3u" \; set key-table root  # M-ESC
-bind-key -T virt         C-_         send-keys Escape "[27;4u" \; set key-table root  # M-S-ESC
-bind-key -T virt         C-Escape     send-keys Escape "[27;5u" \; set key-table root
-bind-key -T virt         C-S-Escape   send-keys Escape "[27;6u" \; set key-table root
-bind-key -T virt         C-M-Escape   send-keys Escape "[27;7u" \; set key-table root
-bind-key -T virt         C-M-S-Escape send-keys Escape "[27;8u" \; set key-table root
-#+end_src
-
-Special handling of ~[~ to avoid conflicting with Escape key.
-
-#+header: :noweb-ref keybindings-insert-mode
-#+begin_src conf
-bind-key -T virt         M-[        send-keys Escape "[91;3u" \; set key-table root
-bind-key -T virt         M-S-[      send-keys Escape "[91;4u" \; set key-table root
-bind-key -T virt         C-[        send-keys Escape "[91;5u" \; set key-table root
-bind-key -T virt         C-S-[      send-keys Escape "[91;6u" \; set key-table root
-bind-key -T virt         C-M-[      send-keys Escape "[91;7u" \; set key-table root
-bind-key -T virt         C-M-S-[    send-keys Escape "[91;8u" \; set key-table root
-#+end_src
-
-**** Other
-
-Special handling of ~C-@~ to map it to something other than the traditional NUL
-(=\x00=) byte.
-
-#+header: :noweb-ref keybindings-insert-mode
-#+begin_src conf
-bind-key -T virt         C-@        send-keys Escape "[64;5u" \; set key-table root
-#+end_src
-
 ** <<<passthrough>>> mode
 
 The sole point of this mode is to allow us to avoid typing in ~C-b~ twice to
@@ -835,7 +754,7 @@ keys pressed with Control or Control+Shift modifiers. This is why we have to
 explicitly tell tmux to relay those troublesome keys while passthrough mode is
 active.
 
-Unlike virt mode, we /do/ want this mode to be sticky. Entering and leaving this
+We want this mode to be sticky. Entering and leaving this
 mode can be done with ~C-M-b~. Once passthrough mode is active, we can freely use
 our existing "insert" mode bindings directly on the nested tmux session.
 

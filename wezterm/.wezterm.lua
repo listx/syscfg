@@ -146,84 +146,84 @@ local cfg = {
         end),
       },
     },
-    bind("a", M, "\x1ba"),
-    bind("b", M, "\x1bb"),
-    bind("c", M, "\x1bc"),
-    bind("d", M, "\x1bd"),
-    bind("e", M, "\x1be"),
-    bind("f", M, "\x1bf"),
-    bind("g", M, "\x1bg"),
-    bind("h", M, "\x1bh"),
-    bind("i", M, "\x1bi"),
-    bind("j", M, "\x1bj"),
-    bind("k", M, "\x1bk"),
-    bind("l", M, "\x1bl"),
-    bind("m", M, "\x1bm"),
-    bind("n", M, "\x1bn"),
-    bind("o", M, "\x1bo"),
-    bind("p", M, "\x1bp"),
-    bind("q", M, "\x1bq"),
-    bind("r", M, "\x1br"),
-    bind("s", M, "\x1bs"),
-    bind("t", M, "\x1bt"),
-    bind("u", M, "\x1bu"),
-    bind("v", M, "\x1bv"),
-    bind("w", M, "\x1bw"),
-    bind("x", M, "\x1bx"),
-    bind("y", M, "\x1by"),
-    bind("z", M, "\x1bz"),
-    bind("a", MS, "\x1bA"),
-    bind("b", MS, "\x1bB"),
-    bind("c", MS, "\x1bC"),
-    bind("d", MS, "\x1bD"),
-    bind("e", MS, "\x1bE"),
-    bind("f", MS, "\x1bF"),
-    bind("g", MS, "\x1bG"),
-    bind("h", MS, "\x1bH"),
-    bind("i", MS, "\x1bI"),
-    bind("j", MS, "\x1bJ"),
-    bind("k", MS, "\x1bK"),
-    bind("l", MS, "\x1bL"),
-    bind("m", MS, "\x1bM"),
-    bind("n", MS, "\x1bN"),
-    bind("o", MS, "\x1bO"),
-    bind("p", MS, "\x1bP"),
-    bind("q", MS, "\x1bQ"),
-    bind("r", MS, "\x1bR"),
-    bind("s", MS, "\x1bS"),
-    bind("t", MS, "\x1bT"),
-    bind("u", MS, "\x1bU"),
-    bind("v", MS, "\x1bV"),
-    bind("w", MS, "\x1bW"),
-    bind("x", MS, "\x1bX"),
-    bind("y", MS, "\x1bY"),
-    bind("z", MS, "\x1bZ"),
-    bind("a", C, "\x01"),
-    bind("b", C, "\x02"),
-    bind("c", C, "\x03"),
-    bind("d", C, "\x04"),
-    bind("e", C, "\x05"),
-    bind("f", C, "\x06"),
-    bind("g", C, "\x07"),
-    bind("h", C, "\x08"),
-    bind("i", C, "\x1b[24~\x09"),
-    bind("j", C, "\x0a"),
-    bind("k", C, "\x0b"),
-    bind("l", C, "\x0c"),
-    bind("m", C, "\x1b[24~\x0d"),
-    bind("n", C, "\x0e"),
-    bind("o", C, "\x0f"),
-    bind("p", C, "\x10"),
-    bind("q", C, "\x11"),
-    bind("r", C, "\x12"),
-    bind("s", C, "\x13"),
-    bind("t", C, "\x14"),
-    bind("u", C, "\x15"),
-    bind("v", C, "\x16"),
-    bind("w", C, "\x17"),
-    bind("x", C, "\x18"),
-    bind("y", C, "\x19"),
-    bind("z", C, "\x1a"),
+    bind("a", M, "\x1b[97;3u"),
+    bind("b", M, "\x1b[98;3u"),
+    bind("c", M, "\x1b[99;3u"),
+    bind("d", M, "\x1b[100;3u"),
+    bind("e", M, "\x1b[101;3u"),
+    bind("f", M, "\x1b[102;3u"),
+    bind("g", M, "\x1b[103;3u"),
+    bind("h", M, "\x1b[104;3u"),
+    bind("i", M, "\x1b[105;3u"),
+    bind("j", M, "\x1b[106;3u"),
+    bind("k", M, "\x1b[107;3u"),
+    bind("l", M, "\x1b[108;3u"),
+    bind("m", M, "\x1b[109;3u"),
+    bind("n", M, "\x1b[110;3u"),
+    bind("o", M, "\x1b[111;3u"),
+    bind("p", M, "\x1b[112;3u"),
+    bind("q", M, "\x1b[113;3u"),
+    bind("r", M, "\x1b[114;3u"),
+    bind("s", M, "\x1b[115;3u"),
+    bind("t", M, "\x1b[116;3u"),
+    bind("u", M, "\x1b[117;3u"),
+    bind("v", M, "\x1b[118;3u"),
+    bind("w", M, "\x1b[119;3u"),
+    bind("x", M, "\x1b[120;3u"),
+    bind("y", M, "\x1b[121;3u"),
+    bind("z", M, "\x1b[122;3u"),
+    bind("a", MS, "\x1b[97;4u"),
+    bind("b", MS, "\x1b[98;4u"),
+    bind("c", MS, "\x1b[99;4u"),
+    bind("d", MS, "\x1b[100;4u"),
+    bind("e", MS, "\x1b[101;4u"),
+    bind("f", MS, "\x1b[102;4u"),
+    bind("g", MS, "\x1b[103;4u"),
+    bind("h", MS, "\x1b[104;4u"),
+    bind("i", MS, "\x1b[105;4u"),
+    bind("j", MS, "\x1b[106;4u"),
+    bind("k", MS, "\x1b[107;4u"),
+    bind("l", MS, "\x1b[108;4u"),
+    bind("m", MS, "\x1b[109;4u"),
+    bind("n", MS, "\x1b[110;4u"),
+    bind("o", MS, "\x1b[111;4u"),
+    bind("p", MS, "\x1b[112;4u"),
+    bind("q", MS, "\x1b[113;4u"),
+    bind("r", MS, "\x1b[114;4u"),
+    bind("s", MS, "\x1b[115;4u"),
+    bind("t", MS, "\x1b[116;4u"),
+    bind("u", MS, "\x1b[117;4u"),
+    bind("v", MS, "\x1b[118;4u"),
+    bind("w", MS, "\x1b[119;4u"),
+    bind("x", MS, "\x1b[120;4u"),
+    bind("y", MS, "\x1b[121;4u"),
+    bind("z", MS, "\x1b[122;4u"),
+    bind("a", C, "\x1b[97;5u"),
+    bind("b", C, "\x1b[98;5u"),
+    bind("c", C, "\x1b[99;5u"),
+    bind("d", C, "\x1b[100;5u"),
+    bind("e", C, "\x1b[101;5u"),
+    bind("f", C, "\x1b[102;5u"),
+    bind("g", C, "\x1b[103;5u"),
+    bind("h", C, "\x1b[104;5u"),
+    bind("i", C, "\x1b[105;5u"),
+    bind("j", C, "\x1b[106;5u"),
+    bind("k", C, "\x1b[107;5u"),
+    bind("l", C, "\x1b[108;5u"),
+    bind("m", C, "\x1b[109;5u"),
+    bind("n", C, "\x1b[110;5u"),
+    bind("o", C, "\x1b[111;5u"),
+    bind("p", C, "\x1b[112;5u"),
+    bind("q", C, "\x1b[113;5u"),
+    bind("r", C, "\x1b[114;5u"),
+    bind("s", C, "\x1b[115;5u"),
+    bind("t", C, "\x1b[116;5u"),
+    bind("u", C, "\x1b[117;5u"),
+    bind("v", C, "\x1b[118;5u"),
+    bind("w", C, "\x1b[119;5u"),
+    bind("x", C, "\x1b[120;5u"),
+    bind("y", C, "\x1b[121;5u"),
+    bind("z", C, "\x1b[122;5u"),
     bind("a", CS, "\x1b[97;6u"),
     bind("b", CS, "\x1b[98;6u"),
     bind("c", CS, "\x1b[99;6u"),
@@ -250,32 +250,32 @@ local cfg = {
     bind("x", CS, "\x1b[120;6u"),
     bind("y", CS, "\x1b[121;6u"),
     bind("z", CS, "\x1b[122;6u"),
-    bind("a", CM, "\x1b\x01"),
-    bind("b", CM, "\x1b\x02"),
-    bind("c", CM, "\x1b\x03"),
-    bind("d", CM, "\x1b\x04"),
-    bind("e", CM, "\x1b\x05"),
-    bind("f", CM, "\x1b\x06"),
-    bind("g", CM, "\x1b\x07"),
-    bind("h", CM, "\x1b\x08"),
-    bind("i", CM, "\x1b[24~\x1b\x09"),
-    bind("j", CM, "\x1b\x0a"),
-    bind("k", CM, "\x1b\x0b"),
-    bind("l", CM, "\x1b\x0c"),
+    bind("a", CM, "\x1b[97;7u"),
+    bind("b", CM, "\x1b[98;7u"),
+    bind("c", CM, "\x1b[99;7u"),
+    bind("d", CM, "\x1b[100;7u"),
+    bind("e", CM, "\x1b[101;7u"),
+    bind("f", CM, "\x1b[102;7u"),
+    bind("g", CM, "\x1b[103;7u"),
+    bind("h", CM, "\x1b[104;7u"),
+    bind("i", CM, "\x1b[105;7u"),
+    bind("j", CM, "\x1b[106;7u"),
+    bind("k", CM, "\x1b[107;7u"),
+    bind("l", CM, "\x1b[108;7u"),
     bind("m", CM, "\x1b[109;7u"),
-    bind("n", CM, "\x1b\x0e"),
-    bind("o", CM, "\x1b\x0f"),
-    bind("p", CM, "\x1b\x10"),
-    bind("q", CM, "\x1b\x11"),
-    bind("r", CM, "\x1b\x12"),
-    bind("s", CM, "\x1b\x13"),
-    bind("t", CM, "\x1b\x14"),
-    bind("u", CM, "\x1b\x15"),
-    bind("v", CM, "\x1b\x16"),
-    bind("w", CM, "\x1b\x17"),
-    bind("x", CM, "\x1b\x18"),
-    bind("y", CM, "\x1b\x19"),
-    bind("z", CM, "\x1b\x1a"),
+    bind("n", CM, "\x1b[110;7u"),
+    bind("o", CM, "\x1b[111;7u"),
+    bind("p", CM, "\x1b[112;7u"),
+    bind("q", CM, "\x1b[113;7u"),
+    bind("r", CM, "\x1b[114;7u"),
+    bind("s", CM, "\x1b[115;7u"),
+    bind("t", CM, "\x1b[116;7u"),
+    bind("u", CM, "\x1b[117;7u"),
+    bind("v", CM, "\x1b[118;7u"),
+    bind("w", CM, "\x1b[119;7u"),
+    bind("x", CM, "\x1b[120;7u"),
+    bind("y", CM, "\x1b[121;7u"),
+    bind("z", CM, "\x1b[122;7u"),
     bind("a", CMS, "\x1b[97;8u"),
     bind("b", CMS, "\x1b[98;8u"),
     bind("c", CMS, "\x1b[99;8u"),
@@ -337,7 +337,7 @@ local cfg = {
     bind("?", CS, "\x1b[47;6u"), -- C-? (C-S-/)
     -- C-@ (that is, C-S-2) by default sends a literal NUL character. This is pretty
     -- much useless so we create a separate mapping here.
-    bind("@", CS, "\x1b[24~\x1b[64;5u"), -- C-@ (C-S-2)
+    bind("@", CS, "\x1b[64;5u"), -- C-@ (C-S-2)
 
     -- C-A to C-Z (codepoints 65-90) are handled already above.
 
@@ -359,32 +359,32 @@ local cfg = {
     bind("}", CS, "\x1b[93;6u"), -- C-} (C-S-])
     bind("~", CS, "\x1b[96;6u"), -- C-~ (C-S-`)
 
-    bind("[", M,   "\x1b[24~\x1b[91;3u"), -- M-[
-    bind("[", MS,  "\x1b[24~\x1b[91;4u"), -- M-S-[ (M-{)
-    bind("[", C,   "\x1b[24~\x1b[91;5u"), -- C-[
-    bind("[", CS,  "\x1b[24~\x1b[91;6u"), -- C-S-[ (C-{)
-    bind("[", CM,  "\x1b[24~\x1b[91;7u"), -- C-M-[
-    bind("[", CMS, "\x1b[24~\x1b[91;8u"), -- C-M-S-[ (C-M-{)
-    bind("Escape", S,   "\x1b[24~\x1d"), -- S-ESC
-    bind("Escape", M,   "\x1b[24~\x1e"), -- M-ESC
-    bind("Escape", MS,  "\x1b[24~\x1f"), -- M-S-ESC
-    bind("Escape", C,   "\x1b[24~\x1b[27;5u"), -- C-ESC
-    bind("Escape", CS,  "\x1b[24~\x1b[27;6u"), -- C-S-ESC
-    bind("Escape", CM,  "\x1b[24~\x1b[27;7u"), -- C-M-ESC
-    bind("Escape", CMS, "\x1b[24~\x1b[27;8u"), -- C-M-S-ESC
+    bind("[", M,   "\x1b[91;3u"), -- M-[
+    bind("[", MS,  "\x1b[91;4u"), -- M-S-[ (M-{)
+    bind("[", C,   "\x1b[91;5u"), -- C-[
+    bind("[", CS,  "\x1b[91;6u"), -- C-S-[ (C-{)
+    bind("[", CM,  "\x1b[91;7u"), -- C-M-[
+    bind("[", CMS, "\x1b[91;8u"), -- C-M-S-[ (C-M-{)
+    bind("Escape", S,   "\x1b[27;2u"), -- S-ESC
+    bind("Escape", M,   "\x1b[27;3u"), -- M-ESC
+    bind("Escape", MS,  "\x1b[27;4u"), -- M-S-ESC
+    bind("Escape", C,   "\x1b[27;5u"), -- C-ESC
+    bind("Escape", CS,  "\x1b[27;6u"), -- C-S-ESC
+    bind("Escape", CM,  "\x1b[27;7u"), -- C-M-ESC
+    bind("Escape", CMS, "\x1b[27;8u"), -- C-M-S-ESC
     bind("Tab", MS,  "\x1b[9;4u"), -- M-S-TAB
     bind("Tab", C,   "\x1b[9;5u"), -- C-TAB
     bind("Tab", CS,  "\x1b[9;6u"), -- C-S-TAB
     bind("Tab", CM,  "\x1b[9;7u"), -- C-M-TAB
     bind("Tab", CMS, "\x1b[9;8u"), -- C-M-S-TAB
-    bind("Backspace", S,   "\x1b[24~\x19"), -- S-Backspace
+    bind("Backspace", S,   "\x1b[127;2u"), -- S-Backspace
     bind("Backspace", M,   "\x1b[127;3u"), -- M-Backspace
     bind("Backspace", MS,  "\x1b[127;4u"), -- M-S-Backspace
     bind("Backspace", C,   "\x1b[127;5u"), -- C-Backspace
     bind("Backspace", CS,  "\x1b[127;6u"), -- C-S-Backspace
     bind("Backspace", CM,  "\x1b[127;7u"), -- C-M-Backspace
     bind("Backspace", CMS, "\x1b[127;8u"), -- C-M-S-Backspace
-    bind("Enter", S,   "\x1b[24~\x1a"), -- S-Enter
+    bind("Enter", S,   "\x1b[13;2u"), -- S-Enter
     bind("Enter", M,   "\x1b[13;3u"), -- M-Enter
     bind("Enter", MS,  "\x1b[13;4u"), -- M-S-Enter
     bind("Enter", C,   "\x1b[13;5u"), -- C-Enter
