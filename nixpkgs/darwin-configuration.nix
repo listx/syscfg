@@ -2,7 +2,7 @@
 
 let
   melby-release = import "${HOME}/prog/melby/package/build.nix";
-  HOME = builtins.getEnv "HOME";
+  HOME = config.system.primaryUserHome;
   baseconfig = { allowUnfree = true; };
   unstable = import <nixpkgs-unstable> { config = baseconfig; };
 in
@@ -99,7 +99,6 @@ in
   };
 
   # Auto upgrade nix package and the daemon service.
-  services.nix-daemon.enable = true;
   nix.package = pkgs.nix;
 
   # nix-direnv
@@ -122,6 +121,12 @@ in
   # Used for backwards compatibility, please read the changelog before changing.
   # $ darwin-rebuild changelog
   system.stateVersion = 4;
+
+  # Set primary user, because nix-darwin requires it (for now) as part of the
+  # migration to use "sudo darwin-rebuild".
+  #
+  # https://github.com/nix-darwin/nix-darwin/blob/fa6120c32f10bd2aac9e8c9a6e71528a9d9d823b/modules/system/primary-user.nix#L53-L58
+  system.primaryUser = "l";
 
   # Disable default "walters" prompt, which adds an annoying green PWD string at the far right hand side of the terminal.
   programs.zsh.promptInit = "";
