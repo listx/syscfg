@@ -123,9 +123,6 @@ nmap <leader>Q :q!<cr>
 " Save and exit (equivalent to "ZZ").
 nmap <leader>x :x<cr>
 
-" Use <F10> to toggle between 'paste' and 'nopaste'.
-set pastetoggle=<F10>
-
 " Move across tabs.
 nnoremap <C-l> :tabnext<cr>
 nnoremap <C-h> :tabprevious<cr>
