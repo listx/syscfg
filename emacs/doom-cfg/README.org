@@ -1449,10 +1449,10 @@ convention.
       :mnv "M-j" #'org-forward-element
       :mnv "M-h" #'org-up-element
       :mnv "M-l" #'org-down-element
-      :mnv "M-K" #'org-metaup
-      :mnv "M-J" #'org-metadown
-      :mnv "M-H" #'org-shiftmetaleft
-      :mnv "M-L" #'org-shiftmetaright
+      :mnv "M-S-k" #'org-metaup
+      :mnv "M-S-j" #'org-metadown
+      :mnv "M-S-h" #'org-shiftmetaleft
+      :mnv "M-S-l" #'org-shiftmetaright
       :mnv "(" #'org-mark-ring-goto
       :i "C-RET" #'l/org-insert-thing)
 

@@ -495,6 +495,38 @@ Also, ~C-#~ is allowed (notice that it is not defined as ~C-S-3~), but ~C-$~ is 
 allowed and we have to use ~C-S-4~ (this is a cosmetic oddity for our
 configuration and does not materially affect us).
 
+*** Meta+Shift and letters
+
+#+header: :noweb-ref keybindings-insert-mode
+#+begin_src conf
+bind-key -T root         M-S-a      send-keys Escape  "[97;4u"
+bind-key -T root         M-S-b      send-keys Escape  "[97;4u"
+bind-key -T root         M-S-c      send-keys Escape  "[99;4u"
+bind-key -T root         M-S-d      send-keys Escape  "[100;4u"
+bind-key -T root         M-S-e      send-keys Escape  "[101;4u"
+bind-key -T root         M-S-f      send-keys Escape  "[102;4u"
+bind-key -T root         M-S-g      send-keys Escape  "[103;4u"
+bind-key -T root         M-S-h      send-keys Escape  "[104;4u"
+bind-key -T root         M-S-i      send-keys Escape  "[105;4u"
+bind-key -T root         M-S-j      send-keys Escape  "[106;4u"
+bind-key -T root         M-S-k      send-keys Escape  "[107;4u"
+bind-key -T root         M-S-l      send-keys Escape  "[108;4u"
+bind-key -T root         M-S-m      send-keys Escape  "[109;4u"
+bind-key -T root         M-S-n      send-keys Escape  "[110;4u"
+bind-key -T root         M-S-o      send-keys Escape  "[111;4u"
+bind-key -T root         M-S-p      send-keys Escape  "[112;4u"
+bind-key -T root         M-S-q      send-keys Escape  "[113;4u"
+bind-key -T root         M-S-r      send-keys Escape  "[114;4u"
+bind-key -T root         M-S-s      send-keys Escape  "[115;4u"
+bind-key -T root         M-S-t      send-keys Escape  "[116;4u"
+bind-key -T root         M-S-u      send-keys Escape  "[117;4u"
+bind-key -T root         M-S-v      send-keys Escape  "[118;4u"
+bind-key -T root         M-S-w      send-keys Escape  "[119;4u"
+bind-key -T root         M-S-x      send-keys Escape  "[120;4u"
+bind-key -T root         M-S-y      send-keys Escape  "[121;4u"
+bind-key -T root         M-S-z      send-keys Escape  "[122;4u"
+#+end_src
+
 *** Control+Shift and letters
 
 #+header: :noweb-ref keybindings-insert-mode
