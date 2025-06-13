@@ -2129,14 +2129,7 @@ To see where the ID-to-file mapping (cache) is stored, see the variable
 #+name: org-id-link-to-org-use-id
 #+begin_src elisp
 (setq org-id-link-to-org-use-id t)
-(setq org-id-link-consider-parent-id t)
 #+end_src
-
-The ~org-id-link-consider-parent-id~ will make Org look up the heading hierarchy
-to find the nearest parent heading's ID, or if there is none, use the file's
-top-level ID (and if there's nothing there, only then create the ID at the
-current heading). If you still want to force the creation of an ID, you can go
-to the heading where you want the ID and then use ~org-id-get-create~.
 
 ** Notes
 
