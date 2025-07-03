@@ -635,6 +635,7 @@ LINK-NAME."
           '((?- . #x25CF)    ;; ● BLACK CIRCLE
             (?+ . #x21AA)    ;; ↪ RIGHT ARROW WITH HOOK
             (?* . #x2738)))) ;; ✸ HEAVY EIGHT POINTED RECTILINEAR BLACK STAR
+  (add-hook 'org-mode-hook (lambda () (org-superstar-mode 1)))
   (after! (org org-fancy-priorities)
     (setq org-priority-highest 0
           org-priority-default 2

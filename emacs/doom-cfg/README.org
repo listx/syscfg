@@ -117,7 +117,7 @@ DOOM requires 3 configuration files in the =$DOOMDIR=:
        (lua +lsp)
        markdown
        nix
-       (org +pretty +roam2)
+       (org +roam2)
        (python +lsp)
        rest
        (rust +lsp)
@@ -229,10 +229,12 @@ still type a ~,~ to access the leader key after typing ~, u~).
 (package! citeproc)
 (package! hyperbole)
 (package! git-gutter)
+(package! org-appear)
 (package! org-auto-tangle)
 (package! org-fc
   :recipe (:host github :repo "l3kn/org-fc"
            :files (:defaults "awk" "demo.org")))
+(package! org-superstar)
 (package! protobuf-mode)
 (package! solaire-mode :disable t)
 (package! vim-empty-lines-mode)
@@ -2075,6 +2077,7 @@ Org table.
         '((?- . #x25CF)    ;; ● BLACK CIRCLE
           (?+ . #x21AA)    ;; ↪ RIGHT ARROW WITH HOOK
           (?* . #x2738)))) ;; ✸ HEAVY EIGHT POINTED RECTILINEAR BLACK STAR
+(add-hook 'org-mode-hook (lambda () (org-superstar-mode 1)))
 #+end_src
 
 ** org-fancy-priorities (programmer priorities)
