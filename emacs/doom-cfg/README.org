@@ -1737,6 +1737,7 @@ interesting to see that doom has a slightly different version with
 #+begin_src elisp
 (map! :after evil-org-agenda
       :map evil-org-agenda-mode-map
+      :mnv "SPC" nil
       :mnv "C-k" nil
       :mnv "C-j" nil
       :mnv "H" #'previous-buffer

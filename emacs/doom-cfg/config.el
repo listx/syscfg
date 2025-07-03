@@ -716,6 +716,7 @@ LINK-NAME."
   :hook (org-mode . org-auto-tangle-mode))
 (map! :after evil-org-agenda
       :map evil-org-agenda-mode-map
+      :mnv "SPC" nil
       :mnv "C-k" nil
       :mnv "C-j" nil
       :mnv "H" #'previous-buffer
