@@ -1240,6 +1240,8 @@ otherwise, close current tab."
                    (lambda (rgx) (string-match rgx bufname)) regexes))))
 (map! :after evil-org
       :map evil-org-mode-map
+      :imnv "C-j" (cmd!! #'other-window 1)
+      :imnv "C-k" (cmd!! #'other-window -1)
       ;; The org lang module (doom's module) has some arcane bindings which we
       ;; have to undo by pulling some teeth out. This includes undoing the
       ;; CSdown and CSup bindings which silently map to C-S-j and C-S-k,
