@@ -5,85 +5,84 @@ let
   HOME = config.system.primaryUserHome;
   baseconfig = { allowUnfree = true; };
   unstable = import <nixpkgs-unstable> { config = baseconfig; };
-in
-{
-  nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
-    "aspell-dict-en-science"
-  ];
+in {
+  nixpkgs.config.allowUnfreePredicate = pkg:
+    builtins.elem (lib.getName pkg) [ "aspell-dict-en-science" ];
+
   # List packages installed in system profile.
   #
   # FIXME: Remove tooling that can be project-specific and placed into
   # "<PROJECT_ROOT>/.envrc".
-  environment.systemPackages = with pkgs;
-    [ (aspellWithDicts (dicts: with dicts; [ en en-computers en-science ]))
-      autoconf
-      babashka
-      bashInteractive
-      bear
-      ccls
-      clang-tools
-      cljfmt
-      clj-kondo
-      clojure
-      clojure-lsp
-      coreutils
-      dhall
-      difftastic
-      dos2unix
-      editorconfig-core-c
-      # Emacs is broken on Sequoia 15.4. See https://github.com/NixOS/nixpkgs/issues/395169#issuecomment-2769619888.
-      (emacs.override { withNativeCompilation = false; })
-      fd
-      ffmpeg
-      findutils
-      fzf
-      gawk
-      gcal
-      git
-      gnugrep
-      gnumake
-      gnupg
-      gnused
-      gnutar
-      graphviz
-      htop
-      inkscape
-      jq
-      unstable.jujutsu
-      less
-      lieer
-      melby-release.melby-daemon
-      melby-release.melby-client-rust
-      neil
-      neovim
-      nodejs
-      notmuch
-      openjdk
-      pass
-      pdf2svg
-      nodePackages.prettier
-      procps
-      ripgrep
-      rustfmt
-      scc
-      shellcheck
-      shfmt
-      source-code-pro
-      source-sans
-      source-serif
-      source-han-sans
-      source-han-serif
-      source-han-mono
-      stack
-      tig
-      tmux
-      tree
-      util-linux
-      wezterm
-      xz
-      zsh
-      zstd
-    ];
+  environment.systemPackages = with pkgs; [
+    (aspellWithDicts (dicts: with dicts; [ en en-computers en-science ]))
+    autoconf
+    babashka
+    bashInteractive
+    bear
+    ccls
+    clang-tools
+    cljfmt
+    clj-kondo
+    clojure
+    clojure-lsp
+    coreutils
+    dhall
+    difftastic
+    dos2unix
+    editorconfig-core-c
+    # Emacs is broken on Sequoia 15.4. See https://github.com/NixOS/nixpkgs/issues/395169#issuecomment-2769619888.
+    (emacs.override { withNativeCompilation = false; })
+    fd
+    ffmpeg
+    findutils
+    fzf
+    gawk
+    gcal
+    git
+    gnugrep
+    gnumake
+    gnupg
+    gnused
+    gnutar
+    graphviz
+    htop
+    inkscape
+    jq
+    unstable.jujutsu
+    less
+    lieer
+    melby-release.melby-daemon
+    melby-release.melby-client-rust
+    neil
+    neovim
+    nodejs
+    notmuch
+    openjdk
+    pass
+    pdf2svg
+    nodePackages.prettier
+    procps
+    ripgrep
+    rustfmt
+    scc
+    shellcheck
+    shfmt
+    source-code-pro
+    source-sans
+    source-serif
+    source-han-sans
+    source-han-serif
+    source-han-mono
+    stack
+    tig
+    tmux
+    tree
+    util-linux
+    wezterm
+    xz
+    zsh
+    zstd
+  ];
 
   # Enable melbyd with launchd.
   launchd.user.agents.melbyd = {
@@ -116,7 +115,7 @@ in
   };
 
   # Create /etc/zshrc that loads the nix-darwin environment.
-  programs.zsh.enable = true;  # default shell on catalina
+  programs.zsh.enable = true; # default shell on catalina
 
   # Used for backwards compatibility, please read the changelog before changing.
   # $ darwin-rebuild changelog
