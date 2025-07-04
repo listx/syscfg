@@ -48,7 +48,7 @@ in {
     htop
     inkscape
     jq
-    unstable.jujutsu
+    jujutsu
     less
     lieer
     melby-release.melby-daemon
@@ -74,12 +74,15 @@ in {
     source-han-serif
     source-han-mono
     stack
+    texliveFull
+    texlivePackages.raleway
     tig
     tmux
     tree
     util-linux
     wezterm
     xz
+    zathura
     zsh
     zstd
   ];
