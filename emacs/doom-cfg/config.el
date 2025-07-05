@@ -651,9 +651,9 @@ LINK-NAME."
                                (?1 :foreground "#ff0")
                                (?2 :foreground "#0f0")
                                (?3 :foreground "#0ff")
-                               (?4 :foreground "#ccc")))
+                               (?4 :foreground "#ccc"))))
 
-    (add-hook 'org-mode-hook 'org-fancy-priorities-mode))
+  (add-hook 'org-mode-hook 'org-fancy-priorities-mode)
   (add-hook 'org-babel-post-tangle-hook (lambda ()
                                           (delete-trailing-whitespace)
                                           (save-buffer)))

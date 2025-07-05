@@ -231,6 +231,7 @@ still type a ~,~ to access the leader key after typing ~, u~).
 (package! git-gutter)
 (package! org-appear)
 (package! org-auto-tangle)
+(package! org-fancy-priorities)
 (package! org-fc
   :recipe (:host github :repo "l3kn/org-fc"
            :files (:defaults "awk" "demo.org")))
@@ -2110,9 +2111,9 @@ https://github.com/harrybournis/org-fancy-priorities.
                              (?1 :foreground "#ff0")
                              (?2 :foreground "#0f0")
                              (?3 :foreground "#0ff")
-                             (?4 :foreground "#ccc")))
+                             (?4 :foreground "#ccc"))))
 
-  (add-hook 'org-mode-hook 'org-fancy-priorities-mode))
+(add-hook 'org-mode-hook 'org-fancy-priorities-mode)
 #+end_src
 
 ** org-auto-tangle
