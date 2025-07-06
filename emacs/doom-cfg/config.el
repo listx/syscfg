@@ -393,6 +393,8 @@ the object exists locally)."
         :desc "subtree (children + parent)" "S"
           (cmd! (l/org-export-as-markdown-to-clipboard 't))
         "d" #'org-export-dispatch)
+      (:prefix ("g" . "goto")
+         "b" #'org-babel-goto-named-src-block)
       (:prefix ("p" . "priority")
          :desc "Set priority to 0"
          "0" (cmd! (org-priority 0))
