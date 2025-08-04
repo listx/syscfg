@@ -1060,7 +1060,8 @@ details."
   "Scroll by CNT lines."
   (interactive "p")
   (if (> 0 cnt)
-      (progn (evil-scroll-line-up (abs cnt))
+      (progn (if (/= (window-start) 1)
+                 (evil-scroll-line-up (abs cnt)))
              (evil-previous-line (abs cnt)))
       (progn (evil-scroll-line-down cnt)
              (evil-next-line cnt))))
