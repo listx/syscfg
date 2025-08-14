@@ -656,6 +656,10 @@ LINK-NAME."
                                (?4 :foreground "#ccc"))))
 
   (add-hook 'org-mode-hook 'org-fancy-priorities-mode)
+  ; Ask before evaluating code blocks, because some code blocks are code
+  ; fragments and will never evaluate properly anyway (especially in Literate
+  ; Programming).
+  (setq org-confirm-babel-evaluate t)
   (add-hook 'org-babel-post-tangle-hook (lambda ()
                                           (delete-trailing-whitespace)
                                           (save-buffer)))
