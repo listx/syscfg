@@ -78,7 +78,7 @@ export LESS_TERMCAP_me=$'\x1b[0m'         # end bold/blinking
 export LESS_TERMCAP_us=$'\x1b[1;35m'      # begin underline
 export LESS_TERMCAP_ue=$'\x1b[0m'         # end underline
 
-export LESS_TERMCAP_so=$'\x1b[1;30;42m'   # begin standout-mode - (interactive search highlight)
+export LESS_TERMCAP_so=$'\x1b[1;38;5;16;42m'   # begin standout-mode - (interactive search highlight)
 export LESS_TERMCAP_se=$'\x1b[0m'         # end standout-mode
 
 # Set PAGER. This is not set on Mac, which results in /usr/bin/less (hardcoded

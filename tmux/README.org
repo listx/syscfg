@@ -1073,7 +1073,7 @@ window.
 
 #+header: :noweb-ref appearance
 #+begin_src conf
-set -gw window-active-style "bg=brightblack fg=white"
+set -gw window-active-style "bg=#343c48 fg=white"
 set -gw window-style "bg=black fg=brightwhite"
 #+end_src
 

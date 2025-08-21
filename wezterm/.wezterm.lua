@@ -61,7 +61,7 @@ local cfg = {
       '#e5e7ea',
     },
     brights = {
-      '#343c48',
+      '#99999f',
       '#e5bfbf',
       '#afe0a1',
       '#f2fb9e',

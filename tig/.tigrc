@@ -1,7 +1,7 @@
 # Appearance.
-color cursor black green bold
-color title-blur black blue bold
-color title-focus black blue bold
+color cursor 16 green bold
+color title-blur 16 blue bold
+color title-focus 16 blue bold
 
 set blame-view = date:relative-compact author:abbreviated,maxwidth=5 id:width=8,color line-number:yes,interval=1 text
 set main-view  = date:relative-compact author:abbreviated,maxwidth=5 id:width=8 commit-title:yes,graph,refs

@@ -41,28 +41,28 @@
   (case window-type
     :manually-named
     (if is-current-window?
-      {:style1 "#[bold bg=cyan fg=black]"
-       :style2 "#[bold bg=brightcyan fg=black]"}
+      {:style1 "#[bold bg=cyan fg=#343c48]"
+       :style2 "#[bold bg=brightcyan fg=#343c48]"}
       {:style1 "#[bg=black fg=cyan]"
        :style2 "#[bg=black fg=cyan]"})
 
     :ssh
     (if is-current-window?
-      {:style1 "#[bold bg=blue fg=black]"
-       :style2 "#[bold bg=brightblue fg=black]"}
+      {:style1 "#[bold bg=blue fg=#343c48]"
+       :style2 "#[bold bg=brightblue fg=#343c48]"}
       {:style1 "#[bg=black fg=blue]"
        :style2 "#[bg=black fg=blue]"})
 
     :zsh
     (if is-current-window?
-      {:style1 "#[bold bg=yellow fg=black]"
-       :style2 "#[bold bg=brightyellow fg=black]"}
+      {:style1 "#[bold bg=yellow fg=#343c48]"
+       :style2 "#[bold bg=brightyellow fg=#343c48]"}
       {:style1 "#[bg=black fg=yellow]"
        :style2 "#[bg=black fg=yellow]"})
 
     (if is-current-window?
-      {:style1 "#[bold bg=green fg=black]"
-       :style2 "#[bold bg=brightgreen fg=black]"}
+      {:style1 "#[bold bg=green fg=#343c48]"
+       :style2 "#[bold bg=brightgreen fg=#343c48]"}
       {:style1 "#[bg=black fg=green]"
        :style2 "#[bg=black fg=green]"})))
 (defn get-window-name-format

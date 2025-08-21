@@ -1495,7 +1495,7 @@ Also add the number of windows in the window configuration."
                     `(:background ,(doom-darken (doom-color 'bg-alt) 0.2))))
   (custom-set-faces!
     `(vertical-border
-      :background ,(doom-color 'base0) :foreground ,(doom-color 'base0))
+      :background ,(doom-darken (doom-color 'bg-alt) 0.2) :foreground ,(doom-darken (doom-color 'bg-alt) 0.2))
     '(highlight-numbers-number  :weight bold)
     `(hl-line :background ,(doom-darken (doom-color 'bg-alt) 0.4))
     '(vim-empty-lines-face :weight bold)
@@ -1518,7 +1518,7 @@ Also add the number of windows in the window configuration."
     `(tab-bar :background ,(doom-darken (doom-color 'bg-alt) 0.2))
     `(tab-bar-tab
        :background ,(doom-color 'base8)
-       :foreground ,(doom-color 'base0)
+       :foreground ,(doom-color 'base1)
        :weight bold
        :box nil)
     `(tab-bar-tab-inactive
@@ -1534,7 +1534,7 @@ Also add the number of windows in the window configuration."
     `(mode-line
        :weight bold
        :background ,(doom-color 'base8)
-       :foreground ,(doom-color 'base0))
+       :foreground ,(doom-color 'base1))
     `(mode-line-inactive
        :background ,(doom-color 'base6)
        :foreground ,(doom-color 'base0))
@@ -1571,7 +1571,7 @@ Also add the number of windows in the window configuration."
   ;; easier to read with our custom mode-line background. This way we don't have
   ;; to spell out each font one at a time.
   (eval `(l/custom-set-faces-matching! "doom-modeline-"
-                                       :foreground ,(doom-color 'base0))))
+                                       :foreground ,(doom-color 'base1))))
 
 (use-package! rainbow-mode
   :hook (prog-mode text-mode))
