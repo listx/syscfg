@@ -32,6 +32,8 @@ git:
 gpg:
 	ln -fns ${C}/gpg                                    ${H}/.gnupg
 	ln -fs ${C}/gpg/gpg-agent.nixos.conf                ${H}/.gnupg/gpg-agent.conf
+jj:
+	ln -fns ${C}/jj                                     ${H}/.config/jj
 karabiner:
 	mkdir -p ${H}/.config/karabiner
 	ln -fns ${C}/karabiner/karabiner.json               ${H}/.config/karabiner
@@ -146,6 +148,7 @@ zsh:
 	emacs \
 	git \
 	gpg \
+	jj \
 	karabiner \
 	lesskey \
 	melby \
