@@ -499,8 +499,7 @@ else
   compinit -C
 fi
 
-source <(jj util completion zsh)
-compdef _jj jj
+source <(COMPLETE=zsh jj)
 
 # Instead of using "qoomon/zsh-lazyload", we simply examine the letters that are
 # already inserted into the zle buffer. If it is "kl" and we press either the
