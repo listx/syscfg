@@ -263,6 +263,7 @@ other configurations that are pulled in. And so we define it first here.
 <<name-and-email>>
 
 <<dired>>
+<<jujutsu>>
 <<magit>>
 <<org>>
 <<org-roam>>
@@ -1188,6 +1189,22 @@ The default binding of ~C-x C-;~ is painful, so use ~,c,~ instead.
       :mnv "c," #'evilnc-comment-or-uncomment-lines)
 #+end_src
 
+* Jujutsu
+
+Set up the "description" buffer of Jujutsu, to make it similar to how we have it
+set up for Git.
+
+#+name: jujutsu
+#+begin_src elisp
+(add-to-list 'auto-mode-alist '("\\.jjdescription\\'" . org-mode))
+(add-hook 'org-mode-hook 'l/jj-description-setup)
+(defun l/jj-description-setup ()
+  "Setup commands for .jjdescription files."
+  (when (string-equal (file-name-extension (buffer-file-name)) "jjdescription")
+    (progn
+      (auto-fill-mode 1)
+      (setq fill-column 72))))
+#+end_src
 * Colors
 
 #+name: theme
@@ -1891,7 +1908,7 @@ Automatically insert newlines after 80 characters as we type.
 
 #+name: set-auto-fill-mode
 #+begin_src elisp
-(add-hook 'org-mode-hook #'(lambda () (setq fill-column 80)))
+(add-hook 'org-mode-hook #'(lambda () (when (not (string-equal (file-name-extension (buffer-file-name)) "jjdescription")) (setq fill-column 80))))
 (add-hook 'org-mode-hook 'turn-on-auto-fill)
 #+end_src
 

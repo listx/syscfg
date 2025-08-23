@@ -5,3 +5,20 @@
 
 [lazyjj]
 layout = "vertical"
+
+[templates]
+draft_commit_description = '''
+concat(
+  coalesce(description, default_commit_description, "\n"),
+  "\n\n",
+  "JJ: --------------------------------------------------------------------\n",
+  "JJ: ignore-rest\n",
+  surround(
+    "#+begin_src txt\n", "#+end_src\n",
+    indent("    ", diff.stat(72)),
+  ),
+  "#+begin_src diff\n",
+  diff.git(),
+  "#+end_src\n",
+)
+'''
