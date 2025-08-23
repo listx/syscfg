@@ -22,3 +22,13 @@ concat(
   "#+end_src\n",
 )
 '''
+
+[colors]
+
+# Diff chunks.
+"diff added token" = { fg = "#335533", bg = "#ccffcc", bold = true, underline = false }
+"diff removed token" = { fg = "#553333", bg = "#ffcccc", bold = true, underline = false  }
+
+# There are for the line numbers in the left margin, next to the diff chunk lines.
+"diff added" = { fg = "#ccffcc", bold = true }
+"diff removed" = { fg = "#ffcccc", bold = true }
