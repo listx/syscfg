@@ -3,6 +3,9 @@
 "name" = "Linus Arver"
 "email" = "linus@ucla.edu"
 
+[aliases]
+sync = ["rebase", "-b", 'all:trunk()..(visible_heads() ~ (immutable_heads() | remote_bookmarks()) | branches())', "-d", "main"]
+
 [lazyjj]
 layout = "vertical"
 
