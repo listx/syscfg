@@ -671,6 +671,11 @@ LINK-NAME."
   (add-hook 'org-babel-post-tangle-hook (lambda ()
                                           (delete-trailing-whitespace)
                                           (save-buffer)))
+  (defun l/org-insert-last-stored-link (orig-fun arg)
+    (interactive "p")
+    (org-insert-all-links arg "" ""))
+
+  (advice-add 'org-insert-last-stored-link :around #'l/org-insert-last-stored-link)
   (defun l/org-log-note-buffer-empty-p ()
     "Is current buffer empty except for the boilerplate template at the top?"
     (eq (point-max) 85))
