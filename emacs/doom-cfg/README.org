@@ -1200,7 +1200,7 @@ set up for Git.
 (add-hook 'org-mode-hook 'l/jj-description-setup)
 (defun l/jj-description-setup ()
   "Setup commands for .jjdescription files."
-  (when (string-equal (file-name-extension (buffer-file-name)) "jjdescription")
+  (when (string-equal (file-name-extension (or (buffer-file-name) "")) "jjdescription")
     (progn
       (auto-fill-mode 1)
       (setq fill-column 72))))
@@ -1909,7 +1909,7 @@ Automatically insert newlines after 80 characters as we type.
 
 #+name: set-auto-fill-mode
 #+begin_src elisp
-(add-hook 'org-mode-hook #'(lambda () (when (not (string-equal (file-name-extension (buffer-file-name)) "jjdescription")) (setq fill-column 80))))
+(add-hook 'org-mode-hook #'(lambda () (when (not (string-equal (file-name-extension (or (buffer-file-name) "")) "jjdescription")) (setq fill-column 80))))
 (add-hook 'org-mode-hook 'turn-on-auto-fill)
 #+end_src
 

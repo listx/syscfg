@@ -234,7 +234,7 @@ Return an event vector."
 (add-hook 'org-mode-hook 'l/jj-description-setup)
 (defun l/jj-description-setup ()
   "Setup commands for .jjdescription files."
-  (when (string-equal (file-name-extension (buffer-file-name)) "jjdescription")
+  (when (string-equal (file-name-extension (or (buffer-file-name) "")) "jjdescription")
     (progn
       (auto-fill-mode 1)
       (setq fill-column 72))))
@@ -598,7 +598,7 @@ LINK-NAME."
   ; completed between 12AM and 4AM are recorded as 23:59 of the previous day.
   (setq org-extend-today-until 4
         org-use-effective-time t)
-  (add-hook 'org-mode-hook #'(lambda () (when (not (string-equal (file-name-extension (buffer-file-name)) "jjdescription")) (setq fill-column 80))))
+  (add-hook 'org-mode-hook #'(lambda () (when (not (string-equal (file-name-extension (or (buffer-file-name) "")) "jjdescription")) (setq fill-column 80))))
   (add-hook 'org-mode-hook 'turn-on-auto-fill)
   (use-package! org-appear
     :config
