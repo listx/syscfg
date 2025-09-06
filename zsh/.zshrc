@@ -214,6 +214,7 @@ alias q=' exit'
 
 alias j='jj'
 alias jd='jj diff'
+alias jc='jj commit'
 alias jca='jj desc'
 alias jb='jj bookmark'
 alias jbl='jj bookmark list'
