@@ -16,14 +16,14 @@
   (is (= "some-command" (sut/get-modified-window-name :other-command "" "@1" "%2" "some-command" "/path/foo/bar"))))
 (deftest get-window-name-format
   (testing "manually named window"
-    (is (= "#[bold bg=cyan fg=black]*2#[bold bg=brightcyan fg=black] foo #[default]"
+    (is (= "#[bold bg=cyan fg=#343c48]*2#[bold bg=brightcyan fg=#343c48] foo #[default]"
            (sut/get-window-name-format "zsh" "/path/foo/bar" "mnw->foo" "@1" "%2" "*" "3" "1"))))
   (testing "zsh shows path"
-    (is (= "#[bold bg=yellow fg=black]*2#[bold bg=brightyellow fg=black] /path #[default]"
+    (is (= "#[bold bg=yellow fg=#343c48]*2#[bold bg=brightyellow fg=#343c48] /path #[default]"
            (sut/get-window-name-format "zsh" "/path" "zsh" "@1" "%2" "*" "3" "1"))))
   (testing "ssh"
-    (is (= "#[bold bg=blue fg=black]*2#[bold bg=brightblue fg=black] ssh #[default]"
+    (is (= "#[bold bg=blue fg=#343c48]*2#[bold bg=brightblue fg=#343c48] ssh #[default]"
            (sut/get-window-name-format "ssh" "/path" "ssh" "@1" "%2" "*" "3" "1"))))
   (testing "other-command"
-    (is (= "#[bold bg=green fg=black]*2#[bold bg=brightgreen fg=black] some-command #[default]"
+    (is (= "#[bold bg=green fg=#343c48]*2#[bold bg=brightgreen fg=#343c48] some-command #[default]"
            (sut/get-window-name-format "some-command" "/path" "some-command" "@1" "%2" "*" "3" "1")))))

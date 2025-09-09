@@ -1083,7 +1083,7 @@ Set colors for copy-mode selections.
 
 #+header: :noweb-ref appearance
 #+begin_src conf
-set -gw mode-style "fg=black bg=brightgreen bold"
+set -gw mode-style "fg=#343c48 bg=brightgreen bold"
 #+end_src
 
 * Miscellaneous
@@ -1240,28 +1240,28 @@ bar.
   (case window-type
     :manually-named
     (if is-current-window?
-      {:style1 "#[bold bg=cyan fg=black]"
-       :style2 "#[bold bg=brightcyan fg=black]"}
+      {:style1 "#[bold bg=cyan fg=#343c48]"
+       :style2 "#[bold bg=brightcyan fg=#343c48]"}
       {:style1 "#[bg=black fg=cyan]"
        :style2 "#[bg=black fg=cyan]"})
 
     :ssh
     (if is-current-window?
-      {:style1 "#[bold bg=blue fg=black]"
-       :style2 "#[bold bg=brightblue fg=black]"}
+      {:style1 "#[bold bg=blue fg=#343c48]"
+       :style2 "#[bold bg=brightblue fg=#343c48]"}
       {:style1 "#[bg=black fg=blue]"
        :style2 "#[bg=black fg=blue]"})
 
     :zsh
     (if is-current-window?
-      {:style1 "#[bold bg=yellow fg=black]"
-       :style2 "#[bold bg=brightyellow fg=black]"}
+      {:style1 "#[bold bg=yellow fg=#343c48]"
+       :style2 "#[bold bg=brightyellow fg=#343c48]"}
       {:style1 "#[bg=black fg=yellow]"
        :style2 "#[bg=black fg=yellow]"})
 
     (if is-current-window?
-      {:style1 "#[bold bg=green fg=black]"
-       :style2 "#[bold bg=brightgreen fg=black]"}
+      {:style1 "#[bold bg=green fg=#343c48]"
+       :style2 "#[bold bg=brightgreen fg=#343c48]"}
       {:style1 "#[bg=black fg=green]"
        :style2 "#[bg=black fg=green]"})))
 #+end_src
@@ -1340,16 +1340,16 @@ combinations. We just test a few key examples.
 #+begin_src clojure
 (deftest get-window-name-format
   (testing "manually named window"
-    (is (= "#[bold bg=cyan fg=black]*2#[bold bg=brightcyan fg=black] foo #[default]"
+    (is (= "#[bold bg=cyan fg=#343c48]*2#[bold bg=brightcyan fg=#343c48] foo #[default]"
            (sut/get-window-name-format "zsh" "/path/foo/bar" "mnw->foo" "@1" "%2" "*" "3" "1"))))
   (testing "zsh shows path"
-    (is (= "#[bold bg=yellow fg=black]*2#[bold bg=brightyellow fg=black] /path #[default]"
+    (is (= "#[bold bg=yellow fg=#343c48]*2#[bold bg=brightyellow fg=#343c48] /path #[default]"
            (sut/get-window-name-format "zsh" "/path" "zsh" "@1" "%2" "*" "3" "1"))))
   (testing "ssh"
-    (is (= "#[bold bg=blue fg=black]*2#[bold bg=brightblue fg=black] ssh #[default]"
+    (is (= "#[bold bg=blue fg=#343c48]*2#[bold bg=brightblue fg=#343c48] ssh #[default]"
            (sut/get-window-name-format "ssh" "/path" "ssh" "@1" "%2" "*" "3" "1"))))
   (testing "other-command"
-    (is (= "#[bold bg=green fg=black]*2#[bold bg=brightgreen fg=black] some-command #[default]"
+    (is (= "#[bold bg=green fg=#343c48]*2#[bold bg=brightgreen fg=#343c48] some-command #[default]"
            (sut/get-window-name-format "some-command" "/path" "some-command" "@1" "%2" "*" "3" "1")))))
 #+end_src
 
