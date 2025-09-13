@@ -236,6 +236,10 @@ Return an event vector."
   "Setup commands for .jjdescription files."
   (when (string-equal (file-name-extension (or (buffer-file-name) "")) "jjdescription")
     (progn
+      (save-excursion
+        (while (re-search-forward "^\\([ ]+\\)#\\+" nil t)
+          (replace-match "\\1,#+" nil nil)))
+      (+org-pretty-mode -1)
       (auto-fill-mode 1)
       (setq fill-column 72))))
 (map! :after magit
