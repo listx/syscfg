@@ -35,3 +35,6 @@ concat(
 # There are for the line numbers in the left margin, next to the diff chunk lines.
 "diff added" = { fg = "#ccffcc", bold = true }
 "diff removed" = { fg = "#ffcccc", bold = true }
+
+[ui]
+merge-editor = "meld"
