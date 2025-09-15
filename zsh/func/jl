@@ -1,0 +1,13 @@
+#!/usr/bin/env zsh
+
+# Determine how many $LINES there are available in the current terminal and use
+# that to commits. Use a buffer of 4 lines to account for showing the prompt, as
+# well as any messages we might get from jj. Divide by 2 because in jj, each
+# commit takes up 2 lines (one for the commit title and another for the commit
+# id)..
+jl()
+{
+	local commits_to_show
+	commits_to_show=$(((LINES - 4) / 2))
+	jj log --limit "${commits_to_show}" "${@}"
+}
