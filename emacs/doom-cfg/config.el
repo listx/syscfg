@@ -235,13 +235,14 @@ Return an event vector."
 (defun l/jj-description-setup ()
   "Setup commands for .jjdescription files."
   (when (string-equal (file-name-extension (or (buffer-file-name) "")) "jjdescription")
-    (progn
-      (save-excursion
-        (while (re-search-forward "^\\([ ]+\\)#\\+" nil t)
-          (replace-match "\\1,#+" nil nil)))
-      (+org-pretty-mode -1)
-      (auto-fill-mode 1)
-      (setq fill-column 72))))
+    (save-excursion
+      (while (re-search-forward "^\\([ ]+\\)#\\+" nil t)
+        (replace-match "\\1,#+" nil nil)))
+    (+org-pretty-mode -1)
+    ;; Add a buffer-local hook to re-enable the mode when the buffer is killed.
+    (add-hook 'kill-buffer-hook (lambda () (+org-pretty-mode 1)) nil t)
+    (auto-fill-mode 1)
+    (setq fill-column 72)))
 (map! :after magit
       :map magit-mode-map
       ;; Remap C-{j,k} bindings.
