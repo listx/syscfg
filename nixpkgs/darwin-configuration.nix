@@ -19,6 +19,7 @@ in {
     babashka
     bashInteractive
     bear
+    bottom
     ccls
     clang-tools
     cljfmt
