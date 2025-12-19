@@ -1564,6 +1564,13 @@ Also add the number of windows in the window configuration."
        :foreground ,(doom-color 'base0)
        :weight bold)
 
+    `(org-scheduled-today
+       :foreground ,l/color-foreground)
+    `(org-upcoming-deadline
+       :foreground ,l/color-yellow)
+    `(org-done
+       :weight bold :foreground "#6F6F6F")
+
     `(notmuch-message-summary-face :foreground ,l/color-foreground)
     `(notmuch-search-count :foreground ,l/color-foreground)
     `(notmuch-tree-no-match-subject-face :foreground ,l/color-foreground)
