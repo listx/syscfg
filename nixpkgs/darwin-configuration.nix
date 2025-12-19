@@ -46,13 +46,18 @@ in {
     gnutar
     graphviz
     htop
+    imagemagick
     inkscape
+    jjui
+    jless
     jq
     jujutsu
     less
     lieer
     melby-release.melby-daemon
     melby-release.melby-client-rust
+    meld
+    ncdu
     neil
     neovim
     nodejs
