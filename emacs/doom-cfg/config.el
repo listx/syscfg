@@ -1387,6 +1387,11 @@ Also add the number of windows in the window configuration."
            :count-query "tag:inbox AND tag:unread"
            :key "i")
 
+          (:name "lilac"
+           :query "tag:lilac"
+           :count-query "tag:lilac AND tag:unread"
+           :key "l")
+
           (:name "git-me"
            :query "tag:git and \"Linus Arver\""
            :count-query "tag:git AND tag:unread"

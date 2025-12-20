@@ -25,6 +25,13 @@
 +list +git/ci       -- tag:raw and to:ci_activity@noreply.github.com and (to:gitgitgadget/git or to:listx/git)
 +list +git/ggg      -- tag:raw and from:gitgitgadget
 
+# Tag all messages related to the lilac mailing list. We have to quote it twice
+# like this, probably to get around the shell's interpretation of ~, as well as
+# Notmuch's own special treatment of ~. We don't require the "raw" tag like we
+# do for Git, because it looks like if we originally send the email to the list,
+# it won't get the "raw" tag.
++list +lilac -- 'to:"~listx/lilac@lists.sr.ht"'
+
 # Tag all raw mailing list messages as being unread. It's important that we do
 # not tag it as "inbox" because that'll put it into the Inbox in Gmail the next
 # time lieer syncs.
