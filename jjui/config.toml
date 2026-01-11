@@ -1,0 +1,3 @@
+[ui.colors]
+"selected" = {bg = "#22222f", bold = true }
+"status title" = { fg = "#000000", bg = "red", bold = true }
