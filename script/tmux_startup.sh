@@ -36,9 +36,12 @@ setup_lilac()
 {
 	local window_emacs_lilac
 	local window_jj_lilac
+	local maybe_sleep
 
 	window_emacs_lilac="$(tmux new-window -c ~/prog/lilac -P)"
-	tmux send-keys -t "${window_emacs_lilac}" "d base/lilac.org" Enter
+	maybe_sleep="pgrep -f 'emacs --bg-daemon' >/dev/null || sleep 20"
+	tmux send-keys -t "${window_emacs_lilac}" \
+		"${maybe_sleep}; d base/lilac.org" Enter
 
 	window_jj_lilac="$(tmux new-window -c ~/prog/lilac -P)"
 	tmux send-keys -t "${window_jj_lilac}" "jl" Enter
