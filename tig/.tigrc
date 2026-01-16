@@ -39,14 +39,13 @@ bind generic h parent
 bind generic <LessThan> none
 bind generic l back
 
-bind generic <Ctrl-n> none
-bind generic <Ctrl-j> next
-
-bind generic <Ctrl-p> none
-bind generic <Ctrl-k> previous
-
 bind generic <Ctrl-h> view-help
 bind generic o view-log
+
+bind diff j next
+bind diff <Ctrl-j> move-down
+bind diff k previous
+bind diff <Ctrl-k> move-up
 
 # Copy 40-char hex string of commit.
 bind generic y +bash -c "git rev-parse %(commit) \
