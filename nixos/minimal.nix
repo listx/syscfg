@@ -8,11 +8,11 @@
   networking = {
     # 10.0.0.1 router
     # 10.0.0.2 printer
+    # 10.0.0.3 UNASSIGNED
+    # 10.0.0.5 UNASSIGNED
+    # 10.0.0.6 UNASSIGNED
     extraHosts = ''
-      10.0.0.3 m0
       10.0.0.4 k0
-      10.0.0.5 k1
-      10.0.0.6 w0
       10.0.0.7 macp
     '';
     # Port 22 is opened automatically if SSH daemon is enabled (no need to specify it here).
@@ -53,7 +53,7 @@
   # NTP for automated system clock adjustments.
   services.ntp.enable = true;
 
-  time.timeZone = "America/Los_Angeles";
+  time.timeZone = "Australia/Melbourne";
 
   i18n.inputMethod.enabled = "uim";
 
@@ -74,7 +74,7 @@
       source-han-serif
       source-han-mono
       terminus_font
-      ubuntu_font_family
+      ubuntu-classic
     ];
   };
 

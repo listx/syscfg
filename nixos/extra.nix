@@ -15,7 +15,7 @@ in
     difftastic
     tig
     jujutsu
-    emacs29
+    emacs
     neovim
     editorconfig-core-c
     ripgrep
@@ -28,6 +28,7 @@ in
     gcal
     melby-release.melby-daemon
     melby-release.melby-client-rust
+    babashka
 
     # Dev tools
     parallel
@@ -64,12 +65,11 @@ in
 
     # Elixir
     elixir
-    elixir_ls # Elixir Language Server
+    elixir-ls # Elixir Language Server
     erlang
 
     # Go
     go
-    gocode
     golint
     gomodifytags
     gore
@@ -83,7 +83,7 @@ in
     # Compiler versions can be discovered with:
     #
     #   nix-env -f "<nixpkgs>" -qaP -A haskell.compiler
-    haskell.compiler.ghc942
+    haskell.compiler.ghc912
     cabal2nix
     # For invoking, e.g., `cabal2nix cabal://some-package`, because cabal2nix
     # depends on `cabal update`. We also get `cabal repl` and other commands
@@ -153,7 +153,7 @@ in
     # Cryptography
     gnupg
     openssl
-    pinentry
+    pinentry-curses
     cryptsetup
     pass
 
@@ -168,14 +168,12 @@ in
 
     # Docs
     man-pages
-    posix_man_pages
     stdman
     stdmanpages
 
     # Archiving
     p7zip
     unzip
-    lzma
     unrar
     zip
 
@@ -201,7 +199,7 @@ in
     mpv
     ffmpeg
     flac
-    mpc_cli
+    mpc
     vimpc
     mpd
     r128gain
@@ -209,17 +207,15 @@ in
 
     # Document processing
     pdftk
-    poppler_utils # pdftotext
+    poppler-utils # pdftotext
     zathura
-    haskellPackages.auca
+    #haskellPackages.auca
     texlive.combined.scheme-full
     pandoc
 
     # Fonts
-    kreative-square-fonts
     raleway
     noto-fonts
-    noto-fonts-cjk
 
     # Data analysis
     graphviz
@@ -236,22 +232,23 @@ in
 
   services.lorri.enable = true;
 
+  services.displayManager = {
+      defaultSession = "l_xmonad";
+      autoLogin.enable = true;
+      autoLogin.user = "l";
+    };
+
   services.xserver = {
     enable = true;
-    layout = "us";
-    xkbVariant = "altgr-intl";
-    xkbOptions = "terminate:ctrl_alt_bksp";
-    displayManager.defaultSession = "l_xmonad";
+    xkb.layout = "us";
+    xkb.variant = "altgr-intl";
+    xkb.options = "terminate:ctrl_alt_bksp";
     # See https://unix.stackexchange.com/questions/597358/nixos-how-to-configure-custom-desktop-session/597359#597359.
     displayManager.session = [{
       manage = "desktop";
       name = "l_xmonad";
       start = "exec $HOME/.xsession";
     }];
-    displayManager = {
-      autoLogin.enable = true;
-      autoLogin.user = "l";
-    };
     # We rely on ~/.xsession to start XMonad, instead of NixOS automagically
     # doing it for us. This way, we can use our xmonad binary compiled by Stack.
     windowManager.xmonad.enable = false;
@@ -261,7 +258,7 @@ in
   virtualisation.virtualbox.host.enable = true;
 
   virtualisation.docker.enable = true;
-  virtualisation.docker.storageDriver = "devicemapper";
+  virtualisation.docker.storageDriver = "overlay2";
 
   # Enable CUPS to print documents.
   services.printing.enable = true;

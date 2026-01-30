@@ -1,6 +1,7 @@
 {-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE RecordWildCards #-}
 {-# LANGUAGE TupleSections #-}
+{-# OPTIONS_GHC -Wno-error=x-partial #-}
 
 module Main where
 
@@ -18,7 +19,6 @@ import Data.Bits
 import Data.List
   ( elemIndex
   , find
-  , foldl'
   , intercalate
   , isPrefixOf
   , nub
@@ -334,7 +334,7 @@ type ZGroupMemberships = [(ZGroup, Bool)]
 l_if :: X Bool -> X () -> X () -> X ()
 l_if p a b = p >>= \pb -> if pb then a else b
 
-newtype FadingPrompts = FadingPrompts [(TimerId, Window)] deriving (Eq, Typeable)
+newtype FadingPrompts = FadingPrompts [(TimerId, Window)] deriving (Eq)
 instance ExtensionClass FadingPrompts where
   initialValue = FadingPrompts []
 
