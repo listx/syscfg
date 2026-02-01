@@ -51,7 +51,7 @@
     videoDrivers = [ "nvidia" ];
     # export finalized xorg.conf to /etc/X11/xorg.conf
     exportConfiguration = true;
-    config = pkgs.lib.mkOverride 50 (builtins.readFile ./quadmon.conf);
+    config = pkgs.lib.mkOverride 50 (builtins.readFile ./xorg.conf);
   };
 
   nixpkgs.config.allowUnfree = true;
