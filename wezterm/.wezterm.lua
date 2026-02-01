@@ -482,9 +482,9 @@ local cfg = {
   },
 }
 
-if hostname == 'm0' then
-  cfg.font_size = 10
-elseif hostname ~= 'k0' then
+if hostname == 'k0' then
+  cfg.font_size = 12
+else
   cfg.font = wezterm.font_with_fallback {
     "CommitMono"
   }
