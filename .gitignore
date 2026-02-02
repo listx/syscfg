@@ -1,5 +1,6 @@
 *#
 *.aes
+*.backup
 .clj-kondo
 .direnv
 *.elc
