@@ -66,6 +66,9 @@
   hardware.nvidia.package =
     config.boot.kernelPackages.nvidiaPackages.legacy_470;
 
+  # Audio
+  services.pipewire.pulse.enable = true;
+
   # Binary Cache for Haskell.nix
   nix.settings.trusted-public-keys =
     [ "hydra.iohk.io:f/Ea+s+dFdN+3Y/G+FDgSq+a5NEWhJGzdjvKNGv0/EQ=" ];

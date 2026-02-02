@@ -204,6 +204,7 @@ in
     mpd
     r128gain
     pavucontrol
+    pulseaudio
 
     # Document processing
     pdftk
