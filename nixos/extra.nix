@@ -15,6 +15,8 @@ in
     difftastic
     tig
     jujutsu
+    jjui
+    meld
     emacs
     neovim
     editorconfig-core-c
@@ -34,6 +36,7 @@ in
     parallel
     unixtools.xxd
     dos2unix
+    jless
     jq
     dhall
     dhall-json
@@ -58,6 +61,7 @@ in
 
     # Clojure
     clj-kondo
+    cljfmt
     clojure
     clojure-lsp
     neil
@@ -144,6 +148,7 @@ in
 
     # Monitoring/Inspection
     htop
+    bottom
     bmon
     ncdu
     tree
