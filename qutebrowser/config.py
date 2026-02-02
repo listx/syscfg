@@ -8,7 +8,7 @@
 config.load_autoconfig()
 
 # Use the exported org agenda view as the default page.
-c.url.start_pages = []
+c.url.start_pages = ["https://www.google.com"]
 c.url.default_page = "https://www.google.com"
 
 # Use emacs to edit text; use <ctrl-e> to invoke.
