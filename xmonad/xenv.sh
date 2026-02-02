@@ -62,6 +62,9 @@ xset r rate 250 80
 # We are done with setting up the keyboard. Below are misc non-keyboard
 # X-related settings.
 
+# Swap left and right mouse buttons.
+xmodmap -e "pointer = 3 2 1"
+
 # Disable mouse acceleration.
 xset m 0 0
 
