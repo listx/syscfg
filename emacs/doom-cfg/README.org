@@ -1556,13 +1556,13 @@ convention.
   ; on the left describing the actual habits (on widescreen monitors, the
   ; detriment to usabilitiy is especially pronounced).
   (defun +org-habit-resize-graph-h nil)
-  ; Set the absolute starting point for the consistency graph. Our habit
-  ; descriptions are short enough that this works fine. The effect is that the
-  ; graph is now left-aligned, closer to the habit descriptions. This improves
+  ; Set the absolute starting point for the consistency graph. The effect is
+  ; that the graph is now left-aligned, closer to the habit descriptions
+  ; (instead of being right-aligned which is the default). This improves
   ; readability.
-  (setq org-habit-graph-column 21)
-  ; Show the past 39 days of history.
-  (setq org-habit-preceding-days 39)
+  (setq org-habit-graph-column 39)
+  ; Show the past 21 days (3 weeks) of history.
+  (setq org-habit-preceding-days 21)
   ; Show 14 days into the future.
   (setq org-habit-following-days 14)
   ; Set 4AM as the true "ending time" of a day, and make it so that any task
