@@ -7,6 +7,9 @@
 # Load settings configured via the GUI (autoconfig.yml).
 config.load_autoconfig()
 
+# Remember closed tabs from previous session.
+c.auto_save.session = True
+
 # Use the exported org agenda view as the default page.
 c.url.start_pages = ["https://www.google.com"]
 c.url.default_page = "https://www.google.com"
