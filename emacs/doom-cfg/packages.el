@@ -57,7 +57,10 @@
 (package! org-fc
   :recipe (:host github :repo "l3kn/org-fc"
            :files (:defaults "awk" "demo.org")))
-(package! org-superstar)
+;; Workaround for [1], as suggested in [2].
+;; [1] https://github.com/integral-dw/org-superstar-mode/issues/63
+;; [2] https://github.com/integral-dw/org-superstar-mode/issues/63#issuecomment-3671354248
+(package! org-superstar :pin "17e248c6eb947ec00bd39c4f8311b15739cbcf8f")
 (package! protobuf-mode)
 (package! solaire-mode :disable t)
 (package! vim-empty-lines-mode)
