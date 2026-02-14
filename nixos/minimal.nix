@@ -6,19 +6,19 @@
   i18n.defaultLocale = "en_US.UTF-8";
 
   networking = {
-    # 10.0.0.1 router
-    # 10.0.0.2 printer
-    # 10.0.0.3 UNASSIGNED
-    # 10.0.0.5 UNASSIGNED
-    # 10.0.0.6 UNASSIGNED
+    # 192.168.1.1 router
+    # 192.168.1.2 printer
+    # 192.168.1.3 UNASSIGNED
+    # 192.168.1.5 UNASSIGNED
+    # 192.168.1.6 UNASSIGNED
     extraHosts = ''
-      10.0.0.4 k0
-      10.0.0.7 macp
+      192.168.1.4 k0
+      192.168.1.7 macp
     '';
     # Port 22 is opened automatically if SSH daemon is enabled (no need to specify it here).
     firewall.allowedTCPPorts = [
       8010 # org-roam-server-mode
-      8020 # stack exec -- blog watch --host=10.0.0.4 --port=8020
+      8020 # stack exec -- blog watch --host=192.168.1.4 --port=8020
       8030 # mpd HTTP stream
     ];
   };

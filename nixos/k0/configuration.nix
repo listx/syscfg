@@ -31,7 +31,7 @@
     hostName = "k0";
     extraHosts = "";
 
-    defaultGateway = "10.0.0.1";
+    defaultGateway = "192.168.1.1";
     nameservers = [ "8.8.8.8" ];
 
     # Use the USB Wifi adapter "ALFA AWUS036ACHM". See
