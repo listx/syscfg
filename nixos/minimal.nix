@@ -55,7 +55,8 @@
 
   time.timeZone = "Australia/Melbourne";
 
-  i18n.inputMethod.enabled = "uim";
+  i18n.inputMethod.type = "uim";
+  i18n.inputMethod.enable = true;
 
   # Fonts
   fonts = {
