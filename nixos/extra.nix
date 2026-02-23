@@ -267,10 +267,7 @@ in
   virtualisation.docker.storageDriver = "overlay2";
 
   # Enable CUPS to print documents.
-  services.printing = {
-    enable = true;
-    drivers = with pkgs; [ cups-filters cups-brother-dcpl3550cdw ];
-  };
+  services.printing.enable = true;
 
   users.extraUsers.l.extraGroups = [ "wheel" "docker" "vboxusers" ];
 }
