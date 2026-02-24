@@ -74,3 +74,6 @@ xsetroot -cursor_name left_ptr
 
 # Manually start up xscreensaver in the background.
 systemctl --user start xscreensaver.service
+
+# Start melby user service.
+systemctl --user start melby.service
