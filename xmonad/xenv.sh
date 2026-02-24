@@ -72,9 +72,5 @@ xset m 0 0
 # without windows).
 xsetroot -cursor_name left_ptr
 
-# For NixOS machines, manually start up xscreensaver in the background, if it is
-# not running already.
-if < /etc/issue | grep NixOS -q \
-	&& ! ps acx | grep xscreensaver -q; then
-	xscreensaver -nosplash & disown
-fi
+# Manually start up xscreensaver in the background.
+systemctl --user start xscreensaver.service

@@ -145,6 +145,7 @@ in
     xorg.xwininfo
     xcompmgr
     xsel
+    xscreensaver
 
     # Monitoring/Inspection
     htop
@@ -260,6 +261,9 @@ in
     windowManager.xmonad.enable = false;
     windowManager.xmonad.enableContribAndExtras = false;
   };
+
+  # Enable X screen saver (xscreensaver).
+  services.xscreensaver.enable = true;
 
   virtualisation.virtualbox.host.enable = true;
 
