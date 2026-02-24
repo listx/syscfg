@@ -1172,6 +1172,13 @@ l_keyBindings hostname numScreens conf@XConfig {XMonad.modMask = hypr}
     [ "~/syscfg/script/susp.sh"
     , "xscreensaver-command -lock"])
 
+  -- Our keyboard is connected to the LG DualUp monitor, and we switch the
+  -- monitor input from USB-C (Mac) to DisplayPort (NixOS). When we do this, the
+  -- keyboard is reset and loses the hyper key binding, which loses all XMonad
+  -- keybindings. So we need a non-hyper-key way to to reset the keybindings.
+  , ((altS,   xK_a       ), spawnSelected def
+    [ "~/syscfg/xmonad/xenv.sh"])
+
   -- Toggle window borders.
   , ((hypr,   xK_b            ), withFocused toggleBorder)
 
