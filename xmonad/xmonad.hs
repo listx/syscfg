@@ -1561,7 +1561,7 @@ main = do
     { terminal           = "wezterm"
     , focusFollowsMouse  = True
     , clickJustFocuses   = True
-    , borderWidth        = 1
+    , borderWidth        = 2
     -- Use 'mod3' from 'xmodmap' output as our 'modMask' key. We alias it
     -- (XMonad.modMask) it as `hypr` in our configuration above. Either before
     -- or immediately after XMonad starts, 'mod3' should be populated as the
@@ -1572,7 +1572,7 @@ main = do
     , modMask            = mod3Mask
     , workspaces         = map show $ l_XZYs numScreens
     , normalBorderColor  = "#000000"
-    , focusedBorderColor = "#ffffff"
+    , focusedBorderColor = "#00ff00"
     , keys               = l_keyBindings hostname numScreens
     , mouseBindings      = l_mouseBindings
     , layoutHook         = l_layoutHook
