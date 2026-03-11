@@ -408,6 +408,8 @@ the object exists locally)."
         "d" #'org-export-dispatch)
       (:prefix ("g" . "goto")
          "b" #'org-babel-goto-named-src-block)
+      (:prefix ("l" . "goto")
+         "L" #'l/org-insert-line-label)
       (:prefix ("p" . "priority")
          :desc "Set priority to 0"
          "0" (cmd! (org-priority 0))
@@ -693,6 +695,58 @@ LINK-NAME."
 
   (advice-add 'org-store-log-note :around #'l/org-store-log-note)
   (setq org-id-link-to-org-use-id t)
+  (defun l/org-insert-line-label (label-suffix)
+    "Insert a commented line label at the end of the line.
+  Works inside any Org block. If it's a source block, it attempts to use
+  the correct comment syntax. Otherwise, it defaults to '#'. Use the name
+  of the block as a prefix, and prompt the user for the suffix."
+    (interactive "sLine label suffix: ")
+    (let* ((element (org-element-at-point))
+           (type (org-element-type element)))
+
+      ;; Check if we are inside ANY block (e.g., src-block, example-block)
+      (unless (and (symbolp type) (string-suffix-p "-block" (symbol-name type)))
+        (user-error "You are not inside a block!"))
+
+      (let* ((name (org-element-property :name element))
+             (lang (org-element-property :language element))
+
+             ;; Construct the full label. Use a "-" separator if needed.
+             (full-label (cond ((and name (not (string= label-suffix "")))
+                                (concat name "-" label-suffix))
+                               (name name)
+                               ((not (string= label-suffix "")) label-suffix)
+                               (t "no-name")))
+
+             ;; Figure out the comment string.
+             (comment-str
+              (if lang
+                  ;; If it has a language, figure out the major mode.
+                  (let* ((lang-mode (org-src-get-lang-mode lang))
+                         (mode-func (intern (symbol-name lang-mode))))
+                    (with-temp-buffer
+                      (when (fboundp mode-func)
+                        (ignore-errors (funcall mode-func)))
+                      (or comment-start "#")))
+                ;; If no language (like an example-block), default to "#".
+                "#"))
+
+             ;; Clean up any trailing spaces from the native comment string (some
+             ;; modes might have a trailing space after the comment).
+             (clean-comment (replace-regexp-in-string "[ \t]+$" "" comment-str))
+
+             ;; Copy link to this reference.
+             (line-label-link (format "[[(%s)]]" full-label)))
+
+        ;; Insert the formatted line label at the end of the current line.
+        (save-excursion
+          (end-of-line)
+          ;; Add a leading space if there isn't one already
+          (unless (looking-back "[ \t]" (line-beginning-position))
+            (insert " "))
+          (insert (format "%s (ref:%s)" clean-comment full-label)))
+        (kill-new line-label-link)
+        (message "Inserted line label and copied link: %s" line-label-link))))
   (add-hook 'org-mode-hook (lambda () (modify-syntax-entry ?= ".")))
   (add-hook 'org-mode-hook (lambda () (org-indent-mode -1)))
   (add-hook 'org-mode-hook 'l/org-colors))
