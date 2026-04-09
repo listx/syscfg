@@ -91,6 +91,7 @@
     # systemd service. To stop the `home' OpenVPN client service, run `sudo
     # systemctl stop openvpn-home'.
     home = { config = builtins.readFile ../openvpn/home.ovpn; };
+    us = { config = builtins.readFile ../openvpn/us.ovpn; autoStart = false; };
   };
 
   # PipeWire
