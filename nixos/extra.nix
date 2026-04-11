@@ -12,6 +12,7 @@ in
     tmux
     zsh
     git
+    git-filter-repo
     difftastic
     tig
     jujutsu
