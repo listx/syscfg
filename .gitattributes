@@ -1,0 +1,3 @@
+*.html -diff
+doc/css/default.css -diff
+doc/js/lilac.js -diff

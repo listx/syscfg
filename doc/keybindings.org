@@ -1,0 +1,27 @@
+:PROPERTIES:
+:ID:       760c42eb-8eee-4e37-98bb-665b4d99f318
+:END:
+#+title: Keybindings
+
+* Introduction
+
+This page discusses keybindings. Much of the discussion will be about
+keybindings in the terminal, because that's where I spend most of my time.
+
+* Keyboard input "stack"
+
+  1) Custom Esrille firmware (keyboard hardware)
+
+  2) (Linux only) xkb layer
+
+  3) (Linux only) XMonad
+
+  4) (Mac only) Karabiner
+
+  5) WezTerm
+
+  6) tmux
+
+  7) Zsh
+
+  8) Emacs (or another terminal application)

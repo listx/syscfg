@@ -1,0 +1,475 @@
+:PROPERTIES:
+:ID:       bbe0ff18-1b29-4f04-b2a6-5f3d7b003eb5
+:END:
+#+title: Introduction
+
+#+name: index
+#+begin_src txt
+keybindings.org
+emacs.org
+#+end_src
+
+This repo uses [[https://git.sr.ht/~listx/lilac][Lilac]] to extract the code/configuration from Org files. Not all
+parts have been migrated over to use Lilac yet, and until that's done there will
+be many incomplete sections in the docs.
+
+Warning: I will force-push to this repo rather frequently. Sorry!
+
+* Installation
+
+Each subdirectory is responsible for one component, and is also the name of a
+build rule in the ~Makefile~.
+
+E.g., to set up Emacs and Vim configurations, do:
+
+#+begin_src sh
+make emacs vim
+#+end_src
+
+* Known Issues
+
+  - The default repository name, ~syscfg~, is hardcoded in some places.
+
+* Build system
+
+** Lilac project configuration
+
+#+header: :tangle doc/.lilac.json
+#+begin_src json
+{
+    "name": "Linus Arver's Dotfiles",
+    "homepage": "https://git.sr.ht/~listx/syscfg",
+    "repo": "https://git.sr.ht/~listx/syscfg",
+    "version": "",
+    "nonTangledPathspecs": [ (ref:nonTangledPathspecs)
+        ":(exclude,top).gitmodules",
+        ":(exclude,top).lilac.json",
+        ":(exclude,top)README.md",
+        ":(exclude,top)LICENSE",
+        ":(exclude,top)bash",
+        ":(exclude,top)clojure",
+        ":(exclude,top)doc/*.org",
+        ":(exclude,top)doc/*.html",
+        ":(exclude,top)doc/css",
+        ":(exclude,top)doc/js",
+        ":(exclude,top)emacs",
+        ":(exclude,top)gd",
+        ":(exclude,top)git",
+        ":(exclude,top)gpg",
+        ":(exclude,top)jj",
+        ":(exclude,top)jjui",
+        ":(exclude,top)karabiner",
+        ":(exclude,top)lesskey",
+        ":(exclude,top)melby",
+        ":(exclude,top)mpd",
+        ":(exclude,top)mpv",
+        ":(exclude,top)nix",
+        ":(exclude,top)nixos",
+        ":(exclude,top)nixpkgs",
+        ":(exclude,top)notmuch",
+        ":(exclude,top)nvim",
+        ":(exclude,top)openvpn",
+        ":(exclude,top)pulse",
+        ":(exclude,top)qutebrowser",
+        ":(exclude,top)rtorrent",
+        ":(exclude,top)ssh",
+        ":(exclude,top)terminfo",
+        ":(exclude,top)tig",
+        ":(exclude,top)tmux",
+        ":(exclude,top)vimpc",
+        ":(exclude,top)wezterm",
+        ":(exclude,top)nixos",
+        ":(exclude,top)script",
+        ":(exclude,top)uim",
+        ":(exclude,top)vim",
+        ":(exclude,top)xmonad",
+        ":(exclude,top)xorg",
+        ":(exclude,top)zathura",
+        ":(exclude,top)zsh"
+    ]
+}
+#+end_src
+
+Currently we exclude most paths in [[(nonTangledPathspecs)]], because we haven't
+migrated existing code to literate style yet.
+
+** Literate Makefile
+
+The literate programming configuration is inside the ~doc~ folder. It houses all
+Org files which we feed into Lilac to tangle the code and also weave HTML
+output.
+
+#+header: :tangle doc/Makefile
+#+begin_src makefile
+org_files := $(shell find . -type f -name "*.org")
+
+obj_files := $(org_files:%.org=%.lobj)
+
+archive_file := syscfg.larc
+
+all: tangle weave lint
+.PHONY: all
+
+$(obj_files) &: $(org_files)
+	lilac compile $?
+	touch $(obj_files)
+
+$(archive_file): $(obj_files)
+	lilac archive $^ --out-file $@
+
+tangle: $(archive_file)
+	lilac tangle $< --out-dir ..
+	touch tangle
+
+weave: $(archive_file)
+	lilac weave $< --out-dir ../site --root-relative-prefix "/site" --write-css --write-js
+	touch weave
+
+lint: $(archive_file)
+	cd .. && lilac lint doc/$<
+	#cd .. && editorconfig-checker
+	touch lint
+
+gitconfig:
+	cd .. && git config diff.orderfile .git-orderfile
+.PHONY: gitconfig
+
+clean:
+	rm -rf \
+		$(archive_file) \
+		$(obj_files) \
+		../site/*
+.PHONY: clean
+#+end_src
+
+** Makefile for installing dotfiles
+
+#+header: :tangle Makefile
+#+begin_src makefile
+# Configuration directory.
+C := $(shell pwd)
+# Home directory.
+H := ${HOME}
+# Platform. E.g., "Darwin", "Linux".
+P := $(shell uname)
+# Long hostname, without the trailing domain name, if any.
+T := $(shell hostname | cut -d. -f1)
+# Short (custom) hostname.
+S := $(shell cat ${H}/.hostname-short)
+
+# Add the -n flag for directories, as otherwise, stray symlinks will be created
+# inside the C (config) directory itself.
+
+bash:
+	ln -fs ${C}/bash/.bashrc                            ${H}
+clojure:
+	ln -fns ${C}/clojure                                ${H}/.config/clojure
+emacs:
+	git -C ${C} submodule update --init ${C}/emacs/doom-upstream
+	# Point .emacs.d to upstream doom code.
+	ln -fns ${C}/emacs/doom-upstream                    ${H}/.emacs.d
+	# Make $$DOOMDIR point to our doom-cfg folder.
+	ln -fns ${C}/emacs/doom-cfg                         ${H}/.doom.d
+	# Bring 'doom' script into $$PATH.
+	cd ${C}/script && ln -fs ../emacs/doom-upstream/bin/doom
+	ln -sf ${H}/lo/custom-dict.txt                      ${C}/emacs/spell-fu
+git:
+	ln -fs ${C}/git/cfg.personal.conf                   ${H}/.gitconfig
+	ln -fs ${C}/git/gitignore                           ${H}/.gitignore
+	ln -fs ${C}/git/sendemail-aliases                   ${H}/.git-sendemail-aliases
+gpg:
+	ln -fns ${C}/gpg                                    ${H}/.gnupg
+	ln -fs ${C}/gpg/gpg-agent.nixos.conf                ${H}/.gnupg/gpg-agent.conf
+jj:
+	ln -fns ${C}/jj                                     ${H}/.config/jj
+jjui:
+	ln -fns ${C}/jjui                                   ${H}/.config/jjui
+karabiner:
+	mkdir -p ${H}/.config/karabiner
+	ln -fns ${C}/karabiner/karabiner.json               ${H}/.config/karabiner
+lesskey:
+	ln -fs ${C}/lesskey/cfg                             ${H}/.lesskey
+	lesskey
+melby:
+	ln -fns ${C}/melby                                   ${H}/.melby
+	set -e && \
+		melby_location=$$(readlink $$(which melbyd)) && \
+		cp -f $${melby_location%/bin/melbyd}/share/melby/sample/* ${H}/.melby
+mpd:
+	ln -fns ${C}/mpd                                    ${H}/.config/mpd
+mpv:
+	ln -fns ${C}/mpv                                    ${H}/.config/mpv
+ifeq ('${T}','k0')
+	ln -fs mpv.${T}.conf                                mpv/mpv.conf
+else ifeq ('${P}','Darwin')
+	ln -fs mpv.osx.conf                                 mpv/mpv.conf
+else
+	ln -fs mpv.linux.conf                               mpv/mpv.conf
+endif
+nix:
+	ln -fns ${C}/nix                                    ${H}/.config/nix
+nixos:
+ifeq ('${T}','w0')
+	ln -fs ${C}/nixos/${T}/configuration.nix            /etc/nixos
+	ln -fs ${C}/nixos/${T}/syschdemd.nix                /etc/nixos
+	ln -fs ${C}/nixos/${T}/syschdemd.sh                 /etc/nixos
+	ln -fs ${C}/nixos/${T}/wsl.conf                     /etc/nixos
+	ln -fs ${C}/nixos/${T}/hosts                        /etc
+	cp -f ${C}/nixos/${T}/resolv.conf                   /etc
+else
+	ln -fs ${C}/nixos/${T}/configuration.nix            /etc/nixos
+	ln -fs ${C}/nixos/${T}/hardware-configuration.nix   /etc/nixos
+endif
+nixpkgs:
+	ln -fns ${C}/nixpkgs                                ${H}/.nixpkgs
+notmuch:
+	ln -fs ${C}/notmuch/notmuch-config                  ${H}/.notmuch-config
+nvim:
+	ln -fns ${C}/nvim                                   ${H}/.config/nvim
+pulse:
+	rm -rf ${H}/.config/pulse
+	rm -rf ${H}/.pulse
+	mkdir -p ${H}/.config/pulse
+	mkdir ${H}/.pulse
+ifeq ('${T}','k0')
+	cp ${C}/pulse/daemon.conf.k0                        ${H}/.config/pulse/daemon.conf
+	cp ${C}/pulse/default.pa.k0                         ${H}/.pulse/default.pa
+else
+	cp ${C}/pulse/default.pa                            ${H}/.pulse/default.pa
+endif
+qutebrowser:
+ifeq ('${P}','Darwin')
+	ln -fns ${C}/qutebrowser                            ${H}/.qutebrowser
+else
+	ln -fns ${C}/qutebrowser                            ${H}/.config
+endif
+rtorrent:
+	ln -fs ${C}/rtorrent/cfg                            ${H}/.rtorrent.rc
+ssh:
+ifeq ($(wildcard ~/.ssh/.),)
+	ln -fns ${C}/ssh                                    ${H}/.ssh
+endif
+	ln -fs ${C}/ssh/config.home.conf                    ${H}/.ssh/config
+terminfo:
+	git -C ${C} submodule update --init ${C}/wezterm/upstream
+	tic -x -o ~/.terminfo ${C}/wezterm/upstream/termwiz/data/wezterm.terminfo
+	tic -x -o ~/.terminfo ${C}/terminfo/xterm-24bit.terminfo
+tig:
+	ln -fs ${C}/tig/.tigrc                              ${H}
+tmux:
+	ln -fs ${C}/tmux/.tmux.conf                         ${H}/.tmux.conf
+	ln -fns ${C}/tmux                                   ${H}/.tmux
+uim:
+	ln -fns ${C}/uim/.uim                               ${H}/.uim
+	ln -fns ${C}/uim                                    ${H}/.uim.d
+vim:
+	ln -fns ${C}/vim                                    ${H}/.vim
+	ln -fs ${C}/vim/cfg                                 ${H}/.vimrc
+	ln -fs ${C}/vim/cfg                                 ${H}/.gvimrc
+vimpc:
+	ln -fs ${C}/vimpc/.vimpcrc                          ${H}
+wezterm:
+	ln -fs ${C}/wezterm/.wezterm.lua                    ${H}
+xmonad:
+	ln -fns ${C}/xmonad                                 ${H}/.xmonad
+	# xsession is relied on by NixOS hosts that use xmonad (basically the
+	# default) to start xmonad.
+	ln -fs ${C}/xmonad/.xsession                        ${H}/.xsession
+zathura:
+	ln -fns ${C}/zathura                                ${H}/.config/zathura
+zsh:
+	ln -fns ${C}/zsh                                    ${H}/.zsh
+	ln -fs ${C}/zsh/.zshenv                             ${H}
+	ln -fs ${C}/zsh/.zshrc                              ${H}
+	test -f ${C}/zsh/zprofile-${T} \
+		&& ln -fs ${C}/zsh/zprofile-${T}                ${H}/.zprofile || true
+	test -f ${C}/zsh/zprofile-${S} \
+		&& ln -fs ${C}/zsh/zprofile-${S}                ${H}/.zprofile || true
+	test -f ${C}/zsh/zlogin-${T} \
+		&& ln -fs ${C}/zsh/zlogin-${T}                  ${H}/.zlogin || true
+	mkdir -p ${H}/.zsh-untracked
+	git -C ${C} submodule update --init ${C}/zsh/zcomet-upstream
+	mkdir -p ${C}/zsh/zcomet
+	ln -fns ${C}/zsh/zcomet                             ${H}/.zcomet
+
+.PHONY: \
+	bash \
+	clojure \
+	emacs \
+	git \
+	gpg \
+	jj \
+	jjui \
+	karabiner \
+	lesskey \
+	melby \
+	mpd \
+	mpv \
+	nix \
+	nixos \
+	nixpkgs \
+	notmuch \
+	nvim \
+	pulse \
+	qutebrowser \
+	rtorrent \
+	ssh \
+	terminfo \
+	tig \
+	tmux \
+	uim \
+	vim \
+	vimpc \
+	wezterm \
+	xmonad \
+	xorg \
+	zathura \
+	zsh
+#+end_src
+
+** Dependencies via Nix
+
+#+begin_src nix
+
+#+end_src
+
+* Other project settings
+
+** ~.gitignore~ file
+
+#+header: :tangle .gitignore
+#+begin_src gitignore
+,*#
+,*.aes
+,*.backup
+.clj-kondo
+.direnv
+,*.elc
+,*.log
+,*.hi
+.lsp
+.nrepl-port
+,*.o
+,*.pyc
+,*.swp
+,*.DS_Store
+,*~
+,*.zwc
+cache
+cmus/*
+emacs/doom-cfg/custom.el
+emacs/spell-fu/*.data
+emacs/spell-fu/*.txt
+gpg
+karabiner/assets
+karabiner/automatic_backups
+lh/target
+melby/*
+mpv/mpv.conf
+nvim/.netrwhist
+openvpn/*.ovpn
+qutebrowser/autoconfig.yml
+qutebrowser/bookmarks
+qutebrowser/quickmarks
+qutebrowser/qsettings
+ssh/*
+tmux/resurrect
+vim/.VimballRecord
+vim/.netrwhist
+vim/colors
+vim/sessions
+wezterm/upstream
+xmonad/.cabal-sandbox
+xmonad/cabal.sandbox.config
+xmonad/dist
+xmonad/dist-newstyle
+xmonad/.stack-work
+xmonad/xmonad
+xmonad/xmonad-x86_64-linux
+xmonad/xmonad.errors
+xmonad/xmonad.state
+xmonad/xmonad-session-rc
+zsh/zcomet
+
+!.gitattributes
+!.git-orderfile
+,*.lobj
+,*.larc
+,*.html
+,*.js
+,*.css
+lint
+site/
+tangle
+weave
+#+end_src
+
+** Git attributes
+
+#+header: :tangle .gitattributes
+#+begin_src txt
+,*.html -diff
+doc/css/default.css -diff
+doc/js/lilac.js -diff
+#+end_src
+
+** Git orderfile
+
+Make ~git-diff~ show the Org files first.
+
+#+name: git-orderfile
+#+header: :tangle .git-orderfile
+#+begin_src txt
+# Org files
+doc/index.org
+,*.org
+#+end_src
+
+** ~.rgignore~ file
+
+#+header: :tangle .rgignore
+#+begin_src rgignore
+emacs/doom-upstream
+zsh/zcomet-upstream
+#+end_src
+
+** EditorConfig
+
+#+header: :tangle .editorconfig
+#+begin_src txt
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+[*.{sh},Makefile]
+indent_style = tab
+tab_width = 8
+
+[COMMIT_EDITMSG]
+max_line_length = 72
+#+end_src
+
+* Plan
+** TODO set up dev environment
+
+We need to install the tools we need for this literate environment. So we
+need to use Nix or something else to install things like Lilac and
+editorconfig-checker.
+
+Installing Lilac is blocked by Lilac's release and addition to nixpkgs.
+
+*** TODO add pikchr for diagrams
+
+** TODO add editorconfig-checker to linter
+
+** TODO add spellchecker to linter
+
+** TODO add ShellCheck linter
+
+** TODO add formatter linter for emacs lisp
+
+** TODO add formatter for Haskell

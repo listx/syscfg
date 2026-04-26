@@ -49,3 +49,15 @@ xmonad/xmonad.errors
 xmonad/xmonad.state
 xmonad/xmonad-session-rc
 zsh/zcomet
+
+!.gitattributes
+!.git-orderfile
+*.lobj
+*.larc
+*.html
+*.js
+*.css
+lint
+site/
+tangle
+weave
