@@ -31,6 +31,10 @@ gitconfig:
 	cd .. && git config diff.orderfile .git-orderfile
 .PHONY: gitconfig
 
+update:
+	cd .. && niv update nixpkgs --branch nixos-25.11
+.PHONY: update
+
 clean:
 	rm -rf \
 		$(archive_file) \

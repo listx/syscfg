@@ -134,12 +134,21 @@ gitconfig:
 	cd .. && git config diff.orderfile .git-orderfile
 .PHONY: gitconfig
 
+update:
+	cd .. && niv update nixpkgs --branch <<Nixpkgs version>>
+.PHONY: update
+
 clean:
 	rm -rf \
 		$(archive_file) \
 		$(obj_files) \
 		../site/*
 .PHONY: clean
+#+end_src
+
+#+name: Nixpkgs version
+#+begin_src txt
+nixos-25.11
 #+end_src
 
 ** Makefile for installing dotfiles
@@ -329,8 +338,40 @@ zsh:
 
 ** Dependencies via Nix
 
+#+header: :tangle shell.nix
 #+begin_src nix
+let
+  sources = import ./nix/sources.nix;
+  pkgs = import sources.nixpkgs { };
+in
+pkgs.mkShell {
+  name = "syscfg-dev-shell";
 
+  buildInputs = with pkgs; [
+    editorconfig-checker
+    pikchr
+    shellcheck
+    nixfmt
+    niv
+    ormolu
+    parinfer-rust
+    shfmt
+    vale
+  ];
+
+  shellHook = ''
+    echo -e "\n$(tput setaf 4)"
+    echo Syscfg | ${pkgs.figlet}/bin/figlet
+    echo -e "$(tput sgr0)\n"
+    echo "Using nixpkgs commit: ${sources.nixpkgs.rev} ${pkgs.lib.version}"
+    echo
+  '';
+}
+#+end_src
+
+#+header: :tangle .envrc
+#+begin_src txt
+use nix
 #+end_src
 
 * Other project settings
@@ -462,11 +503,9 @@ editorconfig-checker.
 
 Installing Lilac is blocked by Lilac's release and addition to nixpkgs.
 
-*** TODO add pikchr for diagrams
-
 ** TODO add editorconfig-checker to linter
 
-** TODO add spellchecker to linter
+** TODO add spellchecker (vale) to linter
 
 ** TODO add ShellCheck linter
 
