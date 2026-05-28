@@ -13,6 +13,7 @@ script which knows what to do depending on the environment."
    (funcall orig-fun string)))
 
 (advice-add 'gui-select-text :around #'l/copy-to-clipboard)
+
 ;; Enable `CSI u` support. See https://emacs.stackexchange.com/a/59225.
 ;;
 ;; xterm with the resource ?.VT100.modifyOtherKeys: 1
@@ -230,6 +231,7 @@ Return an event vector."
       :mnv "L" #'next-buffer
       :mnv "h" #'dired-up-directory
       :mnv "l" #'dired-find-file)
+
 (add-to-list 'auto-mode-alist '("\\.jjdescription\\'" . org-mode))
 (add-hook 'org-mode-hook 'l/jj-description-setup)
 (defun l/jj-description-setup ()
@@ -243,6 +245,7 @@ Return an event vector."
     (add-hook 'kill-buffer-hook (lambda () (+org-pretty-mode 1)) nil t)
     (auto-fill-mode 1)
     (setq fill-column 72)))
+
 (map! :after magit
       :map magit-mode-map
       ;; Remap C-{j,k} bindings.
@@ -260,6 +263,7 @@ Return an event vector."
        (:desc "goto previous hunk" "N" #'l/git-gutter:prev-hunk)
        (:desc "revert hunk"        "r" #'git-gutter:revert-hunk)
        (:desc "show hunk"          "s" #'git-gutter:popup-hunk))
+
       (:desc "Update and push"
              "u"
              (cmd! (start-process-shell-command
@@ -319,12 +323,15 @@ the object exists locally)."
             ('file-url (browse-at-remote-get-url)))))
     (kill-new copytext)
     (message copytext)))
+
 (after! magit
   (setq magit-repository-directories
       `(("~/prog" . 1)
         ("~/syscfg" . 0))))
+
 (after! magit
   (setq git-commit-major-mode #'org-mode))
+
 (defun l/git-commit-setup ()
   (interactive)
   (apheleia-mode -1)
@@ -338,6 +345,7 @@ the object exists locally)."
   (yas-minor-mode -1))
 (after! magit
   (add-hook 'git-commit-setup-hook #'l/git-commit-setup))
+
 (defun l/git-gutter:next-hunk ()
   (interactive)
   (git-gutter:next-hunk 1)
@@ -356,6 +364,7 @@ the object exists locally)."
   (setq git-gutter:modified-sign "█")
   (setq git-gutter:added-sign "█")
   (setq git-gutter:deleted-sign "█"))
+
 (map! :after evil-org
       :map evil-org-mode-map
       ;; Remove conflicting bindings.
@@ -429,6 +438,7 @@ the object exists locally)."
 (defun l/org-insert-timestamp-inactive ()
   (interactive)
   (org-time-stamp-inactive '(16)))
+
 ;; See https://emacs.stackexchange.com/a/22398/13006. Detect poorly-converted
 ;; links (those that have two or more parentheses, which can happen if we have
 ;; an elisp link).
@@ -479,6 +489,7 @@ LINK-NAME."
   (add-hook 'org-mode-hook
             (lambda ()
               (display-fill-column-indicator-mode 1)))
+
   (defun l/org-export-as-markdown-to-clipboard (include-parent-heading)
     "Like doom's +org/export-to-clipboard, but (1) always exports to markdown, (2)
   always processes only the current subtree around point, and (3) pipes to a
@@ -609,6 +620,7 @@ LINK-NAME."
         org-use-effective-time t)
   (add-hook 'org-mode-hook #'(lambda () (when (not (string-equal (file-name-extension (or (buffer-file-name) "")) "jjdescription")) (setq fill-column 80))))
   (add-hook 'org-mode-hook 'turn-on-auto-fill)
+
   (use-package! org-appear
     :config
     ;; Hide emphasis markers (e.g., *foo*, /foo/, =foo=).
@@ -655,6 +667,7 @@ LINK-NAME."
             (?+ . #x21AA)    ;; ↪ RIGHT ARROW WITH HOOK
             (?* . #x2738)))) ;; ✸ HEAVY EIGHT POINTED RECTILINEAR BLACK STAR
   (add-hook 'org-mode-hook (lambda () (org-superstar-mode 1)))
+
   (after! (org org-fancy-priorities)
     (setq org-priority-highest 0
           org-priority-default 2
@@ -685,6 +698,7 @@ LINK-NAME."
     (org-insert-all-links arg "" ""))
 
   (advice-add 'org-insert-last-stored-link :around #'l/org-insert-last-stored-link)
+
   (defun l/org-log-note-buffer-empty-p ()
     "Is current buffer empty except for the boilerplate template at the top?"
     (eq (point-max) 85))
@@ -694,7 +708,9 @@ LINK-NAME."
       (apply orig-fun nil)))
 
   (advice-add 'org-store-log-note :around #'l/org-store-log-note)
+
   (setq org-id-link-to-org-use-id t)
+
   (defun l/org-insert-line-label (label-suffix)
     "Insert a commented line label at the end of the line.
   Works inside any Org block. If it's a source block, it attempts to use
@@ -790,10 +806,13 @@ LINK-NAME."
 (remove-hook 'org-mode-hook #'flyspell-mode)
 
 (setq org-log-done 'note)
+
 (setq org-log-redeadline 'note)
 (setq org-log-reschedule 'note)
+
 (use-package! org-auto-tangle
   :hook (org-mode . org-auto-tangle-mode))
+
 (map! :after evil-org-agenda
       :map evil-org-agenda-mode-map
       :mnv "SPC" nil
@@ -896,6 +915,7 @@ should be continued."
        (and scheduled-seconds
             (>= scheduled-seconds now)
             subtree-end))))
+
 (defun l/org-roam-open-node (&optional initial-input)
   "Search for org-roam nodes and open in a new tab."
   (interactive)
@@ -924,6 +944,7 @@ details."
      dir-expanded
      ;; Initial input
      pat)))
+
 (map! :after org-roam
       :map org-roam-mode-map
       :mnvi "C-k" nil
@@ -972,6 +993,7 @@ details."
                                 ,l/org-roam-default-olp)
          :unnarrowed t)))
 
+
 (use-package org-fc
   :after org
 
@@ -1015,6 +1037,7 @@ details."
          :desc "Cloze"         "c" #'org-fc-type-cloze-init
          :desc "Double"        "d" #'org-fc-type-double-init
          :desc "Text-Input"    "t" #'org-fc-type-text-input-init))))
+
 (use-package! hyperbole
   :init
   (hyperbole-mode 1)
@@ -1039,10 +1062,12 @@ details."
                           (match-end 1))
           (hact 'l/browse-jira-ticket ticket)))))
   )
+
 (map! :after alchemist
       :map alchemist-mode-map
       :mnvi "C-k" nil
       :mnvi "C-j" nil)
+
 (map! :after cider
       :map cider-repl-mode-map
       ; Use M-{k,j} instead of M-{p,n} for cycling through history.
@@ -1054,23 +1079,27 @@ details."
       :map cider-stacktrace-mode-map
       :mnvi "C-k" nil
       :mnvi "C-j" nil)
+
 (add-hook 'clojure-mode-hook 'l/customize-clojure-mode)
 (defun l/customize-clojure-mode ()
   (interactive)
   (auto-fill-mode 1)
   (setq cider-preferred-build-tool 'clojure-cli))
+
 (add-hook 'c-mode-hook 'l/customize-c-mode)
 (defun l/customize-c-mode ()
   (interactive)
   (setq c-default-style "linux"
         c-basic-offset 8
         tab-width 8))
+
 (map! :after ccls
       :map (c-mode-map c++-mode-map)
       :mnvi "C-h" nil
       :mnvi "C-l" nil
       :mnvi "C-k" nil
       :mnvi "C-j" nil)
+
 (defun l/set-tab-width-to-8 ()
   (interactive)
   (setq tab-width 8)
@@ -1080,6 +1109,7 @@ details."
 (add-hook 'makefile-automake-mode-hook #'l/set-tab-width-to-8)
 (add-hook 'makefile-gmake-mode-hook #'l/set-tab-width-to-8)
 (add-hook 'makefile-bsdmake-mode-hook #'l/set-tab-width-to-8)
+
 (defvar l/c-like-modes '(c-mode))
 (defvar l/banned-auto-format-dirs '("prog/git"))
 
@@ -1098,6 +1128,7 @@ details."
     (apheleia-mode (if (l/auto-format-buffer-p) 1 -1))))
 
 (add-hook! 'after-change-major-mode-hook 'l/after-change-major-mode)
+
 (after! sh-script
   (set-formatter! 'shfmt
     '("shfmt"
@@ -1109,6 +1140,7 @@ details."
       (format "--language-dialect=%s"
        (pcase sh-shell (`bash "bash") (`mksh "mksh") (_ "posix"))))))
 (add-hook 'sh-mode-hook #'l/set-tab-width-to-8)
+
 (add-hook 'text-mode-hook
           (lambda ()
             (turn-on-auto-fill)
@@ -1119,6 +1151,7 @@ details."
 (use-package! evil-escape
   :config
   (setq evil-escape-key-sequence "kj"))
+
 (map! :after evil-org
       :map evil-org-mode-map
       :m "gk" #'evil-previous-visual-line
@@ -1126,7 +1159,9 @@ details."
 
 (remove-hook 'doom-first-input-hook #'evil-snipe-mode)
 (map! :n "S" #'evil-snipe-s)
+
 (map! :leader :desc "help" "H" help-map)
+
 (map! :leader
       :desc "notes"
       "N" doom-leader-notes-map)
@@ -1143,8 +1178,10 @@ details."
              (evil-previous-line (abs cnt)))
       (progn (evil-scroll-line-down cnt)
              (evil-next-line cnt))))
+
 (map! :m "H" #'previous-buffer
       :m "L" #'next-buffer)
+
 (after! vertico
   (map! :map vertico-map
          "S-DEL" #'l/vertico-directory-up))
@@ -1158,6 +1195,7 @@ details."
     (when (search-backward "/" (minibuffer-prompt-end) t)
       (delete-region (1+ (point)) (point-max))
       t)))
+
 (require 'consult)
 
 (map! :after evil-common
@@ -1191,6 +1229,7 @@ details."
       "+" #'balance-windows
       "\\" #'enlarge-window-horizontally
       "|" #'shrink-window-horizontally)
+
 (map! :leader
       :desc "quit/session" "Q" doom-leader-quit/session-map
       :desc "l/quit-buffer" "q" #'l/quit-buffer)
@@ -1320,6 +1359,7 @@ otherwise, close current tab."
   (interactive)
   (eval (cons 'or (mapcar
                    (lambda (rgx) (string-match rgx bufname)) regexes))))
+
 (map! :after evil-org
       :map evil-org-mode-map
       :imnv "C-j" (cmd!! #'other-window 1)
@@ -1383,6 +1423,7 @@ Also add the number of windows in the window configuration."
          ((= day-diff 1) (concat date-str " [TOMORROW]"))
          ((= day-diff -1) (concat date-str " [YESTERDAY]"))
          (t (concat date-str suffix)))))
+
 (map! :after evil-org
       :map evil-org-mode-map
       :ni "C-S-h" nil
@@ -1391,10 +1432,12 @@ Also add the number of windows in the window configuration."
       :mi "C-h" #'tab-previous
       :mi "C-S-l" (cmd!! #'tab-bar-move-tab 1)
       :mi "C-S-h" (cmd!! #'tab-bar-move-tab -1))
+
 (map! :leader :desc "tab-new" "n" (cmd!! #'tab-bar-new-tab 1))
 
 (map! :leader :desc "window" "W" evil-window-map)
 (map! :leader :desc "save-buffer" "w" #'save-buffer)
+
 (map! :leader :desc "kill-buffer" "d" #'l/kill-this-buffer)
 (map! :leader :desc "kill-buffer!" "D" #'l/kill-this-buffer!)
 (defun l/kill-this-buffer ()
@@ -1418,6 +1461,7 @@ Also add the number of windows in the window configuration."
     (flycheck-mode -1)
     (git-gutter-mode -1)
     (smartparens-mode -1))
+
   (map! :after notmuch
         :map notmuch-show-mode-map
         :mnv "C-k" nil
@@ -1435,6 +1479,7 @@ Also add the number of windows in the window configuration."
         ;; `notmuch-show-reply-sender' does), so give it the simpler "cr" binding.
         :mnv "cr" #'notmuch-show-reply
         :mnv "cR" #'notmuch-show-reply-sender)
+
   (setq notmuch-saved-searches
         '((:name "inbox"
            :query "tag:inbox"
@@ -1459,11 +1504,14 @@ Also add the number of windows in the window configuration."
           (:name "sent"
            :query "tag:sent"
            :key "s")))
+
   (defun l/+notmuch-get-sync-command (orig-fun) "~/syscfg/script/mail-sync.sh")
   (advice-add '+notmuch-get-sync-command :around #'l/+notmuch-get-sync-command)
+
   (setq sendmail-program "gmi")
   (setq message-sendmail-extra-arguments
         '("send" "--quiet" "-t" "-C" "~/mail/linusarver@gmail.com"))
+
   (defun notmuch-mua-reply-guess-sender (orig-fun query-string &optional sender
                                                   reply-all duplicate)
     (let ((sender (or sender
@@ -1492,6 +1540,7 @@ Also add the number of windows in the window configuration."
   (beginning-of-line)
   (insert "\n")
   (forward-line -1))
+
 (map! :after flycheck
       :leader :desc "flycheck" "F" flycheck-command-map)
 (map! :after flycheck
@@ -1519,9 +1568,11 @@ Also add the number of windows in the window configuration."
   (setq lsp-yaml-format-enable nil)
   (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]bazel-.*\\'")
   (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\.cache\\'"))
+
 (map! :after evil
       :leader
       :mnv "c," #'evilnc-comment-or-uncomment-lines)
+
 ;; Use text-mode for scratch buffer.
 (setq-default doom-scratch-initial-major-mode 'text-mode)
 
@@ -1664,6 +1715,7 @@ Also add the number of windows in the window configuration."
 ;; Disable rainbow-mode (because "#def" in "#define" gets interpreted as a hex
 ;; color.)
 (add-hook 'c-mode-hook (lambda () (rainbow-turn-off)))
+
 (use-package! doom-themes
   :config
   (advice-add 'doom-init-theme-h :after #'l/reset-faces)
@@ -1672,6 +1724,7 @@ Also add the number of windows in the window configuration."
     (load-theme 'doom-one t))
    (t
     (load-theme 'doom-zenburn t))))
+
 ;; Enable soft word-wrap almost everywhere (including elisp).
 (+global-word-wrap-mode +1)
 
@@ -1712,8 +1765,10 @@ Also add the number of windows in the window configuration."
 (setq evil-normal-state-cursor 'box)
 (setq evil-insert-state-cursor 'box)
 (setq evil-emacs-state-cursor  'box)
+
 ;; Broken. See README.org for discussion.
 ;; (tty--set-output-buffer-size (* 128 1024))
+
 (setq
  spell-fu-directory "~/syscfg/emacs/spell-fu"
  ispell-library-directory "~/syscfg/emacs/spell-fu"
