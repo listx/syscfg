@@ -1,4 +1,16 @@
 {
+    "git-hooks.nix": {
+        "branch": "master",
+        "description": "Seamless integration of https://pre-commit.com git hooks with Nix.",
+        "homepage": "",
+        "owner": "cachix",
+        "repo": "git-hooks.nix",
+        "rev": "61ab0e80d9c7ab14c256b5b453d8b3fb0189ba0a",
+        "sha256": "1awl3xmxhn5ilp3wv9pm1sk094z8m325895bfr94vyqmbjpjwg4i",
+        "type": "tarball",
+        "url": "https://github.com/cachix/git-hooks.nix/archive/61ab0e80d9c7ab14c256b5b453d8b3fb0189ba0a.tar.gz",
+        "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
+    },
     "nixpkgs": {
         "branch": "nixos-25.11",
         "description": "Nix Packages collection",

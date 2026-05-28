@@ -6,6 +6,7 @@
     "nonTangledPathspecs": [
         ":(exclude,top).gitmodules",
         ":(exclude,top).lilac.json",
+        ":(exclude,top).pre-commit-config.yaml",
         ":(exclude,top)README.md",
         ":(exclude,top)LICENSE",
         ":(exclude,top)bash",

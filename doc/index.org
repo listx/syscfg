@@ -127,11 +127,7 @@ weave: $(archive_file)
 
 lint: $(archive_file)
 	cd .. && lilac lint doc/$<
-	cd .. && editorconfig-checker -no-color
-	cd .. && git ls-files \
-		| xargs file \
-		| awk -F: '/shell script/ {print $$1}' \
-		| xargs shellcheck --color=never
+	prek run --all-files
 	touch lint
 
 gitconfig:
@@ -347,6 +343,25 @@ zsh:
 let
   sources = import ./nix/sources.nix;
   pkgs = import sources.nixpkgs { };
+  git-hooks = import sources."git-hooks.nix";
+
+  # 3. Configure the pre-commit checks
+  pre-commit-check = git-hooks.run {
+    src = ./.;
+    hooks = {
+      shellcheck = {
+        enable = true;
+        excludes = [
+          "script/aex.sh"
+          "nixos/w0/syschdemd.sh"
+          "\\.(zsh|zshrc|zprofile|zshenv)$"
+          "zsh/*"
+        ];
+      };
+      editorconfig-checker.enable = true;
+    };
+    package = pkgs.prek;
+  };
 in
 pkgs.mkShell {
   name = "syscfg-dev-shell";
@@ -361,7 +376,8 @@ pkgs.mkShell {
     parinfer-rust
     shfmt
     vale
-  ];
+    pkgs.prek
+  ] ++ pre-commit-check.enabledPackages;
 
   shellHook = ''
     echo -e "\n$(tput setaf 4)"
@@ -369,9 +385,13 @@ pkgs.mkShell {
     echo -e "$(tput sgr0)\n"
     echo "Using nixpkgs commit: ${sources.nixpkgs.rev} ${pkgs.lib.version}"
     echo
+    ${pre-commit-check.shellHook}
   '';
 }
 #+end_src
+
+The ~pre-commit-check.shellHook~ generates the YAML at ~.pre-commit-config.yaml~ for
+us.
 
 #+header: :tangle .envrc
 #+begin_src txt
@@ -447,6 +467,7 @@ lint
 site/
 tangle
 weave
+.pre-commit-config.yaml
 #+end_src
 
 ** Git attributes
@@ -513,11 +534,7 @@ editorconfig-checker.
 
 Installing Lilac is blocked by Lilac's release and addition to nixpkgs.
 
-** TODO add editorconfig-checker to linter
-
 ** TODO add spellchecker (vale) to linter
-
-** TODO add ShellCheck linter
 
 ** TODO add formatter linter for emacs lisp
 

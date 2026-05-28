@@ -61,3 +61,4 @@ lint
 site/
 tangle
 weave
+.pre-commit-config.yaml

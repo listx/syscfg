@@ -24,11 +24,7 @@ weave: $(archive_file)
 
 lint: $(archive_file)
 	cd .. && lilac lint doc/$<
-	cd .. && editorconfig-checker -no-color
-	cd .. && git ls-files \
-		| xargs file \
-		| awk -F: '/shell script/ {print $$1}' \
-		| xargs shellcheck --color=never
+	prek run --all-files
 	touch lint
 
 gitconfig:
