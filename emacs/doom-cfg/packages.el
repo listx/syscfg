@@ -52,7 +52,6 @@
 (package! hyperbole)
 (package! git-gutter)
 (package! org-appear)
-(package! org-auto-tangle)
 (package! org-fancy-priorities)
 (package! org-fc
   :recipe (:host github :repo "l3kn/org-fc"
