@@ -526,16 +526,7 @@ max_line_length = 72
 #+end_src
 
 * Plan
-** TODO set up dev environment
-
-We need to install the tools we need for this literate environment. So we
-need to use Nix or something else to install things like Lilac and
-editorconfig-checker.
-
-Installing Lilac is blocked by Lilac's release and addition to nixpkgs.
-
-** TODO add spellchecker (vale) to linter
-
-** TODO add formatter linter for emacs lisp
-
-** TODO add formatter for Haskell
+** TODO pre-commit: add spellchecker (vale) to linter
+** TODO pre-commit: add formatter linter for emacs lisp
+** TODO pre-commit: add ormolu formatter for Haskell
+** TODO pre-commit: add nixfmt formatter to linter
