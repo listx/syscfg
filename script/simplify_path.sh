@@ -13,9 +13,6 @@
 
 set -euo pipefail
 
-# Source utility functions.
-SCRIPT_ROOT="$(dirname "$(readlink -f "$0")")"
-
 # Recognize specially-named paths.
 __l_get_named_paths()
 {
@@ -98,7 +95,7 @@ done
 if ! (( is_named_path )); then
 	# Convert expanded $HOME path to just "~".
 	if [[ "${path}" == "$HOME"* ]]; then
-		path="~${path#$HOME}"
+		path="~${path#"$HOME"}"
 	fi
 	prefix="${path%/*}"
 	basename="${path##*/}"
@@ -110,7 +107,7 @@ __TRUNCATE_THRESHOLD=30
 
 i=0
 mapfile -td / fields < <(printf "%s\0" "${prefix}")
-while (( "${#final_path}" > "${__TRUNCATE_THRESHOLD}" )) && (( $i < "${#fields[@]}" )); do
+while (( "${#final_path}" > "${__TRUNCATE_THRESHOLD}" )) && (( i < "${#fields[@]}" )); do
 	# Truncate this portion of the prefix to its first letter.
 	fields["${i}"]="${fields[${i}]::1}"
 	prefix=$(IFS=/; printf '%s' "${fields[*]}")
@@ -119,10 +116,11 @@ while (( "${#final_path}" > "${__TRUNCATE_THRESHOLD}" )) && (( $i < "${#fields[@
 	else
 		final_path="${prefix}/${basename}"
 	fi
-	i=$(($i + 1))
+	i=$((i + 1))
 done
 
 # Handle edge cases.
+# shellcheck disable=SC2088
 case "${final_path}" in
 # $HOME path as input.
 "~/~")

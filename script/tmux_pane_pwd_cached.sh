@@ -28,7 +28,7 @@ pane_pwd_same()
   pwd_new="${3}"
 
   # Format is L_TMUX_PANE_PWD_<WINDOW_ID>=<PWD_LONG>;<PWD_SHORT>
-  __pwd_old="$(tmux show-environment L_TMUX_PANE_PWD_${window_id})"
+  __pwd_old="$(tmux show-environment L_TMUX_PANE_PWD_"${window_id}")"
   __pwd_old_short="${__pwd_old}"
   __pwd_old="${__pwd_old#*=}"
   __pwd_old="${__pwd_old%;*}"
@@ -70,7 +70,7 @@ main()
   # If the active pane's pwd did change, then we must use a newly shortened
   # window name.
   pwd_shortened="$(~/syscfg/script/simplify_path.sh "${pwd_new}")"
-  echo $pwd_shortened
+  echo "$pwd_shortened"
 
   # TODO: Garbage-collect these tmux environment variables when the window is
   # closed.

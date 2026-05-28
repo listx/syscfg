@@ -17,8 +17,6 @@ fi
 jpg_dir=$1
 dng_dir=$2
 
-mapfile -t dngs < <(find "${dng_dir}" -name '*.dng' | sort)
-
 for dng in "${dng_dir}"/*.dng; do
 	photo="$(basename "${dng%.dng}")"
 	hi_res="${dng}"

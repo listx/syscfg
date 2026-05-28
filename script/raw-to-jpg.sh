@@ -6,7 +6,7 @@
 outdir=${1%%/}
 shift
 
-inputs=($@)
+inputs=("$@")
 for input in "${inputs[@]}"; do
     # Input file: isolate filename (strip leading directories).
     infile="${input##*/}"
@@ -17,5 +17,5 @@ for input in "${inputs[@]}"; do
     if [[ -f "${output}" ]]; then
         continue
     fi
-    sips -s format jpeg $input --out "${output}"
+    sips -s format jpeg "$input" --out "${output}"
 done
