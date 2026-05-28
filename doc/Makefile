@@ -24,7 +24,7 @@ weave: $(archive_file)
 
 lint: $(archive_file)
 	cd .. && lilac lint doc/$<
-	#cd .. && editorconfig-checker
+	cd .. && editorconfig-checker -no-color
 	touch lint
 
 gitconfig:

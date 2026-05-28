@@ -5,7 +5,7 @@ class ColorDemo
   ColorString = "##"
   ColorMode = {'fg' => '38', 'bg' => '48'}
 
-  def show_welcome 
+  def show_welcome
     puts <<-END
 +----------------------------------------------------------------------------+
 | This program shows 256-color support in xterm-compliant terminals. You may |
@@ -38,7 +38,7 @@ class ColorDemo
         print nocolor(" ") if mode == :cube
       end
       print "\n" if mode == :cube
-    end  
+    end
   end
 
   def setup_color_cube_color
@@ -49,7 +49,7 @@ class ColorDemo
         (red * 42.5).to_i,
         (green * 42.5).to_i,
         (blue * 42.5).to_i)
-    end  
+    end
   end
 
   def setup_color_cube_gray
@@ -80,8 +80,8 @@ class ColorDemo
 
   def display_color_cube(mode)
     puts "Color cube, 6x6x6 (#{mode}):"
-    loop_color_cube(:cube) do |red, green, blue| 
-      print colorize(16 + (red * 36) + 
+    loop_color_cube(:cube) do |red, green, blue|
+      print colorize(16 + (red * 36) +
         (green * 6) + blue, ColorString, mode)
     end
   end

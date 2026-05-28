@@ -10,5 +10,11 @@ trim_trailing_whitespace = true
 indent_style = tab
 tab_width = 8
 
+[qutebrowser.conf]
+trim_trailing_whitespace = false
+
+[zsh/.zshrc]
+end_of_line = unset
+
 [COMMIT_EDITMSG]
 max_line_length = 72

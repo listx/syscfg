@@ -127,7 +127,7 @@ weave: $(archive_file)
 
 lint: $(archive_file)
 	cd .. && lilac lint doc/$<
-	#cd .. && editorconfig-checker
+	cd .. && editorconfig-checker -no-color
 	touch lint
 
 gitconfig:
@@ -489,6 +489,12 @@ trim_trailing_whitespace = true
 [*.{sh},Makefile]
 indent_style = tab
 tab_width = 8
+
+[qutebrowser.conf]
+trim_trailing_whitespace = false
+
+[zsh/.zshrc]
+end_of_line = unset
 
 [COMMIT_EDITMSG]
 max_line_length = 72
