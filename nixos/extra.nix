@@ -27,7 +27,6 @@ in
     gnumake
     sqlite # emacs' org-roam needs it
     noweb # literate emacs configuration
-    direnv
     gcal
     melby-release.melby-daemon
     melby-release.melby-client-rust
@@ -238,7 +237,17 @@ in
 
   nixpkgs.overlays = [ (import ./overlay.nix) ];
 
-  services.lorri.enable = true;
+  programs.direnv = {
+    enable = true;
+    package = pkgs.direnv;
+    silent = false;
+    loadInNixShell = true;
+    direnvrcExtra = "";
+    nix-direnv = {
+      enable = true;
+      package = pkgs.nix-direnv;
+    };
+  };
 
   services.displayManager = {
       defaultSession = "l_xmonad";
