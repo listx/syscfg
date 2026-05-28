@@ -9,7 +9,12 @@ let
     hooks = {
       shellcheck = {
         enable = true;
-        excludes = ["\\.(zsh|zshrc|zprofile|zshenv)$" "zsh/*"];
+        excludes = [
+          "script/aex.sh"
+          "nixos/w0/syschdemd.sh"
+          "\\.(zsh|zshrc|zprofile|zshenv)$"
+          "zsh/*"
+        ];
       };
       editorconfig-checker.enable = true;
     };

@@ -1,4 +1,4 @@
-#!/usr/bin/env zsh
+#!/usr/bin/env bash
 # Git tagging script
 
 # Usage: gtag <PROGRAM_NAME> <VERSION_NUMBER>

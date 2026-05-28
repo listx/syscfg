@@ -1,4 +1,4 @@
-#!/usr/bin/env zsh
+#!/usr/bin/env bash
 # decrypt files painlessly
 
 if [[ $1 == "outfile" ]]; then
@@ -8,5 +8,3 @@ elif [[ $1 == "viewfile" ]]; then
 else
 	echo "error: ivalid mode \`$1'"
 fi
-
-# vim:syntax=zsh
