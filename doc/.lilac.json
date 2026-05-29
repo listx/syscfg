@@ -8,7 +8,6 @@
         ":(exclude,top).lilac.json",
         ":(exclude,top)README.md",
         ":(exclude,top)LICENSE",
-        ":(exclude,top)bash",
         ":(exclude,top)clojure",
         ":(exclude,top)doc/*.org",
         ":(exclude,top)emacs/doom-cfg/snippets/.gitkeep",

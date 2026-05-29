@@ -13,7 +13,7 @@ S := $(shell cat ${H}/.hostname-short)
 # inside the C (config) directory itself.
 
 bash:
-	ln -fs ${C}/bash/.bashrc                            ${H}
+	ln -fs ${C}/bash/.bashrc ${H}
 clojure:
 	ln -fns ${C}/clojure                                ${H}/.config/clojure
 emacs:

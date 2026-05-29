@@ -1,0 +1,29 @@
+:PROPERTIES:
+:ID:       843fde83-4ed2-49dc-8d6f-29f103ae2434
+:END:
+#+title: Bash
+
+* Overview
+
+This file is minimal because we use Zsh for our own personal shell. That being
+said, historically we've used [[bashrc]] for work computers in the cloud which had
+annoying Bash defaults.
+
+#+name: bashrc
+#+header: :tangle bash/.bashrc
+#+header: :shebang #!/usr/bin/env bash
+#+begin_src bash
+export HISTCONTROL=ignoreboth:erasedups
+set -o vi
+
+alias q='exit'
+#+end_src
+
+The Makefile rule creates a symlink at ~$HOME/.bashrc~ which points to [[bashrc]] up
+above.
+
+#+name: Makefile-bash
+#+begin_src makefile
+bash:
+	ln -fs ${C}/bash/.bashrc ${H}
+#+end_src

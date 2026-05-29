@@ -5,8 +5,9 @@
 
 #+name: index
 #+begin_src txt
-keybindings.org
+bash.org
 emacs.org
+keybindings.org
 #+end_src
 
 This repo uses [[https://git.sr.ht/~listx/lilac][Lilac]] to extract the code/configuration from Org files. Not all
@@ -46,7 +47,6 @@ make emacs vim
         ":(exclude,top).lilac.json",
         ":(exclude,top)README.md",
         ":(exclude,top)LICENSE",
-        ":(exclude,top)bash",
         ":(exclude,top)clojure",
         ":(exclude,top)doc/*.org",
         ":(exclude,top)emacs/doom-cfg/snippets/.gitkeep",
@@ -167,8 +167,7 @@ S := $(shell cat ${H}/.hostname-short)
 # Add the -n flag for directories, as otherwise, stray symlinks will be created
 # inside the C (config) directory itself.
 
-bash:
-	ln -fs ${C}/bash/.bashrc                            ${H}
+<<id:843fde83-4ed2-49dc-8d6f-29f103ae2434::Makefile-bash>>
 clojure:
 	ln -fns ${C}/clojure                                ${H}/.config/clojure
 emacs:
