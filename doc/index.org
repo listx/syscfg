@@ -492,6 +492,7 @@ doc/index.org
 
 #+header: :tangle .rgignore
 #+begin_src rgignore
+bash/
 clojure/
 emacs/doom-upstream
 zsh/zcomet-upstream
