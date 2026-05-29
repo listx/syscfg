@@ -527,3 +527,8 @@ max_line_length = 72
 ** TODO pre-commit: add formatter linter for emacs lisp
 ** TODO pre-commit: add ormolu formatter for Haskell
 ** TODO pre-commit: add nixfmt formatter to linter
+** TODO migrate everything (at least superficially) to lilac
+
+This basically means chipping away at [[(nonTangledPathspecs)]] to make it much
+leaner. That is, the only reason that section is so long is because most of
+those paths are not tangled from Org files.
