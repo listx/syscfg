@@ -6,6 +6,7 @@
 #+name: index
 #+begin_src txt
 bash.org
+clojure.org
 emacs.org
 keybindings.org
 #+end_src
@@ -168,8 +169,7 @@ S := $(shell cat ${H}/.hostname-short)
 # inside the C (config) directory itself.
 
 <<id:843fde83-4ed2-49dc-8d6f-29f103ae2434::Makefile-bash>>
-clojure:
-	ln -fns ${C}/clojure                                ${H}/.config/clojure
+<<id:6bbe2554-13c3-43c7-b7b5-f3d7ab09562a::Makefile-clojure>>
 emacs:
 	git -C ${C} submodule update --init ${C}/emacs/doom-upstream
 	# Point .emacs.d to upstream doom code.
@@ -492,6 +492,7 @@ doc/index.org
 
 #+header: :tangle .rgignore
 #+begin_src rgignore
+clojure/
 emacs/doom-upstream
 zsh/zcomet-upstream
 #+end_src

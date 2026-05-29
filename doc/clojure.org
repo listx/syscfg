@@ -1,0 +1,20 @@
+:PROPERTIES:
+:ID:       06332889-c7c0-4eaa-8843-0cc955e0b6c8
+:END:
+#+title: Clojure
+
+* Overview
+:PROPERTIES:
+:ID:       6bbe2554-13c3-43c7-b7b5-f3d7ab09562a
+:END:
+
+Our Clojure setup basically just delegates everything to the [[https://github.com/practicalli/clojure][Practically Clojure
+CLI Config]], by tracking that repo as a submodule.
+
+The only interesting thing is probably the Makefile rules to set things up.
+
+#+name: Makefile-clojure
+#+begin_src makefile
+clojure:
+	ln -fns ${C}/clojure ${H}/.config/clojure
+#+end_src
