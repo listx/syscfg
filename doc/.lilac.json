@@ -13,7 +13,6 @@
         ":(exclude,top)emacs/doom-cfg/snippets/.gitkeep",
         ":(exclude,top)emacs/doom-upstream",
         ":(exclude,top)gd",
-        ":(exclude,top)git",
         ":(exclude,top)gpg",
         ":(exclude,top)jj",
         ":(exclude,top)jjui",

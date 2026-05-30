@@ -27,9 +27,8 @@ emacs:
 	cd ${C}/script && ln -fs ../emacs/doom-upstream/bin/doom
 	ln -sf ${H}/lo/custom-dict.txt                      ${C}/emacs/spell-fu
 git:
-	ln -fs ${C}/git/cfg.personal.conf                   ${H}/.gitconfig
-	ln -fs ${C}/git/gitignore                           ${H}/.gitignore
-	ln -fs ${C}/git/sendemail-aliases                   ${H}/.git-sendemail-aliases
+	ln -fs ${C}/git/cfg.personal.conf ${H}/.gitconfig
+	ln -fs ${C}/git/sendemail-aliases ${H}/.git-sendemail-aliases
 gpg:
 	ln -fns ${C}/gpg                                    ${H}/.gnupg
 	ln -fs ${C}/gpg/gpg-agent.nixos.conf                ${H}/.gnupg/gpg-agent.conf

@@ -8,6 +8,7 @@
 bash.org
 clojure.org
 emacs.org
+git.org
 keybindings.org
 #+end_src
 
@@ -53,7 +54,6 @@ make emacs vim
         ":(exclude,top)emacs/doom-cfg/snippets/.gitkeep",
         ":(exclude,top)emacs/doom-upstream",
         ":(exclude,top)gd",
-        ":(exclude,top)git",
         ":(exclude,top)gpg",
         ":(exclude,top)jj",
         ":(exclude,top)jjui",
@@ -179,10 +179,7 @@ emacs:
 	# Bring 'doom' script into $$PATH.
 	cd ${C}/script && ln -fs ../emacs/doom-upstream/bin/doom
 	ln -sf ${H}/lo/custom-dict.txt                      ${C}/emacs/spell-fu
-git:
-	ln -fs ${C}/git/cfg.personal.conf                   ${H}/.gitconfig
-	ln -fs ${C}/git/gitignore                           ${H}/.gitignore
-	ln -fs ${C}/git/sendemail-aliases                   ${H}/.git-sendemail-aliases
+<<id:5a8a24bf-db01-4cf7-8985-e34f86f58ce3::Makefile-git>>
 gpg:
 	ln -fns ${C}/gpg                                    ${H}/.gnupg
 	ln -fs ${C}/gpg/gpg-agent.nixos.conf                ${H}/.gnupg/gpg-agent.conf

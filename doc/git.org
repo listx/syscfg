@@ -1,0 +1,82 @@
+:PROPERTIES:
+:ID:       a4d31d6e-b7ac-4638-8608-8a1bb80ae781
+:END:
+#+title: Git
+
+* Overview
+:PROPERTIES:
+:ID:       5a8a24bf-db01-4cf7-8985-e34f86f58ce3
+:END:
+
+#+header: :tangle git/cfg.personal.conf
+#+begin_src gitconfig
+[user]
+	name = Linus Arver
+	email = linus@ucla.edu
+[clone]
+	defaultRemoteName = u
+[color]
+	branch = auto
+	diff = auto
+	status = auto
+[color "diff"]
+	meta = yellow bold
+	commit = blue bold reverse
+[color "status"]
+	untracked = yellow bold
+[commit]
+	cleanup = scissors
+[core]
+	editor = ~/syscfg/script/emacsclient-tty.sh
+	excludesFile = ~/.gitignore
+	hooksPath = ~/syscfg/script/git/hooks
+[diff]
+	algorithm = histogram
+	colorMoved = default
+	colorMovedWS = allow-indentation-change
+	context = 5
+	tool = difftastic
+[difftool]
+	prompt = false
+[difftool "difftastic"]
+	cmd = difft "$LOCAL" "$REMOTE"
+[gui]
+	spellingdictionary = none
+[init]
+	defaultBranch = main
+[merge]
+	conflictStyle = zdiff3
+[pager]
+	difftool = true
+[push]
+	default = simple
+	autoSetupRemote = true
+[rebase]
+	updateRefs = true
+[rerere]
+	enabled = true
+[sendemail]
+	aliasesFile = ~/.git-sendemail-aliases
+	aliasFileType = mailrc
+	chainReplyTo = false
+	sendmailCmd = "gmi send --quiet -t -C ~/mail/linusarver@gmail.com"
+	suppressCc = self
+[tag]
+	sort = taggerdate
+[tig]
+	vertical-split = false
+#+end_src
+
+#+name: Makefile-git
+#+begin_src makefile
+git:
+	ln -fs ${C}/git/cfg.personal.conf ${H}/.gitconfig
+	ln -fs ${C}/git/sendemail-aliases ${H}/.git-sendemail-aliases
+#+end_src
+
+* Email
+
+#+header: :tangle git/sendemail-aliases
+#+begin_src txt
+alias git git@vger.kernel.org
+#+end_src
