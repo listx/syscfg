@@ -41,6 +41,24 @@ it here in literate form.
   - **Bird's eye view** :: We discuss the most important high-level topics first,
     and leave the finer details at the end.
 
+* Makefile
+:PROPERTIES:
+:ID:       1a89ad75-4234-4fa9-93d0-27c62d220502
+:END:
+
+#+name: Makefile-emacs
+#+begin_src makefile
+emacs:
+	git -C ${C} submodule update --init ${C}/emacs/doom-upstream
+	# Point .emacs.d to upstream doom code.
+	ln -fns ${C}/emacs/doom-upstream ${H}/.emacs.d
+	# Make $$DOOMDIR point to our doom-cfg folder.
+	ln -fns ${C}/emacs/doom-cfg ${H}/.doom.d
+	# Bring 'doom' script into $$PATH.
+	cd ${C}/script && ln -fs ../emacs/doom-upstream/bin/doom
+	ln -sf ${H}/lo/custom-dict.txt ${C}/emacs/spell-fu
+#+end_src
+
 * How DOOM loads configs
 
 DOOM requires 3 configuration files in the =$DOOMDIR=:

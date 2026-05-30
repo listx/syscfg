@@ -17,15 +17,17 @@ bash:
 
 clojure:
 	ln -fns ${C}/clojure ${H}/.config/clojure
+
 emacs:
 	git -C ${C} submodule update --init ${C}/emacs/doom-upstream
 	# Point .emacs.d to upstream doom code.
-	ln -fns ${C}/emacs/doom-upstream                    ${H}/.emacs.d
+	ln -fns ${C}/emacs/doom-upstream ${H}/.emacs.d
 	# Make $$DOOMDIR point to our doom-cfg folder.
-	ln -fns ${C}/emacs/doom-cfg                         ${H}/.doom.d
+	ln -fns ${C}/emacs/doom-cfg ${H}/.doom.d
 	# Bring 'doom' script into $$PATH.
 	cd ${C}/script && ln -fs ../emacs/doom-upstream/bin/doom
-	ln -sf ${H}/lo/custom-dict.txt                      ${C}/emacs/spell-fu
+	ln -sf ${H}/lo/custom-dict.txt ${C}/emacs/spell-fu
+
 git:
 	ln -fs ${C}/git/cfg.personal.conf ${H}/.gitconfig
 	ln -fs ${C}/git/sendemail-aliases ${H}/.git-sendemail-aliases
