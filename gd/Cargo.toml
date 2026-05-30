@@ -8,13 +8,3 @@ edition = "2021"
 [dependencies]
 clap = { version = "3.1.0", features = ["cargo"]}
 colored = "2"
-
-[profile.release]
-# Strip all symbols.
-strip = true
-# Bring in other optimizations to reduce binary size.
-debug = false
-opt-level = 'z'
-codegen-units = 1
-lto = true
-panic = 'abort'

@@ -32,6 +32,7 @@ qutebrowser/bookmarks
 qutebrowser/quickmarks
 qutebrowser/qsettings
 ssh/*
+target/
 tmux/resurrect
 vim/.VimballRecord
 vim/.netrwhist

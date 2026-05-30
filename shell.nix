@@ -1,6 +1,12 @@
 let
   sources = import ./nix/sources.nix;
-  pkgs = import sources.nixpkgs { };
+  rust-overlay = import sources.rust-overlay;
+  pkgs = import sources.nixpkgs {
+    overlays = [ rust-overlay ];
+  };
+  rustToolchain = pkgs.rust-bin.stable.latest.default.override {
+    extensions = [ "rust-src" "rust-analyzer" "clippy" ];
+  };
   git-hooks = import sources."git-hooks.nix";
 
   # 3. Configure the pre-commit checks
@@ -17,6 +23,10 @@ let
         ];
       };
       editorconfig-checker.enable = true;
+      clippy = {
+        enable = true;
+        package = rustToolchain;
+      };
     };
     package = pkgs.prek;
   };
@@ -35,13 +45,25 @@ pkgs.mkShell {
     shfmt
     vale
     pkgs.prek
+
+    rustToolchain
   ] ++ pre-commit-check.enabledPackages;
+
+  nativeBuildInputs = with pkgs; [
+    pkg-config
+    gcc
+  ];
+  propagatedBuildInputs = with pkgs; [
+    openssl
+    zlib
+  ];
 
   shellHook = ''
     echo -e "\n$(tput setaf 4)"
     echo Syscfg | ${pkgs.figlet}/bin/figlet
     echo -e "$(tput sgr0)\n"
     echo "Using nixpkgs commit: ${sources.nixpkgs.rev} ${pkgs.lib.version}"
+    echo "Rust compiler profile: $(rustc --version)"
     echo
     ${pre-commit-check.shellHook}
   '';
