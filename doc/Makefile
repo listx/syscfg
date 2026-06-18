@@ -19,7 +19,7 @@ tangle: $(archive_file)
 	touch tangle
 
 weave: $(archive_file)
-	lilac weave $< --out-dir ../site --root-relative-prefix "/site" --write-css --write-js
+	lilac weave $< --out-dir ../syscfg --root-relative-prefix "/syscfg" --write-css --write-js
 	touch weave
 
 lint: $(archive_file)
@@ -39,5 +39,5 @@ clean:
 	rm -rf \
 		$(archive_file) \
 		$(obj_files) \
-		../site/*
+		../syscfg/*
 .PHONY: clean
