@@ -59,7 +59,6 @@ zsh/zcomet
 *.js
 *.css
 lint
-syscfg/
 tangle
 weave
 .pre-commit-config.yaml
