@@ -1,5 +1,4 @@
 [user]
-
 "name" = "Linus Arver"
 "email" = "linus@ucla.edu"
 
@@ -27,7 +26,6 @@ concat(
 '''
 
 [colors]
-
 # Diff chunks.
 "diff added token" = { fg = "#335533", bg = "#ccffcc", bold = true, underline = false }
 "diff removed token" = { fg = "#553333", bg = "#ffcccc", bold = true, underline = false  }

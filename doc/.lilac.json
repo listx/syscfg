@@ -14,7 +14,6 @@
         ":(exclude,top)emacs/doom-upstream",
         ":(exclude,top)Cargo.lock",
         ":(exclude,top)gpg",
-        ":(exclude,top)jj",
         ":(exclude,top)jjui",
         ":(exclude,top)karabiner",
         ":(exclude,top)lesskey",
