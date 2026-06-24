@@ -5,6 +5,9 @@
 [aliases]
 sync = ["rebase", "-b", 'all:trunk()..(visible_heads() ~ (immutable_heads() | remote_bookmarks()) | branches())', "-d", "main"]
 
+[revset-aliases]
+"immutable_heads()" = "none()"
+
 [lazyjj]
 layout = "vertical"
 

@@ -22,6 +22,7 @@ Melby to be less complicated, but that's for another day).
 #+begin_src toml
 <<user>>
 <<aliases>>
+<<revset-aliases>>
 <<lazyjj>>
 <<templates>>
 <<colors>>
@@ -43,6 +44,21 @@ Melby to be less complicated, but that's for another day).
 #+begin_src toml
 [aliases]
 sync = ["rebase", "-b", 'all:trunk()..(visible_heads() ~ (immutable_heads() | remote_bookmarks()) | branches())', "-d", "main"]
+#+end_src
+
+** Revset aliases
+
+Jujutsu always complains when you try to modify commits that have already been
+pushed up, requiring us to provide the rather long ~--ignore-immutable~ flag. This
+is super annoying (especially on branches where it's expected to be overwritten
+frequently), so disable it completely. We already use Git to push branches up
+anyway (Git will block overwriting already-pushed commits by requiring a force
+push with ~-f~), so this is safe enough.
+
+#+name: revset-aliases
+#+begin_src toml
+[revset-aliases]
+"immutable_heads()" = "none()"
 #+end_src
 
 ** ~lazyjj~
