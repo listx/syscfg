@@ -23,7 +23,7 @@ weave: $(archive_file)
 	touch weave
 
 lint: $(archive_file)
-	cd .. && lilac lint doc/$<
+	cd .. && lilac --project-conf doc/Lilac.toml lint doc/$<
 	prek run --all-files
 	touch lint
 

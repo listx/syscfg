@@ -37,55 +37,53 @@ make emacs vim
 
 ** Lilac project configuration
 
-#+header: :tangle doc/.lilac.json
-#+begin_src json
-{
-    "name": "Linus Arver's Dotfiles",
-    "homepage": "https://git.sr.ht/~listx/syscfg",
-    "repo": "https://git.sr.ht/~listx/syscfg",
-    "version": "",
-    "nonTangledPathspecs": [ (ref:nonTangledPathspecs)
-        ":(exclude,top).gitmodules",
-        ":(exclude,top).lilac.json",
-        ":(exclude,top)README.md",
-        ":(exclude,top)LICENSE",
-        ":(exclude,top)clojure",
-        ":(exclude,top)doc/*.org",
-        ":(exclude,top)emacs/doom-cfg/snippets/.gitkeep",
-        ":(exclude,top)emacs/doom-upstream",
-        ":(exclude,top)Cargo.lock",
-        ":(exclude,top)gpg",
-        ":(exclude,top)jjui",
-        ":(exclude,top)karabiner",
-        ":(exclude,top)lesskey",
-        ":(exclude,top)melby",
-        ":(exclude,top)mpd",
-        ":(exclude,top)mpv",
-        ":(exclude,top)nix",
-        ":(exclude,top)nixos",
-        ":(exclude,top)nixpkgs",
-        ":(exclude,top)notmuch",
-        ":(exclude,top)nvim",
-        ":(exclude,top)openvpn",
-        ":(exclude,top)pulse",
-        ":(exclude,top)qutebrowser",
-        ":(exclude,top)rtorrent",
-        ":(exclude,top)ssh",
-        ":(exclude,top)terminfo",
-        ":(exclude,top)tig",
-        ":(exclude,top)tmux",
-        ":(exclude,top)vimpc",
-        ":(exclude,top)wezterm",
-        ":(exclude,top)nixos",
-        ":(exclude,top)script",
-        ":(exclude,top)uim",
-        ":(exclude,top)vim",
-        ":(exclude,top)xmonad",
-        ":(exclude,top)xorg",
-        ":(exclude,top)zathura",
-        ":(exclude,top)zsh"
-    ]
-}
+#+header: :tangle doc/Lilac.toml
+#+begin_src toml
+name = "Linus Arver's Dotfiles"
+homepage = "https://git.sr.ht/~listx/syscfg"
+repo = "https://git.sr.ht/~listx/syscfg"
+version = ""
+nonTangledPathspecs = [ # (ref:nonTangledPathspecs)
+   ":(exclude,top).gitmodules",
+   ":(exclude,top).lilac.json",
+   ":(exclude,top)README.md",
+   ":(exclude,top)LICENSE",
+   ":(exclude,top)clojure",
+   ":(exclude,top)doc/*.org",
+   ":(exclude,top)emacs/doom-cfg/snippets/.gitkeep",
+   ":(exclude,top)emacs/doom-upstream",
+   ":(exclude,top)Cargo.lock",
+   ":(exclude,top)gpg",
+   ":(exclude,top)jjui",
+   ":(exclude,top)karabiner",
+   ":(exclude,top)lesskey",
+   ":(exclude,top)melby",
+   ":(exclude,top)mpd",
+   ":(exclude,top)mpv",
+   ":(exclude,top)nix",
+   ":(exclude,top)nixos",
+   ":(exclude,top)nixpkgs",
+   ":(exclude,top)notmuch",
+   ":(exclude,top)nvim",
+   ":(exclude,top)openvpn",
+   ":(exclude,top)pulse",
+   ":(exclude,top)qutebrowser",
+   ":(exclude,top)rtorrent",
+   ":(exclude,top)ssh",
+   ":(exclude,top)terminfo",
+   ":(exclude,top)tig",
+   ":(exclude,top)tmux",
+   ":(exclude,top)vimpc",
+   ":(exclude,top)wezterm",
+   ":(exclude,top)nixos",
+   ":(exclude,top)script",
+   ":(exclude,top)uim",
+   ":(exclude,top)vim",
+   ":(exclude,top)xmonad",
+   ":(exclude,top)xorg",
+   ":(exclude,top)zathura",
+   ":(exclude,top)zsh"
+]
 #+end_src
 
 Currently we exclude most paths in [[(nonTangledPathspecs)]], because we haven't
@@ -124,7 +122,7 @@ weave: $(archive_file)
 	touch weave
 
 lint: $(archive_file)
-	cd .. && lilac lint doc/$<
+	cd .. && lilac --project-conf doc/Lilac.toml lint doc/$<
 	prek run --all-files
 	touch lint
 
