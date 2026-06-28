@@ -110,5 +110,6 @@ concat(
 #+name: ui
 #+begin_src toml
 [ui]
+conflict-marker-style = "git"
 merge-editor = "meld"
 #+end_src

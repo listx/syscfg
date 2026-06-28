@@ -38,4 +38,5 @@ concat(
 "diff removed" = { fg = "#ffcccc", bold = true }
 
 [ui]
+conflict-marker-style = "git"
 merge-editor = "meld"
