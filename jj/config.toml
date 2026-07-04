@@ -15,6 +15,17 @@ layout = "vertical"
 draft_commit_description = '''
 concat(
   coalesce(description, default_commit_description, "\n"),
+  if(
+    description.contains("Signed-off-by:"),
+    "",
+    concat(
+      "\nSigned-off-by: ",
+      self.author().name(),
+      " <",
+      self.author().email(),
+      ">"
+    )
+  ),
   "\n\n",
   "JJ: --------------------------------------------------------------------\n",
   "JJ: ignore-rest\n",
