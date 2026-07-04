@@ -84,6 +84,8 @@ nonTangledPathspecs = [ # (ref:nonTangledPathspecs)
    ":(exclude,top)zathura",
    ":(exclude,top)zsh"
 ]
+
+<<custom-html-head>>
 #+end_src
 
 Currently we exclude most paths in [[(nonTangledPathspecs)]], because we haven't
@@ -118,8 +120,10 @@ tangle: $(archive_file)
 	touch tangle
 
 weave: $(archive_file)
-	lilac weave $< --out-dir .. --root-relative-prefix "/syscfg" --write-css --write-js
+	lilac weave $< --out-dir site --write-css --write-js
 	touch weave
+
+<<Makefile:publish>>
 
 lint: $(archive_file)
 	cd .. && lilac --project-conf doc/Lilac.toml lint doc/$<
@@ -402,6 +406,189 @@ us.
 use nix
 #+end_src
 
+* Publish to SourceHut
+
+The woven contents are published to ~lilac.funloop.org~. When Lilac is available
+on Nixpkgs, we can invoke the publishing step as part of CI on SourceHut.
+
+#+name: Makefile:publish
+#+begin_src makefile
+<<Makefile:create-tarball>>
+
+SRHT_TOKEN != cat .srht-pages-token 2>/dev/null || echo ""
+
+publish: weave
+	@if [ -z "$(SRHT_TOKEN)" ]; then \
+		echo "Error: .srht-pages-token is empty or missing." >&2; \
+		exit 1; \
+	fi
+	@echo "Uploading site to SourceHut Pages..."
+	@curl --oauth2-bearer "$(SRHT_TOKEN)" \
+		-Fcontent=@site.tar.gz \
+		https://pages.sr.ht/publish/syscfg.funloop.org
+	touch publish
+#+end_src
+
+The tarball is mainly composed of the site (woven contents) plus the vendored
+stuff.
+
+#+name: Makefile:create-tarball
+#+begin_src makefile
+site.tar.gz: $(archive_file) weave vendor/mathjax vendor/source-fonts
+	rm -f site.tar site.tar.gz
+	tar cvf site.tar -C site .
+	tar rvf site.tar vendor
+	gzip site.tar
+#+end_src
+
+The vendoring is needed because SourceHut does not allow us to pull in
+scripts from CDNs. We have to be self-contained. Lilac has a ~lilac init
+--only-local-imports~ command which gives us some scripts to download MathJax and
+also Source fonts.
+
+#+name: vendor-mathjax.sh
+#+header: :tangle doc/vendor-mathjax.sh
+#+header: :shebang #!/usr/bin/env bash
+#+begin_src bash
+set -euo pipefail
+
+MAIN_PACKAGE="mathjax"
+FONT_PACKAGE="mathjax-newcm-font"
+VERSION="4.1.2"
+
+mkdir -p vendor
+pushd vendor
+
+download_tarball()
+{
+	local package
+	local version
+	local url_prefix
+	local tarball
+	package="${1:-}"
+	version="${2:-}"
+	tarball="${package}-${version}.tgz"
+	url_prefix="${3:-}"
+
+	if [[ -d "${package}" ]]; then
+		echo "${package} directory already exists"
+		return 1
+	fi
+
+	curl -OL "${url_prefix}/-/${tarball}"
+	tar xzvf "${tarball}"
+	mv package "${package}"
+	rm "${tarball}"
+}
+
+download_tarball \
+	"${MAIN_PACKAGE}" \
+	"${VERSION}" \
+	"https://registry.npmjs.org/mathjax"
+download_tarball \
+	"${FONT_PACKAGE}" \
+	"${VERSION}" \
+	"https://registry.npmjs.org/@mathjax/${FONT_PACKAGE}"
+#+end_src
+
+#+name: vendor-source-fonts.sh
+#+header: :tangle doc/vendor-source-fonts.sh
+#+header: :shebang #!/usr/bin/env bash
+#+begin_src bash
+set -euo pipefail
+
+url_sans="https://raw.githubusercontent.com/adobe-fonts/source-sans/3.052R"
+url_serif="https://raw.githubusercontent.com/adobe-fonts/source-serif/4.005R"
+url_code="https://raw.githubusercontent.com/adobe-fonts/source-code-pro/2.042R-u%2F1.062R-i%2F1.026R-vf"
+
+mkdir -p vendor/source-fonts
+pushd vendor/source-fonts
+
+curl -OL "${url_sans}/WOFF2/VF/SourceSans3VF-Italic.otf.woff2"
+curl -OL "${url_sans}/WOFF2/VF/SourceSans3VF-Upright.otf.woff2"
+
+curl -OL "${url_serif}/WOFF2/VAR/SourceSerif4Variable-Italic.otf.woff2"
+curl -OL "${url_serif}/WOFF2/VAR/SourceSerif4Variable-Roman.otf.woff2"
+
+curl -OL "${url_code}/WOFF2/VF/SourceCodeVF-Italic.otf.woff2"
+curl -OL "${url_code}/WOFF2/VF/SourceCodeVF-Upright.otf.woff2"
+
+cat << EOF > source-fonts.css
+@font-face{
+    font-family: 'Source Code Pro';
+    font-weight: 200 900;
+    font-style: normal;
+    font-stretch: normal;
+    src: url('SourceCodeVF-Upright.otf.woff2') format('woff2');
+}
+
+@font-face{
+    font-family: 'Source Code Pro';
+    font-weight: 200 900;
+    font-style: italic;
+    font-stretch: normal;
+    src: url('SourceCodeVF-Italic.otf.woff2') format('woff2');
+}
+
+@font-face{
+    font-family: 'Source Sans 3';
+    font-weight: 200 900;
+    font-style: normal;
+    font-stretch: normal;
+    src: url('SourceSans3VF-Upright.otf.woff2') format('woff2');
+}
+
+@font-face{
+    font-family: 'Source Sans 3';
+    font-weight: 200 900;
+    font-style: italic;
+    font-stretch: normal;
+    src: url('SourceSans3VF-Italic.otf.woff2') format('woff2');
+}
+
+@font-face{
+    font-family: 'Source Serif 4';
+    font-weight: 200 900;
+    font-style: normal;
+    font-stretch: normal;
+    src: url('SourceSerif4Variable-Roman.otf.woff2') format('woff2');
+}
+
+@font-face{
+    font-family: 'Source Serif 4';
+    font-weight: 200 900;
+    font-style: italic;
+    font-stretch: normal;
+    src: url('SourceSerif4Variable-Italic.otf.woff2') format('woff2');
+}
+EOF
+#+end_src
+
+Finally we need to actually use these vendored assets by referring to them in
+every woven HTML file. That's what we do in [[custom-html-head]].
+
+#+name: custom-html-head
+#+begin_src toml
+[htmlHead]
+onlyLocalImports = true
+injection = """
+<link rel="stylesheet" href="/vendor/source-fonts/source-fonts.css">
+<script>
+  window.MathJax = {
+      loader: { paths: { "mathjax-newcm": "/vendor/mathjax-newcm-font" } },
+      output: { font: "mathjax-newcm" },
+  tex: {
+      tags: 'ams'
+  },
+  options: {
+      ignoreHtmlClass: 'verbatim|code'
+  }
+};
+</script>
+<script id="MathJax-script" async="" src="/vendor/mathjax/tex-mml-chtml.js"></script>
+"""
+#+end_src
+
 * Other project settings
 
 ** ~.gitignore~ file
@@ -441,6 +628,10 @@ qutebrowser/autoconfig.yml
 qutebrowser/bookmarks
 qutebrowser/quickmarks
 qutebrowser/qsettings
+doc/.srht-pages-token
+doc/site/
+doc/site.tar.gz
+doc/vendor/
 ssh/*
 target/
 tmux/resurrect
@@ -469,6 +660,7 @@ zsh/zcomet
 ,*.js
 ,*.css
 lint
+publish
 tangle
 weave
 .pre-commit-config.yaml

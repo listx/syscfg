@@ -31,6 +31,10 @@ qutebrowser/autoconfig.yml
 qutebrowser/bookmarks
 qutebrowser/quickmarks
 qutebrowser/qsettings
+doc/.srht-pages-token
+doc/site/
+doc/site.tar.gz
+doc/vendor/
 ssh/*
 target/
 tmux/resurrect
@@ -59,6 +63,7 @@ zsh/zcomet
 *.js
 *.css
 lint
+publish
 tangle
 weave
 .pre-commit-config.yaml

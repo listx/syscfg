@@ -43,3 +43,22 @@ nonTangledPathspecs = [ #
    ":(exclude,top)zathura",
    ":(exclude,top)zsh"
 ]
+
+[htmlHead]
+onlyLocalImports = true
+injection = """
+<link rel="stylesheet" href="/vendor/source-fonts/source-fonts.css">
+<script>
+  window.MathJax = {
+      loader: { paths: { "mathjax-newcm": "/vendor/mathjax-newcm-font" } },
+      output: { font: "mathjax-newcm" },
+  tex: {
+      tags: 'ams'
+  },
+  options: {
+      ignoreHtmlClass: 'verbatim|code'
+  }
+};
+</script>
+<script id="MathJax-script" async="" src="/vendor/mathjax/tex-mml-chtml.js"></script>
+"""
