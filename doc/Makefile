@@ -22,7 +22,7 @@ weave: $(archive_file)
 	lilac weave $< --out-dir site --write-css --write-js
 	touch weave
 
-site.tar.gz: $(archive_file) weave vendor/mathjax vendor/source-fonts
+site.tar.gz: $(archive_file) weave vendor/mathjax vendor/mathjax-newcm-font vendor/source-fonts
 	rm -f site.tar site.tar.gz
 	tar cvf site.tar -C site .
 	tar rvf site.tar vendor
