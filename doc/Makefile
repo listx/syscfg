@@ -30,7 +30,7 @@ site.tar.gz: $(archive_file) weave vendor/mathjax vendor/source-fonts
 
 SRHT_TOKEN != cat .srht-pages-token 2>/dev/null || echo ""
 
-publish: weave
+publish: weave site.tar.gz
 	@if [ -z "$(SRHT_TOKEN)" ]; then \
 		echo "Error: .srht-pages-token is empty or missing." >&2; \
 		exit 1; \
