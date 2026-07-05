@@ -28,6 +28,12 @@ site.tar.gz: $(archive_file) weave vendor/mathjax vendor/mathjax-newcm-font vend
 	tar rvf site.tar vendor
 	gzip site.tar
 
+vendor/source-fonts:
+	./vendor-source-fonts.sh
+
+vendor/mathjax vendor/mathjax-newcm-font &:
+	./vendor-mathjax.sh
+
 SRHT_TOKEN != cat .srht-pages-token 2>/dev/null || echo ""
 
 publish: weave site.tar.gz
