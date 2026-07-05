@@ -1,5 +1,5 @@
 name = "Linus Arver's Dotfiles"
-homepage = "https://git.sr.ht/~listx/syscfg"
+homepage = "https://syscfg.funloop.org"
 repo = "https://git.sr.ht/~listx/syscfg"
 version = ""
 nonTangledPathspecs = [ #
