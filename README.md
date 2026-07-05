@@ -1,3 +1,3 @@
 # Linus Arver's Dotfiles
 
-See the doc/index.org file for details.
+See https://syscfg.funloop.org for details.
