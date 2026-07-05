@@ -724,7 +724,7 @@ max_line_length = 72
 #+end_src
 
 * Plan
-** TODO pre-commit: add spellchecker (vale) to linter
+** TODO pre-commit: add spellchecker (cspell) to linter
 ** TODO pre-commit: add formatter linter for emacs lisp
 ** TODO pre-commit: add ormolu formatter for Haskell
 ** TODO pre-commit: add nixfmt formatter to linter
