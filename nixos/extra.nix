@@ -250,10 +250,10 @@ in
   };
 
   services.displayManager = {
-      defaultSession = "l_xmonad";
-      autoLogin.enable = true;
-      autoLogin.user = "l";
-    };
+    defaultSession = "l_xmonad";
+    autoLogin.enable = true;
+    autoLogin.user = "l";
+  };
 
   services.xserver = {
     enable = true;
@@ -261,11 +261,13 @@ in
     xkb.variant = "altgr-intl";
     xkb.options = "terminate:ctrl_alt_bksp";
     # See https://unix.stackexchange.com/questions/597358/nixos-how-to-configure-custom-desktop-session/597359#597359.
-    displayManager.session = [{
-      manage = "desktop";
-      name = "l_xmonad";
-      start = "exec $HOME/.xsession";
-    }];
+    displayManager.session = [
+      {
+        manage = "desktop";
+        name = "l_xmonad";
+        start = "exec $HOME/.xsession";
+      }
+    ];
     # We rely on ~/.xsession to start XMonad, instead of NixOS automagically
     # doing it for us. This way, we can use our xmonad binary compiled by Stack.
     windowManager.xmonad.enable = false;
@@ -283,5 +285,9 @@ in
   # Enable CUPS to print documents.
   services.printing.enable = true;
 
-  users.extraUsers.l.extraGroups = [ "wheel" "docker" "vboxusers" ];
+  users.extraUsers.l.extraGroups = [
+    "wheel"
+    "docker"
+    "vboxusers"
+  ];
 }
