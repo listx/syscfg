@@ -43,83 +43,10 @@ in
     protobuf
     tokei
     util-linux
-
-    # The various language-specific packages here are meant to help make Emacs'
-    # Flycheck work better. This is not a perfect solution because ideally the
-    # version of Elixir, Rust, etc. is exactly the same as the version used in
-    # the project at hand.
-
-    # C/ASM
-    bear
-    ccls
-    clang
-    clang-tools # clangd LSP
-    gcc
     binutils
-    cmake
-    cppcheck
-
-    # Clojure
-    clj-kondo
-    cljfmt
-    clojure
-    clojure-lsp
-    neil
-    openjdk
-
-    # Elixir
-    elixir
-    elixir-ls # Elixir Language Server
-    erlang
-
-    # Go
-    go
-    golint
-    gomodifytags
-    gore
-    gotests
-    gotools
-
-    # Haskell
-    # We need GHC because it provides the useful 'ghci' REPL; useful for quick
-    # calculator math, etc.
-    #
-    # Compiler versions can be discovered with:
-    #
-    #   nix-env -f "<nixpkgs>" -qaP -A haskell.compiler
-    haskell.compiler.ghc912
-    cabal2nix
-    # For invoking, e.g., `cabal2nix cabal://some-package`, because cabal2nix
-    # depends on `cabal update`. We also get `cabal repl` and other commands
-    # from the `cabal` binary with this package.
-    cabal-install
-    hlint
-    stack
-
-    # JavaScript
-    nodejs
-    nodePackages.js-beautify
-    nodePackages.stylelint
-
-    # Lisp
-    sbcl
 
     # Nix
-    alejandra # nix formatter
     niv
-
-    # Python
-    pipenv
-    python3
-    python3Packages.pylint
-    python3Packages.flake8
-
-    # Rust
-    cargo
-    rustc
-    rustup
-    rust-analyzer
-    wasm-pack
 
     # Shell
     shellcheck
