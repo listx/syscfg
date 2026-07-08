@@ -59,17 +59,16 @@ in
 
     # Web
     firefox
-    chromium
     qutebrowser
 
     # X server utils
-    xorg.xmodmap
-    xorg.xev
+    xmodmap
+    xev
     xdotool
-    xorg.xdpyinfo
-    xorg.xkill
+    xdpyinfo
+    xkill
     xclip
-    xorg.xwininfo
+    xwininfo
     xcompmgr
     xsel
     xscreensaver
@@ -122,7 +121,6 @@ in
 
     # Image
     scrot
-    geeqie
     gimp
     imagemagick
     inkscape
@@ -143,8 +141,6 @@ in
     pdftk
     poppler-utils # pdftotext
     zathura
-    #haskellPackages.auca
-    texlive.combined.scheme-full
     pandoc
 
     # Fonts
@@ -158,8 +154,6 @@ in
     # Containerization
     docker
     kubectl
-    kind
-    ko
   ];
 
   nixpkgs.overlays = [ (import ./overlay.nix) ];
