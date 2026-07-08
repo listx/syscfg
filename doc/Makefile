@@ -57,7 +57,7 @@ gitconfig:
 .PHONY: gitconfig
 
 update:
-	cd .. && niv update nixpkgs --branch nixos-25.11
+	cd .. && niv update nixpkgs --branch nixos-26.05
 .PHONY: update
 
 clean:

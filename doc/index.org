@@ -147,7 +147,7 @@ clean:
 
 #+name: Nixpkgs version
 #+begin_src txt
-nixos-25.11
+nixos-26.05
 #+end_src
 
 ** Makefile for installing dotfiles
