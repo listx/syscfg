@@ -30,7 +30,10 @@
   # Avoid "lacks a valid signature" error from using nix-copy-closures from
   # another machine on the local LAN. See
   # https://github.com/NixOS/nix/issues/2330#issuecomment-451650296.
-  nix.settings.trusted-users = [ "root" "@wheel" ];
+  nix.settings.trusted-users = [
+    "root"
+    "@wheel"
+  ];
 
   # Create a /etc/zshenv and other things to make Zsh work properly. Among
   # other things, this allows us to perform a "git pull <this machine's IP>"
@@ -90,8 +93,13 @@
     # Unless `autoStart = false;', all entries here start automatically as a
     # systemd service. To stop the `home' OpenVPN client service, run `sudo
     # systemctl stop openvpn-home'.
-    home = { config = builtins.readFile ../openvpn/home.ovpn; };
-    us = { config = builtins.readFile ../openvpn/us.ovpn; autoStart = false; };
+    home = {
+      config = builtins.readFile ../openvpn/home.ovpn;
+    };
+    us = {
+      config = builtins.readFile ../openvpn/us.ovpn;
+      autoStart = false;
+    };
   };
 
   # PipeWire
@@ -105,7 +113,9 @@
     wireplumber.enable = true;
   };
 
-  users.groups.l = { gid = 1000; };
+  users.groups.l = {
+    gid = 1000;
+  };
 
   # Set password for extra users with 'passwd' command as root.
   users.users.l = {

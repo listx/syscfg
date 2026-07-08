@@ -1,11 +1,10 @@
 { config, pkgs, ... }:
 
 {
-  imports =
-    [
-      ../extra.nix
-      ./hardware-configuration.nix
-    ];
+  imports = [
+    ../extra.nix
+    ./hardware-configuration.nix
+  ];
 
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
@@ -16,8 +15,7 @@
 
   boot.initrd.luks.devices = {
     luksroot = {
-      device =
-        "/dev/disk/by-id/nvme-SAMSUNG_MZVKW512HMJP-000H1_S34CNA0J100907-part2";
+      device = "/dev/disk/by-id/nvme-SAMSUNG_MZVKW512HMJP-000H1_S34CNA0J100907-part2";
       preLVM = true;
     };
   };
@@ -63,14 +61,12 @@
   # taken from this commit
   # https://github.com/NixOS/nixpkgs/commit/f8d38db8d7c995e0e20ab6b4e48cac26c2ef0dfa.
   # The instructions at https://nixos.wiki/wiki/Nvidia led me to this commit.
-  hardware.nvidia.package =
-    config.boot.kernelPackages.nvidiaPackages.legacy_470;
+  hardware.nvidia.package = config.boot.kernelPackages.nvidiaPackages.legacy_470;
 
   # Audio
   services.pipewire.pulse.enable = true;
 
   # Binary Cache for Haskell.nix
-  nix.settings.trusted-public-keys =
-    [ "hydra.iohk.io:f/Ea+s+dFdN+3Y/G+FDgSq+a5NEWhJGzdjvKNGv0/EQ=" ];
+  nix.settings.trusted-public-keys = [ "hydra.iohk.io:f/Ea+s+dFdN+3Y/G+FDgSq+a5NEWhJGzdjvKNGv0/EQ=" ];
   nix.settings.substituters = [ "https://cache.iog.io" ];
 }
