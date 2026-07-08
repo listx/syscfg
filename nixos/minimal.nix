@@ -1,7 +1,7 @@
 { config, pkgs, ... }:
 
 {
-  system.stateVersion = "23.11";
+  system.stateVersion = "26.05";
   console.keyMap = "us";
   i18n.defaultLocale = "en_US.UTF-8";
 

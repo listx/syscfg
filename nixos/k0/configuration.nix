@@ -34,8 +34,12 @@
 
     # Use the USB Wifi adapter "ALFA AWUS036ACHM". See
     # https://github.com/morrownr/USB-WiFi/blame/73bf16e0621daafdbc9c852836ea0473616ec626/README.md#L61.
-    # This enables wireless support via /etc/wpa_supplicant.conf.
     wireless.enable = true;
+    # This enables wireless support via /etc/wpa_supplicant/imperative.conf.
+    wireless.allowAuxiliaryImperativeNetworks = true;
+    wireless.interfaces = [
+      "wlp0s20u6"
+    ];
   };
 
   # Enable cron service
