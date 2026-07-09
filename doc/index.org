@@ -404,6 +404,7 @@ us.
 
 #+header: :tangle .envrc
 #+begin_src txt
+# shellcheck shell=bash
 use nix
 #+end_src
 
