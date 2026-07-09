@@ -11,6 +11,7 @@ emacs.org
 git.org
 jj.org
 keybindings.org
+notmuch.org
 #+end_src
 
 This repo uses [[https://git.sr.ht/~listx/lilac][Lilac]] to extract the code/configuration from Org files. Not all
