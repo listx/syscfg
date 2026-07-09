@@ -1,7 +1,4 @@
 #!/usr/bin/env bash
-#
-# Call lieer to sync notmuch database with Gmail.
-
 set -euo pipefail
 
 # Be explicit about which Notmuch configuration we're using.

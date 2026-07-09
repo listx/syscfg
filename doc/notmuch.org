@@ -133,6 +133,9 @@ We just use the default setting (which is ~synchronize_flags=true~).
 #+end_src
 
 * Tag handling
+:PROPERTIES:
+:ID:       62b69a89-b413-4868-872e-00d4c1c67def
+:END:
 
 This is where we do most of the work. You can think of the settings here as an
 elaborate script which tags certain emails that match the query, in
@@ -265,4 +268,40 @@ This puts the into the Inbox in the web view.
 #+name: tags-default-catchall
 #+begin_src txt
 +unread -raw +inbox -- tag:raw and (not tag:list)
+#+end_src
+
+* Sync script
+
+Call [[https://github.com/gauteh/lieer][lieer]] to sync local notmuch database (which we processed with [[id:62b69a89-b413-4868-872e-00d4c1c67def][Tag handling]]) with Gmail.
+
+#+header: :tangle script/mail-sync.sh
+#+header: :shebang #!/usr/bin/env bash
+#+begin_src bash
+set -euo pipefail
+
+# Be explicit about which Notmuch configuration we're using.
+export NOTMUCH_CONFIG="${HOME}/.notmuch-config"
+
+# If we're running inside cron, we might not be aware of the usual paths used by
+# Nixpkgs. Enable them here.
+export PATH="${HOME}/.nix-profile/bin:/run/current-system/sw/bin:${PATH}"
+
+NOTMUCH_TAGS_FILE="${HOME}/syscfg/notmuch/tags"
+
+main()
+{
+    cd ~/mail/linusarver@gmail.com
+
+    # "gmi" is a script provided by the "lieer" package. It fetches mail from
+    # Gmail to disk.
+    gmi sync
+
+    # Re-index new emails.
+    notmuch new
+
+    # Tag emails.
+    notmuch tag --batch --input="${NOTMUCH_TAGS_FILE}"
+}
+
+main "$@"
 #+end_src
