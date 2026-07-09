@@ -12,6 +12,8 @@
 
 +list +lilac -- tag:raw and 'to:"~listx/lilac@lists.sr.ht"'
 
++list +sourcehut -- tag:raw and 'to:/~sircmpwn\/.*@lists\.sr\.ht/'
+
 +unread -raw -inbox -- tag:raw and tag:list
 
 -raw                -- tag:raw and (not tag:unread)

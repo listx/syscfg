@@ -151,6 +151,7 @@ top-to-bottom order.
 <<tags-sent>>
 <<tags-ml-git>>
 <<tags-ml-lilac>>
+<<tags-ml-sourcehut>>
 <<tags-ml-catchall>>
 <<tags-read>>
 <<tags-default-catchall>>
@@ -236,6 +237,16 @@ We have to quote it twice like this, probably to get around the shell's
 interpretation of ~\~~, as well as Notmuch's own special treatment of ~\~~. We don't
 require the ~raw~ tag like we do for Git, because it looks like if we originally
 send the email to the list, it won't get the ~raw~ tag.
+
+*** SourceHut
+
+Tag all SourceHut messages. Note the use of slashes to make the query into a
+regex.
+
+#+name: tags-ml-sourcehut
+#+begin_src txt
++list +sourcehut -- tag:raw and 'to:/~sircmpwn\/.*@lists\.sr\.ht/'
+#+end_src
 
 ** Read emails
 
