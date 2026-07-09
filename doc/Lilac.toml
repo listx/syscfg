@@ -22,7 +22,6 @@ nonTangledPathspecs = [ #
    ":(exclude,top)nix",
    ":(exclude,top)nixos",
    ":(exclude,top)nixpkgs",
-   ":(exclude,top)notmuch",
    ":(exclude,top)nvim",
    ":(exclude,top)openvpn",
    ":(exclude,top)pulse",

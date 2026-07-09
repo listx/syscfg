@@ -1,0 +1,257 @@
+:PROPERTIES:
+:ID:       24b856b6-aede-4174-8a2e-1626e8a91402
+:END:
+#+title: Notmuch
+
+For more information about notmuch, see https://notmuchmail.org.
+
+* Main configuration
+
+#+header: :tangle notmuch/notmuch-config
+#+begin_src ini
+<<database>>
+<<user>>
+<<new>>
+<<search>>
+<<maildir>>
+#+end_src
+
+** Database
+
+#+begin_quote
+The only value supported here is 'path' which should be the top-level
+directory where your mail currently exists and to where mail will be
+delivered in the future. Files should be individual email messages.
+Notmuch will store its database within a sub-directory of the path
+configured here named ".notmuch".
+#+end_quote
+
+For us the [[database]] section is empty because we just use the default path
+~\~/mail~.
+
+#+name: database
+#+begin_src ini
+[database]
+#+end_src
+
+** User
+
+#+begin_quote
+Here is where you can let notmuch know how you would like to be
+addressed. Valid settings are
+
+name		Your full name.
+primary_email	Your primary email address.
+other_email	A list (separated by ';') of other email addresses
+		at which you receive email.
+
+Notmuch will use the various email addresses configured here when
+formatting replies. It will avoid including your own addresses in the
+recipient list of replies, and will set the From address based on the
+address to which the original email was addressed.
+#+end_quote
+
+#+name: user
+#+begin_src ini
+[user]
+name=Linus Arver
+primary_email=linus@ucla.edu
+other_email=linusarver@gmail.com
+#+end_src
+
+** ~notmuch new~
+
+#+begin_quote
+Configuration for "notmuch new"
+
+The following options are supported here:
+
+	tags	A list (separated by ';') of the tags that will be
+		added to all messages incorporated by "notmuch new".
+
+	ignore	A list (separated by ';') of file and directory names
+		that will not be searched for messages by "notmuch new".
+
+		NOTE: *Every* file/directory that goes by one of those
+		names will be ignored, independent of its depth/location
+		in the mail store.
+#+end_quote
+
+#+name: new
+#+begin_src ini
+[new]
+tags=raw; (ref:new-raw)
+#+end_src
+
+[[(new-raw)]] tags all new mails as "raw" (unprocessed).
+
+** Search
+
+#+begin_quote
+The following option is supported here:
+
+	exclude_tags
+		A ;-separated list of tags that will be excluded from
+		search results by default.  Using an excluded tag in a
+		query will override that exclusion.
+#+end_quote
+
+#+name: search
+#+begin_src ini
+[search]
+exclude_tags=deleted;trash;spam;
+#+end_src
+
+** Maildir compatibility
+
+#+begin_quote
+The following option is supported here:
+
+	synchronize_flags      Valid values are true and false.
+
+	If true, then the following maildir flags (in message filenames)
+	will be synchronized with the corresponding notmuch tags:
+
+		Flag	Tag
+		----	-------
+		D	draft
+		F	flagged
+		P	passed
+		R	replied
+		S	unread (added when 'S' flag is not present)
+
+	The "notmuch new" command will notice flag changes in filenames
+	and update tags, while the "notmuch tag" and "notmuch restore"
+	commands will notice tag changes and update flags in filenames
+#+end_quote
+
+We just use the default setting (which is ~synchronize_flags=true~).
+
+#+name: maildir
+#+begin_src ini
+[maildir]
+#+end_src
+
+* Tag handling
+
+This is where we do most of the work. You can think of the settings here as an
+elaborate script which tags certain emails that match the query, in
+top-to-bottom order.
+
+# but if they are filtered out of the inbox (aka "Skip the Inbox"), do not tag
+# them as "inbox" because that will put them back into the Inbox, going against
+# the intent of the Gmail filters.
+
+#+name: tags
+#+header: :tangle notmuch/tags
+#+begin_src txt
+<<tags-trash-from-gui>>
+<<tags-trash-from-emacs>>
+<<tags-spam>>
+<<tags-sent>>
+<<tags-ml-git>>
+<<tags-ml-lilac>>
+<<tags-ml-catchall>>
+<<tags-read>>
+<<tags-default-catchall>>
+#+end_src
+
+Recall that at [[(new-raw)]] we tagged all new emails as ~raw~. The goal is to get rid
+of the ~raw~ tag for every email (that is, to give them some other tag that is
+more meaningful that just ~raw~).
+
+** Trash
+
+For emails that were deleted using the web GUI (from the phone or elsewhere)
+out of band, keep them in the trash.
+
+#+name: tags-trash-from-gui
+#+begin_src txt
+-raw                -- tag:raw and tag:trash
+#+end_src
+
+Mark deleted emails (deleted from Notmuch via Emacs) to be moved to the trash.
+We work with the "deleted" tag because the default ~d~ keybinding in Emacs for
+notmuch adds the "deleted" tag (and we don't want to bother customizing that).
+
+#+name: tags-trash-from-emacs
+#+begin_src txt
++trash -inbox -deleted -- tag:deleted
+#+end_src
+
+** Spam
+
+Skip any processing of all spam emails (by removing their ~raw~ tag). In
+particular, this makes the ~+unread -raw +inbox~ rule avoid considering them,
+keeping them out of the inbox.
+
+#+name: tags-spam
+#+begin_src txt
+-raw                -- tag:raw and tag:spam
+#+end_src
+
+** Sent
+
+Skip tagging of sent emails, just like how we skipped spam emails in [[tags-spam]].
+
+#+name: tags-sent
+#+begin_src txt
+-raw                -- tag:raw and tag:sent
+#+end_src
+
+** Mailing lists
+
+Tag all raw mailing list messages as being unread. It's important that we do
+not tag it as ~inbox~ because that'll put it into the Inbox in Gmail the next
+time ~lieer~ syncs.
+
+#+name: tags-ml-catchall
+#+begin_src txt
++unread -raw -inbox -- tag:raw and tag:list
+#+end_src
+
+*** Git
+
+Tag all messages related to the Git mailing list. Gmail filters will tag these
+with ~git~ and ~git/ci~ and so on. Here we additionally give them a ~list~ tag
+so that we can search across all emails related to the mailing list at once.
+
+#+name: tags-ml-git
+#+begin_src txt
++list +git          -- tag:raw and to:git@vger.kernel.org
++list +git/ci       -- tag:raw and to:ci_activity@noreply.github.com and (to:gitgitgadget/git or to:listx/git)
++list +git/ggg      -- tag:raw and from:gitgitgadget
+#+end_src
+
+*** Lilac
+
+Tag all messages related to the Lilac mailing list.
+
+#+name: tags-ml-lilac
+#+begin_src txt
++list +lilac -- 'to:"~listx/lilac@lists.sr.ht"'
+#+end_src
+
+We have to quote it twice like this, probably to get around the shell's
+interpretation of ~\~~, as well as Notmuch's own special treatment of ~\~~. We don't
+require the ~raw~ tag like we do for Git, because it looks like if we originally
+send the email to the list, it won't get the ~raw~ tag.
+
+** Read emails
+
+Process read emails (don't tag already-read emails as unread).
+
+#+name: tags-read
+#+begin_src txt
+-raw                -- tag:raw and (not tag:unread)
+#+end_src
+
+** Default catchall
+
+For all remaining non-mailing list emails, tag them as "inbox" and "unread".
+This puts the into the Inbox in the web view.
+
+#+name: tags-default-catchall
+#+begin_src txt
++unread -raw +inbox -- tag:raw and (not tag:list)
+#+end_src

@@ -1,44 +1,19 @@
-# Handle unprocessed ("raw") emails, tagging them as them "inbox" and "unread";
-# but if they are filtered out of the inbox (aka "Skip the Inbox"), do not tag
-# them as "inbox" because that will put them back into the Inbox, going against
-# the intent of the Gmail filters.
-
-# For emails that were deleted using the web GUI (from the phone or elsewhere)
-# out of band, keep them in the trash.
 -raw                -- tag:raw and tag:trash
-# Mark deleted emails (deleted from Notmuch via Emacs) to be moved to the trash.
-# We work with the "deleted" tag because the default "d" keybinding in Emacs for
-# notmuch adds the "deleted" tag (and we don't want to bother customizing that).
+
 +trash -inbox -deleted -- tag:deleted
 
-# Process all spam emails first (by making them ineligible for further
-# processing). In particular, this makes the "+unread -raw +inbox" rule avoid
-# considering them, keeping them out of the inbox.
 -raw                -- tag:raw and tag:spam
-# Do the same for sent emails (skip processing them).
+
 -raw                -- tag:raw and tag:sent
 
-# Tag all messages related to the git mailing list. Gmail filters will tag these
-# with "git" and "git/ci" and so on. Here we additionally give them a "list" tag
-# so that we can search across all emails related to the mailing list at once.
 +list +git          -- tag:raw and to:git@vger.kernel.org
 +list +git/ci       -- tag:raw and to:ci_activity@noreply.github.com and (to:gitgitgadget/git or to:listx/git)
 +list +git/ggg      -- tag:raw and from:gitgitgadget
 
-# Tag all messages related to the lilac mailing list. We have to quote it twice
-# like this, probably to get around the shell's interpretation of ~, as well as
-# Notmuch's own special treatment of ~. We don't require the "raw" tag like we
-# do for Git, because it looks like if we originally send the email to the list,
-# it won't get the "raw" tag.
 +list +lilac -- 'to:"~listx/lilac@lists.sr.ht"'
 
-# Tag all raw mailing list messages as being unread. It's important that we do
-# not tag it as "inbox" because that'll put it into the Inbox in Gmail the next
-# time lieer syncs.
 +unread -raw -inbox -- tag:raw and tag:list
 
-# Process read emails (don't tag already-read emails as unread).
 -raw                -- tag:raw and (not tag:unread)
 
-# Tag all raw non-mailing-list messages as "inbox" and "unread".
 +unread -raw +inbox -- tag:raw and (not tag:list)
