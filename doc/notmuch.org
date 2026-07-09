@@ -234,6 +234,7 @@ Tag all messages related to the Lilac mailing list.
 #+name: tags-ml-lilac
 #+begin_src txt
 +list +lilac -- tag:raw and 'to:"~listx/lilac@lists.sr.ht"'
++list +lilac -- tag:raw and 'from:builds@sr.ht' and 'subject:lilac'
 #+end_src
 
 We have to quote it twice like this, probably to get around the shell's
@@ -249,6 +250,7 @@ regex.
 #+name: tags-ml-sourcehut
 #+begin_src txt
 +list +sourcehut -- tag:raw and 'to:/~sircmpwn\/.*@lists\.sr\.ht/'
++list +sourcehut -- tag:raw and 'from:builds@sr.ht' and '(subject:srht.site or subject:/.*\.sr\.ht/ or subject:core-go)'
 #+end_src
 
 ** Read emails
