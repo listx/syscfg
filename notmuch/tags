@@ -10,7 +10,7 @@
 +list +git/ci       -- tag:raw and to:ci_activity@noreply.github.com and (to:gitgitgadget/git or to:listx/git)
 +list +git/ggg      -- tag:raw and from:gitgitgadget
 
-+list +lilac -- 'to:"~listx/lilac@lists.sr.ht"'
++list +lilac -- tag:raw and 'to:"~listx/lilac@lists.sr.ht"'
 
 +unread -raw -inbox -- tag:raw and tag:list
 

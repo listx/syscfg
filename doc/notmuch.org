@@ -229,7 +229,7 @@ Tag all messages related to the Lilac mailing list.
 
 #+name: tags-ml-lilac
 #+begin_src txt
-+list +lilac -- 'to:"~listx/lilac@lists.sr.ht"'
++list +lilac -- tag:raw and 'to:"~listx/lilac@lists.sr.ht"'
 #+end_src
 
 We have to quote it twice like this, probably to get around the shell's
