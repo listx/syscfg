@@ -2,7 +2,7 @@
 
 {
   imports = [
-    ../extra.nix
+    ../extra.nix #
     ./hardware-configuration.nix
   ];
 

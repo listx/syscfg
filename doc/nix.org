@@ -1,0 +1,629 @@
+:PROPERTIES:
+:ID:       82cbef73-61b9-43e7-9df6-7b2771000733
+:END:
+#+title: Nix
+
+* NixOS
+
+** Minimal config
+
+The minimal configuration captures some (perhaps boring) minimal features we
+want out of NixOS. Basically it's a lightweight config that isn't too
+package-heavy. The idea is that when you are setting up a new machine, you can
+import just this [[nixos/minimal.nix]] instead of [[nixos/extra.nix]] (as in
+[[(nixos/k0/configuration.nix-extra.nix)]]) to speed up the installation (without
+having to download all of the heavy packages).
+
+#+name: nixos/minimal.nix
+#+header: :tangle nixos/minimal.nix
+#+begin_src nix
+{ config, pkgs, ... }:
+
+{
+  system.stateVersion = "26.05";
+  console.keyMap = "us";
+  i18n.defaultLocale = "en_US.UTF-8";
+
+  networking = {
+    # 192.168.1.1 router
+    # 192.168.1.2 printer
+    # 192.168.1.3 UNASSIGNED
+    # 192.168.1.5 UNASSIGNED
+    # 192.168.1.6 UNASSIGNED
+    extraHosts = ''
+      192.168.1.4 k0
+      192.168.1.7 macp
+    '';
+    # Port 22 is opened automatically if SSH daemon is enabled (no need to specify it here).
+    firewall.allowedTCPPorts = [
+      8010 # org-roam-server-mode
+      8020 # stack exec -- blog watch --host=192.168.1.4 --port=8020
+      8030 # mpd HTTP stream
+    ];
+  };
+
+  # allow installation of 'ati_unfree' video driver and also Firefox with Flash
+  nixpkgs.config.allowUnfree = true;
+  nixpkgs.config.nvidia.acceptLicense = true;
+
+  # Avoid "lacks a valid signature" error from using nix-copy-closures from
+  # another machine on the local LAN. See
+  # https://github.com/NixOS/nix/issues/2330#issuecomment-451650296.
+  nix.settings.trusted-users = [
+    "root"
+    "@wheel"
+  ];
+
+  # Create a /etc/zshenv and other things to make Zsh work properly. Among
+  # other things, this allows us to perform a "git pull <this machine's IP>"
+  # from a remote machine; without this, the login shell cannot find the
+  # git-upload-pack command, and the git pull operation will fail.
+  programs.zsh.enable = true;
+
+  # Delete things that come built-in by nix that customizes Zsh. For one thing,
+  # disable the prompt settings because they interfere with our own
+  # customizations.
+  programs.zsh.promptInit = "";
+
+  # Enable the OpenSSH daemon.
+  services.openssh.enable = true;
+
+  # We're going to use `gpg-agent` with SSH support --- so to avoid conflict,
+  # disable OpenSSH's ssh-agent.
+  programs.ssh.startAgent = false;
+
+  # NTP for automated system clock adjustments.
+  services.ntp.enable = true;
+
+  time.timeZone = "Australia/Melbourne";
+
+  i18n.inputMethod.type = "uim";
+  i18n.inputMethod.enable = true;
+
+  # Fonts
+  fonts = {
+    fontDir.enable = true;
+    enableGhostscriptFonts = true;
+    packages = with pkgs; [
+      baekmuk-ttf
+      corefonts
+      dejavu_fonts
+      ipafont
+      libertine
+      source-code-pro
+      source-sans
+      source-serif
+      source-han-sans
+      source-han-serif
+      source-han-mono
+      terminus_font
+      ubuntu-classic
+    ];
+  };
+
+  # Prettify the virtual console font early on with Terminus.
+  console = {
+    font = "ter-114n";
+    packages = with pkgs; [ terminus_font ];
+    earlySetup = true;
+  };
+
+  services.openvpn.servers = {
+    # Unless `autoStart = false;', all entries here start automatically as a
+    # systemd service. To stop the `home' OpenVPN client service, run `sudo
+    # systemctl stop openvpn-home'.
+    home = {
+      config = builtins.readFile ../openvpn/home.ovpn;
+    };
+    us = {
+      config = builtins.readFile ../openvpn/us.ovpn;
+      autoStart = false;
+    };
+  };
+
+  # PipeWire
+  # rtkit is optional but recommended
+  security.rtkit.enable = true;
+  services.pipewire = {
+    enable = true;
+    alsa.enable = true;
+    alsa.support32Bit = true;
+    pulse.enable = true;
+    wireplumber.enable = true;
+  };
+
+  users.groups.l = {
+    gid = 1000;
+  };
+
+  # Set password for extra users with 'passwd' command as root.
+  users.users.l = {
+    isNormalUser = true;
+    group = "l";
+    description = "Linus Arver";
+    createHome = true;
+    home = "/home/l";
+    extraGroups = [ "wheel" ];
+    shell = "/run/current-system/sw/bin/zsh";
+    uid = 1000;
+  };
+}
+#+end_src
+
+** Extra packages
+
+This includes many more packages to set up a more complete Linux experience.
+
+#+name: nixos/extra.nix
+#+header: :tangle nixos/extra.nix
+#+begin_src nix
+{ config, pkgs, ... }:
+
+let
+  melby-release = import "/home/l/prog/melby/package/build.nix";
+in
+{
+  imports = [ ./minimal.nix ];
+
+  environment.systemPackages = with pkgs; [
+    # Essentials
+    wezterm
+    tmux
+    zsh
+    git
+    git-filter-repo
+    difftastic
+    tig
+    jujutsu
+    jjui
+    meld
+    emacs
+    neovim
+    editorconfig-core-c
+    ripgrep
+    fzf
+    fd
+    gnumake
+    sqlite # emacs' org-roam needs it
+    noweb # literate emacs configuration
+    gcal
+    melby-release.melby-daemon
+    melby-release.melby-client-rust
+    babashka
+
+    # Dev tools
+    parallel
+    unixtools.xxd
+    dos2unix
+    jless
+    jq
+    dhall
+    dhall-json
+    protobuf
+    tokei
+    util-linux
+    binutils
+
+    # Nix
+    niv
+
+    # Shell
+    shellcheck
+
+    # ----------
+
+    # Email
+    notmuch
+    lieer
+
+    # Web
+    firefox
+    qutebrowser
+
+    # X server utils
+    xmodmap
+    xev
+    xdotool
+    xdpyinfo
+    xkill
+    xclip
+    xwininfo
+    xcompmgr
+    xsel
+    xscreensaver
+
+    # Monitoring/Inspection
+    htop
+    bottom
+    bmon
+    ncdu
+    tree
+    pciutils # lspci
+    lsof
+
+    # Cryptography
+    gnupg
+    openssl
+    pinentry-curses
+    cryptsetup
+    pass
+
+    # Net
+    bind # dig
+    rsync
+    wget
+    curl
+    inetutils # ping
+    dhcpcd
+    rtorrent
+
+    # Docs
+    man-pages
+    stdman
+    stdmanpages
+
+    # Archiving
+    p7zip
+    unzip
+    unrar
+    zip
+
+    # Filesystem
+    fuse
+    parted
+    gparted
+    ntfs3g
+    gptfdisk
+    sshfs-fuse
+    woeusb
+    inotify-tools
+
+    # Image
+    scrot
+    gimp
+    imagemagick
+    inkscape
+    pdf2svg
+
+    # Audio/Video
+    mpv
+    ffmpeg
+    flac
+    mpc
+    vimpc
+    mpd
+    r128gain
+    pavucontrol
+    pulseaudio
+
+    # Document processing
+    pdftk
+    poppler-utils # pdftotext
+    zathura
+    pandoc
+
+    # Fonts
+    raleway
+    noto-fonts
+
+    # Data analysis
+    graphviz
+    gnuplot
+
+    # Containerization
+    docker
+    kubectl
+  ];
+
+  nixpkgs.overlays = [ (import ./overlay.nix) ];
+
+  programs.direnv = {
+    enable = true;
+    package = pkgs.direnv;
+    silent = false;
+    loadInNixShell = true;
+    direnvrcExtra = "";
+    nix-direnv = {
+      enable = true;
+      package = pkgs.nix-direnv;
+    };
+  };
+
+  services.displayManager = {
+    defaultSession = "l_xmonad";
+    autoLogin.enable = true;
+    autoLogin.user = "l";
+  };
+
+  services.xserver = {
+    enable = true;
+    xkb.layout = "us";
+    xkb.variant = "altgr-intl";
+    xkb.options = "terminate:ctrl_alt_bksp";
+    # See https://unix.stackexchange.com/questions/597358/nixos-how-to-configure-custom-desktop-session/597359#597359.
+    displayManager.session = [
+      {
+        manage = "desktop";
+        name = "l_xmonad";
+        start = "exec $HOME/.xsession";
+      }
+    ];
+    # We rely on ~/.xsession to start XMonad, instead of NixOS automagically
+    # doing it for us. This way, we can use our xmonad binary compiled by Stack.
+    windowManager.xmonad.enable = false;
+    windowManager.xmonad.enableContribAndExtras = false;
+  };
+
+  # Enable X screen saver (xscreensaver).
+  services.xscreensaver.enable = true;
+
+  virtualisation.virtualbox.host.enable = true;
+
+  virtualisation.docker.enable = true;
+  virtualisation.docker.storageDriver = "overlay2";
+
+  # Enable CUPS to print documents.
+  services.printing.enable = true;
+
+  users.extraUsers.l.extraGroups = [
+    "wheel"
+    "docker"
+    "vboxusers"
+  ];
+}
+#+end_src
+
+** Haskell
+
+Back in the day we used to have more Haskell-based tools. [[nixos/haskell/auca.nix]]
+is one such tool. Anyway, what we want to do is install these programs as
+system packages. To do that we inject them into the system ~haskellPackages~ set
+in [[nixos/overlay.nix]].
+
+#+name: nixos/overlay.nix
+#+header: :tangle nixos/overlay.nix
+#+begin_src nix
+# See https://nixos.org/manual/nixpkgs/stable/#chap-overlays for an overview of overlays.
+
+self: super:
+
+{
+  # Taken from
+  # http://lists.science.uu.nl/pipermail/nix-dev/2015-January/015601.html. We
+  # add in some custom Haskell packages.
+  haskellPackages = super.haskellPackages.override {
+    overrides = self: super: {
+      # Local packages not found on Hackage, but which still exist on the
+      # local machine. As long as they have a .cabal file, we can use
+      # `cabal2nix` to generate a Nix expression to build them.
+      #
+      # To generate the local package's nix expression, simply invoke
+      #
+      #   cabal2nix path/to/folder/containing/cabal/file > project-name.nix
+      #
+      # . E.g., like this:
+      #
+      #   cabal2nix ~/prog/auca > auca.nix
+      #
+      # . The `~/prog/auca` folder contains the `auca.cabal` file, which
+      # will be looked up automatically by cabal2nix. Then, it's simply a
+      # matter of moving the generated file to a folder inside ~/.nixpkgs,
+      # and calling that file with `callPackage`.
+      #
+      # As for the local package itself, you can do
+      #
+      #   cabal2nix --shell path/to/folder > shell.nix
+      #
+      # to create a nix-shell environment. You can just do `nix-shell` after
+      # that to get ghci. For cabal2nix to work properly, you need to have
+      # the `cabal` binary available. To do this, you should have
+      # `haskellPackages.cabal-install` installed either on your system, or
+      # through nix-env.
+      auca = self.callPackage ./haskell/auca.nix { };
+    };
+  };
+}
+#+end_src
+
+*** ~auca~
+
+#+name: nixos/haskell/auca.nix
+#+header: :tangle nixos/haskell/auca.nix
+#+begin_src nix
+{ mkDerivation, base, cmdargs, directory, hinotify, monads-tf
+, process, stdenv, lib, stm, time
+}:
+mkDerivation {
+  pname = "auca";
+  version = "0.0.1.5";
+  src = /home/l/prog/auca;
+  isLibrary = false;
+  isExecutable = true;
+  buildDepends = [
+    base cmdargs directory hinotify monads-tf process stm time
+  ];
+  description = "Execute arbitrary command(s) based on file changes";
+  license = lib.licenses.bsd2;
+}
+#+end_src
+
+** ~k0~ machine
+
+*** Configuration
+
+#+name: nixos/k0/configuration.nix
+#+header: :tangle nixos/k0/configuration.nix
+#+begin_src nix
+{ config, pkgs, ... }:
+
+{
+  imports = [
+    ../extra.nix # (ref:nixos/k0/configuration.nix-extra.nix)
+    ./hardware-configuration.nix
+  ];
+
+  boot.loader.systemd-boot.enable = true;
+  boot.loader.efi.canTouchEfiVariables = true;
+
+  # See https://askubuntu.com/a/863301 (this fixes flooding of the kernel logs
+  # with "printk messages dropped".
+  boot.kernelParams = [ "pcie_aspm=off" ];
+
+  boot.initrd.luks.devices = {
+    luksroot = {
+      device = "/dev/disk/by-id/nvme-SAMSUNG_MZVKW512HMJP-000H1_S34CNA0J100907-part2";
+      preLVM = true;
+    };
+  };
+
+  boot.kernel.sysctl = {
+    # Make the kernel reluctant to use swap.
+    "vm.swappiness" = 5;
+  };
+
+  networking = {
+    hostName = "k0";
+    extraHosts = "";
+
+    defaultGateway = "192.168.1.1";
+    nameservers = [ "8.8.8.8" ];
+
+    # Use the USB Wifi adapter "ALFA AWUS036ACHM". See
+    # https://github.com/morrownr/USB-WiFi/blame/73bf16e0621daafdbc9c852836ea0473616ec626/README.md#L61.
+    wireless.enable = true;
+    # This enables wireless support via /etc/wpa_supplicant/imperative.conf.
+    wireless.allowAuxiliaryImperativeNetworks = true;
+    wireless.interfaces = [
+      "wlp0s20u6"
+    ];
+  };
+
+  # Enable cron service
+  services.cron = {
+    enable = true;
+    systemCronJobs = [
+    ];
+  };
+
+  services.xserver = {
+    videoDrivers = [ "nvidia" ];
+    # export finalized xorg.conf to /etc/X11/xorg.conf
+    exportConfiguration = true;
+    config = pkgs.lib.mkOverride 50 (builtins.readFile ./xorg.conf);
+  };
+
+  nixpkgs.config.allowUnfree = true;
+  nixpkgs.config.nvidia.acceptLicense = true;
+
+  # Unfortunately, upgrading to nixos 21.11 led to us getting the new 495.44
+  # driver, which breaks our configuration (boo NVIDIA). So, we are forced to
+  # use the older version (which works perfectly!). The configuration here is
+  # taken from this commit
+  # https://github.com/NixOS/nixpkgs/commit/f8d38db8d7c995e0e20ab6b4e48cac26c2ef0dfa.
+  # The instructions at https://nixos.wiki/wiki/Nvidia led me to this commit.
+  hardware.nvidia.package = config.boot.kernelPackages.nvidiaPackages.legacy_470;
+
+  # Audio
+  services.pipewire.pulse.enable = true;
+
+  # Binary Cache for Haskell.nix
+  nix.settings.trusted-public-keys = [ "hydra.iohk.io:f/Ea+s+dFdN+3Y/G+FDgSq+a5NEWhJGzdjvKNGv0/EQ=" ];
+  nix.settings.substituters = [ "https://cache.iog.io" ];
+}
+#+end_src
+
+*** X server
+
+#+name: nixos/k0/xorg.conf
+#+header: :tangle nixos/k0/xorg.conf
+#+begin_src txt
+# nvidia-settings: X configuration file generated by nvidia-settings
+# nvidia-settings:  version 470.256.02
+
+Section "ServerLayout"
+    # the same as `xset dpms force off' after 60 minutes of inactivity, which
+    # makes the screens display nothing but a black image, but does not
+    # actually turn the monitors off.
+    #
+    # Also, suspending seems to do the same thing as stand by, so we disable it.
+    # We also disable OffTime because it does not work properly on our hardware
+    # (screen turns off only momentarily before coming back on). We need to set
+    # these unused values to 0, because otherwise they are set to "10" (minutes)
+    # by default. See `xset q' under the DPMS section for details.
+    #
+    # See https://wiki.archlinux.org/index.php/Display_Power_Management_Signaling
+    Identifier     "Layout0"
+    Screen      0  "Screen0" 0 0
+    InputDevice    "Keyboard0" "CoreKeyboard"
+    InputDevice    "Mouse0" "CorePointer"
+    Option         "Xinerama" "0"
+    # Set up monitor poweroff settings.
+    Option         "BlankTime" "0"
+    Option         "StandbyTime" "0"
+    Option         "SuspendTime" "0"
+    Option         "OffTime" "0"
+EndSection
+
+Section "Files"
+    ModulePath      "/nix/store/hc3m68zn6k1w7dr0dpy61lxv1n6q8pyd-nvidia-x11-470.256.02-6.12.67-bin/lib/xorg/modules"
+    ModulePath      "/nix/store/rplqyp07sd2plsa0jvp0yns32xvfyz5w-xorg-server-21.1.20/lib/xorg/modules"
+    ModulePath      "/nix/store/4p0k0xv9yprzd3dbspyydvp0c21vavgq-xf86-input-evdev-2.11.0/lib/xorg/modules"
+    ModulePath      "/nix/store/21cm4jhfmnqa7jdy3zkiiswpjkmri9hk-xf86-input-libinput-1.5.0/lib/xorg/modules"
+    FontPath        "/nix/store/1mpczv0zzhv79l75vdyw40x2hskmj85k-terminus-font-4.49.1/share/fonts/terminus"
+    FontPath        "/nix/store/dp0r75hg8lxm0is2i191sf2mbqrv6pr4-font-cursor-misc-1.0.4/share/fonts/X11/misc"
+    FontPath        "/nix/store/vnlxybwsdpvk64gnp4y4pxk38nlz8q4c-font-misc-misc-1.1.3/share/fonts/X11/misc"
+    FontPath        "/nix/store/1jrlrrggvwiibj5a5jncii3qym81mwf4-unifont-16.0.03/share/fonts"
+    FontPath        "/nix/store/62x3lp93j9q6phnl6s1fphscddkvcqx1-ghostscript-with-X-10.06.0-fonts/share/fonts"
+    FontPath        "/nix/store/0n8vg6chibwm829hnh597q9jx2a0s8if-font-adobe-100dpi-1.0.4/share/fonts/X11/100dpi"
+    FontPath        "/nix/store/i5b8zhswl3lm14ni5zjkk8a8zd0gr5zz-font-adobe-75dpi-1.0.4/share/fonts/X11/75dpi"
+    FontPath        "/nix/store/a5jx22l6xywhfqnszml7wz1fhq67x7yd-X11-fonts/share/X11/fonts"
+EndSection
+
+Section "InputDevice"
+    Identifier     "Keyboard0"
+    Driver         "kbd"
+EndSection
+
+Section "InputDevice"
+    Identifier     "Mouse0"
+    Driver         "mouse"
+    Option         "Protocol" "auto"
+    Option         "Device" "/dev/input/mice"
+    Option         "Emulate3Buttons" "no"
+    Option         "ZAxisMapping" "4 5"
+EndSection
+
+Section "Monitor"
+    Identifier     "Monitor0"
+    VendorName     "Unknown"
+    ModelName      "LG Electronics LG SDQHD"
+    HorizSync       30.0 - 178.0
+    VertRefresh     59.0 - 61.0
+    Option         "DPMS"
+EndSection
+
+Section "Device"
+    Identifier     "Device0"
+    Driver         "nvidia"
+    VendorName     "NVIDIA Corporation"
+    BoardName      "Quadro K1200"
+    Option         "UseEdidDpi" "False"
+    Option         "DPI" "108 x 108"
+EndSection
+
+Section "Screen"
+    Identifier     "Screen0"
+    Device         "Device0"
+    Monitor        "Monitor0"
+    DefaultDepth    24
+    Option         "Stereo" "0"
+    Option         "nvidiaXineramaInfoOrder" "DFP-5"
+    Option         "metamodes" "DP-6: 2560x2880 +1050+0, DP-5: nvidia-auto-select +0+600 {rotation=left}; DP-6: 1024x768_60 +0+0, DP-5: nvidia-auto-select +1024+0; DP-6: 800x600 +0+0, DP-5: nvidia-auto-select +800+0; DP-6: 640x480 +0+0, DP-5: nvidia-auto-select +640+0"
+    Option         "SLI" "Off"
+    Option         "MultiGPU" "Off"
+    Option         "BaseMosaic" "off"
+    SubSection     "Display"
+        Depth       24
+    EndSubSection
+EndSection
+#+end_src

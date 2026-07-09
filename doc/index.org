@@ -11,6 +11,7 @@ emacs.org
 git.org
 jj.org
 keybindings.org
+nix.org
 notmuch.org
 #+end_src
 
@@ -63,7 +64,9 @@ nonTangledPathspecs = [ # (ref:nonTangledPathspecs)
    ":(exclude,top)mpd",
    ":(exclude,top)mpv",
    ":(exclude,top)nix",
-   ":(exclude,top)nixos",
+   ":(exclude,top)nixos/k0/hardware-configuration.nix",
+   ":(exclude,top)nixos/m0",
+   ":(exclude,top)nixos/w0",
    ":(exclude,top)nixpkgs",
    ":(exclude,top)nvim",
    ":(exclude,top)openvpn",
@@ -76,7 +79,6 @@ nonTangledPathspecs = [ # (ref:nonTangledPathspecs)
    ":(exclude,top)tmux",
    ":(exclude,top)vimpc",
    ":(exclude,top)wezterm",
-   ":(exclude,top)nixos",
    ":(exclude,top)script/Makefile",
    ":(exclude,top)script/README.org",
    ":(exclude,top)script/aex.sh",
