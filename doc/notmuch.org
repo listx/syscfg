@@ -273,6 +273,9 @@ This puts the into the Inbox in the web view.
 #+end_src
 
 * Sync script
+:PROPERTIES:
+:ID:       4fe79951-cd00-4b34-bd52-0e27347a5449
+:END:
 
 Call [[https://github.com/gauteh/lieer][lieer]] to sync local notmuch database (which we processed with [[id:62b69a89-b413-4868-872e-00d4c1c67def][Tag handling]]) with Gmail.
 
@@ -286,7 +289,7 @@ export NOTMUCH_CONFIG="${HOME}/.notmuch-config"
 
 # If we're running inside cron, we might not be aware of the usual paths used by
 # Nixpkgs. Enable them here.
-export PATH="${HOME}/.nix-profile/bin:/run/current-system/sw/bin:${PATH}"
+export PATH="${HOME}/.nix-profile/bin:/run/current-system/sw/bin:${PATH}" # (ref:env-path)
 
 NOTMUCH_TAGS_FILE="${HOME}/syscfg/notmuch/tags"
 
@@ -306,4 +309,46 @@ main()
 }
 
 main "$@"
+#+end_src
+
+Call the above script regularly via systemd (like a cronjob) on NixOS. See
+[[id:7a4cb949-a16d-48ab-9a33-43a659c93dd4::nixos/k0/configuration.nix][nixos/k0/configuration.nix]].
+
+#+name: nix:cron-mail-sync
+#+begin_src nix
+systemd.user.services.notmuch-sync = {
+  description = "Sync Gmail with lieer and update Notmuch index";
+  serviceConfig = {
+    Type = "oneshot";
+    ExecStart = "/home/l/syscfg/script/mail-sync.sh";
+    Environment = "PATH=/run/current-system/sw/bin:/usr/bin:/bin"; # (ref:nix:cron-mail-sync-env)
+  };
+};
+
+systemd.user.timers.notmuch-sync = {
+  description = "Run mail sync every 15 minutes";
+  wantedBy = [ "timers.target" ];
+  timerConfig = {
+    OnBootSec = "2min";
+    OnUnitActiveSec = "15min";
+    Persistent = true;
+  };
+};
+#+end_src
+
+Even though the script itself sets up the PATH [[(env-path)]], we still need to give
+the environment /outside/ of the script the right PATH [[(nix:cron-mail-sync-env)]]
+because the script's first line ~/usr/bin/env~ needs to be able to find ~bash~ (it
+won't work without [[(nix:cron-mail-sync-env)]]).
+
+To make the job run immediately, do
+
+#+begin_src bash
+systemctl --user start notmuch-sync.service
+#+end_src
+
+To stream the logs, do
+
+#+begin_src bash
+journalctl --user -u notmuch-sync.service -f
 #+end_src

@@ -42,11 +42,23 @@
     ];
   };
 
-  # Enable cron service
-  services.cron = {
-    enable = true;
-    systemCronJobs = [
-    ];
+  systemd.user.services.notmuch-sync = {
+    description = "Sync Gmail with lieer and update Notmuch index";
+    serviceConfig = {
+      Type = "oneshot";
+      ExecStart = "/home/l/syscfg/script/mail-sync.sh";
+      Environment = "PATH=/run/current-system/sw/bin:/usr/bin:/bin"; #
+    };
+  };
+
+  systemd.user.timers.notmuch-sync = {
+    description = "Run mail sync every 15 minutes";
+    wantedBy = [ "timers.target" ];
+    timerConfig = {
+      OnBootSec = "2min";
+      OnUnitActiveSec = "15min";
+      Persistent = true;
+    };
   };
 
   services.xserver = {

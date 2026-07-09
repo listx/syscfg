@@ -6,7 +6,7 @@ export NOTMUCH_CONFIG="${HOME}/.notmuch-config"
 
 # If we're running inside cron, we might not be aware of the usual paths used by
 # Nixpkgs. Enable them here.
-export PATH="${HOME}/.nix-profile/bin:/run/current-system/sw/bin:${PATH}"
+export PATH="${HOME}/.nix-profile/bin:/run/current-system/sw/bin:${PATH}" #
 
 NOTMUCH_TAGS_FILE="${HOME}/syscfg/notmuch/tags"
 

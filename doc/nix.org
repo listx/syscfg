@@ -450,6 +450,9 @@ mkDerivation {
 ** ~k0~ machine
 
 *** Configuration
+:PROPERTIES:
+:ID:       7a4cb949-a16d-48ab-9a33-43a659c93dd4
+:END:
 
 #+name: nixos/k0/configuration.nix
 #+header: :tangle nixos/k0/configuration.nix
@@ -498,12 +501,7 @@ mkDerivation {
     ];
   };
 
-  # Enable cron service
-  services.cron = {
-    enable = true;
-    systemCronJobs = [
-    ];
-  };
+  <<id:4fe79951-cd00-4b34-bd52-0e27347a5449::nix:cron-mail-sync>>
 
   services.xserver = {
     videoDrivers = [ "nvidia" ];
