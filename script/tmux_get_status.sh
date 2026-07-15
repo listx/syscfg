@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-
 # Usage: $0 <SESSION_NAME> <PANE_MODE> <CLIENT_KEY_TABLE>
 #
 # Generate the status line for tmux.

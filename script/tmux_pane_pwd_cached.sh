@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-#
 # Script used by tmux to figure out how to display the status bar for the
 # current window. Note that this is different from setting the window name (aka
 # "#{window_name}", which we purposely avoid due to race conditions.

@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-
 # Usage: $0 <SESSION_ID> <WINDOW_INDEX> <L|R>
 #
 # Move the current tmux pane in the given session either left or right, across

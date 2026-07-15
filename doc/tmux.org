@@ -1,39 +1,14 @@
-#+TITLE: Literate tmux configuration
-#+AUTHOR: Linus Arver
-#+PROPERTY: header-args :noweb no-export
-#+auto_tangle: t
+:PROPERTIES:
+:ID:       9170fae9-85de-4fd8-96fb-f3d3d2215f94
+:END:
+#+title: tmux
 
-* Literate configuration setup
-
-This file is tangled automatically on save. We also use noweb-style source code
-blocks, which allows us to name source code blocks and reference them elsewhere.
-
-There are two styles of source code block names. The first looks like this:
-
-#+begin_src org
-,#+name: name-of-code-block
-,#+begin_src conf
-...
-,#+end_src
-#+end_src
-
-And we can refer to =name-of-code-block= by enclosing them in double angled
-brackets, like this: =<<name-of-code-block>>=. The other style we use is
-
-#+begin_src org
-,#+header: :noweb-ref name-of-code-block
-,#+begin_src conf
-...
-,#+end_src
-#+end_src
-
-and the advantage of this style is that it behaves exactly like =#+name: ...=
-except that subsequent code blocks with the same name are concatenated together
-in the order that they appear, top-to-bottom, in this document.
+#+lilac_maxHeadingLevel: 5
 
 * =tmux= configuration
 
-#+begin_src conf :tangle .tmux.conf
+#+header: :tangle tmux/.tmux.conf
+#+begin_src conf
 <<global-variables>>
 <<keybindings>>
 <<appearance>>
@@ -59,7 +34,7 @@ value of ="bar"=.
 
 ** =EMACSLIKE=
 
-The =EMACSLIKE= variable is a tmux predicate to check if the current window_name
+The =EMACSLIKE= variable is a tmux predicate to check if the current ~window_name~
 is running either =emacs=, =emacsclient=, or =git=. We include =git= because
 =automatic-rename= sets the name to "git" if we run =git commit --amend= from the
 terminal. We also include =tig= because we can invoke Git interactive rebases
@@ -79,7 +54,7 @@ EMACSLIKE="#{m/r:emacs.*|git|tig,#{window_name}}"
 
 * Keybindings
 
-#+header: :noweb-ref keybindings
+#+name: keybindings
 #+begin_src conf
 <<keybindings-insert-mode>>
 <<keybindings-passthrough-mode>>
@@ -105,20 +80,21 @@ portion (converted to Org table format):
 
 | Oct | Dec | Hex | Char                      | Oct | Dec | Hex | Char    |
 |-----+-----+-----+---------------------------+-----+-----+-----+---------|
-| 000 |   0 |  00 | NUL '\0' (null character) | 100 |  64 |  40 | @       |
+|     |     | <r> | <l>                       |     |     | <r> | <l>     |
+| 000 |   0 |  00 | NUL ~\0~ (null character)   | 100 |  64 |  40 | @       |
 | 001 |   1 |  01 | SOH (start of heading)    | 101 |  65 |  41 | A       |
 | 002 |   2 |  02 | STX (start of text)       | 102 |  66 |  42 | B       |
 | 003 |   3 |  03 | ETX (end of text)         | 103 |  67 |  43 | C       |
 | 004 |   4 |  04 | EOT (end of transmission) | 104 |  68 |  44 | D       |
 | 005 |   5 |  05 | ENQ (enquiry)             | 105 |  69 |  45 | E       |
 | 006 |   6 |  06 | ACK (acknowledge)         | 106 |  70 |  46 | F       |
-| 007 |   7 |  07 | BEL '\a' (bell)           | 107 |  71 |  47 | G       |
-| 010 |   8 |  08 | BS  '\b' (backspace)      | 110 |  72 |  48 | H       |
-| 011 |   9 |  09 | HT  '\t' (horizontal tab) | 111 |  73 |  49 | I       |
-| 012 |  10 |  0A | LF  '\n' (new line)       | 112 |  74 |  4A | J       |
-| 013 |  11 |  0B | VT  '\v' (vertical tab)   | 113 |  75 |  4B | K       |
-| 014 |  12 |  0C | FF  '\f' (form feed)      | 114 |  76 |  4C | L       |
-| 015 |  13 |  0D | CR  '\r' (carriage ret)   | 115 |  77 |  4D | M       |
+| 007 |   7 |  07 | BEL ~\a~ (bell)             | 107 |  71 |  47 | G       |
+| 010 |   8 |  08 | BS  ~\b~ (backspace)        | 110 |  72 |  48 | H       |
+| 011 |   9 |  09 | HT  ~\t~ (horizontal tab)   | 111 |  73 |  49 | I       |
+| 012 |  10 |  0A | LF  ~\n~ (new line)         | 112 |  74 |  4A | J       |
+| 013 |  11 |  0B | VT  ~\v~ (vertical tab)     | 113 |  75 |  4B | K       |
+| 014 |  12 |  0C | FF  ~\f~ (form feed)        | 114 |  76 |  4C | L       |
+| 015 |  13 |  0D | CR  ~\r~ (carriage ret)     | 115 |  77 |  4D | M       |
 | 016 |  14 |  0E | SO  (shift out)           | 116 |  78 |  4E | N       |
 | 017 |  15 |  0F | SI  (shift in)            | 117 |  79 |  4F | O       |
 | 020 |  16 |  10 | DLE (data link escape)    | 120 |  80 |  50 | P       |
@@ -133,10 +109,10 @@ portion (converted to Org table format):
 | 031 |  25 |  19 | EM  (end of medium)       | 131 |  89 |  59 | Y       |
 | 032 |  26 |  1A | SUB (substitute)          | 132 |  90 |  5A | Z       |
 | 033 |  27 |  1B | ESC (escape)              | 133 |  91 |  5B | [       |
-| 034 |  28 |  1C | FS  (file separator)      | 134 |  92 |  5C | \  '\\' |
+| 034 |  28 |  1C | FS  (file separator)      | 134 |  92 |  5C | \\      |
 | 035 |  29 |  1D | GS  (group separator)     | 135 |  93 |  5D | ]       |
 | 036 |  30 |  1E | RS  (record separator)    | 136 |  94 |  5E | ^       |
-| 037 |  31 |  1F | US  (unit separator)      | 137 |  95 |  5F | _       |
+| 037 |  31 |  1F | US  (unit separator)      | 137 |  95 |  5F | \_      |
 | 040 |  32 |  20 | SPACE                     | 140 |  96 |  60 | `       |
 | 041 |  33 |  21 | !                         | 141 |  97 |  61 | a       |
 | 042 |  34 |  22 | "                         | 142 |  98 |  62 | b       |
@@ -165,15 +141,15 @@ portion (converted to Org table format):
 | 071 |  57 |  39 | 9                         | 171 | 121 |  79 | y       |
 | 072 |  58 |  3A | :                         | 172 | 122 |  7A | z       |
 | 073 |  59 |  3B | ;                         | 173 | 123 |  7B | {       |
-| 074 |  60 |  3C | <                         | 174 | 124 |  7C |         |
-| 075 |  61 |  3D | =                         | 175 | 125 |  7D | }       |
-| 076 |  62 |  3E | >                         | 176 | 126 |  7E | ~       |
+| 074 |  60 |  3C | <                         | 174 | 124 |  7C | \vert{} |
+| 075 |  61 |  3D | \=                        | 175 | 125 |  7D | }       |
+| 076 |  62 |  3E | >                         | 176 | 126 |  7E | \~      |
 | 077 |  63 |  3F | ?                         | 177 | 127 |  7F | DEL     |
 
 The historical equivalence of ~C-i~ and ~TAB~, ~C-[~ and ~ESC~, ~C-j~ and ~\n~ come from the
 fact that pressing the CTRL key usually meant clearing the 7th bit in the 7-bit
 code used for ASCII. The 7th bit encodes a numerical value of 64. So, e.g. ~J~ by
-itself is encoded as 74, and doing ~C-j~ gets us $74 - 64 = 10$, or ~\n~.
+itself is encoded as 74, and doing ~C-j~ gets us \(74 - 64 = 10\), or ~\n~.
 
 Note that in the calculations above, there is no distinction between upper and
 lower case. That is, both ~C-j~ and ~C-S-j~ traditionally encode the value of 10 for
@@ -190,16 +166,16 @@ like =prefix= (which is activated by ~C-b~) and =copy-mode-vi=. Users are free t
 their own key-tables as they like.
 
 Here we treat these key-tables as different "modes", similar to modes in
-Vi.[fn:modal-tmux] The table below maps the key-tables to their modes:
+Vi. [fn:modal-tmux] The table below maps the key-tables to their modes:
 
-| tmux key-table | Vi-style mode | Status bar symbol | Sticky? |
-|----------------+---------------+-------------------+---------|
-| root           | insert        | <I>               | yes     |
-| prefix         | normal        | <N>               | no      |
-| copy-mode      | visual        | <V>               | yes     |
-| passthrough    | N/A           | <P>               | yes     |
+| tmux key-table   | Vi-style mode | Status bar symbol | Sticky? |
+|------------------+---------------+-------------------+---------|
+| root             | insert        | <I>               | yes     |
+| prefix           | normal        | <N>               | no      |
+| copy-mode        | visual        | <V>               | yes     |
+| [[id:99539137-2fb7-4ab9-9f9f-5bbc2d91ea2b][Passthrough mode]] | N\/A          | <P>               | yes     |
 
-We display the current key-table with [[file:~/syscfg/script/tmux_get_status.sh][this bash script]] on the status bar. This
+We display the current key-table with [[tmux_get_status.sh][this bash script]] on the status bar. This
 helps us avoid getting lost because tmux by default does not give any sort of
 visual indication of which key-table is currently active.
 
@@ -219,13 +195,37 @@ session.
 
 ** "Insert" mode bindings (=root= key-table)
 
+#+name: keybindings-insert-mode
+#+begin_src conf
+<<keybindings-sessions>>
+<<keybindings-window-create>>
+<<keybindings-window-navigate>>
+<<keybindings-pane-create>>
+<<keybindings-pane-navigate>>
+<<keybindings-pane-move>>
+<<keybindings-pane-move-across-windows>>
+<<keybindings-pane-move-across-windows-new-window>>
+<<keybindings-pane-next-layout>>
+
+<<keybindings-meta-shift-letters>>
+<<keybindings-ctrl-shift-letters>>
+<<keybindings-ctrl-punc>>
+<<keybindings-meta-punc>>
+<<keybindings-ctrl-meta-punc>>
+<<keybindings-special-tab>>
+<<keybindings-special-enter>>
+<<keybindings-special-m>>
+<<keybindings-special-backspace>>
+<<keybindings-special-space>>
+#+end_src
+
 *** Navigation and layout
 
 **** Sessions
 
 Move across tmux sessions.
 
-#+header: :noweb-ref keybindings-insert-mode
+#+name: keybindings-sessions
 #+begin_src conf
 bind-key -T root         C-M-n      switch-client -n
 #+end_src
@@ -235,14 +235,14 @@ bind-key -T root         C-M-n      switch-client -n
 Create a new window (with a single pane) to the right (and spawn a new shell in
 the pane there).
 
-#+header: :noweb-ref keybindings-insert-mode
+#+name: keybindings-window-create
 #+begin_src conf
 bind-key -T root         C-M-o      new-window -a -c "#{pane_current_path}"
 #+end_src
 
 Navigate across windows.
 
-#+header: :noweb-ref keybindings-insert-mode
+#+name: keybindings-window-navigate
 #+begin_src conf
 bind-key -T root         C-M-h      previous-window
 bind-key -T root         C-M-l      next-window
@@ -251,10 +251,10 @@ bind-key -T root         C-M-l      next-window
 **** Panes
 
 Create a new pane by spawning a new shell inside the current window, via a
-horizontal split.[fn:split-naming-convention] The ~C-M-S-e~ variant splits it
+horizontal split. [fn:split-naming-convention] The ~C-M-S-e~ variant splits it
 vertically.
 
-#+header: :noweb-ref keybindings-insert-mode
+#+name: keybindings-pane-create
 #+begin_src conf
 bind-key -T root         C-M-e      split-window -c "#{pane_current_path}"
 bind-key -T root         C-M-S-e    split-window -h -c "#{pane_current_path}"
@@ -265,7 +265,7 @@ and ":.-") used here were derived from the default configuration from =tmux
 list-keys= and the "special tokens" discussion in the "COMMANDS" section of the
 manpage.
 
-#+header: :noweb-ref keybindings-insert-mode
+#+name: keybindings-pane-navigate
 #+begin_src conf
 bind-key -T root         C-M-j      select-pane -Z -t :.+
 bind-key -T root         C-M-k      select-pane -Z -t :.-
@@ -273,7 +273,7 @@ bind-key -T root         C-M-k      select-pane -Z -t :.-
 
 Move the current pane up/down inside the current window.
 
-#+header: :noweb-ref keybindings-insert-mode
+#+name: keybindings-pane-move
 #+begin_src conf
 bind-key -T root         C-M-S-j    swap-pane -Z -D
 bind-key -T root         C-M-S-k    swap-pane -Z -U
@@ -284,7 +284,7 @@ Move the current pane to the window on the left or right. Note that this
 adjacent window. It was determined (at some point) that this is more useful than
 moving the entire window (with all of its panes) over to the left/right.
 
-#+header: :noweb-ref keybindings-insert-mode
+#+name: keybindings-pane-move-across-windows
 #+begin_src conf
 bind-key -T root         C-M-S-h  run-shell '~/syscfg/script/tmux_move_pane.sh \
 	"#{session_name}" \
@@ -296,12 +296,64 @@ bind-key -T root         C-M-S-l  run-shell '~/syscfg/script/tmux_move_pane.sh \
 	"RIGHT"'
 #+end_src
 
+#+name: tmux_move_pane.sh
+#+header: :tangle script/tmux_move_pane.sh
+#+header: :shebang #!/usr/bin/env bash
+#+begin_src bash
+# Usage: $0 <SESSION_ID> <WINDOW_INDEX> <L|R>
+#
+# Move the current tmux pane in the given session either left or right, across
+# windows --- cycling to the front or back as necessary.
+
+set -euo pipefail
+
+main()
+{
+	local session_name
+	local window_index
+	local direction
+
+	local target_window_index
+	local window_index_last
+
+	session_name="${1}"
+	window_index="${2}"
+	direction="${3}"
+
+	# This only works because we turn on "renumber-windows" in tmux.
+	window_index_last="$(tmux list-windows -F \#I | tail -n1)"
+
+	if [[ "${direction}" == LEFT ]]; then
+		# If we're already at the leftmost window, move the pane to the last
+		# window.
+		if (( "${window_index}" == 0 )); then
+			target_window_index="${window_index_last}"
+		else
+			target_window_index="$((window_index - 1))"
+		fi
+	else
+		# If we're at the rightmost window, then we have to move the pane to the
+		# first window.
+		if (( "${window_index}" == "${window_index_last}" )); then
+			target_window_index="0"
+		else
+			target_window_index="$((window_index + 1))"
+		fi
+	fi
+
+	tmux join-pane -t "${session_name}:${target_window_index}"
+	tmux set key-table root
+}
+
+main "$@"
+#+end_src
+
 Move the current pane out to a new window on the right. This only works if
 there is more than one pane in the current window.
 
 This can be done to undo the effect of ~C-M-S-h~, to an extent.
 
-#+header: :noweb-ref keybindings-insert-mode
+#+name: keybindings-pane-move-across-windows-new-window
 #+begin_src conf
 bind-key -T root         C-M-S-o    break-pane -a -t : \; set key-table root
 #+end_src
@@ -310,7 +362,7 @@ Change the layout of the panes. This is useful for converting horizontal splits
 into vertical splits (if we're switching from/to a display in portrait mode, for
 example).
 
-#+header: :noweb-ref keybindings-insert-mode
+#+name: keybindings-pane-next-layout
 #+begin_src conf
 bind-key -T root         C-M-m      next-layout
 #+end_src
@@ -321,12 +373,19 @@ We don't have many customizations for the =prefix= key-table, because =tmux= by
 default gives us many keybindings (such as ~:~ to run =tmux= commands by typing them
 out).
 
+#+name: keybindings-normal-mode
+#+begin_src conf
+<<keybindings-normal-mode-exit>>
+<<keybindings-normal-mode-enter>>
+<<keybindings-reload-config>>
+#+end_src
+
 *** Exit normal mode
 
 These bindings exit "normal" mode by setting the key-table back to the =root= (or
 "insert" mode). There is more than one binding, for convenience.
 
-#+header: :noweb-ref  keybindings-normal-mode
+#+name: keybindings-normal-mode-exit
 #+begin_src conf
 bind-key -T prefix       i          set key-table root
 bind-key -T prefix       q          set key-table root
@@ -340,14 +399,14 @@ that when we reattach, we start out with =root= (insert mode). This is more
 intuitive as it makes insert mode the "default" regardless of how we start tmux
 (either by running =tmux= or by reattaching to an existing tmux session).
 
-#+header: :noweb-ref  keybindings-normal-mode
+#+name: keybindings-normal-mode-enter
 #+begin_src conf
 set-hook -g client-detached[0] "set key-table root"
 #+end_src
 
 *** Reload configuration
 
-#+header: :noweb-ref  keybindings-normal-mode
+#+name: keybindings-reload-config
 #+begin_src conf
 bind-key -T prefix r {
     source-file ~/.tmux.conf
@@ -366,9 +425,18 @@ This mode also lets us effectively treat all tmux panes as a kind of read-only
 buffer, because inside each pane we can always scroll back to see what we missed
 or need to copy out for reference.
 
+#+name: keybindings-copy-mode
+#+begin_src conf
+<<keybindings-copy-mode-enter>>
+<<keybindings-copy-mode-vi>>
+<<keybindings-copy-mode-selection>>
+<<keybindings-copy-mode-navigation>>
+<<keybindings-copy-mode-paste>>
+#+end_src
+
 *** Enter copy-mode
 
-#+header: :noweb-ref  keybindings-copy-mode
+#+name: keybindings-copy-mode-enter
 #+begin_src conf
 bind-key -T root C-M-y {
   copy-mode
@@ -381,14 +449,14 @@ bind-key -T root C-M-y {
 Use vi-style key bindings in copy mode. That is, turn on copy-mode-vi bindings
 in copy-mode that already come out of the box for tmux; see =tmux list-keys=.
 
-#+header: :noweb-ref  keybindings-copy-mode
+#+name: keybindings-copy-mode-vi
 #+begin_src conf
 set -gw mode-keys vi
 #+end_src
 
 *** Selection and copying
 
-#+header: :noweb-ref  keybindings-copy-mode
+#+name: keybindings-copy-mode-selection
 #+begin_src conf
 bind-key -T copy-mode-vi y          send-keys -X copy-selection
 bind-key -T copy-mode-vi v          send-keys -X begin-selection
@@ -400,7 +468,7 @@ bind-key -T copy-mode-vi Escape     send-keys -X clear-selection
 Move around more quickly. We can also use PGUP and PGDOWN to move by entire
 pages if needed.
 
-#+header: :noweb-ref  keybindings-copy-mode
+#+name: keybindings-copy-mode-navigation
 #+begin_src conf
 bind-key -T copy-mode-vi BSpace     send-keys -X -N 10 cursor-up
 bind-key -T copy-mode-vi Space      send-keys -X -N 10 cursor-down
@@ -416,7 +484,7 @@ In practice this isn't used very frequently, as we almost always use ~Super-v~.
 It's here just in case we need to reach inside tmux's buffer instead of the
 system clipboard (if the two ever go out of sync).
 
-#+header: :noweb-ref  keybindings-copy-mode
+#+name: keybindings-copy-mode-paste
 #+begin_src conf
 bind-key -T root         C-M-p      paste-buffer
 #+end_src
@@ -482,7 +550,7 @@ set -s escape-time 0
 ** CSI-u bindings
 
 Make tmux encode ~C-S-{a-z}~ sequences (and others) with the "CSI u"
-scheme.[fn:csi-u] Otherwise, applications that do support it like terminal emacs
+scheme. [fn:csi-u] Otherwise, applications that do support it like terminal emacs
 don't even get these events (probably because tmux swallows those keys and does
 not send them).
 
@@ -497,7 +565,7 @@ configuration and does not materially affect us).
 
 *** Meta+Shift and letters
 
-#+header: :noweb-ref keybindings-insert-mode
+#+name: keybindings-meta-shift-letters
 #+begin_src conf
 bind-key -T root         M-S-a      send-keys Escape  "[97;4u"
 bind-key -T root         M-S-b      send-keys Escape  "[97;4u"
@@ -529,7 +597,7 @@ bind-key -T root         M-S-z      send-keys Escape  "[122;4u"
 
 *** Control+Shift and letters
 
-#+header: :noweb-ref keybindings-insert-mode
+#+name: keybindings-ctrl-shift-letters
 #+begin_src conf
 bind-key -T root         C-S-a      send-keys Escape  "[97;6u"
 bind-key -T root         C-S-b      send-keys Escape  "[97;6u"
@@ -561,7 +629,7 @@ bind-key -T root         C-S-z      send-keys Escape  "[122;6u"
 
 *** Control and punctuation
 
-#+header: :noweb-ref keybindings-insert-mode
+#+name: keybindings-ctrl-punc
 #+begin_src conf
 bind-key -T root         C-!        send-keys Escape "[33;5u"
 # tmux cannot parse C-", so we send C-S-' from wezterm.
@@ -609,7 +677,7 @@ bind-key -T root         C-S-`      send-keys Escape "[96;6u"
 
 *** Meta and punctuation
 
-#+header: :noweb-ref keybindings-insert-mode
+#+name: keybindings-meta-punc
 #+begin_src conf
 bind-key -T root         M-!        send-keys Escape "[33;3u"
 bind-key -T root         M-S-\'     send-keys Escape "[39;4u"
@@ -656,7 +724,7 @@ bind-key -T root         M-S-`      send-keys Escape "[96;4u"
 
 *** Control+Meta and punctuation
 
-#+header: :noweb-ref keybindings-insert-mode
+#+name: keybindings-ctrl-meta-punc
 #+begin_src conf
 bind-key -T root         C-M-!      send-keys Escape "[33;7u"
 bind-key -T root         C-M-S-\'   send-keys Escape "[39;8u"
@@ -704,7 +772,7 @@ bind-key -T root         C-M-S-`    send-keys Escape "[96;8u"
 
 **** Tab
 
-#+header: :noweb-ref keybindings-insert-mode
+#+name: keybindings-special-tab
 #+begin_src conf
 bind-key -T root         M-Tab      send-keys Escape "[9;3u"
 bind-key -T root         M-S-Tab    send-keys Escape "[9;4u"
@@ -716,7 +784,7 @@ bind-key -T root         C-M-S-Tab  send-keys Escape "[9;8u"
 
 **** Enter (RET)
 
-#+header: :noweb-ref keybindings-insert-mode
+#+name: keybindings-special-enter
 #+begin_src conf
 bind-key -T root         S-Enter     send-keys Escape "[13;2u"
 bind-key -T root         M-Enter     send-keys Escape "[13;3u"
@@ -731,14 +799,14 @@ Special handling of "m" to avoid conflicting with Enter key. Only let Emacs
 handle the CSI-u binding of "C-m". For other applications, just send the usual
 "ENTER" key because they might not know how to deal with this.
 
-#+header: :noweb-ref keybindings-insert-mode
+#+name: keybindings-special-m
 #+begin_src conf
 bind-key -T root         C-m        if-shell -F $EMACSLIKE "send-keys Escape '[109;5u'" "send-keys -H 0d"
 #+end_src
 
 **** Backspace
 
-#+header: :noweb-ref keybindings-insert-mode
+#+name: keybindings-special-backspace
 #+begin_src conf
 bind-key -T root         S-BSpace     send-keys Escape "[127;2u"
 bind-key -T root         M-BSpace     send-keys Escape "[127;3u"
@@ -755,7 +823,7 @@ Note how we don't encode ~S-SPC~. This is because when we type in capital letter
 without CAPSLOCK, we want to be able to hold down the Shift key while typing out
 the words (with spaces in between them).
 
-#+header: :noweb-ref keybindings-insert-mode
+#+name: keybindings-special-space
 #+begin_src conf
 bind-key -T root         M-Space     send-keys Escape "[32;3u"
 bind-key -T root         M-S-Space   send-keys Escape "[32;4u"
@@ -765,7 +833,10 @@ bind-key -T root         C-M-Space   send-keys Escape "[32;7u"
 bind-key -T root         C-M-S-Space send-keys Escape "[32;8u"
 #+end_src
 
-** <<<passthrough>>> mode
+** Passthrough mode
+:PROPERTIES:
+:ID:       99539137-2fb7-4ab9-9f9f-5bbc2d91ea2b
+:END:
 
 The sole point of this mode is to allow us to avoid typing in ~C-b~ twice to
 manipulate a nested tmux session over =ssh=. That is, by default if you run =tmux=,
@@ -790,7 +861,7 @@ We want this mode to be sticky. Entering and leaving this
 mode can be done with ~C-M-b~. Once passthrough mode is active, we can freely use
 our existing "insert" mode bindings directly on the nested tmux session.
 
-#+header: :noweb-ref keybindings-passthrough-mode
+#+name: keybindings-passthrough-mode
 #+begin_src conf
 bind-key -T root         C-M-b      {
   set key-table passthrough
@@ -802,11 +873,15 @@ bind-key -T passthrough  C-M-b      {
   set prefix C-b
   set -F status-style "bg=#{L_TMUX_COLOR_TEXT} fg=#{L_TMUX_COLOR_CURSOR} none"
 }
+
+<<keybindings-passthrough-mode-ctrl-shift-letters>>
+<<keybindings-passthrough-mode-ctrl-meta-shift-letters>>
+<<keybindings-passthrough-mode-other>>
 #+end_src
 
 *** Control+Shift and letters
 
-#+header: :noweb-ref keybindings-passthrough-mode
+#+name: keybindings-passthrough-mode-ctrl-shift-letters
 #+begin_src conf
 bind-key -T passthrough  C-S-a      send-keys Escape "[97;6u"
 bind-key -T passthrough  C-S-b      send-keys Escape "[98;6u"
@@ -838,7 +913,7 @@ bind-key -T passthrough  C-S-z      send-keys Escape "[122;6u"
 
 *** Control+Meta+Shift and letters
 
-#+header: :noweb-ref keybindings-passthrough-mode
+#+name: keybindings-passthrough-mode-ctrl-meta-shift-letters
 #+begin_src conf
 bind-key -T passthrough  C-M-S-a    send-keys Escape "[97;8u"
 bind-key -T passthrough  C-M-S-b    send-keys Escape "[98;8u"
@@ -870,7 +945,7 @@ bind-key -T passthrough  C-M-S-z    send-keys Escape "[122;8u"
 
 *** Others
 
-#+header: :noweb-ref keybindings-passthrough-mode
+#+name: keybindings-passthrough-mode-other
 #+begin_src conf
 bind-key -T passthrough  C-,        send-keys Escape "[44;5u"
 bind-key -T passthrough  C-.        send-keys Escape "[46;5u"
@@ -883,16 +958,22 @@ bind-key -T passthrough  C-Enter    send-keys Escape "[13;5u"
 Use 24-bit colors by setting the =TERM= environment variable for newly spawned
 shells to =wezterm=.
 
-#+header: :noweb-ref appearance
+#+name: appearance
 #+begin_src conf
 set -g default-terminal "wezterm"
+
+<<appearance-messages>>
+<<appearance-status-bar>>
+<<appearance-windows>>
+<<appearance-panes-borders>>
+<<appearance-copy-mode>>
 #+end_src
 
 ** Messages
 
 Make messages appear for 4 seconds by default.
 
-#+header: :noweb-ref appearance
+#+name: appearance-messages
 #+begin_src conf
 set -g display-time 4000
 #+end_src
@@ -903,46 +984,49 @@ Explicitly set status line height, where "on" means 1 row. This can be "2, 3, 4
 or 5". In the future if we want to show more information we can set this to "2".
 See https://stackoverflow.com/a/56215242/437583.
 
-#+header: :noweb-ref appearance
+#+name: appearance-status-bar
 #+begin_src conf
 set -g status on
-#+end_src
 
-Don't set limits on status line portion lengths. This way, if either =status-left=
-or =status-right= gets too long, they don't get truncated by tmux.
-
-#+header: :noweb-ref appearance
-#+begin_src conf
+# (ref:appearance-status-bar-limits)
 set -g status-left-length 0
 set -g status-right-length 0
-#+end_src
 
-Set status bar contents.
-
-#+header: :noweb-ref appearance
-#+begin_src conf
+# (ref:appearance-status-bar-contents)
 set -g status-left "#(~/syscfg/script/tmux_get_status.sh \
     '#{session_name}'\
     '#{pane_mode}'\
     '#{client_key_table}')"
 set -g status-right ""
-#+end_src
 
-Set background color for status bar.
-
-#+header: :noweb-ref appearance
-#+begin_src conf
+# (ref:appearance-status-bar-bg-color)
 set -gF status-style "bg=#{L_TMUX_COLOR_TEXT} fg=#{L_TMUX_COLOR_CURSOR} none"
-#+end_src
 
-Set the color for the name of the session (=#{session_name}= tmux variable).
-
-#+header: :noweb-ref appearance
-#+begin_src conf
+# (ref:appearance-status-bar-session-color)
 set -gF status-left-style "bg=#{L_TMUX_COLOR_CURSOR} fg=#{L_TMUX_COLOR_TEXT} bold"
 #+end_src
 
+Don't set limits on status line portion lengths [[(appearance-status-bar-limits)]].
+This way, if either =status-left= or =status-right= gets too long, they don't get
+truncated by tmux.
+
+Set status bar contents [[(appearance-status-bar-contents)]].
+
+Set background color for status bar [[(appearance-status-bar-bg-color)]].
+
+Set the color for the name of the session (=#{session_name}= tmux variable)
+[[(appearance-status-bar-session-color)]].
+
 *** Windows
+
+#+name: appearance-windows
+#+begin_src conf
+<<appearance-windows-renumber>>
+<<appearance-windows-naming-interval>>
+<<appearance-windows-separator>>
+<<appearance-windows-automatic-naming>>
+<<appearance-windows-automatic-active-inactive>>
+#+end_src
 
 Automatically renumber windows if one is closed, so that there are no "gaps" in
 between. See https://unix.stackexchange.com/a/51879/72230. We don't actually use
@@ -950,7 +1034,7 @@ window numbers at all, but this makes things more consistent semantically
 underneath our appearance layer (for example, these numbers matter when we want
 to do refer to windows programmatically from a script).
 
-#+header: :noweb-ref appearance
+#+name: appearance-windows-renumber
 #+begin_src conf
 set -g renumber-windows on
 #+end_src
@@ -958,7 +1042,7 @@ set -g renumber-windows on
 Rename windows every second (both active and inactive) so that we get accurate
 window names depending on what the active pane in each window is doing.
 
-#+header: :noweb-ref appearance
+#+name: appearance-windows-naming-interval
 #+begin_src conf
 set -g status-interval 1
 #+end_src
@@ -966,21 +1050,24 @@ set -g status-interval 1
 We have windows listed in the status bar. Separate them with the space
 character.
 
-#+header: :noweb-ref appearance
+#+name: appearance-windows-separator
 #+begin_src conf
 set -g window-status-separator " "
 #+end_src
 
 **** Automatic window renaming
+:PROPERTIES:
+:ID:       4c6d084d-fd8a-40fc-8022-19b7ea6a13cb
+:END:
 
 Set window name contents by automatically renaming them. We use
-[[file:~/syscfg/script/tmux_get_window_format.sh]] for this, but basically if the
-current command is zsh (our usual shell), then use the current path as the name.
-Otherwise display the name of the running command.
+[[get_window_format.bb]] for this, but basically if the current command is zsh (our
+usual shell), then use the current path as the name. Otherwise display the name
+of the running command.
 
 See https://stackoverflow.com/a/68043814/437583 for the inspiration.
 
-#+header: :noweb-ref appearance
+#+name: appearance-windows-automatic-naming
 #+begin_src conf
 set -gw automatic-rename on
 set -g automatic-rename-format \
@@ -997,7 +1084,7 @@ set -g automatic-rename-format \
 
 Colorize window names, for active and inactive windows.
 
-#+header: :noweb-ref appearance
+#+name: appearance-windows-automatic-active-inactive
 #+begin_src conf
 set -gw window-status-current-format \
     "#(~/syscfg/script/tmux/get_window_format.bb \
@@ -1023,11 +1110,20 @@ set -gw window-status-format \
 
 ** Panes and borders
 
+#+name: appearance-panes-borders
+#+begin_src conf
+<<appearance-panes-borders-focus>>
+<<appearance-panes-borders-bg-fill>>
+<<appearance-panes-borders-balance>>
+<<appearance-panes-borders-splits>>
+<<appearance-panes-borders-active>>
+#+end_src
+
 Ask terminal if focus events are supported and if so, pass focus events to
 applications. This makes terminal emacs aware that it loses focus when we switch
 away from it from tmux (e.g., when we move to a different pane).
 
-#+header: :noweb-ref appearance
+#+name: appearance-panes-borders-focus
 #+begin_src conf
 set -g focus-events on
 #+end_src
@@ -1046,14 +1142,14 @@ succession, next to each other:
 ╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳
 #+end_example
 
-#+header: :noweb-ref appearance
+#+name: appearance-panes-borders-bg-fill
 #+begin_src conf
 set -gw fill-character "╳"
 #+end_src
 
 Automatically re-balance panes after they are created and/or deleted.
 
-#+header: :noweb-ref appearance
+#+name: appearance-panes-borders-balance
 #+begin_src conf
 set-hook -g after-split-window  "select-layout -E"
 set-hook -g pane-exited         "select-layout -E"
@@ -1061,7 +1157,7 @@ set-hook -g pane-exited         "select-layout -E"
 
 Set colors for pane split borders.
 
-#+header: :noweb-ref appearance
+#+name: appearance-panes-borders-splits
 #+begin_src conf
 set -g pane-active-border-style "bg=white  fg=white"
 set -g pane-border-style        "bg=black  fg=white"
@@ -1071,7 +1167,7 @@ Set colors for the active pane. For some reason this option is named
 "window-active-style" but it actually only affects the active pane within a
 window.
 
-#+header: :noweb-ref appearance
+#+name: appearance-panes-borders-active
 #+begin_src conf
 set -gw window-active-style "bg=#343c48 fg=white"
 set -gw window-style "bg=black fg=brightwhite"
@@ -1081,7 +1177,7 @@ set -gw window-style "bg=black fg=brightwhite"
 
 Set colors for copy-mode selections.
 
-#+header: :noweb-ref appearance
+#+name: appearance-copy-mode
 #+begin_src conf
 set -gw mode-style "fg=#343c48 bg=brightgreen bold"
 #+end_src
@@ -1109,21 +1205,30 @@ set -g set-clipboard on
 * Scripts
 
 ** Window name and format
+:PROPERTIES:
+:ID:       931ff79e-b0cc-4922-b5eb-e77a21ecd782
+:END:
 
-This script is called by [[*Automatic window renaming]].
+This script is called by [[id:4c6d084d-fd8a-40fc-8022-19b7ea6a13cb][Automatic window renaming]].
 
 We want to be able to name windows on the status bar a certain way. Each window
 can have more than one pane, and we only care about the current (active) pane
 and what's running in there. So we are getting pane-specific information;
 however for simplicity we just call this the window name here.
 
+#+name: get_window_format.bb
+#+header: :tangle script/tmux/get_window_format.bb
 #+header: :shebang #!/usr/bin/env bb
-#+header: :noweb-ref get-window-format
-#+header: :tangle ../script/tmux/get_window_format.bb
 #+begin_src clojure
-<<wf-imports>>
-<<wf-get-window-name-format>>
-<<wf-main>>
+(ns get-window-format
+  (:require [clojure.string :as str]
+            [babashka.process :refer [shell]]))
+<<f:get-window-type>>
+<<f:get-tmux-pane-pwd-cached>>
+<<f:get-modified-window-name>>
+<<f:get-window-style>>
+<<f:get-window-name-format>>
+<<f:main>>
 #+end_src
 
 *** Get window name and format
@@ -1144,7 +1249,7 @@ that window is doing:
   4) other (where the window is running some other command other than =ssh= or
      =zsh=).
 
-#+header: :noweb-ref wf-get-window-name-format
+#+name: f:get-window-type
 #+begin_src clojure
 (defn get-window-type
   [window-name
@@ -1159,7 +1264,7 @@ that window is doing:
 
 ***** Test
 
-#+header: :noweb-ref wf-tests
+#+name: t:get-window-type
 #+begin_src clojure
 (deftest get-window-type
   (is (= :other-command (sut/get-window-type "" "")))
@@ -1175,7 +1280,7 @@ that window is doing:
 This shells out to a shell script that does the path shortening. It's an
 external command, so we should probably mock it but we're too lazy.
 
-#+header: :noweb-ref wf-get-window-name-format
+#+name: f:get-tmux-pane-pwd-cached
 #+begin_src clojure
 (defn- get-tmux-pane-pwd-cached
   [window-id
@@ -1198,7 +1303,7 @@ displayed in the tmux status bar, other than some extra decorations around it.
 
 The default =window-name= in tmux is the name of the current command.
 
-#+header: :noweb-ref wf-get-window-name-format
+#+name: f:get-modified-window-name
 #+begin_src clojure
 (defn get-modified-window-name
   [window-type
@@ -1216,7 +1321,7 @@ The default =window-name= in tmux is the name of the current command.
 
 ***** Test
 
-#+header: :noweb-ref wf-tests
+#+name: t:get-modified-window-name
 #+begin_src clojure
 (deftest get-modified-window-name
   (is (= "foo" (sut/get-modified-window-name :manually-named "mnw->foo" "@1" "%2" "some-command" "/path/foo/bar")))
@@ -1232,7 +1337,7 @@ Note how the colors are inversed when the window becomes active. This makes it
 much easier to visually see which window is the current window in the status
 bar.
 
-#+header: :noweb-ref wf-get-window-name-format
+#+name: f:get-window-style
 #+begin_src clojure
 (defn get-window-style
   [window-type
@@ -1271,7 +1376,7 @@ bar.
 The window name is augmented with additional formatting and colors. The trailing
 =#[default]= at the end is there to reset colors back to the default.
 
-Here's a description of the tmux variables that we send over from [[*Automatic
+Here's a description of the tmux variables that we send over from [[id:4c6d084d-fd8a-40fc-8022-19b7ea6a13cb][Automatic
 window renaming]]:
 
   - pane-current-command :: the command that's currently running in the pane
@@ -1296,7 +1401,7 @@ window renaming]]:
 The =is-current-window= is a boolean "1" or "0" we denote ourselves (to save
 =get-window-name-format= the trouble of figuring out what the active window is).
 
-#+header: :noweb-ref wf-get-window-name-format
+#+name: f:get-window-name-format
 #+begin_src clojure
 (defn get-window-name-format
   [pane-current-command
@@ -1336,7 +1441,7 @@ The =is-current-window= is a boolean "1" or "0" we denote ourselves (to save
 We don't really test things exhaustively because there are just too many
 combinations. We just test a few key examples.
 
-#+header: :noweb-ref wf-tests
+#+name: t:get-window-name-format
 #+begin_src clojure
 (deftest get-window-name-format
   (testing "manually named window"
@@ -1353,29 +1458,27 @@ combinations. We just test a few key examples.
            (sut/get-window-name-format "some-command" "/path" "some-command" "@1" "%2" "*" "3" "1")))))
 #+end_src
 
-*** Imports
-
-#+header: :noweb-ref wf-imports
-#+begin_src clojure
-(ns get-window-format
-  (:require [clojure.string :as str]
-            [babashka.process :refer [shell]]))
-#+end_src
-
 *** Main
 
 We expect exactly 8 arguments:
 
   1) pane-current-command
+
   2) pane-current-path
+
   3) window-name
+
   4) window-id
+
   5) pane-id
+
   6) window-flags
+
   7) window-panes
+
   8) is-current-window
 
-#+header: :noweb-ref wf-main
+#+name: f:main
 #+begin_src clojure
 (defn -main [& args]
   (when (not= 8 (count args))
@@ -1391,13 +1494,379 @@ interact with the file in the CLI and also the REPL.
 
 *** Tests
 
-#+header: :noweb-ref get-window-format-test
-#+header: :tangle ../script/tmux/get_window_format_test.clj
+#+name: get-window-format-test
+#+header: :tangle script/tmux/get_window_format_test.clj
 #+begin_src clojure
 (ns get-window-format-test
   (:require [clojure.test :refer [deftest is testing]]
             [get-window-format :as sut]))
-<<wf-tests>>
+<<t:get-window-type>>
+<<t:get-modified-window-name>>
+<<t:get-window-name-format>>
+#+end_src
+
+** Historical (original) Bash script
+
+Below is the original shell script which the Babashka version
+[[get_window_format.bb]] replaces.
+
+#+name: tmux_get_window_format.sh
+#+header: :tangle script/tmux_get_window_format.sh
+#+header: :shebang #!/usr/bin/env bash
+#+begin_src bash
+# Usage: $0 <PANE_CURRENT_COMMAND> <PANE_CURRENT_PATH> <WINDOW_NAME> <WINDOW_ID> <PANE_ID> <WINDOW_FLAGS> <WINDOW_PANES> <IS_CURRENT_WINDOW>
+#
+# Generate the window name and formatting/style/colors for all active and inactive windows.
+
+set -euo pipefail
+
+main()
+{
+	local pane_current_command
+	local pane_current_path
+	local pane_id
+	local window_name
+	local window_id
+	local window_name_generated
+	local window_flags
+	local window_panes
+	local is_current_window
+
+	pane_current_command="${1}"
+	pane_current_path="${2}"
+	window_name="${3}"
+	window_id="${4}"
+	pane_id="${5}"
+	window_flags="${6}"
+	window_panes="${7}"
+	is_current_window="${8}"
+
+	local pane_count
+	local style1
+	local style2
+
+	# Manually-named windows ("mnw").
+	if [[ -n "${window_name:-}" ]] && [[ "${window_name}" =~ mnw-\> ]]; then
+		window_name_generated="${window_name#mnw->}"
+		style1="#[bg=black fg=cyan]"
+		style2="#[bg=black fg=cyan]"
+		if ((is_current_window)); then
+			style1="#[bold bg=cyan fg=black]"
+			style2="#[bold bg=brightcyan fg=black]"
+		fi
+	# SSH sessions are named (and colored) specially because they almost always
+	# entail a nested tmux session.
+	elif [[ "${window_name}" =~ ^ssh-\> ]]; then
+		window_name_generated="${window_name}"
+		style1="#[bg=black fg=blue]"
+		style2="#[bg=black fg=blue]"
+		if ((is_current_window)); then
+			style1="#[bold bg=blue fg=black]"
+			style2="#[bold bg=brightblue fg=black]"
+		fi
+	# Plain shell session --- show the shortened $PWD.
+	elif [[ "${pane_current_command}" == zsh ]]; then
+		window_name_generated="$(~/syscfg/script/tmux_pane_pwd_cached.sh "${window_id}" "${pane_id}" "${pane_current_path}")"
+		style1="#[bg=black fg=yellow]"
+		style2="#[bg=black fg=yellow]"
+		if ((is_current_window)); then
+			style1="#[bold bg=yellow fg=black]"
+			style2="#[bold bg=brightyellow fg=black]"
+		fi
+	# Long-running command. Show the command name.
+	else
+		window_name_generated="${pane_current_command}"
+		style1="#[bg=black fg=green]"
+		style2="#[bg=black fg=green]"
+		if ((is_current_window)); then
+			style1="#[bold bg=green fg=black]"
+			style2="#[bold bg=brightgreen fg=black]"
+		fi
+	fi
+
+	if (("${window_panes}" > 1)); then
+		pane_count="$((window_panes - 1))"
+	else
+		pane_count=" "
+	fi
+
+	echo "${style1}${window_flags:- }${pane_count}${style2} ${window_name_generated} #[default]"
+}
+
+main "$@"
+#+end_src
+
+* Scripts
+
+** Status bar (key table)
+
+#+name: tmux_get_status.sh
+#+header: :tangle script/tmux_get_status.sh
+#+header: :shebang #!/usr/bin/env bash
+#+begin_src bash
+# Usage: $0 <SESSION_NAME> <PANE_MODE> <CLIENT_KEY_TABLE>
+#
+# Generate the status line for tmux.
+
+set -euo pipefail
+
+# Imitate emacs evil-mode's "<N>" and "<I>" modal signifiers to help
+# distinguish between modes. When we're in "prefix mode", it is normal mode
+# "<N>", where we can press any number of other keys without having to first
+# press C-b (the prefix key). By default we start out in "insert" mode "<I>"
+# which is when keys are passed through to the underlying application.
+#
+# "<V>" signifies copy-mode. We use "<V>" because copy-mode resembles Vim's
+# visual selection mode.
+#
+# For other key tables, use the format "<key-table-name>" if L_TMUX_DEBUG is set
+# to 1.
+#
+# Summary
+#
+# key-table or mode   | indicator
+# --------------------+----------
+# root                | <I>
+# prefix              | <N>
+# copy-mode/view-mode | <V>
+# passthrough         | <P>
+# other               | <other>
+main()
+{
+	local session_name
+	local pane_mode
+	local client_key_table
+
+	session_name="${1}"
+	pane_mode="${2}"
+	client_key_table="${3}"
+
+	local session_format
+	local style1
+
+	if [[ "${pane_mode}" =~ (copy|view)-mode ]]; then
+		style1=" #[bg=green fg=${L_TMUX_COLOR_TEXT}] <V> "
+	elif [[ "${client_key_table}" == prefix ]]; then
+		style1=" #[bg=blue fg=${L_TMUX_COLOR_TEXT}] <N> "
+	elif [[ "${client_key_table}" == root ]]; then
+		style1=" #[bg=${L_TMUX_COLOR_TEXT} fg=${L_TMUX_COLOR_CURSOR}] <I> "
+	elif [[ "${client_key_table}" == passthrough ]]; then
+		style1=" #[bg=cyan fg=${L_TMUX_COLOR_TEXT}] <P> "
+	else
+		# Display unrecognized key table names directly.
+		style1=" #[bg=red fg=${L_TMUX_COLOR_TEXT}] <${client_key_table}> "
+	fi
+
+	session_format=" ${session_name} "
+	# If we're SSH'ed into a nested tmux session, colorize the session name a
+	# bit differently.
+	if [[ -n "${SSH_CONNECTION:-}" ]]; then
+		session_format="#[bg=blue] ${session_name} "
+	fi
+
+	echo "${session_format}#[bg=${L_TMUX_COLOR_TEXT}]${style1}#[bg=${L_TMUX_COLOR_TEXT}] "
+}
+
+main "$@"
+#+end_src
+
+** Startup
+
+#+name: tmux_startup.sh
+#+header: :tangle script/tmux_startup.sh
+#+header: :shebang #!/usr/bin/env bash
+#+begin_src bash
+# Usage: $0
+#
+# Start up various pre-defined tmux windows.
+
+set -euo pipefail
+
+# Check if the given tmux session is blank (has only 1 window and 1 pane). We
+# check for equality to 0 because all windows and panes are 0-indexed. Use like
+# this:
+#
+#     session_name="$(tmux display-message -p "#{session_name}")"
+#     is_blank_session "${session_name}"
+#
+is_blank_session()
+{
+	local session_name="${1:-}"
+	tmux list-windows -t "${session_name}" -F "#{window_index}" \
+		| tail -n1 | grep -q 0
+	tmux list-panes -t "${session_name}" -F "#{pane_index}" \
+		| tail -n1 | grep -q 0
+}
+
+# Create windows for personal notes.
+setup_notes()
+{
+	local window_emacs_notes
+
+	window_emacs_notes="$(tmux new-window -c ~/lo -P)"
+	tmux send-keys -t "${window_emacs_notes}" "./note/open.sh" Enter
+
+}
+
+setup_lilac()
+{
+	local window_emacs_lilac
+	local window_jj_lilac
+	local maybe_sleep
+
+	window_emacs_lilac="$(tmux new-window -c ~/prog/lilac -P)"
+	maybe_sleep="pgrep -f 'emacs --bg-daemon' >/dev/null || sleep 20"
+	tmux send-keys -t "${window_emacs_lilac}" \
+		"${maybe_sleep}; d base/lilac.org" Enter
+
+	window_jj_lilac="$(tmux new-window -c ~/prog/lilac -P)"
+	tmux send-keys -t "${window_jj_lilac}" "jl" Enter
+}
+
+init_session_1()
+{
+	# Start up main window with Emacs for personal notes.
+	setup_notes
+
+	# Create window for Emacs opened up at Lilac, with another extra blank
+	# window for jj.
+	setup_lilac
+
+	# Go back to main window.
+	tmux previous-window
+	tmux previous-window
+}
+
+init_session_2()
+{
+	local current_window
+	local window_fe_server
+
+	# Navigate to Lilac folder, and start up tangle loop and frontend
+	# server. Use the current window for the tangle loop script.
+	current_window="$(tmux display-message \
+		-p '#{session_name}:#{window_index}')"
+	tmux send-keys -t "${current_window}" \
+		"cd ~/prog/lilac && ./tangle-loop.sh" Enter
+
+	# Start up frontend server.
+	window_fe_server="$(tmux new-window -c ~/prog/lilac -P)"
+	tmux send-keys -t "${window_fe_server}" "make dev-cljs" Enter
+
+	# Show tangle loop window.
+	tmux previous-window
+}
+
+main()
+{
+	case "${1:-1}" in
+	1) init_session_1 ;;
+	2) init_session_2 ;;
+	*)
+		echo >&2 "Unrecognized session ${1}"
+		return 1
+		;;
+	esac
+}
+
+main "$@"
+#+end_src
+
+** PWD-based window name
+
+#+name: tmux_pane_pwd_cached.sh
+#+header: :tangle script/tmux_pane_pwd_cached.sh
+#+header: :shebang #!/usr/bin/env bash
+#+begin_src bash
+# Script used by tmux to figure out how to display the status bar for the
+# current window. Note that this is different from setting the window name (aka
+# "#{window_name}", which we purposely avoid due to race conditions.
+#
+# The point of this script is to avoid spamming melby with too many requests;
+# doing additional requests here would mean we would basically double the number
+# of requests because currently we already spam melby every second to get the
+# prompt. Ideally we could be feeding the shortened pwd information from melby
+# back to tmux, but we don't do that on purpose because we want to have a
+# separate implementation just in case melby is not working.
+
+set -o errexit
+set -o nounset
+set -o pipefail
+set -o xtrace
+
+pane_pwd_same()
+{
+  local window_id
+  local pane_id
+
+  local pwd_new
+
+  window_id="${1}"
+  pane_id="${2}"
+  pwd_new="${3}"
+
+  # Format is L_TMUX_PANE_PWD_<WINDOW_ID>=<PWD_LONG>;<PWD_SHORT>
+  __pwd_old="$(tmux show-environment L_TMUX_PANE_PWD_"${window_id}")"
+  __pwd_old_short="${__pwd_old}"
+  __pwd_old="${__pwd_old#*=}"
+  __pwd_old="${__pwd_old%;*}"
+
+  __pwd_old_short="${__pwd_old_short#*;}"
+
+  if [[ "${pwd_new}" == "${__pwd_old}" ]]; then
+    return 0
+  fi
+
+  return 1
+}
+
+main()
+{
+  local window_id
+  local pane_id
+  local pwd_new
+  local pwd_shortened
+
+  window_id="${1}"
+  # Get rid of leading "@" symbol, as it is unnecessary.
+  window_id="${window_id#@}"
+  pane_id="${2}"
+  pwd_new="${3}"
+
+  # If there is no change to the active pane's pwd, then there's nothing to do;
+  # just reuse the existing window name as-is.
+  if pane_pwd_same "${window_id}" "${pane_id}" "${pwd_new}" && [[ -n "${__pwd_old_short}" ]]; then
+    # window_name_old="${tmux display-message -p -t "${pane_id}" '#{window_name}'}"
+    # if [[ "${window_name_old:0:1}" != "<" ]]; then
+    #   echo "${window_name_old}"
+    #   return
+    # fi
+    echo "${__pwd_old_short}"
+    return
+  fi
+
+  # If the active pane's pwd did change, then we must use a newly shortened
+  # window name.
+  pwd_shortened="$(~/syscfg/script/simplify_path.sh "${pwd_new}")"
+  echo "$pwd_shortened"
+
+  # TODO: Garbage-collect these tmux environment variables when the window is
+  # closed.
+  #
+  # Unfortunately as of tmux 3.2a (Nov 2021) there is no way to set a hook (with
+  # set-hook) that runs just before a window is closed. So technically this is a
+  # memory leak but it is OK because:
+  #
+  #   (1) we don't create that many windows (maybe a few hundred, if we have tmux running for months on end);
+  #   (2) the rate of the leak is negligible due to (1); and
+  #   (3) tmux already garbage-collects these variables when the session is
+  #   closed.
+  #
+  # But this is worth revisiting in the future.
+  tmux set-environment "L_TMUX_PANE_PWD_${window_id}" "${pwd_new};${pwd_shortened}"
+}
+
+main "$@"
 #+end_src
 
 * Footnotes

@@ -11,6 +11,7 @@
         (= pane-current-command "ssh")) :ssh
     (= pane-current-command "zsh") :zsh
     :else :other-command))
+
 (defn- get-tmux-pane-pwd-cached
   [window-id
    pane-id
@@ -23,6 +24,7 @@
              pane-current-path)
       :out
       str/trimr))
+
 (defn get-modified-window-name
   [window-type
    window-name
@@ -35,6 +37,7 @@
     :ssh (if (str/starts-with? window-name "ssh") window-name "ssh")
     :zsh (get-tmux-pane-pwd-cached window-id pane-id pane-current-path)
     pane-current-command))
+
 (defn get-window-style
   [window-type
    is-current-window?]
@@ -65,6 +68,7 @@
        :style2 "#[bold bg=brightgreen fg=#343c48]"}
       {:style1 "#[bg=black fg=green]"
        :style2 "#[bg=black fg=green]"})))
+
 (defn get-window-name-format
   [pane-current-command
     pane-current-path
@@ -96,6 +100,7 @@
             window-weight-str
             style2
             name)))
+
 (defn -main [& args]
   (when (not= 8 (count args))
     (println (format "Need exactly 8 arguments; got %d." (count args)))

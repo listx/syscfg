@@ -13,6 +13,7 @@ jj.org
 keybindings.org
 nix.org
 notmuch.org
+tmux.org
 wezterm.org
 #+end_src
 
@@ -77,7 +78,6 @@ nonTangledPathspecs = [ # (ref:nonTangledPathspecs)
    ":(exclude,top)ssh",
    ":(exclude,top)terminfo",
    ":(exclude,top)tig",
-   ":(exclude,top)tmux",
    ":(exclude,top)vimpc",
    ":(exclude,top)wezterm/upstream",
    ":(exclude,top)script/Makefile",
@@ -106,12 +106,6 @@ nonTangledPathspecs = [ # (ref:nonTangledPathspecs)
    ":(exclude,top)script/sync-sd-card.sh",
    ":(exclude,top)script/terminal-themes",
    ":(exclude,top)script/test-runner.clj",
-   ":(exclude,top)script/tmux",
-   ":(exclude,top)script/tmux_get_status.sh",
-   ":(exclude,top)script/tmux_get_window_format.sh",
-   ":(exclude,top)script/tmux_move_pane.sh",
-   ":(exclude,top)script/tmux_pane_pwd_cached.sh",
-   ":(exclude,top)script/tmux_startup.sh",
    ":(exclude,top)script/windows",
    ":(exclude,top)script/yodel.sh",
    ":(exclude,top)uim",

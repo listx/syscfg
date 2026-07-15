@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-
 # Usage: $0
 #
 # Start up various pre-defined tmux windows.
