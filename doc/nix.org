@@ -21,134 +21,175 @@ having to download all of the heavy packages).
 
 {
   system.stateVersion = "26.05";
-  console.keyMap = "us";
-  i18n.defaultLocale = "en_US.UTF-8";
-
-  networking = {
-    # 192.168.1.1 router
-    # 192.168.1.2 printer
-    # 192.168.1.3 UNASSIGNED
-    # 192.168.1.5 UNASSIGNED
-    # 192.168.1.6 UNASSIGNED
-    extraHosts = ''
-      192.168.1.4 k0
-      192.168.1.7 macp
-    '';
-    # Port 22 is opened automatically if SSH daemon is enabled (no need to specify it here).
-    firewall.allowedTCPPortRanges = [
-      {
-        from = 8000;
-        to = 8010;
-      }
-    ];
-  };
-
   # allow installation of 'ati_unfree' video driver and also Firefox with Flash
   nixpkgs.config.allowUnfree = true;
   nixpkgs.config.nvidia.acceptLicense = true;
 
-  # Avoid "lacks a valid signature" error from using nix-copy-closures from
-  # another machine on the local LAN. See
-  # https://github.com/NixOS/nix/issues/2330#issuecomment-451650296.
-  nix.settings.trusted-users = [
-    "root"
-    "@wheel"
-  ];
-
-  # Create a /etc/zshenv and other things to make Zsh work properly. Among
-  # other things, this allows us to perform a "git pull <this machine's IP>"
-  # from a remote machine; without this, the login shell cannot find the
-  # git-upload-pack command, and the git pull operation will fail.
-  programs.zsh.enable = true;
-
-  # Delete things that come built-in by nix that customizes Zsh. For one thing,
-  # disable the prompt settings because they interfere with our own
-  # customizations.
-  programs.zsh.promptInit = "";
-
-  # Enable the OpenSSH daemon.
-  services.openssh.enable = true;
+  <<nix:users>>
+  <<nix:shell>>
+  <<nix:language-region>>
+  <<nix:networking>>
+  <<nix:audio>>
+  <<nix:fonts>>
 
   # We're going to use `gpg-agent` with SSH support --- so to avoid conflict,
   # disable OpenSSH's ssh-agent.
   programs.ssh.startAgent = false;
-
-  # NTP for automated system clock adjustments.
-  services.ntp.enable = true;
-
-  time.timeZone = "Australia/Melbourne";
-
-  i18n.inputMethod.type = "uim";
-  i18n.inputMethod.enable = true;
-
-  # Fonts
-  fonts = {
-    fontDir.enable = true;
-    enableGhostscriptFonts = true;
-    packages = with pkgs; [
-      baekmuk-ttf
-      corefonts
-      dejavu_fonts
-      ipafont
-      libertine
-      source-code-pro
-      source-sans
-      source-serif
-      source-han-sans
-      source-han-serif
-      source-han-mono
-      terminus_font
-      ubuntu-classic
-    ];
-  };
-
-  # Prettify the virtual console font early on with Terminus.
-  console = {
-    font = "ter-114n";
-    packages = with pkgs; [ terminus_font ];
-    earlySetup = true;
-  };
-
-  services.openvpn.servers = {
-    # Unless `autoStart = false;', all entries here start automatically as a
-    # systemd service. To stop the `home' OpenVPN client service, run `sudo
-    # systemctl stop openvpn-home'.
-    home = {
-      config = builtins.readFile ../openvpn/home.ovpn;
-    };
-    us = {
-      config = builtins.readFile ../openvpn/us.ovpn;
-      autoStart = false;
-    };
-  };
-
-  # PipeWire
-  # rtkit is optional but recommended
-  security.rtkit.enable = true;
-  services.pipewire = {
-    enable = true;
-    alsa.enable = true;
-    alsa.support32Bit = true;
-    pulse.enable = true;
-    wireplumber.enable = true;
-  };
-
-  users.groups.l = {
-    gid = 1000;
-  };
-
-  # Set password for extra users with 'passwd' command as root.
-  users.users.l = {
-    isNormalUser = true;
-    group = "l";
-    description = "Linus Arver";
-    createHome = true;
-    home = "/home/l";
-    extraGroups = [ "wheel" ];
-    shell = "/run/current-system/sw/bin/zsh";
-    uid = 1000;
-  };
 }
+#+end_src
+
+*** Users
+
+#+name: nix:users
+#+begin_src nix
+users.groups.l = {
+  gid = 1000;
+};
+
+# Set password for extra users with 'passwd' command as root.
+users.users.l = {
+  isNormalUser = true;
+  group = "l";
+  description = "Linus Arver";
+  createHome = true;
+  home = "/home/l";
+  extraGroups = [ "wheel" ];
+  shell = "/run/current-system/sw/bin/zsh";
+  uid = 1000;
+};
+
+# Avoid "lacks a valid signature" error from using nix-copy-closures from
+# another machine on the local LAN. See
+# https://github.com/NixOS/nix/issues/2330#issuecomment-451650296.
+nix.settings.trusted-users = [
+  "root"
+  "@wheel"
+];
+#+end_src
+
+*** Shell
+
+#+name: nix:shell
+#+begin_src nix
+# Create a /etc/zshenv and other things to make Zsh work properly. Among
+# other things, this allows us to perform a "git pull <this machine's IP>"
+# from a remote machine; without this, the login shell cannot find the
+# git-upload-pack command, and the git pull operation will fail.
+programs.zsh.enable = true;
+
+# Delete things that come built-in by nix that customizes Zsh. For one thing,
+# disable the prompt settings because they interfere with our own
+# customizations.
+programs.zsh.promptInit = "";
+#+end_src
+
+*** Language & Region
+
+#+name: nix:language-region
+#+begin_src nix
+console.keyMap = "us";
+i18n.defaultLocale = "en_US.UTF-8";
+i18n.inputMethod.type = "uim";
+i18n.inputMethod.enable = true;
+
+# NTP for automated system clock adjustments.
+services.ntp.enable = true;
+time.timeZone = "Australia/Melbourne";
+#+end_src
+
+*** Networking
+
+#+caption: Devices on the LAN.
+| Static IP (192.168.1.X) | Device             |
+|-------------------------+--------------------|
+|                       1 | WiFi Router        |
+|                       2 | Printer            |
+|                       3 |                    |
+|                       4 | k0 (NixOS dev box) |
+|                       5 |                    |
+|                       6 |                    |
+|                       7 | macp (Macbook Air) |
+
+#+name: nix:networking
+#+begin_src nix
+networking = {
+  extraHosts = ''
+    192.168.1.4 k0
+    192.168.1.7 macp
+  '';
+  # Port 22 is opened automatically if SSH daemon is enabled (no need to specify it here).
+  firewall.allowedTCPPortRanges = [
+    {
+      from = 8000;
+      to = 8010;
+    }
+  ];
+};
+
+# Enable the OpenSSH daemon.
+services.openssh.enable = true;
+
+services.openvpn.servers = {
+  # Unless `autoStart = false;', all entries here start automatically as a
+  # systemd service. To stop the `home' OpenVPN client service, run `sudo
+  # systemctl stop openvpn-home'.
+  home = {
+    config = builtins.readFile ../openvpn/home.ovpn;
+  };
+  us = {
+    config = builtins.readFile ../openvpn/us.ovpn;
+    autoStart = false;
+  };
+};
+#+end_src
+
+*** Audio
+
+#+name: nix:audio
+#+begin_src nix
+# PipeWire
+# rtkit is optional but recommended
+security.rtkit.enable = true;
+services.pipewire = {
+  enable = true;
+  alsa.enable = true;
+  alsa.support32Bit = true;
+  pulse.enable = true;
+  wireplumber.enable = true;
+};
+#+end_src
+
+*** Fonts
+
+#+name: nix:fonts
+#+begin_src nix
+# Fonts
+fonts = {
+  fontDir.enable = true;
+  enableGhostscriptFonts = true;
+  packages = with pkgs; [
+    baekmuk-ttf
+    corefonts
+    dejavu_fonts
+    ipafont
+    libertine
+    source-code-pro
+    source-sans
+    source-serif
+    source-han-sans
+    source-han-serif
+    source-han-mono
+    terminus_font
+    ubuntu-classic
+  ];
+};
+
+# Prettify the virtual console font early on with Terminus.
+console = {
+  font = "ter-114n";
+  packages = with pkgs; [ terminus_font ];
+  earlySetup = true;
+};
 #+end_src
 
 ** Extra packages

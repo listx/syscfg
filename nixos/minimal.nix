@@ -2,31 +2,25 @@
 
 {
   system.stateVersion = "26.05";
-  console.keyMap = "us";
-  i18n.defaultLocale = "en_US.UTF-8";
-
-  networking = {
-    # 192.168.1.1 router
-    # 192.168.1.2 printer
-    # 192.168.1.3 UNASSIGNED
-    # 192.168.1.5 UNASSIGNED
-    # 192.168.1.6 UNASSIGNED
-    extraHosts = ''
-      192.168.1.4 k0
-      192.168.1.7 macp
-    '';
-    # Port 22 is opened automatically if SSH daemon is enabled (no need to specify it here).
-    firewall.allowedTCPPortRanges = [
-      {
-        from = 8000;
-        to = 8010;
-      }
-    ];
-  };
-
   # allow installation of 'ati_unfree' video driver and also Firefox with Flash
   nixpkgs.config.allowUnfree = true;
   nixpkgs.config.nvidia.acceptLicense = true;
+
+  users.groups.l = {
+    gid = 1000;
+  };
+
+  # Set password for extra users with 'passwd' command as root.
+  users.users.l = {
+    isNormalUser = true;
+    group = "l";
+    description = "Linus Arver";
+    createHome = true;
+    home = "/home/l";
+    extraGroups = [ "wheel" ];
+    shell = "/run/current-system/sw/bin/zsh";
+    uid = 1000;
+  };
 
   # Avoid "lacks a valid signature" error from using nix-copy-closures from
   # another machine on the local LAN. See
@@ -47,20 +41,55 @@
   # customizations.
   programs.zsh.promptInit = "";
 
-  # Enable the OpenSSH daemon.
-  services.openssh.enable = true;
-
-  # We're going to use `gpg-agent` with SSH support --- so to avoid conflict,
-  # disable OpenSSH's ssh-agent.
-  programs.ssh.startAgent = false;
+  console.keyMap = "us";
+  i18n.defaultLocale = "en_US.UTF-8";
+  i18n.inputMethod.type = "uim";
+  i18n.inputMethod.enable = true;
 
   # NTP for automated system clock adjustments.
   services.ntp.enable = true;
-
   time.timeZone = "Australia/Melbourne";
 
-  i18n.inputMethod.type = "uim";
-  i18n.inputMethod.enable = true;
+  networking = {
+    extraHosts = ''
+      192.168.1.4 k0
+      192.168.1.7 macp
+    '';
+    # Port 22 is opened automatically if SSH daemon is enabled (no need to specify it here).
+    firewall.allowedTCPPortRanges = [
+      {
+        from = 8000;
+        to = 8010;
+      }
+    ];
+  };
+
+  # Enable the OpenSSH daemon.
+  services.openssh.enable = true;
+
+  services.openvpn.servers = {
+    # Unless `autoStart = false;', all entries here start automatically as a
+    # systemd service. To stop the `home' OpenVPN client service, run `sudo
+    # systemctl stop openvpn-home'.
+    home = {
+      config = builtins.readFile ../openvpn/home.ovpn;
+    };
+    us = {
+      config = builtins.readFile ../openvpn/us.ovpn;
+      autoStart = false;
+    };
+  };
+
+  # PipeWire
+  # rtkit is optional but recommended
+  security.rtkit.enable = true;
+  services.pipewire = {
+    enable = true;
+    alsa.enable = true;
+    alsa.support32Bit = true;
+    pulse.enable = true;
+    wireplumber.enable = true;
+  };
 
   # Fonts
   fonts = {
@@ -90,43 +119,7 @@
     earlySetup = true;
   };
 
-  services.openvpn.servers = {
-    # Unless `autoStart = false;', all entries here start automatically as a
-    # systemd service. To stop the `home' OpenVPN client service, run `sudo
-    # systemctl stop openvpn-home'.
-    home = {
-      config = builtins.readFile ../openvpn/home.ovpn;
-    };
-    us = {
-      config = builtins.readFile ../openvpn/us.ovpn;
-      autoStart = false;
-    };
-  };
-
-  # PipeWire
-  # rtkit is optional but recommended
-  security.rtkit.enable = true;
-  services.pipewire = {
-    enable = true;
-    alsa.enable = true;
-    alsa.support32Bit = true;
-    pulse.enable = true;
-    wireplumber.enable = true;
-  };
-
-  users.groups.l = {
-    gid = 1000;
-  };
-
-  # Set password for extra users with 'passwd' command as root.
-  users.users.l = {
-    isNormalUser = true;
-    group = "l";
-    description = "Linus Arver";
-    createHome = true;
-    home = "/home/l";
-    extraGroups = [ "wheel" ];
-    shell = "/run/current-system/sw/bin/zsh";
-    uid = 1000;
-  };
+  # We're going to use `gpg-agent` with SSH support --- so to avoid conflict,
+  # disable OpenSSH's ssh-agent.
+  programs.ssh.startAgent = false;
 }
