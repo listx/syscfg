@@ -466,17 +466,21 @@ stuff.
 
 #+name: Makefile:create-tarball
 #+begin_src makefile
-site.tar.gz: $(archive_file) weave vendor/mathjax vendor/mathjax-newcm-font vendor/source-fonts
-	rm -f site.tar site.tar.gz
-	tar cvf site.tar -C site .
-	tar rvf site.tar vendor
-	gzip site.tar
+vendored := \
+	vendor/source-fonts \
+	vendor/mathjax \
+	vendor/mathjax-newcm-font
 
 vendor/source-fonts:
 	./vendor-source-fonts.sh
 
 vendor/mathjax vendor/mathjax-newcm-font &:
 	./vendor-mathjax.sh
+
+site.tar.gz: $(archive_file) weave $(vendored)
+	rm -rf site.tar.gz site/vendor
+	cp -r vendor site
+	tar czvf site.tar.gz -C site .
 #+end_src
 
 The vendoring is needed because SourceHut does not allow us to pull in
