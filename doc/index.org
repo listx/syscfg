@@ -15,7 +15,7 @@ nix.org
 notmuch.org
 #+end_src
 
-This repo uses [[https://git.sr.ht/~listx/lilac][Lilac]] to extract the code/configuration from Org files. Not all
+This repo uses [[https://lilac.funloop.org/][Lilac]] to extract the code/configuration from Org files. Not all
 parts have been migrated over to use Lilac yet, and until that's done there will
 be many incomplete sections in the docs.
 
