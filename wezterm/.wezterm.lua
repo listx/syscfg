@@ -19,16 +19,21 @@ local bind = function(key, mods, sequence)
 end
 local cfg = {
   enable_tab_bar = false,
+
   check_for_updates = false,
+
   audible_bell = "Disabled",
+
   window_padding = {
     left = 4,
     right = 0,
     top = 0,
     bottom = 0,
   },
+
   initial_cols = 163,
   initial_rows = 102,
+
   colors = {
     -- The default text color
     foreground = '#e5e7ea',
@@ -96,7 +101,9 @@ local cfg = {
     quick_select_match_bg = { AnsiColor = 'Navy' },
     quick_select_match_fg = { Color = '#ffffff' },
   },
+
   cursor_blink_rate = 0,
+
   -- These are also known as OpenType features. The "cv06" here is defined in
   -- the font's website in the "Customize" section; it makes the "6" and "9"
   -- numerals have a straight, not curved, tail.
@@ -105,8 +112,10 @@ local cfg = {
     "Commit Mono"
   },
   font_size = 10.5,
+
   keys = {
     { key = "t", mods = "SUPER", action = act.DisableDefaultAssignment },
+
     { key = "y", mods = "SUPER", action = act.ActivateCopyMode },
     { key = "y", mods = "SUPER|CTRL", action = act.QuickSelect },
     { key = "y", mods = "SUPER|SHIFT",
@@ -146,6 +155,7 @@ local cfg = {
         end),
       },
     },
+
     bind("a", M, "\x1b[97;3u"),
     bind("b", M, "\x1b[98;3u"),
     bind("c", M, "\x1b[99;3u"),
@@ -172,6 +182,7 @@ local cfg = {
     bind("x", M, "\x1b[120;3u"),
     bind("y", M, "\x1b[121;3u"),
     bind("z", M, "\x1b[122;3u"),
+
     bind("a", MS, "\x1b[97;4u"),
     bind("b", MS, "\x1b[98;4u"),
     bind("c", MS, "\x1b[99;4u"),
@@ -198,6 +209,7 @@ local cfg = {
     bind("x", MS, "\x1b[120;4u"),
     bind("y", MS, "\x1b[121;4u"),
     bind("z", MS, "\x1b[122;4u"),
+
     bind("a", C, "\x1b[97;5u"),
     bind("b", C, "\x1b[98;5u"),
     bind("c", C, "\x1b[99;5u"),
@@ -224,6 +236,7 @@ local cfg = {
     bind("x", C, "\x1b[120;5u"),
     bind("y", C, "\x1b[121;5u"),
     bind("z", C, "\x1b[122;5u"),
+
     bind("a", CS, "\x1b[97;6u"),
     bind("b", CS, "\x1b[98;6u"),
     bind("c", CS, "\x1b[99;6u"),
@@ -250,6 +263,7 @@ local cfg = {
     bind("x", CS, "\x1b[120;6u"),
     bind("y", CS, "\x1b[121;6u"),
     bind("z", CS, "\x1b[122;6u"),
+
     bind("a", CM, "\x1b[97;7u"),
     bind("b", CM, "\x1b[98;7u"),
     bind("c", CM, "\x1b[99;7u"),
@@ -276,6 +290,7 @@ local cfg = {
     bind("x", CM, "\x1b[120;7u"),
     bind("y", CM, "\x1b[121;7u"),
     bind("z", CM, "\x1b[122;7u"),
+
     bind("a", CMS, "\x1b[97;8u"),
     bind("b", CMS, "\x1b[98;8u"),
     bind("c", CMS, "\x1b[99;8u"),
@@ -302,6 +317,7 @@ local cfg = {
     bind("x", CMS, "\x1b[120;8u"),
     bind("y", CMS, "\x1b[121;8u"),
     bind("z", CMS, "\x1b[122;8u"),
+
     bind("!", CS, "\x1b[33;5u"), -- C-!
     bind('"', CS, "\x1b[39;6u"), -- C-" (C-S-')
     bind("#", CS, "\x1b[35;5u"), -- C-#
@@ -365,6 +381,7 @@ local cfg = {
     bind("[", CS,  "\x1b[91;6u"), -- C-S-[ (C-{)
     bind("[", CM,  "\x1b[91;7u"), -- C-M-[
     bind("[", CMS, "\x1b[91;8u"), -- C-M-S-[ (C-M-{)
+
     bind("Escape", S,   "\x1b[27;2u"), -- S-ESC
     bind("Escape", M,   "\x1b[27;3u"), -- M-ESC
     bind("Escape", MS,  "\x1b[27;4u"), -- M-S-ESC
@@ -372,11 +389,13 @@ local cfg = {
     bind("Escape", CS,  "\x1b[27;6u"), -- C-S-ESC
     bind("Escape", CM,  "\x1b[27;7u"), -- C-M-ESC
     bind("Escape", CMS, "\x1b[27;8u"), -- C-M-S-ESC
+
     bind("Tab", MS,  "\x1b[9;4u"), -- M-S-TAB
     bind("Tab", C,   "\x1b[9;5u"), -- C-TAB
     bind("Tab", CS,  "\x1b[9;6u"), -- C-S-TAB
     bind("Tab", CM,  "\x1b[9;7u"), -- C-M-TAB
     bind("Tab", CMS, "\x1b[9;8u"), -- C-M-S-TAB
+
     bind("Backspace", S,   "\x1b[127;2u"), -- S-Backspace
     bind("Backspace", M,   "\x1b[127;3u"), -- M-Backspace
     bind("Backspace", MS,  "\x1b[127;4u"), -- M-S-Backspace
@@ -384,6 +403,7 @@ local cfg = {
     bind("Backspace", CS,  "\x1b[127;6u"), -- C-S-Backspace
     bind("Backspace", CM,  "\x1b[127;7u"), -- C-M-Backspace
     bind("Backspace", CMS, "\x1b[127;8u"), -- C-M-S-Backspace
+
     bind("Enter", S,   "\x1b[13;2u"), -- S-Enter
     bind("Enter", M,   "\x1b[13;3u"), -- M-Enter
     bind("Enter", MS,  "\x1b[13;4u"), -- M-S-Enter
@@ -391,12 +411,14 @@ local cfg = {
     bind("Enter", CS,  "\x1b[13;6u"), -- C-S-Enter
     bind("Enter", CM,  "\x1b[13;7u"), -- C-M-Enter
     bind("Enter", CMS, "\x1b[13;8u"), -- C-M-S-Enter
+
     bind("Space", M,   "\x1b[32;3u"), -- M-Space
     bind("Space", MS,  "\x1b[32;4u"), -- M-S-Space
     bind("Space", C,   "\x1b[32;5u"), -- C-Space
     bind("Space", CS,  "\x1b[32;6u"), -- C-S-Space
     bind("Space", CM,  "\x1b[32;7u"), -- C-M-Space
     bind("Space", CMS, "\x1b[32;8u"), -- C-M-S-Space
+
     bind("!", MS, "\x1b[33;3u"), -- M-!
     bind('"', MS, "\x1b[39;4u"), -- M-" (M-S-')
     bind("#", MS, "\x1b[35;3u"), -- M-#
@@ -439,6 +461,7 @@ local cfg = {
     bind("|", MS, "\x1b[92;4u"), -- M-| (M-S-\)
     bind("}", MS, "\x1b[93;4u"), -- M-} (M-S-])
     bind("~", MS, "\x1b[96;4u"), -- M-~ (M-S-`)
+
     bind("!", CMS, "\x1b[33;7u"), -- C-M-!
     bind('"', CMS, "\x1b[39;8u"), -- C-M-" (C-M-S-')
     bind("#", CMS, "\x1b[35;7u"), -- C-M-#

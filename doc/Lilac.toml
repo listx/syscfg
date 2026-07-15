@@ -34,7 +34,7 @@ nonTangledPathspecs = [ #
    ":(exclude,top)tig",
    ":(exclude,top)tmux",
    ":(exclude,top)vimpc",
-   ":(exclude,top)wezterm",
+   ":(exclude,top)wezterm/upstream",
    ":(exclude,top)script/Makefile",
    ":(exclude,top)script/README.org",
    ":(exclude,top)script/aex.sh",

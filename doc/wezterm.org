@@ -1,11 +1,14 @@
-#+TITLE: Literate Wezterm configuration
-#+AUTHOR: Linus Arver
-#+PROPERTY: header-args :noweb no-export
-#+auto_tangle: t
+:PROPERTIES:
+:ID:       1d490bfa-6d4a-4b0e-beac-d3e37fbb21a5
+:END:
+#+title: Wezterm
+
+#+lilac_maxHeadingLevel: 5
 
 * Top-level configuration
 
-#+begin_src lua :tangle .wezterm.lua
+#+header: :tangle wezterm/.wezterm.lua
+#+begin_src lua
 <<boilerplate>>
 local cfg = {
   <<appearance>>
@@ -18,6 +21,7 @@ return cfg
 #+end_src
 
 * Appearance
+
 #+name: appearance
 #+begin_src lua
 <<disable-tab-bar>>
@@ -620,7 +624,7 @@ it as ~<backtab>~.
 
 ~M-TAB~ is =\x1b\x09= (ESC followed by TAB), so don't map this either.
 
-For some reason ~C-S-TAB~ sends "\x19" (EM (end of medium)), which can already
+For some reason ~C-S-TAB~ sends ~\x19~ (EM (end of medium)), which can already
 be sent via C-y, so remap it here.
 
 #+name: csi-u-mode-exotic-tab
@@ -667,7 +671,7 @@ bind("Enter", CMS, "\x1b[13;8u"), -- C-M-S-Enter
 
 **** Space
 
-C-Space sends the NUL byte ("\x00") in =Alacritty=, but in tmux it just sends
+C-Space sends the NUL byte (~\x00~) in =Alacritty=, but in tmux it just sends
 the regular Space character. So it looks like there is no consensus in terminal
 programs, so we rebind it here.
 
