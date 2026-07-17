@@ -7,30 +7,29 @@ in
   imports = [ ./minimal.nix ];
 
   environment.systemPackages = with pkgs; [
-    # Essentials
-    wezterm
-    tmux
-    zsh
+    babashka
+    difftastic
+    editorconfig-core-c
+    emacs
+    fd
+    fzf
+    gcal
     git
     git-filter-repo
-    difftastic
-    tig
-    jujutsu
-    jjui
-    meld
-    emacs
-    neovim
-    editorconfig-core-c
-    ripgrep
-    fzf
-    fd
     gnumake
-    sqlite # emacs' org-roam needs it
-    noweb # literate emacs configuration
-    gcal
-    melby-release.melby-daemon
+    jjui
+    jless
+    jujutsu
     melby-release.melby-client-rust
-    babashka
+    melby-release.melby-daemon
+    meld
+    neovim
+    ripgrep
+    sqlite # emacs' org-roam needs it
+    tig
+    tmux
+    wezterm
+    zsh
 
     # Dev tools
     parallel

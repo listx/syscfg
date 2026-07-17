@@ -14,9 +14,31 @@ in {
   # FIXME: Remove tooling that can be project-specific and placed into
   # "<PROJECT_ROOT>/.envrc".
   environment.systemPackages = with pkgs; [
+    babashka
+    difftastic
+    editorconfig-core-c
+    emacs
+    fd
+    fzf
+    gcal
+    git
+    git-filter-repo
+    gnumake
+    jjui
+    jless
+    jujutsu
+    melby-release.melby-client-rust
+    melby-release.melby-daemon
+    meld
+    neovim
+    ripgrep
+    sqlite # emacs' org-roam needs it
+    tig
+    tmux
+    wezterm
+    zsh
     (aspellWithDicts (dicts: with dicts; [ en en-computers en-science ]))
     autoconf
-    babashka
     bashInteractive
     bear
     bottom
@@ -28,20 +50,11 @@ in {
     clojure-lsp
     coreutils
     dhall
-    difftastic
     dos2unix
-    editorconfig-core-c
-    # Emacs is broken on Sequoia 15.4. See https://github.com/NixOS/nixpkgs/issues/395169#issuecomment-2769619888.
-    (emacs.override { withNativeCompilation = false; })
-    fd
     ffmpeg
     findutils
-    fzf
     gawk
-    gcal
-    git
     gnugrep
-    gnumake
     gnupg
     gnused
     gnutar
@@ -49,18 +62,11 @@ in {
     htop
     imagemagick
     inkscape
-    jjui
-    jless
     jq
-    jujutsu
     less
     lieer
-    melby-release.melby-daemon
-    melby-release.melby-client-rust
-    meld
     ncdu
     neil
-    neovim
     nodejs
     notmuch
     openjdk
@@ -68,7 +74,6 @@ in {
     pdf2svg
     nodePackages.prettier
     procps
-    ripgrep
     rustfmt
     scc
     shellcheck
@@ -82,14 +87,10 @@ in {
     stack
     texliveFull
     texlivePackages.raleway
-    tig
-    tmux
     tree
     util-linux
-    wezterm
     xz
     zathura
-    zsh
     zstd
   ];
 
