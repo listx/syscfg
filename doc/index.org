@@ -69,7 +69,6 @@ nonTangledPathspecs = [ # (ref:nonTangledPathspecs)
    ":(exclude,top)nixos/k0/hardware-configuration.nix",
    ":(exclude,top)nixos/m0",
    ":(exclude,top)nixos/w0",
-   ":(exclude,top)nixpkgs",
    ":(exclude,top)nvim",
    ":(exclude,top)openvpn",
    ":(exclude,top)pulse",
