@@ -62,11 +62,7 @@ in {
     unrar
     xz
     zip
-    autoconf
     bashInteractive
-    bear
-    ccls
-    clang-tools
     cljfmt
     clj-kondo
     clojure
@@ -84,7 +80,6 @@ in {
     inkscape
     less
     lieer
-    neil
     nodejs
     notmuch
     openjdk
@@ -92,8 +87,6 @@ in {
     pdf2svg
     nodePackages.prettier
     procps
-    rustfmt
-    scc
     shfmt
     source-code-pro
     source-sans
@@ -101,11 +94,9 @@ in {
     source-han-sans
     source-han-serif
     source-han-mono
-    stack
     texliveFull
     texlivePackages.raleway
     zathura
-    zstd
   ];
 
   # Enable melbyd with launchd.
