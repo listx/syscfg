@@ -15,7 +15,13 @@ in {
   # "<PROJECT_ROOT>/.envrc".
   environment.systemPackages = with pkgs; [
     babashka
+    binutils
+    bmon
+    bottom
+    dhall
+    dhall-json
     difftastic
+    dos2unix
     editorconfig-core-c
     emacs
     fd
@@ -24,24 +30,42 @@ in {
     git
     git-filter-repo
     gnumake
+    htop
     jjui
     jless
+    jq
     jujutsu
+    lsof
     melby-release.melby-client-rust
     melby-release.melby-daemon
     meld
+    ncdu
     neovim
+    niv
+    parallel
+    pciutils # lspci
+    protobuf
     ripgrep
+    shellcheck
     sqlite # emacs' org-roam needs it
     tig
     tmux
+    tokei
+    tree
+    unixtools.xxd
+    util-linux
     wezterm
     zsh
+
+    p7zip
+    unzip
+    unrar
+    xz
+    zip
     (aspellWithDicts (dicts: with dicts; [ en en-computers en-science ]))
     autoconf
     bashInteractive
     bear
-    bottom
     ccls
     clang-tools
     cljfmt
@@ -49,8 +73,6 @@ in {
     clojure
     clojure-lsp
     coreutils
-    dhall
-    dos2unix
     ffmpeg
     findutils
     gawk
@@ -59,13 +81,10 @@ in {
     gnused
     gnutar
     graphviz
-    htop
     imagemagick
     inkscape
-    jq
     less
     lieer
-    ncdu
     neil
     nodejs
     notmuch
@@ -76,7 +95,6 @@ in {
     procps
     rustfmt
     scc
-    shellcheck
     shfmt
     source-code-pro
     source-sans
@@ -87,9 +105,6 @@ in {
     stack
     texliveFull
     texlivePackages.raleway
-    tree
-    util-linux
-    xz
     zathura
     zstd
   ];

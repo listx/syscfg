@@ -8,7 +8,13 @@ in
 
   environment.systemPackages = with pkgs; [
     babashka
+    binutils
+    bmon
+    bottom
+    dhall
+    dhall-json
     difftastic
+    dos2unix
     editorconfig-core-c
     emacs
     fd
@@ -17,41 +23,38 @@ in
     git
     git-filter-repo
     gnumake
+    htop
     jjui
     jless
+    jq
     jujutsu
+    lsof
     melby-release.melby-client-rust
     melby-release.melby-daemon
     meld
+    ncdu
     neovim
+    niv
+    parallel
+    pciutils # lspci
+    protobuf
     ripgrep
+    shellcheck
     sqlite # emacs' org-roam needs it
     tig
     tmux
+    tokei
+    tree
+    unixtools.xxd
+    util-linux
     wezterm
     zsh
 
-    # Dev tools
-    parallel
-    unixtools.xxd
-    dos2unix
-    jless
-    jq
-    dhall
-    dhall-json
-    protobuf
-    tokei
-    util-linux
-    binutils
-
-    # Nix
-    niv
-
-    # Shell
-    shellcheck
-
-    # ----------
-
+    p7zip
+    unzip
+    unrar
+    xz
+    zip
     # Email
     notmuch
     lieer
@@ -71,15 +74,6 @@ in
     xcompmgr
     xsel
     xscreensaver
-
-    # Monitoring/Inspection
-    htop
-    bottom
-    bmon
-    ncdu
-    tree
-    pciutils # lspci
-    lsof
 
     # Cryptography
     gnupg
@@ -101,12 +95,6 @@ in
     man-pages
     stdman
     stdmanpages
-
-    # Archiving
-    p7zip
-    unzip
-    unrar
-    zip
 
     # Filesystem
     fuse
