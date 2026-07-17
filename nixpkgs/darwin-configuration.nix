@@ -13,6 +13,7 @@ in {
   # FIXME: Remove tooling that can be project-specific and placed into
   # "<PROJECT_ROOT>/.envrc".
   environment.systemPackages = with pkgs; [
+    (aspellWithDicts (dicts: with dicts; [ en en-computers en-science ]))
     babashka
     binutils
     bmon
@@ -61,7 +62,6 @@ in {
     unrar
     xz
     zip
-    (aspellWithDicts (dicts: with dicts; [ en en-computers en-science ]))
     autoconf
     bashInteractive
     bear

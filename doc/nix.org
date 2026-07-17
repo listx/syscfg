@@ -362,6 +362,7 @@ These are mostly related to development.
 
 #+name: pkgs:essentials
 #+begin_src nix
+(aspellWithDicts (dicts: with dicts; [ en en-computers en-science ]))
 babashka
 binutils
 bmon
@@ -694,7 +695,6 @@ in {
   environment.systemPackages = with pkgs; [
     <<pkgs:essentials>>
     <<pkgs:archive>>
-    (aspellWithDicts (dicts: with dicts; [ en en-computers en-science ]))
     autoconf
     bashInteractive
     bear
