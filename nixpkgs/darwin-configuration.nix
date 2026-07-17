@@ -6,8 +6,7 @@ let
   baseconfig = { allowUnfree = true; };
   unstable = import <nixpkgs-unstable> { config = baseconfig; };
 in {
-  nixpkgs.config.allowUnfreePredicate = pkg:
-    builtins.elem (lib.getName pkg) [ "aspell-dict-en-science" ];
+  nixpkgs.config.allowUnfree = true;
 
   # List packages installed in system profile.
   #
