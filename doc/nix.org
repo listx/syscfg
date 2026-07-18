@@ -702,9 +702,6 @@ in {
   nixpkgs.config.allowUnfree = true;
 
   # List packages installed in system profile.
-  #
-  # FIXME: Remove tooling that can be project-specific and placed into
-  # "<PROJECT_ROOT>/.envrc".
   environment.systemPackages = with pkgs; [
     <<pkgs:essentials>>
     <<pkgs:archive>>
@@ -713,10 +710,6 @@ in {
     <<pkgs:image>>
     <<pkgs:misc-common>>
     bashInteractive
-    cljfmt
-    clj-kondo
-    clojure
-    clojure-lsp
     coreutils
     findutils
     gawk
@@ -724,11 +717,7 @@ in {
     gnused
     gnutar
     less
-    nodejs
-    openjdk
-    nodePackages.prettier
     procps
-    shfmt
     texliveFull
     texlivePackages.raleway
   ];
