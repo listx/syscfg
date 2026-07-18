@@ -62,41 +62,53 @@ in {
     unrar
     xz
     zip
-    bashInteractive
-    cljfmt
-    clj-kondo
-    clojure
-    clojure-lsp
-    coreutils
-    ffmpeg
-    findutils
-    gawk
-    gnugrep
-    gnupg
-    gnused
-    gnutar
-    graphviz
-    imagemagick
-    inkscape
-    less
-    lieer
-    nodejs
-    notmuch
-    openjdk
-    pass
-    pdf2svg
-    nodePackages.prettier
-    procps
-    shfmt
+
+    baekmuk-ttf
+    corefonts
+    dejavu_fonts
+    ipafont
+    libertine
+    noto-fonts
+    raleway
     source-code-pro
     source-sans
     source-serif
     source-han-sans
     source-han-serif
     source-han-mono
+    terminus_font
+    ubuntu-classic
+
+    notmuch
+    lieer
+
+    imagemagick
+    inkscape
+
+    ffmpeg
+    gnupg
+    graphviz
+    pass
+    zathura
+    bashInteractive
+    cljfmt
+    clj-kondo
+    clojure
+    clojure-lsp
+    coreutils
+    findutils
+    gawk
+    gnugrep
+    gnused
+    gnutar
+    less
+    nodejs
+    openjdk
+    nodePackages.prettier
+    procps
+    shfmt
     texliveFull
     texlivePackages.raleway
-    zathura
   ];
 
   # Enable melbyd with launchd.

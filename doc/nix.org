@@ -168,19 +168,7 @@ fonts = {
   fontDir.enable = true;
   enableGhostscriptFonts = true;
   packages = with pkgs; [
-    baekmuk-ttf
-    corefonts
-    dejavu_fonts
-    ipafont
-    libertine
-    source-code-pro
-    source-sans
-    source-serif
-    source-han-sans
-    source-han-serif
-    source-han-mono
-    terminus_font
-    ubuntu-classic
+    <<pkgs:fonts-raw-list>>
   ];
 };
 
@@ -190,6 +178,25 @@ console = {
   packages = with pkgs; [ terminus_font ];
   earlySetup = true;
 };
+#+end_src
+
+#+name: pkgs:fonts-raw-list
+#+begin_src nix
+baekmuk-ttf
+corefonts
+dejavu_fonts
+ipafont
+libertine
+noto-fonts
+raleway
+source-code-pro
+source-sans
+source-serif
+source-han-sans
+source-han-serif
+source-han-mono
+terminus_font
+ubuntu-classic
 #+end_src
 
 ** Extra packages
@@ -210,9 +217,9 @@ in
   environment.systemPackages = with pkgs; [
     <<pkgs:essentials>>
     <<pkgs:archive>>
-    # Email
-    notmuch
-    lieer
+    <<pkgs:email>>
+    <<pkgs:image>>
+    <<pkgs:misc-common>>
 
     # Web
     firefox
@@ -231,11 +238,9 @@ in
     xscreensaver
 
     # Cryptography
-    gnupg
     openssl
     pinentry-curses
     cryptsetup
-    pass
 
     # Net
     bind # dig
@@ -248,29 +253,15 @@ in
 
     # Docs
     man-pages
-    stdman
-    stdmanpages
 
     # Filesystem
-    fuse
-    parted
-    gparted
-    ntfs3g
-    gptfdisk
-    sshfs-fuse
-    woeusb
     inotify-tools
 
     # Image
-    scrot
     gimp
-    imagemagick
-    inkscape
-    pdf2svg
 
     # Audio/Video
     mpv
-    ffmpeg
     flac
     mpc
     vimpc
@@ -280,17 +271,9 @@ in
     pulseaudio
 
     # Document processing
-    pdftk
-    poppler-utils # pdftotext
-    zathura
     pandoc
 
-    # Fonts
-    raleway
-    noto-fonts
-
     # Data analysis
-    graphviz
     gnuplot
 
     # Containerization
@@ -416,6 +399,36 @@ unzip
 unrar
 xz
 zip
+#+end_src
+
+*** Email
+
+#+name: pkgs:email
+#+begin_src nix
+notmuch
+lieer
+#+end_src
+
+*** Images
+
+#+name: pkgs:image
+#+begin_src nix
+imagemagick
+inkscape
+#+end_src
+
+*** Miscellaneous common packages
+
+These are common to both [[nixos/minimal.nix]] and [[nixpkgs/darwin-configuration.nix]],
+and are captured here for convenience.
+
+#+name: pkgs:misc-common
+#+begin_src nix
+ffmpeg
+gnupg
+graphviz
+pass
+zathura
 #+end_src
 
 ** Haskell
@@ -695,41 +708,29 @@ in {
   environment.systemPackages = with pkgs; [
     <<pkgs:essentials>>
     <<pkgs:archive>>
+    <<pkgs:fonts-raw-list>>
+    <<pkgs:email>>
+    <<pkgs:image>>
+    <<pkgs:misc-common>>
     bashInteractive
     cljfmt
     clj-kondo
     clojure
     clojure-lsp
     coreutils
-    ffmpeg
     findutils
     gawk
     gnugrep
-    gnupg
     gnused
     gnutar
-    graphviz
-    imagemagick
-    inkscape
     less
-    lieer
     nodejs
-    notmuch
     openjdk
-    pass
-    pdf2svg
     nodePackages.prettier
     procps
     shfmt
-    source-code-pro
-    source-sans
-    source-serif
-    source-han-sans
-    source-han-serif
-    source-han-mono
     texliveFull
     texlivePackages.raleway
-    zathura
   ];
 
   # Enable melbyd with launchd.

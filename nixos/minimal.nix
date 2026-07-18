@@ -101,6 +101,8 @@
       dejavu_fonts
       ipafont
       libertine
+      noto-fonts
+      raleway
       source-code-pro
       source-sans
       source-serif

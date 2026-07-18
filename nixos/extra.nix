@@ -56,9 +56,18 @@ in
     unrar
     xz
     zip
-    # Email
+
     notmuch
     lieer
+
+    imagemagick
+    inkscape
+
+    ffmpeg
+    gnupg
+    graphviz
+    pass
+    zathura
 
     # Web
     firefox
@@ -77,11 +86,9 @@ in
     xscreensaver
 
     # Cryptography
-    gnupg
     openssl
     pinentry-curses
     cryptsetup
-    pass
 
     # Net
     bind # dig
@@ -94,29 +101,15 @@ in
 
     # Docs
     man-pages
-    stdman
-    stdmanpages
 
     # Filesystem
-    fuse
-    parted
-    gparted
-    ntfs3g
-    gptfdisk
-    sshfs-fuse
-    woeusb
     inotify-tools
 
     # Image
-    scrot
     gimp
-    imagemagick
-    inkscape
-    pdf2svg
 
     # Audio/Video
     mpv
-    ffmpeg
     flac
     mpc
     vimpc
@@ -126,17 +119,9 @@ in
     pulseaudio
 
     # Document processing
-    pdftk
-    poppler-utils # pdftotext
-    zathura
     pandoc
 
-    # Fonts
-    raleway
-    noto-fonts
-
     # Data analysis
-    graphviz
     gnuplot
 
     # Containerization
