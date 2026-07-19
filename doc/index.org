@@ -765,6 +765,7 @@ max_line_length = 72
 #+end_src
 
 * Plan
+** TODO add CI (publish step)
 ** TODO pre-commit: add spellchecker (cspell) to linter
 ** TODO pre-commit: add formatter linter for emacs lisp
 ** TODO pre-commit: add ormolu formatter for Haskell
