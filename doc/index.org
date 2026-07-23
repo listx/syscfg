@@ -165,7 +165,7 @@ gitconfig:
 .PHONY: gitconfig
 
 update:
-	cd .. && niv update nixpkgs --branch <<Nixpkgs version>>
+	cd .. && niv update nixpkgs --branch nixos-<<nixos-version>>
 .PHONY: update
 
 clean:
@@ -175,9 +175,9 @@ clean:
 .PHONY: clean
 #+end_src
 
-#+name: Nixpkgs version
+#+name: nixos-version
 #+begin_src txt
-nixos-26.05
+26.05
 #+end_src
 
 ** Makefile for installing dotfiles
@@ -354,6 +354,11 @@ zsh:
 
 ** Dependencies via Nix
 
+#+name: lilac-version
+#+begin_src txt
+v0.1.0.7
+#+end_src
+
 #+header: :tangle shell.nix
 #+begin_src nix
 let
@@ -384,15 +389,27 @@ let
       clippy = {
         enable = true;
         package = rustToolchain;
+        settings.offline = false; # (ref:clippy-online)
       };
     };
     package = pkgs.prek;
+  };
+  lilacSrc = builtins.fetchGit {
+    url = "https://git.sr.ht/~listx/lilac";
+    ref = "refs/tags/<<lilac-version>>";
+    name = "lilac";
+    submodules = true;
+  };
+
+  lilacPkg = import "${lilacSrc}/nix/release.nix" {
+    lilacGitVersion = "<<lilac-version>>";
   };
 in
 pkgs.mkShell {
   name = "syscfg-dev-shell";
 
   buildInputs = with pkgs; [
+    lilacPkg
     editorconfig-checker
     pikchr
     shellcheck
@@ -402,7 +419,7 @@ pkgs.mkShell {
     parinfer-rust
     shfmt
     vale
-    pkgs.prek
+    prek
 
     rustToolchain
   ] ++ pre-commit-check.enabledPackages;
@@ -421,12 +438,16 @@ pkgs.mkShell {
     echo Syscfg | ${pkgs.figlet}/bin/figlet
     echo -e "$(tput sgr0)\n"
     echo "Using nixpkgs commit: ${sources.nixpkgs.rev} ${pkgs.lib.version}"
+    echo "Lilac version: $(lilac --version)"
     echo "Rust compiler profile: $(rustc --version)"
     echo
     ${pre-commit-check.shellHook}
   '';
 }
 #+end_src
+
+[[(clippy-online)]] is required to avoid an error about not being able to find some
+packages (i.e., allow clippy to fetch packges over the network).
 
 The ~pre-commit-check.shellHook~ generates the YAML at ~.pre-commit-config.yaml~ for
 us.
@@ -437,7 +458,7 @@ us.
 use nix
 #+end_src
 
-* Publish to SourceHut
+** Publish to SourceHut
 
 The woven contents are published to ~lilac.funloop.org~. When Lilac is available
 on Nixpkgs, we can invoke the publishing step as part of CI on SourceHut.
@@ -628,6 +649,38 @@ injection = """
 </script>
 <script id="MathJax-script" async="" src="/vendor/mathjax/tex-mml-chtml.js"></script>
 """
+#+end_src
+
+** CI
+
+#+name: .build.yml
+#+header: :tangle .build.yml
+#+begin_src yaml
+image: nixos/<<nixos-version>>
+sources:
+  - https://git.sr.ht/~listx/syscfg
+oauth: pages.sr.ht/PAGES:RW
+environment:
+  site: syscfg.funloop.org
+packages:
+- nixos.hut
+tasks:
+  - tangle-weave-lint: |
+      cd syscfg/doc
+      nix-shell .. --run "make"
+  - verify-git-health: |
+      cd syscfg/doc
+      git diff
+      if [[ -z "$(git status --porcelain)" ]]; then
+        echo "Clean (no untracked files either)."
+      else
+        echo "Modified or untracked files present."
+        exit 1
+      fi
+  - publish: |
+      cd syscfg/doc
+      nix-shell .. --run "make site.tar.gz"
+      hut pages publish -d $site site.tar.gz
 #+end_src
 
 * Other project settings

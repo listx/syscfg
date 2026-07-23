@@ -1,0 +1,25 @@
+image: nixos/26.05
+sources:
+  - https://git.sr.ht/~listx/syscfg
+oauth: pages.sr.ht/PAGES:RW
+environment:
+  site: syscfg.funloop.org
+packages:
+- nixos.hut
+tasks:
+  - tangle-weave-lint: |
+      cd syscfg/doc
+      nix-shell .. --run "make"
+  - verify-git-health: |
+      cd syscfg/doc
+      git diff
+      if [[ -z "$(git status --porcelain)" ]]; then
+        echo "Clean (no untracked files either)."
+      else
+        echo "Modified or untracked files present."
+        exit 1
+      fi
+  - publish: |
+      cd syscfg/doc
+      nix-shell .. --run "make site.tar.gz"
+      hut pages publish -d $site site.tar.gz

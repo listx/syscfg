@@ -26,15 +26,27 @@ let
       clippy = {
         enable = true;
         package = rustToolchain;
+        settings.offline = false; #
       };
     };
     package = pkgs.prek;
+  };
+  lilacSrc = builtins.fetchGit {
+    url = "https://git.sr.ht/~listx/lilac";
+    ref = "refs/tags/v0.1.0.7";
+    name = "lilac";
+    submodules = true;
+  };
+
+  lilacPkg = import "${lilacSrc}/nix/release.nix" {
+    lilacGitVersion = "v0.1.0.7";
   };
 in
 pkgs.mkShell {
   name = "syscfg-dev-shell";
 
   buildInputs = with pkgs; [
+    lilacPkg
     editorconfig-checker
     pikchr
     shellcheck
@@ -44,7 +56,7 @@ pkgs.mkShell {
     parinfer-rust
     shfmt
     vale
-    pkgs.prek
+    prek
 
     rustToolchain
   ] ++ pre-commit-check.enabledPackages;
@@ -63,6 +75,7 @@ pkgs.mkShell {
     echo Syscfg | ${pkgs.figlet}/bin/figlet
     echo -e "$(tput sgr0)\n"
     echo "Using nixpkgs commit: ${sources.nixpkgs.rev} ${pkgs.lib.version}"
+    echo "Lilac version: $(lilac --version)"
     echo "Rust compiler profile: $(rustc --version)"
     echo
     ${pre-commit-check.shellHook}
