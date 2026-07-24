@@ -350,6 +350,7 @@ babashka
 binutils
 bmon
 bottom
+cachix
 dhall
 dhall-json
 difftastic
@@ -374,6 +375,7 @@ meld
 ncdu
 neovim
 niv
+nix-diff
 parallel
 pciutils # lspci
 protobuf

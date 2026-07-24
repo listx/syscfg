@@ -12,6 +12,7 @@ in
     binutils
     bmon
     bottom
+    cachix
     dhall
     dhall-json
     difftastic
@@ -36,6 +37,7 @@ in
     ncdu
     neovim
     niv
+    nix-diff
     parallel
     pciutils # lspci
     protobuf
