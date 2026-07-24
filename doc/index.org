@@ -459,6 +459,9 @@ use nix
 #+end_src
 
 ** Publish to SourceHut
+:PROPERTIES:
+:ID:       6a2b57ae-0d97-4cd0-9d48-2b9390e898ef
+:END:
 
 The woven contents are published to ~lilac.funloop.org~. When Lilac is available
 on Nixpkgs, we can invoke the publishing step as part of CI on SourceHut.
@@ -652,6 +655,9 @@ injection = """
 #+end_src
 
 ** CI
+
+Publish the woven docs to SourceHut in CI, so that we don't have to remember to
+manually invoke the publishing step from [[id:6a2b57ae-0d97-4cd0-9d48-2b9390e898ef][Publish to SourceHut]].
 
 #+name: .build.yml
 #+header: :tangle .build.yml
