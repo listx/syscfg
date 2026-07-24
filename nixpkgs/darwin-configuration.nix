@@ -144,6 +144,7 @@ in {
   #
   # https://github.com/nix-darwin/nix-darwin/blob/fa6120c32f10bd2aac9e8c9a6e71528a9d9d823b/modules/system/primary-user.nix#L53-L58
   system.primaryUser = "l";
+  nix.settings.trusted-users = [ "root" "l" ];
 
   # Disable default "walters" prompt, which adds an annoying green PWD string at the far right hand side of the terminal.
   programs.zsh.promptInit = "";
