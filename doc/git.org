@@ -356,3 +356,88 @@ codegen-units = 1
 lto = true
 panic = 'abort'
 #+end_src
+
+* ~tig~
+
+#+header: :tangle tig/.tigrc
+#+begin_src conf
+# Appearance.
+color cursor 16 green bold
+color title-blur 16 blue bold
+color title-focus 16 blue bold
+
+set blame-view = date:relative-compact author:abbreviated,maxwidth=5 id:width=8,color line-number:yes,interval=1 text
+set main-view  = date:relative-compact author:abbreviated,maxwidth=5 id:width=8 commit-title:yes,graph,refs
+set tree-view  = date:relative-compact author:abbreviated,maxwidth=5 id:width=8 file-name
+set refs-view  = date:relative-compact author:abbreviated,maxwidth=5 id:width=8 ref commit-title
+
+set line-graphics = utf-8
+set blame-options = -w
+
+# Only show the top 500 commits.
+set main-options = -n500
+
+# Only show commits in the main view (don't show spurious, non-committed
+# changes).
+set show-changes = no
+
+# Disable conflicting keybindings (otherwise tig complains).
+bind generic <Ctrl-Y> none
+bind generic J none
+bind generic K none
+bind generic <Ctrl-j> none
+bind generic <Ctrl-k> none
+# Disable unused bindings. Otherwise they clutter up the [help] view.
+bind generic - none
+bind generic <Ctrl-e> none
+bind generic <Insert> none
+bind generic <Delete> none
+bind generic <Ctrl-c> none
+bind generic s none
+
+# Keybindings.
+bind generic , none
+bind generic h parent
+
+bind generic <LessThan> none
+bind generic l back
+
+bind generic <Ctrl-n> none
+bind generic <Ctrl-j> next
+
+bind generic <Ctrl-p> none
+bind generic <Ctrl-k> previous
+
+bind generic <Ctrl-h> view-help
+bind generic o view-log
+
+# Copy 40-char hex string of commit.
+bind generic y +bash -c "git rev-parse %(commit) \
+  | head -c -1 \
+  | ~/syscfg/script/copy-clipboard.sh"
+
+# Copy human-readable description (short hex string, commit title, date).
+bind generic Y +bash -c "git show %(commit) --no-patch --pretty='format:%C(auto)%h (%s, %cd)' --date=short \
+  | ~/syscfg/script/copy-clipboard.sh"
+
+# Same as above, but as an Org-style link. <Esc>y means Alt+y (M-y in Emacs).
+bind generic <Esc>y +bash -c "git rev-parse %(commit) \
+  | head -c -1 \
+  | ~/syscfg/script/git/ref-to-org-link.sh \
+  | ~/syscfg/script/copy-clipboard.sh"
+
+# Copy commit message.
+bind generic <Ctrl-y> +bash -c "git cat-file commit %(commit) \
+  | sed -e '1,/^$/d' \
+  | ~/syscfg/script/copy-clipboard.sh"
+
+# Force branch to point to current commit.
+bind main    B ?+git branch -f "%(prompt Force branch to point here: )" %(commit)
+
+bind generic R none
+bind generic <F5> none
+bind generic <Ctrl-r> refresh
+
+bind main    R !git -c commit.verbose=true rebase -i %(commit)
+bind generic <Backspace> move-page-up
+#+end_src

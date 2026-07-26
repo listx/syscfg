@@ -76,7 +76,6 @@ nonTangledPathspecs = [ # (ref:nonTangledPathspecs)
    ":(exclude,top)rtorrent",
    ":(exclude,top)ssh",
    ":(exclude,top)terminfo",
-   ":(exclude,top)tig",
    ":(exclude,top)vimpc",
    ":(exclude,top)wezterm/upstream",
    ":(exclude,top)script/Makefile",
