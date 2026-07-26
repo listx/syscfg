@@ -416,9 +416,7 @@ bind generic y +bash -c "git rev-parse %(commit) \
   | head -c -1 \
   | ~/syscfg/script/copy-clipboard.sh"
 
-# Copy human-readable description (short hex string, commit title, date).
-bind generic Y +bash -c "git show %(commit) --no-patch --pretty='format:%C(auto)%h (%s, %cd)' --date=short \
-  | ~/syscfg/script/copy-clipboard.sh"
+<<bind:copy-commit-human-friendly>>
 
 # Same as above, but as an Org-style link. <Esc>y means Alt+y (M-y in Emacs).
 bind generic <Esc>y +bash -c "git rev-parse %(commit) \
@@ -440,4 +438,21 @@ bind generic <Ctrl-r> refresh
 
 bind main    R !git -c commit.verbose=true rebase -i %(commit)
 bind generic <Backspace> move-page-up
+#+end_src
+
+** Getting the commit info
+
+Get human-friendly commit information, like
+
+#+begin_example
+commit 55d4c735 ("explain the primary reason behind why we have CI, 2026-07-25")
+#+end_example
+
+This syntax is the same as what is supported in the Linux Kernel documentation
+for it to be automatically linked.
+
+#+name: bind:copy-commit-human-friendly
+#+begin_src conf
+bind generic Y +bash -c "git show %(commit) --no-patch --pretty='format:commit %C(auto)%h (\"%s, %cd\")' --date=short \
+  | ~/syscfg/script/copy-clipboard.sh"
 #+end_src
