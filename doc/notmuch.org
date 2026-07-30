@@ -250,7 +250,7 @@ regex.
 #+name: tags-ml-sourcehut
 #+begin_src txt
 +list +sourcehut -- tag:raw and 'to:/~sircmpwn\/.*@lists\.sr\.ht/'
-+list +sourcehut -- tag:raw and 'from:builds@sr.ht' and '(subject:srht.site or subject:/.*\.sr\.ht/ or subject:core-go)'
++list +sourcehut -- tag:raw and 'from:builds@sr.ht' and '(subject:srht.site or subject:sr.ht or subject:core-go)'
 #+end_src
 
 ** Read emails

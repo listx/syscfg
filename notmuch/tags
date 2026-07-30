@@ -14,7 +14,7 @@
 +list +lilac -- tag:raw and 'from:builds@sr.ht' and 'subject:lilac'
 
 +list +sourcehut -- tag:raw and 'to:/~sircmpwn\/.*@lists\.sr\.ht/'
-+list +sourcehut -- tag:raw and 'from:builds@sr.ht' and '(subject:srht.site or subject:/.*\.sr\.ht/ or subject:core-go)'
++list +sourcehut -- tag:raw and 'from:builds@sr.ht' and '(subject:srht.site or subject:sr.ht or subject:core-go)'
 
 +unread -raw -inbox -- tag:raw and tag:list
 
