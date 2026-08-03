@@ -1,5 +1,4 @@
 #!/bin/sh
-#
 # Set up keyboard and X environment.
 #
 # The most importnat thing we do here is that we disable Caps_Lock from behaving
