@@ -186,7 +186,7 @@ notmuch adds the "deleted" tag (and we don't want to bother customizing that).
 ** Spam
 
 Skip any processing of all spam emails (by removing their ~raw~ tag). In
-particular, this makes the ~+unread -raw +inbox~ rule avoid considering them,
+particular, this makes the [[tags-default-catchall]] rule avoid considering them,
 keeping them out of the inbox.
 
 #+name: tags-spam
