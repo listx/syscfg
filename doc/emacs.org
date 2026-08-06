@@ -257,6 +257,7 @@ still type a ~,~ to access the leader key after typing ~, u~).
 ;(unpin! t)
 (package! auto-dim-other-buffers)
 (package! citeproc)
+<<pkg:copilot>>
 (package! hyperbole)
 (package! git-gutter)
 (package! org-appear)
@@ -333,6 +334,7 @@ other configurations that are pulled in. And so we define it first here.
 <<buffer-management>>
 
 <<notmuch>>
+<<cfg:copilot>>
 
 <<editing>>
 <<code>>
@@ -2937,6 +2939,27 @@ all about the commit message.
               "update-and-push"
               nil
               "git add --update && git commit --message update && git push")))
+#+end_src
+
+* Copilot
+
+You need to also install ~copilot-language-server~ (NixOS package).
+
+#+name: pkg:copilot
+#+begin_src elisp
+(package! copilot
+  :recipe (:host github :repo "copilot-emacs/copilot.el" :files ("*.el")))
+#+end_src
+
+#+name: cfg:copilot
+#+begin_src elisp
+(use-package! copilot
+  :hook (prog-mode . copilot-mode)
+  :bind (:map copilot-completion-map
+              ("<tab>" . 'copilot-accept-completion)
+              ("TAB" . 'copilot-accept-completion)
+              ("C-TAB" . 'copilot-accept-completion-by-word)
+              ("C-<tab>" . 'copilot-accept-completion-by-word)))
 #+end_src
 
 * Misc settings

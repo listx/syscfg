@@ -1523,6 +1523,14 @@ Also add the number of windows in the window configuration."
       (cond
         ((member "git" tags) (setq-local default-directory "~/prog/git"))))))
 
+(use-package! copilot
+  :hook (prog-mode . copilot-mode)
+  :bind (:map copilot-completion-map
+              ("<tab>" . 'copilot-accept-completion)
+              ("TAB" . 'copilot-accept-completion)
+              ("C-TAB" . 'copilot-accept-completion-by-word)
+              ("C-<tab>" . 'copilot-accept-completion-by-word)))
+
 (map! :mi "C-o" #'l/insert-newline-below
       :mi "C-S-o" #'l/insert-newline-above)
 
