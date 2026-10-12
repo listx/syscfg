@@ -33,13 +33,13 @@ let
   };
   lilacSrc = builtins.fetchGit {
     url = "https://git.sr.ht/~listx/lilac";
-    ref = "refs/tags/v0.1.0.8";
+    ref = "refs/tags/v0.2.0.0";
     name = "lilac";
     submodules = true;
   };
 
   lilacPkg = import "${lilacSrc}/nix/release.nix" {
-    lilacGitVersion = "v0.1.0.8";
+    lilacGitVersion = "v0.2.0.0";
   };
 in
 pkgs.mkShell {

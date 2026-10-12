@@ -363,7 +363,7 @@ zsh:
 
 #+name: lilac-version
 #+begin_src txt
-v0.1.0.8
+v0.2.0.0
 #+end_src
 
 #+header: :tangle shell.nix
