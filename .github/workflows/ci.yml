@@ -1,0 +1,48 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: publish
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: cachix/install-nix-action@v31
+
+      - name: tangle-weave-lint
+        working-directory: doc
+        run: nix-shell .. --run "make"
+
+      - name: verify-git-health
+        working-directory: doc
+        run: |
+          git diff
+          if [[ -z "$(git status --porcelain)" ]]; then
+            echo "Clean (no untracked files either)."
+          else
+            echo "Modified or untracked files present."
+            exit 1
+          fi
+
+      - name: publish
+        if: github.ref == 'refs/heads/main'
+        working-directory: doc
+        env:
+          PAGES_REMOTE: https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
+          PAGES_GIT_NAME: github-actions[bot]
+          PAGES_GIT_EMAIL: 41898282+github-actions[bot]@users.noreply.github.com
+        run: |
+          git -C site init -q -b gh-pages
+          nix-shell .. --run "make publish"

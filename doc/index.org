@@ -46,7 +46,7 @@ make emacs vim
 #+begin_src toml
 name = "Linus Arver's Dotfiles"
 homepage = "https://syscfg.funloop.org"
-repo = "https://git.sr.ht/~listx/syscfg"
+repo = "https://github.com/listx/syscfg"
 version = ""
 nonTangledPathspecs = [ # (ref:nonTangledPathspecs)
    ":(exclude,top).gitmodules",
@@ -402,7 +402,7 @@ let
     package = pkgs.prek;
   };
   lilacSrc = builtins.fetchGit {
-    url = "https://git.sr.ht/~listx/lilac";
+    url = "https://github.com/listx/lilac";
     ref = "refs/tags/<<lilac-version>>";
     name = "lilac";
     submodules = true;
@@ -672,37 +672,60 @@ injection = """
 
 ** CI
 
-Publish the woven docs to SourceHut in CI, so that we don't have to remember to
-manually invoke the publishing step from [[id:6a2b57ae-0d97-4cd0-9d48-2b9390e898ef][Publish to GitHub]].
+Publish the woven docs to GitHub in CI for the ~main~ branch, so that we don't
+have to remember to manually invoke the publishing step from [[id:6a2b57ae-0d97-4cd0-9d48-2b9390e898ef][Publish to GitHub]].
 
-#+name: .build.yml
-#+header: :tangle .build.yml
+#+name: GHA-publish
+#+header: :tangle .github/workflows/ci.yml
 #+begin_src yaml
-image: nixos/<<nixos-version>>
-sources:
-  - https://git.sr.ht/~listx/syscfg
-oauth: pages.sr.ht/PAGES:RW
-environment:
-  site: syscfg.funloop.org
-packages:
-- nixos.hut
-tasks:
-  - tangle-weave-lint: |
-      cd syscfg/doc
-      nix-shell .. --run "make"
-  - verify-git-health: |
-      cd syscfg/doc
-      git diff
-      if [[ -z "$(git status --porcelain)" ]]; then
-        echo "Clean (no untracked files either)."
-      else
-        echo "Modified or untracked files present."
-        exit 1
-      fi
-  - publish: |
-      cd syscfg/doc
-      nix-shell .. --run "make site.tar.gz"
-      hut pages publish -d $site site.tar.gz
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: publish
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: cachix/install-nix-action@v31
+
+      - name: tangle-weave-lint
+        working-directory: doc
+        run: nix-shell .. --run "make"
+
+      - name: verify-git-health
+        working-directory: doc
+        run: |
+          git diff
+          if [[ -z "$(git status --porcelain)" ]]; then
+            echo "Clean (no untracked files either)."
+          else
+            echo "Modified or untracked files present."
+            exit 1
+          fi
+
+      - name: publish
+        if: github.ref == 'refs/heads/main'
+        working-directory: doc
+        env:
+          PAGES_REMOTE: https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
+          PAGES_GIT_NAME: github-actions[bot]
+          PAGES_GIT_EMAIL: 41898282+github-actions[bot]@users.noreply.github.com
+        run: |
+          git -C site init -q -b gh-pages
+          nix-shell .. --run "make publish"
 #+end_src
 
 * Other project settings

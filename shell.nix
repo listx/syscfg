@@ -32,7 +32,7 @@ let
     package = pkgs.prek;
   };
   lilacSrc = builtins.fetchGit {
-    url = "https://git.sr.ht/~listx/lilac";
+    url = "https://github.com/listx/lilac";
     ref = "refs/tags/v0.2.0.0";
     name = "lilac";
     submodules = true;
