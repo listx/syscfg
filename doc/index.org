@@ -676,9 +676,9 @@ Publish the woven docs to GitHub in CI for the ~main~ branch, so that we don't
 have to remember to manually invoke the publishing step from [[id:6a2b57ae-0d97-4cd0-9d48-2b9390e898ef][Publish to GitHub]].
 
 #+name: GHA-publish
-#+header: :tangle .github/workflows/ci.yml
+#+header: :tangle .github/workflows/publish-site.yml
 #+begin_src yaml
-name: CI
+name: Build and publish site
 
 on:
   push:
@@ -690,22 +690,25 @@ permissions:
   contents: write
 
 concurrency:
-  group: publish
+  group: publish-site-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
-  build:
+  site:
+    name: Build, check, and publish
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Check out repository
+        uses: actions/checkout@v4
 
-      - uses: cachix/install-nix-action@v31
+      - name: Install Nix
+        uses: cachix/install-nix-action@v31
 
-      - name: tangle-weave-lint
+      - name: Tangle, weave, and lint
         working-directory: doc
         run: nix-shell .. --run "make"
 
-      - name: verify-git-health
+      - name: Check for uncommitted changes
         working-directory: doc
         run: |
           git diff
@@ -716,7 +719,7 @@ jobs:
             exit 1
           fi
 
-      - name: publish
+      - name: Publish to gh-pages
         if: github.ref == 'refs/heads/main'
         working-directory: doc
         env:
