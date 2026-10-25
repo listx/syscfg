@@ -10,7 +10,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: publish-site
+  group: publish-site-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
