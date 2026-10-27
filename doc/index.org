@@ -361,9 +361,14 @@ zsh:
 
 ** Dependencies via Nix
 
+This is the version of Lilac to use, using Nix's ~builtins.fetchGit~ arguments.
+You can specify ~rev = "<SHA>";~ or ~ref = "ref/...";~ to specify the version to
+use.
+
 #+name: lilac-version
-#+begin_src txt
-v0.2.0.0
+#+begin_src nix
+url = "https://github.com/listx/lilac";
+ref = "refs/tags/v0.2.0.3";
 #+end_src
 
 #+header: :tangle shell.nix
@@ -402,15 +407,12 @@ let
     package = pkgs.prek;
   };
   lilacSrc = builtins.fetchGit {
-    url = "https://github.com/listx/lilac";
-    ref = "refs/tags/<<lilac-version>>";
+    <<lilac-version>>
     name = "lilac";
     submodules = true;
   };
 
-  lilacPkg = import "${lilacSrc}/nix/release.nix" {
-    lilacGitVersion = "<<lilac-version>>";
-  };
+  lilacPkg = import "${lilacSrc}/nix/release.nix" { rev = lilacSrc.rev; };
 in
 pkgs.mkShell {
   name = "syscfg-dev-shell";
