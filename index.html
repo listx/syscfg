@@ -1,0 +1,680 @@
+<!DOCTYPE HTML><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Introduction</title><link rel="stylesheet" href="/css/default.css"><link rel="shortcut icon" type="image/png" href="/favicon.png"><link rel="stylesheet" href="/vendor/source-fonts/source-fonts.css">
+<script>
+  window.MathJax = {
+      loader: { paths: { "mathjax-newcm": "/vendor/mathjax-newcm-font" } },
+      output: { font: "mathjax-newcm" },
+  tex: {
+      tags: 'ams'
+  },
+  options: {
+      ignoreHtmlClass: 'verbatim|code'
+  }
+};
+</script>
+<script id="MathJax-script" async="" src="/vendor/mathjax/tex-mml-chtml.js"></script>
+</head><body><div class="navbar"><button id="hamburger" class="tocs-toggle-button" aria-label="Toggle table of contents sidebar">&#x2630;</button><div class="breadcrumbs"><a href="https://syscfg.funloop.org"><span class="breadcrumb">Linus Arver&#39;s Dotfiles</span></a> <span class="breadcrumb-separator">/</span> <a href="#top"><span class="breadcrumb">index.org</span></a></div></div><nav id="tocs"><p class="widget-title gtoc-title">Site contents</p><nav class="gtoc"><ul><li><a href="/index.html" class="bold">Introduction</a></li><li><a href="/bash.html">Bash</a></li><li><a href="/clojure.html">Clojure</a></li><li><a href="/emacs.html">Emacs</a></li><li><a href="/git.html">Git</a></li><li><a href="/jj.html">Jujutsu</a></li><li><a href="/keybindings.html">Keybindings (WIP)</a></li><li><a href="/nix.html">Nix</a></li><li><a href="/notmuch.html">Notmuch</a></li><li><a href="/tmux.html">tmux</a></li><li><a href="/wezterm.html">Wezterm</a></li></ul></nav><p class="widget-title toc-title">Page contents</p><nav class="toc"><div class="toc-entries"><ol><li class="toc-level-1"><div class="toc-entry"><span class="toc-counter">1</span><a href="#h-1-Installation">Installation</a></div></li><li class="toc-level-1"><div class="toc-entry"><span class="toc-counter">2</span><a href="#h-2-Known-Issues">Known Issues</a></div></li><li class="toc-level-1"><div class="toc-entry"><span class="toc-counter">3</span><a href="#h-3-Build-system">Build system</a></div><ol><li class="toc-level-2"><div class="toc-entry"><span class="toc-counter">3.1</span><a href="#h-3.1-Lilac-project-configuration">Lilac project configuration</a></div></li><li class="toc-level-2"><div class="toc-entry"><span class="toc-counter">3.2</span><a href="#h-3.2-Literate-Makefile">Literate Makefile</a></div></li><li class="toc-level-2"><div class="toc-entry"><span class="toc-counter">3.3</span><a href="#h-3.3-Makefile-for-installing-dotfiles">Makefile for installing dotfiles</a></div></li><li class="toc-level-2"><div class="toc-entry"><span class="toc-counter">3.4</span><a href="#h-3.4-Dependencies-via-Nix">Dependencies via Nix</a></div></li><li class="toc-level-2"><div class="toc-entry"><span class="toc-counter">3.5</span><a href="#h-3.5-Publish-to-GitHub">Publish to GitHub</a></div></li><li class="toc-level-2"><div class="toc-entry"><span class="toc-counter">3.6</span><a href="#h-3.6-CI">CI</a></div></li></ol></li><li class="toc-level-1"><div class="toc-entry"><span class="toc-counter">4</span><a href="#h-4-Other-project-settings">Other project settings</a></div><ol><li class="toc-level-2"><div class="toc-entry"><span class="toc-counter">4.1</span><a href="#h-4.1-.gitignore-file"><span class="code">.gitignore</span> file</a></div></li><li class="toc-level-2"><div class="toc-entry"><span class="toc-counter">4.2</span><a href="#h-4.2-Git-attributes">Git attributes</a></div></li><li class="toc-level-2"><div class="toc-entry"><span class="toc-counter">4.3</span><a href="#h-4.3-Git-orderfile">Git orderfile</a></div></li><li class="toc-level-2"><div class="toc-entry"><span class="toc-counter">4.4</span><a href="#h-4.4-.rgignore-file"><span class="code">.rgignore</span> file</a></div></li><li class="toc-level-2"><div class="toc-entry"><span class="toc-counter">4.5</span><a href="#h-4.5-EditorConfig">EditorConfig</a></div></li></ol></li><li class="toc-level-1"><div class="toc-entry"><span class="toc-counter">5</span><a href="#h-5-Plan">Plan</a></div><ol><li class="toc-level-2"><div class="toc-entry"><span class="toc-counter">5.1</span><a href="#h-5.1-TODO-add-CI--publish-step-">TODO add CI (publish step)</a></div></li><li class="toc-level-2"><div class="toc-entry"><span class="toc-counter">5.2</span><a href="#h-5.2-TODO-pre-commit:-add-spellchecker--cspell--to-linter">TODO pre-commit: add spellchecker (cspell) to linter</a></div></li><li class="toc-level-2"><div class="toc-entry"><span class="toc-counter">5.3</span><a href="#h-5.3-TODO-pre-commit:-add-formatter-linter-for-emacs-lisp">TODO pre-commit: add formatter linter for emacs lisp</a></div></li><li class="toc-level-2"><div class="toc-entry"><span class="toc-counter">5.4</span><a href="#h-5.4-TODO-pre-commit:-add-ormolu-formatter-for-Haskell">TODO pre-commit: add ormolu formatter for Haskell</a></div></li><li class="toc-level-2"><div class="toc-entry"><span class="toc-counter">5.5</span><a href="#h-5.5-TODO-pre-commit:-add-nixfmt-formatter-to-linter">TODO pre-commit: add nixfmt formatter to linter</a></div></li><li class="toc-level-2"><div class="toc-entry"><span class="toc-counter">5.6</span><a href="#h-5.6-TODO-migrate-everything--at-least-superficially--to-lilac">TODO migrate everything (at least superficially) to lilac</a></div></li></ol></li><li class="toc-level-1"><div class="toc-entry"><a href="#h--Page-metrics">Page metrics</a></div><ol><li class="toc-level-2"><div class="toc-entry"><a href="#h--Backlinks">Backlinks</a></div></li><li class="toc-level-2"><div class="toc-entry"><a href="#h--Tangled-files">Tangled files</a></div></li><li class="toc-level-2"><div class="toc-entry"><a href="#h--Named-cells">Named cells</a></div></li></ol></li></ol></div></nav></nav><main><h1 id="top">Introduction</h1><hr class="title-underline"><p><span id="c-1" class="cell-idx">This repo uses <a href="https://lilac.funloop.org/" class="external-link" id="linkNumber-1">Lilac</a> to extract the code/configuration from Org files. Not all parts have been migrated over to use Lilac yet, and until that&#39;s done there will be many incomplete sections in the docs.</span></p><p><span id="c-2" class="cell-idx">Warning: I will force-push to this repo rather frequently. Sorry!</span></p><div id="heading-container-h-1-Installation" class="heading-container"><h2 id="h-1-Installation"><span id="c-3" class="cell-idx"><a href="#h-1-Installation">1&ensp;Installation</a></span></h2><p><span id="c-4" class="cell-idx">Each subdirectory is responsible for one component, and is also the name of a build rule in the <span class="code">Makefile</span>.</span></p><p><span id="c-5" class="cell-idx">E.g., to set up Emacs and Vim configurations, do:</span></p><div id="c-6" class="cell-idx"><div class="block-container src" id="b-1"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-1">&#x1F517;</a></div><div class="block-meta-other hidden top-rounded"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__anon_block_number</span> = <span class="code">1</span></p></li><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">sh</span></p></li></ul></div><pre class="block-body anonymous fully-rounded"><code class="sourceCode"><span class="fu">make</span> emacs vim</code></pre></div></div></div><div id="heading-container-h-2-Known-Issues" class="heading-container"><h2 id="h-2-Known-Issues"><span id="c-7" class="cell-idx"><a href="#h-2-Known-Issues">2&ensp;Known Issues</a></span></h2><ul><li><p><span id="c-9" class="cell-idx">The default repository name, <span class="code">syscfg</span>, is hardcoded in some places.</span></p></li></ul></div><div id="heading-container-h-3-Build-system" class="heading-container"><h2 id="h-3-Build-system"><span id="c-11" class="cell-idx"><a href="#h-3-Build-system">3&ensp;Build system</a></span></h2></div><div id="heading-container-h-3.1-Lilac-project-configuration" class="heading-container"><h3 id="h-3.1-Lilac-project-configuration"><span id="c-12" class="cell-idx"><a href="#h-3.1-Lilac-project-configuration">3.1&ensp;Lilac project configuration</a></span></h3><div id="c-13" class="cell-idx"><div class="block-container src" id="b-2"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-2">&#x1F517;</a></div><div class="block-meta"><code><span class="bold">&#x1F3AF; doc/Lilac.toml</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__anon_block_number</span> = <span class="code">2</span></p></li><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">toml</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="dt">name</span> <span class="op">=</span> <span class="st">&quot;Linus Arver&#39;s Dotfiles&quot;</span>
+<span class="dt">homepage</span> <span class="op">=</span> <span class="st">&quot;https://syscfg.funloop.org&quot;</span>
+<span class="dt">repo</span> <span class="op">=</span> <span class="st">&quot;https://github.com/listx/syscfg&quot;</span>
+<span class="dt">version</span> <span class="op">=</span> <span class="st">&quot;&quot;</span>
+<span class="dt">nonTangledPathspecs</span> <span class="op">=</span> <span class="op">[</span> <span class="co"># <a href="#ll--nonTangledPathspecs-" class="internal-link" id="ll--nonTangledPathspecs-"><span class="bold">1</span></a> <a class="button-popup-backlinks" data-backlinks="[[&quot;#linkNumber-6&quot;,&quot;§ 5.6 TODO migrate everything (at least superficially) to lilac ~ ¶ (&lt;span class=\&quot;verbatim\&quot;&gt;Cell 61&lt;/span&gt;)&quot;],[&quot;#linkNumber-2&quot;,&quot;§ 3.1 Lilac project configuration ~ ¶ (&lt;span class=\&quot;verbatim\&quot;&gt;Cell 14&lt;/span&gt;)&quot;]]">←</a></span>
+   <span class="st">&quot;:(exclude,top).gitmodules&quot;</span><span class="op">,</span>
+   <span class="st">&quot;:(exclude,top).lilac.json&quot;</span><span class="op">,</span>
+   <span class="st">&quot;:(exclude,top)README.md&quot;</span><span class="op">,</span>
+   <span class="st">&quot;:(exclude,top)LICENSE&quot;</span><span class="op">,</span>
+   <span class="st">&quot;:(exclude,top)clojure&quot;</span><span class="op">,</span>
+   <span class="st">&quot;:(exclude,top)doc/*.org&quot;</span><span class="op">,</span>
+   <span class="st">&quot;:(exclude,top)emacs/doom-cfg/snippets/.gitkeep&quot;</span><span class="op">,</span>
+   <span class="st">&quot;:(exclude,top)emacs/doom-upstream&quot;</span><span class="op">,</span>
+   <span class="st">&quot;:(exclude,top)Cargo.lock&quot;</span><span class="op">,</span>
+   <span class="st">&quot;:(exclude,top)gpg&quot;</span><span class="op">,</span>
+   <span class="st">&quot;:(exclude,top)jjui&quot;</span><span class="op">,</span>
+   <span class="st">&quot;:(exclude,top)karabiner&quot;</span><span class="op">,</span>
+   <span class="st">&quot;:(exclude,top)lesskey&quot;</span><span class="op">,</span>
+   <span class="st">&quot;:(exclude,top)melby&quot;</span><span class="op">,</span>
+   <span class="st">&quot;:(exclude,top)mpd&quot;</span><span class="op">,</span>
+   <span class="st">&quot;:(exclude,top)mpv&quot;</span><span class="op">,</span>
+   <span class="st">&quot;:(exclude,top)nix&quot;</span><span class="op">,</span>
+   <span class="st">&quot;:(exclude,top)nixos/k0/hardware-configuration.nix&quot;</span><span class="op">,</span>
+   <span class="st">&quot;:(exclude,top)nixos/m0&quot;</span><span class="op">,</span>
+   <span class="st">&quot;:(exclude,top)nixos/w0&quot;</span><span class="op">,</span>
+   <span class="st">&quot;:(exclude,top)nvim&quot;</span><span class="op">,</span>
+   <span class="st">&quot;:(exclude,top)openvpn&quot;</span><span class="op">,</span>
+   <span class="st">&quot;:(exclude,top)pulse&quot;</span><span class="op">,</span>
+   <span class="st">&quot;:(exclude,top)qutebrowser&quot;</span><span class="op">,</span>
+   <span class="st">&quot;:(exclude,top)rtorrent&quot;</span><span class="op">,</span>
+   <span class="st">&quot;:(exclude,top)ssh&quot;</span><span class="op">,</span>
+   <span class="st">&quot;:(exclude,top)terminfo&quot;</span><span class="op">,</span>
+   <span class="st">&quot;:(exclude,top)vimpc&quot;</span><span class="op">,</span>
+   <span class="st">&quot;:(exclude,top)wezterm/upstream&quot;</span><span class="op">,</span>
+   <span class="st">&quot;:(exclude,top)script/Makefile&quot;</span><span class="op">,</span>
+   <span class="st">&quot;:(exclude,top)script/README.org&quot;</span><span class="op">,</span>
+   <span class="st">&quot;:(exclude,top)script/aex.sh&quot;</span><span class="op">,</span>
+   <span class="st">&quot;:(exclude,top)script/bb.edn&quot;</span><span class="op">,</span>
+   <span class="st">&quot;:(exclude,top)script/copy-clipboard.sh&quot;</span><span class="op">,</span>
+   <span class="st">&quot;:(exclude,top)script/decrypt.sh&quot;</span><span class="op">,</span>
+   <span class="st">&quot;:(exclude,top)script/doom&quot;</span><span class="op">,</span>
+   <span class="st">&quot;:(exclude,top)script/emacsclient.sh&quot;</span><span class="op">,</span>
+   <span class="st">&quot;:(exclude,top)script/find-long-lines.org&quot;</span><span class="op">,</span>
+   <span class="st">&quot;:(exclude,top)script/find_long_lines.bb&quot;</span><span class="op">,</span>
+   <span class="st">&quot;:(exclude,top)script/find_long_lines_test.clj&quot;</span><span class="op">,</span>
+   <span class="st">&quot;:(exclude,top)script/git&quot;</span><span class="op">,</span>
+   <span class="st">&quot;:(exclude,top)script/gtag.sh&quot;</span><span class="op">,</span>
+   <span class="st">&quot;:(exclude,top)script/jpg-dng-diff.sh&quot;</span><span class="op">,</span>
+   <span class="st">&quot;:(exclude,top)script/keyboard-repeat-mac.sh&quot;</span><span class="op">,</span>
+   <span class="st">&quot;:(exclude,top)script/mac-setup.sh&quot;</span><span class="op">,</span>
+   <span class="st">&quot;:(exclude,top)script/nix-pull.sh&quot;</span><span class="op">,</span>
+   <span class="st">&quot;:(exclude,top)script/raw-to-jpg.sh&quot;</span><span class="op">,</span>
+   <span class="st">&quot;:(exclude,top)script/rm-raf-if-dng.sh&quot;</span><span class="op">,</span>
+   <span class="st">&quot;:(exclude,top)script/seepr&quot;</span><span class="op">,</span>
+   <span class="st">&quot;:(exclude,top)script/simplify_path.sh&quot;</span><span class="op">,</span>
+   <span class="st">&quot;:(exclude,top)script/startup_hook.sh&quot;</span><span class="op">,</span>
+   <span class="st">&quot;:(exclude,top)script/susp.sh&quot;</span><span class="op">,</span>
+   <span class="st">&quot;:(exclude,top)script/sync-sd-card.sh&quot;</span><span class="op">,</span>
+   <span class="st">&quot;:(exclude,top)script/terminal-themes&quot;</span><span class="op">,</span>
+   <span class="st">&quot;:(exclude,top)script/test-runner.clj&quot;</span><span class="op">,</span>
+   <span class="st">&quot;:(exclude,top)script/windows&quot;</span><span class="op">,</span>
+   <span class="st">&quot;:(exclude,top)script/yodel.sh&quot;</span><span class="op">,</span>
+   <span class="st">&quot;:(exclude,top)uim&quot;</span><span class="op">,</span>
+   <span class="st">&quot;:(exclude,top)vim&quot;</span><span class="op">,</span>
+   <span class="st">&quot;:(exclude,top)xmonad/.xsession&quot;</span><span class="op">,</span>
+   <span class="st">&quot;:(exclude,top)xmonad/HLint.hs&quot;</span><span class="op">,</span>
+   <span class="st">&quot;:(exclude,top)xmonad/build&quot;</span><span class="op">,</span>
+   <span class="st">&quot;:(exclude,top)xmonad/mac-host-ubuntu-guest-setup.md&quot;</span><span class="op">,</span>
+   <span class="st">&quot;:(exclude,top)xmonad/recompile.sh&quot;</span><span class="op">,</span>
+   <span class="st">&quot;:(exclude,top)xmonad/restart.sh&quot;</span><span class="op">,</span>
+   <span class="st">&quot;:(exclude,top)xmonad/shell.nix&quot;</span><span class="op">,</span>
+   <span class="st">&quot;:(exclude,top)xmonad/xmonad-linus.cabal&quot;</span><span class="op">,</span>
+   <span class="st">&quot;:(exclude,top)xmonad/xmonad-start.desktop&quot;</span><span class="op">,</span>
+   <span class="st">&quot;:(exclude,top)xorg&quot;</span><span class="op">,</span>
+   <span class="st">&quot;:(exclude,top)zathura&quot;</span><span class="op">,</span>
+   <span class="st">&quot;:(exclude,top)zsh&quot;</span>
+<span class="op">]</span>
+
+<span class="er"><a href="#b-custom-html-head" class="internal-link" id="b-2-b-custom-html-head">custom-html-head</a></span></code></pre></div></div><p><span id="c-14" class="cell-idx">Currently we exclude most paths in <a href="#ll--nonTangledPathspecs-" class="internal-link" id="linkNumber-2"><span class="bold">1</span></a>, because we haven&#39;t migrated existing code to literate style yet.</span></p></div><div id="heading-container-h-3.2-Literate-Makefile" class="heading-container"><h3 id="h-3.2-Literate-Makefile"><span id="c-15" class="cell-idx"><a href="#h-3.2-Literate-Makefile">3.2&ensp;Literate Makefile</a></span></h3><p><span id="c-16" class="cell-idx">The literate programming configuration is inside the <span class="code">doc</span> folder. It houses all Org files which we feed into Lilac to tangle the code and also weave HTML output.</span></p><div id="c-17" class="cell-idx"><div class="block-container src" id="b-3"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-3">&#x1F517;</a></div><div class="block-meta"><code><span class="bold">&#x1F3AF; doc/Makefile</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__anon_block_number</span> = <span class="code">3</span></p></li><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">makefile</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="dt">org_files</span> <span class="ch">:=</span><span class="st"> </span><span class="ch">$(</span><span class="kw">shell</span><span class="st"> find . -type f -name &quot;*.org&quot;</span><span class="ch">)</span>
+
+<span class="dt">obj_files</span> <span class="ch">:=</span><span class="st"> </span><span class="ch">$(</span><span class="dt">org_files</span><span class="kw">:</span><span class="ss">%.org</span><span class="kw">=</span><span class="ss">%.lobj</span><span class="ch">)</span>
+
+<span class="dt">archive_file</span> <span class="ch">:=</span><span class="st"> syscfg.larc</span>
+
+<span class="dv">all:</span><span class="dt"> tangle weave lint</span>
+<span class="ot">.PHONY:</span><span class="dt"> all</span>
+
+<span class="dv">$(obj_files) &amp;:</span><span class="dt"> </span><span class="ch">$(</span><span class="dt">org_files</span><span class="ch">)</span>
+	lilac compile <span class="ch">$?</span>
+	touch <span class="ch">$(</span><span class="dt">obj_files</span><span class="ch">)</span>
+
+<span class="dv">$(archive_file):</span><span class="dt"> </span><span class="ch">$(</span><span class="dt">obj_files</span><span class="ch">)</span>
+	lilac archive <span class="ch">$^</span> --out-file <span class="ch">$@</span>
+
+<span class="dv">tangle:</span><span class="dt"> </span><span class="ch">$(</span><span class="dt">archive_file</span><span class="ch">)</span>
+	lilac tangle <span class="ch">$&lt;</span> --out-dir ..
+	touch tangle
+
+<span class="dv">weave:</span><span class="dt"> </span><span class="ch">$(</span><span class="dt">archive_file</span><span class="ch">)</span>
+	lilac weave <span class="ch">$&lt;</span> --out-dir site --write-css --write-js
+	touch weave
+
+<a href="#b-Makefile:publish" class="internal-link" id="b-3-b-Makefile:publish">Makefile:publish</a>
+
+<span class="dv">lint:</span><span class="dt"> </span><span class="ch">$(</span><span class="dt">archive_file</span><span class="ch">)</span>
+	cd .. &amp;&amp; lilac --project-conf doc/Lilac.toml lint doc/<span class="ch">$&lt;</span>
+	prek run --all-files
+	touch lint
+
+<span class="dv">gitconfig:</span>
+	cd .. &amp;&amp; git config diff.orderfile .git-orderfile
+<span class="ot">.PHONY:</span><span class="dt"> gitconfig</span>
+
+<span class="dv">update:</span>
+	cd .. &amp;&amp; niv update nixpkgs --branch nixos-<a href="#b-nixos-version" class="internal-link" id="b-3-b-nixos-version">nixos-version</a>
+<span class="ot">.PHONY:</span><span class="dt"> update</span>
+
+<span class="dv">clean:</span>
+	rm -rf <span class="ch">\</span>
+		<span class="ch">$(</span><span class="dt">archive_file</span><span class="ch">)</span> <span class="ch">\</span>
+		<span class="ch">$(</span><span class="dt">obj_files</span><span class="ch">)</span>
+<span class="ot">.PHONY:</span><span class="dt"> clean</span></code></pre></div></div><div id="c-18" class="cell-idx"><div class="block-container src" id="b-nixos-version"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-nixos-version">&#x1F517;</a></div><div class="block-meta"><code>nixos-version</code></div><div class="block-meta-other hidden"><p>Used by <a href="#b-3-b-nixos-version" class="internal-link">Anonymous BlockCell 17</a>.</p><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">txt</span></p></li></ul></div><pre class="block-body"><code class="sourceCode">26.05</code></pre></div></div></div><div id="heading-container-h-3.3-Makefile-for-installing-dotfiles" class="heading-container"><h3 id="h-3.3-Makefile-for-installing-dotfiles"><span id="c-19" class="cell-idx"><a href="#h-3.3-Makefile-for-installing-dotfiles">3.3&ensp;Makefile for installing dotfiles</a></span></h3><div id="c-20" class="cell-idx"><div class="block-container src" id="b-4"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-4">&#x1F517;</a></div><div class="block-meta"><code><span class="bold">&#x1F3AF; Makefile</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__anon_block_number</span> = <span class="code">4</span></p></li><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">makefile</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="co"># Configuration directory.</span>
+<span class="dt">C</span> <span class="ch">:=</span><span class="st"> </span><span class="ch">$(</span><span class="kw">shell</span><span class="st"> pwd</span><span class="ch">)</span>
+<span class="co"># Home directory.</span>
+<span class="dt">H</span> <span class="ch">:=</span><span class="st"> </span><span class="ch">${</span><span class="dt">HOME</span><span class="ch">}</span>
+<span class="co"># Platform. E.g., &quot;Darwin&quot;, &quot;Linux&quot;.</span>
+<span class="dt">P</span> <span class="ch">:=</span><span class="st"> </span><span class="ch">$(</span><span class="kw">shell</span><span class="st"> uname</span><span class="ch">)</span>
+<span class="co"># Long hostname, without the trailing domain name, if any.</span>
+<span class="dt">T</span> <span class="ch">:=</span><span class="st"> </span><span class="ch">$(</span><span class="kw">shell</span><span class="st"> hostname | cut -d. -f1</span><span class="ch">)</span>
+<span class="co"># Short (custom) hostname.</span>
+<span class="dt">S</span> <span class="ch">:=</span><span class="st"> </span><span class="ch">$(</span><span class="kw">shell</span><span class="st"> cat </span><span class="ch">${</span><span class="dt">H</span><span class="ch">}</span><span class="st">/.hostname-short</span><span class="ch">)</span>
+
+<span class="co"># Add the -n flag for directories, as otherwise, stray symlinks will be created</span>
+<span class="co"># inside the C (config) directory itself.</span>
+
+<a href="/bash.html#b-Makefile-bash" class="internal-link" id="b-4-b-Makefile-bash">Makefile-bash</a>
+<a href="/clojure.html#b-Makefile-clojure" class="internal-link" id="b-4-b-Makefile-clojure">Makefile-clojure</a>
+<a href="/emacs.html#b-Makefile-emacs" class="internal-link" id="b-4-b-Makefile-emacs">Makefile-emacs</a>
+<a href="/git.html#b-Makefile-git" class="internal-link" id="b-4-b-Makefile-git">Makefile-git</a>
+<span class="dv">gpg:</span>
+	ln -fns <span class="ch">${</span><span class="dt">C</span><span class="ch">}</span>/gpg                                    <span class="ch">${</span><span class="dt">H</span><span class="ch">}</span>/.gnupg
+	ln -fs <span class="ch">${</span><span class="dt">C</span><span class="ch">}</span>/gpg/gpg-agent.nixos.conf                <span class="ch">${</span><span class="dt">H</span><span class="ch">}</span>/.gnupg/gpg-agent.conf
+<span class="dv">jj:</span>
+	ln -fns <span class="ch">${</span><span class="dt">C</span><span class="ch">}</span>/jj                                     <span class="ch">${</span><span class="dt">H</span><span class="ch">}</span>/.config/jj
+<span class="dv">jjui:</span>
+	ln -fns <span class="ch">${</span><span class="dt">C</span><span class="ch">}</span>/jjui                                   <span class="ch">${</span><span class="dt">H</span><span class="ch">}</span>/.config/jjui
+<span class="dv">karabiner:</span>
+	mkdir -p <span class="ch">${</span><span class="dt">H</span><span class="ch">}</span>/.config/karabiner
+	ln -fns <span class="ch">${</span><span class="dt">C</span><span class="ch">}</span>/karabiner/karabiner.json               <span class="ch">${</span><span class="dt">H</span><span class="ch">}</span>/.config/karabiner
+<span class="dv">lesskey:</span>
+	ln -fs <span class="ch">${</span><span class="dt">C</span><span class="ch">}</span>/lesskey/cfg                             <span class="ch">${</span><span class="dt">H</span><span class="ch">}</span>/.lesskey
+	lesskey
+<span class="dv">melby:</span>
+	ln -fns <span class="ch">${</span><span class="dt">C</span><span class="ch">}</span>/melby                                   <span class="ch">${</span><span class="dt">H</span><span class="ch">}</span>/.melby
+	set -e &amp;&amp; <span class="ch">\</span>
+		melby_location=<span class="ch">$$</span>(readlink <span class="ch">$$</span>(which melbyd)) &amp;&amp; <span class="ch">\</span>
+		cp -f <span class="ch">$$</span>{melby_location%/bin/melbyd}/share/melby/sample/* <span class="ch">${</span><span class="dt">H</span><span class="ch">}</span>/.melby
+<span class="dv">mpd:</span>
+	ln -fns <span class="ch">${</span><span class="dt">C</span><span class="ch">}</span>/mpd                                    <span class="ch">${</span><span class="dt">H</span><span class="ch">}</span>/.config/mpd
+<span class="dv">mpv:</span>
+	ln -fns <span class="ch">${</span><span class="dt">C</span><span class="ch">}</span>/mpv                                    <span class="ch">${</span><span class="dt">H</span><span class="ch">}</span>/.config/mpv
+<span class="cf">ifeq</span> (<span class="st">&#39;</span><span class="ch">${</span><span class="dt">T</span><span class="ch">}</span><span class="st">&#39;</span>,<span class="st">&#39;k0&#39;</span>)
+	ln -fs mpv.<span class="ch">${</span><span class="dt">T</span><span class="ch">}</span>.conf                                mpv/mpv.conf
+<span class="cf">else</span> <span class="cf">ifeq</span> (<span class="st">&#39;</span><span class="ch">${</span><span class="dt">P</span><span class="ch">}</span><span class="st">&#39;</span>,<span class="st">&#39;Darwin&#39;</span>)
+	ln -fs mpv.osx.conf                                 mpv/mpv.conf
+<span class="cf">else</span>
+	ln -fs mpv.linux.conf                               mpv/mpv.conf
+<span class="cf">endif</span>
+<span class="dv">nix:</span>
+	ln -fns <span class="ch">${</span><span class="dt">C</span><span class="ch">}</span>/nix                                    <span class="ch">${</span><span class="dt">H</span><span class="ch">}</span>/.config/nix
+<span class="dv">nixos:</span>
+<span class="cf">ifeq</span> (<span class="st">&#39;</span><span class="ch">${</span><span class="dt">T</span><span class="ch">}</span><span class="st">&#39;</span>,<span class="st">&#39;w0&#39;</span>)
+	ln -fs <span class="ch">${</span><span class="dt">C</span><span class="ch">}</span>/nixos/<span class="ch">${</span><span class="dt">T</span><span class="ch">}</span>/configuration.nix            /etc/nixos
+	ln -fs <span class="ch">${</span><span class="dt">C</span><span class="ch">}</span>/nixos/<span class="ch">${</span><span class="dt">T</span><span class="ch">}</span>/syschdemd.nix                /etc/nixos
+	ln -fs <span class="ch">${</span><span class="dt">C</span><span class="ch">}</span>/nixos/<span class="ch">${</span><span class="dt">T</span><span class="ch">}</span>/syschdemd.sh                 /etc/nixos
+	ln -fs <span class="ch">${</span><span class="dt">C</span><span class="ch">}</span>/nixos/<span class="ch">${</span><span class="dt">T</span><span class="ch">}</span>/wsl.conf                     /etc/nixos
+	ln -fs <span class="ch">${</span><span class="dt">C</span><span class="ch">}</span>/nixos/<span class="ch">${</span><span class="dt">T</span><span class="ch">}</span>/hosts                        /etc
+	cp -f <span class="ch">${</span><span class="dt">C</span><span class="ch">}</span>/nixos/<span class="ch">${</span><span class="dt">T</span><span class="ch">}</span>/resolv.conf                   /etc
+<span class="cf">else</span>
+	ln -fs <span class="ch">${</span><span class="dt">C</span><span class="ch">}</span>/nixos/<span class="ch">${</span><span class="dt">T</span><span class="ch">}</span>/configuration.nix            /etc/nixos
+	ln -fs <span class="ch">${</span><span class="dt">C</span><span class="ch">}</span>/nixos/<span class="ch">${</span><span class="dt">T</span><span class="ch">}</span>/hardware-configuration.nix   /etc/nixos
+<span class="cf">endif</span>
+<span class="dv">nixpkgs:</span>
+	ln -fns <span class="ch">${</span><span class="dt">C</span><span class="ch">}</span>/nixpkgs                                <span class="ch">${</span><span class="dt">H</span><span class="ch">}</span>/.nixpkgs
+<span class="dv">notmuch:</span>
+	ln -fs <span class="ch">${</span><span class="dt">C</span><span class="ch">}</span>/notmuch/notmuch-config                  <span class="ch">${</span><span class="dt">H</span><span class="ch">}</span>/.notmuch-config
+<span class="dv">nvim:</span>
+	ln -fns <span class="ch">${</span><span class="dt">C</span><span class="ch">}</span>/nvim                                   <span class="ch">${</span><span class="dt">H</span><span class="ch">}</span>/.config/nvim
+<span class="dv">pulse:</span>
+	rm -rf <span class="ch">${</span><span class="dt">H</span><span class="ch">}</span>/.config/pulse
+	rm -rf <span class="ch">${</span><span class="dt">H</span><span class="ch">}</span>/.pulse
+	mkdir -p <span class="ch">${</span><span class="dt">H</span><span class="ch">}</span>/.config/pulse
+	mkdir <span class="ch">${</span><span class="dt">H</span><span class="ch">}</span>/.pulse
+<span class="cf">ifeq</span> (<span class="st">&#39;</span><span class="ch">${</span><span class="dt">T</span><span class="ch">}</span><span class="st">&#39;</span>,<span class="st">&#39;k0&#39;</span>)
+	cp <span class="ch">${</span><span class="dt">C</span><span class="ch">}</span>/pulse/daemon.conf.k0                        <span class="ch">${</span><span class="dt">H</span><span class="ch">}</span>/.config/pulse/daemon.conf
+	cp <span class="ch">${</span><span class="dt">C</span><span class="ch">}</span>/pulse/default.pa.k0                         <span class="ch">${</span><span class="dt">H</span><span class="ch">}</span>/.pulse/default.pa
+<span class="cf">else</span>
+	cp <span class="ch">${</span><span class="dt">C</span><span class="ch">}</span>/pulse/default.pa                            <span class="ch">${</span><span class="dt">H</span><span class="ch">}</span>/.pulse/default.pa
+<span class="cf">endif</span>
+<span class="dv">qutebrowser:</span>
+<span class="cf">ifeq</span> (<span class="st">&#39;</span><span class="ch">${</span><span class="dt">P</span><span class="ch">}</span><span class="st">&#39;</span>,<span class="st">&#39;Darwin&#39;</span>)
+	ln -fns <span class="ch">${</span><span class="dt">C</span><span class="ch">}</span>/qutebrowser                            <span class="ch">${</span><span class="dt">H</span><span class="ch">}</span>/.qutebrowser
+<span class="cf">else</span>
+	ln -fns <span class="ch">${</span><span class="dt">C</span><span class="ch">}</span>/qutebrowser                            <span class="ch">${</span><span class="dt">H</span><span class="ch">}</span>/.config
+<span class="cf">endif</span>
+<span class="dv">rtorrent:</span>
+	ln -fs <span class="ch">${</span><span class="dt">C</span><span class="ch">}</span>/rtorrent/cfg                            <span class="ch">${</span><span class="dt">H</span><span class="ch">}</span>/.rtorrent.rc
+<span class="dv">ssh:</span>
+<span class="cf">ifeq</span> (<span class="ch">$(</span><span class="kw">wildcard</span><span class="st"> ~/.ssh/.</span><span class="ch">)</span>,)
+	ln -fns <span class="ch">${</span><span class="dt">C</span><span class="ch">}</span>/ssh                                    <span class="ch">${</span><span class="dt">H</span><span class="ch">}</span>/.ssh
+<span class="cf">endif</span>
+	ln -fs <span class="ch">${</span><span class="dt">C</span><span class="ch">}</span>/ssh/config.home.conf                    <span class="ch">${</span><span class="dt">H</span><span class="ch">}</span>/.ssh/config
+<span class="dv">terminfo:</span>
+	git -C <span class="ch">${</span><span class="dt">C</span><span class="ch">}</span> submodule update --init <span class="ch">${</span><span class="dt">C</span><span class="ch">}</span>/wezterm/upstream
+	tic -x -o ~/.terminfo <span class="ch">${</span><span class="dt">C</span><span class="ch">}</span>/wezterm/upstream/termwiz/data/wezterm.terminfo
+	tic -x -o ~/.terminfo <span class="ch">${</span><span class="dt">C</span><span class="ch">}</span>/terminfo/xterm-24bit.terminfo
+<span class="dv">tig:</span>
+	ln -fs <span class="ch">${</span><span class="dt">C</span><span class="ch">}</span>/tig/.tigrc                              <span class="ch">${</span><span class="dt">H</span><span class="ch">}</span>
+<span class="dv">tmux:</span>
+	ln -fs <span class="ch">${</span><span class="dt">C</span><span class="ch">}</span>/tmux/.tmux.conf                         <span class="ch">${</span><span class="dt">H</span><span class="ch">}</span>/.tmux.conf
+	ln -fns <span class="ch">${</span><span class="dt">C</span><span class="ch">}</span>/tmux                                   <span class="ch">${</span><span class="dt">H</span><span class="ch">}</span>/.tmux
+<span class="dv">uim:</span>
+	ln -fns <span class="ch">${</span><span class="dt">C</span><span class="ch">}</span>/uim/.uim                               <span class="ch">${</span><span class="dt">H</span><span class="ch">}</span>/.uim
+	ln -fns <span class="ch">${</span><span class="dt">C</span><span class="ch">}</span>/uim                                    <span class="ch">${</span><span class="dt">H</span><span class="ch">}</span>/.uim.d
+<span class="dv">vim:</span>
+	ln -fns <span class="ch">${</span><span class="dt">C</span><span class="ch">}</span>/vim                                    <span class="ch">${</span><span class="dt">H</span><span class="ch">}</span>/.vim
+	ln -fs <span class="ch">${</span><span class="dt">C</span><span class="ch">}</span>/vim/cfg                                 <span class="ch">${</span><span class="dt">H</span><span class="ch">}</span>/.vimrc
+	ln -fs <span class="ch">${</span><span class="dt">C</span><span class="ch">}</span>/vim/cfg                                 <span class="ch">${</span><span class="dt">H</span><span class="ch">}</span>/.gvimrc
+<span class="dv">vimpc:</span>
+	ln -fs <span class="ch">${</span><span class="dt">C</span><span class="ch">}</span>/vimpc/.vimpcrc                          <span class="ch">${</span><span class="dt">H</span><span class="ch">}</span>
+<span class="dv">wezterm:</span>
+	ln -fs <span class="ch">${</span><span class="dt">C</span><span class="ch">}</span>/wezterm/.wezterm.lua                    <span class="ch">${</span><span class="dt">H</span><span class="ch">}</span>
+<span class="dv">xmonad:</span>
+	ln -fns <span class="ch">${</span><span class="dt">C</span><span class="ch">}</span>/xmonad                                 <span class="ch">${</span><span class="dt">H</span><span class="ch">}</span>/.xmonad
+	<span class="co"># xsession is relied on by NixOS hosts that use xmonad (basically the</span>
+	<span class="co"># default) to start xmonad.</span>
+	ln -fs <span class="ch">${</span><span class="dt">C</span><span class="ch">}</span>/xmonad/.xsession                        <span class="ch">${</span><span class="dt">H</span><span class="ch">}</span>/.xsession
+<span class="dv">zathura:</span>
+	ln -fns <span class="ch">${</span><span class="dt">C</span><span class="ch">}</span>/zathura                                <span class="ch">${</span><span class="dt">H</span><span class="ch">}</span>/.config/zathura
+<span class="dv">zsh:</span>
+	ln -fns <span class="ch">${</span><span class="dt">C</span><span class="ch">}</span>/zsh                                    <span class="ch">${</span><span class="dt">H</span><span class="ch">}</span>/.zsh
+	ln -fs <span class="ch">${</span><span class="dt">C</span><span class="ch">}</span>/zsh/.zshenv                             <span class="ch">${</span><span class="dt">H</span><span class="ch">}</span>
+	ln -fs <span class="ch">${</span><span class="dt">C</span><span class="ch">}</span>/zsh/.zshrc                              <span class="ch">${</span><span class="dt">H</span><span class="ch">}</span>
+	test -f <span class="ch">${</span><span class="dt">C</span><span class="ch">}</span>/zsh/zprofile-<span class="ch">${</span><span class="dt">T</span><span class="ch">}</span> <span class="ch">\</span>
+		&amp;&amp; ln -fs <span class="ch">${</span><span class="dt">C</span><span class="ch">}</span>/zsh/zprofile-<span class="ch">${</span><span class="dt">T</span><span class="ch">}</span>                <span class="ch">${</span><span class="dt">H</span><span class="ch">}</span>/.zprofile || true
+	test -f <span class="ch">${</span><span class="dt">C</span><span class="ch">}</span>/zsh/zprofile-<span class="ch">${</span><span class="dt">S</span><span class="ch">}</span> <span class="ch">\</span>
+		&amp;&amp; ln -fs <span class="ch">${</span><span class="dt">C</span><span class="ch">}</span>/zsh/zprofile-<span class="ch">${</span><span class="dt">S</span><span class="ch">}</span>                <span class="ch">${</span><span class="dt">H</span><span class="ch">}</span>/.zprofile || true
+	test -f <span class="ch">${</span><span class="dt">C</span><span class="ch">}</span>/zsh/zlogin-<span class="ch">${</span><span class="dt">T</span><span class="ch">}</span> <span class="ch">\</span>
+		&amp;&amp; ln -fs <span class="ch">${</span><span class="dt">C</span><span class="ch">}</span>/zsh/zlogin-<span class="ch">${</span><span class="dt">T</span><span class="ch">}</span>                  <span class="ch">${</span><span class="dt">H</span><span class="ch">}</span>/.zlogin || true
+	mkdir -p <span class="ch">${</span><span class="dt">H</span><span class="ch">}</span>/.zsh-untracked
+	git -C <span class="ch">${</span><span class="dt">C</span><span class="ch">}</span> submodule update --init <span class="ch">${</span><span class="dt">C</span><span class="ch">}</span>/zsh/zcomet-upstream
+	mkdir -p <span class="ch">${</span><span class="dt">C</span><span class="ch">}</span>/zsh/zcomet
+	ln -fns <span class="ch">${</span><span class="dt">C</span><span class="ch">}</span>/zsh/zcomet                             <span class="ch">${</span><span class="dt">H</span><span class="ch">}</span>/.zcomet
+
+<span class="ot">.PHONY:</span><span class="dt"> </span><span class="ch">\</span>
+<span class="dt">	bash </span><span class="ch">\</span>
+<span class="dt">	clojure </span><span class="ch">\</span>
+<span class="dt">	emacs </span><span class="ch">\</span>
+<span class="dt">	git </span><span class="ch">\</span>
+<span class="dt">	gpg </span><span class="ch">\</span>
+<span class="dt">	jj </span><span class="ch">\</span>
+<span class="dt">	jjui </span><span class="ch">\</span>
+<span class="dt">	karabiner </span><span class="ch">\</span>
+<span class="dt">	lesskey </span><span class="ch">\</span>
+<span class="dt">	melby </span><span class="ch">\</span>
+<span class="dt">	mpd </span><span class="ch">\</span>
+<span class="dt">	mpv </span><span class="ch">\</span>
+<span class="dt">	nix </span><span class="ch">\</span>
+<span class="dt">	nixos </span><span class="ch">\</span>
+<span class="dt">	nixpkgs </span><span class="ch">\</span>
+<span class="dt">	notmuch </span><span class="ch">\</span>
+<span class="dt">	nvim </span><span class="ch">\</span>
+<span class="dt">	pulse </span><span class="ch">\</span>
+<span class="dt">	qutebrowser </span><span class="ch">\</span>
+<span class="dt">	rtorrent </span><span class="ch">\</span>
+<span class="dt">	ssh </span><span class="ch">\</span>
+<span class="dt">	terminfo </span><span class="ch">\</span>
+<span class="dt">	tig </span><span class="ch">\</span>
+<span class="dt">	tmux </span><span class="ch">\</span>
+<span class="dt">	uim </span><span class="ch">\</span>
+<span class="dt">	vim </span><span class="ch">\</span>
+<span class="dt">	vimpc </span><span class="ch">\</span>
+<span class="dt">	wezterm </span><span class="ch">\</span>
+<span class="dt">	xmonad </span><span class="ch">\</span>
+<span class="dt">	xorg </span><span class="ch">\</span>
+<span class="dt">	zathura </span><span class="ch">\</span>
+<span class="dt">	zsh</span></code></pre></div></div></div><div id="heading-container-h-3.4-Dependencies-via-Nix" class="heading-container"><h3 id="h-3.4-Dependencies-via-Nix"><span id="c-21" class="cell-idx"><a href="#h-3.4-Dependencies-via-Nix">3.4&ensp;Dependencies via Nix</a></span></h3><p><span id="c-22" class="cell-idx">This is the version of Lilac to use, using Nix&#39;s <span class="code">builtins.fetchGit</span> arguments. You can specify <span class="code">rev = &quot;&lt;SHA&gt;&quot;;</span> or <span class="code">ref = &quot;ref/...&quot;;</span> to specify the version to use.</span></p><div id="c-23" class="cell-idx"><div class="block-container src" id="b-lilac-version"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-lilac-version">&#x1F517;</a></div><div class="block-meta"><code>lilac-version</code></div><div class="block-meta-other hidden"><p>Used by <a href="#b-5-b-lilac-version" class="internal-link">Anonymous BlockCell 24</a>.</p><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">nix</span></p></li></ul></div><pre class="block-body"><code class="sourceCode">url = <span class="st">&quot;https://github.com/listx/lilac&quot;</span>;
+ref = <span class="st">&quot;refs/tags/v0.2.0.3&quot;</span>;</code></pre></div></div><div id="c-24" class="cell-idx"><div class="block-container src" id="b-5"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-5">&#x1F517;</a></div><div class="block-meta"><code><span class="bold">&#x1F3AF; shell.nix</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__anon_block_number</span> = <span class="code">5</span></p></li><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">nix</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="kw">let</span>
+  <span class="va">sources</span> <span class="op">=</span> <span class="bu">import</span> <span class="ss">./nix/sources.nix</span><span class="op">;</span>
+  <span class="va">rust-overlay</span> <span class="op">=</span> <span class="bu">import</span> sources<span class="op">.</span>rust<span class="op">-</span>overlay<span class="op">;</span>
+  <span class="va">pkgs</span> <span class="op">=</span> <span class="bu">import</span> sources<span class="op">.</span>nixpkgs <span class="op">{</span>
+    <span class="va">overlays</span> <span class="op">=</span> <span class="op">[</span> rust-overlay <span class="op">];</span>
+  <span class="op">};</span>
+  <span class="va">rustToolchain</span> <span class="op">=</span> pkgs<span class="op">.</span>rust<span class="op">-</span>bin<span class="op">.</span>stable<span class="op">.</span>latest<span class="op">.</span>default<span class="op">.</span>override <span class="op">{</span>
+    <span class="va">extensions</span> <span class="op">=</span> <span class="op">[</span> <span class="st">&quot;rust-src&quot;</span> <span class="st">&quot;rust-analyzer&quot;</span> <span class="st">&quot;clippy&quot;</span> <span class="op">];</span>
+  <span class="op">};</span>
+  <span class="va">git-hooks</span> <span class="op">=</span> <span class="bu">import</span> sources<span class="op">.</span><span class="st">&quot;git-hooks.nix&quot;</span><span class="op">;</span>
+
+  <span class="co"># 3. Configure the pre-commit checks</span>
+  <span class="va">pre-commit-check</span> <span class="op">=</span> git<span class="op">-</span>hooks<span class="op">.</span>run <span class="op">{</span>
+    <span class="va">src</span> <span class="op">=</span> <span class="ss">./.</span><span class="op">;</span>
+    <span class="va">hooks</span> <span class="op">=</span> <span class="op">{</span>
+      <span class="va">shellcheck</span> <span class="op">=</span> <span class="op">{</span>
+        <span class="va">enable</span> <span class="op">=</span> <span class="cn">true</span><span class="op">;</span>
+        <span class="va">excludes</span> <span class="op">=</span> <span class="op">[</span>
+          <span class="st">&quot;script/aex.sh&quot;</span>
+          <span class="st">&quot;nixos/w0/syschdemd.sh&quot;</span>
+          <span class="st">&quot;</span><span class="sc">\\</span><span class="st">.(zsh|zshrc|zprofile|zshenv)$&quot;</span>
+          <span class="st">&quot;zsh/*&quot;</span>
+        <span class="op">];</span>
+      <span class="op">};</span>
+      <span class="va">editorconfig-checker</span>.<span class="va">enable</span> <span class="op">=</span> <span class="cn">true</span><span class="op">;</span>
+      <span class="va">clippy</span> <span class="op">=</span> <span class="op">{</span>
+        <span class="va">enable</span> <span class="op">=</span> <span class="cn">true</span><span class="op">;</span>
+        <span class="va">package</span> <span class="op">=</span> rustToolchain<span class="op">;</span>
+        <span class="va">settings</span>.<span class="va">offline</span> <span class="op">=</span> <span class="cn">false</span><span class="op">;</span> <span class="co"># <a href="#ll--clippy-online-" class="internal-link" id="ll--clippy-online-"><span class="bold">2</span></a> <a class="button-popup-backlinks" data-backlinks="[[&quot;#linkNumber-3&quot;,&quot;§ 3.4 Dependencies via Nix ~ ¶ (&lt;span class=\&quot;verbatim\&quot;&gt;Cell 25&lt;/span&gt;)&quot;]]">←</a></span>
+      <span class="op">};</span>
+    <span class="op">};</span>
+    <span class="va">package</span> <span class="op">=</span> pkgs<span class="op">.</span>prek<span class="op">;</span>
+  <span class="op">};</span>
+  <span class="va">lilacSrc</span> <span class="op">=</span> <span class="bu">builtins</span><span class="op">.</span>fetchGit <span class="op">{</span>
+    <a href="#b-lilac-version" class="internal-link" id="b-5-b-lilac-version">lilac-version</a>
+    <span class="va">name</span> <span class="op">=</span> <span class="st">&quot;lilac&quot;</span><span class="op">;</span>
+    <span class="va">submodules</span> <span class="op">=</span> <span class="cn">true</span><span class="op">;</span>
+  <span class="op">};</span>
+
+  <span class="va">lilacPkg</span> <span class="op">=</span> <span class="bu">import</span> <span class="st">&quot;</span><span class="sc">${</span>lilacSrc<span class="sc">}</span><span class="st">/nix/release.nix&quot;</span> <span class="op">{</span> <span class="va">rev</span> <span class="op">=</span> lilacSrc<span class="op">.</span>rev<span class="op">;</span> <span class="op">};</span>
+<span class="kw">in</span>
+pkgs<span class="op">.</span>mkShell <span class="op">{</span>
+  <span class="va">name</span> <span class="op">=</span> <span class="st">&quot;syscfg-dev-shell&quot;</span><span class="op">;</span>
+
+  <span class="va">buildInputs</span> <span class="op">=</span> <span class="kw">with</span> pkgs<span class="op">;</span> <span class="op">[</span>
+    lilacPkg
+    editorconfig-checker
+    pikchr
+    shellcheck
+    nixfmt
+    niv
+    ormolu
+    parinfer-rust
+    shfmt
+    vale
+    prek
+
+    rustToolchain
+  <span class="op">]</span> <span class="op">++</span> pre<span class="op">-</span>commit<span class="op">-</span>check<span class="op">.</span>enabledPackages<span class="op">;</span>
+
+  <span class="va">nativeBuildInputs</span> <span class="op">=</span> <span class="kw">with</span> pkgs<span class="op">;</span> <span class="op">[</span>
+    pkg-config
+    gcc
+  <span class="op">];</span>
+  <span class="va">propagatedBuildInputs</span> <span class="op">=</span> <span class="kw">with</span> pkgs<span class="op">;</span> <span class="op">[</span>
+    openssl
+    zlib
+  <span class="op">];</span>
+
+  <span class="va">shellHook</span> <span class="op">=</span> <span class="st">&#39;&#39;</span>
+<span class="st">    echo -e &quot;\n$(tput setaf 4)&quot;</span>
+<span class="st">    echo Syscfg | </span><span class="sc">${</span>pkgs<span class="op">.</span>figlet<span class="sc">}</span><span class="st">/bin/figlet</span>
+<span class="st">    echo -e &quot;$(tput sgr0)\n&quot;</span>
+<span class="st">    echo &quot;Using nixpkgs commit: </span><span class="sc">${</span>sources<span class="op">.</span>nixpkgs<span class="op">.</span>rev<span class="sc">}</span><span class="st"> </span><span class="sc">${</span>pkgs<span class="op">.</span>lib<span class="op">.</span>version<span class="sc">}</span><span class="st">&quot;</span>
+<span class="st">    echo &quot;Lilac version: $(lilac --version)&quot;</span>
+<span class="st">    echo &quot;Rust compiler profile: $(rustc --version)&quot;</span>
+<span class="st">    echo</span>
+<span class="st">    </span><span class="sc">${</span>pre<span class="op">-</span>commit<span class="op">-</span>check<span class="op">.</span>shellHook<span class="sc">}</span>
+<span class="st">  &#39;&#39;</span><span class="op">;</span>
+<span class="op">}</span></code></pre></div></div><p><span id="c-25" class="cell-idx"><a href="#ll--clippy-online-" class="internal-link" id="linkNumber-3"><span class="bold">2</span></a> is required to avoid an error about not being able to find some packages (i.e., allow clippy to fetch packges over the network).</span></p><p><span id="c-26" class="cell-idx">The <span class="code">pre-commit-check.shellHook</span> generates the YAML at <span class="code">.pre-commit-config.yaml</span> for us.</span></p><div id="c-27" class="cell-idx"><div class="block-container src" id="b-6"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-6">&#x1F517;</a></div><div class="block-meta"><code><span class="bold">&#x1F3AF; .envrc</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__anon_block_number</span> = <span class="code">6</span></p></li><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">txt</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"># shellcheck shell=bash
+use nix</code></pre></div></div></div><div id="heading-container-h-3.5-Publish-to-GitHub" class="heading-container"><h3 id="h-3.5-Publish-to-GitHub"><span id="c-28" class="cell-idx"><a href="#h-3.5-Publish-to-GitHub">3.5&ensp;Publish to GitHub</a></span></h3><p><span id="c-29" class="cell-idx">The woven contents are published to <span class="code">syscfg.funloop.org</span>, with GitHub Pages. We publish the contents to a separate branch <span class="code">gh-pages</span> on the same repo.</span></p><div id="c-30" class="cell-idx"><div class="block-container src" id="b-Makefile:publish"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-Makefile:publish">&#x1F517;</a></div><div class="block-meta"><code>Makefile:publish</code></div><div class="block-meta-other hidden"><p>Used by <a href="#b-3-b-Makefile:publish" class="internal-link">Anonymous BlockCell 17</a>.</p><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">makefile</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><a href="#b-Makefile:create-tarball" class="internal-link" id="b-Makefile:publish-b-Makefile:create-tarball">Makefile:create-tarball</a>
+
+<span class="dt">PAGES_BRANCH</span> <span class="ch">:=</span><span class="st"> gh-pages</span>
+<span class="dt">PAGES_DOMAIN</span> <span class="ch">:=</span><span class="st"> syscfg.funloop.org</span>
+<span class="dt">PAGES_REMOTE</span> <span class="ch">?=</span><span class="st"> </span><span class="ch">$(</span><span class="kw">shell</span><span class="st"> git remote get-url </span><span class="ch">$$</span><span class="st">(git config branch.main.remote) || git remote get-url origin</span><span class="ch">)</span>
+<span class="dt">PAGES_GIT_NAME</span>  <span class="ch">?=</span><span class="st"> </span><span class="ch">$(</span><span class="kw">or</span><span class="st"> </span><span class="ch">$(</span><span class="kw">shell</span><span class="st"> git config user.name</span><span class="ch">)</span><span class="kw">,</span><span class="st">pages-publisher</span><span class="ch">)</span>
+<span class="dt">PAGES_GIT_EMAIL</span> <span class="ch">?=</span><span class="st"> </span><span class="ch">$(</span><span class="kw">or</span><span class="st"> </span><span class="ch">$(</span><span class="kw">shell</span><span class="st"> git config user.email</span><span class="ch">)</span><span class="kw">,</span><span class="st">pages-publisher@localhost</span><span class="ch">)</span>
+
+<span class="dv">publish:</span><span class="dt"> </span><span class="ch">$(</span><span class="dt">archive_file</span><span class="ch">)</span><span class="dt"> weave </span><span class="ch">$(</span><span class="dt">vendored</span><span class="ch">)</span>
+	rm -rf site/vendor
+	cp -r vendor site
+	touch site/.nojekyll
+	echo <span class="ch">$(</span><span class="dt">PAGES_DOMAIN</span><span class="ch">)</span> &gt; site/CNAME
+	cd site &amp;&amp; <span class="ch">\</span>
+		git add -A &amp;&amp; <span class="ch">\</span>
+		{ git diff --cached --quiet || <span class="ch">\</span>
+		  git -c user.name=<span class="st">&quot;</span><span class="ch">$(</span><span class="dt">PAGES_GIT_NAME</span><span class="ch">)</span><span class="st">&quot;</span> -c user.email=<span class="st">&quot;</span><span class="ch">$(</span><span class="dt">PAGES_GIT_EMAIL</span><span class="ch">)</span><span class="st">&quot;</span> <span class="ch">\</span>
+			commit -q -m <span class="st">&quot;update&quot;</span>; } &amp;&amp; <span class="ch">\</span>
+		git push -f <span class="st">&quot;</span><span class="ch">$(</span><span class="dt">PAGES_REMOTE</span><span class="ch">)</span><span class="st">&quot;</span> <span class="ch">$(</span><span class="dt">PAGES_BRANCH</span><span class="ch">)</span>
+	touch publish</code></pre></div></div><p><span id="c-31" class="cell-idx">The tarball is mainly composed of the site (woven contents) plus the vendored stuff.</span></p><div id="c-32" class="cell-idx"><div class="block-container src" id="b-Makefile:create-tarball"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-Makefile:create-tarball">&#x1F517;</a></div><div class="block-meta"><code>Makefile:create-tarball</code></div><div class="block-meta-other hidden"><p>Used by <a href="#b-Makefile:publish-b-Makefile:create-tarball" class="internal-link"><span class="verbatim">Makefile:publish</span></a>.</p><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">makefile</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="dt">vendored</span> <span class="ch">:=</span><span class="st"> </span><span class="ch">\</span>
+<span class="st">	vendor/source-fonts </span><span class="ch">\</span>
+<span class="st">	vendor/mathjax </span><span class="ch">\</span>
+<span class="st">	vendor/mathjax-newcm-font</span>
+
+<span class="dv">vendor/source-fonts:</span>
+	./vendor-source-fonts.sh
+
+<span class="dv">vendor/mathjax vendor/mathjax-newcm-font &amp;:</span>
+	./vendor-mathjax.sh
+
+<span class="dv">site.tar.gz:</span><span class="dt"> </span><span class="ch">$(</span><span class="dt">archive_file</span><span class="ch">)</span><span class="dt"> weave </span><span class="ch">$(</span><span class="dt">vendored</span><span class="ch">)</span>
+	rm -rf site.tar.gz site/vendor
+	cp -r vendor site
+	tar czvf site.tar.gz -C site .</code></pre></div></div><p><span id="c-33" class="cell-idx">The vendoring is needed because originally we used to publish on SourceHut, which does not allow us to pull in scripts from CDNs. SourceHut forced us to be self-contained. Lilac has a <span class="code">lilac init --only-local-imports</span> command which gives us some scripts to download MathJax and also Source fonts.</span></p><p><span id="c-34" class="cell-idx">Although we don&#39;t use SourceHut any more, we&#39;ve kept the &quot;let&#39;s keep things self-contained&quot; philosophy, for reproducibility.</span></p><div id="c-35" class="cell-idx"><div class="block-container src" id="b-vendor-mathjax.sh"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-vendor-mathjax.sh">&#x1F517;</a></div><div class="block-meta"><code>vendor-mathjax.sh</code><br><code><span class="bold">&#x1F3AF; doc/vendor-mathjax.sh</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">bash</span></p></li><li><p><span class="code">shebang</span> = <span class="code">#!/usr/bin/env bash</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="bu">set</span> <span class="at">-euo</span> pipefail
+
+<span class="va">MAIN_PACKAGE</span><span class="op">=</span><span class="st">&quot;mathjax&quot;</span>
+<span class="va">FONT_PACKAGE</span><span class="op">=</span><span class="st">&quot;mathjax-newcm-font&quot;</span>
+<span class="va">VERSION</span><span class="op">=</span><span class="st">&quot;4.1.2&quot;</span>
+
+<span class="fu">mkdir</span> <span class="at">-p</span> vendor
+<span class="bu">pushd</span> vendor
+
+<span class="fu">download_tarball()</span>
+<span class="kw">{</span>
+	<span class="bu">local</span> <span class="va">package</span>
+	<span class="bu">local</span> <span class="va">version</span>
+	<span class="bu">local</span> <span class="va">url_prefix</span>
+	<span class="bu">local</span> <span class="va">tarball</span>
+	<span class="va">package</span><span class="op">=</span><span class="st">&quot;</span><span class="va">${1</span><span class="op">:-</span><span class="va">}</span><span class="st">&quot;</span>
+	<span class="va">version</span><span class="op">=</span><span class="st">&quot;</span><span class="va">${2</span><span class="op">:-</span><span class="va">}</span><span class="st">&quot;</span>
+	<span class="va">tarball</span><span class="op">=</span><span class="st">&quot;</span><span class="va">${package}</span><span class="st">-</span><span class="va">${version}</span><span class="st">.tgz&quot;</span>
+	<span class="va">url_prefix</span><span class="op">=</span><span class="st">&quot;</span><span class="va">${3</span><span class="op">:-</span><span class="va">}</span><span class="st">&quot;</span>
+
+	<span class="cf">if</span> <span class="kw">[[</span> <span class="ot">-d</span> <span class="st">&quot;</span><span class="va">${package}</span><span class="st">&quot;</span> <span class="kw">]];</span> <span class="cf">then</span>
+		<span class="bu">echo</span> <span class="st">&quot;</span><span class="va">${package}</span><span class="st"> directory already exists&quot;</span>
+		<span class="cf">return</span> <span class="dv">1</span>
+	<span class="cf">fi</span>
+
+	<span class="ex">curl</span> <span class="at">-OL</span> <span class="st">&quot;</span><span class="va">${url_prefix}</span><span class="st">/-/</span><span class="va">${tarball}</span><span class="st">&quot;</span>
+	<span class="fu">tar</span> xzvf <span class="st">&quot;</span><span class="va">${tarball}</span><span class="st">&quot;</span>
+	<span class="fu">mv</span> package <span class="st">&quot;</span><span class="va">${package}</span><span class="st">&quot;</span>
+	<span class="fu">rm</span> <span class="st">&quot;</span><span class="va">${tarball}</span><span class="st">&quot;</span>
+<span class="kw">}</span>
+
+<span class="ex">download_tarball</span> <span class="dt">\</span>
+	<span class="st">&quot;</span><span class="va">${MAIN_PACKAGE}</span><span class="st">&quot;</span> <span class="dt">\</span>
+	<span class="st">&quot;</span><span class="va">${VERSION}</span><span class="st">&quot;</span> <span class="dt">\</span>
+	<span class="st">&quot;https://registry.npmjs.org/mathjax&quot;</span>
+<span class="ex">download_tarball</span> <span class="dt">\</span>
+	<span class="st">&quot;</span><span class="va">${FONT_PACKAGE}</span><span class="st">&quot;</span> <span class="dt">\</span>
+	<span class="st">&quot;</span><span class="va">${VERSION}</span><span class="st">&quot;</span> <span class="dt">\</span>
+	<span class="st">&quot;https://registry.npmjs.org/@mathjax/</span><span class="va">${FONT_PACKAGE}</span><span class="st">&quot;</span></code></pre></div></div><div id="c-36" class="cell-idx"><div class="block-container src" id="b-vendor-source-fonts.sh"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-vendor-source-fonts.sh">&#x1F517;</a></div><div class="block-meta"><code>vendor-source-fonts.sh</code><br><code><span class="bold">&#x1F3AF; doc/vendor-source-fonts.sh</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">bash</span></p></li><li><p><span class="code">shebang</span> = <span class="code">#!/usr/bin/env bash</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="bu">set</span> <span class="at">-euo</span> pipefail
+
+<span class="va">url_sans</span><span class="op">=</span><span class="st">&quot;https://raw.githubusercontent.com/adobe-fonts/source-sans/3.052R&quot;</span>
+<span class="va">url_serif</span><span class="op">=</span><span class="st">&quot;https://raw.githubusercontent.com/adobe-fonts/source-serif/4.005R&quot;</span>
+<span class="va">url_code</span><span class="op">=</span><span class="st">&quot;https://raw.githubusercontent.com/adobe-fonts/source-code-pro/2.042R-u%2F1.062R-i%2F1.026R-vf&quot;</span>
+
+<span class="fu">mkdir</span> <span class="at">-p</span> vendor/source-fonts
+<span class="bu">pushd</span> vendor/source-fonts
+
+<span class="ex">curl</span> <span class="at">-OL</span> <span class="st">&quot;</span><span class="va">${url_sans}</span><span class="st">/WOFF2/VF/SourceSans3VF-Italic.otf.woff2&quot;</span>
+<span class="ex">curl</span> <span class="at">-OL</span> <span class="st">&quot;</span><span class="va">${url_sans}</span><span class="st">/WOFF2/VF/SourceSans3VF-Upright.otf.woff2&quot;</span>
+
+<span class="ex">curl</span> <span class="at">-OL</span> <span class="st">&quot;</span><span class="va">${url_serif}</span><span class="st">/WOFF2/VAR/SourceSerif4Variable-Italic.otf.woff2&quot;</span>
+<span class="ex">curl</span> <span class="at">-OL</span> <span class="st">&quot;</span><span class="va">${url_serif}</span><span class="st">/WOFF2/VAR/SourceSerif4Variable-Roman.otf.woff2&quot;</span>
+
+<span class="ex">curl</span> <span class="at">-OL</span> <span class="st">&quot;</span><span class="va">${url_code}</span><span class="st">/WOFF2/VF/SourceCodeVF-Italic.otf.woff2&quot;</span>
+<span class="ex">curl</span> <span class="at">-OL</span> <span class="st">&quot;</span><span class="va">${url_code}</span><span class="st">/WOFF2/VF/SourceCodeVF-Upright.otf.woff2&quot;</span>
+
+<span class="fu">cat</span> <span class="op">&lt;&lt; EOF</span> <span class="op">&gt;</span> source-fonts.css
+<span class="st">@font-face{</span>
+<span class="st">    font-family: &#39;Source Code Pro&#39;;</span>
+<span class="st">    font-weight: 200 900;</span>
+<span class="st">    font-style: normal;</span>
+<span class="st">    font-stretch: normal;</span>
+<span class="st">    src: url(&#39;SourceCodeVF-Upright.otf.woff2&#39;) format(&#39;woff2&#39;);</span>
+<span class="st">}</span>
+
+<span class="st">@font-face{</span>
+<span class="st">    font-family: &#39;Source Code Pro&#39;;</span>
+<span class="st">    font-weight: 200 900;</span>
+<span class="st">    font-style: italic;</span>
+<span class="st">    font-stretch: normal;</span>
+<span class="st">    src: url(&#39;SourceCodeVF-Italic.otf.woff2&#39;) format(&#39;woff2&#39;);</span>
+<span class="st">}</span>
+
+<span class="st">@font-face{</span>
+<span class="st">    font-family: &#39;Source Sans 3&#39;;</span>
+<span class="st">    font-weight: 200 900;</span>
+<span class="st">    font-style: normal;</span>
+<span class="st">    font-stretch: normal;</span>
+<span class="st">    src: url(&#39;SourceSans3VF-Upright.otf.woff2&#39;) format(&#39;woff2&#39;);</span>
+<span class="st">}</span>
+
+<span class="st">@font-face{</span>
+<span class="st">    font-family: &#39;Source Sans 3&#39;;</span>
+<span class="st">    font-weight: 200 900;</span>
+<span class="st">    font-style: italic;</span>
+<span class="st">    font-stretch: normal;</span>
+<span class="st">    src: url(&#39;SourceSans3VF-Italic.otf.woff2&#39;) format(&#39;woff2&#39;);</span>
+<span class="st">}</span>
+
+<span class="st">@font-face{</span>
+<span class="st">    font-family: &#39;Source Serif 4&#39;;</span>
+<span class="st">    font-weight: 200 900;</span>
+<span class="st">    font-style: normal;</span>
+<span class="st">    font-stretch: normal;</span>
+<span class="st">    src: url(&#39;SourceSerif4Variable-Roman.otf.woff2&#39;) format(&#39;woff2&#39;);</span>
+<span class="st">}</span>
+
+<span class="st">@font-face{</span>
+<span class="st">    font-family: &#39;Source Serif 4&#39;;</span>
+<span class="st">    font-weight: 200 900;</span>
+<span class="st">    font-style: italic;</span>
+<span class="st">    font-stretch: normal;</span>
+<span class="st">    src: url(&#39;SourceSerif4Variable-Italic.otf.woff2&#39;) format(&#39;woff2&#39;);</span>
+<span class="st">}</span>
+<span class="op">EOF</span></code></pre></div></div><p><span id="c-37" class="cell-idx">Finally we need to actually use these vendored assets by referring to them in every woven HTML file. That&#39;s what we do in <a href="#b-custom-html-head" class="internal-link" id="linkNumber-4">custom-html-head</a>.</span></p><div id="c-38" class="cell-idx"><div class="block-container src" id="b-custom-html-head"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-custom-html-head">&#x1F517;</a></div><div class="block-meta"><code>custom-html-head</code></div><div class="block-meta-other hidden"><p>Used by <a href="#b-2-b-custom-html-head" class="internal-link">Anonymous BlockCell 13</a>.</p><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">toml</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="kw">[htmlHead]</span>
+<span class="dt">onlyLocalImports</span> <span class="op">=</span> <span class="cn">true</span>
+<span class="dt">injection</span> <span class="op">=</span> <span class="st">&quot;&quot;&quot;</span>
+<span class="st">&lt;link rel=&quot;stylesheet&quot; href=&quot;/vendor/source-fonts/source-fonts.css&quot;&gt;</span>
+<span class="st">&lt;script&gt;</span>
+<span class="st">  window.MathJax = {</span>
+<span class="st">      loader: { paths: { &quot;mathjax-newcm&quot;: &quot;/vendor/mathjax-newcm-font&quot; } },</span>
+<span class="st">      output: { font: &quot;mathjax-newcm&quot; },</span>
+<span class="st">  tex: {</span>
+<span class="st">      tags: &#39;ams&#39;</span>
+<span class="st">  },</span>
+<span class="st">  options: {</span>
+<span class="st">      ignoreHtmlClass: &#39;verbatim|code&#39;</span>
+<span class="st">  }</span>
+<span class="st">};</span>
+<span class="st">&lt;/script&gt;</span>
+<span class="st">&lt;script id=&quot;MathJax-script&quot; async=&quot;&quot; src=&quot;/vendor/mathjax/tex-mml-chtml.js&quot;&gt;&lt;/script&gt;</span>
+<span class="st">&quot;&quot;&quot;</span></code></pre></div></div></div><div id="heading-container-h-3.6-CI" class="heading-container"><h3 id="h-3.6-CI"><span id="c-39" class="cell-idx"><a href="#h-3.6-CI">3.6&ensp;CI</a></span></h3><p><span id="c-40" class="cell-idx">Publish the woven docs to GitHub in CI for the <span class="code">main</span> branch, so that we don&#39;t have to remember to manually invoke the publishing step from <a href="#h-3.5-Publish-to-GitHub" class="internal-link" id="linkNumber-5">Publish to GitHub</a>.</span></p><div id="c-41" class="cell-idx"><div class="block-container src" id="b-GHA-publish"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-GHA-publish">&#x1F517;</a></div><div class="block-meta"><code>GHA-publish</code><br><code><span class="bold">&#x1F3AF; .github/workflows/publish-site.yml</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">yaml</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="fu">name</span><span class="kw">:</span><span class="at"> Build and publish site</span>
+
+<span class="fu">on</span><span class="kw">:</span>
+<span class="at">  </span><span class="fu">push</span><span class="kw">:</span>
+<span class="at">    </span><span class="fu">branches</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="at">main</span><span class="kw">]</span>
+<span class="at">  </span><span class="fu">pull_request</span><span class="kw">:</span>
+<span class="at">  </span><span class="fu">workflow_dispatch</span><span class="kw">:</span>
+
+<span class="fu">permissions</span><span class="kw">:</span>
+<span class="at">  </span><span class="fu">contents</span><span class="kw">:</span><span class="at"> write</span>
+
+<span class="fu">concurrency</span><span class="kw">:</span>
+<span class="at">  </span><span class="fu">group</span><span class="kw">:</span><span class="at"> publish-site-${{ github.ref }}</span>
+<span class="at">  </span><span class="fu">cancel-in-progress</span><span class="kw">:</span><span class="at"> </span><span class="ch">false</span>
+
+<span class="fu">jobs</span><span class="kw">:</span>
+<span class="at">  </span><span class="fu">site</span><span class="kw">:</span>
+<span class="at">    </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Build, check, and publish</span>
+<span class="at">    </span><span class="fu">runs-on</span><span class="kw">:</span><span class="at"> ubuntu-latest</span>
+<span class="at">    </span><span class="fu">steps</span><span class="kw">:</span>
+<span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Check out repository</span>
+<span class="at">        </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> actions/checkout@v4</span>
+
+<span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Install Nix</span>
+<span class="at">        </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> cachix/install-nix-action@v31</span>
+
+<span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Tangle, weave, and lint</span>
+<span class="at">        </span><span class="fu">working-directory</span><span class="kw">:</span><span class="at"> doc</span>
+<span class="at">        </span><span class="fu">run</span><span class="kw">:</span><span class="at"> nix-shell .. --run &quot;make&quot;</span>
+
+<span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Check for uncommitted changes</span>
+<span class="at">        </span><span class="fu">working-directory</span><span class="kw">:</span><span class="at"> doc</span>
+<span class="fu">        run</span><span class="kw">: </span><span class="ch">|</span>
+          git diff
+          if [[ -z &quot;$(git status --porcelain)&quot; ]]; then
+            echo &quot;Clean (no untracked files either).&quot;
+          else
+            echo &quot;Modified or untracked files present.&quot;
+            exit 1
+          fi
+
+<span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Publish to gh-pages</span>
+<span class="at">        </span><span class="fu">if</span><span class="kw">:</span><span class="at"> github.ref == &#39;refs/heads/main&#39;</span>
+<span class="at">        </span><span class="fu">working-directory</span><span class="kw">:</span><span class="at"> doc</span>
+<span class="at">        </span><span class="fu">env</span><span class="kw">:</span>
+<span class="at">          </span><span class="fu">PAGES_REMOTE</span><span class="kw">:</span><span class="at"> https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git</span>
+<span class="at">          </span><span class="fu">PAGES_GIT_NAME</span><span class="kw">:</span><span class="at"> github-actions[bot]</span>
+<span class="at">          </span><span class="fu">PAGES_GIT_EMAIL</span><span class="kw">:</span><span class="at"> 41898282+github-actions[bot]@users.noreply.github.com</span>
+<span class="fu">        run</span><span class="kw">: </span><span class="ch">|</span>
+          git -C site init -q -b gh-pages
+          nix-shell .. --run &quot;make publish&quot;</code></pre></div></div></div><div id="heading-container-h-4-Other-project-settings" class="heading-container"><h2 id="h-4-Other-project-settings"><span id="c-42" class="cell-idx"><a href="#h-4-Other-project-settings">4&ensp;Other project settings</a></span></h2></div><div id="heading-container-h-4.1-.gitignore-file" class="heading-container"><h3 id="h-4.1-.gitignore-file"><span id="c-43" class="cell-idx"><a href="#h-4.1-.gitignore-file">4.1&ensp;<span class="code">.gitignore</span> file</a></span></h3><div id="c-44" class="cell-idx"><div class="block-container src" id="b-7"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-7">&#x1F517;</a></div><div class="block-meta"><code><span class="bold">&#x1F3AF; .gitignore</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__anon_block_number</span> = <span class="code">7</span></p></li><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">gitignore</span></p></li></ul></div><pre class="block-body"><code>*#
+*.aes
+*.backup
+.clj-kondo
+.direnv
+*.elc
+*.log
+*.hi
+.lsp
+.nrepl-port
+*.o
+*.pyc
+*.swp
+*.DS_Store
+*~
+*.zwc
+cache
+cmus/*
+emacs/doom-cfg/custom.el
+emacs/spell-fu/*.data
+emacs/spell-fu/*.txt
+gpg
+karabiner/assets
+karabiner/automatic_backups
+lh/target
+melby/*
+mpv/mpv.conf
+nvim/.netrwhist
+openvpn/*.ovpn
+qutebrowser/autoconfig.yml
+qutebrowser/bookmarks
+qutebrowser/quickmarks
+qutebrowser/qsettings
+doc/.srht-pages-token
+doc/site/
+doc/site.tar.gz
+doc/vendor/
+ssh/*
+target/
+tmux/resurrect
+vim/.VimballRecord
+vim/.netrwhist
+vim/colors
+vim/sessions
+wezterm/upstream
+xmonad/.cabal-sandbox
+xmonad/cabal.sandbox.config
+xmonad/dist
+xmonad/dist-newstyle
+xmonad/.stack-work
+xmonad/xmonad
+xmonad/xmonad-x86_64-linux
+xmonad/xmonad.errors
+xmonad/xmonad.state
+xmonad/xmonad-session-rc
+zsh/zcomet
+
+!.gitattributes
+!.git-orderfile
+*.lobj
+*.larc
+*.html
+*.js
+*.css
+lint
+publish
+tangle
+weave
+.pre-commit-config.yaml</code></pre></div></div></div><div id="heading-container-h-4.2-Git-attributes" class="heading-container"><h3 id="h-4.2-Git-attributes"><span id="c-45" class="cell-idx"><a href="#h-4.2-Git-attributes">4.2&ensp;Git attributes</a></span></h3><div id="c-46" class="cell-idx"><div class="block-container src" id="b-8"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-8">&#x1F517;</a></div><div class="block-meta"><code><span class="bold">&#x1F3AF; .gitattributes</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__anon_block_number</span> = <span class="code">8</span></p></li><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">txt</span></p></li></ul></div><pre class="block-body"><code class="sourceCode">*.html -diff
+doc/css/default.css -diff
+doc/js/lilac.js -diff</code></pre></div></div></div><div id="heading-container-h-4.3-Git-orderfile" class="heading-container"><h3 id="h-4.3-Git-orderfile"><span id="c-47" class="cell-idx"><a href="#h-4.3-Git-orderfile">4.3&ensp;Git orderfile</a></span></h3><p><span id="c-48" class="cell-idx">Make <span class="code">git-diff</span> show the Org files first.</span></p><div id="c-49" class="cell-idx"><div class="block-container src" id="b-git-orderfile"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-git-orderfile">&#x1F517;</a></div><div class="block-meta"><code>git-orderfile</code><br><code><span class="bold">&#x1F3AF; .git-orderfile</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">txt</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"># Org files
+doc/index.org
+*.org</code></pre></div></div></div><div id="heading-container-h-4.4-.rgignore-file" class="heading-container"><h3 id="h-4.4-.rgignore-file"><span id="c-50" class="cell-idx"><a href="#h-4.4-.rgignore-file">4.4&ensp;<span class="code">.rgignore</span> file</a></span></h3><div id="c-51" class="cell-idx"><div class="block-container src" id="b-9"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-9">&#x1F517;</a></div><div class="block-meta"><code><span class="bold">&#x1F3AF; .rgignore</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__anon_block_number</span> = <span class="code">9</span></p></li><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">rgignore</span></p></li></ul></div><pre class="block-body"><code>bash/
+clojure/
+emacs/doom-upstream
+zsh/zcomet-upstream</code></pre></div></div></div><div id="heading-container-h-4.5-EditorConfig" class="heading-container"><h3 id="h-4.5-EditorConfig"><span id="c-52" class="cell-idx"><a href="#h-4.5-EditorConfig">4.5&ensp;EditorConfig</a></span></h3><div id="c-53" class="cell-idx"><div class="block-container src" id="b-10"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-10">&#x1F517;</a></div><div class="block-meta"><code><span class="bold">&#x1F3AF; .editorconfig</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__anon_block_number</span> = <span class="code">10</span></p></li><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">txt</span></p></li></ul></div><pre class="block-body"><code class="sourceCode">root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+[*.{sh},Makefile]
+indent_style = tab
+tab_width = 8
+
+[qutebrowser.conf]
+trim_trailing_whitespace = false
+
+[zsh/.zshrc]
+end_of_line = unset
+
+[COMMIT_EDITMSG]
+max_line_length = 72</code></pre></div></div></div><div id="heading-container-h-5-Plan" class="heading-container"><h2 id="h-5-Plan"><span id="c-54" class="cell-idx"><a href="#h-5-Plan">5&ensp;Plan</a></span></h2></div><div id="heading-container-h-5.1-TODO-add-CI--publish-step-" class="heading-container"><h3 id="h-5.1-TODO-add-CI--publish-step-"><span id="c-55" class="cell-idx"><a href="#h-5.1-TODO-add-CI--publish-step-">5.1&ensp;TODO add CI (publish step)</a></span></h3></div><div id="heading-container-h-5.2-TODO-pre-commit:-add-spellchecker--cspell--to-linter" class="heading-container"><h3 id="h-5.2-TODO-pre-commit:-add-spellchecker--cspell--to-linter"><span id="c-56" class="cell-idx"><a href="#h-5.2-TODO-pre-commit:-add-spellchecker--cspell--to-linter">5.2&ensp;TODO pre-commit: add spellchecker (cspell) to linter</a></span></h3></div><div id="heading-container-h-5.3-TODO-pre-commit:-add-formatter-linter-for-emacs-lisp" class="heading-container"><h3 id="h-5.3-TODO-pre-commit:-add-formatter-linter-for-emacs-lisp"><span id="c-57" class="cell-idx"><a href="#h-5.3-TODO-pre-commit:-add-formatter-linter-for-emacs-lisp">5.3&ensp;TODO pre-commit: add formatter linter for emacs lisp</a></span></h3></div><div id="heading-container-h-5.4-TODO-pre-commit:-add-ormolu-formatter-for-Haskell" class="heading-container"><h3 id="h-5.4-TODO-pre-commit:-add-ormolu-formatter-for-Haskell"><span id="c-58" class="cell-idx"><a href="#h-5.4-TODO-pre-commit:-add-ormolu-formatter-for-Haskell">5.4&ensp;TODO pre-commit: add ormolu formatter for Haskell</a></span></h3></div><div id="heading-container-h-5.5-TODO-pre-commit:-add-nixfmt-formatter-to-linter" class="heading-container"><h3 id="h-5.5-TODO-pre-commit:-add-nixfmt-formatter-to-linter"><span id="c-59" class="cell-idx"><a href="#h-5.5-TODO-pre-commit:-add-nixfmt-formatter-to-linter">5.5&ensp;TODO pre-commit: add nixfmt formatter to linter</a></span></h3></div><div id="heading-container-h-5.6-TODO-migrate-everything--at-least-superficially--to-lilac" class="heading-container"><h3 id="h-5.6-TODO-migrate-everything--at-least-superficially--to-lilac"><span id="c-60" class="cell-idx"><a href="#h-5.6-TODO-migrate-everything--at-least-superficially--to-lilac">5.6&ensp;TODO migrate everything (at least superficially) to lilac</a></span></h3><p><span id="c-61" class="cell-idx">This basically means chipping away at <a href="#ll--nonTangledPathspecs-" class="internal-link" id="linkNumber-6"><span class="bold">1</span></a> to make it much leaner. That is, the only reason that section is so long is because most of those paths are not tangled from Org files.</span></p></div><div id="heading-container-h--Page-metrics" class="heading-container page-metrics"><h2 id="h--Page-metrics"><a href="#h--Page-metrics">Page metrics</a></h2></div><div id="heading-container-h--Backlinks" class="heading-container backlinks"><h3 id="h--Backlinks"><a href="#h--Backlinks">Backlinks (0)</a></h3></div><div id="heading-container-h--Tangled-files" class="heading-container tangled-blocks"><h3 id="h--Tangled-files"><a href="#h--Tangled-files">Tangled files (13)</a></h3><ol><li><a href="#b-10" class="verbatim">.editorconfig</a></li><li><a href="#b-6" class="verbatim">.envrc</a></li><li><a href="#b-git-orderfile" class="verbatim">.git-orderfile</a></li><li><a href="#b-8" class="verbatim">.gitattributes</a></li><li><a href="#b-GHA-publish" class="verbatim">.github/workflows/publish-site.yml</a></li><li><a href="#b-7" class="verbatim">.gitignore</a></li><li><a href="#b-9" class="verbatim">.rgignore</a></li><li><a href="#b-4" class="verbatim">Makefile</a></li><li><a href="#b-2" class="verbatim">doc/Lilac.toml</a></li><li><a href="#b-3" class="verbatim">doc/Makefile</a></li><li><a href="#b-vendor-mathjax.sh" class="verbatim">doc/vendor-mathjax.sh</a></li><li><a href="#b-vendor-source-fonts.sh" class="verbatim">doc/vendor-source-fonts.sh</a></li><li><a href="#b-5" class="verbatim">shell.nix</a></li></ol></div><div id="heading-container-h--Named-cells" class="heading-container named-cells"><h3 id="h--Named-cells"><a href="#h--Named-cells">Named cells (9)</a></h3><ol><li><a href="#b-GHA-publish"><span class="verbatim">GHA-publish</span></a></li><li><a href="#b-Makefile:create-tarball"><span class="verbatim">Makefile:create-tarball</span></a></li><li><a href="#b-Makefile:publish"><span class="verbatim">Makefile:publish</span></a></li><li><a href="#b-custom-html-head"><span class="verbatim">custom-html-head</span></a></li><li><a href="#b-git-orderfile"><span class="verbatim">git-orderfile</span></a></li><li><a href="#b-lilac-version"><span class="verbatim">lilac-version</span></a></li><li><a href="#b-nixos-version"><span class="verbatim">nixos-version</span></a></li><li><a href="#b-vendor-mathjax.sh"><span class="verbatim">vendor-mathjax.sh</span></a></li><li><a href="#b-vendor-source-fonts.sh"><span class="verbatim">vendor-source-fonts.sh</span></a></li></ol></div><footer><div class="lilac-stamp">Generated by <a href="https://syscfg.funloop.org" class="external-link" target="_blank" rel="noopener noreferrer">Lilac</a></div></footer></main><script id="heading-ancestry" type="application/json">{"h--Backlinks":["h--Page-metrics"],"h--Named-cells":["h--Page-metrics"],"h--Page-metrics":[],"h--Tangled-files":["h--Page-metrics"],"h-1-Installation":[],"h-2-Known-Issues":[],"h-3-Build-system":[],"h-3.1-Lilac-project-configuration":["h-3-Build-system"],"h-3.2-Literate-Makefile":["h-3-Build-system"],"h-3.3-Makefile-for-installing-dotfiles":["h-3-Build-system"],"h-3.4-Dependencies-via-Nix":["h-3-Build-system"],"h-3.5-Publish-to-GitHub":["h-3-Build-system"],"h-3.6-CI":["h-3-Build-system"],"h-4-Other-project-settings":[],"h-4.1-.gitignore-file":["h-4-Other-project-settings"],"h-4.2-Git-attributes":["h-4-Other-project-settings"],"h-4.3-Git-orderfile":["h-4-Other-project-settings"],"h-4.4-.rgignore-file":["h-4-Other-project-settings"],"h-4.5-EditorConfig":["h-4-Other-project-settings"],"h-5-Plan":[],"h-5.1-TODO-add-CI--publish-step-":["h-5-Plan"],"h-5.2-TODO-pre-commit:-add-spellchecker--cspell--to-linter":["h-5-Plan"],"h-5.3-TODO-pre-commit:-add-formatter-linter-for-emacs-lisp":["h-5-Plan"],"h-5.4-TODO-pre-commit:-add-ormolu-formatter-for-Haskell":["h-5-Plan"],"h-5.5-TODO-pre-commit:-add-nixfmt-formatter-to-linter":["h-5-Plan"],"h-5.6-TODO-migrate-everything--at-least-superficially--to-lilac":["h-5-Plan"]}</script><script id="lilac-fe-script" src="/js/lilac.js"></script></body></html>

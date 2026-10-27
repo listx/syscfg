@@ -1,0 +1,391 @@
+<!DOCTYPE HTML><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Git</title><link rel="stylesheet" href="/css/default.css"><link rel="shortcut icon" type="image/png" href="/favicon.png"><link rel="stylesheet" href="/vendor/source-fonts/source-fonts.css">
+<script>
+  window.MathJax = {
+      loader: { paths: { "mathjax-newcm": "/vendor/mathjax-newcm-font" } },
+      output: { font: "mathjax-newcm" },
+  tex: {
+      tags: 'ams'
+  },
+  options: {
+      ignoreHtmlClass: 'verbatim|code'
+  }
+};
+</script>
+<script id="MathJax-script" async="" src="/vendor/mathjax/tex-mml-chtml.js"></script>
+</head><body><div class="navbar"><button id="hamburger" class="tocs-toggle-button" aria-label="Toggle table of contents sidebar">&#x2630;</button><div class="breadcrumbs"><a href="https://syscfg.funloop.org"><span class="breadcrumb">Linus Arver&#39;s Dotfiles</span></a> <span class="breadcrumb-separator">/</span> <a href="#top"><span class="breadcrumb">git.org</span></a></div></div><nav id="tocs"><p class="widget-title gtoc-title">Site contents</p><nav class="gtoc"><ul><li><a href="/index.html">Introduction</a></li><li><a href="/bash.html">Bash</a></li><li><a href="/clojure.html">Clojure</a></li><li><a href="/emacs.html">Emacs</a></li><li><a href="/git.html" class="bold">Git</a></li><li><a href="/jj.html">Jujutsu</a></li><li><a href="/keybindings.html">Keybindings (WIP)</a></li><li><a href="/nix.html">Nix</a></li><li><a href="/notmuch.html">Notmuch</a></li><li><a href="/tmux.html">tmux</a></li><li><a href="/wezterm.html">Wezterm</a></li></ul></nav><p class="widget-title toc-title">Page contents</p><nav class="toc"><div class="toc-entries"><ol><li class="toc-level-1"><div class="toc-entry"><span class="toc-counter">1</span><a href="#h-1-Overview">Overview</a></div></li><li class="toc-level-1"><div class="toc-entry"><span class="toc-counter">2</span><a href="#h-2-Email">Email</a></div></li><li class="toc-level-1"><div class="toc-entry"><span class="toc-counter">3</span><a href="#h-3-Diffs">Diffs</a></div><ol><li class="toc-level-2"><div class="toc-entry"><span class="toc-counter">3.1</span><a href="#h-3.1-Build-system">Build system</a></div></li></ol></li><li class="toc-level-1"><div class="toc-entry"><span class="toc-counter">4</span><a href="#h-4-tig"><span class="code">tig</span></a></div><ol><li class="toc-level-2"><div class="toc-entry"><span class="toc-counter">4.1</span><a href="#h-4.1-Getting-the-commit-info">Getting the commit info</a></div></li></ol></li><li class="toc-level-1"><div class="toc-entry"><a href="#h--Page-metrics">Page metrics</a></div><ol><li class="toc-level-2"><div class="toc-entry"><a href="#h--Backlinks">Backlinks</a></div></li><li class="toc-level-2"><div class="toc-entry"><a href="#h--Tangled-files">Tangled files</a></div></li><li class="toc-level-2"><div class="toc-entry"><a href="#h--Named-cells">Named cells</a></div></li></ol></li></ol></div></nav></nav><main><h1 id="top">Git</h1><hr class="title-underline"><div id="heading-container-h-1-Overview" class="heading-container"><h2 id="h-1-Overview"><span id="c-0" class="cell-idx"><a href="#h-1-Overview">1&ensp;Overview</a></span></h2><div id="c-1" class="cell-idx"><div class="block-container src" id="b-1"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-1">&#x1F517;</a></div><div class="block-meta"><code><span class="bold">&#x1F3AF; git/cfg.personal.conf</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__anon_block_number</span> = <span class="code">1</span></p></li><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">gitconfig</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="kw">[user]</span>
+<span class="dt">	name </span><span class="ot">=</span><span class="st"> Linus Arver</span>
+<span class="dt">	email </span><span class="ot">=</span><span class="st"> linus@ucla.edu</span>
+<span class="kw">[clone]</span>
+<span class="dt">	defaultRemoteName </span><span class="ot">=</span><span class="st"> u</span>
+<span class="kw">[color]</span>
+<span class="dt">	branch </span><span class="ot">=</span><span class="st"> auto</span>
+<span class="dt">	diff </span><span class="ot">=</span><span class="st"> auto</span>
+<span class="dt">	status </span><span class="ot">=</span><span class="st"> auto</span>
+<span class="kw">[color &quot;diff&quot;]</span>
+<span class="dt">	meta </span><span class="ot">=</span><span class="st"> yellow bold</span>
+<span class="dt">	commit </span><span class="ot">=</span><span class="st"> blue bold reverse</span>
+<span class="kw">[color &quot;status&quot;]</span>
+<span class="dt">	untracked </span><span class="ot">=</span><span class="st"> yellow bold</span>
+<span class="kw">[commit]</span>
+<span class="dt">	cleanup </span><span class="ot">=</span><span class="st"> scissors</span>
+<span class="kw">[core]</span>
+<span class="dt">	editor </span><span class="ot">=</span><span class="st"> ~/syscfg/script/emacsclient-tty.sh</span>
+<span class="dt">	excludesFile </span><span class="ot">=</span><span class="st"> ~/.gitignore</span>
+<span class="dt">	hooksPath </span><span class="ot">=</span><span class="st"> ~/syscfg/script/git/hooks</span>
+<span class="kw">[diff]</span>
+<span class="dt">	algorithm </span><span class="ot">=</span><span class="st"> histogram</span>
+<span class="dt">	colorMoved </span><span class="ot">=</span><span class="st"> </span><span class="kw">default</span>
+<span class="dt">	colorMovedWS </span><span class="ot">=</span><span class="st"> allow-indentation-change</span>
+<span class="dt">	context </span><span class="ot">=</span><span class="st"> </span><span class="dv">5</span>
+<span class="dt">	tool </span><span class="ot">=</span><span class="st"> difftastic</span>
+<span class="kw">[difftool]</span>
+<span class="dt">	prompt </span><span class="ot">=</span><span class="st"> </span><span class="kw">false</span>
+<span class="kw">[difftool &quot;difftastic&quot;]</span>
+<span class="dt">	cmd </span><span class="ot">=</span><span class="st"> difft &quot;$LOCAL&quot; &quot;$REMOTE&quot;</span>
+<span class="kw">[gui]</span>
+<span class="dt">	spellingdictionary </span><span class="ot">=</span><span class="st"> none</span>
+<span class="kw">[init]</span>
+<span class="dt">	defaultBranch </span><span class="ot">=</span><span class="st"> main</span>
+<span class="kw">[merge]</span>
+<span class="dt">	conflictStyle </span><span class="ot">=</span><span class="st"> zdiff3</span>
+<span class="kw">[pager]</span>
+<span class="dt">	difftool </span><span class="ot">=</span><span class="st"> </span><span class="kw">true</span>
+<span class="kw">[push]</span>
+<span class="dt">	default </span><span class="ot">=</span><span class="st"> simple</span>
+<span class="dt">	autoSetupRemote </span><span class="ot">=</span><span class="st"> </span><span class="kw">true</span>
+<span class="kw">[rebase]</span>
+<span class="dt">	updateRefs </span><span class="ot">=</span><span class="st"> </span><span class="kw">true</span>
+<span class="kw">[rerere]</span>
+<span class="dt">	enabled </span><span class="ot">=</span><span class="st"> </span><span class="kw">true</span>
+<span class="kw">[sendemail]</span>
+<span class="dt">	aliasesFile </span><span class="ot">=</span><span class="st"> ~/.git-sendemail-aliases</span>
+<span class="dt">	aliasFileType </span><span class="ot">=</span><span class="st"> mailrc</span>
+<span class="dt">	chainReplyTo </span><span class="ot">=</span><span class="st"> </span><span class="kw">false</span>
+<span class="dt">	sendmailCmd </span><span class="ot">=</span><span class="st"> &quot;gmi send --quiet -t -C ~/mail/linusarver@gmail.com&quot;</span>
+<span class="dt">	suppressCc </span><span class="ot">=</span><span class="st"> self</span>
+<span class="kw">[tag]</span>
+<span class="dt">	sort </span><span class="ot">=</span><span class="st"> taggerdate</span>
+<span class="kw">[tig]</span>
+<span class="dt">	vertical-split </span><span class="ot">=</span><span class="st"> </span><span class="kw">false</span></code></pre></div></div><div id="c-2" class="cell-idx"><div class="block-container src" id="b-Makefile-git"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-Makefile-git">&#x1F517;</a></div><div class="block-meta"><code>Makefile-git</code></div><div class="block-meta-other hidden"><p>Used by index.org→<a href="/index.html#b-4-b-Makefile-git" class="internal-link">Anonymous BlockCell 20</a>.</p><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">makefile</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="dv">git:</span>
+	ln -fs <span class="ch">${</span><span class="dt">C</span><span class="ch">}</span>/git/cfg.personal.conf <span class="ch">${</span><span class="dt">H</span><span class="ch">}</span>/.gitconfig
+	ln -fs <span class="ch">${</span><span class="dt">C</span><span class="ch">}</span>/git/sendemail-aliases <span class="ch">${</span><span class="dt">H</span><span class="ch">}</span>/.git-sendemail-aliases</code></pre></div></div></div><div id="heading-container-h-2-Email" class="heading-container"><h2 id="h-2-Email"><span id="c-3" class="cell-idx"><a href="#h-2-Email">2&ensp;Email</a></span></h2><div id="c-4" class="cell-idx"><div class="block-container src" id="b-2"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-2">&#x1F517;</a></div><div class="block-meta"><code><span class="bold">&#x1F3AF; git/sendemail-aliases</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__anon_block_number</span> = <span class="code">2</span></p></li><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">txt</span></p></li></ul></div><pre class="block-body"><code class="sourceCode">alias git git@vger.kernel.org</code></pre></div></div></div><div id="heading-container-h-3-Diffs" class="heading-container"><h2 id="h-3-Diffs"><span id="c-5" class="cell-idx"><a href="#h-3-Diffs">3&ensp;Diffs</a></span></h2><p><span id="c-6" class="cell-idx">By default running <span class="code">git diff</span> gives you paged output, and sometimes it can be tricky to remember whether the diff was of the worktree or the index (what&#39;s been staged, if you passed the <span class="code">-c</span> flag).</span></p><p><span id="c-7" class="cell-idx">It would be nice if you could put a vertical label showing &quot;worktree&quot; or &quot;index&quot; to tell you which diff you were looking at. Below is a Rust program which does this (it uses the label &quot;CHANGED&quot; and &quot;STAGED&quot; instead of &quot;worktree&quot; or &quot;index&quot;).</span></p><div id="c-8" class="cell-idx"><div class="block-container src" id="b-3"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-3">&#x1F517;</a></div><div class="block-meta"><code><span class="bold">&#x1F3AF; gd/src/main.rs</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__anon_block_number</span> = <span class="code">3</span></p></li><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">rust</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="kw">use</span> <span class="pp">clap::</span><span class="op">{</span>Arg<span class="op">,</span> ArgAction<span class="op">,</span> Command<span class="op">};</span>
+<span class="kw">use</span> <span class="pp">colored::</span><span class="op">*;</span>
+<span class="kw">use</span> <span class="pp">std::borrow::</span>Cow<span class="op">;</span>
+<span class="kw">use</span> <span class="pp">std::process::</span>Command <span class="kw">as</span> SCommand<span class="op">;</span>
+
+<span class="kw">fn</span> main() <span class="op">-&gt;</span> <span class="dt">Result</span><span class="op">&lt;</span>()<span class="op">,</span> <span class="dt">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="pp">std::error::</span><span class="bu">Error</span><span class="op">&gt;&gt;</span> <span class="op">{</span>
+    <span class="kw">let</span> cmd <span class="op">=</span> <span class="pp">clap::Command::</span>new(<span class="st">&quot;gd&quot;</span>)
+        <span class="op">.</span>version(<span class="st">&quot;v0.0&quot;</span>)
+        <span class="op">.</span>propagate_version(<span class="cn">true</span>)
+        <span class="op">.</span>subcommand_required(<span class="cn">true</span>)
+        <span class="op">.</span>arg_required_else_help(<span class="cn">true</span>)
+        <span class="op">.</span>subcommand(
+            <span class="pp">Command::</span>new(<span class="st">&quot;diff&quot;</span>)
+                <span class="op">.</span>about(<span class="st">&quot;Show git unstaged and staged diffs.&quot;</span>)
+                <span class="op">.</span>arg(
+                    <span class="pp">Arg::</span>new(<span class="st">&quot;width&quot;</span>)
+                        <span class="op">.</span>long(<span class="st">&quot;width&quot;</span>)
+                        <span class="op">.</span>value_name(<span class="st">&quot;NUM&quot;</span>)
+                        <span class="op">.</span>default_value(<span class="st">&quot;80&quot;</span>)
+                        <span class="op">.</span>help(<span class="st">&quot;With of the terminal screen; used for coloring in missing trailing whitespace for better legibility. Default 80.&quot;</span>)
+                        <span class="op">.</span>takes_value(<span class="cn">true</span>)
+                        <span class="op">.</span>required(<span class="cn">false</span>)<span class="op">,</span>
+                )
+                <span class="op">.</span>arg(
+                    <span class="pp">Arg::</span>new(<span class="st">&quot;staged&quot;</span>)
+                        <span class="op">.</span>long(<span class="st">&quot;staged&quot;</span>)
+                        <span class="op">.</span>help(<span class="st">&quot;Whether to get staged diff.&quot;</span>)
+                        <span class="op">.</span>action(<span class="pp">ArgAction::</span>SetTrue)<span class="op">,</span>
+                )<span class="op">,</span>
+        )<span class="op">;</span>
+    <span class="kw">let</span> matches <span class="op">=</span> cmd<span class="op">.</span>get_matches()<span class="op">;</span>
+    <span class="cf">match</span> matches<span class="op">.</span>subcommand_name() <span class="op">{</span>
+        <span class="cn">Some</span>(<span class="st">&quot;diff&quot;</span>) <span class="op">=&gt;</span> <span class="op">{</span>
+            <span class="cf">if</span> <span class="kw">let</span> <span class="cn">Some</span>(m) <span class="op">=</span> matches<span class="op">.</span>subcommand_matches(<span class="st">&quot;diff&quot;</span>) <span class="op">{</span>
+                <span class="kw">let</span> width <span class="op">=</span> m
+                    <span class="op">.</span><span class="pp">get_one::</span><span class="op">&lt;</span><span class="dt">String</span><span class="op">&gt;</span>(<span class="st">&quot;width&quot;</span>)
+                    <span class="op">.</span>unwrap()
+                    <span class="op">.</span><span class="pp">parse::</span><span class="op">&lt;</span><span class="dt">usize</span><span class="op">&gt;</span>()
+                    <span class="op">.</span>unwrap()<span class="op">;</span>
+                <span class="kw">let</span> staged <span class="op">=</span> m<span class="op">.</span><span class="pp">get_one::</span><span class="op">&lt;</span><span class="dt">bool</span><span class="op">&gt;</span>(<span class="st">&quot;staged&quot;</span>)<span class="op">.</span>unwrap()<span class="op">;</span>
+                <span class="kw">let</span> diff <span class="op">=</span> <span class="cf">if</span> <span class="op">*</span>staged <span class="op">{</span>
+                    <span class="pp">SCommand::</span>new(<span class="st">&quot;git&quot;</span>)
+                        <span class="op">.</span>args([<span class="st">&quot;diff&quot;</span><span class="op">,</span> <span class="st">&quot;--staged&quot;</span>])
+                        <span class="op">.</span>output()
+                        <span class="op">.</span>expect(<span class="st">&quot;git command failed to start&quot;</span>)
+                <span class="op">}</span> <span class="cf">else</span> <span class="op">{</span>
+                    <span class="pp">SCommand::</span>new(<span class="st">&quot;git&quot;</span>)
+                        <span class="op">.</span>args([<span class="st">&quot;diff&quot;</span>])
+                        <span class="op">.</span>output()
+                        <span class="op">.</span>expect(<span class="st">&quot;git command failed to start&quot;</span>)
+                <span class="op">};</span>
+
+                <span class="pp">colored::control::</span>set_override(<span class="cn">true</span>)<span class="op">;</span>
+                show_diff(
+                    <span class="op">&amp;</span>diff<span class="op">.</span>stdout<span class="op">,</span>
+                    <span class="op">&amp;</span>width<span class="op">,</span>
+                    <span class="cf">if</span> <span class="op">*</span>staged <span class="op">{</span>
+                        <span class="st">&quot; STAGED ---------------------- &quot;</span>
+                    <span class="op">}</span> <span class="cf">else</span> <span class="op">{</span>
+                        <span class="st">&quot; CHANGED --------------------- &quot;</span>
+                    <span class="op">},</span>
+                    <span class="op">*</span>staged<span class="op">,</span>
+                )<span class="op">;</span>
+            <span class="op">}</span>
+        <span class="op">}</span>
+        _ <span class="op">=&gt;</span> <span class="pp">unreachable!</span>(<span class="st">&quot;clap should ensure we don&#39;t get here&quot;</span>)<span class="op">,</span>
+    <span class="op">}</span>
+    <span class="cn">Ok</span>(())
+<span class="op">}</span>
+
+<span class="kw">fn</span> show_diff(output<span class="op">:</span> <span class="op">&amp;</span><span class="dt">Vec</span><span class="op">&lt;</span><span class="dt">u8</span><span class="op">&gt;,</span> width<span class="op">:</span> <span class="op">&amp;</span><span class="dt">usize</span><span class="op">,</span> vlabel<span class="op">:</span> <span class="op">&amp;</span><span class="dt">str</span><span class="op">,</span> staged<span class="op">:</span> <span class="dt">bool</span>) <span class="op">-&gt;</span> () <span class="op">{</span>
+    <span class="co">// We convert tabs into 4 spaces. This should ideally only</span>
+    <span class="co">// affect leading indentation, but we are too lazy to fix this</span>
+    <span class="co">// because 99.999% of the time literal tabs are only found in</span>
+    <span class="co">// the leading indentation anyway.</span>
+    <span class="kw">let</span> diff_output <span class="op">=</span> <span class="dt">String</span><span class="pp">::</span>from_utf8_lossy(output)<span class="op">.</span>replace(<span class="st">&quot;</span><span class="sc">\t</span><span class="st">&quot;</span><span class="op">,</span> <span class="st">&quot;    &quot;</span>)<span class="op">;</span>
+
+    <span class="co">// Split output lines, then for each line: (1) prepend the</span>
+    <span class="co">// vertical label char and (2) depending on leading +/- char</span>
+    <span class="co">// colorize the text fg and bg.</span>
+
+    <span class="kw">let</span> divider <span class="op">=</span> <span class="st">&quot; &quot;</span><span class="op">.</span>on_truecolor(<span class="dv">0</span><span class="op">,</span> <span class="dv">0</span><span class="op">,</span> <span class="dv">0</span>)<span class="op">;</span>
+
+    <span class="kw">let</span> <span class="kw">mut</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span>
+    <span class="cf">for</span> line <span class="kw">in</span> diff_output<span class="op">.</span>lines() <span class="op">{</span>
+        <span class="kw">let</span> <span class="kw">mut</span> words_iter <span class="op">=</span> line<span class="op">.</span>split_ascii_whitespace()<span class="op">;</span>
+        <span class="kw">let</span> (eline<span class="op">,</span> escaped) <span class="op">=</span> escape(line)<span class="op">;</span>
+
+        <span class="kw">let</span> cline <span class="op">=</span> <span class="cf">if</span> line<span class="op">.</span>len() <span class="op">&gt;</span> <span class="dv">0</span> <span class="op">{</span>
+            <span class="cf">if</span> line<span class="op">.</span>chars()<span class="op">.</span>nth(<span class="dv">0</span>)<span class="op">.</span>unwrap()<span class="op">.</span>is_ascii_whitespace() <span class="op">{</span>
+                <span class="pp">format!</span>(<span class="st">&quot; {}&quot;</span><span class="op">,</span> eline)<span class="op">.</span>normal()
+            <span class="op">}</span> <span class="cf">else</span> <span class="op">{</span>
+                <span class="cf">match</span> words_iter<span class="op">.</span>next() <span class="op">{</span>
+                    <span class="cn">Some</span>(<span class="st">&quot;diff&quot;</span>) <span class="op">=&gt;</span> <span class="pp">format!</span>(<span class="st">&quot; {}&quot;</span><span class="op">,</span> eline)
+                        <span class="op">.</span>bold()
+                        <span class="op">.</span>truecolor(<span class="dv">255</span><span class="op">,</span> <span class="dv">255</span><span class="op">,</span> <span class="dv">0</span>)
+                        <span class="op">.</span>on_truecolor(<span class="dv">85</span><span class="op">,</span> <span class="dv">85</span><span class="op">,</span> <span class="dv">51</span>)<span class="op">,</span>
+                    <span class="cn">Some</span>(<span class="st">&quot;index&quot;</span>) <span class="op">=&gt;</span> <span class="pp">format!</span>(<span class="st">&quot; {}&quot;</span><span class="op">,</span> eline)
+                        <span class="op">.</span>bold()
+                        <span class="op">.</span>truecolor(<span class="dv">255</span><span class="op">,</span> <span class="dv">255</span><span class="op">,</span> <span class="dv">0</span>)
+                        <span class="op">.</span>on_truecolor(<span class="dv">85</span><span class="op">,</span> <span class="dv">85</span><span class="op">,</span> <span class="dv">51</span>)<span class="op">,</span>
+                    <span class="cn">Some</span>(<span class="st">&quot;---&quot;</span>) <span class="op">=&gt;</span> <span class="pp">format!</span>(<span class="st">&quot; {}&quot;</span><span class="op">,</span> eline)
+                        <span class="op">.</span>bold()
+                        <span class="op">.</span>truecolor(<span class="dv">255</span><span class="op">,</span> <span class="dv">255</span><span class="op">,</span> <span class="dv">0</span>)
+                        <span class="op">.</span>on_truecolor(<span class="dv">85</span><span class="op">,</span> <span class="dv">85</span><span class="op">,</span> <span class="dv">51</span>)<span class="op">,</span>
+                    <span class="cn">Some</span>(<span class="st">&quot;+++&quot;</span>) <span class="op">=&gt;</span> <span class="pp">format!</span>(<span class="st">&quot; {}&quot;</span><span class="op">,</span> eline)
+                        <span class="op">.</span>bold()
+                        <span class="op">.</span>truecolor(<span class="dv">255</span><span class="op">,</span> <span class="dv">255</span><span class="op">,</span> <span class="dv">0</span>)
+                        <span class="op">.</span>on_truecolor(<span class="dv">85</span><span class="op">,</span> <span class="dv">85</span><span class="op">,</span> <span class="dv">51</span>)<span class="op">,</span>
+
+                    <span class="co">// This is not identical to git-diff (the latter does</span>
+                    <span class="co">// not colorize the entire line), but this is close</span>
+                    <span class="co">// enough.</span>
+                    <span class="cn">Some</span>(<span class="st">&quot;@@&quot;</span>) <span class="op">=&gt;</span> <span class="pp">format!</span>(<span class="st">&quot; {}&quot;</span><span class="op">,</span> eline)<span class="op">.</span>cyan()<span class="op">,</span>
+
+                    <span class="co">// It could be that the word looks like &quot;+foo&quot; if &quot;foo&quot; is at the</span>
+                    <span class="co">// beginning of the eline. In this case we have to check for the</span>
+                    <span class="co">// first letter.</span>
+                    <span class="cn">Some</span>(w) <span class="op">=&gt;</span> <span class="cf">match</span> <span class="op">&amp;</span>w[<span class="dv">0</span><span class="op">..</span><span class="dv">1</span>] <span class="op">{</span>
+                        <span class="st">&quot;+&quot;</span> <span class="op">=&gt;</span> <span class="pp">format!</span>(<span class="st">&quot; {}&quot;</span><span class="op">,</span> eline)
+                            <span class="op">.</span>truecolor(<span class="dv">204</span><span class="op">,</span> <span class="dv">255</span><span class="op">,</span> <span class="dv">204</span>)
+                            <span class="op">.</span>on_truecolor(<span class="dv">51</span><span class="op">,</span> <span class="dv">85</span><span class="op">,</span> <span class="dv">51</span>)
+                            <span class="op">.</span>bold()<span class="op">,</span>
+                        <span class="st">&quot;-&quot;</span> <span class="op">=&gt;</span> <span class="pp">format!</span>(<span class="st">&quot; {}&quot;</span><span class="op">,</span> eline)
+                            <span class="op">.</span>truecolor(<span class="dv">255</span><span class="op">,</span> <span class="dv">204</span><span class="op">,</span> <span class="dv">204</span>)
+                            <span class="op">.</span>on_truecolor(<span class="dv">85</span><span class="op">,</span> <span class="dv">51</span><span class="op">,</span> <span class="dv">51</span>)
+                            <span class="op">.</span>bold()<span class="op">,</span>
+                        _ <span class="op">=&gt;</span> <span class="pp">format!</span>(<span class="st">&quot; {}&quot;</span><span class="op">,</span> eline)<span class="op">.</span>normal()<span class="op">,</span>
+                    <span class="op">},</span>
+
+                    <span class="cn">None</span> <span class="op">=&gt;</span> <span class="pp">format!</span>(<span class="st">&quot; {}&quot;</span><span class="op">,</span> eline)<span class="op">.</span>normal()<span class="op">,</span>
+                <span class="op">}</span>
+            <span class="op">}</span>
+        <span class="op">}</span> <span class="cf">else</span> <span class="op">{</span>
+            <span class="st">&quot;&quot;</span><span class="op">.</span>normal()
+        <span class="op">};</span>
+
+        <span class="co">// vlabel_part is surrounded with 3 spaces, for a total of 4 chars. We</span>
+        <span class="co">// also have to bump the width because each escaped character fools</span>
+        <span class="co">// println!() into thinking that the string is 1 char larger than it</span>
+        <span class="co">// really is.</span>
+        <span class="kw">let</span> rwidth <span class="op">=</span> width <span class="op">-</span> <span class="dv">4</span> <span class="op">+</span> escaped<span class="op">;</span>
+        <span class="kw">let</span> vlabel_part <span class="op">=</span> <span class="cf">match</span> <span class="op">&amp;</span>vlabel[i<span class="op">..</span>i <span class="op">+</span> <span class="dv">1</span>] <span class="op">{</span>
+            <span class="st">&quot; &quot;</span> <span class="op">=&gt;</span> <span class="op">{</span>
+                <span class="cf">if</span> staged <span class="op">{</span>
+                    <span class="st">&quot;   &quot;</span><span class="op">.</span>truecolor(<span class="dv">255</span><span class="op">,</span> <span class="dv">0</span><span class="op">,</span> <span class="dv">255</span>)<span class="op">.</span>on_truecolor(<span class="dv">81</span><span class="op">,</span> <span class="dv">51</span><span class="op">,</span> <span class="dv">81</span>)
+                <span class="op">}</span> <span class="cf">else</span> <span class="op">{</span>
+                    <span class="st">&quot;   &quot;</span><span class="op">.</span>truecolor(<span class="dv">0</span><span class="op">,</span> <span class="dv">255</span><span class="op">,</span> <span class="dv">255</span>)<span class="op">.</span>on_truecolor(<span class="dv">51</span><span class="op">,</span> <span class="dv">81</span><span class="op">,</span> <span class="dv">81</span>)
+                <span class="op">}</span>
+            <span class="op">}</span>
+            <span class="st">&quot;-&quot;</span> <span class="op">=&gt;</span> <span class="op">{</span>
+                <span class="cf">if</span> staged <span class="op">{</span>
+                    <span class="st">&quot; </span><span class="sc">\u{2503}</span><span class="st"> &quot;</span><span class="op">.</span>truecolor(<span class="dv">255</span><span class="op">,</span> <span class="dv">0</span><span class="op">,</span> <span class="dv">255</span>)<span class="op">.</span>on_truecolor(<span class="dv">81</span><span class="op">,</span> <span class="dv">51</span><span class="op">,</span> <span class="dv">81</span>)
+                <span class="op">}</span> <span class="cf">else</span> <span class="op">{</span>
+                    <span class="st">&quot; </span><span class="sc">\u{2503}</span><span class="st"> &quot;</span><span class="op">.</span>truecolor(<span class="dv">0</span><span class="op">,</span> <span class="dv">255</span><span class="op">,</span> <span class="dv">255</span>)<span class="op">.</span>on_truecolor(<span class="dv">51</span><span class="op">,</span> <span class="dv">81</span><span class="op">,</span> <span class="dv">81</span>)
+                <span class="op">}</span>
+            <span class="op">}</span>
+            c <span class="op">=&gt;</span> <span class="op">{</span>
+                <span class="cf">if</span> staged <span class="op">{</span>
+                    <span class="pp">format!</span>(<span class="st">&quot; {} &quot;</span><span class="op">,</span> c)
+                        <span class="op">.</span>truecolor(<span class="dv">255</span><span class="op">,</span> <span class="dv">0</span><span class="op">,</span> <span class="dv">255</span>)
+                        <span class="op">.</span>on_truecolor(<span class="dv">81</span><span class="op">,</span> <span class="dv">51</span><span class="op">,</span> <span class="dv">81</span>)
+                <span class="op">}</span> <span class="cf">else</span> <span class="op">{</span>
+                    <span class="pp">format!</span>(<span class="st">&quot; {} &quot;</span><span class="op">,</span> c)
+                        <span class="op">.</span>truecolor(<span class="dv">0</span><span class="op">,</span> <span class="dv">255</span><span class="op">,</span> <span class="dv">255</span>)
+                        <span class="op">.</span>on_truecolor(<span class="dv">51</span><span class="op">,</span> <span class="dv">81</span><span class="op">,</span> <span class="dv">81</span>)
+                <span class="op">}</span>
+            <span class="op">}</span>
+        <span class="op">};</span>
+        <span class="pp">println!</span>(<span class="st">&quot;{}{}{:rwidth$}&quot;</span><span class="op">,</span> vlabel_part<span class="op">,</span> divider<span class="op">,</span> cline)<span class="op">;</span>
+        i <span class="op">=</span> (i <span class="op">+</span> <span class="dv">1</span>) <span class="op">%</span> vlabel<span class="op">.</span>len()<span class="op">;</span>
+    <span class="op">}</span>
+<span class="op">}</span>
+
+<span class="co">// Escapes a string to be fed into println!(). E.g., &quot;foo\bar&quot; becomes</span>
+<span class="co">// &quot;foo\\bar&quot;.</span>
+<span class="co">//</span>
+<span class="co">// Adapted from</span>
+<span class="co">// https://github.com/njaard/sonnerie/blob/e6b82eed3d5ba53c2e667172985df9a967056b5d/escape_string/src/lib.rs#L166.</span>
+<span class="kw">fn</span> escape<span class="op">&lt;</span><span class="ot">&#39;a</span><span class="op">&gt;</span>(text<span class="op">:</span> <span class="op">&amp;</span><span class="ot">&#39;a</span> <span class="dt">str</span>) <span class="op">-&gt;</span> (Cow<span class="op">&lt;</span><span class="ot">&#39;a</span><span class="op">,</span> <span class="dt">str</span><span class="op">&gt;,</span> <span class="dt">usize</span>) <span class="op">{</span>
+    <span class="kw">let</span> bytes <span class="op">=</span> text<span class="op">.</span>as_bytes()<span class="op">;</span>
+
+    <span class="kw">let</span> <span class="kw">mut</span> owned <span class="op">=</span> <span class="cn">None</span><span class="op">;</span>
+    <span class="kw">let</span> <span class="kw">mut</span> escaped <span class="op">=</span> <span class="dv">0</span><span class="op">;</span>
+
+    <span class="cf">for</span> pos <span class="kw">in</span> <span class="dv">0</span><span class="op">..</span>bytes<span class="op">.</span>len() <span class="op">{</span>
+        <span class="kw">let</span> special <span class="op">=</span> <span class="cf">match</span> bytes[pos] <span class="op">{</span>
+            <span class="ch">b&#39;%&#39;</span> <span class="op">=&gt;</span> <span class="cn">Some</span>(<span class="ch">b&#39;%&#39;</span>)<span class="op">,</span>
+            <span class="ch">b&#39;</span><span class="sc">\\</span><span class="ch">&#39;</span> <span class="op">=&gt;</span> <span class="cn">Some</span>(<span class="ch">b&#39;</span><span class="sc">\\</span><span class="ch">&#39;</span>)<span class="op">,</span>
+            _ <span class="op">=&gt;</span> <span class="cn">None</span><span class="op">,</span>
+        <span class="op">};</span>
+        <span class="cf">if</span> <span class="kw">let</span> <span class="cn">Some</span>(s) <span class="op">=</span> special <span class="op">{</span>
+            <span class="cf">if</span> owned<span class="op">.</span>is_none() <span class="op">{</span>
+                owned <span class="op">=</span> <span class="cn">Some</span>(bytes[<span class="dv">0</span><span class="op">..</span>pos]<span class="op">.</span>to_owned())<span class="op">;</span>
+            <span class="op">}</span>
+            owned<span class="op">.</span>as_mut()<span class="op">.</span>unwrap()<span class="op">.</span>push(s)<span class="op">;</span>
+            owned<span class="op">.</span>as_mut()<span class="op">.</span>unwrap()<span class="op">.</span>push(s)<span class="op">;</span>
+            escaped <span class="op">=</span> escaped <span class="op">+</span> <span class="dv">1</span><span class="op">;</span>
+        <span class="op">}</span> <span class="cf">else</span> <span class="cf">if</span> <span class="kw">let</span> <span class="cn">Some</span>(owned) <span class="op">=</span> owned<span class="op">.</span>as_mut() <span class="op">{</span>
+            owned<span class="op">.</span>push(bytes[pos])<span class="op">;</span>
+        <span class="op">}</span>
+    <span class="op">}</span>
+
+    <span class="cf">if</span> <span class="kw">let</span> <span class="cn">Some</span>(owned) <span class="op">=</span> owned <span class="op">{</span>
+        (
+            <span class="kw">unsafe</span> <span class="op">{</span> <span class="pp">Cow::</span>Owned(<span class="dt">String</span><span class="pp">::</span>from_utf8_unchecked(owned)) <span class="op">},</span>
+            escaped<span class="op">,</span>
+        )
+    <span class="op">}</span> <span class="cf">else</span> <span class="op">{</span>
+        (
+            <span class="kw">unsafe</span> <span class="op">{</span> <span class="pp">Cow::</span>Borrowed(<span class="pp">std::</span><span class="dt">str</span><span class="pp">::</span>from_utf8_unchecked(bytes)) <span class="op">},</span>
+            escaped<span class="op">,</span>
+        )
+    <span class="op">}</span>
+<span class="op">}</span></code></pre></div></div></div><div id="heading-container-h-3.1-Build-system" class="heading-container"><h3 id="h-3.1-Build-system"><span id="c-9" class="cell-idx"><a href="#h-3.1-Build-system">3.1&ensp;Build system</a></span></h3><div id="c-10" class="cell-idx"><div class="block-container src" id="b-4"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-4">&#x1F517;</a></div><div class="block-meta"><code><span class="bold">&#x1F3AF; gd/Makefile</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__anon_block_number</span> = <span class="code">4</span></p></li><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">makefile</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="dv">all:</span>
+	cargo install --profile release --path .
+<span class="dv">build:</span>
+	cargo build
+<span class="dv">test:</span>
+	cargo test</code></pre></div></div><div id="c-11" class="cell-idx"><div class="block-container src" id="b-5"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-5">&#x1F517;</a></div><div class="block-meta"><code><span class="bold">&#x1F3AF; gd/Cargo.toml</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__anon_block_number</span> = <span class="code">5</span></p></li><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">toml</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="kw">[package]</span>
+<span class="dt">name</span> <span class="op">=</span> <span class="st">&quot;gd&quot;</span>
+<span class="dt">version</span> <span class="op">=</span> <span class="st">&quot;0.1.0&quot;</span>
+<span class="dt">edition</span> <span class="op">=</span> <span class="st">&quot;2021&quot;</span>
+
+<span class="co"># See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html</span>
+
+<span class="kw">[dependencies]</span>
+<span class="dt">clap</span> <span class="op">=</span> <span class="op">{ </span><span class="dt">version</span><span class="op"> =</span> <span class="st">&quot;3.1.0&quot;</span><span class="op">, </span><span class="dt">features</span><span class="op"> =</span> <span class="op">[</span><span class="st">&quot;cargo&quot;</span><span class="op">]}</span>
+<span class="dt">colored</span> <span class="op">=</span> <span class="st">&quot;2&quot;</span></code></pre></div></div><div id="c-12" class="cell-idx"><div class="block-container src" id="b-6"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-6">&#x1F517;</a></div><div class="block-meta"><code><span class="bold">&#x1F3AF; Cargo.toml</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__anon_block_number</span> = <span class="code">6</span></p></li><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">toml</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="kw">[workspace]</span>
+<span class="dt">members</span> <span class="op">=</span> <span class="op">[</span>
+    <span class="st">&quot;gd&quot;</span>
+<span class="op">]</span>
+
+<span class="dt">resolver</span> <span class="op">=</span> <span class="st">&quot;2&quot;</span>
+
+<span class="kw">[profile.release]</span>
+<span class="co"># Strip all symbols.</span>
+<span class="dt">strip</span> <span class="op">=</span> <span class="cn">true</span>
+<span class="co"># Bring in other optimizations to reduce binary size.</span>
+<span class="dt">debug</span> <span class="op">=</span> <span class="cn">false</span>
+<span class="dt">opt-level</span> <span class="op">=</span> <span class="st">&#39;</span><span class="vs">z</span><span class="st">&#39;</span>
+<span class="dt">codegen-units</span> <span class="op">=</span> <span class="dv">1</span>
+<span class="dt">lto</span> <span class="op">=</span> <span class="cn">true</span>
+<span class="dt">panic</span> <span class="op">=</span> <span class="st">&#39;</span><span class="vs">abort</span><span class="st">&#39;</span></code></pre></div></div></div><div id="heading-container-h-4-tig" class="heading-container"><h2 id="h-4-tig"><span id="c-13" class="cell-idx"><a href="#h-4-tig">4&ensp;<span class="code">tig</span></a></span></h2><div id="c-14" class="cell-idx"><div class="block-container src" id="b-7"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-7">&#x1F517;</a></div><div class="block-meta"><code><span class="bold">&#x1F3AF; tig/.tigrc</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__anon_block_number</span> = <span class="code">7</span></p></li><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">conf</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="co"># Appearance.</span>
+<span class="dt">color</span> <span class="dt">cursor</span> <span class="dt">16</span> <span class="dt">green</span> <span class="dt">bold</span>
+<span class="dt">color</span> <span class="dt">title-blur</span> <span class="dt">16</span> <span class="dt">blue</span> <span class="dt">bold</span>
+<span class="dt">color</span> <span class="dt">title-focus</span> <span class="dt">16</span> <span class="dt">blue</span> <span class="dt">bold</span>
+
+<span class="dt">set</span> <span class="dt">blame-view</span> <span class="op">=</span> <span class="dt">date</span><span class="er">:</span><span class="dt">relative-compact</span> <span class="dt">author</span><span class="er">:</span><span class="dt">abbreviated</span><span class="er">,</span><span class="dt">maxwidth</span><span class="op">=</span><span class="dv">5</span> <span class="dt">id</span><span class="er">:</span><span class="dt">width</span><span class="op">=</span><span class="dv">8</span><span class="er">,</span><span class="dt">color</span> <span class="dt">line-number</span><span class="er">:</span><span class="dt">yes</span><span class="er">,</span><span class="dt">interval</span><span class="op">=</span><span class="dv">1</span> <span class="dt">text</span>
+<span class="dt">set</span> <span class="dt">main-view</span>  <span class="op">=</span> <span class="dt">date</span><span class="er">:</span><span class="dt">relative-compact</span> <span class="dt">author</span><span class="er">:</span><span class="dt">abbreviated</span><span class="er">,</span><span class="dt">maxwidth</span><span class="op">=</span><span class="dv">5</span> <span class="dt">id</span><span class="er">:</span><span class="dt">width</span><span class="op">=</span><span class="dv">8</span> <span class="dt">commit-title</span><span class="er">:</span><span class="dt">yes</span><span class="er">,</span><span class="dt">graph</span><span class="er">,</span><span class="dt">refs</span>
+<span class="dt">set</span> <span class="dt">tree-view</span>  <span class="op">=</span> <span class="dt">date</span><span class="er">:</span><span class="dt">relative-compact</span> <span class="dt">author</span><span class="er">:</span><span class="dt">abbreviated</span><span class="er">,</span><span class="dt">maxwidth</span><span class="op">=</span><span class="dv">5</span> <span class="dt">id</span><span class="er">:</span><span class="dt">width</span><span class="op">=</span><span class="dv">8</span> <span class="dt">file-name</span>
+<span class="dt">set</span> <span class="dt">refs-view</span>  <span class="op">=</span> <span class="dt">date</span><span class="er">:</span><span class="dt">relative-compact</span> <span class="dt">author</span><span class="er">:</span><span class="dt">abbreviated</span><span class="er">,</span><span class="dt">maxwidth</span><span class="op">=</span><span class="dv">5</span> <span class="dt">id</span><span class="er">:</span><span class="dt">width</span><span class="op">=</span><span class="dv">8</span> <span class="dt">ref</span> <span class="dt">commit-title</span>
+
+<span class="dt">set</span> <span class="dt">line-graphics</span> <span class="op">=</span> <span class="dt">utf-8</span>
+<span class="dt">set</span> <span class="dt">blame-options</span> <span class="op">=</span> <span class="dt">-w</span>
+
+<span class="co"># Only show the top 500 commits.</span>
+<span class="dt">set</span> <span class="dt">main-options</span> <span class="op">=</span> <span class="dt">-n500</span>
+
+<span class="co"># Only show commits in the main view (don&#39;t show spurious, non-committed</span>
+<span class="co"># changes).</span>
+<span class="dt">set</span> <span class="dt">show-changes</span> <span class="op">=</span> <span class="dt">no</span>
+
+<span class="co"># Disable conflicting keybindings (otherwise tig complains).</span>
+<span class="dt">bind</span> <span class="dt">generic</span> <span class="er">&lt;</span><span class="dt">Ctrl-Y</span><span class="er">&gt;</span> <span class="dt">none</span>
+<span class="dt">bind</span> <span class="dt">generic</span> <span class="dt">J</span> <span class="dt">none</span>
+<span class="dt">bind</span> <span class="dt">generic</span> <span class="dt">K</span> <span class="dt">none</span>
+<span class="dt">bind</span> <span class="dt">generic</span> <span class="er">&lt;</span><span class="dt">Ctrl-j</span><span class="er">&gt;</span> <span class="dt">none</span>
+<span class="dt">bind</span> <span class="dt">generic</span> <span class="er">&lt;</span><span class="dt">Ctrl-k</span><span class="er">&gt;</span> <span class="dt">none</span>
+<span class="co"># Disable unused bindings. Otherwise they clutter up the [help] view.</span>
+<span class="dt">bind</span> <span class="dt">generic</span> <span class="dt">-</span> <span class="dt">none</span>
+<span class="dt">bind</span> <span class="dt">generic</span> <span class="er">&lt;</span><span class="dt">Ctrl-e</span><span class="er">&gt;</span> <span class="dt">none</span>
+<span class="dt">bind</span> <span class="dt">generic</span> <span class="er">&lt;</span><span class="dt">Insert</span><span class="er">&gt;</span> <span class="dt">none</span>
+<span class="dt">bind</span> <span class="dt">generic</span> <span class="er">&lt;</span><span class="dt">Delete</span><span class="er">&gt;</span> <span class="dt">none</span>
+<span class="dt">bind</span> <span class="dt">generic</span> <span class="er">&lt;</span><span class="dt">Ctrl-c</span><span class="er">&gt;</span> <span class="dt">none</span>
+<span class="dt">bind</span> <span class="dt">generic</span> <span class="dt">s</span> <span class="dt">none</span>
+
+<span class="co"># Keybindings.</span>
+<span class="dt">bind</span> <span class="dt">generic</span> <span class="er">,</span> <span class="dt">none</span>
+<span class="dt">bind</span> <span class="dt">generic</span> <span class="dt">h</span> <span class="dt">parent</span>
+
+<span class="dt">bind</span> <span class="dt">generic</span> <span class="er">&lt;</span><span class="dt">LessThan</span><span class="er">&gt;</span> <span class="dt">none</span>
+<span class="dt">bind</span> <span class="dt">generic</span> <span class="dt">l</span> <span class="dt">back</span>
+
+<span class="dt">bind</span> <span class="dt">generic</span> <span class="er">&lt;</span><span class="dt">Ctrl-n</span><span class="er">&gt;</span> <span class="dt">none</span>
+<span class="dt">bind</span> <span class="dt">generic</span> <span class="er">&lt;</span><span class="dt">Ctrl-j</span><span class="er">&gt;</span> <span class="dt">next</span>
+
+<span class="dt">bind</span> <span class="dt">generic</span> <span class="er">&lt;</span><span class="dt">Ctrl-p</span><span class="er">&gt;</span> <span class="dt">none</span>
+<span class="dt">bind</span> <span class="dt">generic</span> <span class="er">&lt;</span><span class="dt">Ctrl-k</span><span class="er">&gt;</span> <span class="dt">previous</span>
+
+<span class="dt">bind</span> <span class="dt">generic</span> <span class="er">&lt;</span><span class="dt">Ctrl-h</span><span class="er">&gt;</span> <span class="dt">view-help</span>
+<span class="dt">bind</span> <span class="dt">generic</span> <span class="dt">o</span> <span class="dt">view-log</span>
+
+<span class="co"># Copy 40-char hex string of commit.</span>
+<span class="dt">bind</span> <span class="dt">generic</span> <span class="dt">y</span> <span class="er">+</span><span class="dt">bash</span> <span class="dt">-c</span> <span class="dt">&quot;git rev-parse %(commit) \</span>
+  <span class="er">|</span> <span class="dt">head</span> <span class="dt">-c</span> <span class="dt">-1</span> <span class="er">\</span>
+  <span class="er">|</span> <span class="er">~/</span><span class="dt">syscfg</span><span class="er">/</span><span class="dt">script</span><span class="er">/</span><span class="dt">copy-clipboard.sh&quot;</span>
+
+<span class="er"><a href="#b-bind:copy-commit-human-friendly" class="internal-link" id="b-7-b-bind:copy-commit-human-friendly">bind:copy-commit-human-friendly</a></span>
+
+<span class="co"># Same as above, but as an Org-style link. &lt;Esc&gt;y means Alt+y (M-y in Emacs).</span>
+<span class="dt">bind</span> <span class="dt">generic</span> <span class="er">&lt;</span><span class="dt">Esc</span><span class="er">&gt;</span><span class="dt">y</span> <span class="er">+</span><span class="dt">bash</span> <span class="dt">-c</span> <span class="dt">&quot;git rev-parse %(commit) \</span>
+  <span class="er">|</span> <span class="dt">head</span> <span class="dt">-c</span> <span class="dt">-1</span> <span class="er">\</span>
+  <span class="er">|</span> <span class="er">~/</span><span class="dt">syscfg</span><span class="er">/</span><span class="dt">script</span><span class="er">/</span><span class="dt">git</span><span class="er">/</span><span class="dt">ref-to-org-link.sh</span> <span class="er">\</span>
+  <span class="er">|</span> <span class="er">~/</span><span class="dt">syscfg</span><span class="er">/</span><span class="dt">script</span><span class="er">/</span><span class="dt">copy-clipboard.sh&quot;</span>
+
+<span class="co"># Copy commit message.</span>
+<span class="dt">bind</span> <span class="dt">generic</span> <span class="er">&lt;</span><span class="dt">Ctrl-y</span><span class="er">&gt;</span> <span class="er">+</span><span class="dt">bash</span> <span class="dt">-c</span> <span class="dt">&quot;git cat-file commit %(commit) \</span>
+  <span class="er">|</span> <span class="dt">sed</span> <span class="dt">-e</span> <span class="dt">&#39;1,/^$/d&#39;</span> <span class="er">\</span>
+  <span class="er">|</span> <span class="er">~/</span><span class="dt">syscfg</span><span class="er">/</span><span class="dt">script</span><span class="er">/</span><span class="dt">copy-clipboard.sh&quot;</span>
+
+<span class="co"># Force branch to point to current commit.</span>
+<span class="dt">bind</span> <span class="dt">main</span>    <span class="dt">B</span> <span class="er">?+</span><span class="dt">git</span> <span class="dt">branch</span> <span class="dt">-f</span> <span class="dt">&quot;%(prompt Force branch to point here: )&quot;</span> <span class="er">%(</span><span class="dt">commit</span><span class="er">)</span>
+
+<span class="dt">bind</span> <span class="dt">generic</span> <span class="dt">R</span> <span class="dt">none</span>
+<span class="dt">bind</span> <span class="dt">generic</span> <span class="er">&lt;</span><span class="dt">F5</span><span class="er">&gt;</span> <span class="dt">none</span>
+<span class="dt">bind</span> <span class="dt">generic</span> <span class="er">&lt;</span><span class="dt">Ctrl-r</span><span class="er">&gt;</span> <span class="dt">refresh</span>
+
+<span class="dt">bind</span> <span class="dt">main</span>    <span class="dt">R</span> <span class="er">!</span><span class="dt">git</span> <span class="dt">-c</span> <span class="dt">commit.verbose</span><span class="op">=</span><span class="cn">true</span> <span class="dt">rebase</span> <span class="dt">-i</span> <span class="er">%(</span><span class="dt">commit</span><span class="er">)</span>
+<span class="dt">bind</span> <span class="dt">generic</span> <span class="er">&lt;</span><span class="dt">Backspace</span><span class="er">&gt;</span> <span class="dt">move-page-up</span></code></pre></div></div></div><div id="heading-container-h-4.1-Getting-the-commit-info" class="heading-container"><h3 id="h-4.1-Getting-the-commit-info"><span id="c-15" class="cell-idx"><a href="#h-4.1-Getting-the-commit-info">4.1&ensp;Getting the commit info</a></span></h3><p><span id="c-16" class="cell-idx">Get human-friendly commit information, like</span></p><div id="c-17" class="cell-idx"><div class="block-container example" id="b-8"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-8">&#x1F517;</a></div><div class="block-meta-other hidden top-rounded"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__anon_block_number</span> = <span class="code">8</span></p></li><li><p><span class="code">__block_type</span> = <span class="code">example</span></p></li></ul></div><pre class="block-body anonymous fully-rounded"><code>commit 55d4c735 (&quot;explain the primary reason behind why we have CI&quot;, 2026-07-25)</code></pre></div></div><p><span id="c-18" class="cell-idx">This syntax is similar to what is supported in the Linux Kernel documentation for it to be automatically linked.</span></p><div id="c-19" class="cell-idx"><div class="block-container src" id="b-bind:copy-commit-human-friendly"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-bind:copy-commit-human-friendly">&#x1F517;</a></div><div class="block-meta"><code>bind:copy-commit-human-friendly</code></div><div class="block-meta-other hidden"><p>Used by <a href="#b-7-b-bind:copy-commit-human-friendly" class="internal-link">Anonymous BlockCell 14</a>.</p><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">conf</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="dt">bind</span> <span class="dt">generic</span> <span class="dt">Y</span> <span class="er">+</span><span class="dt">bash</span> <span class="dt">-c</span> <span class="dt">&quot;git show %(commit) --no-patch --pretty=&#39;format:commit %C(auto)%h (</span><span class="sc">\&quot;</span><span class="dt">%s</span><span class="sc">\&quot;</span><span class="dt">, %cd)&#39; --date=short \</span>
+  <span class="er">|</span> <span class="er">~/</span><span class="dt">syscfg</span><span class="er">/</span><span class="dt">script</span><span class="er">/</span><span class="dt">copy-clipboard.sh&quot;</span></code></pre></div></div></div><div id="heading-container-h--Page-metrics" class="heading-container page-metrics"><h2 id="h--Page-metrics"><a href="#h--Page-metrics">Page metrics</a></h2></div><div id="heading-container-h--Backlinks" class="heading-container backlinks"><h3 id="h--Backlinks"><a href="#h--Backlinks">Backlinks (0)</a></h3></div><div id="heading-container-h--Tangled-files" class="heading-container tangled-blocks"><h3 id="h--Tangled-files"><a href="#h--Tangled-files">Tangled files (7)</a></h3><ol><li><a href="#b-6" class="verbatim">Cargo.toml</a></li><li><a href="#b-5" class="verbatim">gd/Cargo.toml</a></li><li><a href="#b-4" class="verbatim">gd/Makefile</a></li><li><a href="#b-3" class="verbatim">gd/src/main.rs</a></li><li><a href="#b-1" class="verbatim">git/cfg.personal.conf</a></li><li><a href="#b-2" class="verbatim">git/sendemail-aliases</a></li><li><a href="#b-7" class="verbatim">tig/.tigrc</a></li></ol></div><div id="heading-container-h--Named-cells" class="heading-container named-cells"><h3 id="h--Named-cells"><a href="#h--Named-cells">Named cells (2)</a></h3><ol><li><a href="#b-Makefile-git"><span class="verbatim">Makefile-git</span></a></li><li><a href="#b-bind:copy-commit-human-friendly"><span class="verbatim">bind:copy-commit-human-friendly</span></a></li></ol></div><footer><div class="lilac-stamp">Generated by <a href="https://syscfg.funloop.org" class="external-link" target="_blank" rel="noopener noreferrer">Lilac</a></div></footer></main><script id="heading-ancestry" type="application/json">{"h--Backlinks":["h--Page-metrics"],"h--Named-cells":["h--Page-metrics"],"h--Page-metrics":[],"h--Tangled-files":["h--Page-metrics"],"h-1-Overview":[],"h-2-Email":[],"h-3-Diffs":[],"h-3.1-Build-system":["h-3-Diffs"],"h-4-tig":[],"h-4.1-Getting-the-commit-info":["h-4-tig"]}</script><script id="lilac-fe-script" src="/js/lilac.js"></script></body></html>

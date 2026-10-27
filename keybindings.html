@@ -1,0 +1,91 @@
+<!DOCTYPE HTML><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Keybindings (WIP)</title><link rel="stylesheet" href="/css/default.css"><link rel="shortcut icon" type="image/png" href="/favicon.png"><link rel="stylesheet" href="/vendor/source-fonts/source-fonts.css">
+<script>
+  window.MathJax = {
+      loader: { paths: { "mathjax-newcm": "/vendor/mathjax-newcm-font" } },
+      output: { font: "mathjax-newcm" },
+  tex: {
+      tags: 'ams'
+  },
+  options: {
+      ignoreHtmlClass: 'verbatim|code'
+  }
+};
+</script>
+<script id="MathJax-script" async="" src="/vendor/mathjax/tex-mml-chtml.js"></script>
+</head><body><div class="navbar"><button id="hamburger" class="tocs-toggle-button" aria-label="Toggle table of contents sidebar">&#x2630;</button><div class="breadcrumbs"><a href="https://syscfg.funloop.org"><span class="breadcrumb">Linus Arver&#39;s Dotfiles</span></a> <span class="breadcrumb-separator">/</span> <a href="#top"><span class="breadcrumb">keybindings.org</span></a></div></div><nav id="tocs"><p class="widget-title gtoc-title">Site contents</p><nav class="gtoc"><ul><li><a href="/index.html">Introduction</a></li><li><a href="/bash.html">Bash</a></li><li><a href="/clojure.html">Clojure</a></li><li><a href="/emacs.html">Emacs</a></li><li><a href="/git.html">Git</a></li><li><a href="/jj.html">Jujutsu</a></li><li><a href="/keybindings.html" class="bold">Keybindings (WIP)</a></li><li><a href="/nix.html">Nix</a></li><li><a href="/notmuch.html">Notmuch</a></li><li><a href="/tmux.html">tmux</a></li><li><a href="/wezterm.html">Wezterm</a></li></ul></nav><p class="widget-title toc-title">Page contents</p><nav class="toc"><div class="toc-entries"><ol><li class="toc-level-1"><div class="toc-entry"><span class="toc-counter">1</span><a href="#h-1-Introduction">Introduction</a></div></li><li class="toc-level-1"><div class="toc-entry"><span class="toc-counter">2</span><a href="#h-2-Keyboard-input--stack-">Keyboard input &quot;stack&quot;</a></div></li><li class="toc-level-1"><div class="toc-entry"><span class="toc-counter">3</span><a href="#h-3-Xkb-layer">Xkb layer</a></div></li><li class="toc-level-1"><div class="toc-entry"><a href="#h--Page-metrics">Page metrics</a></div><ol><li class="toc-level-2"><div class="toc-entry"><a href="#h--Backlinks">Backlinks</a></div></li><li class="toc-level-2"><div class="toc-entry"><a href="#h--Tangled-files">Tangled files</a></div></li><li class="toc-level-2"><div class="toc-entry"><a href="#h--Named-cells">Named cells</a></div></li></ol></li></ol></div></nav></nav><main><h1 id="top">Keybindings (WIP)</h1><hr class="title-underline"><div id="heading-container-h-1-Introduction" class="heading-container"><h2 id="h-1-Introduction"><span id="c-0" class="cell-idx"><a href="#h-1-Introduction">1&ensp;Introduction</a></span></h2><p><span id="c-1" class="cell-idx">This page discusses keybindings. Much of the discussion will be about keybindings in the terminal, because that&#39;s where I spend most of my time.</span></p><p><span id="c-2" class="cell-idx">I&#39;m writing this page because only talking about keybindings within a single application is just scratching the surface. Ultimately you have to start from the hardware (which physical keyboard layout you use, etc) in order to get a more complete picture.</span></p></div><div id="heading-container-h-2-Keyboard-input--stack-" class="heading-container"><h2 id="h-2-Keyboard-input--stack-"><span id="c-3" class="cell-idx"><a href="#h-2-Keyboard-input--stack-">2&ensp;Keyboard input &quot;stack&quot;</a></span></h2><p><span id="c-4" class="cell-idx">The list below summarizes my keyboard input &quot;stack&quot;. Because I spend most of my development/writing time inside terminal Emacs, every single keypress goes through this stack.</span></p><ol><li><p><span id="c-6" class="cell-idx">Custom Esrille firmware (keyboard hardware)</span></p><p><span id="c-7" class="cell-idx">I <a href="https://funloop.org/post/2019-11-13-esrille-nisse-three-years-later.html" class="external-link" id="linkNumber-1">still use</a> the <a href="https://www.esrille.com/keyboard/" class="external-link" id="linkNumber-2">Esrille Nisse</a>, which I&#39;ve modified to use my own keyboard input layout. That is, I don&#39;t use QWERTY or DVORAK or COLEMAK on this keyboard, but rather my <a href="https://github.com/listx/new-keyboard" class="external-link" id="linkNumber-3">own layout</a> which I&#39;ve loaded onto the 2 keyboards I have for this.</span></p><p><span id="c-8" class="cell-idx">Granted, I only use the Nisse for my home PC. On my laptop I just use plain old QWERTY.</span></p></li><li><p><span id="c-10" class="cell-idx">(Linux only) xkb layer</span></p><p><span id="c-11" class="cell-idx">On Linux I use X (I should move toward a more modern stack, like Hyprland, but this still works so... that&#39;s what I use). <a href="#b-xenv.sh" class="internal-link" id="linkNumber-4">xenv.sh</a> is where we have the first level of modifications to how the keyboard should behave. All X programs obviously inherit the settings set in that script.</span></p></li><li><p><span id="c-13" class="cell-idx">(Linux only) XMonad</span></p><p><span id="c-14" class="cell-idx"><a href="/xmonad.html" class="internal-link" id="linkNumber-5">XMonad</a> is my tiling window manager for my Linux PC. I wrote quite a lot of extensive customizations around it, but alas I don&#39;t really use these features much any more, because of tmux.</span></p></li><li><p><span id="c-16" class="cell-idx">(Mac only) Karabiner</span></p><p><span id="c-17" class="cell-idx">Karabiner is useful because it can remap some fundamental keys like CTRL and ALT. On Mac I just plug in a regular QWERTY keyboard and it&#39;s useful to remap some of these modifiers so that they are more comfortable to press.</span></p></li><li><p><span id="c-19" class="cell-idx">WezTerm</span></p></li><li><p><span id="c-21" class="cell-idx">tmux</span></p></li><li><p><span id="c-23" class="cell-idx">Zsh</span></p></li><li><p><span id="c-25" class="cell-idx">Emacs (or another terminal application)</span></p></li></ol></div><div id="heading-container-h-3-Xkb-layer" class="heading-container"><h2 id="h-3-Xkb-layer"><span id="c-27" class="cell-idx"><a href="#h-3-Xkb-layer">3&ensp;Xkb layer</a></span></h2><div id="c-28" class="cell-idx"><div class="block-container src" id="b-xenv.sh"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-xenv.sh">&#x1F517;</a></div><div class="block-meta"><code>xenv.sh</code><br><code><span class="bold">&#x1F3AF; xmonad/xenv.sh</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">sh</span></p></li><li><p><span class="code">shebang</span> = <span class="code">#!/bin/sh</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="co"># Set up keyboard and X environment.</span>
+<span class="co">#</span>
+<span class="co"># The most importnat thing we do here is that we disable Caps_Lock from behaving</span>
+<span class="co"># like a &quot;Lock&quot; key, convert it to behave as a Hyper_L key, and then add Hyper_L</span>
+<span class="co"># to its own unique modifer group, mod3 (mod3 is unused by default). We use mod3</span>
+<span class="co"># as our XMonad key as &quot;mod3Mask&quot; in xmonad.hs.</span>
+<span class="co">#</span>
+<span class="co"># We don&#39;t background any of these X API calls to ensure a deterministic manner</span>
+<span class="co"># of execution.</span>
+
+<span class="co"># Set keyboard layout to us-intl (altgr variant). This way we can type letters</span>
+<span class="co"># like &quot;é&quot; easily.</span>
+<span class="ex">setxkbmap</span> <span class="dt">\</span>
+	<span class="at">-rules</span> evdev <span class="dt">\</span>
+	<span class="at">-model</span> evdev <span class="dt">\</span>
+	<span class="at">-layout</span> us <span class="dt">\</span>
+	<span class="at">-variant</span> altgr-intl <span class="dt">\</span>
+	<span class="at">-option</span> <span class="st">&quot;terminate:ctrl_alt_bksp&quot;</span>
+
+<span class="co"># Convert Caps_Lock into Hyper_L key, and also map it to &quot;mod3&quot; modifier group</span>
+<span class="co"># (used exclusively by XMonad, because virtually no userspace programs make use</span>
+<span class="co"># of it). The nice side effect is that the Caps Lock key becomes impossible to</span>
+<span class="co"># press from our keyboard.</span>
+<span class="co">#</span>
+<span class="co"># Default xmodmap output (vanilla state):</span>
+<span class="co">#</span>
+<span class="co">#   xmodmap:  up to 4 keys per modifier, (keycodes in parentheses):</span>
+<span class="co">#</span>
+<span class="co">#   shift       Shift_L (0x32),  Shift_R (0x3e)</span>
+<span class="co">#   lock        Caps_Lock (0x42)</span>
+<span class="co">#   control     Control_L (0x25),  Control_R (0x69)</span>
+<span class="co">#   mod1        Alt_L (0x40),  Meta_L (0xcd)</span>
+<span class="co">#   mod2        Num_Lock (0x4d)</span>
+<span class="co">#   mod3</span>
+<span class="co">#   mod4        Super_L (0x85),  Super_R (0x86),  Super_L (0xce),  Hyper_L (0xcf)</span>
+<span class="co">#   mod5        ISO_Level3_Shift (0x5c),  Mode_switch (0xcb)</span>
+
+<span class="co"># Prevent pressing Caps_Lock (0x42) from triggering the &quot;Lock&quot; modifier.</span>
+<span class="fu">xmodmap</span> <span class="at">-e</span> <span class="st">&quot;remove Lock = Caps_Lock&quot;</span>
+
+<span class="co"># At this stage, pressing Caps_Lock still behaves like the original. To prevent</span>
+<span class="co"># this from happening, make it so that pressing Caps_Lock (hardware keycode</span>
+<span class="co"># 0x42, decimal 66) results in activating a different key event in X. In</span>
+<span class="co"># particular, we want it to trigger a &quot;Hyper_L&quot; event.</span>
+<span class="fu">xmodmap</span> <span class="at">-e</span> <span class="st">&quot;keysym Caps_Lock = Hyper_L&quot;</span>
+
+<span class="co"># At this point, pressing Caps_Lock will be treated exactly the same as a</span>
+<span class="co"># Hyper_L keypress. You can test it by running &#39;xev&#39; and pressing Caps_Lock.</span>
+
+<span class="co"># Now the goal is to move Hyper_L from mod4 to mod3. This way, Hyper_L does not</span>
+<span class="co"># share the same modifier namespace as the Super_L (Windows) key. First remove</span>
+<span class="co"># Hyper_L from mod4.</span>
+<span class="fu">xmodmap</span> <span class="at">-e</span> <span class="st">&quot;remove mod4 = Hyper_L&quot;</span>
+<span class="co"># Hyper_L is now &quot;free&quot;, so add it to mod3.</span>
+<span class="fu">xmodmap</span> <span class="at">-e</span> <span class="st">&quot;add mod3 = Hyper_L&quot;</span>
+
+<span class="co"># Set keystroke repeat speed (delay, speed).</span>
+<span class="fu">xset</span> r rate 250 80
+
+<span class="co"># We are done with setting up the keyboard. Below are misc non-keyboard</span>
+<span class="co"># X-related settings.</span>
+
+<span class="co"># Swap left and right mouse buttons.</span>
+<span class="fu">xmodmap</span> <span class="at">-e</span> <span class="st">&quot;pointer = 3 2 1&quot;</span>
+
+<span class="co"># Disable mouse acceleration.</span>
+<span class="fu">xset</span> m 0 0
+
+<span class="co"># Use circle, not &quot;X&quot; icon, for the mouse cursor on empty workspaces (an area</span>
+<span class="co"># without windows).</span>
+<span class="ex">xsetroot</span> <span class="at">-cursor_name</span> left_ptr
+
+<span class="co"># Manually start up xscreensaver in the background.</span>
+<span class="ex">systemctl</span> <span class="at">--user</span> start xscreensaver.service
+
+<span class="co"># Start melby user service.</span>
+<span class="ex">systemctl</span> <span class="at">--user</span> start melby.service</code></pre></div></div></div><div id="heading-container-h--Page-metrics" class="heading-container page-metrics"><h2 id="h--Page-metrics"><a href="#h--Page-metrics">Page metrics</a></h2></div><div id="heading-container-h--Backlinks" class="heading-container backlinks"><h3 id="h--Backlinks"><a href="#h--Backlinks">Backlinks (0)</a></h3></div><div id="heading-container-h--Tangled-files" class="heading-container tangled-blocks"><h3 id="h--Tangled-files"><a href="#h--Tangled-files">Tangled files (1)</a></h3><ol><li><a href="#b-xenv.sh" class="verbatim">xmonad/xenv.sh</a></li></ol></div><div id="heading-container-h--Named-cells" class="heading-container named-cells"><h3 id="h--Named-cells"><a href="#h--Named-cells">Named cells (1)</a></h3><ol><li><a href="#b-xenv.sh"><span class="verbatim">xenv.sh</span></a></li></ol></div><footer><div class="lilac-stamp">Generated by <a href="https://syscfg.funloop.org" class="external-link" target="_blank" rel="noopener noreferrer">Lilac</a></div></footer></main><script id="heading-ancestry" type="application/json">{"h--Backlinks":["h--Page-metrics"],"h--Named-cells":["h--Page-metrics"],"h--Page-metrics":[],"h--Tangled-files":["h--Page-metrics"],"h-1-Introduction":[],"h-2-Keyboard-input--stack-":[],"h-3-Xkb-layer":[]}</script><script id="lilac-fe-script" src="/js/lilac.js"></script></body></html>

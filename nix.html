@@ -1,0 +1,611 @@
+<!DOCTYPE HTML><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Nix</title><link rel="stylesheet" href="/css/default.css"><link rel="shortcut icon" type="image/png" href="/favicon.png"><link rel="stylesheet" href="/vendor/source-fonts/source-fonts.css">
+<script>
+  window.MathJax = {
+      loader: { paths: { "mathjax-newcm": "/vendor/mathjax-newcm-font" } },
+      output: { font: "mathjax-newcm" },
+  tex: {
+      tags: 'ams'
+  },
+  options: {
+      ignoreHtmlClass: 'verbatim|code'
+  }
+};
+</script>
+<script id="MathJax-script" async="" src="/vendor/mathjax/tex-mml-chtml.js"></script>
+</head><body><div class="navbar"><button id="hamburger" class="tocs-toggle-button" aria-label="Toggle table of contents sidebar">&#x2630;</button><div class="breadcrumbs"><a href="https://syscfg.funloop.org"><span class="breadcrumb">Linus Arver&#39;s Dotfiles</span></a> <span class="breadcrumb-separator">/</span> <a href="#top"><span class="breadcrumb">nix.org</span></a></div></div><nav id="tocs"><p class="widget-title gtoc-title">Site contents</p><nav class="gtoc"><ul><li><a href="/index.html">Introduction</a></li><li><a href="/bash.html">Bash</a></li><li><a href="/clojure.html">Clojure</a></li><li><a href="/emacs.html">Emacs</a></li><li><a href="/git.html">Git</a></li><li><a href="/jj.html">Jujutsu</a></li><li><a href="/keybindings.html">Keybindings (WIP)</a></li><li><a href="/nix.html" class="bold">Nix</a></li><li><a href="/notmuch.html">Notmuch</a></li><li><a href="/tmux.html">tmux</a></li><li><a href="/wezterm.html">Wezterm</a></li></ul></nav><p class="widget-title toc-title">Page contents</p><nav class="toc"><div class="toc-entries"><ol><li class="toc-level-1"><div class="toc-entry"><span class="toc-counter">1</span><a href="#h-1-NixOS">NixOS</a></div><ol><li class="toc-level-2"><div class="toc-entry"><span class="toc-counter">1.1</span><a href="#h-1.1-Minimal-config">Minimal config</a></div><ol><li class="toc-level-3"><div class="toc-entry"><span class="toc-counter">1.1.1</span><a href="#h-1.1.1-Users">Users</a></div></li><li class="toc-level-3"><div class="toc-entry"><span class="toc-counter">1.1.2</span><a href="#h-1.1.2-Shell">Shell</a></div></li><li class="toc-level-3"><div class="toc-entry"><span class="toc-counter">1.1.3</span><a href="#h-1.1.3-Language---Region">Language &amp; Region</a></div></li><li class="toc-level-3"><div class="toc-entry"><span class="toc-counter">1.1.4</span><a href="#h-1.1.4-Networking">Networking</a></div></li><li class="toc-level-3"><div class="toc-entry"><span class="toc-counter">1.1.5</span><a href="#h-1.1.5-Audio">Audio</a></div></li><li class="toc-level-3"><div class="toc-entry"><span class="toc-counter">1.1.6</span><a href="#h-1.1.6-Fonts">Fonts</a></div></li></ol></li><li class="toc-level-2"><div class="toc-entry"><span class="toc-counter">1.2</span><a href="#h-1.2-Extra-packages">Extra packages</a></div><ol><li class="toc-level-3"><div class="toc-entry"><span class="toc-counter">1.2.1</span><a href="#h-1.2.1-Essentials">Essentials</a></div></li><li class="toc-level-3"><div class="toc-entry"><span class="toc-counter">1.2.2</span><a href="#h-1.2.2-Archive-handling">Archive handling</a></div></li><li class="toc-level-3"><div class="toc-entry"><span class="toc-counter">1.2.3</span><a href="#h-1.2.3-Email">Email</a></div></li><li class="toc-level-3"><div class="toc-entry"><span class="toc-counter">1.2.4</span><a href="#h-1.2.4-Images">Images</a></div></li><li class="toc-level-3"><div class="toc-entry"><span class="toc-counter">1.2.5</span><a href="#h-1.2.5-Miscellaneous-common-packages">Miscellaneous common packages</a></div></li></ol></li><li class="toc-level-2"><div class="toc-entry"><span class="toc-counter">1.3</span><a href="#h-1.3-Haskell">Haskell</a></div><ol><li class="toc-level-3"><div class="toc-entry"><span class="toc-counter">1.3.1</span><a href="#h-1.3.1-auca"><span class="code">auca</span></a></div></li></ol></li><li class="toc-level-2"><div class="toc-entry"><span class="toc-counter">1.4</span><a href="#h-1.4-k0-machine"><span class="code">k0</span> machine</a></div><ol><li class="toc-level-3"><div class="toc-entry"><span class="toc-counter">1.4.1</span><a href="#h-1.4.1-Configuration">Configuration</a></div></li><li class="toc-level-3"><div class="toc-entry"><span class="toc-counter">1.4.2</span><a href="#h-1.4.2-X-server">X server</a></div></li></ol></li></ol></li><li class="toc-level-1"><div class="toc-entry"><span class="toc-counter">2</span><a href="#h-2-nix-darwin">nix-darwin</a></div></li><li class="toc-level-1"><div class="toc-entry"><a href="#h--Page-metrics">Page metrics</a></div><ol><li class="toc-level-2"><div class="toc-entry"><a href="#h--Backlinks">Backlinks</a></div></li><li class="toc-level-2"><div class="toc-entry"><a href="#h--Tangled-files">Tangled files</a></div></li><li class="toc-level-2"><div class="toc-entry"><a href="#h--Named-cells">Named cells</a></div></li></ol></li></ol></div></nav></nav><main><h1 id="top">Nix</h1><hr class="title-underline"><div id="heading-container-h-1-NixOS" class="heading-container"><h2 id="h-1-NixOS"><span id="c-0" class="cell-idx"><a href="#h-1-NixOS">1&ensp;NixOS</a></span></h2></div><div id="heading-container-h-1.1-Minimal-config" class="heading-container"><h3 id="h-1.1-Minimal-config"><span id="c-1" class="cell-idx"><a href="#h-1.1-Minimal-config">1.1&ensp;Minimal config</a></span></h3><p><span id="c-2" class="cell-idx">The minimal configuration captures some (perhaps boring) minimal features we want out of NixOS. Basically it&#39;s a lightweight config that isn&#39;t too package-heavy. The idea is that when you are setting up a new machine, you can import just this <a href="#b-nixos-minimal.nix" class="internal-link" id="linkNumber-1">nixos/minimal.nix</a> instead of <a href="#b-nixos-extra.nix" class="internal-link" id="linkNumber-2">nixos/extra.nix</a> (as in <a href="#ll--nixos-k0-configuration.nix-extra.nix-" class="internal-link" id="linkNumber-3"><span class="bold">1</span></a>) to speed up the installation (without having to download all of the heavy packages).</span></p><div id="c-3" class="cell-idx"><div class="block-container src" id="b-nixos-minimal.nix"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-nixos-minimal.nix">&#x1F517;</a></div><div class="block-meta"><code>nixos/minimal.nix</code><br><code><span class="bold">&#x1F3AF; nixos/minimal.nix</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">nix</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="op">{</span> <span class="va">config</span><span class="op">,</span> <span class="va">pkgs</span><span class="op">,</span> <span class="op">...</span> <span class="op">}</span>:
+
+<span class="op">{</span>
+  <span class="va">system</span>.<span class="va">stateVersion</span> <span class="op">=</span> <span class="st">&quot;26.05&quot;</span><span class="op">;</span>
+  <span class="co"># allow installation of &#39;ati_unfree&#39; video driver and also Firefox with Flash</span>
+  <span class="va">nixpkgs</span>.<span class="va">config</span>.<span class="va">allowUnfree</span> <span class="op">=</span> <span class="cn">true</span><span class="op">;</span>
+  <span class="va">nixpkgs</span>.<span class="va">config</span>.<span class="va">nvidia</span>.<span class="va">acceptLicense</span> <span class="op">=</span> <span class="cn">true</span><span class="op">;</span>
+
+  <a href="#b-nix:users" class="internal-link" id="b-nixos-minimal.nix-b-nix:users">nix:users</a>
+  <a href="#b-nix:shell" class="internal-link" id="b-nixos-minimal.nix-b-nix:shell">nix:shell</a>
+  <a href="#b-nix:language-region" class="internal-link" id="b-nixos-minimal.nix-b-nix:language-region">nix:language-region</a>
+  <a href="#b-nix:networking" class="internal-link" id="b-nixos-minimal.nix-b-nix:networking">nix:networking</a>
+  <a href="#b-nix:audio" class="internal-link" id="b-nixos-minimal.nix-b-nix:audio">nix:audio</a>
+  <a href="#b-nix:fonts" class="internal-link" id="b-nixos-minimal.nix-b-nix:fonts">nix:fonts</a>
+
+  <span class="co"># We&#39;re going to use `gpg-agent` with SSH support --- so to avoid conflict,</span>
+  <span class="co"># disable OpenSSH&#39;s ssh-agent.</span>
+  <span class="va">programs</span>.<span class="va">ssh</span>.<span class="va">startAgent</span> <span class="op">=</span> <span class="cn">false</span><span class="op">;</span>
+<span class="op">}</span></code></pre></div></div></div><div id="heading-container-h-1.1.1-Users" class="heading-container"><h4 id="h-1.1.1-Users"><span id="c-4" class="cell-idx"><a href="#h-1.1.1-Users">1.1.1&ensp;Users</a></span></h4><div id="c-5" class="cell-idx"><div class="block-container src" id="b-nix:users"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-nix:users">&#x1F517;</a></div><div class="block-meta"><code>nix:users</code></div><div class="block-meta-other hidden"><p>Used by <a href="#b-nixos-minimal.nix-b-nix:users" class="internal-link"><span class="verbatim">nixos/minimal.nix</span></a>.</p><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">nix</span></p></li></ul></div><pre class="block-body"><code class="sourceCode">users<span class="op">.</span>groups<span class="op">.</span>l = <span class="op">{</span>
+  <span class="va">gid</span> <span class="op">=</span> <span class="dv">1000</span><span class="op">;</span>
+<span class="op">}</span>;
+
+<span class="co"># Set password for extra users with &#39;passwd&#39; command as root.</span>
+users<span class="op">.</span>users<span class="op">.</span>l = <span class="op">{</span>
+  <span class="va">isNormalUser</span> <span class="op">=</span> <span class="cn">true</span><span class="op">;</span>
+  <span class="va">group</span> <span class="op">=</span> <span class="st">&quot;l&quot;</span><span class="op">;</span>
+  <span class="va">description</span> <span class="op">=</span> <span class="st">&quot;Linus Arver&quot;</span><span class="op">;</span>
+  <span class="va">createHome</span> <span class="op">=</span> <span class="cn">true</span><span class="op">;</span>
+  <span class="va">home</span> <span class="op">=</span> <span class="st">&quot;/home/l&quot;</span><span class="op">;</span>
+  <span class="va">extraGroups</span> <span class="op">=</span> <span class="op">[</span> <span class="st">&quot;wheel&quot;</span> <span class="op">];</span>
+  <span class="va">shell</span> <span class="op">=</span> <span class="st">&quot;/run/current-system/sw/bin/zsh&quot;</span><span class="op">;</span>
+  <span class="va">uid</span> <span class="op">=</span> <span class="dv">1000</span><span class="op">;</span>
+<span class="op">}</span>;
+
+<span class="co"># Avoid &quot;lacks a valid signature&quot; error from using nix-copy-closures from</span>
+<span class="co"># another machine on the local LAN. See</span>
+<span class="co"># https://github.com/NixOS/nix/issues/2330#issuecomment-451650296.</span>
+nix<span class="op">.</span>settings<span class="op">.</span>trusted<span class="op">-</span>users = <span class="op">[</span>
+  <span class="st">&quot;root&quot;</span>
+  <span class="st">&quot;@wheel&quot;</span>
+<span class="op">]</span>;</code></pre></div></div></div><div id="heading-container-h-1.1.2-Shell" class="heading-container"><h4 id="h-1.1.2-Shell"><span id="c-6" class="cell-idx"><a href="#h-1.1.2-Shell">1.1.2&ensp;Shell</a></span></h4><div id="c-7" class="cell-idx"><div class="block-container src" id="b-nix:shell"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-nix:shell">&#x1F517;</a></div><div class="block-meta"><code>nix:shell</code></div><div class="block-meta-other hidden"><p>Used by <a href="#b-nixos-minimal.nix-b-nix:shell" class="internal-link"><span class="verbatim">nixos/minimal.nix</span></a>.</p><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">nix</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="co"># Create a /etc/zshenv and other things to make Zsh work properly. Among</span>
+<span class="co"># other things, this allows us to perform a &quot;git pull &lt;this machine&#39;s IP&gt;&quot;</span>
+<span class="co"># from a remote machine; without this, the login shell cannot find the</span>
+<span class="co"># git-upload-pack command, and the git pull operation will fail.</span>
+programs<span class="op">.</span>zsh<span class="op">.</span>enable = <span class="cn">true</span>;
+
+<span class="co"># Delete things that come built-in by nix that customizes Zsh. For one thing,</span>
+<span class="co"># disable the prompt settings because they interfere with our own</span>
+<span class="co"># customizations.</span>
+programs<span class="op">.</span>zsh<span class="op">.</span>promptInit = <span class="st">&quot;&quot;</span>;</code></pre></div></div></div><div id="heading-container-h-1.1.3-Language---Region" class="heading-container"><h4 id="h-1.1.3-Language---Region"><span id="c-8" class="cell-idx"><a href="#h-1.1.3-Language---Region">1.1.3&ensp;Language &amp; Region</a></span></h4><div id="c-9" class="cell-idx"><div class="block-container src" id="b-nix:language-region"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-nix:language-region">&#x1F517;</a></div><div class="block-meta"><code>nix:language-region</code></div><div class="block-meta-other hidden"><p>Used by <a href="#b-nixos-minimal.nix-b-nix:language-region" class="internal-link"><span class="verbatim">nixos/minimal.nix</span></a>.</p><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">nix</span></p></li></ul></div><pre class="block-body"><code class="sourceCode">console<span class="op">.</span>keyMap = <span class="st">&quot;us&quot;</span>;
+i18n<span class="op">.</span>defaultLocale = <span class="st">&quot;en_US.UTF-8&quot;</span>;
+i18n<span class="op">.</span>inputMethod<span class="op">.</span>type = <span class="st">&quot;uim&quot;</span>;
+i18n<span class="op">.</span>inputMethod<span class="op">.</span>enable = <span class="cn">true</span>;
+
+<span class="co"># NTP for automated system clock adjustments.</span>
+services<span class="op">.</span>ntp<span class="op">.</span>enable = <span class="cn">true</span>;
+time<span class="op">.</span>timeZone = <span class="st">&quot;Australia/Melbourne&quot;</span>;</code></pre></div></div></div><div id="heading-container-h-1.1.4-Networking" class="heading-container"><h4 id="h-1.1.4-Networking"><span id="c-10" class="cell-idx"><a href="#h-1.1.4-Networking">1.1.4&ensp;Networking</a></span></h4><figure id="tbl-1"><figcaption><span id="c-11" class="cell-idx"><a href="#tbl-1" class="self-link caption-prefix">Table 1</a>. Devices on the LAN.</span></figcaption><div class="table-wrapper"><table><colgroup><col><col class="table-vertical-thin-line-col"></colgroup><thead><tr><th>Static IP (192.168.1.X)</th><th>Device</th></tr></thead><tbody><tr class="table-horizontal-line"><td></td><td></td></tr><tr class="table-body-row"><td class="table-cell-numeric">1</td><td>WiFi Router</td></tr><tr class="table-body-row"><td class="table-cell-numeric">2</td><td>Printer</td></tr><tr class="table-body-row"><td class="table-cell-numeric">3</td><td></td></tr><tr class="table-body-row"><td class="table-cell-numeric">4</td><td>k0 (NixOS dev box)</td></tr><tr class="table-body-row"><td class="table-cell-numeric">5</td><td></td></tr><tr class="table-body-row"><td class="table-cell-numeric">6</td><td></td></tr><tr class="table-body-row"><td class="table-cell-numeric">7</td><td>macp (Macbook Air)</td></tr></tbody></table></div></figure><div id="c-12" class="cell-idx"><div class="block-container src" id="b-nix:networking"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-nix:networking">&#x1F517;</a></div><div class="block-meta"><code>nix:networking</code></div><div class="block-meta-other hidden"><p>Used by <a href="#b-nixos-minimal.nix-b-nix:networking" class="internal-link"><span class="verbatim">nixos/minimal.nix</span></a>.</p><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">nix</span></p></li></ul></div><pre class="block-body"><code class="sourceCode">networking = <span class="op">{</span>
+  <span class="va">extraHosts</span> <span class="op">=</span> <span class="st">&#39;&#39;</span>
+<span class="st">    192.168.1.4 k0</span>
+<span class="st">    192.168.1.7 macp</span>
+<span class="st">  &#39;&#39;</span><span class="op">;</span>
+  <span class="co"># Port 22 is opened automatically if SSH daemon is enabled (no need to specify it here).</span>
+  <span class="va">firewall</span>.<span class="va">allowedTCPPortRanges</span> <span class="op">=</span> <span class="op">[</span>
+    <span class="op">{</span>
+      <span class="va">from</span> <span class="op">=</span> <span class="dv">8000</span><span class="op">;</span>
+      <span class="va">to</span> <span class="op">=</span> <span class="dv">8010</span><span class="op">;</span>
+    <span class="op">}</span>
+  <span class="op">];</span>
+<span class="op">}</span>;
+
+<span class="co"># Enable the OpenSSH daemon.</span>
+services<span class="op">.</span>openssh<span class="op">.</span>enable = <span class="cn">true</span>;
+
+services<span class="op">.</span>openvpn<span class="op">.</span>servers = <span class="op">{</span>
+  <span class="co"># Unless `autoStart = false;&#39;, all entries here start automatically as a</span>
+  <span class="co"># systemd service. To stop the `home&#39; OpenVPN client service, run `sudo</span>
+  <span class="co"># systemctl stop openvpn-home&#39;.</span>
+  <span class="va">home</span> <span class="op">=</span> <span class="op">{</span>
+    <span class="va">config</span> <span class="op">=</span> <span class="bu">builtins</span><span class="op">.</span>readFile <span class="ss">../openvpn/home.ovpn</span><span class="op">;</span>
+  <span class="op">};</span>
+  <span class="va">us</span> <span class="op">=</span> <span class="op">{</span>
+    <span class="va">config</span> <span class="op">=</span> <span class="bu">builtins</span><span class="op">.</span>readFile <span class="ss">../openvpn/us.ovpn</span><span class="op">;</span>
+    <span class="va">autoStart</span> <span class="op">=</span> <span class="cn">false</span><span class="op">;</span>
+  <span class="op">};</span>
+<span class="op">}</span>;</code></pre></div></div></div><div id="heading-container-h-1.1.5-Audio" class="heading-container"><h4 id="h-1.1.5-Audio"><span id="c-13" class="cell-idx"><a href="#h-1.1.5-Audio">1.1.5&ensp;Audio</a></span></h4><div id="c-14" class="cell-idx"><div class="block-container src" id="b-nix:audio"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-nix:audio">&#x1F517;</a></div><div class="block-meta"><code>nix:audio</code></div><div class="block-meta-other hidden"><p>Used by <a href="#b-nixos-minimal.nix-b-nix:audio" class="internal-link"><span class="verbatim">nixos/minimal.nix</span></a>.</p><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">nix</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="co"># PipeWire</span>
+<span class="co"># rtkit is optional but recommended</span>
+security<span class="op">.</span>rtkit<span class="op">.</span>enable = <span class="cn">true</span>;
+services<span class="op">.</span>pipewire = <span class="op">{</span>
+  <span class="va">enable</span> <span class="op">=</span> <span class="cn">true</span><span class="op">;</span>
+  <span class="va">alsa</span>.<span class="va">enable</span> <span class="op">=</span> <span class="cn">true</span><span class="op">;</span>
+  <span class="va">alsa</span>.<span class="va">support32Bit</span> <span class="op">=</span> <span class="cn">true</span><span class="op">;</span>
+  <span class="va">pulse</span>.<span class="va">enable</span> <span class="op">=</span> <span class="cn">true</span><span class="op">;</span>
+  <span class="va">wireplumber</span>.<span class="va">enable</span> <span class="op">=</span> <span class="cn">true</span><span class="op">;</span>
+<span class="op">}</span>;</code></pre></div></div></div><div id="heading-container-h-1.1.6-Fonts" class="heading-container"><h4 id="h-1.1.6-Fonts"><span id="c-15" class="cell-idx"><a href="#h-1.1.6-Fonts">1.1.6&ensp;Fonts</a></span></h4><div id="c-16" class="cell-idx"><div class="block-container src" id="b-nix:fonts"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-nix:fonts">&#x1F517;</a></div><div class="block-meta"><code>nix:fonts</code></div><div class="block-meta-other hidden"><p>Used by <a href="#b-nixos-minimal.nix-b-nix:fonts" class="internal-link"><span class="verbatim">nixos/minimal.nix</span></a>.</p><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">nix</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="co"># Fonts</span>
+fonts = <span class="op">{</span>
+  <span class="va">fontDir</span>.<span class="va">enable</span> <span class="op">=</span> <span class="cn">true</span><span class="op">;</span>
+  <span class="va">enableGhostscriptFonts</span> <span class="op">=</span> <span class="cn">true</span><span class="op">;</span>
+  <span class="va">packages</span> <span class="op">=</span> <span class="kw">with</span> pkgs<span class="op">;</span> <span class="op">[</span>
+    <a href="#b-pkgs:fonts-raw-list" class="internal-link" id="b-nix:fonts-b-pkgs:fonts-raw-list">pkgs:fonts-raw-list</a>
+  <span class="op">];</span>
+<span class="op">}</span>;
+
+<span class="co"># Prettify the virtual console font early on with Terminus.</span>
+console = <span class="op">{</span>
+  <span class="va">font</span> <span class="op">=</span> <span class="st">&quot;ter-114n&quot;</span><span class="op">;</span>
+  <span class="va">packages</span> <span class="op">=</span> <span class="kw">with</span> pkgs<span class="op">;</span> <span class="op">[</span> terminus_font <span class="op">];</span>
+  <span class="va">earlySetup</span> <span class="op">=</span> <span class="cn">true</span><span class="op">;</span>
+<span class="op">}</span>;</code></pre></div></div><div id="c-17" class="cell-idx"><div class="block-container src" id="b-pkgs:fonts-raw-list"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-pkgs:fonts-raw-list">&#x1F517;</a></div><div class="block-meta"><code>pkgs:fonts-raw-list</code></div><div class="block-meta-other hidden"><p>Used by <a href="#b-nix:fonts-b-pkgs:fonts-raw-list" class="internal-link"><span class="verbatim">nix:fonts</span></a>, <a href="#b-nixpkgs-darwin-configuration.nix-b-pkgs:fonts-raw-list" class="internal-link"><span class="verbatim">nixpkgs/darwin-configuration.nix</span></a>.</p><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">nix</span></p></li></ul></div><pre class="block-body"><code class="sourceCode">baekmuk<span class="op">-</span>ttf
+corefonts
+dejavu_fonts
+ipafont
+libertine
+noto<span class="op">-</span>fonts
+raleway
+source<span class="op">-</span>code<span class="op">-</span>pro
+source<span class="op">-</span>sans
+source<span class="op">-</span>serif
+source<span class="op">-</span>han<span class="op">-</span>sans
+source<span class="op">-</span>han<span class="op">-</span>serif
+source<span class="op">-</span>han<span class="op">-</span>mono
+terminus_font
+ubuntu<span class="op">-</span>classic</code></pre></div></div></div><div id="heading-container-h-1.2-Extra-packages" class="heading-container"><h3 id="h-1.2-Extra-packages"><span id="c-18" class="cell-idx"><a href="#h-1.2-Extra-packages">1.2&ensp;Extra packages</a></span></h3><p><span id="c-19" class="cell-idx">This includes many more packages to set up a more complete Linux experience.</span></p><div id="c-20" class="cell-idx"><div class="block-container src" id="b-nixos-extra.nix"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-nixos-extra.nix">&#x1F517;</a></div><div class="block-meta"><code>nixos/extra.nix</code><br><code><span class="bold">&#x1F3AF; nixos/extra.nix</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">nix</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="op">{</span> <span class="va">config</span><span class="op">,</span> <span class="va">pkgs</span><span class="op">,</span> <span class="op">...</span> <span class="op">}</span>:
+
+<span class="kw">let</span>
+  <span class="va">melby-release</span> <span class="op">=</span> <span class="bu">import</span> <span class="st">&quot;/home/l/prog/melby/package/build.nix&quot;</span><span class="op">;</span>
+<span class="kw">in</span>
+<span class="op">{</span>
+  <span class="va">imports</span> <span class="op">=</span> <span class="op">[</span> <span class="ss">./minimal.nix</span> <span class="op">];</span>
+
+  <span class="va">environment</span>.<span class="va">systemPackages</span> <span class="op">=</span> <span class="kw">with</span> pkgs<span class="op">;</span> <span class="op">[</span>
+    <a href="#b-pkgs:essentials" class="internal-link" id="b-nixos-extra.nix-b-pkgs:essentials">pkgs:essentials</a>
+    <a href="#b-pkgs:archive" class="internal-link" id="b-nixos-extra.nix-b-pkgs:archive">pkgs:archive</a>
+    <a href="#b-pkgs:email" class="internal-link" id="b-nixos-extra.nix-b-pkgs:email">pkgs:email</a>
+    <a href="#b-pkgs:image" class="internal-link" id="b-nixos-extra.nix-b-pkgs:image">pkgs:image</a>
+    <a href="#b-pkgs:misc-common" class="internal-link" id="b-nixos-extra.nix-b-pkgs:misc-common">pkgs:misc-common</a>
+
+    <span class="co"># Web</span>
+    firefox
+    qutebrowser
+
+    <span class="co"># X server utils</span>
+    xmodmap
+    xev
+    xdotool
+    xdpyinfo
+    xkill
+    xclip
+    xwininfo
+    xcompmgr
+    xsel
+    xscreensaver
+
+    <span class="co"># Cryptography</span>
+    openssl
+    pinentry-curses
+    cryptsetup
+
+    <span class="co"># Net</span>
+    bind <span class="co"># dig</span>
+    rsync
+    wget
+    curl
+    inetutils <span class="co"># ping</span>
+    dhcpcd
+    rtorrent
+
+    <span class="co"># Docs</span>
+    man-pages
+
+    <span class="co"># Filesystem</span>
+    inotify-tools
+
+    <span class="co"># Image</span>
+    gimp
+
+    <span class="co"># Audio/Video</span>
+    mpv
+    flac
+    mpc
+    vimpc
+    mpd
+    r128gain
+    pavucontrol
+    pulseaudio
+
+    <span class="co"># Document processing</span>
+    pandoc
+
+    <span class="co"># Data analysis</span>
+    gnuplot
+
+    <span class="co"># Containerization</span>
+    docker
+    kubectl
+  <span class="op">];</span>
+
+  <span class="va">nixpkgs</span>.<span class="va">overlays</span> <span class="op">=</span> <span class="op">[</span> <span class="op">(</span><span class="bu">import</span> <span class="ss">./overlay.nix</span><span class="op">)</span> <span class="op">];</span>
+
+  <span class="va">programs</span>.<span class="va">direnv</span> <span class="op">=</span> <span class="op">{</span>
+    <span class="va">enable</span> <span class="op">=</span> <span class="cn">true</span><span class="op">;</span>
+    <span class="va">package</span> <span class="op">=</span> pkgs<span class="op">.</span>direnv<span class="op">;</span>
+    <span class="va">silent</span> <span class="op">=</span> <span class="cn">false</span><span class="op">;</span>
+    <span class="va">loadInNixShell</span> <span class="op">=</span> <span class="cn">true</span><span class="op">;</span>
+    <span class="va">direnvrcExtra</span> <span class="op">=</span> <span class="st">&quot;&quot;</span><span class="op">;</span>
+    <span class="va">nix-direnv</span> <span class="op">=</span> <span class="op">{</span>
+      <span class="va">enable</span> <span class="op">=</span> <span class="cn">true</span><span class="op">;</span>
+      <span class="va">package</span> <span class="op">=</span> pkgs<span class="op">.</span>nix<span class="op">-</span>direnv<span class="op">;</span>
+    <span class="op">};</span>
+  <span class="op">};</span>
+
+  <span class="va">services</span>.<span class="va">displayManager</span> <span class="op">=</span> <span class="op">{</span>
+    <span class="va">defaultSession</span> <span class="op">=</span> <span class="st">&quot;l_xmonad&quot;</span><span class="op">;</span>
+    <span class="va">autoLogin</span>.<span class="va">enable</span> <span class="op">=</span> <span class="cn">true</span><span class="op">;</span>
+    <span class="va">autoLogin</span>.<span class="va">user</span> <span class="op">=</span> <span class="st">&quot;l&quot;</span><span class="op">;</span>
+  <span class="op">};</span>
+
+  <span class="va">services</span>.<span class="va">xserver</span> <span class="op">=</span> <span class="op">{</span>
+    <span class="va">enable</span> <span class="op">=</span> <span class="cn">true</span><span class="op">;</span>
+    <span class="va">xkb</span>.<span class="va">layout</span> <span class="op">=</span> <span class="st">&quot;us&quot;</span><span class="op">;</span>
+    <span class="va">xkb</span>.<span class="va">variant</span> <span class="op">=</span> <span class="st">&quot;altgr-intl&quot;</span><span class="op">;</span>
+    <span class="va">xkb</span>.<span class="va">options</span> <span class="op">=</span> <span class="st">&quot;terminate:ctrl_alt_bksp&quot;</span><span class="op">;</span>
+    <span class="co"># See https://unix.stackexchange.com/questions/597358/nixos-how-to-configure-custom-desktop-session/597359#597359.</span>
+    <span class="va">displayManager</span>.<span class="va">session</span> <span class="op">=</span> <span class="op">[</span>
+      <span class="op">{</span>
+        <span class="va">manage</span> <span class="op">=</span> <span class="st">&quot;desktop&quot;</span><span class="op">;</span>
+        <span class="va">name</span> <span class="op">=</span> <span class="st">&quot;l_xmonad&quot;</span><span class="op">;</span>
+        <span class="va">start</span> <span class="op">=</span> <span class="st">&quot;exec $HOME/.xsession&quot;</span><span class="op">;</span>
+      <span class="op">}</span>
+    <span class="op">];</span>
+    <span class="co"># We rely on ~/.xsession to start XMonad, instead of NixOS automagically</span>
+    <span class="co"># doing it for us. This way, we can use our xmonad binary compiled by Stack.</span>
+    <span class="va">windowManager</span>.<span class="va">xmonad</span>.<span class="va">enable</span> <span class="op">=</span> <span class="cn">false</span><span class="op">;</span>
+    <span class="va">windowManager</span>.<span class="va">xmonad</span>.<span class="va">enableContribAndExtras</span> <span class="op">=</span> <span class="cn">false</span><span class="op">;</span>
+  <span class="op">};</span>
+
+  <span class="co"># Enable X screen saver (xscreensaver).</span>
+  <span class="va">services</span>.<span class="va">xscreensaver</span>.<span class="va">enable</span> <span class="op">=</span> <span class="cn">true</span><span class="op">;</span>
+
+  <span class="va">virtualisation</span>.<span class="va">virtualbox</span>.<span class="va">host</span>.<span class="va">enable</span> <span class="op">=</span> <span class="cn">true</span><span class="op">;</span>
+
+  <span class="va">virtualisation</span>.<span class="va">docker</span>.<span class="va">enable</span> <span class="op">=</span> <span class="cn">true</span><span class="op">;</span>
+  <span class="va">virtualisation</span>.<span class="va">docker</span>.<span class="va">storageDriver</span> <span class="op">=</span> <span class="st">&quot;overlay2&quot;</span><span class="op">;</span>
+
+  <span class="co"># Enable CUPS to print documents.</span>
+  <span class="va">services</span>.<span class="va">printing</span>.<span class="va">enable</span> <span class="op">=</span> <span class="cn">true</span><span class="op">;</span>
+
+  <span class="va">users</span>.<span class="va">extraUsers</span>.<span class="va">l</span>.<span class="va">extraGroups</span> <span class="op">=</span> <span class="op">[</span>
+    <span class="st">&quot;wheel&quot;</span>
+    <span class="st">&quot;docker&quot;</span>
+    <span class="st">&quot;vboxusers&quot;</span>
+  <span class="op">];</span>
+<span class="op">}</span></code></pre></div></div></div><div id="heading-container-h-1.2.1-Essentials" class="heading-container"><h4 id="h-1.2.1-Essentials"><span id="c-21" class="cell-idx"><a href="#h-1.2.1-Essentials">1.2.1&ensp;Essentials</a></span></h4><p><span id="c-22" class="cell-idx">These are mostly related to development.</span></p><div id="c-23" class="cell-idx"><div class="block-container src" id="b-pkgs:essentials"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-pkgs:essentials">&#x1F517;</a></div><div class="block-meta"><code>pkgs:essentials</code></div><div class="block-meta-other hidden"><p>Used by <a href="#b-nixos-extra.nix-b-pkgs:essentials" class="internal-link"><span class="verbatim">nixos/extra.nix</span></a>, <a href="#b-nixpkgs-darwin-configuration.nix-b-pkgs:essentials" class="internal-link"><span class="verbatim">nixpkgs/darwin-configuration.nix</span></a>.</p><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">nix</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="op">(</span>aspellWithDicts <span class="op">(</span><span class="va">dicts</span><span class="op">:</span> <span class="kw">with</span> dicts<span class="op">;</span> <span class="op">[</span> en en-computers en-science <span class="op">]))</span>
+babashka
+binutils
+bmon
+bottom
+cachix
+dhall
+dhall<span class="op">-</span>json
+difftastic
+dos2unix
+editorconfig<span class="op">-</span>core<span class="op">-</span>c
+emacs
+fd
+fzf
+gcal
+git
+git<span class="op">-</span>filter<span class="op">-</span>repo
+gnumake
+htop
+jjui
+jless
+jq
+jujutsu
+lsof
+melby<span class="op">-</span>release<span class="op">.</span>melby<span class="op">-</span>client<span class="op">-</span>rust
+melby<span class="op">-</span>release<span class="op">.</span>melby<span class="op">-</span>daemon
+meld
+ncdu
+neovim
+niv
+nix<span class="op">-</span>diff
+parallel
+pciutils <span class="co"># lspci</span>
+protobuf
+ripgrep
+shellcheck
+sqlite <span class="co"># emacs&#39; org-roam needs it</span>
+tig
+tmux
+tokei
+tree
+unixtools<span class="op">.</span>xxd
+util<span class="op">-</span>linux
+wezterm
+zsh</code></pre></div></div></div><div id="heading-container-h-1.2.2-Archive-handling" class="heading-container"><h4 id="h-1.2.2-Archive-handling"><span id="c-24" class="cell-idx"><a href="#h-1.2.2-Archive-handling">1.2.2&ensp;Archive handling</a></span></h4><div id="c-25" class="cell-idx"><div class="block-container src" id="b-pkgs:archive"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-pkgs:archive">&#x1F517;</a></div><div class="block-meta"><code>pkgs:archive</code></div><div class="block-meta-other hidden"><p>Used by <a href="#b-nixos-extra.nix-b-pkgs:archive" class="internal-link"><span class="verbatim">nixos/extra.nix</span></a>, <a href="#b-nixpkgs-darwin-configuration.nix-b-pkgs:archive" class="internal-link"><span class="verbatim">nixpkgs/darwin-configuration.nix</span></a>.</p><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">nix</span></p></li></ul></div><pre class="block-body"><code class="sourceCode">p7zip
+unzip
+unrar
+xz
+zip</code></pre></div></div></div><div id="heading-container-h-1.2.3-Email" class="heading-container"><h4 id="h-1.2.3-Email"><span id="c-26" class="cell-idx"><a href="#h-1.2.3-Email">1.2.3&ensp;Email</a></span></h4><div id="c-27" class="cell-idx"><div class="block-container src" id="b-pkgs:email"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-pkgs:email">&#x1F517;</a></div><div class="block-meta"><code>pkgs:email</code></div><div class="block-meta-other hidden"><p>Used by <a href="#b-nixos-extra.nix-b-pkgs:email" class="internal-link"><span class="verbatim">nixos/extra.nix</span></a>, <a href="#b-nixpkgs-darwin-configuration.nix-b-pkgs:email" class="internal-link"><span class="verbatim">nixpkgs/darwin-configuration.nix</span></a>.</p><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">nix</span></p></li></ul></div><pre class="block-body"><code class="sourceCode">notmuch
+lieer</code></pre></div></div></div><div id="heading-container-h-1.2.4-Images" class="heading-container"><h4 id="h-1.2.4-Images"><span id="c-28" class="cell-idx"><a href="#h-1.2.4-Images">1.2.4&ensp;Images</a></span></h4><div id="c-29" class="cell-idx"><div class="block-container src" id="b-pkgs:image"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-pkgs:image">&#x1F517;</a></div><div class="block-meta"><code>pkgs:image</code></div><div class="block-meta-other hidden"><p>Used by <a href="#b-nixos-extra.nix-b-pkgs:image" class="internal-link"><span class="verbatim">nixos/extra.nix</span></a>, <a href="#b-nixpkgs-darwin-configuration.nix-b-pkgs:image" class="internal-link"><span class="verbatim">nixpkgs/darwin-configuration.nix</span></a>.</p><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">nix</span></p></li></ul></div><pre class="block-body"><code class="sourceCode">imagemagick
+inkscape</code></pre></div></div></div><div id="heading-container-h-1.2.5-Miscellaneous-common-packages" class="heading-container"><h4 id="h-1.2.5-Miscellaneous-common-packages"><span id="c-30" class="cell-idx"><a href="#h-1.2.5-Miscellaneous-common-packages">1.2.5&ensp;Miscellaneous common packages</a></span></h4><p><span id="c-31" class="cell-idx">These are common to both <a href="#b-nixos-minimal.nix" class="internal-link" id="linkNumber-4">nixos/minimal.nix</a> and <a href="#b-nixpkgs-darwin-configuration.nix" class="internal-link" id="linkNumber-5">nixpkgs/darwin-configuration.nix</a>, and are captured here for convenience.</span></p><div id="c-32" class="cell-idx"><div class="block-container src" id="b-pkgs:misc-common"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-pkgs:misc-common">&#x1F517;</a></div><div class="block-meta"><code>pkgs:misc-common</code></div><div class="block-meta-other hidden"><p>Used by <a href="#b-nixos-extra.nix-b-pkgs:misc-common" class="internal-link"><span class="verbatim">nixos/extra.nix</span></a>, <a href="#b-nixpkgs-darwin-configuration.nix-b-pkgs:misc-common" class="internal-link"><span class="verbatim">nixpkgs/darwin-configuration.nix</span></a>.</p><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">nix</span></p></li></ul></div><pre class="block-body"><code class="sourceCode">ffmpeg
+gnupg
+graphviz
+pass
+zathura</code></pre></div></div></div><div id="heading-container-h-1.3-Haskell" class="heading-container"><h3 id="h-1.3-Haskell"><span id="c-33" class="cell-idx"><a href="#h-1.3-Haskell">1.3&ensp;Haskell</a></span></h3><p><span id="c-34" class="cell-idx">Back in the day we used to have more Haskell-based tools. <a href="#b-nixos-haskell-auca.nix" class="internal-link" id="linkNumber-6">nixos/haskell/auca.nix</a> is one such tool. Anyway, what we want to do is install these programs as system packages. To do that we inject them into the system <span class="code">haskellPackages</span> set in <a href="#b-nixos-overlay.nix" class="internal-link" id="linkNumber-7">nixos/overlay.nix</a>.</span></p><div id="c-35" class="cell-idx"><div class="block-container src" id="b-nixos-overlay.nix"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-nixos-overlay.nix">&#x1F517;</a></div><div class="block-meta"><code>nixos/overlay.nix</code><br><code><span class="bold">&#x1F3AF; nixos/overlay.nix</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">nix</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="co"># See https://nixos.org/manual/nixpkgs/stable/#chap-overlays for an overview of overlays.</span>
+
+<span class="va">self</span><span class="op">:</span> <span class="va">super</span><span class="op">:</span>
+
+<span class="op">{</span>
+  <span class="co"># Taken from</span>
+  <span class="co"># http://lists.science.uu.nl/pipermail/nix-dev/2015-January/015601.html. We</span>
+  <span class="co"># add in some custom Haskell packages.</span>
+  <span class="va">haskellPackages</span> <span class="op">=</span> super<span class="op">.</span>haskellPackages<span class="op">.</span>override <span class="op">{</span>
+    <span class="va">overrides</span> <span class="op">=</span> <span class="va">self</span><span class="op">:</span> <span class="va">super</span><span class="op">:</span> <span class="op">{</span>
+      <span class="co"># Local packages not found on Hackage, but which still exist on the</span>
+      <span class="co"># local machine. As long as they have a .cabal file, we can use</span>
+      <span class="co"># `cabal2nix` to generate a Nix expression to build them.</span>
+      <span class="co">#</span>
+      <span class="co"># To generate the local package&#39;s nix expression, simply invoke</span>
+      <span class="co">#</span>
+      <span class="co">#   cabal2nix path/to/folder/containing/cabal/file &gt; project-name.nix</span>
+      <span class="co">#</span>
+      <span class="co"># . E.g., like this:</span>
+      <span class="co">#</span>
+      <span class="co">#   cabal2nix ~/prog/auca &gt; auca.nix</span>
+      <span class="co">#</span>
+      <span class="co"># . The `~/prog/auca` folder contains the `auca.cabal` file, which</span>
+      <span class="co"># will be looked up automatically by cabal2nix. Then, it&#39;s simply a</span>
+      <span class="co"># matter of moving the generated file to a folder inside ~/.nixpkgs,</span>
+      <span class="co"># and calling that file with `callPackage`.</span>
+      <span class="co">#</span>
+      <span class="co"># As for the local package itself, you can do</span>
+      <span class="co">#</span>
+      <span class="co">#   cabal2nix --shell path/to/folder &gt; shell.nix</span>
+      <span class="co">#</span>
+      <span class="co"># to create a nix-shell environment. You can just do `nix-shell` after</span>
+      <span class="co"># that to get ghci. For cabal2nix to work properly, you need to have</span>
+      <span class="co"># the `cabal` binary available. To do this, you should have</span>
+      <span class="co"># `haskellPackages.cabal-install` installed either on your system, or</span>
+      <span class="co"># through nix-env.</span>
+      <span class="va">auca</span> <span class="op">=</span> self<span class="op">.</span>callPackage <span class="ss">./haskell/auca.nix</span> <span class="op">{</span> <span class="op">};</span>
+    <span class="op">};</span>
+  <span class="op">};</span>
+<span class="op">}</span></code></pre></div></div></div><div id="heading-container-h-1.3.1-auca" class="heading-container"><h4 id="h-1.3.1-auca"><span id="c-36" class="cell-idx"><a href="#h-1.3.1-auca">1.3.1&ensp;<span class="code">auca</span></a></span></h4><div id="c-37" class="cell-idx"><div class="block-container src" id="b-nixos-haskell-auca.nix"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-nixos-haskell-auca.nix">&#x1F517;</a></div><div class="block-meta"><code>nixos/haskell/auca.nix</code><br><code><span class="bold">&#x1F3AF; nixos/haskell/auca.nix</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">nix</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="op">{</span> <span class="va">mkDerivation</span><span class="op">,</span> <span class="va">base</span><span class="op">,</span> <span class="va">cmdargs</span><span class="op">,</span> <span class="va">directory</span><span class="op">,</span> <span class="va">hinotify</span><span class="op">,</span> <span class="va">monads-tf</span>
+<span class="op">,</span> <span class="va">process</span><span class="op">,</span> <span class="va">stdenv</span><span class="op">,</span> <span class="va">lib</span><span class="op">,</span> <span class="va">stm</span><span class="op">,</span> <span class="va">time</span>
+<span class="op">}</span>:
+mkDerivation <span class="op">{</span>
+  <span class="va">pname</span> <span class="op">=</span> <span class="st">&quot;auca&quot;</span><span class="op">;</span>
+  <span class="va">version</span> <span class="op">=</span> <span class="st">&quot;0.0.1.5&quot;</span><span class="op">;</span>
+  <span class="va">src</span> <span class="op">=</span> <span class="ss">/home/l/prog/auca</span><span class="op">;</span>
+  <span class="va">isLibrary</span> <span class="op">=</span> <span class="cn">false</span><span class="op">;</span>
+  <span class="va">isExecutable</span> <span class="op">=</span> <span class="cn">true</span><span class="op">;</span>
+  <span class="va">buildDepends</span> <span class="op">=</span> <span class="op">[</span>
+    base cmdargs directory hinotify monads-tf process stm time
+  <span class="op">];</span>
+  <span class="va">description</span> <span class="op">=</span> <span class="st">&quot;Execute arbitrary command(s) based on file changes&quot;</span><span class="op">;</span>
+  <span class="va">license</span> <span class="op">=</span> lib<span class="op">.</span>licenses<span class="op">.</span>bsd2<span class="op">;</span>
+<span class="op">}</span></code></pre></div></div></div><div id="heading-container-h-1.4-k0-machine" class="heading-container"><h3 id="h-1.4-k0-machine"><span id="c-38" class="cell-idx"><a href="#h-1.4-k0-machine">1.4&ensp;<span class="code">k0</span> machine</a></span></h3></div><div id="heading-container-h-1.4.1-Configuration" class="heading-container"><h4 id="h-1.4.1-Configuration"><span id="c-39" class="cell-idx"><a href="#h-1.4.1-Configuration">1.4.1&ensp;Configuration</a></span></h4><div id="c-40" class="cell-idx"><div class="block-container src" id="b-nixos-k0-configuration.nix"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-nixos-k0-configuration.nix">&#x1F517;</a></div><div class="block-meta"><code>nixos/k0/configuration.nix</code><br><code><span class="bold">&#x1F3AF; nixos/k0/configuration.nix</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">nix</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="op">{</span> <span class="va">config</span><span class="op">,</span> <span class="va">pkgs</span><span class="op">,</span> <span class="op">...</span> <span class="op">}</span>:
+
+<span class="op">{</span>
+  <span class="va">imports</span> <span class="op">=</span> <span class="op">[</span>
+    <span class="ss">../extra.nix</span> <span class="co"># <a href="#ll--nixos-k0-configuration.nix-extra.nix-" class="internal-link" id="ll--nixos-k0-configuration.nix-extra.nix-"><span class="bold">1</span></a> <a class="button-popup-backlinks" data-backlinks="[[&quot;#linkNumber-3&quot;,&quot;§ 1.1 Minimal config ~ ¶ (&lt;span class=\&quot;verbatim\&quot;&gt;Cell 2&lt;/span&gt;)&quot;]]">←</a></span>
+    <span class="ss">./hardware-configuration.nix</span>
+  <span class="op">];</span>
+
+  <span class="va">boot</span>.<span class="va">loader</span>.<span class="va">systemd-boot</span>.<span class="va">enable</span> <span class="op">=</span> <span class="cn">true</span><span class="op">;</span>
+  <span class="va">boot</span>.<span class="va">loader</span>.<span class="va">efi</span>.<span class="va">canTouchEfiVariables</span> <span class="op">=</span> <span class="cn">true</span><span class="op">;</span>
+
+  <span class="co"># See https://askubuntu.com/a/863301 (this fixes flooding of the kernel logs</span>
+  <span class="co"># with &quot;printk messages dropped&quot;.</span>
+  <span class="va">boot</span>.<span class="va">kernelParams</span> <span class="op">=</span> <span class="op">[</span> <span class="st">&quot;pcie_aspm=off&quot;</span> <span class="op">];</span>
+
+  <span class="va">boot</span>.<span class="va">initrd</span>.<span class="va">luks</span>.<span class="va">devices</span> <span class="op">=</span> <span class="op">{</span>
+    <span class="va">luksroot</span> <span class="op">=</span> <span class="op">{</span>
+      <span class="va">device</span> <span class="op">=</span> <span class="st">&quot;/dev/disk/by-id/nvme-SAMSUNG_MZVKW512HMJP-000H1_S34CNA0J100907-part2&quot;</span><span class="op">;</span>
+      <span class="va">preLVM</span> <span class="op">=</span> <span class="cn">true</span><span class="op">;</span>
+    <span class="op">};</span>
+  <span class="op">};</span>
+
+  <span class="va">boot</span>.<span class="va">kernel</span>.<span class="va">sysctl</span> <span class="op">=</span> <span class="op">{</span>
+    <span class="co"># Make the kernel reluctant to use swap.</span>
+    <span class="st">&quot;vm.swappiness&quot;</span> <span class="op">=</span> <span class="dv">5</span><span class="op">;</span>
+  <span class="op">};</span>
+
+  <span class="va">networking</span> <span class="op">=</span> <span class="op">{</span>
+    <span class="va">hostName</span> <span class="op">=</span> <span class="st">&quot;k0&quot;</span><span class="op">;</span>
+    <span class="va">extraHosts</span> <span class="op">=</span> <span class="st">&quot;&quot;</span><span class="op">;</span>
+
+    <span class="va">defaultGateway</span> <span class="op">=</span> <span class="st">&quot;192.168.1.1&quot;</span><span class="op">;</span>
+    <span class="va">nameservers</span> <span class="op">=</span> <span class="op">[</span> <span class="st">&quot;8.8.8.8&quot;</span> <span class="op">];</span>
+
+    <span class="co"># Use the USB Wifi adapter &quot;ALFA AWUS036ACHM&quot;. See</span>
+    <span class="co"># https://github.com/morrownr/USB-WiFi/blame/73bf16e0621daafdbc9c852836ea0473616ec626/README.md#L61.</span>
+    <span class="va">wireless</span>.<span class="va">enable</span> <span class="op">=</span> <span class="cn">true</span><span class="op">;</span>
+    <span class="co"># This enables wireless support via /etc/wpa_supplicant/imperative.conf.</span>
+    <span class="va">wireless</span>.<span class="va">allowAuxiliaryImperativeNetworks</span> <span class="op">=</span> <span class="cn">true</span><span class="op">;</span>
+    <span class="va">wireless</span>.<span class="va">interfaces</span> <span class="op">=</span> <span class="op">[</span>
+      <span class="st">&quot;wlp0s20u6&quot;</span>
+    <span class="op">];</span>
+  <span class="op">};</span>
+
+  <a href="/notmuch.html#b-nix:cron-mail-sync" class="internal-link" id="b-nixos-k0-configuration.nix-b-nix:cron-mail-sync">nix:cron-mail-sync</a>
+
+  <span class="va">services</span>.<span class="va">xserver</span> <span class="op">=</span> <span class="op">{</span>
+    <span class="va">videoDrivers</span> <span class="op">=</span> <span class="op">[</span> <span class="st">&quot;nvidia&quot;</span> <span class="op">];</span>
+    <span class="co"># export finalized xorg.conf to /etc/X11/xorg.conf</span>
+    <span class="va">exportConfiguration</span> <span class="op">=</span> <span class="cn">true</span><span class="op">;</span>
+    <span class="va">config</span> <span class="op">=</span> pkgs<span class="op">.</span>lib<span class="op">.</span>mkOverride <span class="dv">50</span> <span class="op">(</span><span class="bu">builtins</span><span class="op">.</span>readFile <span class="ss">./xorg.conf</span><span class="op">);</span>
+  <span class="op">};</span>
+
+  <span class="va">nixpkgs</span>.<span class="va">config</span>.<span class="va">allowUnfree</span> <span class="op">=</span> <span class="cn">true</span><span class="op">;</span>
+  <span class="va">nixpkgs</span>.<span class="va">config</span>.<span class="va">nvidia</span>.<span class="va">acceptLicense</span> <span class="op">=</span> <span class="cn">true</span><span class="op">;</span>
+
+  <span class="co"># Unfortunately, upgrading to nixos 21.11 led to us getting the new 495.44</span>
+  <span class="co"># driver, which breaks our configuration (boo NVIDIA). So, we are forced to</span>
+  <span class="co"># use the older version (which works perfectly!). The configuration here is</span>
+  <span class="co"># taken from this commit</span>
+  <span class="co"># https://github.com/NixOS/nixpkgs/commit/f8d38db8d7c995e0e20ab6b4e48cac26c2ef0dfa.</span>
+  <span class="co"># The instructions at https://nixos.wiki/wiki/Nvidia led me to this commit.</span>
+  <span class="va">hardware</span>.<span class="va">nvidia</span>.<span class="va">package</span> <span class="op">=</span> config<span class="op">.</span>boot<span class="op">.</span>kernelPackages<span class="op">.</span>nvidiaPackages<span class="op">.</span>legacy_470<span class="op">;</span>
+
+  <span class="co"># Audio</span>
+  <span class="va">services</span>.<span class="va">pipewire</span>.<span class="va">pulse</span>.<span class="va">enable</span> <span class="op">=</span> <span class="cn">true</span><span class="op">;</span>
+
+  <span class="co"># Binary Cache for Haskell.nix</span>
+  <span class="va">nix</span>.<span class="va">settings</span>.<span class="va">trusted-public-keys</span> <span class="op">=</span> <span class="op">[</span> <span class="st">&quot;hydra.iohk.io:f/Ea+s+dFdN+3Y/G+FDgSq+a5NEWhJGzdjvKNGv0/EQ=&quot;</span> <span class="op">];</span>
+  <span class="va">nix</span>.<span class="va">settings</span>.<span class="va">substituters</span> <span class="op">=</span> <span class="op">[</span> <span class="st">&quot;https://cache.iog.io&quot;</span> <span class="op">];</span>
+<span class="op">}</span></code></pre></div></div></div><div id="heading-container-h-1.4.2-X-server" class="heading-container"><h4 id="h-1.4.2-X-server"><span id="c-41" class="cell-idx"><a href="#h-1.4.2-X-server">1.4.2&ensp;X server</a></span></h4><div id="c-42" class="cell-idx"><div class="block-container src" id="b-nixos-k0-xorg.conf"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-nixos-k0-xorg.conf">&#x1F517;</a></div><div class="block-meta"><code>nixos/k0/xorg.conf</code><br><code><span class="bold">&#x1F3AF; nixos/k0/xorg.conf</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">txt</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"># nvidia-settings: X configuration file generated by nvidia-settings
+# nvidia-settings:  version 470.256.02
+
+Section &quot;ServerLayout&quot;
+    # the same as `xset dpms force off&#39; after 60 minutes of inactivity, which
+    # makes the screens display nothing but a black image, but does not
+    # actually turn the monitors off.
+    #
+    # Also, suspending seems to do the same thing as stand by, so we disable it.
+    # We also disable OffTime because it does not work properly on our hardware
+    # (screen turns off only momentarily before coming back on). We need to set
+    # these unused values to 0, because otherwise they are set to &quot;10&quot; (minutes)
+    # by default. See `xset q&#39; under the DPMS section for details.
+    #
+    # See https://wiki.archlinux.org/index.php/Display_Power_Management_Signaling
+    Identifier     &quot;Layout0&quot;
+    Screen      0  &quot;Screen0&quot; 0 0
+    InputDevice    &quot;Keyboard0&quot; &quot;CoreKeyboard&quot;
+    InputDevice    &quot;Mouse0&quot; &quot;CorePointer&quot;
+    Option         &quot;Xinerama&quot; &quot;0&quot;
+    # Set up monitor poweroff settings.
+    Option         &quot;BlankTime&quot; &quot;0&quot;
+    Option         &quot;StandbyTime&quot; &quot;0&quot;
+    Option         &quot;SuspendTime&quot; &quot;0&quot;
+    Option         &quot;OffTime&quot; &quot;0&quot;
+EndSection
+
+Section &quot;Files&quot;
+    ModulePath      &quot;/nix/store/hc3m68zn6k1w7dr0dpy61lxv1n6q8pyd-nvidia-x11-470.256.02-6.12.67-bin/lib/xorg/modules&quot;
+    ModulePath      &quot;/nix/store/rplqyp07sd2plsa0jvp0yns32xvfyz5w-xorg-server-21.1.20/lib/xorg/modules&quot;
+    ModulePath      &quot;/nix/store/4p0k0xv9yprzd3dbspyydvp0c21vavgq-xf86-input-evdev-2.11.0/lib/xorg/modules&quot;
+    ModulePath      &quot;/nix/store/21cm4jhfmnqa7jdy3zkiiswpjkmri9hk-xf86-input-libinput-1.5.0/lib/xorg/modules&quot;
+    FontPath        &quot;/nix/store/1mpczv0zzhv79l75vdyw40x2hskmj85k-terminus-font-4.49.1/share/fonts/terminus&quot;
+    FontPath        &quot;/nix/store/dp0r75hg8lxm0is2i191sf2mbqrv6pr4-font-cursor-misc-1.0.4/share/fonts/X11/misc&quot;
+    FontPath        &quot;/nix/store/vnlxybwsdpvk64gnp4y4pxk38nlz8q4c-font-misc-misc-1.1.3/share/fonts/X11/misc&quot;
+    FontPath        &quot;/nix/store/1jrlrrggvwiibj5a5jncii3qym81mwf4-unifont-16.0.03/share/fonts&quot;
+    FontPath        &quot;/nix/store/62x3lp93j9q6phnl6s1fphscddkvcqx1-ghostscript-with-X-10.06.0-fonts/share/fonts&quot;
+    FontPath        &quot;/nix/store/0n8vg6chibwm829hnh597q9jx2a0s8if-font-adobe-100dpi-1.0.4/share/fonts/X11/100dpi&quot;
+    FontPath        &quot;/nix/store/i5b8zhswl3lm14ni5zjkk8a8zd0gr5zz-font-adobe-75dpi-1.0.4/share/fonts/X11/75dpi&quot;
+    FontPath        &quot;/nix/store/a5jx22l6xywhfqnszml7wz1fhq67x7yd-X11-fonts/share/X11/fonts&quot;
+EndSection
+
+Section &quot;InputDevice&quot;
+    Identifier     &quot;Keyboard0&quot;
+    Driver         &quot;kbd&quot;
+EndSection
+
+Section &quot;InputDevice&quot;
+    Identifier     &quot;Mouse0&quot;
+    Driver         &quot;mouse&quot;
+    Option         &quot;Protocol&quot; &quot;auto&quot;
+    Option         &quot;Device&quot; &quot;/dev/input/mice&quot;
+    Option         &quot;Emulate3Buttons&quot; &quot;no&quot;
+    Option         &quot;ZAxisMapping&quot; &quot;4 5&quot;
+EndSection
+
+Section &quot;Monitor&quot;
+    Identifier     &quot;Monitor0&quot;
+    VendorName     &quot;Unknown&quot;
+    ModelName      &quot;LG Electronics LG SDQHD&quot;
+    HorizSync       30.0 - 178.0
+    VertRefresh     59.0 - 61.0
+    Option         &quot;DPMS&quot;
+EndSection
+
+Section &quot;Device&quot;
+    Identifier     &quot;Device0&quot;
+    Driver         &quot;nvidia&quot;
+    VendorName     &quot;NVIDIA Corporation&quot;
+    BoardName      &quot;Quadro K1200&quot;
+    Option         &quot;UseEdidDpi&quot; &quot;False&quot;
+    Option         &quot;DPI&quot; &quot;108 x 108&quot;
+EndSection
+
+Section &quot;Screen&quot;
+    Identifier     &quot;Screen0&quot;
+    Device         &quot;Device0&quot;
+    Monitor        &quot;Monitor0&quot;
+    DefaultDepth    24
+    Option         &quot;Stereo&quot; &quot;0&quot;
+    Option         &quot;nvidiaXineramaInfoOrder&quot; &quot;DFP-5&quot;
+    Option         &quot;metamodes&quot; &quot;DP-6: 2560x2880 +1050+0, DP-5: nvidia-auto-select +0+600 {rotation=left}; DP-6: 1024x768_60 +0+0, DP-5: nvidia-auto-select +1024+0; DP-6: 800x600 +0+0, DP-5: nvidia-auto-select +800+0; DP-6: 640x480 +0+0, DP-5: nvidia-auto-select +640+0&quot;
+    Option         &quot;SLI&quot; &quot;Off&quot;
+    Option         &quot;MultiGPU&quot; &quot;Off&quot;
+    Option         &quot;BaseMosaic&quot; &quot;off&quot;
+    SubSection     &quot;Display&quot;
+        Depth       24
+    EndSubSection
+EndSection</code></pre></div></div></div><div id="heading-container-h-2-nix-darwin" class="heading-container"><h2 id="h-2-nix-darwin"><span id="c-43" class="cell-idx"><a href="#h-2-nix-darwin">2&ensp;nix-darwin</a></span></h2><p><span id="c-44" class="cell-idx"><a href="https://github.com/nix-darwin/nix-darwin" class="external-link" id="linkNumber-8">nix-darwin</a> is useful for making Mac laptops behave similar to NixOS.</span></p><div id="c-45" class="cell-idx"><div class="block-container src" id="b-nixpkgs-darwin-configuration.nix"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-nixpkgs-darwin-configuration.nix">&#x1F517;</a></div><div class="block-meta"><code>nixpkgs/darwin-configuration.nix</code><br><code><span class="bold">&#x1F3AF; nixpkgs/darwin-configuration.nix</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">nix</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="op">{</span> <span class="va">config</span><span class="op">,</span> <span class="va">lib</span><span class="op">,</span> <span class="va">pkgs</span><span class="op">,</span> <span class="op">...</span> <span class="op">}</span>:
+
+<span class="kw">let</span>
+  <span class="va">melby-release</span> <span class="op">=</span> <span class="bu">import</span> <span class="st">&quot;</span><span class="sc">${</span>HOME<span class="sc">}</span><span class="st">/prog/melby/package/build.nix&quot;</span><span class="op">;</span>
+  <span class="va">HOME</span> <span class="op">=</span> config<span class="op">.</span>system<span class="op">.</span>primaryUserHome<span class="op">;</span>
+  <span class="va">baseconfig</span> <span class="op">=</span> <span class="op">{</span> <span class="va">allowUnfree</span> <span class="op">=</span> <span class="cn">true</span><span class="op">;</span> <span class="op">};</span>
+  <span class="va">unstable</span> <span class="op">=</span> <span class="bu">import</span> &lt;nixpkgs<span class="op">-</span>unstable&gt; <span class="op">{</span> <span class="va">config</span> <span class="op">=</span> baseconfig<span class="op">;</span> <span class="op">};</span>
+<span class="kw">in</span> <span class="op">{</span>
+  <span class="va">nixpkgs</span>.<span class="va">config</span>.<span class="va">allowUnfree</span> <span class="op">=</span> <span class="cn">true</span><span class="op">;</span>
+
+  <span class="co"># List packages installed in system profile.</span>
+  <span class="va">environment</span>.<span class="va">systemPackages</span> <span class="op">=</span> <span class="kw">with</span> pkgs<span class="op">;</span> <span class="op">[</span>
+    <a href="#b-pkgs:essentials" class="internal-link" id="b-nixpkgs-darwin-configuration.nix-b-pkgs:essentials">pkgs:essentials</a>
+    <a href="#b-pkgs:archive" class="internal-link" id="b-nixpkgs-darwin-configuration.nix-b-pkgs:archive">pkgs:archive</a>
+    <a href="#b-pkgs:fonts-raw-list" class="internal-link" id="b-nixpkgs-darwin-configuration.nix-b-pkgs:fonts-raw-list">pkgs:fonts-raw-list</a>
+    <a href="#b-pkgs:email" class="internal-link" id="b-nixpkgs-darwin-configuration.nix-b-pkgs:email">pkgs:email</a>
+    <a href="#b-pkgs:image" class="internal-link" id="b-nixpkgs-darwin-configuration.nix-b-pkgs:image">pkgs:image</a>
+    <a href="#b-pkgs:misc-common" class="internal-link" id="b-nixpkgs-darwin-configuration.nix-b-pkgs:misc-common">pkgs:misc-common</a>
+    bashInteractive
+    coreutils
+    findutils
+    gawk
+    gnugrep
+    gnused
+    gnutar
+    less
+    procps
+    texliveFull
+    texlivePackages<span class="op">.</span>raleway
+  <span class="op">];</span>
+
+  <span class="co"># Enable melbyd with launchd.</span>
+  <span class="va">launchd</span>.<span class="va">user</span>.<span class="va">agents</span>.<span class="va">melbyd</span> <span class="op">=</span> <span class="op">{</span>
+    <span class="va">script</span> <span class="op">=</span> <span class="st">&quot;</span><span class="sc">${</span>melby<span class="op">-</span>release<span class="op">.</span>melby<span class="op">-</span>daemon<span class="sc">}</span><span class="st">/bin/melbyd start&quot;</span><span class="op">;</span>
+    <span class="va">environment</span> <span class="op">=</span> <span class="op">{</span>
+      <span class="va">RELEASE_COOKIE</span> <span class="op">=</span> <span class="st">&quot;</span><span class="sc">${</span>HOME<span class="sc">}</span><span class="st">/.melby/cookie&quot;</span><span class="op">;</span>
+      <span class="va">LUA_PATH</span> <span class="op">=</span> <span class="st">&quot;</span><span class="sc">${</span>HOME<span class="sc">}</span><span class="st">/.melby/?.lua&quot;</span><span class="op">;</span>
+    <span class="op">};</span>
+    <span class="va">serviceConfig</span> <span class="op">=</span> <span class="op">{</span>
+      <span class="va">KeepAlive</span> <span class="op">=</span> <span class="cn">true</span><span class="op">;</span>
+      <span class="va">RunAtLoad</span> <span class="op">=</span> <span class="cn">true</span><span class="op">;</span>
+    <span class="op">};</span>
+  <span class="op">};</span>
+
+  <span class="co"># Auto upgrade nix package and the daemon service.</span>
+  <span class="va">nix</span>.<span class="va">package</span> <span class="op">=</span> pkgs<span class="op">.</span>nix<span class="op">;</span>
+
+  <span class="co"># nix-direnv</span>
+  <span class="co"># See https://github.com/nix-community/nix-direnv.</span>
+  <span class="va">programs</span>.<span class="va">direnv</span> <span class="op">=</span> <span class="op">{</span>
+    <span class="va">enable</span> <span class="op">=</span> <span class="cn">true</span><span class="op">;</span>
+    <span class="va">package</span> <span class="op">=</span> pkgs<span class="op">.</span>direnv<span class="op">;</span>
+    <span class="va">silent</span> <span class="op">=</span> <span class="cn">false</span><span class="op">;</span>
+    <span class="va">loadInNixShell</span> <span class="op">=</span> <span class="cn">true</span><span class="op">;</span>
+    <span class="va">direnvrcExtra</span> <span class="op">=</span> <span class="st">&quot;&quot;</span><span class="op">;</span>
+    <span class="va">nix-direnv</span> <span class="op">=</span> <span class="op">{</span>
+      <span class="va">enable</span> <span class="op">=</span> <span class="cn">true</span><span class="op">;</span>
+      <span class="va">package</span> <span class="op">=</span> pkgs<span class="op">.</span>nix<span class="op">-</span>direnv<span class="op">;</span>
+    <span class="op">};</span>
+  <span class="op">};</span>
+
+  <span class="co"># Create /etc/zshrc that loads the nix-darwin environment.</span>
+  <span class="va">programs</span>.<span class="va">zsh</span>.<span class="va">enable</span> <span class="op">=</span> <span class="cn">true</span><span class="op">;</span> <span class="co"># default shell on catalina</span>
+
+  <span class="co"># Used for backwards compatibility, please read the changelog before changing.</span>
+  <span class="co"># $ darwin-rebuild changelog</span>
+  <span class="va">system</span>.<span class="va">stateVersion</span> <span class="op">=</span> <span class="dv">4</span><span class="op">;</span>
+
+  <span class="co"># Set primary user, because nix-darwin requires it (for now) as part of the</span>
+  <span class="co"># migration to use &quot;sudo darwin-rebuild&quot;.</span>
+  <span class="co">#</span>
+  <span class="co"># https://github.com/nix-darwin/nix-darwin/blob/fa6120c32f10bd2aac9e8c9a6e71528a9d9d823b/modules/system/primary-user.nix#L53-L58</span>
+  <span class="va">system</span>.<span class="va">primaryUser</span> <span class="op">=</span> <span class="st">&quot;l&quot;</span><span class="op">;</span>
+  <span class="va">nix</span>.<span class="va">settings</span>.<span class="va">trusted-users</span> <span class="op">=</span> <span class="op">[</span> <span class="st">&quot;root&quot;</span> <span class="st">&quot;l&quot;</span> <span class="op">];</span>
+
+  <span class="co"># Disable default &quot;walters&quot; prompt, which adds an annoying green PWD string at the far right hand side of the terminal.</span>
+  <span class="va">programs</span>.<span class="va">zsh</span>.<span class="va">promptInit</span> <span class="op">=</span> <span class="st">&quot;&quot;</span><span class="op">;</span>
+
+  <span class="va">environment</span>.<span class="va">variables</span>.<span class="va">SHELL</span> <span class="op">=</span> <span class="st">&quot;</span><span class="sc">${</span>pkgs<span class="op">.</span>zsh<span class="sc">}</span><span class="st">/bin/zsh&quot;</span><span class="op">;</span>
+  <span class="va">environment</span>.<span class="va">variables</span>.<span class="va">LANG</span> <span class="op">=</span> <span class="st">&quot;en_US.UTF-8&quot;</span><span class="op">;</span>
+<span class="op">}</span></code></pre></div></div></div><div id="heading-container-h--Page-metrics" class="heading-container page-metrics"><h2 id="h--Page-metrics"><a href="#h--Page-metrics">Page metrics</a></h2></div><div id="heading-container-h--Backlinks" class="heading-container backlinks"><h3 id="h--Backlinks"><a href="#h--Backlinks">Backlinks (1)</a></h3><ol><li><a href="/notmuch.html">notmuch.org (1)</a><ol><li><a href="#b-nixos-k0-configuration.nix"><span class="verbatim">nixos/k0/configuration.nix</span></a><span class="verbatim"> &#x2190; </span><a href="/notmuch.html#c-55">¶ (<span class="verbatim">Cell 55</span>)</a></li></ol></li></ol></div><div id="heading-container-h--Tangled-files" class="heading-container tangled-blocks"><h3 id="h--Tangled-files"><a href="#h--Tangled-files">Tangled files (7)</a></h3><ol><li><a href="#b-nixos-extra.nix" class="verbatim">nixos/extra.nix</a></li><li><a href="#b-nixos-haskell-auca.nix" class="verbatim">nixos/haskell/auca.nix</a></li><li><a href="#b-nixos-k0-configuration.nix" class="verbatim">nixos/k0/configuration.nix</a></li><li><a href="#b-nixos-k0-xorg.conf" class="verbatim">nixos/k0/xorg.conf</a></li><li><a href="#b-nixos-minimal.nix" class="verbatim">nixos/minimal.nix</a></li><li><a href="#b-nixos-overlay.nix" class="verbatim">nixos/overlay.nix</a></li><li><a href="#b-nixpkgs-darwin-configuration.nix" class="verbatim">nixpkgs/darwin-configuration.nix</a></li></ol></div><div id="heading-container-h--Named-cells" class="heading-container named-cells"><h3 id="h--Named-cells"><a href="#h--Named-cells">Named cells (19)</a></h3><ol><li><a href="#b-nix:audio"><span class="verbatim">nix:audio</span></a></li><li><a href="#b-nix:fonts"><span class="verbatim">nix:fonts</span></a></li><li><a href="#b-nix:language-region"><span class="verbatim">nix:language-region</span></a></li><li><a href="#b-nix:networking"><span class="verbatim">nix:networking</span></a></li><li><a href="#b-nix:shell"><span class="verbatim">nix:shell</span></a></li><li><a href="#b-nix:users"><span class="verbatim">nix:users</span></a></li><li><a href="#b-nixos-extra.nix"><span class="verbatim">nixos/extra.nix</span></a></li><li><a href="#b-nixos-haskell-auca.nix"><span class="verbatim">nixos/haskell/auca.nix</span></a></li><li><a href="#b-nixos-k0-configuration.nix"><span class="verbatim">nixos/k0/configuration.nix</span></a></li><li><a href="#b-nixos-k0-xorg.conf"><span class="verbatim">nixos/k0/xorg.conf</span></a></li><li><a href="#b-nixos-minimal.nix"><span class="verbatim">nixos/minimal.nix</span></a></li><li><a href="#b-nixos-overlay.nix"><span class="verbatim">nixos/overlay.nix</span></a></li><li><a href="#b-nixpkgs-darwin-configuration.nix"><span class="verbatim">nixpkgs/darwin-configuration.nix</span></a></li><li><a href="#b-pkgs:archive"><span class="verbatim">pkgs:archive</span></a></li><li><a href="#b-pkgs:email"><span class="verbatim">pkgs:email</span></a></li><li><a href="#b-pkgs:essentials"><span class="verbatim">pkgs:essentials</span></a></li><li><a href="#b-pkgs:fonts-raw-list"><span class="verbatim">pkgs:fonts-raw-list</span></a></li><li><a href="#b-pkgs:image"><span class="verbatim">pkgs:image</span></a></li><li><a href="#b-pkgs:misc-common"><span class="verbatim">pkgs:misc-common</span></a></li></ol></div><footer><div class="lilac-stamp">Generated by <a href="https://syscfg.funloop.org" class="external-link" target="_blank" rel="noopener noreferrer">Lilac</a></div></footer></main><script id="heading-ancestry" type="application/json">{"h--Backlinks":["h--Page-metrics"],"h--Named-cells":["h--Page-metrics"],"h--Page-metrics":[],"h--Tangled-files":["h--Page-metrics"],"h-1-NixOS":[],"h-1.1-Minimal-config":["h-1-NixOS"],"h-1.1.1-Users":["h-1.1-Minimal-config","h-1-NixOS"],"h-1.1.2-Shell":["h-1.1-Minimal-config","h-1-NixOS"],"h-1.1.3-Language---Region":["h-1.1-Minimal-config","h-1-NixOS"],"h-1.1.4-Networking":["h-1.1-Minimal-config","h-1-NixOS"],"h-1.1.5-Audio":["h-1.1-Minimal-config","h-1-NixOS"],"h-1.1.6-Fonts":["h-1.1-Minimal-config","h-1-NixOS"],"h-1.2-Extra-packages":["h-1-NixOS"],"h-1.2.1-Essentials":["h-1.2-Extra-packages","h-1-NixOS"],"h-1.2.2-Archive-handling":["h-1.2-Extra-packages","h-1-NixOS"],"h-1.2.3-Email":["h-1.2-Extra-packages","h-1-NixOS"],"h-1.2.4-Images":["h-1.2-Extra-packages","h-1-NixOS"],"h-1.2.5-Miscellaneous-common-packages":["h-1.2-Extra-packages","h-1-NixOS"],"h-1.3-Haskell":["h-1-NixOS"],"h-1.3.1-auca":["h-1.3-Haskell","h-1-NixOS"],"h-1.4-k0-machine":["h-1-NixOS"],"h-1.4.1-Configuration":["h-1.4-k0-machine","h-1-NixOS"],"h-1.4.2-X-server":["h-1.4-k0-machine","h-1-NixOS"],"h-2-nix-darwin":[]}</script><script id="lilac-fe-script" src="/js/lilac.js"></script></body></html>

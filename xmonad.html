@@ -1,0 +1,1596 @@
+<!DOCTYPE HTML><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>xmonad</title><link rel="stylesheet" href="/css/default.css"><link rel="shortcut icon" type="image/png" href="/favicon.png"><link rel="stylesheet" href="/vendor/source-fonts/source-fonts.css">
+<script>
+  window.MathJax = {
+      loader: { paths: { "mathjax-newcm": "/vendor/mathjax-newcm-font" } },
+      output: { font: "mathjax-newcm" },
+  tex: {
+      tags: 'ams'
+  },
+  options: {
+      ignoreHtmlClass: 'verbatim|code'
+  }
+};
+</script>
+<script id="MathJax-script" async="" src="/vendor/mathjax/tex-mml-chtml.js"></script>
+</head><body><div class="navbar"><button id="hamburger" class="tocs-toggle-button" aria-label="Toggle table of contents sidebar">&#x2630;</button><div class="breadcrumbs"><a href="https://syscfg.funloop.org"><span class="breadcrumb">Linus Arver&#39;s Dotfiles</span></a> <span class="breadcrumb-separator">/</span> <a href="#top"><span class="breadcrumb">xmonad.org</span></a></div></div><nav id="tocs"><p class="widget-title gtoc-title">Site contents</p><nav class="gtoc"><ul><li><a href="/index.html">Introduction</a></li><li><a href="/bash.html">Bash</a></li><li><a href="/clojure.html">Clojure</a></li><li><a href="/emacs.html">Emacs</a></li><li><a href="/git.html">Git</a></li><li><a href="/jj.html">Jujutsu</a></li><li><a href="/keybindings.html">Keybindings (WIP)</a></li><li><a href="/nix.html">Nix</a></li><li><a href="/notmuch.html">Notmuch</a></li><li><a href="/tmux.html">tmux</a></li><li><a href="/wezterm.html">Wezterm</a></li></ul></nav><p class="widget-title toc-title">Page contents</p><nav class="toc"><div class="toc-entries"><ol><li class="toc-level-1"><div class="toc-entry"><a href="#h--Page-metrics">Page metrics</a></div><ol><li class="toc-level-2"><div class="toc-entry"><a href="#h--Backlinks">Backlinks</a></div></li><li class="toc-level-2"><div class="toc-entry"><a href="#h--Tangled-files">Tangled files</a></div></li><li class="toc-level-2"><div class="toc-entry"><a href="#h--Named-cells">Named cells</a></div></li></ol></li></ol></div></nav></nav><main><h1 id="top">xmonad</h1><hr class="title-underline"><div id="c-0" class="cell-idx"><div class="block-container src" id="b-xmonad.hs"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-xmonad.hs">&#x1F517;</a></div><div class="block-meta"><code>xmonad.hs</code><br><code><span class="bold">&#x1F3AF; xmonad/xmonad.hs</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">haskell</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="ot">{-# LANGUAGE LambdaCase #-}</span>
+<span class="ot">{-# LANGUAGE RecordWildCards #-}</span>
+<span class="ot">{-# LANGUAGE TupleSections #-}</span>
+<span class="ot">{-# OPTIONS_GHC -Wno-error=x-partial #-}</span>
+
+<span class="kw">module</span> <span class="dt">Main</span> <span class="kw">where</span>
+
+<span class="kw">import</span> <span class="dt">Control.Arrow</span>
+  ( first
+  , second
+  )
+<span class="kw">import</span> <span class="dt">Control.Monad</span>
+  ( (<span class="op">&lt;=&lt;</span>)
+  , foldM
+  , when
+  )
+<span class="kw">import</span> <span class="dt">Data.Bits</span>
+  ( (<span class="op">.&amp;.</span>) )
+<span class="kw">import</span> <span class="dt">Data.List</span>
+  ( elemIndex
+  , find
+  , intercalate
+  , isPrefixOf
+  , nub
+  , sortBy
+  , sortOn
+  )
+<span class="kw">import</span> <span class="dt">Data.Maybe</span>
+  ( fromJust
+  , isJust
+  , isNothing
+  , listToMaybe
+  )
+<span class="kw">import</span> <span class="dt">Data.Monoid</span>
+  ( <span class="dt">All</span>(<span class="op">..</span>)
+  , appEndo
+  )
+<span class="kw">import</span> <span class="dt">Data.Ord</span>
+  ( comparing
+  )
+<span class="kw">import</span> <span class="dt">Graphics.X11.Types</span>
+<span class="kw">import</span> <span class="dt">Safe</span>
+  ( headDef )
+<span class="kw">import</span> <span class="dt">System.Posix.Unistd</span>
+  ( nodeName
+  , getSystemID
+  )
+<span class="kw">import</span> <span class="dt">XMonad</span>
+<span class="kw">import</span> <span class="dt">XMonad.Actions.CycleWS</span>
+  ( <span class="dt">Direction1D</span>
+    ( <span class="dt">Next</span>
+    , <span class="dt">Prev</span>
+    )
+  , <span class="dt">WSType</span> (<span class="dt">WSIs</span>)
+  , doTo
+  , findWorkspace
+  , moveTo
+  , screenBy
+  )
+<span class="kw">import</span> <span class="dt">XMonad.Actions.GridSelect</span>
+  ( gridselect
+  , spawnSelected
+  , stringColorizer
+  , buildDefaultGSConfig
+  , gs_cellheight
+  , gs_cellwidth
+  )
+<span class="kw">import</span> <span class="dt">XMonad.Actions.NoBorders</span>
+  ( toggleBorder )
+<span class="kw">import</span> <span class="dt">XMonad.Actions.Warp</span>
+  ( banish
+  , <span class="dt">Corner</span>(<span class="op">..</span>))
+<span class="kw">import</span> <span class="dt">XMonad.Hooks.ManageHelpers</span>
+  ( (<span class="op">-?&gt;</span>)
+  , doCenterFloat
+  , composeOne
+  )
+<span class="kw">import</span> <span class="dt">XMonad.Layout.IndependentScreens</span>
+  ( countScreens )
+<span class="kw">import</span> <span class="dt">XMonad.Layout.NoBorders</span>
+  ( <span class="dt">WithBorder</span>
+  , noBorders
+  )
+<span class="kw">import</span> <span class="dt">XMonad.Layout.ResizableTile</span>
+  ( <span class="dt">MirrorResize</span>
+    ( <span class="dt">MirrorExpand</span>
+    , <span class="dt">MirrorShrink</span>
+    )
+  , <span class="dt">ResizableTall</span>(<span class="op">..</span>)
+  )
+<span class="kw">import</span> <span class="dt">XMonad.Util.Font</span>
+  ( <span class="dt">Align</span>(<span class="op">..</span>)
+  , fi
+  , initXMF
+  , releaseXMF
+  , textExtentsXMF
+  , textWidthXMF
+  )
+<span class="kw">import</span> <span class="dt">XMonad.Util.NamedWindows</span>
+  ( getName )
+<span class="kw">import</span> <span class="dt">XMonad.Util.Timer</span>
+  ( <span class="dt">TimerId</span>
+  , handleTimer
+  , startTimer
+  )
+<span class="kw">import</span> <span class="dt">XMonad.Util.WindowProperties</span>
+<span class="kw">import</span> <span class="dt">XMonad.Util.WorkspaceCompare</span>
+  ( getSortByIndex )
+<span class="kw">import</span> <span class="dt">XMonad.Util.XUtils</span>
+  ( createNewWindow
+  , deleteWindow
+  , paintAndWrite
+  , showWindow
+  )
+<span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Data.Map</span> <span class="kw">as</span> <span class="dt">M</span>
+<span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Data.Map.Strict</span> <span class="kw">as</span> <span class="dt">H</span>
+<span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">XMonad.Layout.LayoutModifier</span> <span class="kw">as</span> <span class="dt">XLL</span>
+<span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">XMonad.StackSet</span> <span class="kw">as</span> <span class="dt">W</span>
+<span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">XMonad.Util.ExtensibleState</span> <span class="kw">as</span> <span class="dt">XS</span>
+
+<span class="co">-- The main concept behind this configuration is the 3-dimensional navigation of</span>
+<span class="co">-- Workspaces. To my knowledge it is unique in the XMonad world. It builds on a</span>
+<span class="co">-- simple idea from XMonad.Layout.IndependentScreens (the idea of adding a</span>
+<span class="co">-- dimension by merely modifying a WorkspaceId (string)). A summary of how that</span>
+<span class="co">-- works follows below. The other thing is that all toplevel functions in here</span>
+<span class="co">-- are prefixed with &quot;l_&quot;, in the style of my Emacs configuration (where all</span>
+<span class="co">-- custom functions are prefixed with &quot;l/&quot;).</span>
+
+<span class="kw">newtype</span> <span class="dt">XCoord</span> <span class="ot">=</span> <span class="dt">X</span> <span class="dt">Int</span>
+  <span class="kw">deriving</span> (<span class="dt">Eq</span>, <span class="dt">Ord</span>)
+<span class="kw">newtype</span> <span class="dt">ZCoord</span> <span class="ot">=</span> <span class="dt">Z</span> <span class="dt">Int</span>
+  <span class="kw">deriving</span> (<span class="dt">Eq</span>, <span class="dt">Ord</span>)
+<span class="kw">newtype</span> <span class="dt">YCoord</span> <span class="ot">=</span> <span class="dt">Y</span> <span class="dt">Int</span>
+  <span class="kw">deriving</span> (<span class="dt">Eq</span>, <span class="dt">Ord</span>)
+
+<span class="co">-- Each WorkspaceId, aka Workspace name, is the unique cross-section of the X,</span>
+<span class="co">-- Z, and Y axes. The WorkspaceId is a String, and we can convert a XZY to a</span>
+<span class="co">-- String with a basic &quot;Show&quot; instance.</span>
+<span class="kw">newtype</span> <span class="dt">XZY</span> <span class="ot">=</span> <span class="dt">XZY</span> (<span class="dt">XCoord</span>, <span class="dt">ZCoord</span>, <span class="dt">YCoord</span>)
+  <span class="kw">deriving</span> (<span class="dt">Eq</span>, <span class="dt">Ord</span>)
+<span class="kw">instance</span> <span class="dt">Show</span> <span class="dt">XZY</span> <span class="kw">where</span>
+  <span class="fu">show</span> (<span class="dt">XZY</span> (<span class="dt">X</span> x, <span class="dt">Z</span> z, <span class="dt">Y</span> y)) <span class="ot">=</span> intercalate <span class="st">&quot;_&quot;</span> <span class="op">$</span> <span class="fu">map</span> <span class="fu">show</span> [x, z, y]
+
+<span class="co">-- XMonad internally calls the WorkspaceId a &quot;tag&quot; as it is just a String</span>
+<span class="co">-- (WorkspaceId is type-synonymed to it). We use a combination of X, Y, and</span>
+<span class="co">-- Z-axis coordinates to get a 3-dimensional view of Workspaces. We do this by</span>
+<span class="co">-- breaking up WorkspaceId into the following format:</span>
+<span class="co">-- &quot;&lt;XCoord&gt;_&lt;ZCoord&gt;_&lt;YCoord&gt;&quot;.</span>
+<span class="co">--</span>
+<span class="co">-- The H-h/H-l bindings move the active workspace (or window) focus across</span>
+<span class="co">-- physical screens in the X-axis direction (the vanilla XMonad bindings are</span>
+<span class="co">-- Modkey-{Q,W,E}). We chose the name X-axis for this direction because on most</span>
+<span class="co">-- multihead setups, the monitors are placed horizontally in a</span>
+<span class="co">-- left-to-right fashion. To move into our Z axis, we use H-n; this binding</span>
+<span class="co">-- switches the workspace on the current physical screen only and leaves all</span>
+<span class="co">-- other screens as-is. Intuitively, we can imagine this 2-dimensional scheme as</span>
+<span class="co">-- if each XMonad worspace is a playing card in a deck of cards. Each physical</span>
+<span class="co">-- screen has its own unique deck. Not to be pedantic, but for those unfamiliar</span>
+<span class="co">-- with XMonad, each &quot;playing card&quot; here is its own &quot;Desktop&quot; with multiple</span>
+<span class="co">-- tiled GUI windows of applications.</span>
+<span class="co">--</span>
+<span class="co">-- Now we add in our final dimension, the Y dimension. The H-M-j/H-M-k bindings</span>
+<span class="co">-- move up and down the Y axis. Continuing with our playing card analogy, it&#39;s</span>
+<span class="co">-- as if each &lt;YCoord&gt; in the Y axis has its own independent array of decks. The</span>
+<span class="co">-- most interesting thing here is that moving up and down the Y axis changes</span>
+<span class="co">-- _all_ screens (every deck must change!). The effect is quite dramatic (and</span>
+<span class="co">-- refreshing on my 4-monitor setup) and really shows off the power of</span>
+<span class="co">-- multi-head setups. This simulates the workflow demonstrated in</span>
+<span class="co">-- https://youtu.be/w5_36BBGoU0?t=3m30s, where multiple screens all change</span>
+<span class="co">-- content at once. The cool part about our setup is that we have the added Z</span>
+<span class="co">-- dimension (for each unique X and Y coordinate pair), giving us much more room</span>
+<span class="co">-- to place windows around. An important thing to keep in mind here is that even</span>
+<span class="co">-- though we change by the Y coordinate with H-M-j/H-M-k, we actually change the</span>
+<span class="co">-- Z coordinate as well if necessary on a per-screen basis (for each physical</span>
+<span class="co">-- screen (XCoord)). This is because whenever we move up/down the Y axis, we</span>
+<span class="co">-- move to the *last used set of XZY workspaces at that YCoord*; using our</span>
+<span class="co">-- playing card example, each Y coordinate (array of decks) remembers what</span>
+<span class="co">-- ZCoord (playing card) each X screen (deck) was showing before focus changed</span>
+<span class="co">-- to a different Y coordinate. This &quot;last seen&quot; concept is made possible with</span>
+<span class="co">-- the &quot;Seen&quot; data type. We also save which screen had focus, which comes in</span>
+<span class="co">-- handy when switching rapidly between Y coordinates.</span>
+<span class="co">--</span>
+<span class="co">-- That&#39;s about it. Maybe one day this will become an XMonad extension...</span>
+
+<span class="co">-- The number of connected physical screens can vary across OS boots (e.g., when</span>
+<span class="co">-- we disconnect or connect an external monitor to a laptop). So we rely on</span>
+<span class="co">-- XMonad.Layout.IndependentScreens to give us the correct number of X</span>
+<span class="co">-- coordinates (see countScreens), and use it here as numScreens. (</span><span class="al">NOTE</span><span class="co">: it</span>
+<span class="co">-- is unclear what will happen if we change the number of physical screens</span>
+<span class="co">-- within a single X Session.)</span>
+<span class="ot">l_XCoords ::</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> [<span class="dt">XCoord</span>]
+l_XCoords numScreens <span class="ot">=</span> <span class="fu">map</span> <span class="dt">X</span> <span class="op">$</span> <span class="fu">take</span> numScreens [<span class="dv">0</span><span class="op">..</span>]
+
+<span class="co">-- We have 10 Z coordinates and 10 Y coordinates. That means there are 100</span>
+<span class="co">-- unique workspaces, which is more than enough, one would think, for most work.</span>
+<span class="co">--</span>
+<span class="co">-- The X coordinate is composed of the number of monitor screens available in</span>
+<span class="co">-- the real world.</span>
+<span class="ot">l_ZCoords ::</span> [<span class="dt">ZCoord</span>]
+l_ZCoords <span class="ot">=</span> <span class="fu">map</span> <span class="dt">Z</span> <span class="op">$</span> <span class="fu">take</span> <span class="dv">10</span> [<span class="dv">0</span><span class="op">..</span>]
+<span class="ot">l_YCoords ::</span> [<span class="dt">YCoord</span>]
+l_YCoords <span class="ot">=</span> <span class="fu">map</span> <span class="dt">Y</span> <span class="op">$</span> <span class="fu">take</span> <span class="dv">10</span> [<span class="dv">0</span><span class="op">..</span>]
+
+<span class="co">-- Again, for reference our format for WorkspaceIds are &quot;&lt;x&gt;_&lt;z&gt;_&lt;y&gt;&quot;.</span>
+<span class="ot">l_XFrom ::</span> <span class="dt">XZY</span> <span class="ot">-&gt;</span> <span class="dt">XCoord</span>
+l_XFrom (<span class="dt">XZY</span> (xc, _, _))<span class="ot">=</span> xc
+<span class="ot">l_ZFrom ::</span> <span class="dt">XZY</span> <span class="ot">-&gt;</span> <span class="dt">ZCoord</span>
+l_ZFrom (<span class="dt">XZY</span> (_, zc, _))<span class="ot">=</span> zc
+<span class="ot">l_YFrom ::</span> <span class="dt">XZY</span> <span class="ot">-&gt;</span> <span class="dt">YCoord</span>
+l_YFrom (<span class="dt">XZY</span> (_, _, yc))<span class="ot">=</span> yc
+
+<span class="ot">l_XFromWid ::</span> <span class="dt">WorkspaceId</span> <span class="ot">-&gt;</span> <span class="dt">XCoord</span>
+l_XFromWid wid <span class="ot">=</span> <span class="dt">X</span> <span class="op">$</span> <span class="fu">read</span> xString
+  <span class="kw">where</span>
+  xString <span class="ot">=</span> <span class="fu">takeWhile</span> (<span class="op">/=</span><span class="ch">&#39;_&#39;</span>) wid
+<span class="ot">l_ZFromWid ::</span> <span class="dt">WorkspaceId</span> <span class="ot">-&gt;</span> <span class="dt">ZCoord</span>
+l_ZFromWid wid <span class="ot">=</span> <span class="dt">Z</span> <span class="op">$</span> <span class="fu">read</span> zString
+  <span class="kw">where</span>
+  zString <span class="ot">=</span> <span class="fu">takeWhile</span> (<span class="op">/=</span><span class="ch">&#39;_&#39;</span>) <span class="op">.</span> <span class="fu">drop</span> <span class="dv">1</span> <span class="op">.</span> <span class="fu">snd</span> <span class="op">$</span> <span class="fu">break</span> (<span class="op">==</span><span class="ch">&#39;_&#39;</span>) wid
+<span class="ot">l_YFromWid ::</span> <span class="dt">WorkspaceId</span> <span class="ot">-&gt;</span> <span class="dt">YCoord</span>
+l_YFromWid wid <span class="ot">=</span> <span class="dt">Y</span> <span class="op">$</span> <span class="fu">read</span> yString
+  <span class="kw">where</span>
+  yString <span class="ot">=</span> <span class="fu">drop</span> <span class="dv">1</span> <span class="op">$</span> <span class="fu">dropWhile</span> (<span class="op">/=</span><span class="ch">&#39;_&#39;</span>) <span class="op">$</span> <span class="fu">drop</span> <span class="dv">1</span> <span class="op">$</span> <span class="fu">dropWhile</span> (<span class="op">/=</span><span class="ch">&#39;_&#39;</span>) wid
+
+<span class="co">-- Group ZCoords by type. Usinge our playing card analogy, these groups are like</span>
+<span class="co">-- the &quot;suits&quot; of cards.</span>
+<span class="kw">data</span> <span class="dt">ZGroup</span>
+  <span class="ot">=</span> <span class="dt">ZGWork</span>
+  <span class="op">|</span> <span class="dt">ZGNet</span>
+  <span class="op">|</span> <span class="dt">ZGMisc</span>
+  <span class="op">|</span> <span class="dt">ZGSys</span>
+  <span class="kw">deriving</span> (<span class="dt">Eq</span>, <span class="dt">Ord</span>, <span class="dt">Enum</span>, <span class="dt">Show</span>)
+
+<span class="ot">l_ZCoordToGroup ::</span> <span class="dt">ZCoord</span> <span class="ot">-&gt;</span> <span class="dt">ZGroup</span>
+l_ZCoordToGroup (<span class="dt">Z</span> z)
+  <span class="op">|</span> <span class="fu">elem</span> z [<span class="dv">0</span><span class="op">..</span><span class="dv">2</span>] <span class="ot">=</span> <span class="dt">ZGWork</span>
+  <span class="op">|</span> <span class="fu">elem</span> z [<span class="dv">3</span><span class="op">..</span><span class="dv">4</span>] <span class="ot">=</span> <span class="dt">ZGNet</span>
+  <span class="op">|</span> z <span class="op">==</span> <span class="dv">5</span> <span class="ot">=</span> <span class="dt">ZGSys</span>
+  <span class="op">|</span> <span class="fu">otherwise</span> <span class="ot">=</span> <span class="dt">ZGMisc</span>
+
+<span class="ot">l_ZGroupToZCoords ::</span> <span class="dt">ZGroup</span> <span class="ot">-&gt;</span> [<span class="dt">ZCoord</span>]
+l_ZGroupToZCoords zGroup
+  <span class="ot">=</span> <span class="fu">map</span> <span class="fu">fst</span>
+  <span class="op">$</span> <span class="fu">filter</span> ((<span class="op">==</span> zGroup) <span class="op">.</span> <span class="fu">snd</span>) l_ZCoordGroups
+
+<span class="ot">l_ZCoordGroups ::</span> [(<span class="dt">ZCoord</span>, <span class="dt">ZGroup</span>)]
+l_ZCoordGroups <span class="ot">=</span>
+  [ (z, l_ZCoordToGroup z)
+  <span class="op">|</span> z <span class="ot">&lt;-</span> l_ZCoords
+  ]
+
+<span class="co">-- Generate all possible XZYs. Sort by the Y, X, and Z coordinates, in that</span>
+<span class="co">-- order. This is important because, for instance, XMonad assigns each physical</span>
+<span class="co">-- screen to each WorkspaceId in this list when we use it in assigning</span>
+<span class="co">-- workspaces.</span>
+<span class="ot">l_XZYs ::</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> [<span class="dt">XZY</span>]
+l_XZYs numScreens <span class="ot">=</span> l_multiSort
+  [ <span class="dt">XZY</span> (x, z, y)
+  <span class="op">|</span> x <span class="ot">&lt;-</span> l_XCoords numScreens
+  , z <span class="ot">&lt;-</span> l_ZCoords
+  , y <span class="ot">&lt;-</span> l_YCoords
+  ]
+  [ comparing l_ZFrom
+  , comparing l_YFrom
+  ]
+
+<span class="co">-- Each time we change the Y coordinate, we record the ZCoord on each XCoord.</span>
+<span class="co">-- For simplicity, instead of storing the ZCoord and XCoord pair, we instead</span>
+<span class="co">-- store the entire XZY string (which is also the full, unique WorkspaceId). We</span>
+<span class="co">-- use XMonad.Util.ExtensibleState to store this state. See</span>
+<span class="co">-- https://stackoverflow.com/questions/40270793/user-state-in-xmonad</span>
+<span class="kw">data</span> <span class="dt">Seen</span> <span class="ot">=</span> <span class="dt">Seen</span> (<span class="dt">H.Map</span> <span class="dt">YCoord</span> (<span class="dt">XZY</span>, [<span class="dt">XZY</span>])) [<span class="dt">YCoord</span>]
+<span class="kw">instance</span> <span class="dt">ExtensionClass</span> <span class="dt">Seen</span> <span class="kw">where</span>
+  initialValue <span class="ot">=</span> <span class="dt">Seen</span> H.empty []
+
+<span class="ot">l_YFromWindowSet ::</span> <span class="dt">WindowSet</span> <span class="ot">-&gt;</span> <span class="dt">YCoord</span>
+l_YFromWindowSet <span class="ot">=</span> l_YFromWid <span class="op">.</span> W.tag <span class="op">.</span> W.workspace <span class="op">.</span> W.current
+
+<span class="ot">l_XZYFromWindowSet ::</span> <span class="dt">WindowSet</span> <span class="ot">-&gt;</span> <span class="dt">XZY</span>
+l_XZYFromWindowSet windowSet
+  <span class="ot">=</span> <span class="dt">XZY</span>
+  <span class="op">.</span> l_CoordsFromWid
+  <span class="op">.</span> W.tag <span class="op">.</span> W.workspace <span class="op">$</span> W.current windowSet
+
+<span class="ot">l_XZYFromWid ::</span> <span class="dt">WorkspaceId</span> <span class="ot">-&gt;</span> <span class="dt">XZY</span>
+l_XZYFromWid <span class="ot">=</span> <span class="dt">XZY</span> <span class="op">.</span> l_CoordsFromWid
+
+<span class="ot">l_CoordsFromWid ::</span> <span class="dt">WorkspaceId</span> <span class="ot">-&gt;</span> (<span class="dt">XCoord</span>, <span class="dt">ZCoord</span>, <span class="dt">YCoord</span>)
+l_CoordsFromWid xzy <span class="ot">=</span>
+  ( l_XFromWid xzy
+  , l_ZFromWid xzy
+  , l_YFromWid xzy
+  )
+
+<span class="ot">l_YIncrementedBy ::</span> <span class="dt">Direction1D</span> <span class="ot">-&gt;</span> <span class="dt">Bool</span> <span class="ot">-&gt;</span> <span class="dt">YCoord</span> <span class="ot">-&gt;</span> <span class="dt">YCoord</span>
+l_YIncrementedBy dir safe (<span class="dt">Y</span> y) <span class="ot">=</span> <span class="kw">if</span> safe
+  <span class="kw">then</span> <span class="dt">Y</span> <span class="op">$</span> <span class="fu">mod</span> (op y <span class="dv">1</span>) (<span class="fu">length</span> l_YCoords)
+  <span class="kw">else</span> <span class="dt">Y</span> <span class="op">$</span> op y <span class="dv">1</span>
+  <span class="kw">where</span>
+  op <span class="ot">=</span> <span class="kw">if</span> dir <span class="op">==</span> <span class="dt">Next</span> <span class="kw">then</span> (<span class="op">+</span>) <span class="kw">else</span> (<span class="op">-</span>)
+
+<span class="co">-- Given the X, Y, and ZGroup constraints, generate the full XZY coordinate</span>
+<span class="co">-- WorkspaceId by deciding on the ZCoord.</span>
+<span class="ot">l_XZYFrom ::</span> <span class="dt">XCoord</span> <span class="ot">-&gt;</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">ZGroup</span> <span class="ot">-&gt;</span> <span class="dt">YCoord</span> <span class="ot">-&gt;</span> <span class="dt">XZY</span>
+l_XZYFrom (<span class="dt">X</span> xCoord) numScreens zGroup y <span class="ot">=</span> <span class="dt">XZY</span> (x, z, y)
+  <span class="kw">where</span>
+  <span class="co">-- Wrap xCoord if it is out of bounds.</span>
+  x <span class="ot">=</span> l_XCoords numScreens <span class="op">!!</span> <span class="fu">mod</span> xCoord numScreens
+  <span class="co">-- We just grab the very first ZCoord in the ZGroup.</span>
+  z <span class="ot">=</span> <span class="fu">head</span> <span class="op">$</span> l_ZGroupToZCoords zGroup
+
+<span class="co">-- For a given ZGroup and YCoord, get a list of XZYs belonging to that ZGroup</span>
+<span class="co">-- for every XCoord. The pool of available ZCoords is modified once by</span>
+<span class="co">-- transformZCoords.</span>
+<span class="ot">l_XZYsFrom ::</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">ZGroup</span> <span class="ot">-&gt;</span> ([<span class="dt">ZCoord</span>] <span class="ot">-&gt;</span> [<span class="dt">ZCoord</span>]) <span class="ot">-&gt;</span> <span class="dt">YCoord</span> <span class="ot">-&gt;</span> [<span class="dt">XZY</span>]
+l_XZYsFrom numScreens zGroup transformZCoords y <span class="ot">=</span>
+  [ <span class="dt">XZY</span> (x, z, y)
+  <span class="op">|</span> x <span class="ot">&lt;-</span> l_XCoords numScreens
+  , z <span class="ot">&lt;-</span> transformZCoords <span class="op">$</span> l_ZGroupToZCoords zGroup
+  ]
+
+<span class="co">-- Abstraction to help us search for a Workspace. See l_searchZ for more info.</span>
+<span class="kw">data</span> <span class="dt">WorkspaceQuery</span> <span class="ot">=</span> <span class="dt">WQ</span> <span class="dt">WindowPopulation</span> <span class="dt">ZGroupMemberships</span>
+<span class="kw">data</span> <span class="dt">WindowPopulation</span>
+  <span class="ot">=</span> <span class="dt">Empty</span>
+  <span class="op">|</span> <span class="dt">NonEmpty</span>
+  <span class="kw">deriving</span> (<span class="dt">Eq</span>)
+
+<span class="co">-- The boolean in the tuple determines whether we should check if the XZY in the</span>
+<span class="co">-- Workspace belongs to the ZGroup (True for yes, it belongs; False for no it</span>
+<span class="co">-- does not belong).</span>
+<span class="kw">type</span> <span class="dt">ZGroupMemberships</span> <span class="ot">=</span> [(<span class="dt">ZGroup</span>, <span class="dt">Bool</span>)]
+
+<span class="ot">l_if ::</span> <span class="dt">X</span> <span class="dt">Bool</span> <span class="ot">-&gt;</span> <span class="dt">X</span> () <span class="ot">-&gt;</span> <span class="dt">X</span> () <span class="ot">-&gt;</span> <span class="dt">X</span> ()
+l_if p a b <span class="ot">=</span> p <span class="op">&gt;&gt;=</span> \pb <span class="ot">-&gt;</span> <span class="kw">if</span> pb <span class="kw">then</span> a <span class="kw">else</span> b
+
+<span class="kw">newtype</span> <span class="dt">FadingPrompts</span> <span class="ot">=</span> <span class="dt">FadingPrompts</span> [(<span class="dt">TimerId</span>, <span class="dt">Window</span>)] <span class="kw">deriving</span> (<span class="dt">Eq</span>)
+<span class="kw">instance</span> <span class="dt">ExtensionClass</span> <span class="dt">FadingPrompts</span> <span class="kw">where</span>
+  initialValue <span class="ot">=</span> <span class="dt">FadingPrompts</span> []
+
+<span class="kw">data</span> <span class="dt">RichText</span> <span class="ot">=</span> <span class="dt">RichText</span>
+  {<span class="ot"> rtString ::</span> <span class="dt">String</span>
+  ,<span class="ot"> rtFont ::</span> <span class="dt">String</span>
+  ,<span class="ot"> rtSize ::</span> <span class="dt">Int</span>
+  ,<span class="ot"> rtForeground ::</span> <span class="dt">String</span>
+  ,<span class="ot"> rtBackground ::</span> <span class="dt">String</span>
+  ,<span class="ot"> rtBorder ::</span> <span class="dt">String</span>
+  ,<span class="ot"> rtBorderWidth ::</span> <span class="dt">Int</span>
+  }
+
+<span class="ot">richTextDef ::</span> <span class="dt">RichText</span>
+richTextDef <span class="ot">=</span> <span class="dt">RichText</span>
+  { rtString <span class="ot">=</span> <span class="st">&quot; &quot;</span>
+  , rtFont <span class="ot">=</span> <span class="st">&quot;DejaVu Sans Mono&quot;</span>
+  , rtSize <span class="ot">=</span> <span class="dv">160</span>
+  , rtForeground <span class="ot">=</span> <span class="st">&quot;white&quot;</span>
+  , rtBackground <span class="ot">=</span> <span class="st">&quot;blue&quot;</span>
+  , rtBorder <span class="ot">=</span> <span class="st">&quot;white&quot;</span>
+  , rtBorderWidth <span class="ot">=</span> <span class="dv">4</span>
+  }
+
+<span class="ot">l_showYCoord ::</span> <span class="dt">X</span> ()
+l_showYCoord <span class="ot">=</span> <span class="kw">do</span>
+  (<span class="dt">Y</span> y) <span class="ot">&lt;-</span> gets (l_YFromWindowSet <span class="op">.</span> windowset)
+  l_displayString <span class="op">$</span> richTextDef
+    { rtString <span class="ot">=</span> <span class="fu">show</span> y
+    , rtForeground <span class="ot">=</span> <span class="st">&quot;black&quot;</span>
+    , rtBackground <span class="ot">=</span> c y
+    , rtBorder <span class="ot">=</span> <span class="st">&quot;white&quot;</span>
+    }
+  <span class="kw">where</span>
+  colors <span class="ot">=</span>
+    [ <span class="st">&quot;green&quot;</span>
+    , <span class="st">&quot;yellow&quot;</span>
+    , <span class="st">&quot;blue&quot;</span>
+    , <span class="st">&quot;red&quot;</span>
+    , <span class="st">&quot;magenta&quot;</span>
+    , <span class="st">&quot;cyan&quot;</span>
+    , <span class="st">&quot;olive&quot;</span>
+    , <span class="st">&quot;light slate gray&quot;</span>
+    , <span class="st">&quot;light pink&quot;</span>
+    , <span class="st">&quot;white&quot;</span>
+    ]
+  c n&#39; <span class="ot">=</span> colors <span class="op">!!</span> <span class="fu">mod</span> n&#39; (<span class="fu">length</span> colors)
+
+<span class="co">-- Show the number of hidden *and* nonempty workspaces in the current Z</span>
+<span class="co">-- coordinate, if there are any. This reminds the user that even if they think</span>
+<span class="co">-- they have deleted all windows, that there are still some workspaces with</span>
+<span class="co">-- pending work in them.</span>
+<span class="ot">l_maybeShowHiddenNonEmptyZCount ::</span> <span class="dt">X</span> ()
+l_maybeShowHiddenNonEmptyZCount <span class="ot">=</span> <span class="kw">do</span>
+  windowSet <span class="ot">&lt;-</span> gets windowset
+  numHidden <span class="ot">&lt;-</span> l_countHiddenNonEmptyZ
+  <span class="kw">let</span>
+    xzy <span class="ot">=</span> l_XZYFromWindowSet windowSet
+  noWindows <span class="ot">&lt;-</span> l_workspaceIsEmpty xzy
+  when (noWindows <span class="op">||</span> (numHidden <span class="op">&gt;</span> <span class="dv">0</span>)) <span class="op">$</span> l_displayStringDef <span class="op">$</span> <span class="fu">show</span> numHidden
+
+<span class="ot">l_countHiddenNonEmptyZ ::</span> <span class="dt">X</span> <span class="dt">Int</span>
+l_countHiddenNonEmptyZ <span class="ot">=</span> <span class="kw">do</span>
+  windowSet <span class="ot">&lt;-</span> gets windowset
+  <span class="kw">let</span>
+    xzy <span class="ot">=</span> l_XZYFromWindowSet windowSet
+    x <span class="ot">=</span> l_XFrom xzy
+    y <span class="ot">=</span> l_YFrom xzy
+  <span class="fu">pure</span> <span class="op">$</span> <span class="fu">length</span>
+    [ ww
+    <span class="op">|</span> ww <span class="ot">&lt;-</span> W.workspaces windowSet
+    <span class="co">-- Don&#39;t count current workspace.</span>
+    , W.tag ww <span class="op">/=</span> <span class="fu">show</span> xzy
+    , atXY x y <span class="op">.</span> l_XZYFromWid <span class="op">$</span> W.tag ww
+    , isJust <span class="op">$</span> W.stack ww
+    ]
+  <span class="kw">where</span>
+  atXY x y (<span class="dt">XZY</span> (x&#39;, _, y&#39;)) <span class="ot">=</span> x <span class="op">==</span> x&#39; <span class="op">&amp;&amp;</span> y <span class="op">==</span> y&#39;
+
+<span class="ot">l_displayString ::</span> <span class="dt">RichText</span> <span class="ot">-&gt;</span> <span class="dt">X</span> ()
+l_displayString <span class="dt">RichText</span>{<span class="op">..</span>} <span class="ot">=</span> <span class="kw">do</span>
+  scr <span class="ot">&lt;-</span> gets <span class="op">$</span> screenRect <span class="op">.</span> W.screenDetail <span class="op">.</span> W.current <span class="op">.</span> windowset
+  dpy <span class="ot">&lt;-</span> asks display
+  f <span class="ot">&lt;-</span> initXMF (<span class="st">&quot;xft:&quot;</span> <span class="op">&lt;&gt;</span> rtFont <span class="op">&lt;&gt;</span> <span class="st">&quot;:pixelsize=&quot;</span> <span class="op">&lt;&gt;</span> <span class="fu">show</span> rtSize)
+  width <span class="ot">&lt;-</span> (\w <span class="ot">-&gt;</span> w <span class="op">+</span> w <span class="ot">`div`</span> <span class="fu">length</span> rtString) <span class="op">&lt;$&gt;</span> textWidthXMF dpy f rtString
+  (ascent, descent) <span class="ot">&lt;-</span> textExtentsXMF f rtString
+  <span class="kw">let</span>
+    height <span class="ot">=</span> ascent <span class="op">+</span> descent <span class="op">+</span> <span class="dv">10</span>
+    y&#39; <span class="ot">=</span> fi (rect_y scr) <span class="op">+</span> <span class="fu">div</span> (fi (rect_height scr) <span class="op">-</span> height) <span class="dv">2</span>
+    x  <span class="ot">=</span> fi (rect_x scr) <span class="op">+</span> <span class="fu">div</span> (fi (rect_width scr) <span class="op">-</span> width) <span class="dv">2</span>
+  maybeFocusedWindow <span class="ot">&lt;-</span> gets <span class="op">$</span> W.stack <span class="op">.</span> W.workspace <span class="op">.</span> W.current <span class="op">.</span> windowset
+  (xFinal, yFinal) <span class="ot">&lt;-</span> <span class="kw">case</span> maybeFocusedWindow <span class="kw">of</span>
+    <span class="dt">Just</span> s <span class="ot">-&gt;</span> <span class="kw">do</span>
+      (_, x2, y2, w2, h2, _, _) <span class="ot">&lt;-</span> liftIO <span class="op">.</span> getGeometry dpy <span class="op">$</span> W.focus s
+      <span class="fu">return</span>
+        ( x2 <span class="op">+</span> (<span class="fu">div</span> (fi w2) <span class="dv">2</span> <span class="op">-</span> <span class="fu">div</span> (fi width) <span class="dv">2</span>)
+        , y2 <span class="op">+</span> (<span class="fu">div</span> (fi h2) <span class="dv">2</span> <span class="op">-</span> <span class="fu">div</span> height <span class="dv">2</span>)
+        )
+    <span class="dt">Nothing</span> <span class="ot">-&gt;</span> <span class="fu">return</span> (fi x, y&#39;)
+  w <span class="ot">&lt;-</span> createNewWindow
+    (<span class="dt">Rectangle</span> (fi xFinal) (fi yFinal) (fi width) (fi height)) <span class="dt">Nothing</span> <span class="st">&quot;&quot;</span> <span class="dt">True</span>
+  showWindow w
+  paintAndWrite
+    w
+    f
+    (fi width)
+    (fi height)
+    (<span class="fu">fromIntegral</span> rtBorderWidth)
+    rtBackground
+    rtBorder
+    rtForeground
+    rtBackground
+    [<span class="dt">AlignCenter</span>]
+    [rtString]
+  releaseXMF f
+  <span class="co">-- Show the window for 0.4 seconds.</span>
+  tid <span class="ot">&lt;-</span> startTimer <span class="fl">0.4</span>
+  (<span class="dt">FadingPrompts</span> tws) <span class="ot">&lt;-</span> XS.get<span class="ot"> ::</span> <span class="dt">X</span> <span class="dt">FadingPrompts</span>
+  XS.put <span class="op">.</span> <span class="dt">FadingPrompts</span> <span class="op">$</span> (tid, w)<span class="op">:</span>tws
+
+<span class="ot">l_displayStringOn ::</span> <span class="dt">RichText</span> <span class="ot">-&gt;</span> <span class="dt">WorkspaceId</span> <span class="ot">-&gt;</span> <span class="dt">X</span> ()
+l_displayStringOn <span class="dt">RichText</span>{<span class="op">..</span>} wid <span class="ot">=</span> <span class="kw">do</span>
+  windowSet <span class="ot">&lt;-</span> gets windowset
+  <span class="kw">let</span>
+    xzy <span class="ot">=</span> l_XZYFromWid wid
+    scn <span class="ot">=</span> <span class="fu">head</span>
+      [ ss
+      <span class="op">|</span> ss <span class="ot">&lt;-</span> W.screens windowSet
+      , W.tag (W.workspace ss) <span class="op">==</span> <span class="fu">show</span> xzy
+      ]
+    scr <span class="ot">=</span> screenRect <span class="op">$</span> W.screenDetail scn
+  dpy <span class="ot">&lt;-</span> asks display
+  f <span class="ot">&lt;-</span> initXMF (<span class="st">&quot;xft:&quot;</span> <span class="op">&lt;&gt;</span> rtFont <span class="op">&lt;&gt;</span> <span class="st">&quot;:pixelsize=&quot;</span> <span class="op">&lt;&gt;</span> <span class="fu">show</span> rtSize)
+  width <span class="ot">&lt;-</span> (\w <span class="ot">-&gt;</span> w <span class="op">+</span> w <span class="ot">`div`</span> <span class="fu">length</span> rtString) <span class="op">&lt;$&gt;</span> textWidthXMF dpy f rtString
+  (ascent, descent) <span class="ot">&lt;-</span> textExtentsXMF f rtString
+  <span class="kw">let</span>
+    height <span class="ot">=</span> ascent <span class="op">+</span> descent <span class="op">+</span> <span class="dv">10</span>
+    y&#39; <span class="ot">=</span> fi (rect_y scr) <span class="op">+</span> <span class="fu">div</span> (fi (rect_height scr) <span class="op">-</span> height) <span class="dv">2</span>
+    x  <span class="ot">=</span> fi (rect_x scr) <span class="op">+</span> <span class="fu">div</span> (fi (rect_width scr) <span class="op">-</span> width) <span class="dv">2</span>
+    maybeFocusedWindow <span class="ot">=</span> W.stack <span class="op">$</span> W.workspace scn
+  (xFinal, yFinal) <span class="ot">&lt;-</span> <span class="kw">case</span> maybeFocusedWindow <span class="kw">of</span>
+    <span class="dt">Just</span> s <span class="ot">-&gt;</span> <span class="kw">do</span>
+      (_, x2, y2, w2, h2, _, _) <span class="ot">&lt;-</span> liftIO <span class="op">.</span> getGeometry dpy <span class="op">$</span> W.focus s
+      <span class="fu">return</span>
+        ( x2 <span class="op">+</span> (<span class="fu">div</span> (fi w2) <span class="dv">2</span> <span class="op">-</span> <span class="fu">div</span> (fi width) <span class="dv">2</span>)
+        , y2 <span class="op">+</span> (<span class="fu">div</span> (fi h2) <span class="dv">2</span> <span class="op">-</span> <span class="fu">div</span> height <span class="dv">2</span>)
+        )
+    <span class="dt">Nothing</span> <span class="ot">-&gt;</span> <span class="fu">return</span> (fi x, y&#39;)
+  w <span class="ot">&lt;-</span> createNewWindow
+    (<span class="dt">Rectangle</span> (fi xFinal) (fi yFinal) (fi width) (fi height)) <span class="dt">Nothing</span> <span class="st">&quot;&quot;</span> <span class="dt">True</span>
+  showWindow w
+  paintAndWrite
+    w
+    f
+    (fi width)
+    (fi height)
+    (<span class="fu">fromIntegral</span> rtBorderWidth)
+    rtBackground
+    rtBorder
+    rtForeground
+    rtBackground
+    [<span class="dt">AlignCenter</span>]
+    [rtString]
+  releaseXMF f
+  <span class="co">-- Show the window for 0.4 seconds.</span>
+  tid <span class="ot">&lt;-</span> startTimer <span class="fl">0.4</span>
+  (<span class="dt">FadingPrompts</span> tws) <span class="ot">&lt;-</span> XS.get<span class="ot"> ::</span> <span class="dt">X</span> <span class="dt">FadingPrompts</span>
+  XS.put <span class="op">.</span> <span class="dt">FadingPrompts</span> <span class="op">$</span> (tid, w)<span class="op">:</span>tws
+
+<span class="ot">l_displayStringDef ::</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">X</span> ()
+l_displayStringDef s <span class="ot">=</span> l_displayString <span class="op">$</span> richTextDef
+  { rtString <span class="ot">=</span> s
+  }
+
+<span class="ot">l_eventHook ::</span> <span class="dt">Event</span> <span class="ot">-&gt;</span> <span class="dt">X</span> <span class="dt">All</span>
+l_eventHook e <span class="ot">=</span> <span class="kw">do</span>
+  (<span class="dt">FadingPrompts</span> tws) <span class="ot">&lt;-</span> XS.get<span class="ot"> ::</span> <span class="dt">X</span> <span class="dt">FadingPrompts</span>
+  when (<span class="fu">not</span> <span class="op">$</span> <span class="fu">null</span> tws) <span class="op">$</span> <span class="kw">do</span>
+    <span class="kw">let</span>
+      f (tid, w) <span class="ot">=</span> handleTimer tid e <span class="op">$</span> <span class="kw">do</span>
+        deleteWindow w
+        <span class="fu">return</span> <span class="dt">Nothing</span>
+    <span class="co">-- We need to process the window deletion across *all* outstanding</span>
+    <span class="co">-- FadingPrompts because it may be the case that we receive the events out</span>
+    <span class="co">-- of order (that is, although we always build up the events by cons-ing it,</span>
+    <span class="co">-- this hook uses XS (global state) to retrieve all known tid values and</span>
+    <span class="co">-- runs the window deletion routine against all of them). This brute force</span>
+    <span class="co">-- approach is not too terrible, because the deletion will fail if the tid</span>
+    <span class="co">-- does not line up with the one in the actual event.</span>
+    <span class="co">--</span>
+    <span class="co">-- The naive way (which works, but is not guaranteed to work), simply treats</span>
+    <span class="co">-- FadingPrompts as a queue and retrieves the last item of the list, then</span>
+    <span class="co">-- deletes it from the list after processing.</span>
+    <span class="fu">mapM_</span> f tws
+  <span class="fu">return</span> <span class="op">$</span> <span class="dt">All</span> <span class="dt">True</span>
+
+<span class="co">-- This function was written to implement the idea expressed in</span>
+<span class="co">-- https://www.reddit.com/r/xmonad/comments/7mawso/switch_workspaces_on_multiple_monitors_with_1/.</span>
+<span class="co">-- It involves less work for the user than XMonad.Actions.DynamicWorkspaceGroups</span>
+<span class="co">-- because we don&#39;t have to manually name workspace groups (basically for us,</span>
+<span class="co">-- every YCoord in l_YCoords is a &quot;WorkspaceGroup&quot;).</span>
+<span class="ot">l_viewY ::</span> <span class="dt">YCoord</span> <span class="ot">-&gt;</span> <span class="dt">Bool</span> <span class="ot">-&gt;</span> <span class="dt">X</span> ()
+l_viewY yNext keepXCoord <span class="ot">=</span> <span class="kw">do</span>
+  windowSet <span class="ot">&lt;-</span> gets windowset
+  when (yNext <span class="op">/=</span> l_YFromWid (W.currentTag windowSet)) <span class="op">$</span> <span class="kw">do</span>
+    <span class="co">-- Save xzys of yPrev, so that if and when we switch back to it, we get back</span>
+    <span class="co">-- the same workspaces (and not just some random default set of XZYs).</span>
+    l_recordXZYs
+    <span class="co">-- Activate next YCoord&#39;s workspaces. After this operation, visually all</span>
+    <span class="co">-- screens will have switched their XZY coordinate to reflect yNext, not</span>
+    <span class="co">-- yPrev.</span>
+    l_activateY yNext keepXCoord
+    l_showYCoord
+
+<span class="ot">l_viewYDir ::</span> <span class="dt">Direction1D</span> <span class="ot">-&gt;</span> <span class="dt">Bool</span> <span class="ot">-&gt;</span> <span class="dt">X</span> ()
+l_viewYDir dir keepXCoord <span class="ot">=</span> <span class="kw">do</span>
+  windowSet <span class="ot">&lt;-</span> gets windowset
+  <span class="kw">let</span>
+    (<span class="dt">XZY</span> (_, _, yPrev)) <span class="ot">=</span> l_XZYFromWindowSet windowSet
+    yNext <span class="ot">=</span> l_YIncrementedBy dir <span class="dt">True</span> yPrev
+  l_viewY yNext keepXCoord
+
+<span class="ot">l_atYEdge ::</span> <span class="dt">Direction1D</span> <span class="ot">-&gt;</span> <span class="dt">X</span> <span class="dt">Bool</span>
+l_atYEdge dir <span class="ot">=</span> <span class="kw">do</span>
+  windowSet <span class="ot">&lt;-</span> gets windowset
+  <span class="kw">let</span>
+    (<span class="dt">XZY</span> (_, _, yPrev)) <span class="ot">=</span> l_XZYFromWindowSet windowSet
+    yNext <span class="ot">=</span> l_YIncrementedBy dir <span class="dt">False</span> yPrev
+  <span class="fu">return</span> <span class="op">$</span> <span class="fu">notElem</span> yNext l_YCoords
+
+<span class="co">-- Like l_viewYDir, but first search in the given direction if there are any</span>
+<span class="co">-- non-empty XZYs, and if so, view that YCoord. If all other YCoords are empty,</span>
+<span class="co">-- do nothing. Note that a YCoord could be non-empty, but that it currently is</span>
+<span class="co">-- viewing only empty workspaces; such a YCoord is still considered non-empty.</span>
+<span class="ot">l_viewYNonEmpty ::</span> <span class="dt">Direction1D</span> <span class="ot">-&gt;</span> <span class="dt">X</span> ()
+l_viewYNonEmpty dir <span class="ot">=</span> <span class="kw">do</span>
+  (<span class="dt">Seen</span> hashmap _) <span class="ot">&lt;-</span> XS.get<span class="ot"> ::</span> <span class="dt">X</span> <span class="dt">Seen</span>
+  windowSet <span class="ot">&lt;-</span> gets windowset
+  <span class="kw">let</span>
+    xzyPrev <span class="ot">=</span> l_XZYFromWindowSet windowSet
+    yPrev <span class="ot">=</span> l_YFrom xzyPrev
+    searchDirection <span class="ot">=</span> <span class="kw">if</span> dir <span class="op">==</span> <span class="dt">Next</span> <span class="kw">then</span> <span class="fu">id</span> <span class="kw">else</span> <span class="fu">reverse</span>
+    <span class="co">-- We say &quot;were&quot; instead of &quot;are&quot;, because we use the history stored in Seen</span>
+    <span class="co">-- (it is, technically, old information). It could be incorrect (such as</span>
+    <span class="co">-- when XMonad is restarted and Seen state is lost --- even though windows</span>
+    <span class="co">-- remain populated at various Workspaces).</span>
+    xzysWerePopulatedAtY y <span class="ot">=</span> (,) y <span class="op">$</span> <span class="kw">case</span> H.lookup y hashmap <span class="kw">of</span>
+      <span class="dt">Just</span> (_, xzys&#39;) <span class="ot">-&gt;</span> <span class="fu">not</span> <span class="op">$</span> <span class="fu">null</span>
+        [ xzy
+        <span class="op">|</span> ww <span class="ot">&lt;-</span> W.workspaces windowSet
+        , isJust <span class="op">$</span> W.stack ww
+        , xzy <span class="ot">&lt;-</span> xzys&#39;
+        , W.tag ww <span class="op">==</span> <span class="fu">show</span> xzy
+        ]
+      <span class="dt">Nothing</span> <span class="ot">-&gt;</span> <span class="dt">False</span>
+    rejectWraparound <span class="ot">=</span> <span class="fu">takeWhile</span> (<span class="kw">if</span> dir <span class="op">==</span> <span class="dt">Next</span> <span class="kw">then</span> (<span class="op">&gt;</span>yPrev) <span class="kw">else</span> (<span class="op">&lt;</span>yPrev))
+    yNexts
+      <span class="ot">=</span> <span class="fu">map</span> <span class="fu">fst</span>
+      <span class="op">.</span> <span class="fu">dropWhile</span> ((<span class="op">==</span><span class="dt">False</span>) <span class="op">.</span> <span class="fu">snd</span>)
+      <span class="op">.</span> <span class="fu">map</span> xzysWerePopulatedAtY
+      <span class="op">.</span> rejectWraparound
+      <span class="op">.</span> searchDirection
+      <span class="op">$</span> l_wrapWithout (<span class="op">==</span>yPrev) l_YCoords
+  when (<span class="fu">not</span> <span class="op">$</span> <span class="fu">null</span> yNexts) <span class="op">$</span> <span class="kw">do</span>
+    l_recordXZYs
+    l_activateY (<span class="fu">head</span> yNexts) <span class="dt">False</span>
+  l_showYCoord
+
+<span class="ot">l_viewNthY ::</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">Bool</span> <span class="ot">-&gt;</span> <span class="dt">X</span> ()
+l_viewNthY n keepXCoord <span class="ot">=</span> <span class="kw">do</span>
+  (<span class="dt">Seen</span> _ ys) <span class="ot">&lt;-</span> XS.get<span class="ot"> ::</span> <span class="dt">X</span> <span class="dt">Seen</span>
+  when (n <span class="op">&lt;</span> <span class="fu">length</span> ys) <span class="op">$</span> <span class="kw">do</span>
+    <span class="kw">let</span>
+      y <span class="ot">=</span> ys<span class="op">!!</span>n
+    l_viewY y keepXCoord
+  l_showYCoord
+
+<span class="ot">l_recordXZYs ::</span> <span class="dt">X</span> ()
+l_recordXZYs <span class="ot">=</span> <span class="kw">do</span>
+  windowSet <span class="ot">&lt;-</span> gets windowset
+  <span class="kw">let</span>
+    <span class="co">-- Get current (soon to be previous) YCoord.</span>
+    y <span class="ot">=</span> l_YFrom xzy
+    xzy <span class="ot">=</span> l_XZYFromWindowSet windowSet
+    <span class="co">-- Make note of all XZYs at the current YCoord.</span>
+    xzys <span class="ot">=</span> <span class="fu">map</span> (l_XZYFromWid <span class="op">.</span> W.tag <span class="op">.</span> W.workspace)
+      <span class="op">$</span> W.screens windowSet
+    f xzy&#39; <span class="ot">=</span> <span class="kw">do</span>
+      isEmpty <span class="ot">&lt;-</span> l_workspaceIsEmpty xzy&#39;
+      <span class="fu">return</span> (<span class="fu">not</span> isEmpty, xzy&#39;)
+  xzyCurrentIsEmpty <span class="ot">&lt;-</span> l_workspaceIsEmpty xzy
+  xzyCandidates <span class="ot">&lt;-</span> <span class="fu">mapM</span> f xzys
+  <span class="kw">let</span>
+    xzyCs <span class="ot">=</span> <span class="fu">map</span> <span class="fu">snd</span> <span class="op">.</span> sortOn <span class="fu">snd</span> <span class="op">$</span> <span class="fu">filter</span> <span class="fu">fst</span> xzyCandidates
+    xzyC
+      <span class="op">|</span> xzyCurrentIsEmpty <span class="op">&amp;&amp;</span> <span class="fu">not</span> (<span class="fu">null</span> xzyCs) <span class="ot">=</span> <span class="fu">head</span> xzyCs
+      <span class="op">|</span> <span class="fu">otherwise</span> <span class="ot">=</span> xzy
+  XS.modify
+    (\(<span class="dt">Seen</span> hashmap ys) <span class="ot">-&gt;</span> <span class="dt">Seen</span>
+      (H.insert y (xzyC, xzys) hashmap)
+      ys)
+
+<span class="ot">l_updateYHist ::</span> <span class="dt">X</span> ()
+l_updateYHist <span class="ot">=</span> <span class="kw">do</span>
+  windowSet <span class="ot">&lt;-</span> gets windowset
+  <span class="kw">let</span>
+    y <span class="ot">=</span> l_YFrom xzy
+    xzy <span class="ot">=</span> l_XZYFromWindowSet windowSet
+  XS.modify
+    (\(<span class="dt">Seen</span> hm ys) <span class="ot">-&gt;</span> <span class="dt">Seen</span>
+      hm
+      (<span class="kw">case</span> elemIndex y ys <span class="kw">of</span>
+        <span class="dt">Just</span> i <span class="ot">-&gt;</span> l_bubbleUp i ys
+        <span class="dt">Nothing</span> <span class="ot">-&gt;</span> y<span class="op">:</span>ys))
+
+<span class="co">-- Bring the element at the i-th index to the head of the list.</span>
+<span class="ot">l_bubbleUp ::</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> [a] <span class="ot">-&gt;</span> [a]
+l_bubbleUp i xs
+  <span class="op">|</span> i <span class="op">&lt;</span> <span class="fu">length</span> xs <span class="ot">=</span> (xs<span class="op">!!</span>i)<span class="op">:</span>(<span class="fu">take</span> i xs <span class="op">++</span> <span class="fu">drop</span> (i <span class="op">+</span> <span class="dv">1</span>) xs)
+  <span class="op">|</span> <span class="fu">otherwise</span> <span class="ot">=</span> xs
+
+<span class="co">-- Make the list cyclic so that we start first with the item that satisifies p,</span>
+<span class="co">-- then remove this item.</span>
+<span class="co">--</span>
+<span class="co">-- Examples:</span>
+<span class="co">--</span>
+<span class="co">--  l_wrapWithout (==3) [0..5] =&gt; [4, 5, 0, 1, 2]</span>
+<span class="co">--  l_wrapWithout (==4) [0..5] =&gt; [5, 0, 1, 2, 3]</span>
+<span class="ot">l_wrapWithout ::</span> (a <span class="ot">-&gt;</span> <span class="dt">Bool</span>) <span class="ot">-&gt;</span> [a] <span class="ot">-&gt;</span> [a]
+l_wrapWithout p xs
+  <span class="op">|</span> <span class="fu">null</span> xs <span class="ot">=</span> xs
+  <span class="op">|</span> <span class="fu">otherwise</span> <span class="ot">=</span> <span class="fu">drop</span> <span class="dv">1</span> after <span class="op">++</span> before
+  <span class="kw">where</span>
+  (before, after) <span class="ot">=</span> <span class="fu">break</span> p xs
+
+<span class="co">-- Make the given YCoord &quot;active&quot; by viewing its XZYs on all physical screen(s).</span>
+<span class="co">-- If we viewed the YCoord before, present its XZYs that we recorded when we</span>
+<span class="co">-- switched away from it the last time around. Otherwise, show the default XZYs</span>
+<span class="co">-- for the YCoord.</span>
+<span class="ot">l_activateY ::</span> <span class="dt">YCoord</span> <span class="ot">-&gt;</span> <span class="dt">Bool</span> <span class="ot">-&gt;</span> <span class="dt">X</span> ()
+l_activateY y keepXCoord <span class="ot">=</span> <span class="kw">do</span>
+  windowSet <span class="ot">&lt;-</span> gets windowset
+  (<span class="dt">Seen</span> hashmap _) <span class="ot">&lt;-</span> XS.get<span class="ot"> ::</span> <span class="dt">X</span> <span class="dt">Seen</span>
+  <span class="kw">let</span>
+    numScreens <span class="ot">=</span> <span class="fu">length</span> <span class="op">$</span> W.screens windowSet
+    (wid, xzys) <span class="ot">=</span> <span class="kw">case</span> H.lookup y hashmap <span class="kw">of</span>
+      <span class="dt">Just</span> found <span class="ot">-&gt;</span> first <span class="fu">show</span> found
+      <span class="dt">Nothing</span> <span class="ot">-&gt;</span> (<span class="st">&quot;0&quot;</span>, l_defaultXZYsForY y numScreens)
+  <span class="co">-- First update all screens.</span>
+  windows <span class="op">$</span> l_viewXZYs xzys
+  when (<span class="fu">not</span> keepXCoord)
+    (windows <span class="op">$</span> W.view wid)
+  l_updateYHist
+
+<span class="co">-- Given a list of XZYs to view, convert each XZY to a &quot;Workspace i l a&quot; type</span>
+<span class="co">-- (this is the type that XMonad cares about). In this conversion process, we</span>
+<span class="co">-- only look at the `hidden&#39; part of the StackSet (the idea is that we only</span>
+<span class="co">-- really want to use this function to view workspaces on a YCoord other than</span>
+<span class="co">-- the current one, which means that by definition they should be hidden).</span>
+<span class="co">--</span>
+<span class="co">-- First we sanitize the input XZYs by making sure that each XZY is (1) unique,</span>
+<span class="co">-- (2) has a different XCoord, and (3) can be found in the `hidden&#39; Workspaces</span>
+<span class="co">-- list. We then make each XZY visible with `l_promoteFromHidden&#39;.</span>
+<span class="ot">l_viewXZYs ::</span> [<span class="dt">XZY</span>]
+  <span class="ot">-&gt;</span> <span class="dt">WindowSet</span>
+  <span class="ot">-&gt;</span> <span class="dt">WindowSet</span>
+l_viewXZYs xzyCandidates windowSet
+  <span class="co">-- If none of the xzyCandidates survived the sanity check, then do nothing.</span>
+  <span class="op">|</span> <span class="fu">null</span> xzys <span class="ot">=</span> windowSet
+  <span class="op">|</span> <span class="fu">otherwise</span> <span class="ot">=</span> foldl&#39; l_promoteFromHidden windowSet xzys
+  <span class="kw">where</span>
+  xzys
+    <span class="ot">=</span> <span class="fu">concatMap</span> (<span class="fu">flip</span> xzyToWorkspace <span class="op">$</span> W.hidden windowSet)
+    <span class="op">$</span> nub xzyCandidates
+  xzyToWorkspace xzy hiddenWorkspaces <span class="ot">=</span>
+    [ hiddenWorkspace
+    <span class="op">|</span> hiddenWorkspace<span class="op">@</span>(<span class="dt">W.Workspace</span> xzy&#39; _ _) <span class="ot">&lt;-</span> hiddenWorkspaces
+    , xzy&#39; <span class="op">==</span> <span class="fu">show</span> xzy
+    ]
+
+<span class="co">-- Promote a hidden workspace to be visible. As a reminder, XMonad.Core</span>
+<span class="co">-- (confusingly) uses the type synonym WindowSpace to mean &quot;Workspace i l a&quot;. We</span>
+<span class="co">-- call a WindowSpace &quot;ww&quot; to make the code a little easier to read (better than</span>
+<span class="co">-- using &quot;workspace&quot;, considering how we already use XMonad.StackSet.workspace</span>
+<span class="co">-- as W.workspace).</span>
+<span class="ot">l_promoteFromHidden ::</span> <span class="dt">WindowSet</span> <span class="ot">-&gt;</span> <span class="dt">WindowSpace</span> <span class="ot">-&gt;</span> <span class="dt">WindowSet</span>
+l_promoteFromHidden windowSet ww
+  <span class="co">-- If the given XCoord matches the XCoord of the current (focused) screen, we</span>
+  <span class="co">-- have to promote ww to be W.current and demote the existing W.current screen</span>
+  <span class="co">-- to be hidden.</span>
+  <span class="op">|</span> matchesXCoordFromWW <span class="op">.</span> W.screen <span class="op">$</span> W.current windowSet <span class="ot">=</span> windowSet
+    { W.current <span class="ot">=</span> (W.current windowSet) { W.workspace <span class="ot">=</span> ww }
+    , W.hidden <span class="ot">=</span> W.workspace (W.current windowSet) <span class="op">:</span> otherHidden
+    }
+  <span class="co">-- If the workspace we want to see is for a visible screen (not focused), we</span>
+  <span class="co">-- have to promote ww to be inside W.visible and demote the existing matching</span>
+  <span class="co">-- workspace in W.visible to be hidden.</span>
+  <span class="op">|</span> (<span class="dt">Just</span> sc) <span class="ot">&lt;-</span> find (matchesXCoordFromWW <span class="op">.</span> W.screen) (W.visible windowSet) <span class="ot">=</span> windowSet
+    { W.visible
+      <span class="ot">=</span> sc { W.workspace <span class="ot">=</span> ww }
+      <span class="op">:</span> <span class="fu">filter</span> (<span class="fu">not</span> <span class="op">.</span> matchesXCoordFromWW <span class="op">.</span> W.screen) (W.visible windowSet)
+    , W.hidden <span class="ot">=</span> W.workspace sc <span class="op">:</span> otherHidden
+    }
+  <span class="op">|</span> <span class="fu">otherwise</span> <span class="ot">=</span> windowSet
+  <span class="kw">where</span>
+  matchesXCoordFromWW (<span class="dt">S</span> s) <span class="ot">=</span> s <span class="op">==</span> ((\(<span class="dt">X</span> x) <span class="ot">-&gt;</span> x) <span class="op">.</span> l_XFromWid <span class="op">$</span> W.tag ww)
+  otherHidden <span class="ot">=</span> <span class="fu">filter</span> ((<span class="op">/=</span> W.tag ww) <span class="op">.</span> W.tag) <span class="op">$</span> W.hidden windowSet
+
+<span class="co">-- Pick out a default set of workspaces at a particular level. We make sure to</span>
+<span class="co">-- pick 1 workspace for each physical screen (given by numScreens).</span>
+<span class="ot">l_defaultXZYsForY ::</span> <span class="dt">YCoord</span> <span class="ot">-&gt;</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> [<span class="dt">XZY</span>]
+l_defaultXZYsForY y numScreens
+  <span class="ot">=</span> selectForEachXCoord (l_XCoords numScreens)
+  <span class="op">.</span> <span class="fu">filter</span> xzyIsOnYCoord
+  <span class="op">$</span> l_XZYs numScreens
+  <span class="kw">where</span>
+  xzyIsOnYCoord (<span class="dt">XZY</span> (_, _, y&#39;)) <span class="ot">=</span> y&#39; <span class="op">==</span> y
+  selectForEachXCoord xCoords xzys <span class="ot">=</span>
+    [ xzy
+    <span class="op">|</span> xzy <span class="ot">&lt;-</span> xzys
+    , <span class="fu">elem</span> (l_XFrom xzy) xCoords
+    <span class="co">-- Select the xzy at the first ZCoord.</span>
+    , l_ZFrom xzy <span class="op">==</span> <span class="fu">head</span> l_ZCoords
+    ]
+
+<span class="co">-- Move currently selected window to the given YCoord, preserving its XCoord.</span>
+<span class="ot">l_shiftY ::</span> <span class="dt">YCoord</span> <span class="ot">-&gt;</span> <span class="dt">X</span> ()
+l_shiftY yNext <span class="ot">=</span> <span class="kw">do</span>
+  windowSet <span class="ot">&lt;-</span> gets windowset
+  (<span class="dt">Seen</span> hashmap _) <span class="ot">&lt;-</span> XS.get<span class="ot"> ::</span> <span class="dt">X</span> <span class="dt">Seen</span>
+  <span class="kw">let</span>
+    numScreens <span class="ot">=</span> <span class="fu">length</span> <span class="op">$</span> W.screens windowSet
+    x <span class="ot">=</span> l_XFromWid <span class="op">.</span> W.tag <span class="op">.</span> W.workspace <span class="op">$</span> W.current windowSet
+    <span class="co">-- Like in l_viewYDir, try to grab the XZY of the last used Workspace at the</span>
+    <span class="co">-- target xzy.</span>
+    xzys <span class="ot">=</span> <span class="kw">case</span> H.lookup yNext hashmap <span class="kw">of</span>
+      <span class="co">-- Grab the xzy with the same XCoord as the current screen.</span>
+      <span class="dt">Just</span> (_, xzys&#39;) <span class="ot">-&gt;</span> xzys&#39;
+      <span class="dt">Nothing</span> <span class="ot">-&gt;</span> l_defaultXZYsForY yNext numScreens
+  whenJust
+    (find ((<span class="op">==</span>x) <span class="op">.</span> l_XFrom) xzys)
+    (\xzy <span class="ot">-&gt;</span> (windows <span class="op">.</span> W.shift <span class="op">$</span> <span class="fu">show</span> xzy) <span class="op">&gt;&gt;</span> l_viewY yNext <span class="dt">True</span>)
+
+<span class="co">-- Move currently focused window over to the next YCoord. Then view that YCoord.</span>
+<span class="co">-- If there is no currently focused window, don&#39;t do anything. This is the</span>
+<span class="co">-- Y-axis analogue of the H-S-{h,l} bindings powered by l_shiftAndView.</span>
+<span class="ot">l_shiftYDir ::</span> <span class="dt">Direction1D</span> <span class="ot">-&gt;</span> <span class="dt">X</span> ()
+l_shiftYDir dir <span class="ot">=</span> <span class="kw">do</span>
+  windowSet <span class="ot">&lt;-</span> gets windowset
+  (<span class="dt">Seen</span> hashmap _) <span class="ot">&lt;-</span> XS.get<span class="ot"> ::</span> <span class="dt">X</span> <span class="dt">Seen</span>
+  <span class="kw">let</span>
+    numScreens <span class="ot">=</span> <span class="fu">length</span> <span class="op">$</span> W.screens windowSet
+    yPrev <span class="ot">=</span> l_YFromWindowSet windowSet
+    yNext <span class="ot">=</span> l_YIncrementedBy dir <span class="dt">True</span> yPrev
+    x <span class="ot">=</span> l_XFromWid <span class="op">.</span> W.tag <span class="op">.</span> W.workspace <span class="op">$</span> W.current windowSet
+    <span class="co">-- Like in l_viewYDir, try to grab the XZY of the last used Workspace at the</span>
+    <span class="co">-- target xzy.</span>
+    xzys <span class="ot">=</span> <span class="kw">case</span> H.lookup yNext hashmap <span class="kw">of</span>
+      <span class="co">-- Grab the xzy with the same XCoord as the current screen.</span>
+      <span class="dt">Just</span> (_, xzys&#39;) <span class="ot">-&gt;</span> xzys&#39;
+      <span class="dt">Nothing</span> <span class="ot">-&gt;</span> l_defaultXZYsForY yNext numScreens
+  whenJust
+    (find ((<span class="op">==</span>x) <span class="op">.</span> l_XFrom) xzys)
+    (\xzy <span class="ot">-&gt;</span> (windows <span class="op">.</span> W.shift <span class="op">$</span> <span class="fu">show</span> xzy) <span class="op">&gt;&gt;</span> l_viewYDir dir <span class="dt">True</span>)
+
+<span class="co">-- Show all windows at the current YCoord; if selected, then view that window</span>
+<span class="co">-- and switch focus to it.</span>
+<span class="ot">l_gridSelectWithinY ::</span> <span class="dt">X</span> ()
+l_gridSelectWithinY <span class="ot">=</span> <span class="kw">do</span>
+  windowSet <span class="ot">&lt;-</span> gets windowset
+  <span class="kw">let</span>
+    y <span class="ot">=</span> l_YFromWindowSet windowSet
+    numScreens <span class="ot">=</span> <span class="fu">length</span> <span class="op">$</span> W.screens windowSet
+    attachName (ww, a) <span class="ot">=</span> <span class="kw">do</span>
+      b <span class="ot">&lt;-</span> <span class="fu">show</span> <span class="op">&lt;$&gt;</span> getName a
+      <span class="fu">return</span> (b, (ww, a))
+  windowsAtY <span class="ot">&lt;-</span> <span class="fu">mapM</span> attachName
+    <span class="op">$</span> <span class="fu">concat</span>
+      [ <span class="fu">map</span> (ww,) <span class="op">$</span> W.integrate&#39; <span class="op">$</span> W.stack ww
+      <span class="op">|</span> ww <span class="ot">&lt;-</span> W.workspaces windowSet
+      , xzy <span class="ot">&lt;-</span> l_XZYs numScreens
+      , W.tag ww <span class="op">==</span> <span class="fu">show</span> xzy
+      , l_YFrom xzy <span class="op">==</span> y
+      ]
+  selected <span class="ot">&lt;-</span> gridselect (gsconfig2 colorizeByXCoord) windowsAtY
+  whenJust selected
+    (windows <span class="op">.</span> l_viewByGoing <span class="op">.</span> first W.tag)
+  <span class="kw">where</span>
+  colorizeByXCoord (ww, _)
+    <span class="ot">=</span> stringColorizer
+    <span class="op">.</span> (\(<span class="dt">X</span> x) <span class="ot">-&gt;</span> <span class="fu">show</span> x)
+    <span class="op">.</span> l_XFromWid
+    <span class="op">$</span> W.tag ww
+  gsconfig2 colorizer <span class="ot">=</span> (buildDefaultGSConfig colorizer)
+    { gs_cellheight <span class="ot">=</span> <span class="dv">30</span>
+    , gs_cellwidth <span class="ot">=</span> <span class="dv">100</span>
+    }
+
+<span class="co">-- Show debug info, such as WorkspaceId (XZY).</span>
+<span class="ot">l_gridShowDebugInfo ::</span> <span class="dt">X</span> ()
+l_gridShowDebugInfo <span class="ot">=</span> <span class="kw">do</span>
+  windowSet <span class="ot">&lt;-</span> gets windowset
+  <span class="kw">let</span>
+    xzy <span class="ot">=</span> l_XZYFromWindowSet windowSet
+    wid <span class="ot">=</span> <span class="fu">show</span> xzy
+    zGrp <span class="ot">=</span> <span class="fu">show</span> <span class="op">.</span> l_ZCoordToGroup <span class="op">$</span> l_ZFrom xzy
+    focusedWindow <span class="ot">=</span> <span class="kw">case</span> W.stack <span class="op">.</span> W.workspace <span class="op">$</span> W.current windowSet <span class="kw">of</span>
+      <span class="dt">Just</span> s <span class="ot">-&gt;</span> <span class="fu">show</span> <span class="op">$</span> W.focus s
+      <span class="dt">Nothing</span> <span class="ot">-&gt;</span> <span class="st">&quot;None&quot;</span>
+    <span class="co">-- stringColorizer uses the _snd_ part of the pairs in debugInfo, not fst.</span>
+    debugInfo <span class="ot">=</span>
+      [ (<span class="st">&quot;WINDOWID: &quot;</span> <span class="op">++</span> focusedWindow, <span class="st">&quot;XID&quot;</span>)
+      , (<span class="st">&quot;XZY: &quot;</span> <span class="op">++</span> wid, <span class="st">&quot;XZY&quot;</span>)
+      , (<span class="st">&quot;ZGroup: &quot;</span> <span class="op">++</span> zGrp, <span class="st">&quot;ZGroup&quot;</span>)
+      ]
+  _ <span class="ot">&lt;-</span> gridselect (gsconfig2 stringColorizer) debugInfo
+  <span class="fu">return</span> ()
+  <span class="kw">where</span>
+  gsconfig2 colorizer <span class="ot">=</span> (buildDefaultGSConfig colorizer)
+    { gs_cellheight <span class="ot">=</span> <span class="dv">30</span>
+    , gs_cellwidth <span class="ot">=</span> <span class="dv">200</span>
+    }
+
+<span class="co">-- If the current workspace has windows, move focus within the current worpace.</span>
+<span class="co">-- If the current workspace is empty, this analagous to H-{h,l}).</span>
+<span class="ot">l_viewWindowOrWorkspace ::</span> <span class="dt">Direction1D</span> <span class="ot">-&gt;</span> <span class="dt">X</span> ()
+l_viewWindowOrWorkspace dir <span class="ot">=</span> <span class="kw">do</span>
+  windowSet <span class="ot">&lt;-</span> gets windowset
+  <span class="kw">let</span>
+    currentX <span class="ot">=</span> l_XFromWid <span class="op">.</span> W.tag <span class="op">.</span> W.workspace <span class="op">$</span> W.current windowSet
+    <span class="co">-- &quot;wsAcrossX&quot; has all visible stacks from other screens in the current Y</span>
+    <span class="co">-- cordinate (excluding the current stack in the X coordinate).</span>
+    wsAcrossX <span class="ot">=</span> (<span class="kw">if</span> dir <span class="op">==</span> <span class="dt">Next</span> <span class="kw">then</span> <span class="fu">id</span> <span class="kw">else</span> <span class="fu">reverse</span>)
+      <span class="op">.</span> <span class="fu">map</span> <span class="fu">snd</span>
+      <span class="op">.</span> l_wrapWithout (\(x, _) <span class="ot">-&gt;</span> x <span class="op">==</span> currentX)
+      <span class="op">.</span> <span class="fu">map</span> (\ww <span class="ot">-&gt;</span> (l_XFromWid <span class="op">$</span> W.tag ww, ww))
+      <span class="op">.</span> sortOn (l_XFromWid <span class="op">.</span> W.tag)
+      <span class="op">.</span> <span class="fu">map</span> W.workspace
+      <span class="op">$</span> W.screens windowSet
+    nextVisible <span class="ot">=</span> <span class="fu">head</span> wsAcrossX
+    currentStack <span class="ot">=</span> W.stack <span class="op">$</span> W.workspace <span class="op">$</span> W.current windowSet
+    moveFocus <span class="ot">=</span> windows <span class="op">$</span> <span class="kw">if</span> dir <span class="op">==</span> <span class="dt">Next</span>
+        <span class="kw">then</span> W.focusDown
+        <span class="kw">else</span> W.focusUp
+    moveFocusWithHop <span class="ot">=</span> <span class="kw">do</span>
+      focusTowardOppositeEdge nextVisible
+      windows <span class="op">.</span> W.view <span class="op">.</span> W.tag <span class="op">$</span> nextVisible
+      l_maybeShowHiddenNonEmptyZCount
+    focusTowardOppositeEdge ww <span class="ot">=</span> <span class="kw">case</span> W.stack ww <span class="kw">of</span>
+      <span class="dt">Just</span> _ <span class="ot">-&gt;</span> resetFocus ww
+      <span class="dt">Nothing</span> <span class="ot">-&gt;</span> <span class="fu">return</span> ()
+    resetFocus <span class="ot">=</span> windows <span class="op">.</span> l_modifyVisible (<span class="kw">if</span> dir <span class="op">==</span> <span class="dt">Next</span> <span class="kw">then</span> focusTop <span class="kw">else</span> focusBottom)
+    focusTop s<span class="op">@</span>(<span class="dt">W.Stack</span> t ls rs)
+      <span class="op">|</span> <span class="fu">null</span> ls <span class="op">&amp;&amp;</span> <span class="fu">null</span> rs <span class="ot">=</span> s
+      <span class="op">|</span> <span class="fu">null</span> ls <span class="ot">=</span> s
+      <span class="op">|</span> <span class="fu">null</span> rs <span class="ot">=</span> W.focusDown&#39; s
+      <span class="op">|</span> <span class="fu">otherwise</span> <span class="ot">=</span> <span class="dt">W.Stack</span> (<span class="fu">last</span> ls) [] (<span class="fu">reverse</span> (<span class="fu">init</span> ls) <span class="op">++</span> [t] <span class="op">++</span> rs)
+    focusBottom s<span class="op">@</span>(<span class="dt">W.Stack</span> t ls rs)
+      <span class="op">|</span> <span class="fu">null</span> ls <span class="op">&amp;&amp;</span> <span class="fu">null</span> rs <span class="ot">=</span> s
+      <span class="op">|</span> <span class="fu">null</span> rs <span class="ot">=</span> s
+      <span class="op">|</span> <span class="fu">null</span> ls <span class="ot">=</span> W.focusUp&#39; s
+      <span class="op">|</span> <span class="fu">otherwise</span> <span class="ot">=</span> <span class="dt">W.Stack</span> (<span class="fu">last</span> rs) (<span class="fu">reverse</span> (<span class="fu">init</span> rs) <span class="op">++</span> [t] <span class="op">++</span> ls) []
+    focusedOnEdge <span class="ot">=</span> <span class="kw">case</span> currentStack <span class="kw">of</span>
+      <span class="dt">Just</span> s <span class="ot">-&gt;</span> <span class="fu">null</span> ((<span class="kw">if</span> dir <span class="op">==</span> <span class="dt">Next</span> <span class="kw">then</span> W.down <span class="kw">else</span> W.up) s)
+      <span class="dt">Nothing</span> <span class="ot">-&gt;</span> <span class="dt">True</span>
+    action
+      <span class="op">|</span> isNothing currentStack <span class="op">||</span> focusedOnEdge <span class="ot">=</span> <span class="kw">do</span>
+          l_promoteHidden
+          moveFocusWithHop
+          l_maybeShowHiddenNonEmptyZCount
+      <span class="op">|</span> <span class="fu">otherwise</span> <span class="ot">=</span> moveFocus
+  action
+
+<span class="ot">l_viewAcrossX ::</span> <span class="dt">ScreenId</span> <span class="ot">-&gt;</span> <span class="dt">X</span> ()
+l_viewAcrossX sc <span class="ot">=</span> <span class="kw">do</span>
+  l_promoteHidden
+  <span class="fu">flip</span> whenJust (windows <span class="op">.</span> W.view) <span class="op">=&lt;&lt;</span> screenWorkspace sc
+  l_promoteHidden
+
+<span class="ot">l_promoteHidden ::</span> <span class="dt">X</span> ()
+l_promoteHidden <span class="ot">=</span> <span class="kw">do</span>
+  whenX (l_currentWindowCountIs (<span class="op">==</span><span class="dv">0</span>)) <span class="op">$</span>
+    moveTo <span class="dt">Prev</span> <span class="op">$</span> l_searchZ (<span class="dt">WQ</span> <span class="dt">NonEmpty</span> [])
+  l_maybeShowHiddenNonEmptyZCount
+
+<span class="co">-- Like XMonad.StackSet.modify, but act on the Stack found in the given</span>
+<span class="co">-- workspace, if it is currently visible to the user.</span>
+<span class="ot">l_modifyVisible ::</span> <span class="dt">Eq</span> i <span class="ot">=&gt;</span>
+  (<span class="dt">W.Stack</span> a <span class="ot">-&gt;</span> <span class="dt">W.Stack</span> a)
+  <span class="ot">-&gt;</span> <span class="dt">W.Workspace</span> i l s
+  <span class="ot">-&gt;</span> <span class="dt">W.StackSet</span> i l a sid sd
+  <span class="ot">-&gt;</span> <span class="dt">W.StackSet</span> i l a sid sd
+l_modifyVisible editStack ww windowSet
+  <span class="op">|</span> wwIsCurrent <span class="ot">=</span> W.modify <span class="dt">Nothing</span> (<span class="dt">Just</span> <span class="op">.</span> editStack) windowSet
+  <span class="op">|</span> <span class="fu">otherwise</span> <span class="ot">=</span> <span class="fu">maybe</span> windowSet replaceIfFound (find ((<span class="op">==</span>W.tag ww) <span class="op">.</span> W.tag <span class="op">.</span> W.workspace) <span class="op">$</span> W.visible windowSet)
+  <span class="kw">where</span>
+  wwIsCurrent <span class="ot">=</span> (<span class="op">==</span>W.tag ww) <span class="op">$</span> W.currentTag windowSet
+  <span class="co">-- No need to bind the first thing here, because we reference windowSet from</span>
+  <span class="co">-- the outer scope. Closures!</span>
+  replaceIfFound _ <span class="ot">=</span> windowSet
+    { W.visible <span class="ot">=</span> l_replaceIf (\s <span class="ot">-&gt;</span> W.tag (W.workspace s) <span class="op">==</span> W.tag ww) editStackOfScreen <span class="op">$</span> W.visible windowSet }
+  editStackOfScreen s <span class="ot">=</span> s
+    { W.workspace <span class="ot">=</span> (W.workspace s)
+      { W.stack <span class="ot">=</span> <span class="fu">fmap</span> editStack <span class="op">.</span> W.stack <span class="op">$</span> W.workspace s }}
+
+<span class="ot">l_replaceIf ::</span> (a <span class="ot">-&gt;</span> <span class="dt">Bool</span>) <span class="ot">-&gt;</span> (a <span class="ot">-&gt;</span> a) <span class="ot">-&gt;</span> [a] <span class="ot">-&gt;</span> [a]
+l_replaceIf p f <span class="ot">=</span> <span class="fu">map</span> (\a <span class="ot">-&gt;</span> <span class="kw">if</span> p a <span class="kw">then</span> f a <span class="kw">else</span> a)
+
+<span class="co">-- Focus on the given Window `a&#39;, but instead of forcing the Workspace to show</span>
+<span class="co">-- up in the current Xine screen, _go_ to that Window. If the Window is already</span>
+<span class="co">-- located in the given WorkspaceId `wid&#39;, just view that Workspace. If it</span>
+<span class="co">-- doesn&#39;t reside in `wid&#39;, move it there first.</span>
+<span class="co">--</span>
+<span class="co">-- We assume that wid is in the current YCoord (otherwise, it&#39;s a NOP).</span>
+<span class="ot">l_viewByGoing ::</span> (<span class="dt">WorkspaceId</span>, <span class="dt">Window</span>) <span class="ot">-&gt;</span> <span class="dt">WindowSet</span> <span class="ot">-&gt;</span> <span class="dt">WindowSet</span>
+l_viewByGoing (wid, a) windowSet
+  <span class="op">|</span> <span class="fu">null</span> (wws windowSet) <span class="op">||</span> invalidWindow <span class="ot">=</span> windowSet
+  <span class="op">|</span> l_YFromWid wid <span class="op">/=</span> l_YFromWid (W.currentTag windowSet) <span class="ot">=</span> windowSet
+  <span class="op">|</span> l_windowIsInWid wid a windowSet <span class="ot">=</span> f windowSet
+  <span class="op">|</span> <span class="fu">otherwise</span> <span class="ot">=</span> f <span class="op">$</span> W.shiftWin wid a windowSet
+  <span class="kw">where</span>
+  invalidWindow <span class="ot">=</span> <span class="fu">notElem</span> a <span class="op">$</span> W.allWindows windowSet
+  f wx
+    <span class="op">|</span> isHidden wid wx <span class="ot">=</span> W.focusWindow a <span class="op">.</span> l_promoteFromHidden wx <span class="op">.</span> <span class="fu">head</span> <span class="op">$</span> wws wx
+    <span class="op">|</span> <span class="fu">otherwise</span> <span class="ot">=</span> W.focusWindow a wx
+  isHidden b wx
+    <span class="ot">=</span> <span class="fu">elem</span> b
+    <span class="op">.</span> <span class="fu">map</span> W.tag
+    <span class="op">$</span> W.hidden wx
+  wws wx <span class="ot">=</span>
+    [ b
+    <span class="op">|</span> b <span class="ot">&lt;-</span> W.workspaces wx
+    , W.tag b <span class="op">==</span> wid
+    ]
+
+<span class="ot">l_windowIsInWid ::</span> <span class="dt">WorkspaceId</span> <span class="ot">-&gt;</span> <span class="dt">Window</span> <span class="ot">-&gt;</span> <span class="dt">WindowSet</span> <span class="ot">-&gt;</span> <span class="dt">Bool</span>
+l_windowIsInWid wid a windowSet <span class="ot">=</span> (<span class="op">==</span> <span class="dt">Just</span> wid) <span class="op">$</span> <span class="fu">lookup</span> a
+  [ (a&#39;, W.tag ww)
+  <span class="op">|</span> ww <span class="ot">&lt;-</span> W.workspaces windowSet
+  , a&#39; <span class="ot">&lt;-</span> W.integrate&#39; <span class="op">$</span> W.stack ww
+  ]
+
+<span class="co">-- Try to find a workspace based on the given WorkspaceQuery, but inside the</span>
+<span class="co">-- current XCoord and YCoord. In other words, flip through the ZCoords available</span>
+<span class="co">-- on the current physical screen (X and Y coordinates stay constant).</span>
+<span class="ot">l_searchZ ::</span> <span class="dt">WorkspaceQuery</span> <span class="ot">-&gt;</span> <span class="dt">WSType</span>
+l_searchZ q <span class="ot">=</span> <span class="dt">WSIs</span> <span class="op">$</span> <span class="kw">do</span>
+  windowSet <span class="ot">&lt;-</span> gets windowset
+  <span class="kw">let</span>
+    (x, _, y) <span class="ot">=</span> l_CoordsFromWid <span class="op">.</span> W.tag <span class="op">.</span> W.workspace <span class="op">$</span> W.current windowSet
+    predicate ww <span class="ot">=</span> l_resolveQuery q ww
+      <span class="op">&amp;&amp;</span> l_XFromWid (W.tag ww) <span class="op">==</span> x
+      <span class="op">&amp;&amp;</span> l_YFromWid (W.tag ww) <span class="op">==</span> y
+  <span class="fu">return</span> predicate
+
+<span class="co">-- Like l_searchZ, but instead of only searching for the one workspace that</span>
+<span class="co">-- satisfies the WorkspaceQuery, return an empty workspace if the search fails.</span>
+<span class="ot">l_searchZPreferNonEmpty ::</span> <span class="dt">X</span> <span class="dt">WSType</span>
+l_searchZPreferNonEmpty <span class="ot">=</span> <span class="kw">do</span>
+  xzyNext <span class="ot">&lt;-</span> findWorkspace getSortByIndex <span class="dt">Next</span> qNonEmpty <span class="dv">1</span>
+  xzyCurrent <span class="ot">&lt;-</span> gets (W.tag <span class="op">.</span> W.workspace <span class="op">.</span> W.current <span class="op">.</span> windowset)
+  <span class="fu">return</span> <span class="op">$</span> <span class="kw">if</span> xzyNext <span class="op">==</span> xzyCurrent
+    <span class="kw">then</span> qEmpty
+    <span class="kw">else</span> qNonEmpty
+  <span class="kw">where</span>
+  qEmpty <span class="ot">=</span> l_searchZ (<span class="dt">WQ</span> <span class="dt">Empty</span> [])
+  qNonEmpty <span class="ot">=</span> l_searchZ (<span class="dt">WQ</span> <span class="dt">NonEmpty</span> [])
+
+<span class="co">-- Like l_searchZ, but always return a XZY in a given ZGroup. When choosing</span>
+<span class="co">-- among XZYs in the ZGroup, choose the one with the fewest number of windows.</span>
+<span class="ot">l_searchZPreferZGroup ::</span> <span class="dt">ZGroup</span> <span class="ot">-&gt;</span> <span class="dt">X</span> <span class="dt">WorkspaceId</span>
+l_searchZPreferZGroup zGroup <span class="ot">=</span> <span class="kw">do</span>
+  windowSet <span class="ot">&lt;-</span> gets windowset
+  <span class="kw">let</span>
+    numScreens <span class="ot">=</span> <span class="fu">length</span> <span class="op">$</span> W.screens windowSet
+    xzyCurrent <span class="ot">=</span> l_XZYFromWid <span class="op">.</span> W.tag <span class="op">$</span> W.workspace <span class="op">$</span> W.current windowSet
+    (<span class="dt">XZY</span> (x, _, y)) <span class="ot">=</span> l_XZYFromWindowSet windowSet
+    <span class="co">-- Get all XZYs at the current XCoord/YCoord combination that belong to</span>
+    <span class="co">-- zGroup.</span>
+    xzys <span class="ot">=</span> <span class="fu">filter</span> ((<span class="op">==</span>x) <span class="op">.</span> l_XFrom) <span class="op">$</span> l_XZYsFrom numScreens zGroup <span class="fu">id</span> y
+    xzysOfGroup <span class="ot">=</span>
+      [ (l_XZYFromWid wid, <span class="fu">length</span> <span class="op">$</span> W.integrate&#39; stack)
+      <span class="op">|</span> (<span class="dt">W.Workspace</span> wid _ stack) <span class="ot">&lt;-</span> W.workspaces windowSet
+      , <span class="fu">elem</span> wid <span class="op">$</span> <span class="fu">map</span> <span class="fu">show</span> xzys
+      ]
+    xzyPicked
+      <span class="op">|</span> <span class="fu">null</span> xzysOfGroup <span class="ot">=</span> xzyCurrent
+      <span class="op">|</span> <span class="fu">otherwise</span> <span class="ot">=</span> <span class="fu">fst</span> <span class="op">.</span> <span class="fu">head</span> <span class="op">$</span> l_multiSort xzysOfGroup
+        [ comparing <span class="fu">snd</span>
+        , comparing <span class="fu">fst</span>
+        ]
+  <span class="fu">return</span> <span class="op">$</span> <span class="fu">show</span> xzyPicked
+
+<span class="ot">l_multiSort ::</span> [a] <span class="ot">-&gt;</span> [a <span class="ot">-&gt;</span> a <span class="ot">-&gt;</span> <span class="dt">Ordering</span>] <span class="ot">-&gt;</span> [a]
+l_multiSort sortMe dimensions <span class="ot">=</span> sortBy (l_compareDimensions dimensions) sortMe
+
+<span class="co">-- The reason why the type signature is not &quot;[a -&gt; a -&gt; Ordering]&quot; for the</span>
+<span class="co">-- predicates is that we are comparing a single list of things, but are using</span>
+<span class="co">-- arbitrary predicates &quot;ps&quot; that can change to type of &quot;a&quot; to be anything, as</span>
+<span class="co">-- long as that resulting type is an Orderable thing. So, if we are sorting</span>
+<span class="co">-- &quot;[a]&quot; in l_multiSort and are using different orderable attributes of &quot;a&quot;,</span>
+<span class="co">-- there must come point in time when the different attributes of &quot;a&quot; get</span>
+<span class="co">-- compared by their underlying Ordering conversion.</span>
+<span class="co">--</span>
+<span class="co">-- Put another way, if we do have [a -&gt; a -&gt; Ordering] here for ps, then</span>
+<span class="co">-- obviously we are only sorting in 1 dimension (the &quot;a&quot; dimension), which is</span>
+<span class="co">-- not what we want.</span>
+<span class="ot">l_compareDimensions ::</span> [a <span class="ot">-&gt;</span> b <span class="ot">-&gt;</span> <span class="dt">Ordering</span>] <span class="ot">-&gt;</span> a <span class="ot">-&gt;</span> b <span class="ot">-&gt;</span> <span class="dt">Ordering</span>
+l_compareDimensions ps x y
+  <span class="ot">=</span> headDef <span class="dt">EQ</span>
+  <span class="op">.</span> <span class="fu">dropWhile</span> (<span class="op">==</span><span class="dt">EQ</span>)
+  <span class="op">$</span> <span class="fu">map</span> (\p <span class="ot">-&gt;</span> p x y) ps
+
+<span class="co">-- Resolve the given WorkspaceQuery against the Workspace/WindowSpace. This is</span>
+<span class="co">-- also where we resolve the ZGroup membership exclusion list.</span>
+<span class="ot">l_resolveQuery ::</span> <span class="dt">WorkspaceQuery</span> <span class="ot">-&gt;</span> <span class="dt">WindowSpace</span> <span class="ot">-&gt;</span> <span class="dt">Bool</span>
+l_resolveQuery (<span class="dt">WQ</span> hasWindows zGroupMemberships) ww
+  <span class="ot">=</span> l_queryEmptiness hasWindows ww
+  <span class="op">&amp;&amp;</span> l_queryZGroupMemberships zGroupMemberships ww
+
+<span class="ot">l_queryEmptiness ::</span> <span class="dt">WindowPopulation</span> <span class="ot">-&gt;</span> <span class="dt">WindowSpace</span> <span class="ot">-&gt;</span> <span class="dt">Bool</span>
+l_queryEmptiness hasWindows ww <span class="ot">=</span> <span class="kw">case</span> hasWindows <span class="kw">of</span>
+  <span class="dt">Empty</span> <span class="ot">-&gt;</span> isNothing <span class="op">$</span> W.stack ww
+  <span class="dt">NonEmpty</span> <span class="ot">-&gt;</span> isJust <span class="op">$</span> W.stack ww
+
+<span class="ot">l_queryZGroupMemberships ::</span> <span class="dt">ZGroupMemberships</span> <span class="ot">-&gt;</span> <span class="dt">WindowSpace</span> <span class="ot">-&gt;</span> <span class="dt">Bool</span>
+l_queryZGroupMemberships zGroupMemberships ww <span class="ot">=</span> <span class="fu">all</span>
+  (\(zGroup, expectedResult) <span class="ot">-&gt;</span> expectedResult <span class="op">==</span> l_inGroup zGroup ww)
+  zGroupMemberships
+
+<span class="ot">l_inGroup ::</span> <span class="dt">ZGroup</span> <span class="ot">-&gt;</span> <span class="dt">WindowSpace</span> <span class="ot">-&gt;</span> <span class="dt">Bool</span>
+l_inGroup zGroup ww <span class="ot">=</span> (l_ZCoordToGroup <span class="op">.</span> l_ZFromWid <span class="op">$</span> W.tag ww) <span class="op">==</span> zGroup
+
+<span class="co">-- Move the focused window to the given Workspace, and then view that Workspace.</span>
+<span class="ot">l_shiftAndView ::</span> <span class="dt">WorkspaceId</span> <span class="ot">-&gt;</span> <span class="dt">WindowSet</span> <span class="ot">-&gt;</span> <span class="dt">WindowSet</span>
+l_shiftAndView wid <span class="ot">=</span> W.view wid <span class="op">.</span> W.shift wid
+
+<span class="co">-- Like XMonad.ManageHook.doShift, but follow the moved window to its new home.</span>
+<span class="co">-- We use l_viewY just in case the destination WorkspaceId is not in the current</span>
+<span class="co">-- YCoord.</span>
+<span class="ot">l_shiftAndViewAsHook ::</span> <span class="dt">WorkspaceId</span> <span class="ot">-&gt;</span> <span class="dt">ManageHook</span>
+l_shiftAndViewAsHook wid <span class="ot">=</span> <span class="kw">do</span>
+  a <span class="ot">&lt;-</span> ask
+  composeAll
+    [ doF <span class="op">=&lt;&lt;</span> liftX (l_viewY (l_YFromWid wid) <span class="dt">False</span> <span class="op">&gt;&gt;</span> <span class="fu">return</span> <span class="fu">id</span>)
+    , doF <span class="op">$</span> l_viewByGoing (wid, a)
+    ]
+
+<span class="ot">l_currentWindowCountIs ::</span> (<span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">Bool</span>) <span class="ot">-&gt;</span> <span class="dt">X</span> <span class="dt">Bool</span>
+l_currentWindowCountIs predicate <span class="ot">=</span> <span class="kw">do</span>
+  windowSet <span class="ot">&lt;-</span> gets windowset
+  <span class="kw">let</span>
+    windowCount <span class="ot">=</span> <span class="fu">length</span> <span class="op">.</span> W.integrate&#39; <span class="op">.</span> W.stack <span class="op">.</span> W.workspace <span class="op">$</span> W.current windowSet
+  <span class="fu">pure</span> <span class="op">$</span> predicate windowCount
+
+<span class="ot">l_windowCountIs ::</span> (<span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">Bool</span>) <span class="ot">-&gt;</span> <span class="dt">WorkspaceId</span> <span class="ot">-&gt;</span> <span class="dt">X</span> <span class="dt">Bool</span>
+l_windowCountIs predicate wid <span class="ot">=</span> <span class="kw">do</span>
+  windowSet <span class="ot">&lt;-</span> gets windowset
+  <span class="kw">let</span>
+    xzy <span class="ot">=</span> l_XZYFromWid wid
+    windowCount <span class="ot">=</span> <span class="fu">head</span>
+      [ <span class="fu">length</span> <span class="op">.</span> W.integrate&#39; <span class="op">$</span> W.stack ww
+      <span class="op">|</span> ww <span class="ot">&lt;-</span> W.workspaces windowSet
+      , W.tag ww <span class="op">==</span> <span class="fu">show</span> xzy
+      ]
+  <span class="fu">pure</span> <span class="op">$</span> predicate windowCount
+
+<span class="ot">l_workspaceIsEmpty ::</span> <span class="dt">XZY</span> <span class="ot">-&gt;</span> <span class="dt">X</span> <span class="dt">Bool</span>
+l_workspaceIsEmpty xzy <span class="ot">=</span> <span class="kw">do</span>
+  windowSet <span class="ot">&lt;-</span> gets windowset
+  <span class="fu">return</span> <span class="op">.</span> isJust <span class="op">$</span> listToMaybe
+    [ ww
+    <span class="op">|</span> ww <span class="ot">&lt;-</span> W.workspaces windowSet
+    , W.tag ww <span class="op">==</span> <span class="fu">show</span> xzy
+    , isNothing <span class="op">$</span> W.stack ww
+    ]
+
+<span class="co">-- Terminals.</span>
+<span class="ot">l_term ::</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">String</span>
+l_term hostname <span class="ot">=</span> <span class="kw">case</span> hostname <span class="kw">of</span>
+  <span class="st">&quot;k1&quot;</span> <span class="ot">-&gt;</span> <span class="st">&quot;LIBGL_ALWAYS_SOFTWARE=1 &quot;</span> <span class="op">&lt;&gt;</span> invocation
+  _ <span class="ot">-&gt;</span> invocation
+  <span class="kw">where</span>
+  invocation <span class="ot">=</span> <span class="st">&quot;wezterm&quot;</span>
+
+<span class="ot">l_isPortraitMonitorLayout ::</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">Bool</span>
+l_isPortraitMonitorLayout givenHost <span class="ot">=</span> <span class="fu">any</span> (<span class="ot">`isPrefixOf`</span> givenHost) portraitHosts
+  <span class="kw">where</span>
+  portraitHosts <span class="ot">=</span> [<span class="st">&quot;k0&quot;</span>]
+
+<span class="ot">l_keyBindings ::</span> <span class="dt">String</span>
+  <span class="ot">-&gt;</span> <span class="dt">Int</span>
+  <span class="ot">-&gt;</span> <span class="dt">XConfig</span> <span class="dt">Layout</span>
+  <span class="ot">-&gt;</span> <span class="dt">M.Map</span> (<span class="dt">KeyMask</span>, <span class="dt">KeySym</span>) (<span class="dt">X</span> ())
+l_keyBindings hostname numScreens conf<span class="op">@</span><span class="dt">XConfig</span> {XMonad.modMask <span class="ot">=</span> hypr}
+  <span class="ot">=</span> M.fromList
+  <span class="op">.</span> <span class="fu">map</span> (second (\f <span class="ot">-&gt;</span> f <span class="op">&gt;&gt;</span> l_resetMouse <span class="dt">True</span>)) <span class="op">$</span>
+  <span class="co">-- Close focused window.</span>
+  [ ((hyprS,  xK_q            ), kill)
+
+  <span class="co">-- Rotate through the available layout styles.</span>
+  , ((hypr,   xK_t            ), sendMessage <span class="dt">NextLayout</span>)
+
+  <span class="co">-- Reset the layouts on the current workspace to default.</span>
+  , ((hypr,   xK_equal        ), setLayout <span class="op">$</span> XMonad.layoutHook conf)
+
+  <span class="co">-- Move focus to the next/prev window, on the current set of current + visible</span>
+  <span class="co">-- screens.</span>
+  , ((hypr,   xK_j            ), l_viewWindowOrWorkspace <span class="dt">Next</span>)
+  , ((hypr,   xK_k            ), l_viewWindowOrWorkspace <span class="dt">Prev</span>)
+
+  <span class="co">-- Swap the focused window with the next/prev window.</span>
+  , ((hyprS,  xK_j            ), windows W.swapDown)
+  , ((hyprS,  xK_k            ), windows W.swapUp)
+
+  <span class="co">-- Unfloat/float window.</span>
+  , ((hypr,   xK_f            ), withFocused <span class="op">$</span> windows <span class="op">.</span> W.sink)
+  , ((hyprS,  xK_f            ), withFocused <span class="op">$</span> windows <span class="op">.</span> <span class="fu">flip</span> W.float relativeDimenions)
+
+  <span class="co">-- Shrink/Expand work on the Master window; the Mirror* counterparts do the</span>
+  <span class="co">-- same (although, from the looks of it, the definitions are somehow</span>
+  <span class="co">-- *reversed*), but for a slave window.</span>
+  , ((hyprS,  xK_bracketleft  ), shrinkExpand <span class="dt">Shrink</span> <span class="dt">MirrorExpand</span>)
+  , ((hyprS,  xK_bracketright ), shrinkExpand <span class="dt">Expand</span> <span class="dt">MirrorShrink</span>)
+
+  <span class="co">-- Increment/decrement the number of windows in the master area.</span>
+  , ((hypr,   xK_m            ), sendMessage (<span class="dt">IncMasterN</span> <span class="dv">1</span>))
+  , ((hyprS,  xK_m            ), sendMessage (<span class="dt">IncMasterN</span> (<span class="op">-</span><span class="dv">1</span>)))
+
+  , ((hypr,   xK_g            ), l_gridSelectWithinY)
+  , ((hypr,   xK_s            ), l_gridShowDebugInfo)
+
+  <span class="co">-- Lock screen.</span>
+  , ((hypr,   xK_Escape       ), spawnSelected def
+    [ <span class="st">&quot;~/syscfg/script/susp.sh&quot;</span>
+    , <span class="st">&quot;xscreensaver-command -lock&quot;</span>])
+
+  <span class="co">-- Our keyboard is connected to the LG DualUp monitor, and we switch the</span>
+  <span class="co">-- monitor input from USB-C (Mac) to DisplayPort (NixOS). When we do this, the</span>
+  <span class="co">-- keyboard is reset and loses the hyper key binding, which loses all XMonad</span>
+  <span class="co">-- keybindings. So we need a non-hyper-key way to to reset the keybindings.</span>
+  , ((altS,   xK_a            ), spawn <span class="st">&quot;~/syscfg/xmonad/xenv.sh&quot;</span>)
+
+  <span class="co">-- Toggle window borders.</span>
+  , ((hypr,   xK_b            ), withFocused toggleBorder)
+
+  <span class="co">-- Reapply l_manageHook against the focused window.</span>
+  , ((hypr,   xK_Return       ), l_resetWindow numScreens)
+
+  <span class="co">-- Go to empty Workspace, on the current YCoord, in the current physical</span>
+  <span class="co">-- screen. For shifting an existing window to an empty Workspace, only do so</span>
+  <span class="co">-- if there is indeed a window to work with in the current Workspace (i.e., if</span>
+  <span class="co">-- all ZCoords at this X/Y-coordinate pair is full, do nothing).</span>
+  , ((hypr,   xK_o            ), <span class="kw">do</span>
+      moveTo <span class="dt">Next</span> <span class="op">$</span> l_searchZ (<span class="dt">WQ</span> <span class="dt">Empty</span> [])
+      l_maybeShowHiddenNonEmptyZCount)
+  , ((hyprS,  xK_o            ), whenX (l_currentWindowCountIs (<span class="op">&gt;</span><span class="dv">0</span>)) <span class="op">$</span> <span class="kw">do</span>
+      doTo <span class="dt">Next</span> (l_searchZ (<span class="dt">WQ</span> <span class="dt">Empty</span> [])) getSortByIndex (windows <span class="op">.</span> l_shiftAndView)
+      l_maybeShowHiddenNonEmptyZCount)
+  ]
+  <span class="op">++</span>
+  <span class="co">-- Go to any non-empty Workspace only within the Z-Axis (X and Y remain</span>
+  <span class="co">-- untouched) The Z-axis direction is either Next or Prev (depending on the</span>
+  <span class="co">-- key). If we use the Shift key, move the current window to that direction,</span>
+  <span class="co">-- unless there is only 1 window.</span>
+  [ ((modifier, key), action <span class="op">&gt;&gt;</span> l_maybeShowHiddenNonEmptyZCount)
+  <span class="op">|</span> (key, dir) <span class="ot">&lt;-</span>
+    [ (xK_n, <span class="dt">Next</span>)
+    , (xK_p, <span class="dt">Prev</span>)
+    ]
+  , (modifier, action) <span class="ot">&lt;-</span>
+    [ (hypr, moveTo dir <span class="op">$</span> l_searchZ (<span class="dt">WQ</span> <span class="dt">NonEmpty</span> []))
+    , (hyprS, whenX
+        (l_currentWindowCountIs (<span class="op">&gt;</span><span class="dv">0</span>))
+        ((\wst <span class="ot">-&gt;</span> doTo dir wst getSortByIndex (windows <span class="op">.</span> l_shiftAndView))
+          <span class="op">=&lt;&lt;</span> l_searchZPreferNonEmpty))
+    ]
+  ]
+  <span class="op">++</span>
+  <span class="co">-- H-{h,l}: Switch focus across X-axis (prev/next physical screen).</span>
+  [((hypr, key), l_viewAcrossX <span class="op">=&lt;&lt;</span> sc)
+  <span class="op">|</span> (key, sc) <span class="ot">&lt;-</span> [(xK_h, screenBy (<span class="op">-</span><span class="dv">1</span>)), (xK_l, screenBy <span class="dv">1</span>)]
+  ]
+  <span class="op">++</span>
+  <span class="co">-- H-S-{h,l}: Move focused window along X-axis. The difference here versus the</span>
+  <span class="co">-- vanilla XMonad behavior is that we not only move the focused window, but</span>
+  <span class="co">-- _move focus to it_ afterwards. This way, repeatedly pressing this binding</span>
+  <span class="co">-- merely moves the focused window along; otherwise we just end up moving all</span>
+  <span class="co">-- windows out of the current screen, which is not as useful in practice.</span>
+  <span class="co">--</span>
+  <span class="co">-- It is worth noting that this binding does nothing if there is no window in</span>
+  <span class="co">-- the current workspace to move.</span>
+  [((hyprS, key), whenX
+    (l_currentWindowCountIs (<span class="op">&gt;</span><span class="dv">0</span>))
+    (<span class="kw">do</span>
+      windowSet <span class="ot">&lt;-</span> gets windowset
+      <span class="kw">let</span>
+        widCur <span class="ot">=</span> W.tag <span class="op">.</span> W.workspace <span class="op">$</span> W.current windowSet
+      wst <span class="ot">&lt;-</span> l_searchZPreferNonEmpty
+
+      <span class="co">-- Move focused window to next workspace.</span>
+      widNext <span class="ot">&lt;-</span> fromJust <span class="op">&lt;$&gt;</span> (screenWorkspace <span class="op">=&lt;&lt;</span> screenBy dir)
+      windows <span class="op">$</span> W.shift widNext
+
+      <span class="co">-- On the old workspace, try to promote hidden nonempty workspace if we&#39;re</span>
+      <span class="co">-- staring at an empty one.</span>
+      whenX (l_windowCountIs (<span class="op">==</span><span class="dv">0</span>) widCur) <span class="op">$</span>
+        doTo <span class="dt">Prev</span> wst getSortByIndex (windows <span class="op">.</span> l_shiftAndView)
+      l_maybeShowHiddenNonEmptyZCount
+
+      <span class="co">-- Shift focus to workspace.</span>
+      windows <span class="op">$</span> W.view widNext
+
+      <span class="co">-- Show hidden workspace count, if any.</span>
+      l_maybeShowHiddenNonEmptyZCount))
+      <span class="op">|</span> (key, dir) <span class="ot">&lt;-</span> [(xK_h, <span class="op">-</span><span class="dv">1</span>), (xK_l, <span class="dv">1</span>)]
+  ]
+  <span class="op">++</span>
+  <span class="co">-- Show the next set of workspaces by moving in the Y direction. If at the</span>
+  <span class="co">-- edge, do NOT cycle; instead, popup a message saying that we&#39;re at the edge</span>
+  <span class="co">-- of the Y coordinate.</span>
+  [ ((hyprA,  xK_j            ), l_viewYNonEmpty <span class="dt">Next</span>)
+  , ((hyprAS, xK_j            ), whenX
+                                  (l_currentWindowCountIs (<span class="op">&gt;</span><span class="dv">0</span>))
+                                  (yEdgeGuard <span class="dt">Next</span> <span class="op">$</span> l_shiftYDir <span class="dt">Next</span>))
+  , ((hyprA,  xK_k            ), l_viewYNonEmpty <span class="dt">Prev</span>)
+  , ((hyprAS, xK_k            ), whenX
+                                  (l_currentWindowCountIs (<span class="op">&gt;</span><span class="dv">0</span>))
+                                  (yEdgeGuard <span class="dt">Prev</span> <span class="op">$</span> l_shiftYDir <span class="dt">Prev</span>))
+  , ((hyprA,  xK_Return       ), yEdgeGuard <span class="dt">Next</span> <span class="op">$</span> l_viewYDir <span class="dt">Next</span> <span class="dt">False</span>)
+  , ((hyprA,  xK_BackSpace    ), yEdgeGuard <span class="dt">Prev</span> <span class="op">$</span> l_viewYDir <span class="dt">Prev</span> <span class="dt">False</span>)
+  , ((hypr,   xK_y            ), l_viewNthY <span class="dv">1</span> <span class="dt">False</span>)
+  , ((hypr,   xK_w            ), l_viewNthY <span class="dv">2</span> <span class="dt">False</span>)
+  ]
+  <span class="op">++</span>
+  <span class="co">-- hypr-[0..9]: Switch to YCoord N.</span>
+  <span class="co">-- hyprS-[0..9]: Move focused window to YCoord N, preserving its XCoord.</span>
+  <span class="co">-- </span><span class="al">NOTE</span><span class="co">: Depending on the machine, we change the order of keys to optimize</span>
+  <span class="co">-- for the keyboard layout used on the machine. The order in</span>
+  <span class="co">-- `forQwertyKeyboard&#39; is coincidentally optimized for that layout, because</span>
+  <span class="co">-- the &quot;1&quot;, &quot;2&quot;, &quot;3&quot; keys etc. are nearest the left side of the keyboard</span>
+  <span class="co">-- where we have our XMonad mod key (CapsLock remapped to Hyper key). In</span>
+  <span class="co">-- `forZQKeyboard&#39;, the numpad home row gets priority.</span>
+  [((hypr <span class="op">.|.</span> mask, k         ), f y)
+    <span class="op">|</span> (y, k) <span class="ot">&lt;-</span> <span class="fu">zip</span> l_YCoords&#39; <span class="op">$</span> <span class="kw">if</span> l_isPortraitMonitorLayout hostname
+      <span class="kw">then</span> forZQKeyboard
+      <span class="kw">else</span> forQwertyKeyboard
+    , (f, mask) <span class="ot">&lt;-</span>
+      [ (<span class="fu">flip</span> l_viewY <span class="dt">False</span>, <span class="dv">0</span>)
+      , (whenX (l_currentWindowCountIs (<span class="op">&gt;</span><span class="dv">0</span>)) <span class="op">.</span> l_shiftY, shiftMask)
+      ]
+  ]
+  <span class="op">++</span>
+  <span class="co">-- Launch apps.</span>
+  [ ((hypr,   xK_i            ), spawnSelected def [<span class="st">&quot;qutebrowser&quot;</span>, <span class="st">&quot;firefox&quot;</span>, <span class="st">&quot;chromium&quot;</span>])
+  , ((hypr,   xK_e            ), spawnSelected def [l_term hostname, l_term hostname, <span class="st">&quot;xterm&quot;</span>])
+  <span class="co">-- Backup binding to launch a terminal in case our Hyper key (hypr) is</span>
+  <span class="co">-- unavailable. This happens whenever we unplug/replug our keyboard, and a</span>
+  <span class="co">-- terminal isn&#39;t already showing in a window somewhere to be able to call</span>
+  <span class="co">-- ~/syscfg/xmonad/xenv.sh to re-initialize the Hyper key. Because the</span>
+  <span class="co">-- Hyper key is used exclusively to maneuver around Xmonad, we need a</span>
+  <span class="co">-- non-Hyper-key binding to launch a terminal to bootstrap ourselves back in</span>
+  <span class="co">-- with initkeys.sh.</span>
+  , ((altS,   xK_e            ), spawnSelected def [l_term hostname, l_term hostname, <span class="st">&quot;xterm&quot;</span>])
+  , ((hypr,   xK_u            ), spawnSelected def [<span class="st">&quot;emacsclient&quot;</span>, <span class="st">&quot;emacs&quot;</span>])
+  ]
+  <span class="kw">where</span>
+  yEdgeGuard dir <span class="ot">=</span> l_if (l_atYEdge dir) (<span class="fu">return</span> ())
+  shrinkExpand master slave <span class="ot">=</span> <span class="kw">if</span> l_isPortraitMonitorLayout hostname
+    <span class="kw">then</span> sendMessage slave
+    <span class="kw">else</span> sendMessage master
+  hyprS <span class="ot">=</span> hypr <span class="op">.|.</span> shiftMask
+  <span class="co">-- Alias &quot;altMask&quot; for left alt key.</span>
+  altMask <span class="ot">=</span> mod1Mask
+  altS <span class="ot">=</span> altMask <span class="op">.|.</span> shiftMask
+  hyprA <span class="ot">=</span> hypr <span class="op">.|.</span> altMask
+  hyprAS <span class="ot">=</span> hypr <span class="op">.|.</span> altMask <span class="op">.|.</span> shiftMask
+  relativeDimenions
+    <span class="ot">=</span> <span class="dt">W.RationalRect</span> marginLeft marginTop windowWidth windowHeight
+    <span class="kw">where</span>
+    marginLeft <span class="ot">=</span> <span class="dv">1</span><span class="op">/</span><span class="dv">6</span>
+    marginTop <span class="ot">=</span> <span class="dv">1</span><span class="op">/</span><span class="dv">6</span>
+    windowWidth <span class="ot">=</span> <span class="dv">2</span><span class="op">/</span><span class="dv">3</span>
+    windowHeight <span class="ot">=</span> <span class="dv">2</span><span class="op">/</span><span class="dv">3</span>
+  forZQKeyboard <span class="ot">=</span>
+    [ xK_0
+    , xK_4
+    , xK_5
+    , xK_6
+    , xK_7
+    , xK_8
+    , xK_9
+    , xK_1
+    , xK_2
+    , xK_3
+    ]
+  forQwertyKeyboard <span class="ot">=</span>
+    [ xK_1
+    , xK_2
+    , xK_3
+    , xK_4
+    , xK_5
+    , xK_6
+    , xK_7
+    , xK_8
+    , xK_9
+    , xK_0
+    ]
+  l_YCoords&#39; <span class="ot">=</span> <span class="fu">map</span> <span class="dt">Y</span> (<span class="kw">if</span> l_isPortraitMonitorLayout hostname
+    <span class="co">-- For Zq, we just use the plain ordering. In practice this doesn&#39;t even</span>
+    <span class="co">-- matter that much because we just use the H-M-j/k bindings for navigating</span>
+    <span class="co">-- across Y coordinates.</span>
+    <span class="kw">then</span> [<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>,<span class="dv">6</span>,<span class="dv">7</span>,<span class="dv">8</span>,<span class="dv">9</span>]
+    <span class="co">-- For Qwerty, we want 0 to be last, because it&#39;s printed last in the number</span>
+    <span class="co">-- row.</span>
+    <span class="kw">else</span> [<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>,<span class="dv">6</span>,<span class="dv">7</span>,<span class="dv">8</span>,<span class="dv">9</span>,<span class="dv">0</span>])
+
+<span class="ot">l_mouseBindings ::</span> <span class="dt">XConfig</span> t <span class="ot">-&gt;</span> <span class="dt">M.Map</span> (<span class="dt">KeyMask</span>, <span class="dt">Button</span>) (<span class="dt">Window</span> <span class="ot">-&gt;</span> <span class="dt">X</span> ())
+l_mouseBindings _ <span class="ot">=</span> M.fromList
+  <span class="co">-- hypr-button1 (left-click): Set the window to floating mode and move by</span>
+  <span class="co">-- dragging.</span>
+  [ ( (altGr, button1)
+  , \w <span class="ot">-&gt;</span> focus w <span class="op">&gt;&gt;</span> mouseMoveWindow w <span class="op">&gt;&gt;</span> windows W.shiftMaster
+  )
+  <span class="co">-- hypr-button2 (middle-click): Raise the window to the top of the stack.</span>
+  <span class="co">-- This binding is almost never used, but we keep it here for instructive</span>
+  <span class="co">-- purposes.</span>
+  , ((altGr, button2), \w <span class="ot">-&gt;</span> focus w <span class="op">&gt;&gt;</span> windows W.shiftMaster)
+  ,
+  <span class="co">-- hypr-button3 (right-click): Set the window to floating mode and resize by</span>
+  <span class="co">-- dragging.</span>
+  ( (altGr, button3)
+  , \w <span class="ot">-&gt;</span> focus w <span class="op">&gt;&gt;</span> mouseResizeWindow w <span class="op">&gt;&gt;</span> windows W.shiftMaster
+  )
+  <span class="co">-- You may also bind events to the mouse scroll wheel (button4 and button5).</span>
+  ]
+  <span class="kw">where</span>
+  altGr <span class="ot">=</span> mod5Mask
+
+<span class="co">-- Tall is the default tiling algorithm, which partitions the screen into two</span>
+<span class="co">-- panes. It takes three arguments x y z, where x is the default number of</span>
+<span class="co">-- windows in the master pane, y is the percent of the screen to increment by</span>
+<span class="co">-- when resizing panes, and z is the default proportion of the screen occupied</span>
+<span class="co">-- by the master pane.</span>
+<span class="ot">l_layoutHook ::</span> <span class="dt">Choose</span> (<span class="dt">Mirror</span> <span class="dt">Tall</span>) (<span class="dt">Choose</span> <span class="dt">Tall</span> (<span class="dt">XLL.ModifiedLayout</span> <span class="dt">WithBorder</span> <span class="dt">Full</span>)) <span class="dt">Window</span>
+l_layoutHook <span class="ot">=</span> <span class="dt">Mirror</span> (tiled <span class="dv">1</span>) <span class="op">|||</span> tiled <span class="dv">1</span> <span class="op">|||</span> noBorders <span class="dt">Full</span>
+  <span class="kw">where</span>
+  tiled nmaster <span class="ot">=</span> <span class="dt">Tall</span> nmaster delta ratio
+  delta <span class="ot">=</span> <span class="dv">3</span><span class="op">/</span><span class="dv">100</span>
+  ratio <span class="ot">=</span> <span class="dv">1</span><span class="op">/</span><span class="dv">2</span>
+
+<span class="ot">l_layoutNoMirror ::</span> <span class="dt">Choose</span> <span class="dt">ResizableTall</span> (<span class="dt">XLL.ModifiedLayout</span> <span class="dt">WithBorder</span> <span class="dt">Full</span>) <span class="dt">Window</span>
+l_layoutNoMirror <span class="ot">=</span> <span class="dt">ResizableTall</span> <span class="dv">0</span> (<span class="dv">3</span><span class="op">/</span><span class="dv">100</span>) (<span class="dv">1</span><span class="op">/</span><span class="dv">2</span>) [] <span class="op">|||</span> noBorders <span class="dt">Full</span>
+
+<span class="co">-- ManageHook: Execute arbitrary actions and WindowSet manipulations when</span>
+<span class="co">-- managing a new window. You can use this to, for example, always float a</span>
+<span class="co">-- particular program, or have a client always appear on a particular workspace.</span>
+<span class="co">--</span>
+<span class="co">-- To find the property name associated with a program, use</span>
+<span class="co">--</span>
+<span class="co">--  xprop | grep WM_CLASS</span>
+<span class="co">--</span>
+<span class="co">-- and click on the client you&#39;re interested in.</span>
+<span class="co">--</span>
+<span class="co">-- To match on the WM_NAME, you can use &#39;title&#39; in the same way that &#39;className&#39;</span>
+<span class="co">-- and &#39;resource&#39; are used below. E.g., if</span>
+<span class="co">--</span>
+<span class="co">--   WM_CLASS(STRING) = &quot;Qt-subapplication&quot;, &quot;VirtualBox&quot;</span>
+<span class="co">--</span>
+<span class="co">-- then Qt-subapplication is resource, and VirtualBox is className.</span>
+<span class="ot">l_manageHook ::</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">ManageHook</span>
+l_manageHook numScreens <span class="ot">=</span> composeOne <span class="op">$</span>
+  [ className <span class="op">=?</span> <span class="st">&quot;Gimp&quot;</span>               <span class="op">-?&gt;</span> doFloat
+  , className <span class="op">=?</span> <span class="st">&quot;Agave&quot;</span>              <span class="op">-?&gt;</span> doCenterFloat
+  , resource  <span class="op">=?</span> <span class="st">&quot;desktop_window&quot;</span>     <span class="op">-?&gt;</span> doIgnore
+  , resource  <span class="op">=?</span> <span class="st">&quot;kdesktop&quot;</span>           <span class="op">-?&gt;</span> doIgnore
+  , resource  <span class="op">=?</span> <span class="st">&quot;floatme&quot;</span>            <span class="op">-?&gt;</span> doCenterFloat
+  <span class="co">-- Move browsers to the ZGNet ZGroup. If all ZCoords in ZGNet are full,</span>
+  , className <span class="op">=?</span> <span class="st">&quot;qutebrowser&quot;</span>        <span class="op">-?&gt;</span> l_shiftAndViewAsHook <span class="op">=&lt;&lt;</span> toZGNet
+  , className <span class="op">=?</span> <span class="st">&quot;Chromium-browser&quot;</span>   <span class="op">-?&gt;</span> l_shiftAndViewAsHook <span class="op">=&lt;&lt;</span> toZGNet
+  , resource  <span class="op">=?</span> <span class="st">&quot;Navigator&quot;</span>          <span class="op">-?&gt;</span> l_shiftAndViewAsHook <span class="op">=&lt;&lt;</span> toZGNet
+  , className <span class="op">=?</span> <span class="st">&quot;Blender:Render&quot;</span>     <span class="op">-?&gt;</span> doFloat
+  , resource  <span class="op">=?</span> <span class="st">&quot;Browser&quot;</span>            <span class="op">-?&gt;</span> doFloat
+  , className <span class="op">=?</span> <span class="st">&quot;Xsane&quot;</span>              <span class="op">-?&gt;</span> doFloat
+  , className <span class="op">=?</span> <span class="st">&quot;Glade&quot;</span>              <span class="op">-?&gt;</span> doFloat
+  , className <span class="op">=?</span> <span class="st">&quot;Anki&quot;</span>               <span class="op">-?&gt;</span> doFloat
+  ]
+  <span class="op">++</span>
+  <span class="co">-- This is useful for auto-moving a terminal screen we spawn elsewhere in</span>
+  <span class="co">-- this config file to a particular workspace.</span>
+  <span class="fu">map</span>
+    (\xzy <span class="ot">-&gt;</span>
+      resource <span class="op">=?</span> (<span class="st">&quot;atWorkspace_&quot;</span> <span class="op">++</span> <span class="fu">show</span> xzy) <span class="op">-?&gt;</span> l_shiftAndViewAsHook (<span class="fu">show</span> xzy))
+    (l_XZYs numScreens)
+  <span class="op">++</span>
+  <span class="co">-- Force new windows down (i.e., if a screen has 1 window (master) and we</span>
+  <span class="co">-- spawn a new window, don&#39;t become the new master window). See &quot;Make new</span>
+  <span class="co">-- windows appear &#39;below&#39; rather than &#39;above&#39; the current window&quot; at</span>
+  <span class="co">-- https://wiki.haskell.org/Xmonad/Frequently_asked_questions.</span>
+  [ <span class="fu">return</span> <span class="dt">True</span> <span class="op">-?&gt;</span> doF W.swapDown
+  ]
+  <span class="kw">where</span>
+  toZGNet <span class="ot">=</span> liftX <span class="op">$</span> l_searchZPreferZGroup <span class="dt">ZGNet</span>
+
+<span class="ot">l_startupHook ::</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">X</span> ()
+l_startupHook hostname <span class="ot">=</span> <span class="kw">do</span>
+  <span class="co">-- When we start up, we visit the default (starting) Y Coord. Record it.</span>
+  l_updateYHist
+  <span class="co">-- Kill ~/.xmonad/xmonad.state (this file makes sense when you have 5 or 10</span>
+  <span class="co">-- workspaces, but its utility breaks down quickly when you have as many</span>
+  <span class="co">-- workspaces as we do).</span>
+  spawn <span class="st">&quot;rm -f ~/syscfg/xmonad/xmonad.state&quot;</span>
+  <span class="co">-- Setup keyboard.</span>
+  spawn <span class="st">&quot;~/syscfg/xmonad/xenv.sh&quot;</span>
+  windowSet <span class="ot">&lt;-</span> gets windowset
+  y <span class="ot">&lt;-</span> gets (l_YFromWindowSet <span class="op">.</span> windowset)
+  <span class="kw">let</span>
+    numScreens <span class="ot">=</span> <span class="fu">length</span> <span class="op">$</span> W.screens windowSet
+  <span class="co">-- Spawn one terminal in every screen at the &quot;Work&quot; ZGroup at the current</span>
+  <span class="co">-- YCoord (but only if that screen is empty). We have to feed in `(take 1)&#39; in</span>
+  <span class="co">-- order to spawn terminals in a single ZCoord.</span>
+  <span class="co">--</span>
+  <span class="co">-- Each of these terminals also spawn a tmux client instance.</span>
+  <span class="fu">mapM_</span>
+    (\xzy <span class="ot">-&gt;</span> whenX (l_workspaceIsEmpty xzy)
+      (spawn <span class="op">$</span> l_term hostname <span class="op">++</span> <span class="st">&quot; --class atWorkspace_&quot;</span> <span class="op">++</span> <span class="fu">show</span> xzy))
+    <span class="op">$</span> l_XZYsFrom numScreens <span class="dt">ZGWork</span> (<span class="fu">take</span> <span class="dv">1</span>) y
+  <span class="co">-- The emacs daemon also starts up org-roam-server-mode, which turns on an</span>
+  <span class="co">-- HTTP server to serve org-roam files over port 8010.</span>
+  spawn <span class="st">&quot;emacs --daemon&quot;</span>
+  when (hostname <span class="op">==</span> <span class="st">&quot;k0&quot;</span>) <span class="op">$</span> <span class="kw">do</span>
+    spawn <span class="st">&quot;qutebrowser&quot;</span>
+  spawn <span class="st">&quot;~/syscfg/script/startup_hook.sh&quot;</span>
+
+<span class="co">-- Reset the location of the mouse pointer, with the destination depending on</span>
+<span class="co">-- the type of window that is currently focused.</span>
+<span class="ot">l_resetMouse ::</span> <span class="dt">Bool</span> <span class="ot">-&gt;</span> <span class="dt">X</span> ()
+l_resetMouse alwaysReset <span class="ot">=</span> <span class="kw">do</span>
+  windowSet <span class="ot">&lt;-</span> gets windowset
+  dpy <span class="ot">&lt;-</span> asks display
+  root <span class="ot">&lt;-</span> asks theRoot
+  (_,_,_,_,_,_,_,inputMask) <span class="ot">&lt;-</span> io <span class="op">$</span> queryPointer dpy root
+  <span class="kw">let</span>
+    currentStack <span class="ot">=</span> W.stack <span class="op">.</span> W.workspace <span class="op">$</span> W.current windowSet
+    moveMouse stack <span class="ot">=</span> banish
+      <span class="op">.</span> <span class="fu">snd</span>
+      <span class="op">=&lt;&lt;</span> foldM step (W.focus stack, <span class="dt">LowerRight</span>) windowPropToDest
+    maybeMoveMouse stack <span class="ot">=</span> <span class="kw">do</span>
+      mouseIsMoving <span class="ot">&lt;-</span> asks mouseFocused
+      drag <span class="ot">&lt;-</span> gets dragging
+      <span class="kw">let</span>
+        mouseBeingUsed
+          <span class="ot">=</span> mouseIsMoving
+          <span class="op">||</span> isJust drag
+          <span class="co">-- Detect if we are pressing down the 1st mouse button (traditionally</span>
+          <span class="co">-- called &quot;Left Click&quot; for right-handed mice). This catches the use</span>
+          <span class="co">-- case where a Chromium tab is being clicked, then dragged onto</span>
+          <span class="co">-- another Chromium window&#39;s tab bar area. In this case, we don&#39;t want</span>
+          <span class="co">-- to reset the mouse position. Granted, the window will still jump</span>
+          <span class="co">-- around, because XMonad will try to tile it and untile it as it</span>
+          <span class="co">-- creates/destroys windows, but this is the vanilla XMonad behavior</span>
+          <span class="co">-- anyway without l_resetMouse. Without this boolean check, we end up</span>
+          <span class="co">-- repeatedly resetting the mouse coordinates (in a way that</span>
+          <span class="co">-- interferes with Chromium&#39;s vision of where the pointer is), making</span>
+          <span class="co">-- it basically impossible to move a tab back onto another tab bar</span>
+          <span class="co">-- area (a workaround is to first float the window and then drag the</span>
+          <span class="co">-- tag, but this is too much work).</span>
+          <span class="co">--</span>
+          <span class="co">-- We explicitly choose button1Mask, because that&#39;s the only button we</span>
+          <span class="co">-- use to drag Chromium tabs around.</span>
+          <span class="co">--</span>
+          <span class="co">-- </span><span class="al">NOTE</span><span class="co">: Firefox does not have this issue of windows jumping around</span>
+          <span class="co">-- when we move tabs across windows.</span>
+          <span class="op">||</span> inputMask <span class="op">.&amp;.</span> button1Mask <span class="op">/=</span> <span class="dv">0</span>
+      when (<span class="fu">not</span> mouseBeingUsed) <span class="op">$</span> moveMouse stack
+    f stack
+      <span class="op">|</span> alwaysReset <span class="ot">=</span> moveMouse stack
+      <span class="op">|</span> <span class="fu">otherwise</span> <span class="ot">=</span> <span class="kw">do</span>
+        ev <span class="ot">&lt;-</span> asks currentEvent
+        whenJust ev <span class="op">$</span> \<span class="kw">case</span>
+          <span class="co">-- MapRequestEvent is triggered when new windows are created.</span>
+          <span class="co">-- Conversely, UnmapEvent is triggered when windows are deleted.</span>
+          <span class="dt">MapRequestEvent</span> {} <span class="ot">-&gt;</span> maybeMoveMouse stack
+          <span class="dt">UnmapEvent</span> {} <span class="ot">-&gt;</span> maybeMoveMouse stack
+          _ <span class="ot">-&gt;</span> <span class="fu">pure</span> ()
+  whenJust currentStack f
+  <span class="kw">where</span>
+  step s<span class="op">@</span>(w, _) (p, destNew) <span class="ot">=</span> <span class="kw">do</span>
+    b <span class="ot">&lt;-</span> hasProperty p w
+    <span class="kw">if</span> b
+      <span class="kw">then</span> <span class="fu">return</span> (w, destNew)
+      <span class="kw">else</span> <span class="fu">return</span> s
+  windowPropToDest <span class="ot">=</span>
+    [ (<span class="dt">ClassName</span> <span class="st">&quot;org.wezfurlong.wezterm&quot;</span>, <span class="dt">LowerLeft</span>)
+    , (<span class="dt">ClassName</span> <span class="st">&quot;Emacs&quot;</span>, <span class="dt">LowerLeft</span>)
+    , (<span class="dt">ClassName</span> <span class="st">&quot;qutebrowser&quot;</span>, <span class="dt">UpperRight</span>)
+    , (<span class="dt">ClassName</span> <span class="st">&quot;Chromium-browser&quot;</span>, <span class="dt">UpperRight</span>)
+    , (<span class="dt">ClassName</span> <span class="st">&quot;Firefox&quot;</span>, <span class="dt">UpperRight</span>)
+    , (<span class="dt">ClassName</span> <span class="st">&quot;firefox&quot;</span>, <span class="dt">UpperRight</span>)
+    ]
+
+<span class="co">-- Reset the focused window by running l_manageHook against it. This way, we can</span>
+<span class="co">-- move a window back to its correct ZCoord. The fancy appEndo/&lt;=&lt; stuff is from</span>
+<span class="co">-- `XMonad.Actions.WindowGo.ifWindow&#39;.</span>
+<span class="ot">l_resetWindow ::</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">X</span> ()
+l_resetWindow numScreens <span class="ot">=</span> <span class="kw">do</span>
+  windowSet <span class="ot">&lt;-</span> gets windowset
+  <span class="kw">let</span>
+    currentStack <span class="ot">=</span> W.stack <span class="op">.</span> W.workspace <span class="op">$</span> W.current windowSet
+  whenJust
+    currentStack
+    (windows <span class="op">.</span> appEndo <span class="op">&lt;=&lt;</span> runQuery (l_manageHook numScreens) <span class="op">.</span> W.focus)
+
+<span class="ot">main ::</span> <span class="dt">IO</span> ()
+main <span class="ot">=</span> <span class="kw">do</span>
+  numScreens <span class="ot">&lt;-</span> countScreens
+  hostname <span class="ot">&lt;-</span> <span class="fu">fmap</span> nodeName getSystemID
+  <span class="kw">if</span> l_isPortraitMonitorLayout hostname
+    <span class="kw">then</span> xmonad (myconf hostname numScreens) {layoutHook <span class="ot">=</span> l_layoutNoMirror}
+    <span class="kw">else</span> xmonad <span class="op">$</span> myconf hostname numScreens
+  <span class="kw">where</span>
+  myconf hostname numScreens <span class="ot">=</span> def
+    { terminal           <span class="ot">=</span> <span class="st">&quot;wezterm&quot;</span>
+    , focusFollowsMouse  <span class="ot">=</span> <span class="dt">True</span>
+    , clickJustFocuses   <span class="ot">=</span> <span class="dt">True</span>
+    , borderWidth        <span class="ot">=</span> <span class="dv">2</span>
+    <span class="co">-- Use &#39;mod3&#39; from &#39;xmodmap&#39; output as our &#39;modMask&#39; key. We alias it</span>
+    <span class="co">-- (XMonad.modMask) it as `hypr` in our configuration above. Either before</span>
+    <span class="co">-- or immediately after XMonad starts, &#39;mod3&#39; should be populated as the</span>
+    <span class="co">-- Hyper key (as this is how we call it above). This is handled usually by</span>
+    <span class="co">-- xsession scripts. On NixOS, it is baked in directly to the system</span>
+    <span class="co">-- configuration file under the</span>
+    <span class="co">-- `services.xserver.displayManager.sessionCommands` option.</span>
+    , modMask            <span class="ot">=</span> mod3Mask
+    , workspaces         <span class="ot">=</span> <span class="fu">map</span> <span class="fu">show</span> <span class="op">$</span> l_XZYs numScreens
+    , normalBorderColor  <span class="ot">=</span> <span class="st">&quot;#000000&quot;</span>
+    , focusedBorderColor <span class="ot">=</span> <span class="st">&quot;#00ff00&quot;</span>
+    , keys               <span class="ot">=</span> l_keyBindings hostname numScreens
+    , mouseBindings      <span class="ot">=</span> l_mouseBindings
+    , layoutHook         <span class="ot">=</span> l_layoutHook
+    , manageHook         <span class="ot">=</span> l_manageHook numScreens
+    , handleEventHook    <span class="ot">=</span> l_eventHook
+    , logHook            <span class="ot">=</span> l_resetMouse <span class="dt">False</span>
+    , startupHook        <span class="ot">=</span> l_startupHook hostname
+    }</code></pre></div></div><div id="heading-container-h--Page-metrics" class="heading-container page-metrics"><h2 id="h--Page-metrics"><a href="#h--Page-metrics">Page metrics</a></h2></div><div id="heading-container-h--Backlinks" class="heading-container backlinks"><h3 id="h--Backlinks"><a href="#h--Backlinks">Backlinks (1)</a></h3><ol><li><a href="/keybindings.html">keybindings.org (1)</a><ol><li><a href="#top">^ Top</a><span class="verbatim"> &#x2190; </span><a href="/keybindings.html#c-14">¶ (<span class="verbatim">Cell 14</span>)</a></li></ol></li></ol></div><div id="heading-container-h--Tangled-files" class="heading-container tangled-blocks"><h3 id="h--Tangled-files"><a href="#h--Tangled-files">Tangled files (1)</a></h3><ol><li><a href="#b-xmonad.hs" class="verbatim">xmonad/xmonad.hs</a></li></ol></div><div id="heading-container-h--Named-cells" class="heading-container named-cells"><h3 id="h--Named-cells"><a href="#h--Named-cells">Named cells (1)</a></h3><ol><li><a href="#b-xmonad.hs"><span class="verbatim">xmonad.hs</span></a></li></ol></div><footer><div class="lilac-stamp">Generated by <a href="https://syscfg.funloop.org" class="external-link" target="_blank" rel="noopener noreferrer">Lilac</a></div></footer></main><script id="heading-ancestry" type="application/json">{"h--Backlinks":["h--Page-metrics"],"h--Named-cells":["h--Page-metrics"],"h--Page-metrics":[],"h--Tangled-files":["h--Page-metrics"]}</script><script id="lilac-fe-script" src="/js/lilac.js"></script></body></html>
