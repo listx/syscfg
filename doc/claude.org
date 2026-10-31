@@ -129,7 +129,8 @@ Other syntax constraints:
   its documents, and the parent lists it by directory name (`script`), because
   an entry that doesn't end in `.org` means `<entry>/index.org`. Update the block
   when adding, moving, or removing a document.
-- List items must be indented two spaces and separated by blank lines.
+- List items must be indented two spaces and separated by blank lines. Write
+  ordered lists with `1)`, not `1.`, which is a compile error.
 - In new Org prose, mark up code, paths, and commands with code emphasis
   (`~foo~`), not verbatim (`=foo=`), even where the surrounding text uses
   verbatim. Use verbatim only when asked. Don't rewrite existing verbatim markup
