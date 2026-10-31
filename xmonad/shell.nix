@@ -30,4 +30,3 @@ in pkgs.stdenv.mkDerivation {
   ];
   shellHook = "eval $(egrep ^export ${ghc}/bin/ghc)";
 }
-

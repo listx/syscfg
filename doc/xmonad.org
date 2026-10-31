@@ -1589,3 +1589,161 @@ main = do
     , startupHook        = l_startupHook hostname
     }
 #+end_src
+
+* Building
+
+[[xmonad-shell.nix][~shell.nix~]] provides GHC with the XMonad libraries, along with Cabal and the system
+libraries that XMonad needs.
+
+#+name: xmonad-shell.nix
+#+header: :tangle xmonad/shell.nix
+#+begin_src nix
+{ nixpkgs ? import <nixos> { }, compiler ? "ghc912" }:
+let
+  inherit (nixpkgs) pkgs;
+  ghc = pkgs.haskell.packages.${compiler}.ghcWithPackages (ps:
+    with ps;
+    [
+      # If you want to use cached Haskell packages (instead of making cabal
+      # download them dynamically), you can list them here (e.g., "mtl"). But
+      # this only works if the nixpkgs cache has them built; it may be that
+      # nixpkgs does not have them yet (at least at the correct versions) which
+      # would mean that we would have to download and build these packages
+      # ourselves.
+
+      xmonad
+      xmonad-contrib
+    ]);
+in pkgs.stdenv.mkDerivation {
+  name = "my-haskell-env-0";
+  buildInputs = [
+    ghc
+    pkgs.cabal-install
+    pkgs.pkg-config
+    pkgs.zlib
+
+    pkgs.gmp
+    pkgs.libffi
+    pkgs.xorg.libXinerama
+    pkgs.xorg.libXScrnSaver
+    pkgs.xorg.libXrandr
+  ];
+  shellHook = "eval $(egrep ^export ${ghc}/bin/ghc)";
+}
+#+end_src
+
+[[xmonad-linus.cabal][The Cabal file]] describes [[xmonad.hs][our configuration]] as an executable.
+
+#+name: xmonad-linus.cabal
+#+header: :tangle xmonad/xmonad-linus.cabal
+#+begin_src cabal
+name: xmonad-linus
+version: 0.0.0.0
+license: BSD2
+author: Linus Arver
+maintainer: linusarver@gmail.com
+category: Utility
+build-type: Simple
+cabal-version: >=1.10
+
+executable xmonad
+  main-is: xmonad.hs
+  default-language: Haskell2010
+  ghc-options: -O2 -Wall -Werror -threaded -fno-warn-tabs
+  default-extensions:
+      DeriveDataTypeable
+    , RecordWildCards
+  build-depends:
+      base >= 4.8
+    , array >= 0.5.1.0
+    , containers >= 0.5.6.2
+    , unix >= 2.7.1.0
+    , random >= 1.1
+    , safe >= 0.3.15
+    , X11 >= 1.8
+    , xmonad >= 0.11.1
+    , xmonad-contrib >= 0.11.4
+#+end_src
+
+[[recompile.sh][~recompile.sh~]] builds that executable with Cabal into the ~xmonad/~ directory. The
+~xmonad/build~ symlink points to this script.
+
+#+name: recompile.sh
+#+header: :shebang #!/bin/sh
+#+header: :tangle xmonad/recompile.sh
+#+begin_src sh
+
+set -ex
+
+xmonad_dir="${HOME}/syscfg/xmonad"
+cd "${xmonad_dir}"
+cabal install --installdir "${xmonad_dir}" --overwrite-policy=always
+cp -f "${xmonad_dir}/xmonad" "${xmonad_dir}/xmonad-x86_64-linux"
+#+end_src
+
+These are the HLint warnings that we ignore.
+
+#+name: HLint.hs
+#+header: :tangle xmonad/HLint.hs
+#+begin_src haskell
+import "hint" HLint.HLint
+
+ignore "Use camelCase"
+ignore "Use section"
+ignore "Use infix"
+ignore "Use unless"
+#+end_src
+
+* Running
+
+[[xsession][~.xsession~]] puts ~\~/.xmonad~ on the ~PATH~ and starts XMonad, and [[restart.sh][~restart.sh~]] restarts
+it.
+
+#+name: xsession
+#+header: :shebang #!/usr/bin/env bash
+#+header: :tangle xmonad/.xsession
+#+begin_src bash
+
+export PATH=~/.xmonad:$PATH
+exec xmonad
+#+end_src
+
+#+name: restart.sh
+#+header: :shebang #!/bin/sh
+#+header: :tangle xmonad/restart.sh
+#+begin_src sh
+
+set -ex
+
+./xmonad --restart
+#+end_src
+
+This is an entry for a display manager's session list. It runs ~xmonad-start~,
+which isn't defined in this repo.
+
+#+name: xmonad-start.desktop
+#+header: :tangle xmonad/xmonad-start.desktop
+#+begin_src conf
+[Desktop Entry]
+Name=XMonad-start
+Comment=Lightweight tiling window manager
+Exec=xmonad-start
+Icon=xmonad.png
+Type=XSession
+#+end_src
+
+* Old notes
+
+These are notes for running XMonad in an Ubuntu virtual machine on a Mac.
+
+#+name: mac-host-ubuntu-guest-setup
+#+header: :tangle xmonad/mac-host-ubuntu-guest-setup.md
+#+begin_src markdown
+- in Apple keyboard settings, under "Modifier Keys", make CapsLock do nothing.
+- install Seil
+- map CapsLock to right command (ubuntu vm will see this Super_R in `xev` program)
+- in Ubuntu, modify the `Exec` line in `/usr/share/xsessions/xmonad.desktop` from
+    Exec=xmonad
+to
+    Exec=~/.xinitrc
+#+end_src

@@ -6,4 +6,3 @@ xmonad_dir="${HOME}/syscfg/xmonad"
 cd "${xmonad_dir}"
 cabal install --installdir "${xmonad_dir}" --overwrite-policy=always
 cp -f "${xmonad_dir}/xmonad" "${xmonad_dir}/xmonad-x86_64-linux"
-

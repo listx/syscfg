@@ -1,0 +1,201 @@
+:PROPERTIES:
+:ID:       e81c2418-3063-42a3-9769-959af3ecdae8
+:END:
+#+title: Vim
+
+* Configuration
+
+We share this one configuration between Vim and Neovim: the ~vim~ [[id:bbe0ff18-1b29-4f04-b2a6-5f3d7b003eb5][Makefile]] rule links
+it to both ~.vimrc~ and ~.gvimrc~, and ~nvim/init.vim~ is a symlink to it. It's meant
+for quick edits, because we don't do any serious work in Vim.
+
+#+name: vim-cfg
+#+header: :tangle vim/cfg
+#+begin_src vim
+" Remove Vi compatibility. No one cares about this.
+set nocp
+
+" Prefer unix newlines whenever possible, but leave DOS files as DOS
+" (don't change their line endings).
+set ffs=unix,dos
+
+" Disable backups, because we don't do any serious work in Vim. Plus we save
+" incessantly.
+set nobackup
+
+" Default tabstop and shiftwidths.
+set tabstop=4
+set shiftwidth=4
+set expandtab
+
+" Linux Kernel style indentation.
+au FileType c,cpp set noexpandtab shiftwidth=8 softtabstop=8 tabstop=8
+
+" Backspace works in Insert mode (e.g. not inserting a ^?), but won't delete
+" over line breaks, or automatically-inserted indentation, or the place where
+" insert mode started. Use backspace=2 to solve this from
+" http://vim.wikia.com/wiki/Backspace_and_delete_problems.
+" This is only necessary because of the funny backspace behavior in Nixos.
+set backspace=2
+
+" When the page starts to scroll, keep the cursor 3 lines from the top and 3
+" lines from the bottom (i.e., keep the cursor with at least 3 lines of
+" context)
+set scrolloff=3
+
+" Place help page on its own tab.
+cabbrev help tab h
+
+" Always display status line.
+set laststatus=2
+
+" Turn on automatic indenting based on filetype recognition.
+filetype indent on
+
+" Automatically load the corresponding filetype plugin if we've detected a filetype.
+filetype plugin on
+
+" Enable syntax highlighting.
+syntax enable
+
+" Turn on search highlighting.
+set hlsearch
+
+" Search any match IMMEDIATELY.
+set incsearch
+
+" Disable incremental search highlighting after `updatetime` seconds. By
+" default this is set to 4 seconds.
+" https://stackoverflow.com/questions/22798473/vim-how-to-turn-off-search-highlight-after-timeout-x-seconds
+autocmd CursorHold,CursorHoldI * let v:hlsearch = 0 | redraw
+
+set background=dark
+" Use 24-bit colors (aka "true color" support).
+set termguicolors
+
+" Explicitly set default colorscheme.
+if has('nvim')
+  colorscheme vim
+else
+  colorscheme default
+endif
+
+" Word-wrap based on words, not characters (would anyone on Earth want it the other
+" way?).
+set lbr
+
+" Make cursor look square, and prevent cursor blinking.
+set guicursor+=a:block-blinkon0
+
+" Set maximum number of tabs on startup to 50, instead of the default 10.
+set tabpagemax=50
+
+" Wait 1 second instead of 0.5 seconds before erasing any "half-finished"
+" commands in normal/visual mode.
+set timeoutlen=1000
+
+" Leader key (works with Intellij IDEA's Vim plugin).
+let mapleader = ","
+
+" We only want to load autocommands ONCE (esp. for GVim, which sources
+" ~/.vimrc).
+if !exists("autocommands_loaded")
+    let autocommands_loaded = 1
+
+    " Highlight red any trailing whitespace.
+    highlight ExtraWhitespace ctermbg=red guibg=red
+    au ColorScheme * highlight ExtraWhitespace guibg=red
+    au BufEnter * match ExtraWhitespace /\s\+$/
+    au InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
+    au InsertLeave * match ExtraWhiteSpace /\s\+$/
+
+    " Always run highlighting regex from the beginning of the file, not just
+    " what is displayed on-screen (useful for multiline highlighting patterns).
+    au BufEnter *.hs :syntax sync fromstart
+endif
+
+" Quick copy and paste from CLIPBOARD ("+y and "+p).
+vmap <leader>y "+y
+nmap <leader>p "+p
+nmap <leader>P "+P
+
+" Change K from being mapped to interactive man pages to being used as the
+" vanilla comma ',' key's functionality (intra-line backwards search repeat for
+" any t, T, f, F searches).
+nnoremap K ,
+vnoremap K ,
+
+" Quicksave files.
+nmap <leader>w :up<cr>
+" Force save.
+nmap <leader>W :w<cr>
+
+" Exit.
+nmap <leader>q :q<cr>
+nmap <leader>Q :q!<cr>
+
+" Save and exit (equivalent to "ZZ").
+nmap <leader>x :x<cr>
+
+" Move across tabs.
+nnoremap <C-l> :tabnext<cr>
+nnoremap <C-h> :tabprevious<cr>
+inoremap <C-l> <esc>:tabnext<cr>
+inoremap <C-h> <esc>:tabprevious<cr>
+
+" Window movement (i.e., moving around INSIDE a tab).
+nmap <Tab> <C-w>w
+nmap <S-Tab> <C-w>W
+nmap <C-j> <C-w>w
+nmap <C-k> <C-w>W
+nmap <C-S-j> <C-w>r
+nmap <C-S-k> <C-w>R
+
+" Buffer movement (i.e., moving around INSIDE a window).
+nmap <S-h> :bn<cr>
+nmap <S-l> :bp<cr>
+
+" Faster access to normal mode.
+imap kj <esc>
+
+" Faster vertical buffer navigation.
+nnoremap <space> 10jzz
+nnoremap <backspace> 10kzz
+vnoremap <space> 10jzz
+vnoremap <backspace> 10kzz
+
+" Create a new blank tab.
+nmap <leader>n :tabe<cr>
+
+" Horizontally/vertically split current window.
+nmap <leader>h :sp<cr>
+nmap <leader>H :sp<space>.<cr>
+nmap <leader>v :vsp<cr>
+nmap <leader>V :vsp<space>.<cr>
+
+" Set terminal search highlight colors to a higher contrast combination. The
+" default use of a yellow background makes it hard to read if the text is white
+" (which is typically the case in dark terminals color themes independent of Vim).
+highlight Search cterm=bold ctermfg=black ctermbg=green
+
+" ------------
+" GUI settings
+" ------------
+
+" Hide the mouse cursor when typing (only for GVIM).
+set mousehide
+
+" Set GUI font.
+set gfn=Terminus\ 9
+
+" Remove mouse-friendly options from GUI, because we simply don't use the mouse when
+" in Vim.
+set guioptions-=T
+set guioptions-=m
+set guioptions-=l
+set guioptions-=r
+set guioptions-=L
+set guioptions-=R
+
+" vim: syntax=vim
+#+end_src

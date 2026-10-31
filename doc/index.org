@@ -9,12 +9,16 @@ bash.org
 clojure.org
 emacs.org
 git.org
+gpg.org
 jj.org
 keybindings.org
+mpv.org
 nix.org
 notmuch.org
+qutebrowser.org
 script
 tmux.org
+vim.org
 wezterm.org
 zsh
 #+end_src
@@ -60,21 +64,22 @@ nonTangledPathspecs = [ # (ref:nonTangledPathspecs)
    ":(exclude,top)emacs/doom-cfg/snippets/.gitkeep",
    ":(exclude,top)emacs/doom-upstream",
    ":(exclude,top)Cargo.lock",
-   ":(exclude,top)gpg",
    ":(exclude,top)jjui",
    ":(exclude,top)karabiner",
    ":(exclude,top)lesskey",
    ":(exclude,top)melby",
    ":(exclude,top)mpd",
-   ":(exclude,top)mpv",
-   ":(exclude,top)nix",
+   ":(exclude,top)nix/sources.json",
+   ":(exclude,top)nix/sources.nix",
    ":(exclude,top)nixos/k0/hardware-configuration.nix",
    ":(exclude,top)nixos/m0",
    ":(exclude,top)nixos/w0",
    ":(exclude,top)nvim",
    ":(exclude,top)openvpn",
    ":(exclude,top)pulse",
-   ":(exclude,top)qutebrowser",
+   ":(exclude,top)qutebrowser/blocked-hosts",
+   ":(exclude,top)qutebrowser/keys.conf",
+   ":(exclude,top)qutebrowser/qutebrowser.conf",
    ":(exclude,top)rtorrent",
    ":(exclude,top)ssh",
    ":(exclude,top)terminfo",
@@ -83,16 +88,7 @@ nonTangledPathspecs = [ # (ref:nonTangledPathspecs)
    ":(exclude,top)script/doom",
    ":(exclude,top)script/git/hooks/prepare-commit-msg",
    ":(exclude,top)uim",
-   ":(exclude,top)vim",
-   ":(exclude,top)xmonad/.xsession",
-   ":(exclude,top)xmonad/HLint.hs",
    ":(exclude,top)xmonad/build",
-   ":(exclude,top)xmonad/mac-host-ubuntu-guest-setup.md",
-   ":(exclude,top)xmonad/recompile.sh",
-   ":(exclude,top)xmonad/restart.sh",
-   ":(exclude,top)xmonad/shell.nix",
-   ":(exclude,top)xmonad/xmonad-linus.cabal",
-   ":(exclude,top)xmonad/xmonad-start.desktop",
    ":(exclude,top)xorg",
    ":(exclude,top)zathura",
    ":(exclude,top)zsh/zcomet-upstream"
@@ -873,9 +869,8 @@ Do one area per commit, in this order:
   2) (DONE) The rest of ~script/~, in ~doc/script/~: the standalone scripts first,
      then ~terminal-themes~ as its own document.
 
-  3) Actively used configs: ~qutebrowser/config.py~, ~nix/nix.conf~, ~mpv~, ~gpg~,
-     ~vim~, and the helper files for ~xmonad~ (in ~doc/xmonad.org~). Check whether
-     Qutebrowser still reads ~qutebrowser.conf~ and ~keys.conf~ before porting them.
+  3) (DONE) Actively used configs: ~qutebrowser/config.py~, ~nix/nix.conf~, ~mpv~,
+     ~gpg~, ~vim~, and the helper files for ~xmonad~ (in ~doc/xmonad.org~).
 
   4) ~nixos/m0~ and ~nixos/w0~, and then the very small configs, which can share
      one new ~doc/misc.org~.
@@ -887,14 +882,16 @@ Some files should stay excluded, because prose around them adds little:
 
   - machine-written or pinned files: the ~uim/customs~ settings, the
     ~hardware-configuration.nix~ files, ~Cargo.lock~, ~nix/sources.json~,
-    ~nix/sources.nix~, and probably ~karabiner/karabiner.json~, and
+    ~nix/sources.nix~, and probably ~karabiner/karabiner.json~,
 
-  - data: the ~openvpn~ certificates and ~qutebrowser/blocked-hosts~.
+  - data: the ~openvpn~ certificates and ~qutebrowser/blocked-hosts~, and
+
+  - old formats: ~qutebrowser.conf~ and ~keys.conf~, which ~config.py~ doesn't load.
 
 Two things to decide along the way:
 
   - ~xorg~ and ~rtorrent~ haven't changed since 2018 and 2017. If they're dead,
     delete them instead of migrating them. Leave them until last either way.
 
-  - The woven site is public, so review ~gpg~, ~openvpn~, and ~nixos/w0~ for
-    sensitive content before porting them.
+  - The woven site is public, so review ~openvpn~ and ~nixos/w0~ for sensitive
+    content before porting them.

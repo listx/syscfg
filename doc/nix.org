@@ -775,3 +775,17 @@ in {
   environment.variables.LANG = "en_US.UTF-8";
 }
 #+end_src
+
+* ~nix.conf~
+
+The ~nix~ [[id:bbe0ff18-1b29-4f04-b2a6-5f3d7b003eb5][Makefile]] rule links ~nix/~ to ~\~/.config/nix~, which is where Nix reads this
+file from. It enables the ~nix-command~ and ~flakes~ experimental features, and adds
+our binary caches and their public keys.
+
+#+name: nix.conf
+#+header: :tangle nix/nix.conf
+#+begin_src conf
+experimental-features = nix-command flakes
+substituters = https://cache.nixos.org https://cache.iog.io https://cache.nixos.org/ https://funloop.cachix.org
+trusted-public-keys = cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY= hydra.iohk.io:f/Ea+s+dFdN+3Y/G+FDgSq+a5NEWhJGzdjvKNGv0/EQ= funloop.cachix.org-1:tLu8Pm6sPcHwiQV+myZYREodm0tkfU/CBJgOZr+tSIk=
+#+end_src
