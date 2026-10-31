@@ -93,6 +93,13 @@ Other syntax constraints:
   Link to documents and headings **by UUID only**, never by filename or heading
   text. Do not invent UUIDs by hand for real documents; generate a fresh one
   (e.g. `uuidgen`) for new files and headings.
+- A document only appears in the site's "Site contents" sidebar if it is listed
+  in a `txt` block named `index` (`#+name: index`) in the `index.org` of its
+  directory, with one path per line relative to that `index.org`. The block is
+  not shown on the woven page. A subdirectory has its own `index.org` listing
+  its documents, and the parent lists it by directory name (`script`), because
+  an entry that doesn't end in `.org` means `<entry>/index.org`. Update the block
+  when adding, moving, or removing a document.
 - List items must be indented two spaces and separated by blank lines.
 - In new Org prose, mark up code, paths, and commands with code emphasis
   (`~foo~`), not verbatim (`=foo=`), even where the surrounding text uses
