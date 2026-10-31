@@ -1,7 +1,9 @@
-#+TITLE: Git commit message hook
-#+AUTHOR: Linus Arver
-#+PROPERTY: header-args :noweb no-export
-#+auto_tangle: t
+:PROPERTIES:
+:ID:       dbb50a18-732c-4549-8fe8-1b07a1e0e9bd
+:END:
+#+title: Git commit message hook
+
+#+lilac_maxHeadingLevel: 4
 
 * Description
 
@@ -33,8 +35,7 @@ somewhere. For that we have to read the file into memory first, construct the
 new file contents in memory, then write it back out.
 
 #+header: :shebang #!/usr/bin/env bb
-#+header: :noweb-ref prepare-commit-msg
-#+header: :tangle prepare_commit_msg.bb
+#+header: :tangle script/git/hooks/prepare_commit_msg.bb
 #+begin_src clojure
 <<imports>>
 <<wrap-diff-portion>>
@@ -43,13 +44,21 @@ new file contents in memory, then write it back out.
 
 *** Wrap diff portion
 
+This has two parts: wrapping the diff in a string, and doing that to a file.
+
+#+name: wrap-diff-portion
+#+begin_src clojure
+<<wrap-diff>>
+<<wrap-diff-file>>
+#+end_src
+
 The hard part is locating the "diff" string in the file. We can let =str/split= do
 most of the heavy lifting. Instead of reading the file and splitting
 line-by-line, we can slurp it into memory and then use =str/index-of= to find
 where the first "diff " string occurs in the file. Then we can extract the
 substrings before and after this bit.
 
-#+header: :noweb-ref wrap-diff-portion
+#+name: wrap-diff
 #+begin_src clojure
 (def pats
   ["#\ndiff "
@@ -87,7 +96,7 @@ string unmodified.
 Now we can read the file, invoke our wrapper, and then write back out the
 result. We use =slurp= and =spit= for this.
 
-#+header: :noweb-ref wrap-diff-portion
+#+name: wrap-diff-file
 #+begin_src clojure
 (defn wrap-diff-portion
   [file]
@@ -98,7 +107,7 @@ result. We use =slurp= and =spit= for this.
 
 **** Tests
 
-#+header: :noweb-ref tests
+#+name: tests
 #+begin_src clojure
 <<pseudo-realistic-input>>
 
@@ -118,7 +127,7 @@ Anyway, the input itself has a scissor line and two ="diff"= strings because the
 are two hunks. We only expect to add the =#+begin_src= line for the first
 occurrence.
 
-#+header: :noweb-ref pseudo-realistic-input
+#+name: pseudo-realistic-input
 #+begin_src clojure
 (def commit-msg-text "
 
@@ -267,7 +276,7 @@ index c862589b..0f2cc942 100644
 
 *** Imports
 
-#+header: :noweb-ref imports
+#+name: imports
 #+begin_src clojure
 (ns prepare-commit-msg
   (:require [clojure.java.io :as io]
@@ -279,7 +288,7 @@ index c862589b..0f2cc942 100644
 Git will pass in the path of the =COMMIT_MSG= file as the first argument; this
 file is what we want to modify. We ignore other arguments passed to us (=rst=).
 
-#+header: :noweb-ref main
+#+name: main
 #+begin_src clojure
 (defn -main [& [file & rst]]
   (wrap-diff-portion file))
@@ -297,8 +306,7 @@ The shell implementation is only here as a point of comparison; it's not
 actually used.
 
 #+header: :shebang #!/bin/sh
-#+header: :noweb-ref prepare-commit-msg
-#+header: :tangle prepare-commit-msg.sh
+#+header: :tangle script/git/hooks/prepare-commit-msg.sh
 #+begin_src sh
 <<arguments>>
 
@@ -309,15 +317,21 @@ This isn't as portable as we'd like it to be because it requires GNU Sed.
 
 *** Arguments
 
-Git will call our script with the path of the special COMMIT_MSG file as the
+Git will call our script with the path of the special ~COMMIT_MSG~ file as the
 first argument.
 
-#+header: :noweb-ref arguments
+#+name: arguments
 #+begin_src sh
 COMMIT_MSG_FILE=$1
 #+end_src
 
 *** Source code block wrapper
+
+#+name: wrap-diff-with-source-code-block
+#+begin_src sh
+<<sed-begin-src>>
+<<echo-end-src>>
+#+end_src
 
 Wrapping the diff part just means adding
 
@@ -335,12 +349,12 @@ around the diff portion.
 
 **** Add =#+begin_src diff=
 
-The trick here is to tell =sed= (GNU sed)[fn:gnu-sed] to only concern itself with
+The trick here is to tell =sed= (GNU sed) [fn:gnu-sed] to only concern itself with
 the area of the file where the =diff= word appears the first time. This is because
 the diff could have multiple hunks in it (each with its own =diff ...= section).
 That's what the =0,/^diff/= means below:
 
-#+header: :noweb-ref wrap-diff-with-source-code-block
+#+name: sed-begin-src
 #+begin_src sh
 sed -i '0,/^diff/{s/^diff /#+begin_src diff\ndiff /}' "${COMMIT_MSG_FILE}"
 #+end_src
@@ -352,7 +366,7 @@ We use =-i= to edit the file in-place.
 Adding the =#+end_src= is easy because it just has to be at the end of the file.
 We use shell redirection =>>= (for appending) to do this.
 
-#+header: :noweb-ref wrap-diff-with-source-code-block
+#+name: echo-end-src
 #+begin_src sh
 echo '#+end_src' >> "${COMMIT_MSG_FILE}"
 #+end_src
@@ -361,8 +375,7 @@ echo '#+end_src' >> "${COMMIT_MSG_FILE}"
 
 We only test the Clojure implementation, because it's so much easier.
 
-#+header: :noweb-ref prepare-commit-msg-test
-#+header: :tangle prepare_commit_msg_test.clj
+#+header: :tangle script/git/hooks/prepare_commit_msg_test.clj
 #+begin_src clojure
 (ns prepare-commit-msg-test
   (:require [clojure.test :refer [deftest is]]

@@ -1,7 +1,13 @@
-#+TITLE: System scripts
-#+AUTHOR: Linus Arver
-#+PROPERTY: header-args :noweb no-export
-#+auto_tangle: t
+:PROPERTIES:
+:ID:       61450114-101e-453e-a593-961ba9a49568
+:END:
+#+title: System scripts
+
+#+name: index
+#+begin_src txt
+find-long-lines.org
+prepare-commit-msg.org
+#+end_src
 
 * Introduction
 
@@ -10,21 +16,23 @@ single script.
 
 ** Literate style
 
-See the discussion for [[file:~/syscfg/tmux/README.org][the literate tmux configuration]] about how we use literate
+See the discussion for [[id:9170fae9-85de-4fd8-96fb-f3d3d2215f94][the literate tmux configuration]] about how we use literate
 programming in this file. We use the same conventions used there.
 
 * Linters
 
-  - [[file:find-long-lines.org]] :: Detect long lines in Org mode files that could
+  - [[id:dc670104-acf9-41ec-ae70-3bd4650fbf0d][Find long lines]] :: Detect long lines in Org mode files that could
     probably be reflowed to be under 100 columns.
 
 * Test runner
+:PROPERTIES:
+:ID:       4bd4d2d2-58a0-4a85-8879-e2e7d2268d89
+:END:
 
 This script just imports all Clojure test files and then runs them.
 
 #+header: :shebang #!/usr/bin/env bb
-#+header: :noweb-ref test-runner
-#+header: :tangle test-runner.clj
+#+header: :tangle script/test-runner.clj
 #+begin_src clojure
 (require '[clojure.test :refer [run-tests]]
          '[babashka.classpath :refer [add-classpath]])
@@ -45,7 +53,7 @@ This script just imports all Clojure test files and then runs them.
 
 * Clojure project settings
 
-#+header: :tangle bb.edn
+#+header: :tangle script/bb.edn
 #+begin_src clojure
 {:deps {
     <<dependencies>>}
@@ -65,7 +73,7 @@ look out of place in the clojure.core namespace".
 We don't use =medley= yet but it's there just as a demonstration of how
 dependencies can be declared in Clojure.
 
-#+header: :noweb-ref dependencies
+#+name: dependencies
 #+begin_src clojure
 dev.weavejester/medley {:mvn/version "1.8.1"}
 #+end_src
@@ -73,9 +81,9 @@ dev.weavejester/medley {:mvn/version "1.8.1"}
 ** Paths
 
 We have to declare all paths where our Babashka files (and their tests) live.
-This is needed for running the [[*Test runner]] ([[file:test-runner.clj]]).
+This is needed for running the [[id:4bd4d2d2-58a0-4a85-8879-e2e7d2268d89][test runner]].
 
-#+header: :noweb-ref paths
+#+name: paths
 #+begin_src clojure
 "git/hooks"
 #+end_src
@@ -86,9 +94,9 @@ This adds a separate (alternative) test runner which has more options (and which
 discovers tests on its own, similar to Python's =python -m unittest discover=
 invocation.
 
-To run it, do =bb test= in [[file:~/syscfg/script][this directory]].
+To run it, do ~bb test~ in ~script/~.
 
-#+header: :noweb-ref tasks
+#+name: tasks
 #+begin_src clojure
 test {:extra-paths [".", "tmux"]
       :extra-deps {io.github.cognitect-labs/test-runner

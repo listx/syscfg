@@ -2,6 +2,7 @@
 (ns prepare-commit-msg
   (:require [clojure.java.io :as io]
             [clojure.string :as str]))
+
 (def pats
   ["#\ndiff "
    "# Everything below it will be ignored.\ndiff "])
@@ -25,11 +26,13 @@
                      "#+end_src\n"]]
       (str/join new-parts))
     s))
+
 (defn wrap-diff-portion
   [file]
   (->> (slurp file)
        wrap-diff
        (spit file)))
+
 (defn -main [& [file & rst]]
   (wrap-diff-portion file))
 (when (= *file* (System/getProperty "babashka.file"))
