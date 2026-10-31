@@ -13,7 +13,7 @@ tab_width = 8
 [qutebrowser.conf]
 trim_trailing_whitespace = false
 
-[zsh/.zshrc]
+[{zsh/.zshrc,doc/zsh/zshrc.org}]
 end_of_line = unset
 
 [COMMIT_EDITMSG]

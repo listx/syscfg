@@ -16,6 +16,7 @@ notmuch.org
 script
 tmux.org
 wezterm.org
+zsh
 #+end_src
 
 This repo uses [[https://lilac.funloop.org/][Lilac]] to extract the code/configuration from Org files. Not all
@@ -115,7 +116,7 @@ nonTangledPathspecs = [ # (ref:nonTangledPathspecs)
    ":(exclude,top)xmonad/xmonad-start.desktop",
    ":(exclude,top)xorg",
    ":(exclude,top)zathura",
-   ":(exclude,top)zsh"
+   ":(exclude,top)zsh/zcomet-upstream"
 ]
 
 <<custom-html-head>>
@@ -859,7 +860,7 @@ tab_width = 8
 [qutebrowser.conf]
 trim_trailing_whitespace = false
 
-[zsh/.zshrc]
+[{zsh/.zshrc,doc/zsh/zshrc.org}]
 end_of_line = unset
 
 [COMMIT_EDITMSG]
@@ -887,8 +888,8 @@ escape, and executable bits.
 
 Do one area per commit, in this order:
 
-  1) ~zsh~, in ~doc/zsh/~: give ~.zshrc~ and ~lib.sh~ their own documents, and put
-     the ~func/~ files in one document with a section each.
+  1) (DONE) ~zsh~, in ~doc/zsh/~: give ~.zshrc~ and ~lib.sh~ their own documents, and
+     put the ~func/~ files in one document with a section each.
 
   2) The rest of ~script/~, in ~doc/script/~: the standalone scripts first, then
      ~terminal-themes~ as its own document.

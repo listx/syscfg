@@ -68,7 +68,7 @@ nonTangledPathspecs = [ #
    ":(exclude,top)xmonad/xmonad-start.desktop",
    ":(exclude,top)xorg",
    ":(exclude,top)zathura",
-   ":(exclude,top)zsh"
+   ":(exclude,top)zsh/zcomet-upstream"
 ]
 
 [htmlHead]

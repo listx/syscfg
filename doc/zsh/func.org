@@ -1,0 +1,1542 @@
+:PROPERTIES:
+:ID:       fd0afd0c-d608-4ad5-83ff-6a080a62bc66
+:END:
+#+title: Zsh functions
+
+[[id:9b76d360-8483-4449-b3a5-6c3678defc58][~.zshrc~]] adds this directory to ~fpath~ and marks every file in it for autoloading,
+so each file defines a function of the same name which only gets loaded when we
+first use it. Files that start with an underscore are completion functions.
+
+* Finding things
+
+** ~f~
+
+A front end to the search functions below. The ~ff~, ~ft~, and ~fp~ family of aliases in [[id:9b76d360-8483-4449-b3a5-6c3678defc58][~.zshrc~]] call it.
+
+#+name: func-f
+#+header: :tangle zsh/func/f
+#+begin_src zsh
+#!/usr/bin/env zsh
+
+# Find all files and directories using rg.. Does not traverse git folders by
+# default, but this can be "overridden" by simply cd-ing into the .git folder
+# first.
+f()
+{
+	if (( $# < 2 )); then
+		echo >&2 "usage: $0 <TYPE> [OTHER_RIPGREP_ARGS..] <PATTERN>"
+		echo >&2 "args:"
+		printf >&2 '%s\n' "$@"
+		return 1
+	fi
+
+	local subcommand
+	local pattern
+	local args
+	subcommand="${1}"
+	shift 1
+
+	# PATTERN is in the last element of "$@". Assign all other elements to
+	# $args array.
+	args=("$@")
+	pattern=${args[-1]}
+	unset 'args[-1]'
+
+	# Imply '--' if the pattern starts with a dash. Otherwise the pattern
+	# becomes a flag for rg.
+	if [[ "${pattern}" =~ ^- ]]; then
+		args+=(--)
+	fi
+
+	# Determine type of search. Search files and directories for 'f' and text
+	# for 't'.
+	case "${subcommand}" in
+		files|procs|text)
+			f_${subcommand} "${pattern}" "${args[@]}"
+			;;
+		all_files)
+			f_files "${pattern}" SEARCH_ALL_FILES "${args[@]}"
+			;;
+		all_text)
+			f_text "${pattern}" SEARCH_ALL_FILES "${args[@]}"
+			;;
+		all_text_binary)
+			f_text "${pattern}" SEARCH_ALL_FILES_BINARY "${args[@]}"
+			;;
+		*)
+			echo >&2 "$0: unknown search type \`${_type}'"
+			return 1
+			;;
+	esac
+}
+#+end_src
+
+** ~f_files~
+
+Search filenames and directory names.
+
+#+name: func-f-files
+#+header: :tangle zsh/func/f_files
+#+begin_src zsh
+#!/usr/bin/env zsh
+
+# Search filenames and directory names.
+f_files()
+{
+	local pattern="${1}"
+	local pattern_orig="${pattern}"
+	shift
+	local args=()
+
+	# By default, ignore all hidden files.
+	local find_args=(-not -path '*/\.*')
+	# Filter out arguments meant for f_files(), not rg.
+	for arg in "${@}"; do
+		case "${arg}" in
+			SEARCH_ALL_FILES)
+				find_args=()
+				;;
+			# Save anything else we don't recognize (to pass along to rg).
+			*) args+=("${arg}") ;;
+		esac
+	done
+
+	# Patterns without a "/" are restricted to the *last part* of the path. This
+	# is to weed out false hits where the pattern only matches the parent folder
+	# name. E.g., if there is a directory structure like this:
+	#
+	#   emacs/
+	#   emacs/a
+	#   emacs/b
+	#   emacs/c
+	#   emacs/d
+	#   emacs/e
+	#   emacs/f
+	#
+	# and we search for the pattern "e" we only want to show "emacs/" and
+	# "emacs/e", not the other folders like "emacs/a" or "emacs/b".
+	if [[ ! $pattern == */* ]]; then
+		# Add negative lookahead if there is no "/" in the original search
+		# pattern. The negative lookahead makes sure that no other slashes
+		# following the original pattern, effectively limiting the pattern to
+		# the last "dirname" or "basename" part of a path.
+		pattern="${pattern}(?![^/]*/)"
+	fi
+
+	# We skip the leading first character of each line `^.', which is the
+	# filetype output classified by the `find' command below. The remaining '.*?'
+	# part and the '\K' is to remove from the match any characters that do not
+	# match the given pattern, which are in-between the pattern and the very
+	# beginning of the line. If we don't have this "buffer" zone, then the
+	# pattern is expected to immediately follow the initial `^.' only, which
+	# makes the search very inflexible (and which would force the user to type
+	# in something like `.*PATTERN' to search for `PATTERN', not to mention that
+	# the leading "buffer" zone will get highlighted as a positive match by `rg'
+	# as well).
+	pattern="(^..*?)\K${pattern}"
+
+	# If we see a line depicting a symlink, search both the link name and the
+	# target name (we make no distinctions around the " -> " delimiter that
+	# denotes the source and target). For symlinks we also ignore the condition
+	# of trying to only search the trailing "basename" of a path.
+	pattern="(?(?=^l)(^l.*?)\K${pattern_orig}|${pattern})"
+
+	local c_pipe="\x1b[1;32m" # bright green
+	local c_sock="\x1b[1;34m" # bright blue
+	local c_dir="\x1b[1;33m" # bright yellow
+	local c_link="\x1b[36m" # cyan
+	local c_end="\x1b[0m"
+
+	local colorizer=""
+
+	# Colorize the different file types recognized by the `%y' printf option for
+	# `find(1)'. We support 5 of the most common file types: files, directories,
+	# symlinks, named pipes, and sockets.
+	colorizer="s|^d|${c_dir}|;"
+	# Regular files aren't colored. However we still inject a color escape
+	# sequence so that the rest of the expressions below don't match against it.
+	# For example, if we have 'fpar' to denote a regular file 'par' and we just
+	# erase the leading 'f', we get 'par', and this will match against the
+	# ${c_pipe} colorizer pattern below (bad!).
+	colorizer+="s|^f|${c_end}|;"
+	colorizer+="s|^l|${c_link}|;"
+	colorizer+="s|^s|${c_sock}|;"
+	colorizer+="s|^p|${c_pipe}|;"
+	# Match the last "turn off color" code injected by `rg'. Use this point to
+	# reinstate the color injected from above. This way the entire line is
+	# colorized a certain way except for the portion matched by rg.
+	colorizer+="s|^\(\(\x1b\[\(1;\)\?3.m\).*\x1b\[0m\)|\1\2|;"
+	# Turn off colors at the end of the line.
+	colorizer+="s|$|${c_end}|"
+
+	# The "-k1.2" sorts by the 1st word's 2nd character on each line. We have to
+	# skip the 1st character because it is the filetype "%y" character.
+
+	find ${find_args[@]} -printf '%y%P\0' \
+		| while IFS="" read -r -d "" find_output; do \
+				if [[ "${find_output:0:1}" == l ]]; then \
+					printf "%s -> %s\0" "${find_output}" "$(readlink -m ${find_output:1})"; \
+				else \
+					printf "%s\0" "${find_output}"; \
+				fi; \
+			done \
+		| rg --null-data --smart-case --pcre2 --color always ${args[@]} "${pattern}" \
+		| sort --zero-terminated -k1.2 \
+		| sed --null-data "${colorizer}" \
+		| sed 's|\x00|\n|g'
+}
+#+end_src
+
+** ~f_text~
+
+Search plain text with ~rg~, ignoring the ~.git~ folder.
+
+#+name: func-f-text
+#+header: :tangle zsh/func/f_text
+#+begin_src zsh
+#!/usr/bin/env zsh
+
+# Search plaintext. This is the typical use case for ripgrep and is pretty
+# straightforward.
+f_text()
+{
+	local pattern="${1}"
+	shift
+	local args=()
+
+	# Explicitly ignore the .git folder because rg by default ignores the paths
+	# inside .gitignore files, but still searches inside the .git folder itself.
+	local rg_args=(--glob '!.git')
+
+	# Filter out arguments meant for f_text(), not rg.
+	for arg in "${@}"; do
+		case "${arg}" in
+			SEARCH_ALL_FILES)
+				# Providing 2 -u flags (--unrestricted) makes rg ignore
+				# .gitignore files and also search hidden files and directories.
+				rg_args=(-uu)
+				;;
+			SEARCH_ALL_FILES_BINARY)
+				# Providing three -u flags (--unrestricted) makes rg search even
+				# binary files.
+				rg_args=(-uuu)
+				;;
+			# Save anything else we don't recognize (to pass along to rg).
+			*) args+=("${arg}") ;;
+		esac
+	done
+
+	rg --color always --smart-case --pcre2 --hidden \
+		${rg_args[@]} ${args[@]} "${pattern}"
+}
+#+end_src
+
+** ~f_procs~
+
+Search running processes, keeping the ~ps~ column headers.
+
+#+name: func-f-procs
+#+header: :tangle zsh/func/f_procs
+#+begin_src zsh
+#!/usr/bin/env zsh
+
+# Search processes.
+f_procs()
+{
+	local pattern="${1}"
+	shift
+	local args=("$@")
+	# Print out the first line of ps output, because it gives us the column
+	# headers. Otherwise, we get a bunch of results without any indication of
+	# what each column actually means.
+	ps aux | head -n1
+	# The process substitution with the `=(...)' syntax prevents the `rg'
+	# process itself from showing up in the results.
+	rg --color always --smart-case --pcre2 -i --no-line-number \
+		${args[@]} "${pattern}" =(ps aux)
+}
+#+end_src
+
+** ~find_long_lines~
+
+Find files with lines that are too long (80 columns by default).
+
+#+name: func-find-long-lines
+#+header: :tangle zsh/func/find_long_lines
+#+begin_src zsh
+#!/usr/bin/env zsh
+
+# Find files with lines that have 80+ columns.
+# Usage: find_long_lines TABWIDTH [DIRECTORY] [COLUMNS]
+
+find_long_lines() {
+	# Search current directory by default.
+	tabwidth="${1}"
+	dir="${2:-.}"
+
+	# Search lines longer than 80 columns by default.
+	columns="${3:-80}"
+	((columns++))
+
+	if (( $# < 1 )) || (( $# > 3 )); then
+		echo "usage: $0 TABWIDTH [DIRECTORY] [COLUMNS]"
+		return 1
+	fi
+
+	if [[ ! -d "$dir" ]]; then
+		echo "directory \`$dir' does not exist"
+		return 1
+	elif [[ -z $tabwidth ]]; then
+		echo "second argument must contain a number"
+		return 1
+	fi
+
+	find "$dir" -type f -not -path "$dir/.git"\
+		-exec sh -c "expand -t $tabwidth {} | grep -n \".\{${columns}\}\"" \; -print
+}
+#+end_src
+
+* Files and directories
+
+** ~univ_open~
+
+Open a file with a suitable program, or list a directory if given one. The ~d~ [[id:9b76d360-8483-4449-b3a5-6c3678defc58][alias]] calls this.
+
+#+name: func-univ-open
+#+header: :tangle zsh/func/univ_open
+#+begin_src zsh
+#!/usr/bin/env zsh
+
+# univ_open() is intended to be used to pass either a SINGLE valid FILE or
+# DIRECTORY. For illustrative purposes, we assume "d" to be aliased to
+# univ_open() in ~/.zshrc. If optional flags are desired, then either prepend
+# or append them appropriately. E.g., if you have jpg's to be opened by eog,
+# then doing "d -f file.jpg" or "d file.jpg -f" will be the same as "eog -f
+# file.jpg" or "eog file.jpg -f", respectively. The only requirement when
+# passing flags is that the either the first word or last word must be a valid
+# filename.
+
+# univ_open requires the custom shell function dir_info() (`ls` with saner
+# default args) to work properly
+
+univ_open() {
+	if [[ -z $@ ]]; then
+		cd && dir_info brief # ("cd" w/o any arguments goes to the home directory)
+	elif [[ -f $1 || -f ${=@[-1]} ]]; then
+		# if we're here, it means that the user either (1) provided a single valid file name, or (2) a number of
+		# commandline arguments PLUS a single valid file name; use of the $@ variable ensures that we preserve all the
+		# arguments the user passed to us
+
+		# $1 is the first arg; ${=@[-1]} is the last arg (i.e., if user passes "-o -m FILE" to us, then obviously the
+		# last arg is the filename
+		#
+		# we use && and || for simple ternary operation (like ? and : in C)
+		[[ -f $1 ]] && file=$1 || file=${=@[-1]}
+		case $file:e:l in
+			(doc|docx|odf|odt|rtf)
+				soffice -writer $@ &>/dev/null & disown
+			;;
+			(pps|ppt)
+				soffice -impress $@ &>/dev/null & disown
+			;;
+			(djvu|dvi|eps|pdf|ps)
+				zathura $@ &>/dev/null & disown
+			;;
+			(bmp|gif|jpg|jpeg|pcx|png|raf|svg|tga|tif|tiff)
+				geeqie -f $@ &>/dev/null & disown
+			;;
+			(psd|xcf)
+				gimp $@ &>/dev/null & disown
+			;;
+			(aac|flac|m4a|mp3|ogg|opus|wav|wma)
+				mpv --vo=null $@
+			;;
+			(mid|midi)
+				timidity $@
+			;;
+			(asf|avi|divx|flv|ogm|ogv|m4v|mkv|mov|mp4|mpg|mpeg|rm|rmvb|webm|wmv)
+				mpv $@ &>/dev/null & disown
+			;;
+			(mts)
+				vlc $@ &>/dev/null & disown
+			;;
+			(exe)
+				wine $@ &>/dev/null & disown
+			;;
+			(otf|ttf)
+				fontforge $@ &>/dev/null & disown
+			;;
+			(chm)
+				xchm $@ &>/dev/null & disown
+			;;
+			*)
+				~/syscfg/script/emacsclient-tty.sh "$@"
+			;;
+		esac
+	elif [[ -d $1 ]]; then
+		# if the first argument is a valid directory, just cd into it -- ignore
+		# any trailing arguments (in zsh, '#' is the same as ARGC, and denotes the number of arguments passed to the
+		# script (so '$#' is the same as $ARGC)
+		if [[ $# -eq 1 ]]; then
+			cd $@ && dir_info brief
+		else
+			# if the first argument was a valid directory, but there was more than 1 argument, then we ignore these
+			# trailing args but still cd into the first given directory
+			cd $1 && dir_info brief
+			# i.e., show arguments 2 ... all the way to the last one (last one has an index of -1 argument array)
+			echo "\nuniv_open: argument(s) ignored: \`${=@[2,-1]}\`"
+			echo "univ_open: went to \`$1'\n"
+		fi
+	elif [[ ! -e $@ ]]; then
+		[[ $# -gt 1 ]] && head=$1:h || head=$@:h
+		# if we're given just 1 argument, and that argument does not exist,
+		# then go to the nearest valid parent directory; we use a while loop to
+		# find the closest valid directory, just in case the user gave a
+		# butchered-up path
+		while [[ ! -d $head ]]; do head=$head:h; done
+		cd $head && dir_info brief
+		echo "\nuniv_open: path \`$@' does not exist"
+		[[ $head == "." ]] && echo "univ_open: stayed in same directory\n" || echo "univ_open: relocated to nearest parent directory \`$head'\n"
+	else
+		# possible error -- should re-program the above if this ever happens,
+		# but, it seems unlikely
+		echo "\nuniv_open: error -- exiting peacefully"
+	fi
+}
+#+end_src
+
+** ~dir_info~
+
+An intelligent ~ls~, used by [[func-univ-open][~univ_open~]] and by the ~ll~, ~l~, ~lj~, and ~lk~ [[id:9b76d360-8483-4449-b3a5-6c3678defc58][aliases]].
+
+#+name: func-dir-info
+#+header: :tangle zsh/func/dir_info
+#+begin_src zsh
+#!/usr/bin/env zsh
+
+# dir_info(), a function that acts as an intelligent "ls". This function is
+# used by univ_open() to display directory contents, but can be used independently.
+
+dir_info()
+{
+	local file_count
+	local mode
+	local deref
+	local thing
+
+	mode="${1:-}"
+
+	# Add a blank line for legibility.
+	echo
+
+	# List the contents of the given argument, but use "." (current directory)
+	# if this argument is blank. If we are given a specific thing to list, make
+	# sure to dereference any symlinks.
+	thing="${2:-.}"
+	if [[ -n "${thing}" ]]; then
+		# Resolve symlinks.
+		if [[ -L "${thing}" ]]; then
+			echo "  ${thing} -> $(readlink -f "${thing}")"
+			echo "  ---"
+			thing="$(readlink -f "${thing}")"
+		fi
+	fi
+
+	# NOP if there is nothing to show.
+	file_count=$(ls -A1 "${thing}" | wc -l)
+	if (( file_count == 0 )); then
+		echo "($PWD is empty)"
+		echo
+		return
+	fi
+
+	case "${mode}" in
+	verbose-by-name)
+		ls -Aho --time-style=long-iso --color ${thing} \
+			| sed -e 's|^|  |'
+		;;
+	verbose-by-size)
+		ls -AhoSr --time-style=long-iso --color ${thing} \
+			| sed -e 's|^|  |'
+		;;
+	verbose-by-date)
+		ls -Ahotr --time-style=long-iso --color ${thing} \
+			| sed -e 's|^|  |'
+		;;
+	brief)
+		ls -AC -w $((COLUMNS - 2)) --color ${thing} \
+			| sed 's|^|  |'
+		;;
+	*)
+		echo >&2 "unrecognized mode \`${mode}'"
+		return 1
+		;;
+	esac
+
+	# If this is a git root directory, then show a list of all remotes.
+	if [[ -d .git ]]; then
+		echo
+		git remote -v
+	fi
+
+	# Add a blank line between us and the shell prompt for legibility.
+	echo
+}
+#+end_src
+
+** ~dirs_navigate~
+
+Move backward and forward through the directory stack. [[id:9b76d360-8483-4449-b3a5-6c3678defc58][~.zshrc~]] binds this to ~C-h~ and ~C-l~.
+
+#+name: func-dirs-navigate
+#+header: :tangle zsh/func/dirs_navigate
+#+begin_src zsh
+#!/usr/bin/env zsh
+
+# Usage: `_l_dirs_navigate <next|prev>' to go forward/backwards in directory
+# (PWD) history. Use 'dirs -v' to see the directory history stack.
+
+dirs_navigate()
+{
+	local direction="${1}"
+	if [[ "${direction}" == prev ]]; then
+		dirs $(dirs -lp | awk 'NR==1{store=$0;next}1;END{print store}') && popd && dir_info brief
+	else
+		cd -0 && dir_info brief
+	fi
+}
+#+end_src
+
+** ~rand_open~
+
+Shuffle the files with the given extensions into a list, and open that list with the given command.
+
+#+name: func-rand-open
+#+header: :tangle zsh/func/rand_open
+#+begin_src zsh
+#!/usr/bin/env zsh
+
+# rand_open() [recurse/norecurse] ['command string'] [extensions...]
+
+# Find all files matching the extension (recursively or not), and store the
+# filenames as a list in `/tmp/rand_open_files`. Then, use the given command
+# string to open this list of files.
+
+rand_open()
+{
+	:>/tmp/rand_open_files
+	recurse_flag=$1
+	command=$2
+	if [[ -n $3 ]]; then
+		output_ext=".$3"
+	else
+		output_ext=""
+	fi
+	output_file=/tmp/rand_open_files${output_ext}
+	regex_str=".*\\.\\("
+	find_recurse=""
+	shift 3
+
+	for ext in $*; do
+		regex_str+="$ext\\|"
+	done
+
+	regex_str+="\\)$"
+
+	if [[ $recurse_flag == "norecurse" ]]; then
+		find_recurse="-maxdepth 1"
+	fi
+
+	find -L $PWD ${(z)find_recurse} -type f -iregex $regex_str \
+		| shuf --random-source /dev/urandom \
+		> $output_file
+
+	if [[ $(wc -l $output_file | cut -d ' ' -f 1) -gt 0 ]]; then
+		${(z)command} $output_file
+		echo "Chose file \`$chosen'"
+	else
+		echo "No files to choose."
+	fi
+}
+#+end_src
+
+* Git
+
+** ~git_contents~
+
+Check that we're in a Git repo with at least one commit. Several of the functions below use this as a guard.
+
+#+name: func-git-contents
+#+header: :tangle zsh/func/git_contents
+#+begin_src zsh
+#!/usr/bin/env zsh
+
+git_contents()
+{
+	# git-status: Is this a git repo?
+	# git-log: If so, does it actually have any commits? (I.e., it may be the case
+	# that this is a fresh repo without any commits yet, but where there are
+	# still staged files such that git-ls-files is non-empty.
+	git status &> /dev/null && # (1)
+		git log --max-count 1 &> /dev/null # (2)
+}
+#+end_src
+
+** ~gst~
+
+Run ~git status~, and also show any stashes and assume-unchanged files.
+
+#+name: func-gst
+#+header: :tangle zsh/func/gst
+#+begin_src zsh
+#!/usr/bin/env zsh
+
+gst()
+{
+	! git_contents && return
+
+	local ce="\x1b[0m"
+
+	git -c color.status=always status
+	local gstash=$(git stash list)
+	if [[ -n "$gstash" ]]; then
+		printf "\n\x1b[1;38;5;196m-- STASH --${ce}\n$gstash\n"
+	fi
+	local groot=$(git rev-parse --show-toplevel)
+	local gau=$(git -C "$groot" ls-files -v | grep "^[[:lower:]]")
+	if [[ -n "$gau" ]]; then
+		printf "\n\x1b[1;38;5;201m-- ASSUME UNCHANGED --${ce}\n$gau\n"
+	fi
+}
+#+end_src
+
+** ~gsts~
+
+Summarize a repo's state compactly: its ref and hash, markers for changed, untracked, and stashed files, and its divergence from upstream.
+
+#+name: func-gsts
+#+header: :tangle zsh/func/gsts
+#+begin_src zsh
+#!/usr/bin/env zsh
+
+gsts_print()
+{
+	if [[ $for_prompt == for_prompt ]]; then
+		print -n $1
+	else
+		print -nP $1
+	fi
+}
+
+gsts_hash()
+{
+	local g_hash=$(git rev-parse --short HEAD)
+	gsts_print "$g_hash"
+}
+
+gsts_ref()
+{
+	local g_ref=$(git rev-parse --abbrev-ref HEAD)
+	if [[ $g_ref == HEAD ]]; then
+		g_ref=" $(git rev-parse HEAD)"
+	fi
+	gsts_print "$g_ref"
+}
+
+# Adapted from http://www.zsh.org/mla/users/2016/msg00664.html.
+gsts_upstream_divergence() {
+	git rev-parse @{upstream} >/dev/null 2>&1 || return
+	local -a x
+	x=( $(git rev-list --left-right --count HEAD...@{upstream}) )
+	if (( x[1] )) || (( x[2] )); then
+		if (( x[1] )); then
+			gsts_print "%B%F{green}\u25b2%b%f"
+		fi
+		if (( x[2] )); then
+			gsts_print "%B%F{red}\u25bc%b%f"
+		fi
+	else
+		gsts_print "%B%F{default}\u25cf%b%f"
+	fi
+}
+
+gsts_bare()
+{
+	local g_ref=$(gsts_ref)
+	local g_hash=$(gsts_hash)
+	gsts_print "<bare>:$g_hash:$g_ref"
+}
+
+gsts_nonbare()
+{
+	local g_path=$(git rev-parse --show-toplevel)
+
+	local g_ref=$(gsts_ref)
+	local g_hash=$(gsts_hash)
+
+	local g_diff=$(git diff)
+	local g_diffc=$(git diff --cached)
+	local g_changed="-"
+	if [[ -n $g_diff && -n $g_diffc ]]; then
+		g_changed="%B%F{208}X%b%f"
+	elif [[ -n $g_diff ]]; then
+		g_changed="%B%F{green}C%b%f"
+	elif [[ -n $g_diffc ]]; then
+		g_changed="%B%F{magenta}S%b%f"
+	fi
+
+	local g_untracked=$(git -C "$g_path" ls-files --other --exclude-standard \
+		| wc -l)
+	if (( $g_untracked == 0 )); then
+		g_untracked="-"
+	else
+		if (( $g_untracked > 9 )); then
+			g_untracked="!"
+		fi
+		g_untracked="%B%F{yellow}${g_untracked}%b%f"
+	fi
+
+	local g_stashed=$(git stash list | wc -l)
+	if (( $g_stashed == 0 )); then
+		g_stashed="-"
+	else
+		if (( $g_stashed > 9 )); then
+			g_stashed="!"
+		fi
+		g_stashed="%B%F{196}${g_stashed}%b%f"
+	fi
+
+	local g_assume_unchanged=$(git -C "$g_path" ls-files -v | grep "^[[:lower:]]" | wc -l)
+	if (( $g_assume_unchanged == 0 )); then
+		g_assume_unchanged="-"
+	else
+		if (( $g_assume_unchanged > 9 )); then
+			g_assume_unchanged="!"
+		fi
+		g_assume_unchanged="%B%F{201}$g_assume_unchanged%b%f"
+	fi
+
+	gsts_print "$g_hash:$g_changed$g_untracked$g_stashed$g_assume_unchanged"
+	if [[ $g_ref[1] != ' ' ]]; then
+		gsts_print ":$g_ref"
+	fi
+	gsts_upstream_divergence
+}
+
+local for_prompt=$1
+local l_status
+
+! git_contents && return
+
+if [[ $(git rev-parse --is-bare-repository) == true ]]; then
+	gsts_bare
+else
+	l_status="$(gsts_nonbare)"
+	if [[ -n "${l_status}" ]]; then
+		echo "${l_status} "
+	fi
+fi
+#+end_src
+
+** ~gd~
+
+Show the worktree and index diffs in a pager. This uses the [[id:a4d31d6e-b7ac-4638-8608-8a1bb80ae781][~gd~ program]] from this repo if it's installed, and otherwise falls back to labeling the diffs with [[func-vertical-label][~vertical_label~]].
+
+#+name: func-gd
+#+header: :tangle zsh/func/gd
+#+begin_src zsh
+#!/usr/bin/env zsh
+
+_gd()
+{
+	! git_contents && return
+
+	local c_green="\x1b[1;32m"
+	local c_magenta="\x1b[1;35m"
+	local ce="\x1b[0m"
+
+	local git_diff=$(git diff --color=always)
+	local git_diff_c=$(git diff --cached --color=always)
+
+	if [[ -z "$git_diff" && -z "$git_diff_c" ]]; then
+		return 0
+	fi
+
+	local msg_diff=""
+	local msg_diff_c=""
+	if [[ -n "$git_diff" ]]; then
+		# The sed '/^$/d' below is to remove the extra trailing whitespace
+		# line that seems to get added into `git diff' but not `git diff
+		# --cached'.
+		msg_diff=$(vertical_label \
+			"git diff --color=always | sed '/^$/d'" \
+			"TREE ------------------------ " \
+			"$c_green")
+	fi
+
+	if [[ -n "$git_diff_c" ]]; then
+		msg_diff_c=$(vertical_label \
+			"git diff --cached --color=always" \
+			"INDEX ------------------------ " \
+			"$c_magenta")
+	fi
+
+	if [[ -n "$git_diff" ]] && [[ -n "$git_diff_c" ]]; then
+		# If we have two buffers to show, force less to pause before
+		# showing the next one. We do this by unsetting the -F flag set in
+		# ~/.lesskey.
+		printf "$msg_diff" | less -+F
+		printf "$msg_diff_c" | less
+	elif [[ -n "$git_diff" ]]; then
+		printf "$msg_diff" | less
+	elif [[ -n "$git_diff_c" ]]; then
+		printf "$msg_diff_c" | less
+	fi
+}
+
+_gd_rs()
+{
+	local git_diff="$(command gd diff --width=${COLUMNS})"
+	local git_diff_c="$(command gd diff --width=${COLUMNS} --staged)"
+
+	if [[ -z "$git_diff" && -z "$git_diff_c" ]]; then
+		return 0
+	fi
+
+	if [[ -n "$git_diff" ]] && [[ -n "$git_diff_c" ]]; then
+		# If we have two buffers to show, force less to pause before
+		# showing the next one. We do this by unsetting the -F flag set in
+		# ~/.lesskey.
+		printf "$git_diff" | less -+F
+		printf "$git_diff_c" | less
+	elif [[ -n "$git_diff" ]]; then
+		printf "$git_diff" | less
+	elif [[ -n "$git_diff_c" ]]; then
+		printf "$git_diff_c" | less
+	fi
+}
+
+gd()
+{
+	if whence -cp "gd" > /dev/null; then
+		_gd_rs
+	else
+		_gd
+	fi
+}
+
+
+gd
+#+end_src
+
+** ~gflat~
+
+Flatten the last N commits with an interactive rebase.
+
+#+name: func-gflat
+#+header: :tangle zsh/func/gflat
+#+begin_src zsh
+#!/usr/bin/env zsh
+
+# Shortcut for "git rebase -i HEAD~<N>" where <N> is a positive integer, and
+# where "f" is used to flatten all commits up to the oldest (topmost in rebase
+# buffer) commit.
+gflat()
+{
+	if (( $# != 1 )); then
+		printf "gflat: Need exactly 1 argument.\n"
+		return 1
+	# The odd-looking "<->" pattern is a zsh-ism tht checks to see that the
+	# string only has digits [1].
+	# [1]: https://www.zsh.org/mla/users/2007/msg00084.html
+	elif [[ "$1" == <-> ]]; then
+		# Strip any leading zeroes [1].
+		# [1]: https://groups.google.com/d/msg/comp.unix.shell/VI8nIp1plWc/WOhfzd16ug8J
+		n="${1#${1%%[!0]*}}"
+
+		if (( n < 2 )); then
+			printf "gflat: Numerical argument must be at least 2.\n"
+			return 1
+		fi
+
+		arg=HEAD~"${n}"
+	# The argument may be a commit-ish.
+	else
+		arg="$1"
+	fi
+
+	GIT_SEQUENCE_EDITOR="sed -i -e '2,\$s/^pick/f/'" git rebase -i "${arg}"
+}
+#+end_src
+
+** ~git_check_linearity~
+
+Check that every commit in a range has one parent and at most one child.
+
+#+name: func-git-check-linearity
+#+header: :tangle zsh/func/git_check_linearity
+#+begin_src zsh
+#!/usr/bin/env zsh
+
+# Check if given range of commits all have just 1 parent and at most 1 child (0
+# children if commit is at HEAD).
+
+git_check_linearity_usage()
+{
+	cat <<EOF
+usage: git_check_linearity COMMIT_RANGE_START [COMMIT_RANGE_END]
+EOF
+}
+
+git_check_linearity()
+{
+	if ! git_contents; then
+		echo "Not a git repo; aborting."
+		return 1
+	fi
+
+	case $# in
+		1)
+			if [[ -z ${1:-} ]]; then
+				git_check_linearity_usage
+				return 1
+			fi
+			typeset -r commit_range_start=$1
+			typeset -r commit_range_end=$1
+			;;
+		2)
+			if [[ -z ${1:-} ]] ||
+				[[ -z ${2:-} ]]; then
+				git_check_linearity_usage
+				return 1
+			fi
+			typeset -r commit_range_start=$1
+			typeset -r commit_range_end=$2
+			;;
+		*)
+			git_check_linearity_usage
+			return 1
+			;;
+	esac
+
+	typeset -r commit_range=$commit_range_start^..$commit_range_end
+
+	# Convert commit range into a list of commits, from newest to oldest.
+	typeset -r commits=($(git rev-list $commit_range))
+	if ! (( $#commits )); then
+		echo "Invalid commit range; aborting."
+		return 1
+	fi
+
+	# Check that all commits in COMMIT_RANGE have only 1 parent, and at most 1
+	# child (there will be no children if COMMIT_RANGE ends at a branch tip).
+	# Just check if each line exceeds 81 characters (excluding newline). There
+	# will be 81 characters if there is just 1 parent (current commit's 40-char
+	# hash, space character, and 40-char hash of parent). We do the same thing
+	# for checking the number of children.
+	git rev-list --parents $commit_range \
+		| while read -Ar hashes; do
+		if (( $#hashes > 2 )); then
+			echo "More than 1 parent detected for $hashes[1]:"
+			echo "$(git log --oneline --no-walk $hashes[1])"
+			for hash in ${hashes[@]:1}; do
+				echo "  $(git log --oneline --no-walk $hash)"
+			done
+			return 1
+		fi
+	done
+
+	git rev-list --children $commit_range \
+		| while read -Ar hashes; do
+		if (( $#hashes > 2 )); then
+			echo "More than 1 child detected for $hashes[1]:"
+			echo "$(git log --oneline --no-walk $hashes[1])"
+			for hash in ${hashes[@]:1}; do
+				echo "  $(git log --oneline --no-walk $hash)"
+			done
+			return 1
+		fi
+	done
+	# For children, we have to check the newest and oldest commit's children.
+	# This is because the newest commit in the commit range is not covered by
+	# `git rev-list --children $commit_range'. For the oldest commit, consider
+	# the following case:
+	#
+	#     B
+	#    /
+	#   A-C
+	#
+	# where A is the oldest and B and C are child commits. If we specify a range
+	# A^..B, then C is *not* shown by `git rev-list --children A^..B', because
+	# the "..B" acts as a short-circuit, preventing C from being shown. For
+	# these reasons, we have to use the trick with `--all' and `grep' below.
+	git rev-list --all --children \
+		| grep "^${commits[1]}\|^${commits[-1]}" \
+		| while read -Ar hashes; do
+		if (( $#hashes > 2 )); then
+			echo "More than 1 child detected for $hashes[1]:"
+			echo "$(git log --oneline --no-walk $hashes[1])"
+			for hash in ${hashes[@]:1}; do
+				echo "  $(git log --oneline --no-walk $hash)"
+			done
+			return 1
+		fi
+	done
+
+	return 0
+}
+
+git_check_linearity $@
+#+end_src
+
+** ~git_copy_sha~
+
+Copy the ~HEAD~ commit's SHA to the X primary buffer and clipboard.
+
+#+name: func-git-copy-sha
+#+header: :tangle zsh/func/git_copy_sha
+#+begin_src zsh
+#!/usr/bin/env zsh
+
+git_copy_sha()
+{
+	! git_contents && return
+    # Copy to both X primary buffer and clipboard. We copy the SHA without a
+    # trailing newline, but display it to STDOUT with a newline in order to
+    # avoid printing the "%" symbol at the end.
+    git rev-parse HEAD \
+        | tr -d '\n' \
+        | tee >(xsel -ip) >(xsel -ib) \
+        && printf '\n'
+}
+#+end_src
+
+* Jujutsu
+
+** ~jl~
+
+Run ~jj log~, showing only as many commits as fit in the terminal.
+
+#+name: func-jl
+#+header: :tangle zsh/func/jl
+#+begin_src zsh
+#!/usr/bin/env zsh
+
+# Determine how many $LINES there are available in the current terminal and use
+# that to commits. Use a buffer of 4 lines to account for showing the prompt, as
+# well as any messages we might get from jj. Divide by 2 because in jj, each
+# commit takes up 2 lines (one for the commit title and another for the commit
+# id)..
+jl()
+{
+	local commits_to_show
+	commits_to_show=$(((LINES - 4) / 2))
+	jj log --limit "${commits_to_show}" "${@}"
+}
+#+end_src
+
+* Emacs
+
+** ~emacs_list_buffers~
+
+List the buffers of a running Emacs server.
+
+#+name: func-emacs-list-buffers
+#+header: :tangle zsh/func/emacs_list_buffers
+#+begin_src zsh
+#!/usr/bin/env zsh
+
+emacs_list_buffers()
+{
+	local buffers
+	local socket="${1:-default}"
+	elisp=$(cat << EOF
+	(let*
+		(
+			(buffers (mapcar 'buffer-name (buffer-list)))
+			(sorted-buffers (cl-sort buffers 'string-lessp :key 'downcase))
+			(output (mapconcat (function identity) sorted-buffers "\n")))
+		output
+	)
+EOF
+	)
+
+	# Get list of all buffers.
+	buffers="$(emacsclient --socket "${socket}" -e "${elisp}")"
+	# Remove leading and trailing quotations.
+	buffers="${buffers:1:-1}"
+	# Change into an array.
+	buffers=(${(f)"$(echo $buffers)"})
+
+	for buffer in "${buffers[@]}"; do
+		echo "$buffer"
+	done
+}
+#+end_src
+
+** ~emacs_kill_buffer~
+
+Kill a buffer in a running Emacs server. This revives ~emacsclient~ when it hangs on a buffer waiting for input.
+
+#+name: func-emacs-kill-buffer
+#+header: :tangle zsh/func/emacs_kill_buffer
+#+begin_src zsh
+#!/usr/bin/env zsh
+
+# Used to revive emacsclient whenever it starts hanging due to some buffer
+# waiting on input (which will never come, because it is hanging).
+emacs_kill_buffer()
+{
+	if (( $# != 2 )); then
+		>&2 echo "usage: $0 <SOCKET> <EMACS_BUFFER>"
+		return 1
+	fi
+
+	local socket="${1}"
+	local buffer
+	local elisp
+	buffer="${2}"
+	elisp=$(cat << EOF
+	(let*
+		(
+			(kill-me "${buffer}"))
+		(switch-to-buffer kill-me)
+
+		; (with-editor-cancel) is dangerous because it also silently deletes the
+		; file on disk! Only invoke it if (kill-this-buffer) fails (typically
+		; due to the function having been made useless by magit's with-editor
+		; mode).
+		(or (kill-this-buffer) (with-editor-cancel t))
+	)
+EOF
+	)
+
+	emacsclient --socket "${socket}" -e "${elisp}"
+}
+#+end_src
+
+** ~_emacs_kill_buffer~
+
+Completion for [[func-emacs-kill-buffer][~emacs_kill_buffer~]], offering the buffers from [[func-emacs-list-buffers][~emacs_list_buffers~]].
+
+#+name: func--emacs-kill-buffer
+#+header: :tangle zsh/func/_emacs_kill_buffer
+#+begin_src zsh
+#compdef emacs_kill_buffer
+
+# Adapted from https://unix.stackexchange.com/questions/239528/dynamic-zsh-autocomplete-for-custom-commands.
+_emacs_kill_buffer() {
+	local state
+
+	_arguments '1: :->buffer'
+	case $state in
+		(buffer) _arguments '1:buffers:(${(f)"$(emacs_list_buffers)"})' ;;
+        *) ;;
+	esac
+}
+
+_emacs_kill_buffer "$@"
+#+end_src
+
+* Remote machines
+
+** ~s~
+
+SSH to one of our known machines.
+
+#+name: func-s
+#+header: :tangle zsh/func/s
+#+begin_src zsh
+#!/usr/bin/env zsh
+
+# SSH to known machines.
+
+s()
+{
+	if (( $#@ == 0 )); then
+		echo >&2 "Usage: <HOST>"
+		return 1
+	fi
+
+	local user
+	local host="${1}"
+
+	case "${host}" in
+	w0) user="ingra" ;;
+	*)  user="l" ;;
+	esac
+
+	tmux rename-window "ssh->${user}@${host}"
+
+	case "${host}" in
+	w0)
+		ssh -t "${user}@${host}" \"wsl.exe -d NixOS\"
+		;;
+	*)
+		ssh -t "${user}@${host}"
+		;;
+	esac
+
+	tmux set -w automatic-rename on
+}
+#+end_src
+
+** ~_s~
+
+Completion for [[func-s][~s~]].
+
+#+name: func--s
+#+header: :tangle zsh/func/_s
+#+begin_src zsh
+#compdef s
+
+# Adapted from https://unix.stackexchange.com/questions/239528/dynamic-zsh-autocomplete-for-custom-commands.
+_s() {
+	local state
+
+	_arguments \
+		'1: :->host'
+
+	local user
+	case "${words[2]}" in
+	w0) user="ingra" ;;
+	*)  user="l" ;;
+	esac
+
+	case $state in
+		(host) _arguments '1:hosts:(k0 k1 m0 w0 macp)' ;;
+	esac
+}
+
+_s "$@"
+#+end_src
+
+** ~tmux_list_sessions~
+
+List the ~tmux~ sessions on a remote machine.
+
+#+name: func-tmux-list-sessions
+#+header: :tangle zsh/func/tmux_list_sessions
+#+begin_src zsh
+#!/usr/bin/env zsh
+
+tmux_list_sessions()
+{
+	if (( $#@ != 2 )); then
+		echo >&2 "Usage: $0 <USER> <HOST>"
+		return 1
+	fi
+	local user="${1}"
+	local host="${2}"
+
+	2>/dev/null ssh "${user}@${host}" tmux list-sessions | cut -d: -f1
+}
+#+end_src
+
+* Prompt
+
+** ~prompt_kody_setup~
+
+The "kody" prompt theme. [[id:9b76d360-8483-4449-b3a5-6c3678defc58][~.zshrc~]] calls this at startup, and [[id:af7d3c1d-058f-4b11-944b-284c14ef2b38::lib][~__l_prompt_tick~]] rebuilds the prompt every second using ~construct_prompt~.
+
+#+name: func-prompt-kody-setup
+#+header: :tangle zsh/func/prompt_kody_setup
+#+begin_src zsh
+#!/usr/bin/env zsh
+# "kody" prompt theme.
+
+# The zle-keymap-select and zle-line-finish functions are special widgets that
+# are empty by default. We use it to set the Vim-style "<I>" or "<N>" mode
+# indicators in the prompt. See "Special Widgets" in zshzle(1).
+zle-line-init zle-keymap-select() {
+	# After recalculating the indicator, rebuild the prompt before resetting it.
+	# Otherwise the prompt itself does not get re-built (it only gets re-printed
+	# using the old state).
+	set_zsh_keymap_indicator
+	construct_prompt
+	zle reset-prompt
+}
+# Create user-defined widgets.
+zle -N zle-line-init
+zle -N zle-keymap-select
+
+prompt_kody_setup()
+{
+	typeset -g prompt_newline
+	prompt_newline=$'\n%{\r%}'
+
+	# Run construct_prompt() after executing precmd().
+	add-zsh-hook precmd construct_prompt
+
+	# Make text typed in by the user be displayed as bold text.
+	zle_highlight[(r)default:*]="default:fg=default,bold"
+}
+
+# The chpwd(), preexec() and precmd() functions are specially recognized by Zsh.
+# Normally they are not defined and hence nothing happens.
+
+# preexec() is a hook function under "SPECIAL FUNCTIONS"; it is executed just
+# after a command has been read, but before it is executed.
+preexec() {
+	# We set the ran_something variable to TRUE to indicate that the user typed
+	# in a command to be executed.
+	global_ran_something=1
+}
+
+# precmd() is executed before each prompt.
+precmd()
+{
+	# Catch cases where we press C-c to stop execution (or if we just pressed
+	# ENTER after deleting the entire BUFFER); we want to treat such cases as
+	# non-error exits. So, if we did not run anything (preexec() did not get
+	# executed due to C-c), then assign global_exit_status as 0.
+	global_exit_status=$?
+	if ! (( $global_ran_something )); then
+		global_exit_status=0
+	fi
+	global_ran_something=0
+}
+
+set_zsh_keymap_indicator()
+{
+
+	case "${KEYMAP}" in
+	vicmd)
+		global_keymap_indicator="N"
+	;;
+	main|viins)
+		global_keymap_indicator="I"
+	;;
+	esac
+}
+
+# Python VirtualEnv info.
+get_venv_info()
+{
+	if [[ -n "${VIRTUAL_ENV}" ]]; then
+		echo "($(basename "${VIRTUAL_ENV}")) "
+	fi
+}
+
+get_day()
+{
+	local day=""
+	case $(date +%a) in
+		Mon) day+="月" ;;
+		Tue) day+="火" ;;
+		Wed) day+="水" ;;
+		Thu) day+="木" ;;
+		Fri) day+="金" ;;
+		Sat) day+="土" ;;
+		Sun) day+="日" ;;
+	esac
+	echo "${day}"
+}
+
+get_user_host()
+{
+	local prompt_hostname="%m"
+	local prompt_hostname_short="$([[ -f ~/.hostname-short ]] && cat ~/.hostname-short || hostname)"
+	if [[ -n "${prompt_hostname_short}" ]]; then
+		prompt_hostname="${prompt_hostname_short}"
+	fi
+	echo "%n@${prompt_hostname} "
+}
+
+get_exit_status()
+{
+	if (( $global_exit_status )); then
+		echo "%B%F{red}${global_exit_status}%f%b "
+	fi
+}
+
+get_melby_info()
+{
+	if ! HOST="$(cat ~/.hostname-short || hostname)" \
+		 MELBY_ZSH_KEYMAP_INDICATOR="${global_keymap_indicator}" \
+		 MELBY_LAST_CMD_EXIT_STATUS="${global_exit_status}" \
+		 MELBY_PATH_ALIASES_FILE="${HOME}/.zsh/path-aliases" \
+		 MELBY_DIR="${HOME}/.melby" \
+		 melbyc-rust --config ~/.melby/melby.lua view --shell-pid "$$" 2>/dev/null; then
+		cat <<EOF
+global_prompt_path_short="%B%F{cyan}$(~/syscfg/script/simplify_path.sh ${PWD})%f%b"
+global_prompt_git="$(gsts for_prompt)"
+MELBY_PS1=
+EOF
+	fi
+}
+
+# Set global variables used for prompt generation. This function is only
+# executed once. That is, even in cases where we press ESC to enter "Normal"
+# mode, we do _not_ call this function.
+set_globals()
+{
+	source <(get_melby_info)
+
+	# Arrays cannot be exported (this is true at least for Bash and Zsh). So we
+	# must consume it here.
+	local m
+	if (( $#MELBY_SHELL_MESSAGES != 0 )); then
+		# Pad some newlines to move past the " $ " PS1 substring.
+		echo
+		echo
+		for m in "${MELBY_SHELL_MESSAGES[@]}"; do
+			echo "${m}"
+		done
+		echo
+	fi
+
+	global_timestamp="%B%K{214}%F{16} %D{%d} $(get_day) %D{%H:%M:%S %Z} %f%k%b "
+	global_user_host="$(get_user_host)"
+	global_cmd_exit_status="$(get_exit_status)"
+	global_venv_info="$(get_venv_info)"
+}
+
+# The actual prompt. This does mostly pure string manipulation as all of the
+# data that we want to display has been calculated elsewhere (and set as global
+# variables).
+#
+# The use of global variables here is important because it allows us to avoid
+# recalculating costly bits. Practically speaking, we recalculate the keymap
+# indicator whenever the user enters or leaves vi mode ("Normal" mode), but we
+# do not recalculate the other globals.
+construct_prompt()
+{
+	set_globals
+
+	if [[ -n "${MELBY_PS1_LINE1:-}" ]]; then
+		if [[ -n "${MELBY_PS1_LINE2:-}" ]]; then
+			# We have to put the MELBY_PS1 value inside "%{..%}" because this
+			# tells Zsh to interpret the ANSI escape sequences inside the
+			# MELBY_PS1 variable. See
+			# https://stackoverflow.com/a/30581694/437583.
+			PS1="%{${MELBY_PS1_LINE1}%}${prompt_newline}%{${MELBY_PS1_LINE2}%}${prompt_newline} \$ "
+		else
+			PS1="%{${MELBY_PS1_LINE1}%}${prompt_newline} \$ "
+		fi
+		local prompt_line_2=" "
+	else
+		# Date, time, Zsh keymap indicator, exit code, Git, and VirtualEnv.
+		local prompt_line_1="${global_timestamp}<${global_keymap_indicator}> ${global_venv_info}${global_cmd_exit_status}${global_prompt_git}${global_user_host}${global_prompt_path_short}"
+
+		local prompt_line_2=" "
+
+		# PS1 -> what you see by default.
+		PS1="${prompt_line_1}${prompt_newline}${prompt_line_2}\$ "
+	fi
+
+	# PS2 -> what you see when you enter a multi-line shell command.
+	PS2="${prompt_line_2}..%_ > "
+	# PS3 -> what you see when you are given a selection option screen (e.g.,
+	# selecting a directory in the directory stack).
+	PS3="${prompt_line_2}?# "
+}
+
+prompt_kody_setup "$@"
+#+end_src
+
+* Miscellaneous
+
+** ~vertical_label~
+
+Print a command's output with a label running down its left edge. [[func-gd][~gd~]] uses this.
+
+#+name: func-vertical-label
+#+header: :tangle zsh/func/vertical_label
+#+begin_src zsh
+#!/usr/bin/env zsh
+
+vertical_label()
+{
+	c=$3
+	ce="\x1b[0m"
+	label=$2
+	i=1
+	# The `s/^/x/' marks each line's beginning with a non-whitespace character
+	# `x' so that when we pipe it to the `read' zsh builtin, we read all leading
+	# indentation as well (otherwise we lose it). The `s/\t/ /g' standardizes
+	# all tab characters to four spaces; this is purely for visual aesthetics.
+	eval $1 | sed  's/^/x/ ; s/\t/    /g ; s/%/%%%%/g' | while read -r line; do
+		case $label[$i] in
+		" ") printf "  " ;;
+		"-") printf " $c\u2503$ce" ;;
+		*) printf " $c$label[$i]$ce" ;;
+		esac
+		line_without_x=$line[2,-1]
+		printf "  ${line_without_x//\\/\\\\\\\\}\n"
+		((i+=1))
+		if (( i > $#label )); then
+			i=1
+		fi
+	done
+}
+#+end_src
+
+** ~color_cycle~
+
+Change the terminal's color theme, using ~script/terminal-themes~.
+
+#+name: func-color-cycle
+#+header: :tangle zsh/func/color_cycle
+#+begin_src zsh
+#!/usr/bin/env zsh
+
+color_cycle()
+{
+	local root_dir
+	local direction
+	local res
+
+	root_dir="$HOME/syscfg/script/terminal-themes"
+	direction=$1
+
+	source <("${root_dir}/change_theme.sh" "${direction}")
+}
+#+end_src
+
+** ~susp~
+
+Suspend the system, optionally after sleeping for some time.
+
+#+name: func-susp
+#+header: :tangle zsh/func/susp
+#+begin_src zsh
+#!/usr/bin/env zsh
+
+# susp() optionally sleeps for the given time amount, then suspends the system
+# using systemctl.
+
+susp()
+{
+	amt=$1
+	date # display system time before going into suspend
+	if [[ -n $amt ]]; then
+		echo "Sleeping for $amt before suspending..."
+		sleep $amt && sudo systemctl suspend
+	else
+		sudo systemctl suspend
+	fi
+}
+#+end_src
+
+** ~apt_cache_search~
+
+A shortcut for sorting and paging ~apt-cache search~ results.
+
+#+name: func-apt-cache-search
+#+header: :tangle zsh/func/apt_cache_search
+#+begin_src zsh
+#!/usr/bin/env zsh
+
+# apt_cache_search() is a shorcut for "apt-cache search PATTERN | sort | less".
+
+apt_cache_search()
+{
+	pattern=$1
+	if [[ -z "$pattern" ]]; then
+		echo "Need pattern argument"
+		return 1
+	fi
+	apt-cache search $pattern | sort | less
+}
+#+end_src

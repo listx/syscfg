@@ -1,0 +1,143 @@
+:PROPERTIES:
+:ID:       4ef05c5a-117f-4b9c-8bee-dc1eaae8efc7
+:END:
+#+title: Zsh
+
+#+name: index
+#+begin_src txt
+zshrc.org
+lib.org
+func.org
+#+end_src
+
+* Overview
+
+Zsh is our personal shell. Most of its configuration is in [[id:9b76d360-8483-4449-b3a5-6c3678defc58][~.zshrc~]], which relies on
+the helpers in [[id:af7d3c1d-058f-4b11-944b-284c14ef2b38][~lib.sh~]] and the autoloaded functions in [[id:fd0afd0c-d608-4ad5-83ff-6a080a62bc66][~func/~]].
+
+Zsh reads its configuration files in this order:
+
+  1) ~/etc/zshenv~
+
+  2) [[zshenv][~\~/.zshenv~]]
+
+  3) (if login shell) ~/etc/zprofile~
+
+  4) (if login shell) ~\~/.zprofile~
+
+  5) (if interactive) ~/etc/zshrc~
+
+  6) (if interactive) [[id:9b76d360-8483-4449-b3a5-6c3678defc58][~\~/.zshrc~]]
+
+  7) (if login shell) ~/etc/zlogin~
+
+  8) (if login shell) ~\~/.zlogin~
+
+The smaller files that we manage are below.
+
+* ~.zshenv~
+
+Every Zsh instance reads this file, so it sets the baseline environment: our Org
+agenda directories, the Nix profile on the ~PATH~, ~TERM~ for each host, and
+~XDG_CONFIG_HOME~. Individual machines can adjust these values further in
+~\~/.zprofile~.
+
+#+name: zshenv
+#+header: :tangle zsh/.zshenv
+#+begin_src zsh
+# Default (personal) values. Use these as a baseline, and modify further in
+# ~/.zprofile depending on the machine as necessary.
+
+. $HOME/.zsh/lib.sh
+
+# Space-delimited list of directories to use for setting org-agenda-files. All
+# *.org files in these directories are included, recursively.
+export L_ORG_AGENDA_DIRS="$HOME/lo"
+# Space-delimited list of exclusion patterns to remove files from
+# org-agenda-files.
+export L_ORG_AGENDA_EXCLUDE_PATTERNS="
+	$HOME/lo/archived/
+	$HOME/lo/plan.org
+	$HOME/lo/note.org
+	$HOME/lo/note/chart.org
+	$HOME/lo/note/snippets.org
+"
+
+__l_prepend_path ~/.nix-profile/bin
+
+case "$(hostname)" in
+	w0) export TERM=xterm-24bit  ;;
+	*) export TERM=wezterm ;;
+esac
+
+# Let emacs and other applications know that our terminal supports 24-bit colors.
+export COLORTERM=truecolor
+
+# Tell clojure CLI to look into ~/.config/clojure to look for cross-project
+# configuration files.
+if [[ -z "${XDG_CONFIG_HOME:-}" ]]; then
+	export XDG_CONFIG_HOME="$HOME/.config"
+fi
+#+end_src
+
+* Machine-specific profiles
+
+The ~zsh~ [[id:bbe0ff18-1b29-4f04-b2a6-5f3d7b003eb5][Makefile]] rule links one of these to ~\~/.zprofile~, depending on the
+machine.
+
+On ~macp~, we have to set the locale and fix up the ~PATH~ after the system's
+~/etc/zprofile~ reorders it, and then load Nix.
+
+#+name: zprofile-macp
+#+header: :tangle zsh/zprofile-macp
+#+begin_src zsh
+# Allow both chinese characters (in our prompt) and also the UTF-8 geometric
+# character set we use for displaying our git prompts. If we don't do this,
+# these characters don't get displayed correctly.
+export LANG=en_US.UTF-8
+
+# We need to do this because /etc/zprofile (read in just before this file)
+# changes the order of PATH directories, because it calls out to
+# /usr/libexec/path_helper, putting the ~/.nix-profile/bin folder _after_ the
+# other standard locations, which is NOT what we want.
+__l_prepend_path $HOME/.nix-profile/bin
+
+# Load Nix stuff. For some reason, we have to do this on macp after the Monterey
+#  12.5 update. Otherwise the "nix" command just doesn't get found.
+if [ -e '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh' ]; then
+  . '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh'
+fi
+#+end_src
+
+On ~w0~ (NixOS on WSL), the shell starts outside of our home directory, so we move
+back into it.
+
+#+name: zprofile-w0
+#+header: :tangle zsh/zprofile-w0
+#+begin_src zsh
+# In w0 (wsl -d NixOS) we start out at /mnt/c/Users/ingra so we have to move
+# back into our home folder.
+cd
+#+end_src
+
+* Directory aliases
+
+These named directories let us write things like ~\~s~ for this repo. [[id:9b76d360-8483-4449-b3a5-6c3678defc58][~.zshrc~]]
+sources this file, and [[id:af7d3c1d-058f-4b11-944b-284c14ef2b38::lib][~__l_accept_line~]] also uses these names for its
+~d.<alias>~ shorthand.
+
+#+name: path-aliases
+#+header: :tangle zsh/path-aliases
+#+begin_src zsh
+# To sort on expanded paths, first separate the expanded paths into their own
+# column (as the 4th whitespace-delimited column of text), then sort with `C-u 4
+# M-x sort-fields'.
+
+hash -d  l=${HOME}/lo
+hash -d  s=${HOME}/syscfg
+hash -d  g=${HOME}/prog/git
+hash -d  m=${HOME}/prog/melby
+
+hash -d nixp=${HOME}/.nix-profile
+hash -d nix=/nix/var/nix
+#+end_src
