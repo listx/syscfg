@@ -8,7 +8,13 @@ commented out.
 
 * Default configuration
 
-The ~rtorrent~ [[id:bbe0ff18-1b29-4f04-b2a6-5f3d7b003eb5][Makefile]] rule links this to ~\~/.rtorrent.rc~.
+The ~rtorrent~ [[Makefile-rtorrent][Makefile rule]] links this to ~\~/.rtorrent.rc~.
+
+#+name: Makefile-rtorrent
+#+begin_src makefile
+rtorrent:
+	ln -fs ${C}/rtorrent/cfg ${H}/.rtorrent.rc
+#+end_src
 
 #+name: rtorrent-cfg
 #+header: :tangle rtorrent/cfg
@@ -102,7 +108,7 @@ schedule = untied_directory,5,5,stop_untied=
 * ~k1~ configuration
 
 This variant has a much lower upload rate, closes torrents when disk space is low,
-and removes torrents once they reach a seeding ratio. The [[id:bbe0ff18-1b29-4f04-b2a6-5f3d7b003eb5][Makefile]] rule doesn't link
+and removes torrents once they reach a seeding ratio. The [[Makefile-rtorrent][Makefile rule]] doesn't link
 this one, so we have to do that by hand.
 
 #+name: rtorrent-cfg-k1

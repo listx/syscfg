@@ -3,7 +3,7 @@
 :END:
 #+title: X.Org
 
-These are configuration snippets for the X server. No [[id:bbe0ff18-1b29-4f04-b2a6-5f3d7b003eb5][Makefile]] rule installs them,
+These are configuration snippets for the X server. No [[id:bbe0ff18-1b29-4f04-b2a6-5f3d7b003eb5::Makefile][Makefile]] rule installs them,
 so we copy the ones that a machine needs by hand. The ~k0~ machine's own X
 configuration is in [[id:82cbef73-61b9-43e7-9df6-7b2771000733::nixos/k0/xorg.conf][~doc/nix.org~]].
 

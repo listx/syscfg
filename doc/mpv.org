@@ -5,8 +5,21 @@
 
 * Settings
 
-The ~mpv~ [[id:bbe0ff18-1b29-4f04-b2a6-5f3d7b003eb5][Makefile]] rule links one of these to ~mpv/mpv.conf~, depending on the host
+The ~mpv~ [[Makefile-mpv][Makefile rule]] links one of these to ~mpv/mpv.conf~, depending on the host
 and operating system. They all loop playlists and prefer English subtitles.
+
+#+name: Makefile-mpv
+#+begin_src makefile
+mpv:
+	ln -fns ${C}/mpv ${H}/.config/mpv
+ifeq ('${T}','k0')
+	ln -fs mpv.${T}.conf mpv/mpv.conf
+else ifeq ('${P}','Darwin')
+	ln -fs mpv.osx.conf mpv/mpv.conf
+else
+	ln -fs mpv.linux.conf mpv/mpv.conf
+endif
+#+end_src
 
 On ~k0~, we also ask for hardware decoding and the ~gpu~ video output.
 

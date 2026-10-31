@@ -6,23 +6,23 @@
 Both [[id:4ef05c5a-117f-4b9c-8bee-dc1eaae8efc7::zshenv][~.zshenv~]] and [[id:9b76d360-8483-4449-b3a5-6c3678defc58][~.zshrc~]] source this file, so that its functions are available
 early on. Functions with the ~__l_~ prefix are internal helpers. They cover
 
-  - redrawing the prompt every second (~__l_prompt_tick~),
+  - redrawing the prompt every second ([[lib-prompt-tick][~__l_prompt_tick~]]),
 
-  - the ~d.<alias>~ shorthand for [[id:4ef05c5a-117f-4b9c-8bee-dc1eaae8efc7::path-aliases][named directories]] (~__l_accept_line~),
+  - the [[lib-accept-line][~d.<alias>~ shorthand]] for [[id:4ef05c5a-117f-4b9c-8bee-dc1eaae8efc7::path-aliases][named directories]] (~__l_accept_line~),
 
-  - pulling mistyped commands back out of the history (~__l_command_not_found~),
+  - pulling mistyped commands back out of the history ([[lib-command-not-found][~__l_command_not_found~]]),
 
-  - lazily loading ~kubectl~ completions (~__l_lazy_load_completions~),
+  - lazily loading ~kubectl~ completions ([[lib-lazy-load-completions][~__l_lazy_load_completions~]]),
 
   - picking a ~tmux~ session name, reusing the smallest free number
-    (~__l_tmux_command~),
+    ([[lib-tmux-command][~__l_tmux_command~]]),
 
-  - managing the ~PATH~ without duplicates (~__l_prepend_path~), and
+  - managing the ~PATH~ without duplicates ([[lib-prepend-path][~__l_prepend_path~]]), and
 
   - yanking to the system clipboard from Vim mode
-    (~__l_vi_yank_system_clipboard~).
+    ([[lib-vi-yank-system-clipboard][~__l_vi_yank_system_clipboard~]]).
 
-The function ~t~ is the exception to the prefix: it's a command that we run
+The function [[lib-t][~t~]] is the exception to the prefix: it's a command that we run
 directly to start a new ~tmux~ session and switch to it, without nesting.
 
 #+name: lib
@@ -30,6 +30,27 @@ directly to start a new ~tmux~ session and switch to it, without nesting.
 #+begin_src zsh
 #!/usr/bin/env zsh
 
+<<lib-prompt-tick>>
+<<lib-accept-line>>
+<<lib-command-not-found>>
+<<lib-maybe-load-completions>>
+<<lib-lazy-load-completions>>
+<<lib-is-ssh-connection>>
+<<lib-get-hostname>>
+<<lib-get-tmux-sessions>>
+<<lib-get-tmux-sessions-attached>>
+<<lib-find-free-tmux-session-id>>
+<<lib-new-tmux-session-command>>
+<<lib-tmux-command>>
+<<lib-prepend-path>>
+<<lib-t>>
+<<lib-vi-yank-system-clipboard>>
+#+end_src
+
+* ~__l_prompt_tick~
+
+#+name: lib-prompt-tick
+#+begin_src zsh
 # Don't redraw the prompt if we are in the middle of a completion widget. See
 # https://stackoverflow.com/a/30456173/437583.
 __l_prompt_tick ()
@@ -64,7 +85,12 @@ __l_prompt_tick ()
   construct_prompt
   zle reset-prompt
 }
+#+end_src
 
+* ~__l_accept_line~
+
+#+name: lib-accept-line
+#+begin_src zsh
 # Wrap around default accept-line zle widget in order to do special handling of
 # `d.<aliased_directory>', where `<aliased_directory' comes from
 # ~/zsh/path-aliases. See https://stackoverflow.com/a/28101424.
@@ -87,7 +113,12 @@ __l_accept_line () {
   # Call original `accept-line' widget by prepending the leading period.
   zle .accept-line
 }
+#+end_src
 
+* ~__l_command_not_found~
+
+#+name: lib-command-not-found
+#+begin_src zsh
 __l_command_not_found () {
   # $global_exit_status is set by the prompt. If we simply use "$?" as the variable
   # to check, unfortunately it does not get cleared when we (1) invoke an
@@ -97,7 +128,12 @@ __l_command_not_found () {
     hist -fs f -1 || echo "\`hist' is not installed"
   fi
 }
+#+end_src
 
+* ~__l_maybe_load_completions_and_autocorrect~
+
+#+name: lib-maybe-load-completions
+#+begin_src zsh
 __l_maybe_load_completions_and_autocorrect()
 {
   # Remove leading whitespace from BUFFER, to catch cases where we enter some
@@ -161,7 +197,12 @@ __l_maybe_load_completions_and_autocorrect()
     ;;
   esac
 }
+#+end_src
 
+* ~__l_lazy_load_completions~
+
+#+name: lib-lazy-load-completions
+#+begin_src zsh
 __l_lazy_load_completions()
 {
   __l_maybe_load_completions_and_autocorrect
@@ -183,7 +224,12 @@ __l_lazy_load_completions()
     ;;
   esac
 }
+#+end_src
 
+* ~__l_is_ssh_connection~
+
+#+name: lib-is-ssh-connection
+#+begin_src zsh
 # Check if the current shell session is an SSH session (a remote session).
 __l_is_ssh_connection()
 {
@@ -197,7 +243,12 @@ __l_is_ssh_connection()
 
   return 1
 }
+#+end_src
 
+* ~__l_get_hostname~
+
+#+name: lib-get-hostname
+#+begin_src zsh
 # Grab hostname. If we're using our own home-grown convention of using
 # ~/.hostname-short as a shorter hostname alias for scripting, use that instead
 # if it is available.
@@ -212,7 +263,12 @@ __l_get_hostname()
 
   echo "${_hostname}"
 }
+#+end_src
 
+* ~__l_get_tmux_sessions~
+
+#+name: lib-get-tmux-sessions
+#+begin_src zsh
 __l_get_tmux_sessions()
 {
   local _hostname
@@ -224,7 +280,12 @@ __l_get_tmux_sessions()
     | grep "^${_hostname}-[0-9]\+\$" \
     | sort
 }
+#+end_src
 
+* ~__l_get_tmux_sessions_attached~
+
+#+name: lib-get-tmux-sessions-attached
+#+begin_src zsh
 __l_get_tmux_sessions_attached()
 {
   local _hostname
@@ -236,7 +297,12 @@ __l_get_tmux_sessions_attached()
     | grep "^${_hostname}-[0-9]\+\$" \
     | sort
 }
+#+end_src
 
+* ~__l_find_free_tmux_session_id~
+
+#+name: lib-find-free-tmux-session-id
+#+begin_src zsh
 # Return the smallest free available session ID for tmux, using the template
 # <HOSTNAME>-<NUMBER>. This is the "parking lot" problem described at
 # https://funloop.org/post/2016-09-24-parking-lot-problem-revisited.html.
@@ -272,7 +338,12 @@ __l_find_free_tmux_session_id()
 
   echo "${desired_id}"
 }
+#+end_src
 
+* ~__l_new_tmux_session_command~
+
+#+name: lib-new-tmux-session-command
+#+begin_src zsh
 __l_new_tmux_session_command()
 {
   local _hostname
@@ -283,7 +354,12 @@ __l_new_tmux_session_command()
 
   echo "tmux new-session -A -s ${_hostname}-${desired_id}"
 }
+#+end_src
 
+* ~__l_tmux_command~
+
+#+name: lib-tmux-command
+#+begin_src zsh
 # Invoke tmux, but find the smallest free number among the existing session
 # names, and use that. This avoids having always-increasing session numbers,
 # which can get out of hand if we're invoking tmux many times on a machine
@@ -326,7 +402,12 @@ __l_tmux_command()
   desired_id="$(__l_find_free_tmux_session_id "${_hostname}")"
   __l_new_tmux_session_command "${_hostname}" "${desired_id}"
 }
+#+end_src
 
+* ~__l_prepend_path~
+
+#+name: lib-prepend-path
+#+begin_src zsh
 # Use this to avoid putting in duplicate entries into the $PATH. This can happen
 # if you log in with zsh as your login shell (resulting in reading ~/.zshrc),
 # and then invoke tmux (which itself invokes zsh again, as a login shell). This
@@ -354,7 +435,12 @@ __l_prepend_path()
 
   export PATH=${dir}:$PATH
 }
+#+end_src
 
+* ~t~
+
+#+name: lib-t
+#+begin_src zsh
 # Start a new tmux session in the background, then switch to it. Note that this
 # is different than using `tmux attach-session ...` because we do *NOT* start a
 # nested tmux session.
@@ -371,7 +457,12 @@ t()
   tmux new-session -d -s "${session_id}"
   tmux switch-client -t "${session_id}"
 }
+#+end_src
 
+* ~__l_vi_yank_system_clipboard~
+
+#+name: lib-vi-yank-system-clipboard
+#+begin_src zsh
 # Yank to the system clipboard.
 __l_vi_yank_system_clipboard() {
   # Execute the normal copying widget to copy to Zsh's own register.

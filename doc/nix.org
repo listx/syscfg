@@ -1008,9 +1008,15 @@ in {
 
 * ~nix.conf~
 
-The ~nix~ [[id:bbe0ff18-1b29-4f04-b2a6-5f3d7b003eb5][Makefile]] rule links ~nix/~ to ~\~/.config/nix~, which is where Nix reads this
+The ~nix~ [[Makefile-nix][Makefile rule]] links ~nix/~ to ~\~/.config/nix~, which is where Nix reads this
 file from. It enables the ~nix-command~ and ~flakes~ experimental features, and adds
 our binary caches and their public keys.
+
+#+name: Makefile-nix
+#+begin_src makefile
+nix:
+	ln -fns ${C}/nix ${H}/.config/nix
+#+end_src
 
 #+name: nix.conf
 #+header: :tangle nix/nix.conf

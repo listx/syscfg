@@ -150,6 +150,7 @@ clean:
 
 ** Makefile for installing dotfiles
 
+#+name: Makefile
 #+header: :tangle Makefile
 #+begin_src makefile
 # Configuration directory.
@@ -171,9 +172,7 @@ S := $(shell cat ${H}/.hostname-short)
 <<id:00a0db98-5605-4c05-886f-e85d3b2f2d65::Makefile-claude>>
 <<id:1a89ad75-4234-4fa9-93d0-27c62d220502::Makefile-emacs>>
 <<id:5a8a24bf-db01-4cf7-8985-e34f86f58ce3::Makefile-git>>
-gpg:
-	ln -fns ${C}/gpg ${H}/.gnupg
-	ln -fs ${C}/gpg/gpg-agent.nixos.conf ${H}/.gnupg/gpg-agent.conf
+<<id:19751576-5ebe-4f2b-bcea-22d6054f6f99::Makefile-gpg>>
 jj:
 	ln -fns ${C}/jj ${H}/.config/jj
 jjui:
@@ -181,9 +180,7 @@ jjui:
 karabiner:
 	mkdir -p ${H}/.config/karabiner
 	ln -fns ${C}/karabiner/karabiner.json ${H}/.config/karabiner
-lesskey:
-	ln -fs ${C}/lesskey/cfg ${H}/.lesskey
-	lesskey
+<<id:adcc2f40-1a86-47f4-a22b-73968a118745::Makefile-lesskey>>
 melby:
 	ln -fns ${C}/melby ${H}/.melby
 	set -e && \
@@ -191,17 +188,8 @@ melby:
 		cp -f $${melby_location%/bin/melbyd}/share/melby/sample/* ${H}/.melby
 mpd:
 	ln -fns ${C}/mpd ${H}/.config/mpd
-mpv:
-	ln -fns ${C}/mpv ${H}/.config/mpv
-ifeq ('${T}','k0')
-	ln -fs mpv.${T}.conf mpv/mpv.conf
-else ifeq ('${P}','Darwin')
-	ln -fs mpv.osx.conf mpv/mpv.conf
-else
-	ln -fs mpv.linux.conf mpv/mpv.conf
-endif
-nix:
-	ln -fns ${C}/nix ${H}/.config/nix
+<<id:fc99f714-9086-48fe-826b-24a27e996713::Makefile-mpv>>
+<<id:82cbef73-61b9-43e7-9df6-7b2771000733::Makefile-nix>>
 nixos:
 ifeq ('${T}','w0')
 	ln -fs ${C}/nixos/${T}/configuration.nix /etc/nixos
@@ -220,46 +208,22 @@ notmuch:
 	ln -fs ${C}/notmuch/notmuch-config ${H}/.notmuch-config
 nvim:
 	ln -fns ${C}/nvim ${H}/.config/nvim
-pulse:
-	rm -rf ${H}/.config/pulse
-	rm -rf ${H}/.pulse
-	mkdir -p ${H}/.config/pulse
-	mkdir ${H}/.pulse
-ifeq ('${T}','k0')
-	cp ${C}/pulse/daemon.conf.k0 ${H}/.config/pulse/daemon.conf
-	cp ${C}/pulse/default.pa.k0 ${H}/.pulse/default.pa
-else
-	cp ${C}/pulse/default.pa ${H}/.pulse/default.pa
-endif
+<<id:adcc2f40-1a86-47f4-a22b-73968a118745::Makefile-pulse>>
 qutebrowser:
 ifeq ('${P}','Darwin')
 	ln -fns ${C}/qutebrowser ${H}/.qutebrowser
 else
 	ln -fns ${C}/qutebrowser ${H}/.config
 endif
-rtorrent:
-	ln -fs ${C}/rtorrent/cfg ${H}/.rtorrent.rc
-ssh:
-ifeq ($(wildcard ~/.ssh/.),)
-	ln -fns ${C}/ssh ${H}/.ssh
-endif
-	ln -fs ${C}/ssh/config.home.conf ${H}/.ssh/config
-terminfo:
-	git -C ${C} submodule update --init ${C}/wezterm/upstream
-	tic -x -o ~/.terminfo ${C}/wezterm/upstream/termwiz/data/wezterm.terminfo
-	tic -x -o ~/.terminfo ${C}/terminfo/xterm-24bit.terminfo
+<<id:93b46542-466b-420f-8b50-df7fa4dbf413::Makefile-rtorrent>>
+<<id:adcc2f40-1a86-47f4-a22b-73968a118745::Makefile-ssh>>
+<<id:adcc2f40-1a86-47f4-a22b-73968a118745::Makefile-terminfo>>
 tig:
 	ln -fs ${C}/tig/.tigrc ${H}
 tmux:
 	ln -fs ${C}/tmux/.tmux.conf ${H}/.tmux.conf
 	ln -fns ${C}/tmux ${H}/.tmux
-uim:
-	ln -fns ${C}/uim/.uim ${H}/.uim
-	ln -fns ${C}/uim ${H}/.uim.d
-vim:
-	ln -fns ${C}/vim ${H}/.vim
-	ln -fs ${C}/vim/cfg ${H}/.vimrc
-	ln -fs ${C}/vim/cfg ${H}/.gvimrc
+<<id:adcc2f40-1a86-47f4-a22b-73968a118745::Makefile-uim>>
 vimpc:
 	ln -fs ${C}/vimpc/.vimpcrc ${H}
 wezterm:
@@ -271,20 +235,7 @@ xmonad:
 	ln -fs ${C}/xmonad/.xsession ${H}/.xsession
 zathura:
 	ln -fns ${C}/zathura ${H}/.config/zathura
-zsh:
-	ln -fns ${C}/zsh ${H}/.zsh
-	ln -fs ${C}/zsh/.zshenv ${H}
-	ln -fs ${C}/zsh/.zshrc ${H}
-	test -f ${C}/zsh/zprofile-${T} \
-		&& ln -fs ${C}/zsh/zprofile-${T} ${H}/.zprofile || true
-	test -f ${C}/zsh/zprofile-${S} \
-		&& ln -fs ${C}/zsh/zprofile-${S} ${H}/.zprofile || true
-	test -f ${C}/zsh/zlogin-${T} \
-		&& ln -fs ${C}/zsh/zlogin-${T} ${H}/.zlogin || true
-	mkdir -p ${H}/.zsh-untracked
-	git -C ${C} submodule update --init ${C}/zsh/zcomet-upstream
-	mkdir -p ${C}/zsh/zcomet
-	ln -fns ${C}/zsh/zcomet ${H}/.zcomet
+<<id:4ef05c5a-117f-4b9c-8bee-dc1eaae8efc7::Makefile-zsh>>
 
 .PHONY: \
 	bash \
@@ -807,6 +758,7 @@ zsh/zcomet-upstream
 
 ** EditorConfig
 
+#+name: editorconfig
 #+header: :tangle .editorconfig
 #+begin_src txt
 root = true

@@ -10,7 +10,7 @@ Zsh reads this file for every interactive shell. From top to bottom, it
 
   - autoloads our [[id:fd0afd0c-d608-4ad5-83ff-6a080a62bc66][~func/~]] functions and sets history, completion, and globbing options,
 
-  - defines our aliases,
+  - defines our [[zshrc-aliases][aliases]],
 
   - sets up Vim-style key bindings and the [[id:fd0afd0c-d608-4ad5-83ff-6a080a62bc66::func-prompt-kody-setup]["kody" prompt]],
 
@@ -21,10 +21,19 @@ Zsh reads this file for every interactive shell. From top to bottom, it
 
 A few of the ~bindkey~ lines and their comments contain raw ~ESC~ and carriage
 return bytes, which means that this Org file has them too. So both this file and
-[[zshrc][~zsh/.zshrc~]] have an ~end_of_line~ exception in [[id:bbe0ff18-1b29-4f04-b2a6-5f3d7b003eb5][~.editorconfig~]].
+[[zshrc][~zsh/.zshrc~]] have an ~end_of_line~ exception in [[id:bbe0ff18-1b29-4f04-b2a6-5f3d7b003eb5::editorconfig][~.editorconfig~]].
 
 #+name: zshrc
 #+header: :tangle zsh/.zshrc
+#+begin_src zsh
+<<zshrc-setup>>
+<<zshrc-aliases>>
+<<zshrc-bindings-and-plugins>>
+#+end_src
+
+* Environment and shell options
+
+#+name: zshrc-setup
 #+begin_src zsh
 # ZSH configuration.
 #
@@ -205,7 +214,12 @@ setopt extendedglob
 # used.
 stty stop undef
 stty start undef
+#+end_src
 
+* Aliases
+
+#+name: zshrc-aliases
+#+begin_src zsh
 # make 'ds' prompt the user to select a dir from the dir stack, instead of just listing the dir stick
 # with a plain 'dirs -v'
 # NOTE: 'cd +$n' makes it go to the number listed, whereas 'cd -$n' reverses it... don't know why
@@ -350,7 +364,12 @@ alias reset_swap='free && sudo swapoff -a && sudo swapon -a && free'
 # encoding/decoding
 alias rgmp3='~/syscfg/script/audio/replaygain/mp3/tmwrg.sh'
 alias rgflac='~/syscfg/script/audio/replaygain/flac/tfwrg.sh'
+#+end_src
 
+* Key bindings, prompt, and plugins
+
+#+name: zshrc-bindings-and-plugins
+#+begin_src zsh
 # Add commonly-used paths into the named directory hash table.
 . ~/.zsh/path-aliases
 zle -N accept-line __l_accept_line

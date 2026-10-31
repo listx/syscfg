@@ -23,7 +23,7 @@ Zsh reads its configuration files in this order:
 
   3) (if login shell) ~/etc/zprofile~
 
-  4) (if login shell) ~\~/.zprofile~
+  4) (if login shell) [[id:385b8ce5-c7d4-46d1-ad13-1d78005507dd][~\~/.zprofile~]]
 
   5) (if interactive) ~/etc/zshrc~
 
@@ -40,7 +40,7 @@ The smaller files that we manage are below.
 Every Zsh instance reads this file, so it sets the baseline environment: our Org
 agenda directories, the Nix profile on the ~PATH~, ~TERM~ for each host, and
 ~XDG_CONFIG_HOME~. Individual machines can adjust these values further in
-~\~/.zprofile~.
+[[id:385b8ce5-c7d4-46d1-ad13-1d78005507dd][~\~/.zprofile~]].
 
 #+name: zshenv
 #+header: :tangle zsh/.zshenv
@@ -81,9 +81,30 @@ fi
 #+end_src
 
 * Machine-specific profiles
+:PROPERTIES:
+:ID:       385b8ce5-c7d4-46d1-ad13-1d78005507dd
+:END:
 
-The ~zsh~ [[id:bbe0ff18-1b29-4f04-b2a6-5f3d7b003eb5][Makefile]] rule links one of these to ~\~/.zprofile~, depending on the
+The ~zsh~ [[Makefile-zsh][Makefile rule]] links one of these to ~\~/.zprofile~, depending on the
 machine.
+
+#+name: Makefile-zsh
+#+begin_src makefile
+zsh:
+	ln -fns ${C}/zsh ${H}/.zsh
+	ln -fs ${C}/zsh/.zshenv ${H}
+	ln -fs ${C}/zsh/.zshrc ${H}
+	test -f ${C}/zsh/zprofile-${T} \
+		&& ln -fs ${C}/zsh/zprofile-${T} ${H}/.zprofile || true
+	test -f ${C}/zsh/zprofile-${S} \
+		&& ln -fs ${C}/zsh/zprofile-${S} ${H}/.zprofile || true
+	test -f ${C}/zsh/zlogin-${T} \
+		&& ln -fs ${C}/zsh/zlogin-${T} ${H}/.zlogin || true
+	mkdir -p ${H}/.zsh-untracked
+	git -C ${C} submodule update --init ${C}/zsh/zcomet-upstream
+	mkdir -p ${C}/zsh/zcomet
+	ln -fns ${C}/zsh/zcomet ${H}/.zcomet
+#+end_src
 
 On ~macp~, we have to set the locale and fix up the ~PATH~ after the system's
 ~/etc/zprofile~ reorders it, and then load Nix.
@@ -123,7 +144,7 @@ cd
 * Directory aliases
 
 These named directories let us write things like ~\~s~ for this repo. [[id:9b76d360-8483-4449-b3a5-6c3678defc58][~.zshrc~]]
-sources this file, and [[id:af7d3c1d-058f-4b11-944b-284c14ef2b38::lib][~__l_accept_line~]] also uses these names for its
+sources this file, and [[id:af7d3c1d-058f-4b11-944b-284c14ef2b38::lib-accept-line][~__l_accept_line~]] also uses these names for its
 ~d.<alias>~ shorthand.
 
 #+name: path-aliases

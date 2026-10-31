@@ -19,9 +19,16 @@ The colors for ~jjui~, our terminal interface to Jujutsu.
 
 * less
 
-The ~lesskey~ [[id:bbe0ff18-1b29-4f04-b2a6-5f3d7b003eb5][Makefile]] rule links this to ~\~/.lesskey~ and runs ~lesskey~ on it. This
+The ~lesskey~ [[Makefile-lesskey][Makefile rule]] links this to ~\~/.lesskey~ and runs ~lesskey~ on it. This
 sets up the backspace and delete keys, along with the default options in ~LESS~,
 which the comments below explain.
+
+#+name: Makefile-lesskey
+#+begin_src makefile
+lesskey:
+	ln -fs ${C}/lesskey/cfg ${H}/.lesskey
+	lesskey
+#+end_src
 
 #+name: lesskey
 #+header: :tangle lesskey/cfg
@@ -116,8 +123,23 @@ replaygain          "track"
 
 * PulseAudio
 
-The ~pulse~ [[id:bbe0ff18-1b29-4f04-b2a6-5f3d7b003eb5][Makefile]] rule copies these into place. The ~k0~ machine gets its own
+The ~pulse~ [[Makefile-pulse][Makefile rule]] copies these into place. The ~k0~ machine gets its own
 versions, with a higher quality sample format and rate, and a default sink.
+
+#+name: Makefile-pulse
+#+begin_src makefile
+pulse:
+	rm -rf ${H}/.config/pulse
+	rm -rf ${H}/.pulse
+	mkdir -p ${H}/.config/pulse
+	mkdir ${H}/.pulse
+ifeq ('${T}','k0')
+	cp ${C}/pulse/daemon.conf.k0 ${H}/.config/pulse/daemon.conf
+	cp ${C}/pulse/default.pa.k0 ${H}/.pulse/default.pa
+else
+	cp ${C}/pulse/default.pa ${H}/.pulse/default.pa
+endif
+#+end_src
 
 #+name: pulse-default.pa
 #+header: :tangle pulse/default.pa
@@ -144,9 +166,18 @@ default-sample-rate = 192000
 
 * SSH
 
-The ~ssh~ [[id:bbe0ff18-1b29-4f04-b2a6-5f3d7b003eb5][Makefile]] rule links this to ~\~/.ssh/config~. This keeps connections alive,
+The ~ssh~ [[Makefile-ssh][Makefile rule]] links this to ~\~/.ssh/config~. This keeps connections alive,
 forwards our agent to machines on the home network, and picks the key to use for
 GitHub and SourceHut.
+
+#+name: Makefile-ssh
+#+begin_src makefile
+ssh:
+ifeq ($(wildcard ~/.ssh/.),)
+	ln -fns ${C}/ssh ${H}/.ssh
+endif
+	ln -fs ${C}/ssh/config.home.conf ${H}/.ssh/config
+#+end_src
 
 #+name: ssh-config
 #+header: :tangle ssh/config.home.conf
@@ -171,8 +202,16 @@ Host *.builds.sr.ht
 * terminfo
 
 This defines the ~xterm-24bit~ terminal type, for 24-bit color and italics. The
-~terminfo~ [[id:bbe0ff18-1b29-4f04-b2a6-5f3d7b003eb5][Makefile]] rule compiles it with ~tic~, and [[id:4ef05c5a-117f-4b9c-8bee-dc1eaae8efc7::zshenv][~.zshenv~]] sets this as our ~TERM~
+~terminfo~ [[Makefile-terminfo][Makefile rule]] compiles it with ~tic~, and [[id:4ef05c5a-117f-4b9c-8bee-dc1eaae8efc7::zshenv][~.zshenv~]] sets this as our ~TERM~
 on ~w0~.
+
+#+name: Makefile-terminfo
+#+begin_src makefile
+terminfo:
+	git -C ${C} submodule update --init ${C}/wezterm/upstream
+	tic -x -o ~/.terminfo ${C}/wezterm/upstream/termwiz/data/wezterm.terminfo
+	tic -x -o ~/.terminfo ${C}/terminfo/xterm-24bit.terminfo
+#+end_src
 
 #+name: xterm-24bit
 #+header: :tangle terminfo/xterm-24bit.terminfo
@@ -247,9 +286,17 @@ set font "CommitMono 9"
 
 * uim
 
-The ~uim~ [[id:bbe0ff18-1b29-4f04-b2a6-5f3d7b003eb5][Makefile]] rule links this to ~\~/.uim~. It defines a custom Hangul layout for
+The ~uim~ [[Makefile-uim][Makefile rule]] links this to ~\~/.uim~. It defines a custom Hangul layout for
 the ~byeoru~ input method. The settings that uim saves automatically are in
 ~uim/customs~, which we don't manage here.
+
+#+name: Makefile-uim
+#+begin_src makefile
+uim:
+	ln -fns ${C}/uim/.uim ${H}/.uim
+	ln -fns ${C}/uim ${H}/.uim.d
+<<id:e81c2418-3063-42a3-9769-959af3ecdae8::Makefile-vim>>
+#+end_src
 
 #+name: uim
 #+header: :tangle uim/.uim

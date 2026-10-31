@@ -11,7 +11,7 @@ first use it. Files that start with an underscore are completion functions.
 
 ** ~f~
 
-A front end to the search functions below. The ~ff~, ~ft~, and ~fp~ family of aliases in [[id:9b76d360-8483-4449-b3a5-6c3678defc58][~.zshrc~]] call it.
+A front end to the search functions below. The ~ff~, ~ft~, and ~fp~ family of [[id:9b76d360-8483-4449-b3a5-6c3678defc58::zshrc-aliases][aliases]] in ~.zshrc~ call it.
 
 #+name: func-f
 #+header: :tangle zsh/func/f
@@ -300,7 +300,7 @@ find_long_lines() {
 
 ** ~univ_open~
 
-Open a file with a suitable program, or list a directory if given one. The ~d~ [[id:9b76d360-8483-4449-b3a5-6c3678defc58][alias]] calls this.
+Open a file with a suitable program, or list a directory if given one. The ~d~ [[id:9b76d360-8483-4449-b3a5-6c3678defc58::zshrc-aliases][alias]] calls this.
 
 #+name: func-univ-open
 #+header: :tangle zsh/func/univ_open
@@ -407,7 +407,7 @@ univ_open() {
 
 ** ~dir_info~
 
-An intelligent ~ls~, used by [[func-univ-open][~univ_open~]] and by the ~ll~, ~l~, ~lj~, and ~lk~ [[id:9b76d360-8483-4449-b3a5-6c3678defc58][aliases]].
+An intelligent ~ls~, used by [[func-univ-open][~univ_open~]] and by the ~ll~, ~l~, ~lj~, and ~lk~ [[id:9b76d360-8483-4449-b3a5-6c3678defc58::zshrc-aliases][aliases]].
 
 #+name: func-dir-info
 #+header: :tangle zsh/func/dir_info
@@ -1237,10 +1237,17 @@ tmux_list_sessions()
 
 ** ~prompt_kody_setup~
 
-The "kody" prompt theme. [[id:9b76d360-8483-4449-b3a5-6c3678defc58][~.zshrc~]] calls this at startup, and [[id:af7d3c1d-058f-4b11-944b-284c14ef2b38::lib][~__l_prompt_tick~]] rebuilds the prompt every second using ~construct_prompt~.
+The "kody" prompt theme. [[id:9b76d360-8483-4449-b3a5-6c3678defc58][~.zshrc~]] calls this at startup, and [[id:af7d3c1d-058f-4b11-944b-284c14ef2b38::lib-prompt-tick][~__l_prompt_tick~]] rebuilds the prompt every second using [[kody-construct-prompt][~construct_prompt~]].
 
 #+name: func-prompt-kody-setup
 #+header: :tangle zsh/func/prompt_kody_setup
+#+begin_src zsh
+<<kody-setup>>
+<<kody-construct-prompt>>
+<<kody-invoke>>
+#+end_src
+
+#+name: kody-setup
 #+begin_src zsh
 #!/usr/bin/env zsh
 # "kody" prompt theme.
@@ -1391,7 +1398,12 @@ set_globals()
 	global_cmd_exit_status="$(get_exit_status)"
 	global_venv_info="$(get_venv_info)"
 }
+#+end_src
 
+This builds the actual prompt.
+
+#+name: kody-construct-prompt
+#+begin_src zsh
 # The actual prompt. This does mostly pure string manipulation as all of the
 # data that we want to display has been calculated elsewhere (and set as global
 # variables).
@@ -1431,7 +1443,10 @@ construct_prompt()
 	# selecting a directory in the directory stack).
 	PS3="${prompt_line_2}?# "
 }
+#+end_src
 
+#+name: kody-invoke
+#+begin_src zsh
 prompt_kody_setup "$@"
 #+end_src
 

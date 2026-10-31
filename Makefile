@@ -35,6 +35,7 @@ emacs:
 git:
 	ln -fs ${C}/git/cfg.personal.conf ${H}/.gitconfig
 	ln -fs ${C}/git/sendemail-aliases ${H}/.git-sendemail-aliases
+
 gpg:
 	ln -fns ${C}/gpg ${H}/.gnupg
 	ln -fs ${C}/gpg/gpg-agent.nixos.conf ${H}/.gnupg/gpg-agent.conf
@@ -64,6 +65,7 @@ else ifeq ('${P}','Darwin')
 else
 	ln -fs mpv.linux.conf mpv/mpv.conf
 endif
+
 nix:
 	ln -fns ${C}/nix ${H}/.config/nix
 nixos:
@@ -103,11 +105,13 @@ else
 endif
 rtorrent:
 	ln -fs ${C}/rtorrent/cfg ${H}/.rtorrent.rc
+
 ssh:
 ifeq ($(wildcard ~/.ssh/.),)
 	ln -fns ${C}/ssh ${H}/.ssh
 endif
 	ln -fs ${C}/ssh/config.home.conf ${H}/.ssh/config
+
 terminfo:
 	git -C ${C} submodule update --init ${C}/wezterm/upstream
 	tic -x -o ~/.terminfo ${C}/wezterm/upstream/termwiz/data/wezterm.terminfo

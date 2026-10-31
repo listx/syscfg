@@ -211,8 +211,15 @@ keyserver hkp://keys.gnupg.net
 * ~gpg-agent.conf~
 
 This caches passphrases for 8 hours, up to a maximum of 16 hours, and uses the
-agent for SSH as well. The ~gpg~ [[id:bbe0ff18-1b29-4f04-b2a6-5f3d7b003eb5][Makefile]] rule links it to ~gpg-agent.conf~. The
+agent for SSH as well. The ~gpg~ [[Makefile-gpg][Makefile rule]] links it to ~gpg-agent.conf~. The
 ~pinentry~ path here is specific to NixOS.
+
+#+name: Makefile-gpg
+#+begin_src makefile
+gpg:
+	ln -fns ${C}/gpg ${H}/.gnupg
+	ln -fs ${C}/gpg/gpg-agent.nixos.conf ${H}/.gnupg/gpg-agent.conf
+#+end_src
 
 #+name: gpg-agent.nixos.conf
 #+header: :tangle gpg/gpg-agent.nixos.conf

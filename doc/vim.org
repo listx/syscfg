@@ -5,9 +5,17 @@
 
 * Configuration
 
-We share this one configuration between Vim and Neovim: the ~vim~ [[id:bbe0ff18-1b29-4f04-b2a6-5f3d7b003eb5][Makefile]] rule links
+We share this one configuration between Vim and Neovim: the ~vim~ [[Makefile-vim][Makefile rule]] links
 it to both ~.vimrc~ and ~.gvimrc~, and ~nvim/init.vim~ is a symlink to it. It's meant
 for quick edits, because we don't do any serious work in Vim.
+
+#+name: Makefile-vim
+#+begin_src makefile
+vim:
+	ln -fns ${C}/vim ${H}/.vim
+	ln -fs ${C}/vim/cfg ${H}/.vimrc
+	ln -fs ${C}/vim/cfg ${H}/.gvimrc
+#+end_src
 
 #+name: vim-cfg
 #+header: :tangle vim/cfg

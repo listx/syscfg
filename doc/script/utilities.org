@@ -320,7 +320,7 @@ echo
 
 ** ~decrypt.sh~
 
-Decrypt a GPG file, either to an output file (~outfile~) or to a pager (~viewfile~). The ~dec~ [[id:9b76d360-8483-4449-b3a5-6c3678defc58][alias]] in Zsh uses this.
+Decrypt a GPG file, either to an output file (~outfile~) or to a pager (~viewfile~). The ~dec~ [[id:9b76d360-8483-4449-b3a5-6c3678defc58::zshrc-aliases][alias]] in Zsh uses this.
 
 #+name: decrypt
 #+header: :shebang #!/usr/bin/env bash
