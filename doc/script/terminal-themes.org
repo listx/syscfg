@@ -1,0 +1,1500 @@
+:PROPERTIES:
+:ID:       205ec9d4-2e2f-46f7-a1aa-c3105e1ba491
+:END:
+#+title: Terminal color themes
+
+* Overview
+
+These scripts define our terminal color themes in Dhall, and apply them to both
+the terminal and Emacs. The [[id:fd0afd0c-d608-4ad5-83ff-6a080a62bc66::func-color-cycle][~color_cycle~]] function in Zsh is the usual way to run
+them, and [[id:100011e3-ba36-4078-975e-6136d25e60cc][~doc/emacs.org~]] also generates its color definitions from
+[[list-colors-for-emacs][~listColorsForEmacs.dhall~]].
+
+* Switching themes
+
+[[change-theme][~change_theme.sh~]] takes a theme's filename, or ~next~ or ~prev~ to cycle through the
+themes. It tells Emacs to load the theme's colors, and prints the control
+sequences for the terminal, which the caller then sources.
+
+#+name: change-theme
+#+header: :shebang #!/usr/bin/env bash
+#+header: :tangle script/terminal-themes/change_theme.sh
+#+begin_src bash
+
+# We only need to run this script when we add a new terminal color theme.
+
+set -euo pipefail
+
+root_dir="${HOME}/syscfg/script/terminal-themes"
+
+# Input is a string like "#abcdef". We have to convert this to: "#xabab #xcdcd
+# #xefef".
+__emacs_color(){
+
+    local color
+    local r
+    local g
+    local b
+    color=${1}
+
+    # Return #000000 if we are told to parse an invalid color.
+    if [[ ! "${color}" =~ ^#[0-9a-f]+$ ]] || (( ${#color} != 7 )); then
+        echo "#x0000 #x0000 #x0000"
+        return
+    fi
+
+    color=${color#\#}
+    r=${color:0:2}
+    g=${color:2:2}
+    b=${color:4:2}
+
+    echo "#x${r}${r} #x${g}${g} #x${b}${b}"
+}
+
+set_theme() {
+    local theme
+    local for_tmux
+    local renderer_path
+    local root_dir
+    local emacs_theme
+    local all_colors
+    local extra_colors
+    local colorKey
+    local colorValue
+    declare -A colors
+    local __elisp
+
+    theme="${1}"
+    root_dir="${HOME}/syscfg/script/terminal-themes"
+    renderer_path="${root_dir}/renderControlSequences.dhall"
+
+    # Change doom emacs color theme. This doesn't check if the emacs daemon is
+    # already running --- rather it just executes and forgets about it.
+    emacs_theme="$(dhall text <<< "(${root_dir}/themes/${theme}).emacsTheme")"
+
+    mapfile -t all_colors < <(dhall text <<< "${root_dir}/listColorsForShell.dhall ${root_dir}/themes/${theme}")
+    extra_colors="$(dhall text <<< "${root_dir}/listColorsForEmacs.dhall ${root_dir}/themes/${theme}")"
+    for colorline in "${all_colors[@]}"; do
+        colorKey=${colorline%=*}
+        colorValue=${colorline#*=}
+        colors[${colorKey}]=${colorValue}
+    done
+
+    __elisp=$(cat << EOF
+    (progn
+        ; Set custom colors. These are only usable from 24-bit color-enabled
+        ; emacs.
+${extra_colors}
+
+        ; Set 16 colors. This is because the default 16 colors are hardcoded by
+        ; emacs, making it impossible to refer to the colors used by the
+        ; existing terminal color theme.
+        (tty-color-define "black"          0 '($(__emacs_color "${colors[black]}")))
+        (tty-color-define "red"            1 '($(__emacs_color "${colors[red]}")))
+        (tty-color-define "green"          2 '($(__emacs_color "${colors[green]}")))
+        (tty-color-define "yellow"         3 '($(__emacs_color "${colors[yellow]}")))
+        (tty-color-define "blue"           4 '($(__emacs_color "${colors[blue]}")))
+        (tty-color-define "magenta"        5 '($(__emacs_color "${colors[magenta]}")))
+        (tty-color-define "cyan"           6 '($(__emacs_color "${colors[cyan]}")))
+        (tty-color-define "white"          7 '($(__emacs_color "${colors[white]}")))
+        (tty-color-define "brightblack"    8 '($(__emacs_color "${colors[brightblack]}")))
+        (tty-color-define "brightred"      9 '($(__emacs_color "${colors[brightred]}")))
+        (tty-color-define "brightgreen"   10 '($(__emacs_color "${colors[brightgreen]}")))
+        (tty-color-define "brightyellow"  11 '($(__emacs_color "${colors[brightyellow]}")))
+        (tty-color-define "brightblue"    12 '($(__emacs_color "${colors[brightblue]}")))
+        (tty-color-define "brightmagenta" 13 '($(__emacs_color "${colors[brightmagenta]}")))
+        (tty-color-define "brightcyan"    14 '($(__emacs_color "${colors[brightcyan]}")))
+        (tty-color-define "brightwhite"   15 '($(__emacs_color "${colors[brightwhite]}")))
+        (load-theme '${emacs_theme} t)
+        (l/reset-faces)
+    )
+EOF
+    )
+    >/dev/null 2>&1 emacsclient -e "${__elisp}" -a "" & disown
+
+    # Print control sequences. These are meant to be sourced by the caller.
+    for_tmux="False"
+    if [[ -n "${TMUX:-}" ]]; then
+        for_tmux="True"
+    fi
+    echo "${renderer_path} ${for_tmux} ${root_dir}/themes/${theme}" | dhall text
+    echo "export TERM_COLOR_THEME=${theme}"
+}
+
+cycle_theme()
+{
+    local root_dir
+    local direction
+    local i
+    local j
+    local len
+    local next_theme
+
+    root_dir="$HOME/syscfg/script/terminal-themes/themes"
+    direction=$1
+
+    # Cycle through to the next theme in the list.
+    declare -A themes
+    declare -A themes_indexed
+    i=0
+    len=0
+    for theme in "${root_dir}"/*.dhall; do
+        t=$(basename "$theme")
+        themes[$i]="$t"
+        themes_indexed["$t"]=$i
+        ((i+=1))
+        ((len+=1))
+    done
+    j=${themes_indexed["${TERM_COLOR_THEME}"]}
+    if [[ "$direction" == "next" ]]; then
+        ((j+=1))
+    else
+        ((j+=len - 1))
+    fi
+    next_theme=${themes[$((j%len))]}
+    set_theme "${next_theme}"
+}
+
+main() {
+    arg="${1:-next}"
+    case "${arg}" in
+        *.dhall) set_theme "${arg}" ;;
+        next|prev) cycle_theme "${arg}" ;;
+        *)
+            echo >&2 "unrecognized argument ${arg}"
+            return 1
+            ;;
+    esac
+}
+
+main "$@"
+#+end_src
+
+* Types
+
+[[theme-type][~Theme~]] is the type of each theme, and [[palette-extra-type][~PaletteExtra~]] is the type of the extra named
+colors that each theme has in addition to its 16-color palette.
+
+#+name: theme-type
+#+header: :tangle script/terminal-themes/Theme
+#+begin_src dhall
+{ name : Text
+, emacsTheme : Text
+, text : Text
+, cursor : Text
+, background : Text
+, foreground : Text
+, palette16 : List Text
+, paletteExtra : ./PaletteExtra
+}
+#+end_src
+
+#+name: palette-extra-type
+#+header: :tangle script/terminal-themes/PaletteExtra
+#+begin_src dhall
+{ xBrightOrange : Text
+, xDarkGreen : Text
+, xAvocado : Text
+, xLime : Text
+, xMoss : Text
+, xUltraBrightMagenta : Text
+, xUltraBrightGreen : Text
+, xUltraBrightRed : Text
+, xGrey1 : Text
+, xGrey2 : Text
+}
+#+end_src
+
+* Rendering
+
+[[to-color-map][~toColorMap.dhall~]] turns a theme into a list of color names and values, which the
+two ~listColors~ functions then print for [[list-colors-for-emacs][Emacs]] and [[list-colors-for-shell][the shell]].
+
+#+name: to-color-map
+#+header: :tangle script/terminal-themes/toColorMap.dhall
+#+begin_src dhall
+let Enumerated = { index : Natural, value : Text }
+
+let Mapped = { mapKey : Text, mapValue : Text }
+
+let isIndex =
+      λ(idx : Natural) →
+      λ(n : Natural) →
+            Natural/isZero (Natural/subtract n idx)
+        &&  Natural/isZero (Natural/subtract idx n)
+
+let getColorName =
+      λ(idx : Natural) →
+        if    Natural/isZero idx
+        then  "black"
+        else  if isIndex 1 idx
+        then  "red"
+        else  if isIndex 2 idx
+        then  "green"
+        else  if isIndex 3 idx
+        then  "yellow"
+        else  if isIndex 4 idx
+        then  "blue"
+        else  if isIndex 5 idx
+        then  "magenta"
+        else  if isIndex 6 idx
+        then  "cyan"
+        else  if isIndex 7 idx
+        then  "white"
+        else  if isIndex 8 idx
+        then  "brightblack"
+        else  if isIndex 9 idx
+        then  "brightred"
+        else  if isIndex 10 idx
+        then  "brightgreen"
+        else  if isIndex 11 idx
+        then  "brightyellow"
+        else  if isIndex 12 idx
+        then  "brightblue"
+        else  if isIndex 13 idx
+        then  "brightmagenta"
+        else  if isIndex 14 idx
+        then  "brightcyan"
+        else  if isIndex 15 idx
+        then  "brightwhite"
+        else  "?"
+
+in  λ(theme : ./Theme) →
+        [ { mapKey = "text", mapValue = theme.text }
+        , { mapKey = "cursor", mapValue = theme.cursor }
+        , { mapKey = "background", mapValue = theme.background }
+        , { mapKey = "foreground", mapValue = theme.foreground }
+        ]
+      # List/fold
+          Enumerated
+          (List/reverse Enumerated (List/indexed Text theme.palette16))
+          (List Mapped)
+          ( λ(a : Enumerated) →
+            λ(b : List Mapped) →
+              b # [ { mapKey = getColorName a.index, mapValue = a.value } ]
+          )
+          ([] : List Mapped)
+      # toMap theme.paletteExtra
+#+end_src
+
+#+name: list-colors-for-emacs
+#+header: :tangle script/terminal-themes/listColorsForEmacs.dhall
+#+begin_src dhall
+let Mapped = { mapKey : Text, mapValue : Text }
+
+in  λ(theme : ./Theme) →
+      List/fold
+        Mapped
+        (List/reverse Mapped (./toColorMap.dhall theme))
+        Text
+        ( λ(a : Mapped) →
+          λ(b : Text) →
+                b
+            ++  ''
+                (setq l/color-${a.mapKey} "${a.mapValue}")
+                ''
+        )
+        ""
+#+end_src
+
+#+name: list-colors-for-shell
+#+header: :tangle script/terminal-themes/listColorsForShell.dhall
+#+begin_src dhall
+let Mapped = { mapKey : Text, mapValue : Text }
+
+in  λ(theme : ./Theme) →
+      List/fold
+        Mapped
+        (./toColorMap.dhall theme)
+        Text
+        ( λ(a : Mapped) →
+          λ(b : Text) →
+                b
+            ++  ''
+                ${a.mapKey}=${a.mapValue}
+                ''
+        )
+        ""
+#+end_src
+
+[[render-control-sequences][~renderControlSequences.dhall~]] prints the control sequences that apply a theme to
+the terminal, with extra wrapping if we're inside ~tmux~.
+
+#+name: render-control-sequences
+#+header: :tangle script/terminal-themes/renderControlSequences.dhall
+#+begin_src dhall
+let Enumerated = { index : Natural, value : Text }
+
+let controlSequence =
+      λ(forTmux : Bool) →
+        if    forTmux
+        then  { start = "\\x1bPtmux;\\x1b\\x1b]", end = "\\x07\\x1b\\\\" }
+        else  { start = "\\x1b]", end = "\\x07" }
+
+let setColor =
+      λ(forTmux : Bool) →
+      λ(code : Natural) →
+      λ(color : Text) →
+        ''
+        printf '${    (controlSequence forTmux).start
+                  ++  Natural/show code
+                  ++  ";"
+                  ++  color
+                  ++  (controlSequence forTmux).end}'
+        ''
+
+in  λ(forTmux : Bool) →
+    λ(theme : ./Theme) →
+          ''
+          # Foreground color. (Default text color).
+          ${setColor forTmux 10 theme.foreground}
+
+          # Background color.
+          ${setColor forTmux 11 theme.background}
+
+          # Cursor background color.
+          ${setColor forTmux 12 theme.cursor}
+          ''
+      ++  ( if    forTmux
+            then  ''
+                  # Set colors for TMUX status bar. We just recycle the colors defined
+                  # for the cursor.
+                  tmux set-environment L_TMUX_COLOR_TEXT "${theme.text}"
+                  tmux set-environment L_TMUX_COLOR_CURSOR "${theme.cursor}"
+                  tmux source-file ~/.tmux/colors.conf
+
+                  ''
+            else  ''
+                  export L_TMUX_COLOR_TEXT="${theme.text}"
+                  export L_TMUX_COLOR_CURSOR="${theme.cursor}"
+                  ''
+          )
+      ++  ''
+          # Remaining 16 colors.
+          ''
+      ++  List/fold
+            Enumerated
+            (List/indexed Text theme.palette16)
+            Text
+            ( λ(a : Enumerated) →
+              λ(b : Text) →
+                b ++ setColor forTmux 4 "${Natural/show a.index};${a.value}"
+            )
+            ""
+#+end_src
+
+* Themes
+
+** Blue
+
+#+name: theme-blue
+#+header: :tangle script/terminal-themes/themes/Blue.dhall
+#+begin_src dhall
+-- Based on Codeschool light by Chris Kempson from https://terminal.sexy
+{ name = "Blue"
+, emacsTheme = "doom-one-light"
+, cursor = "#2299dd"
+, text = "#ffffff"
+, background = "#b1eaff"
+, foreground = "#2a343a"
+, palette16 =
+  [ "#84d5ff"
+  , "#c43d16"
+  , "#007836"
+  , "#535000"
+  , "#356ab7"
+  , "#b02f50"
+  , "#31a3a8"
+  , "#2a343a"
+  , "#b1eaff"
+  , "#e45d36"
+  , "#2b8c64"
+  , "#636000"
+  , "#558ad7"
+  , "#d04f70"
+  , "#39bdc4"
+  , "#000000"
+  ]
+, paletteExtra = (./Vanilla.dhall).paletteExtra
+}
+#+end_src
+
+** Dark
+
+#+name: theme-dark
+#+header: :tangle script/terminal-themes/themes/Dark.dhall
+#+begin_src dhall
+-- Based on Visibone Alt. 2 from https://terminal.sexy
+{ name = "Dark"
+, emacsTheme = "zenburn"
+, cursor = "#ffffff"
+, text = "#000000"
+, background = "#333333"
+, foreground = "#cccccc"
+, palette16 =
+  [ "#222222"
+  , "#cc6699"
+  , "#99cc66"
+  , "#cc9966"
+  , "#6699cc"
+  , "#9966cc"
+  , "#66cc99"
+  , "#cccccc"
+  , "#333333"
+  , "#ff99cc"
+  , "#ccff99"
+  , "#ffcc99"
+  , "#99ccff"
+  , "#cc99ff"
+  , "#99ffcc"
+  , "#ffffff"
+  ]
+, paletteExtra = (./PastelDark.dhall).paletteExtra
+}
+#+end_src
+
+** Light
+
+#+name: theme-light
+#+header: :tangle script/terminal-themes/themes/Light.dhall
+#+begin_src dhall
+-- Based on Ivory Light by Baskerville from https://terminal.sexy
+{ name = "Light"
+, emacsTheme = "doom-solarized-light"
+, cursor = "#999933"
+, text = "#ffffff"
+, background = "#fef9ec"
+, foreground = "#34363c"
+, palette16 =
+  [ "#eee9dc"
+  , "#cc514e"
+  , "#00a250"
+  , "#a08a00"
+  , "#208ffb"
+  , "#b453a9"
+  , "#00a4c1"
+  , "#34363c"
+  , "#fef9ec"
+  , "#b22b31"
+  , "#007427"
+  , "#715f00"
+  , "#0065ca"
+  , "#a03196"
+  , "#007693"
+  , "#000000"
+  ]
+, paletteExtra = (./Vanilla.dhall).paletteExtra
+}
+#+end_src
+
+** PastelDark
+
+#+name: theme-pasteldark
+#+header: :tangle script/terminal-themes/themes/PastelDark.dhall
+#+begin_src dhall
+-- Color definition order for "palette16".
+-- 00 black
+-- 01 red
+-- 02 green
+-- 03 yellow
+-- 04 blue
+-- 05 magenta
+-- 06 cyan
+-- 07 white
+-- 08 *bright* black
+-- 09 *bright* red
+-- 10 *bright* green
+-- 11 *bright* yellow
+-- 12 *bright* blue
+-- 13 *bright* magenta
+-- 14 *bright* cyan
+-- 15 *bright* white
+--
+-- The "text" field is only used by Alacritty to colorize the text (letter) of
+-- the current cursor position.
+{ name = "PastelDark"
+, emacsTheme = "zenburn"
+, cursor = "#ffffff"
+, text = "#000000"
+, background = "#343c48"
+, foreground = "#e5e7ea"
+, palette16 =
+  [ "#22222f"
+  , "#e49f9f"
+  , "#91e380"
+  , "#eae47c"
+  , "#7cacd3"
+  , "#df9494"
+  , "#8cdbd8"
+  , "#e5e7ea"
+  , "#343c48"
+  , "#e5bfbf"
+  , "#afe0a1"
+  , "#f2fb9e"
+  , "#95add1"
+  , "#f2b0b0"
+  , "#b4f0f0"
+  , "#ffffff"
+  ]
+, paletteExtra =
+  { xBrightOrange = "#ffcfaf"
+  , xDarkGreen = "#2e3330"
+  , xAvocado = "#3f5f4f"
+  , xLime = "#ccff94"
+  , xMoss = "#86ab8e"
+  , xUltraBrightMagenta = "#ff00ff"
+  , xUltraBrightGreen = "#00ff00"
+  , xUltraBrightRed = "#ff0000"
+  , xGrey1 = "#1c1c1c"
+  , xGrey2 = "#262626"
+  }
+}
+#+end_src
+
+** Red
+
+#+name: theme-red
+#+header: :tangle script/terminal-themes/themes/Red.dhall
+#+begin_src dhall
+-- Based on Aiseered.vim by Alexander Evstiougov from https://www.vim.org/scripts/script.php?script_id=750
+{ name = "Red"
+, emacsTheme = "zenburn"
+, cursor = "#ffffff"
+, text = "#000000"
+, background = "#400000"
+, foreground = "#cfcfcf"
+, palette16 =
+  [ "#400000"
+  , "#dd8800"
+  , "#66dd88"
+  , "#ccdd77"
+  , "#1188cc"
+  , "#bb88aa"
+  , "#66cccc"
+  , "#cfcfcf"
+  , "#600000"
+  , "#ffaa00"
+  , "#88ffaa"
+  , "#eeff99"
+  , "#33aaee"
+  , "#ddaacc"
+  , "#88eeee"
+  , "#ffffff"
+  ]
+, paletteExtra = (./PastelDark.dhall).paletteExtra
+}
+#+end_src
+
+** RetroBlue
+
+#+name: theme-retroblue
+#+header: :tangle script/terminal-themes/themes/RetroBlue.dhall
+#+begin_src dhall
+{ name = "RetroBlue"
+, emacsTheme = "zenburn"
+, cursor = "#ffffff"
+, text = "#000000"
+, background = "#1111aa"
+, foreground = "#ffffff"
+, palette16 =
+  [ "#1111aa"
+  , "#ff6666"
+  , "#00ff00"
+  , "#ffff00"
+  , "#ff88ff"
+  , "#ff00ff"
+  , "#00ffff"
+  , "#ffffff"
+  , "#3333ff"
+  , "#ff6666"
+  , "#00ff00"
+  , "#ffff00"
+  , "#ff88ff"
+  , "#ff00ff"
+  , "#00ffff"
+  , "#ffffff"
+  ]
+, paletteExtra = (./PastelDark.dhall).paletteExtra
+}
+#+end_src
+
+** Vanilla
+
+#+name: theme-vanilla
+#+header: :tangle script/terminal-themes/themes/Vanilla.dhall
+#+begin_src dhall
+{ name = "Vanilla"
+, emacsTheme = "doom-one-light"
+, cursor = "#aaaaaa"
+, text = "#ffffff"
+, background = "#ffffff"
+, foreground = "#222222"
+, palette16 =
+  [ "#cccccc"
+  , "#ff0000"
+  , "#007700"
+  , "#999900"
+  , "#0000ff"
+  , "#cc00cc"
+  , "#00aaaa"
+  , "#222222"
+  , "#ffffff"
+  , "#ff6666"
+  , "#33cc33"
+  , "#aaaa66"
+  , "#3333ff"
+  , "#cc66cc"
+  , "#33aaaa"
+  , "#000000"
+  ]
+, paletteExtra =
+  { xBrightOrange = "#cc7700"
+  , xDarkGreen = "#2e3330"
+  , xAvocado = "#3f5f4f"
+  , xLime = "#ccff94"
+  , xMoss = "#86ab8e"
+  , xUltraBrightMagenta = "#ff00ff"
+  , xUltraBrightGreen = "#00ff00"
+  , xUltraBrightRed = "#ff0000"
+  , xGrey1 = "#1c1c1c"
+  , xGrey2 = "#262626"
+  }
+}
+#+end_src
+
+* Color tests
+
+These print test patterns for checking a terminal's color support. They aren't part
+of the theme machinery, and some of them are from other authors, as their headers
+show.
+
+#+name: test-24-bit-color
+#+header: :shebang #!/usr/bin/env bash
+#+header: :tangle script/terminal-themes/color-tests/24-bit-color.sh
+#+begin_src bash
+# shellcheck disable=all
+#
+#   This file echoes a bunch of 24-bit color codes
+#   to the terminal to demonstrate its functionality.
+#   The foreground escape sequence is ^[38;2;<r>;<g>;<b>m
+#   The background escape sequence is ^[48;2;<r>;<g>;<b>m
+#   <r> <g> <b> range from 0 to 255 inclusive.
+#   The escape sequence ^[0m returns output to default
+
+# If the terminal ($TERM) supports 24-bit colors, then this script will output a
+# smooth gradient.  This script was taken from
+# https://gist.githubusercontent.com/lifepillar/09a44b8cf0f9397465614e622979107f/raw/24-bit-color.sh.
+# See https://github.com/alacritty/alacritty/issues/109#issuecomment-507026155
+# for context.
+
+setBackgroundColor()
+{
+    echo -en "\x1b[48;2;$1;$2;$3""m"
+}
+
+resetOutput()
+{
+    echo -en "\x1b[0m\n"
+}
+
+# Gives a color $1/255 % along HSV
+# Who knows what happens when $1 is outside 0-255
+# Echoes "$red $green $blue" where
+# $red $green and $blue are integers
+# ranging between 0 and 255 inclusive
+rainbowColor()
+{
+    let h=$1/43
+    let f=$1-43*$h
+    let t=$f*255/43
+    let q=255-t
+
+    if [ $h -eq 0 ]
+    then
+        echo "255 $t 0"
+    elif [ $h -eq 1 ]
+    then
+        echo "$q 255 0"
+    elif [ $h -eq 2 ]
+    then
+        echo "0 255 $t"
+    elif [ $h -eq 3 ]
+    then
+        echo "0 $q 255"
+    elif [ $h -eq 4 ]
+    then
+        echo "$t 0 255"
+    elif [ $h -eq 5 ]
+    then
+        echo "255 0 $q"
+    else
+        # execution should never reach here
+        echo "0 0 0"
+    fi
+}
+
+for i in `seq 0 127`; do
+    setBackgroundColor $i 0 0
+    echo -en " "
+done
+resetOutput
+for i in `seq 255 128`; do
+    setBackgroundColor $i 0 0
+    echo -en " "
+done
+resetOutput
+
+for i in `seq 0 127`; do
+    setBackgroundColor 0 $i 0
+    echo -n " "
+done
+resetOutput
+for i in `seq 255 128`; do
+    setBackgroundColor 0 $i 0
+    echo -n " "
+done
+resetOutput
+
+for i in `seq 0 127`; do
+    setBackgroundColor 0 0 $i
+    echo -n " "
+done
+resetOutput
+for i in `seq 255 128`; do
+    setBackgroundColor 0 0 $i
+    echo -n " "
+done
+resetOutput
+
+for i in `seq 0 127`; do
+    setBackgroundColor `rainbowColor $i`
+    echo -n " "
+done
+resetOutput
+for i in `seq 255 128`; do
+    setBackgroundColor `rainbowColor $i`
+    echo -n " "
+done
+resetOutput
+
+# Based on: https://gist.github.com/XVilka/8346728.
+awk -v term_cols="${width:-$(tput cols || echo 80)}" 'BEGIN{
+    s="/\\";
+    for (colnum = 0; colnum<term_cols; colnum++) {
+        r = 255-(colnum*255/term_cols);
+        g = (colnum*510/term_cols);
+        b = (colnum*255/term_cols);
+        if (g>255) g = 510-g;
+        printf "\033[48;2;%d;%d;%dm", r,g,b;
+        printf "\033[38;2;%d;%d;%dm", 255-r,255-g,255-b;
+        printf "%s\033[0m", substr(s,colnum%2+1,1);
+    }
+    printf "\n";
+}'
+#+end_src
+
+#+name: test-colortable16
+#+header: :shebang #!/usr/bin/env bash
+#+header: :tangle script/terminal-themes/color-tests/colortable16.sh
+#+begin_src bash
+# shellcheck disable=all
+
+# prints a color table of 8bg * 8fg * 2 states (regular/bold)
+echo
+echo Table for 16-color terminal escape sequences.
+echo Replace ESC with \\033 in bash.
+echo
+echo "Background | Foreground colors"
+echo "---------------------------------------------------------------------"
+for((bg=40;bg<=47;bg++)); do
+	for((bold=0;bold<=1;bold++)) do
+		echo -en "\033[0m"" ESC[${bg}m   | "
+		for((fg=30;fg<=37;fg++)); do
+			if [ $bold == "0" ]; then
+				echo -en "\033[${bg}m\033[${fg}m [${fg}m  "
+			else
+				echo -en "\033[${bg}m\033[1;${fg}m [1;${fg}m"
+			fi
+		done
+		echo -e "\033[0m"
+	done
+	echo "--------------------------------------------------------------------- "
+done
+
+echo
+echo
+
+# See https://askubuntu.com/a/821163.
+printable_colours=256
+
+# Return a colour that contrasts with the given colour
+# Bash only does integer division, so keep it integral
+function contrast_colour {
+    local r g b luminance
+    colour="$1"
+
+    if (( colour < 16 )); then # Initial 16 ANSI colours
+        (( colour == 0 )) && printf "15" || printf "0"
+        return
+    fi
+
+    # Greyscale # rgb_R = rgb_G = rgb_B = (number - 232) * 10 + 8
+    if (( colour > 231 )); then # Greyscale ramp
+        (( colour < 244 )) && printf "15" || printf "0"
+        return
+    fi
+
+    # All other colours:
+    # 6x6x6 colour cube = 16 + 36*R + 6*G + B  # Where RGB are [0..5]
+    # See http://stackoverflow.com/a/27165165/5353461
+
+    # r=$(( (colour-16) / 36 ))
+    g=$(( ((colour-16) % 36) / 6 ))
+    # b=$(( (colour-16) % 6 ))
+
+    # If luminance is bright, print number in black, white otherwise.
+    # Green contributes 587/1000 to human perceived luminance - ITU R-REC-BT.601
+    (( g > 2)) && printf "0" || printf "15"
+    return
+
+    # Uncomment the below for more precise luminance calculations
+
+    # # Calculate percieved brightness
+    # # See https://www.w3.org/TR/AERT#color-contrast
+    # # and http://www.itu.int/rec/R-REC-BT.601
+    # # Luminance is in range 0..5000 as each value is 0..5
+    # luminance=$(( (r * 299) + (g * 587) + (b * 114) ))
+    # (( $luminance > 2500 )) && printf "0" || printf "15"
+}
+
+# Print a coloured block with the number of that colour
+function print_colour {
+    local colour="$1" contrast
+    contrast=$(contrast_colour "$1")
+    printf "\e[48;5;%sm" "$colour"                # Start block of colour
+    printf "\e[38;5;%sm%3d" "$contrast" "$colour" # In contrast, print number
+    printf "\e[0m "                               # Reset colour
+}
+
+# Starting at $1, print a run of $2 colours
+function print_run {
+    local i
+    for (( i = "$1"; i < "$1" + "$2" && i < printable_colours; i++ )) do
+        print_colour "$i"
+    done
+    printf "  "
+}
+
+# Print blocks of colours
+function print_blocks {
+    local start="$1" i
+    local end="$2" # inclusive
+    local block_cols="$3"
+    local block_rows="$4"
+    local blocks_per_line="$5"
+    local block_length=$((block_cols * block_rows))
+
+    # Print sets of blocks
+    for (( i = start; i <= end; i += (blocks_per_line-1) * block_length )) do
+        printf "\n" # Space before each set of blocks
+        # For each block row
+        for (( row = 0; row < block_rows; row++ )) do
+            # Print block columns for all blocks on the line
+            for (( block = 0; block < blocks_per_line; block++ )) do
+                print_run $(( i + (block * block_length) )) "$block_cols"
+            done
+            (( i += block_cols )) # Prepare to print the next row
+            printf "\n"
+        done
+    done
+}
+
+print_run 0 16 # The first 16 colours are spread over the whole spectrum
+printf "\n"
+print_blocks 16 231 6 6 3 # 6x6x6 colour cube between 16 and 231 inclusive
+print_blocks 232 255 12 2 1 # Not 50, but 24 Shades of Grey
+#+end_src
+
+#+name: test-256colors-rb
+#+header: :shebang #!/usr/bin/env ruby
+#+header: :tangle script/terminal-themes/color-tests/256colors.rb
+#+begin_src ruby
+
+class ColorDemo
+
+  ColorString = "##"
+  ColorMode = {'fg' => '38', 'bg' => '48'}
+
+  def show_welcome
+    puts <<-END
++----------------------------------------------------------------------------+
+| This program shows 256-color support in xterm-compliant terminals. You may |
+| notice some flickering while the color codes are mapped in your terminal.  |
+| Please resize your terminal to at least the width of this box. Try this:   |
+| xterm -fg beige -bg midnightblue -fa "antialias=true:rgba=0:pixelsize=18"  |
++-------------+--------------------------------------------------------------+
+| Color Range | Description                                                  |
++-------------+--------------------------------------------------------------+
+|  000 - 015  | Standard ANSI colors, but with more pleasing shades          |
+|  016 - 231  | 6x6x6 color cube                                             |
+|  232 - 255  | Greyscale ramp, with black and white intentionally omitted   |
++-------------+--------------------------------------------------------------|
+| Translation: 256colors.rb by Daniel Butler <yup.com@gmail.com>  2005-10-30 |
+| Original: 256colors2.pl by Todd Larason <jtl@molehill.org> v1.1 1999-07-11 |
++----------------------------------------------------------------------------+
+  END
+  end
+
+  def clear_screen
+    system("clear")
+  end
+
+  def loop_color_cube(mode = nil)
+    (0...6).each do |red|
+      (0...6).each do |green|
+        (0...6).each do |blue|
+          yield red, green, blue
+        end
+        print nocolor(" ") if mode == :cube
+      end
+      print "\n" if mode == :cube
+    end
+  end
+
+  def setup_color_cube_color
+    # Colors 16-231 are a 6x6x6 color cube
+    loop_color_cube do |red, green, blue|
+      printf("\x1b]4;%d;rgb:%2.2x/%2.2x/%2.2x\x1b\\",
+        16 + (red * 36) + (green * 6) + blue,
+        (red * 42.5).to_i,
+        (green * 42.5).to_i,
+        (blue * 42.5).to_i)
+    end
+  end
+
+  def setup_color_cube_gray
+    # Colors 232-255 are a grayscale ramp, intentionally
+    # leaving out black and white
+    (0...24).each do |gray|
+      level = (gray * 10) + 8
+      printf("\x1b]4;%d;rgb:%2.2x/%2.2x/%2.2x\x1b\\",
+        232 + gray, level, level, level);
+    end
+  end
+
+  def colorize(color, text, mode)
+    "\x1b[#{ColorMode[mode]};5;#{color}m#{text}"
+  end
+
+  def nocolor(text)
+    "\x1b[0m#{text}"
+  end
+
+  def display_system_colors(mode)
+    puts "System colors (#{mode}):"
+    (0...16).each do |color|
+      print colorize(color, ColorString, mode)
+      print nocolor("\n") if [7, 15].include? color
+    end
+  end
+
+  def display_color_cube(mode)
+    puts "Color cube, 6x6x6 (#{mode}):"
+    loop_color_cube(:cube) do |red, green, blue|
+      print colorize(16 + (red * 36) +
+        (green * 6) + blue, ColorString, mode)
+    end
+  end
+
+  def display_grayscale_ramp(mode)
+    puts "Grayscale ramp (#{mode}):"
+    (232...256).each do |color|
+      print colorize(color, ColorString, mode)
+    end
+    print nocolor("\n")
+  end
+
+  def go
+    clear_screen
+    show_welcome
+    setup_color_cube_color
+    setup_color_cube_gray
+    ['fg', 'bg'].each do |mode|
+      display_system_colors(mode)
+      display_color_cube(mode)
+      display_grayscale_ramp(mode)
+    end
+  end
+end
+
+demo = ColorDemo.new
+demo.go
+#+end_src
+
+#+name: test-rubycolor
+#+header: :shebang #!/usr/bin/env ruby
+#+header: :tangle script/terminal-themes/color-tests/rubycolor.rb
+#+begin_src ruby
+
+[0, 1, 4, 5, 7].each do |attr|
+  puts '----------------------------------------------------------------'
+  puts "\\033[#{attr};Foreground;Background"
+  30.upto(37) do |fg|
+    40.upto(47) do |bg|
+      print "\033[#{attr};#{fg};#{bg}m #{fg};#{bg}  "
+    end
+  puts "\033[0m"
+  end
+end
+#+end_src
+
+#+name: test-256colors2-pl
+#+header: :shebang #!/usr/bin/env perl
+#+header: :tangle script/terminal-themes/color-tests/256colors2.pl
+#+begin_src perl
+# Author: Todd Larason <jtl@molehill.org>
+# $XFree86: xc/programs/xterm/vttests/256colors2.pl,v 1.2 2002/03/26 01:46:43 dickey Exp $
+
+# use the resources for colors 0-15 - usually more-or-less a
+# reproduction of the standard ANSI colors, but possibly more
+# pleasing shades
+
+# colors 16-231 are a 6x6x6 color cube
+for ($red = 0; $red < 6; $red++) {
+    for ($green = 0; $green < 6; $green++) {
+	for ($blue = 0; $blue < 6; $blue++) {
+	    printf("\x1b]4;%d;rgb:%2.2x/%2.2x/%2.2x\x1b\\",
+		   16 + ($red * 36) + ($green * 6) + $blue,
+		   ($red ? ($red * 40 + 55) : 0),
+		   ($green ? ($green * 40 + 55) : 0),
+		   ($blue ? ($blue * 40 + 55) : 0));
+	}
+    }
+}
+
+# colors 232-255 are a grayscale ramp, intentionally leaving out
+# black and white
+for ($gray = 0; $gray < 24; $gray++) {
+    $level = ($gray * 10) + 8;
+    printf("\x1b]4;%d;rgb:%2.2x/%2.2x/%2.2x\x1b\\",
+	   232 + $gray, $level, $level, $level);
+}
+
+
+# display the colors
+
+# first the system ones:
+print "System colors:\n";
+for ($color = 0; $color < 8; $color++) {
+    print "\x1b[48;5;${color}m  ";
+}
+
+# test basic colors
+print "\x1b[0m\n";
+for ($color = 8; $color < 16; $color++) {
+    print "\x1b[48;5;${color}m  ";
+}
+print "\x1b[0m\n\n";
+for ($color = 0; $color < 16; $color++) {
+    my $hex = sprintf("%x", $color);
+    if ($hex eq "0") {
+        print "\x1b[48;5;${color};38;5;15m${hex}${hex}";
+    } elsif ($hex eq "8") {
+        print "\x1b[48;5;${color};38;5;15m${hex}${hex}";
+    } else {
+        print "\x1b[48;5;${color};38;5;0m${hex}${hex}";
+    }
+}
+print "\x1b[0m\n\n";
+
+# now the color cube
+print "Color cube, 6x6x6:\n";
+for ($green = 0; $green < 6; $green++) {
+    for ($red = 0; $red < 6; $red++) {
+	for ($blue = 0; $blue < 6; $blue++) {
+	    $color = 16 + ($red * 36) + ($green * 6) + $blue;
+	    print "\x1b[48;5;${color}m  ";
+	}
+	print "\x1b[0m ";
+    }
+    print "\n";
+}
+
+
+# now the grayscale ramp
+print "Grayscale ramp:\n";
+for ($color = 232; $color < 256; $color++) {
+    print "\x1b[48;5;${color}m  ";
+}
+print "\x1b[0m\n";
+#+end_src
+
+#+name: test-xterm-colortest
+#+header: :shebang #!/usr/bin/env perl
+#+header: :tangle script/terminal-themes/color-tests/xterm-colortest.pl
+#+begin_src perl
+
+# by entheon, do whatever the hell you want with this file
+
+print "\n";
+print "**************************\n";
+print "*XTERM 256Color Test Chart\n";
+print "**************************\n";
+print "* 16  = black\n";
+print "* 255 = white\n";
+print "*\n";
+print "* Usage:\n";
+print "* colortest -w\n";
+print "*    wide display\n";
+print "*\n";
+print "* colortest -w -r\n";
+print "*    wide display reversed\n";
+print "*\n";
+print "* colortest -w -s\n";
+print "*    extra spaces padding\n";
+print "*\n";
+print "* colortest -w -r -s\n";
+print "*    available combination\n";
+print "*\n";
+print "**************************\n";
+
+if( $ARGV[0] eq "-w" || $ARGV[1] eq "-w" || $ARGV[2] eq "-w" ) {
+    push(@arr, [(  "[38;5;16m 16:  00/00/00",     "[38;5;17m 17:  00/00/5f",     "[38;5;18m 18:  00/00/87",     "[38;5;19m 19:  00/00/af",     "[38;5;20m 20:  00/00/d7",     "[38;5;21m 21:  00/00/ff")] );
+    push(@arr, [(  "[38;5;22m 22:  00/5f/00",     "[38;5;23m 23:  00/5f/5f",     "[38;5;24m 24:  00/5f/87",     "[38;5;25m 25:  00/5f/af",     "[38;5;26m 26:  00/5f/d7",     "[38;5;27m 27:  00/5f/ff")] );
+    push(@arr, [(  "[38;5;28m 28:  00/87/00",     "[38;5;29m 29:  00/87/5f",     "[38;5;30m 30:  00/87/87",     "[38;5;31m 31:  00/87/af",     "[38;5;32m 32:  00/87/d7",     "[38;5;33m 33:  00/87/ff")] );
+    push(@arr, [(  "[38;5;34m 34:  00/af/00",     "[38;5;35m 35:  00/af/5f",     "[38;5;36m 36:  00/af/87",     "[38;5;37m 37:  00/af/af",     "[38;5;38m 38:  00/af/d7",     "[38;5;39m 39:  00/af/ff")] );
+    push(@arr, [(  "[38;5;40m 40:  00/d7/00",     "[38;5;41m 41:  00/d7/5f",     "[38;5;42m 42:  00/d7/87",     "[38;5;43m 43:  00/d7/af",     "[38;5;44m 44:  00/d7/d7",     "[38;5;45m 45:  00/d7/ff")] );
+    push(@arr, [(  "[38;5;46m 46:  00/ff/00",     "[38;5;47m 47:  00/ff/5f",     "[38;5;48m 48:  00/ff/87",     "[38;5;49m 49:  00/ff/af",     "[38;5;50m 50:  00/ff/d7",     "[38;5;51m 51:  00/ff/ff")] );
+    push(@arr, [(  "[38;5;52m 52:  5f/00/00",     "[38;5;53m 53:  5f/00/5f",     "[38;5;54m 54:  5f/00/87",     "[38;5;55m 55:  5f/00/af",     "[38;5;56m 56:  5f/00/d7",     "[38;5;57m 57:  5f/00/ff")] );
+    push(@arr, [(  "[38;5;58m 58:  5f/5f/00",     "[38;5;59m 59:  5f/5f/5f",     "[38;5;60m 60:  5f/5f/87",     "[38;5;61m 61:  5f/5f/af",     "[38;5;62m 62:  5f/5f/d7",     "[38;5;63m 63:  5f/5f/ff")] );
+    push(@arr, [(  "[38;5;64m 64:  5f/87/00",     "[38;5;65m 65:  5f/87/5f",     "[38;5;66m 66:  5f/87/87",     "[38;5;67m 67:  5f/87/af",     "[38;5;68m 68:  5f/87/d7",     "[38;5;69m 69:  5f/87/ff")] );
+    push(@arr, [(  "[38;5;70m 70:  5f/af/00",     "[38;5;71m 71:  5f/af/5f",     "[38;5;72m 72:  5f/af/87",     "[38;5;73m 73:  5f/af/af",     "[38;5;74m 74:  5f/af/d7",     "[38;5;75m 75:  5f/af/ff")] );
+    push(@arr, [(  "[38;5;76m 76:  5f/d7/00",     "[38;5;77m 77:  5f/d7/5f",     "[38;5;78m 78:  5f/d7/87",     "[38;5;79m 79:  5f/d7/af",     "[38;5;80m 80:  5f/d7/d7",     "[38;5;81m 81:  5f/d7/ff")] );
+    push(@arr, [(  "[38;5;82m 82:  5f/ff/00",     "[38;5;83m 83:  5f/ff/5f",     "[38;5;84m 84:  5f/ff/87",     "[38;5;85m 85:  5f/ff/af",     "[38;5;86m 86:  5f/ff/d7",     "[38;5;87m 87:  5f/ff/ff")] );
+    push(@arr, [(  "[38;5;88m 88:  87/00/00",     "[38;5;89m 89:  87/00/5f",     "[38;5;90m 90:  87/00/87",     "[38;5;91m 91:  87/00/af",     "[38;5;92m 92:  87/00/d7",     "[38;5;93m 93:  87/00/ff")] );
+    push(@arr, [(  "[38;5;94m 94:  87/5f/00",     "[38;5;95m 95:  87/5f/5f",     "[38;5;96m 96:  87/5f/87",     "[38;5;97m 97:  87/5f/af",     "[38;5;98m 98:  87/5f/d7",     "[38;5;99m 99:  87/5f/ff")] );
+    push(@arr, [( "[38;5;100m 100: 87/87/00",    "[38;5;101m 101: 87/87/5f",    "[38;5;102m 102: 87/87/87",    "[38;5;103m 103: 87/87/af",    "[38;5;104m 104: 87/87/d7",    "[38;5;105m 105: 87/87/ff")] );
+    push(@arr, [( "[38;5;106m 106: 87/af/00",    "[38;5;107m 107: 87/af/5f",    "[38;5;108m 108: 87/af/87",    "[38;5;109m 109: 87/af/af",    "[38;5;110m 110: 87/af/d7",    "[38;5;111m 111: 87/af/ff")] );
+    push(@arr, [( "[38;5;112m 112: 87/d7/00",    "[38;5;113m 113: 87/d7/5f",    "[38;5;114m 114: 87/d7/87",    "[38;5;115m 115: 87/d7/af",    "[38;5;116m 116: 87/d7/d7",    "[38;5;117m 117: 87/d7/ff")] );
+    push(@arr, [( "[38;5;118m 118: 87/ff/00",    "[38;5;119m 119: 87/ff/5f",    "[38;5;120m 120: 87/ff/87",    "[38;5;121m 121: 87/ff/af",    "[38;5;122m 122: 87/ff/d7",    "[38;5;123m 123: 87/ff/ff")] );
+    push(@arr, [( "[38;5;124m 124: af/00/00",    "[38;5;125m 125: af/00/5f",    "[38;5;126m 126: af/00/87",    "[38;5;127m 127: af/00/af",    "[38;5;128m 128: af/00/d7",    "[38;5;129m 129: af/00/ff")] );
+    push(@arr, [( "[38;5;130m 130: af/5f/00",    "[38;5;131m 131: af/5f/5f",    "[38;5;132m 132: af/5f/87",    "[38;5;133m 133: af/5f/af",    "[38;5;134m 134: af/5f/d7",    "[38;5;135m 135: af/5f/ff")] );
+    push(@arr, [( "[38;5;136m 136: af/87/00",    "[38;5;137m 137: af/87/5f",    "[38;5;138m 138: af/87/87",    "[38;5;139m 139: af/87/af",    "[38;5;140m 140: af/87/d7",    "[38;5;141m 141: af/87/ff")] );
+    push(@arr, [( "[38;5;142m 142: af/af/00",    "[38;5;143m 143: af/af/5f",    "[38;5;144m 144: af/af/87",    "[38;5;145m 145: af/af/af",    "[38;5;146m 146: af/af/d7",    "[38;5;147m 147: af/af/ff")] );
+    push(@arr, [( "[38;5;148m 148: af/d7/00",    "[38;5;149m 149: af/d7/5f",    "[38;5;150m 150: af/d7/87",    "[38;5;151m 151: af/d7/af",    "[38;5;152m 152: af/d7/d7",    "[38;5;153m 153: af/d7/ff")] );
+    push(@arr, [( "[38;5;154m 154: af/ff/00",    "[38;5;155m 155: af/ff/5f",    "[38;5;156m 156: af/ff/87",    "[38;5;157m 157: af/ff/af",    "[38;5;158m 158: af/ff/d7",    "[38;5;159m 159: af/ff/ff")] );
+    push(@arr, [( "[38;5;160m 160: d7/00/00",    "[38;5;161m 161: d7/00/5f",    "[38;5;162m 162: d7/00/87",    "[38;5;163m 163: d7/00/af",    "[38;5;164m 164: d7/00/d7",    "[38;5;165m 165: d7/00/ff")] );
+    push(@arr, [( "[38;5;166m 166: d7/5f/00",    "[38;5;167m 167: d7/5f/5f",    "[38;5;168m 168: d7/5f/87",    "[38;5;169m 169: d7/5f/af",    "[38;5;170m 170: d7/5f/d7",    "[38;5;171m 171: d7/5f/ff")] );
+    push(@arr, [( "[38;5;172m 172: d7/87/00",    "[38;5;173m 173: d7/87/5f",    "[38;5;174m 174: d7/87/87",    "[38;5;175m 175: d7/87/af",    "[38;5;176m 176: d7/87/d7",    "[38;5;177m 177: d7/87/ff")] );
+    push(@arr, [( "[38;5;178m 178: d7/af/00",    "[38;5;179m 179: d7/af/5f",    "[38;5;180m 180: d7/af/87",    "[38;5;181m 181: d7/af/af",    "[38;5;182m 182: d7/af/d7",    "[38;5;183m 183: d7/af/ff")] );
+    push(@arr, [( "[38;5;184m 184: d7/d7/00",    "[38;5;185m 185: d7/d7/5f",    "[38;5;186m 186: d7/d7/87",    "[38;5;187m 187: d7/d7/af",    "[38;5;188m 188: d7/d7/d7",    "[38;5;189m 189: d7/d7/ff")] );
+    push(@arr, [( "[38;5;190m 190: d7/ff/00",    "[38;5;191m 191: d7/ff/5f",    "[38;5;192m 192: d7/ff/87",    "[38;5;193m 193: d7/ff/af",    "[38;5;194m 194: d7/ff/d7",    "[38;5;195m 195: d7/ff/ff")] );
+    push(@arr, [( "[38;5;196m 196: ff/00/00",    "[38;5;197m 197: ff/00/5f",    "[38;5;198m 198: ff/00/87",    "[38;5;199m 199: ff/00/af",    "[38;5;200m 200: ff/00/d7",    "[38;5;201m 201: ff/00/ff")] );
+    push(@arr, [( "[38;5;202m 202: ff/5f/00",    "[38;5;203m 203: ff/5f/5f",    "[38;5;204m 204: ff/5f/87",    "[38;5;205m 205: ff/5f/af",    "[38;5;206m 206: ff/5f/d7",    "[38;5;207m 207: ff/5f/ff")] );
+    push(@arr, [( "[38;5;208m 208: ff/87/00",    "[38;5;209m 209: ff/87/5f",    "[38;5;210m 210: ff/87/87",    "[38;5;211m 211: ff/87/af",    "[38;5;212m 212: ff/87/d7",    "[38;5;213m 213: ff/87/ff")] );
+    push(@arr, [( "[38;5;214m 214: ff/af/00",    "[38;5;215m 215: ff/af/5f",    "[38;5;216m 216: ff/af/87",    "[38;5;217m 217: ff/af/af",    "[38;5;218m 218: ff/af/d7",    "[38;5;219m 219: ff/af/ff")] );
+    push(@arr, [( "[38;5;220m 220: ff/d7/00",    "[38;5;221m 221: ff/d7/5f",    "[38;5;222m 222: ff/d7/87",    "[38;5;223m 223: ff/d7/af",    "[38;5;224m 224: ff/d7/d7",    "[38;5;225m 225: ff/d7/ff")] );
+    push(@arr, [( "[38;5;226m 226: ff/ff/00",    "[38;5;227m 227: ff/ff/5f",    "[38;5;228m 228: ff/ff/87",    "[38;5;229m 229: ff/ff/af",    "[38;5;230m 230: ff/ff/d7",    "[38;5;231m 231: ff/ff/ff")] );
+    push(@arr, [( "[38;5;232m 232: 08/08/08",    "[38;5;233m 233: 12/12/12",    "[38;5;234m 234: 1c/1c/1c",    "[38;5;235m 235: 26/26/26",    "[38;5;236m 236: 30/30/30",    "[38;5;237m 237: 3a/3a/3a")] );
+    push(@arr, [( "[38;5;238m 238: 44/44/44",    "[38;5;239m 239: 4e/4e/4e",    "[38;5;240m 240: 58/58/58",    "[38;5;241m 241: 62/62/62",    "[38;5;242m 242: 6c/6c/6c",    "[38;5;243m 243: 76/76/76")] );
+    push(@arr, [( "[38;5;244m 244: 80/80/80",    "[38;5;245m 245: 8a/8a/8a",    "[38;5;246m 246: 94/94/94",    "[38;5;247m 247: 9e/9e/9e",    "[38;5;248m 248: a8/a8/a8",    "[38;5;249m 249: b2/b2/b2")] );
+    push(@arr, [( "[38;5;250m 250: bc/bc/bc",    "[38;5;251m 251: c6/c6/c6",    "[38;5;252m 252: d0/d0/d0",    "[38;5;253m 253: da/da/da",    "[38;5;254m 254: e4/e4/e4",    "[38;5;255m 255: ee/ee/ee")] );
+
+    if( $ARGV[0] eq "-s" || $ARGV[1] eq "-s" || $ARGV[2] eq "-s" ){
+        $padding = "    ";
+    }
+    else {
+
+    }
+
+    # display in reverse order
+    if( $ARGV[0] eq "-r" || $ARGV[1] eq "-r" || $ARGV[2] eq "-r" ){
+        for( $dimone = 0; $dimone < scalar @arr; $dimone++ ) {
+
+            $seed = ($dimone % 6) * -1;
+            for( $dimtwo = 0; $dimtwo < 6; $dimtwo++ ) {
+
+                $movone = $seed;
+                $movtwo = $seed * -1;
+
+                print $arr[$dimone][$dimtwo] . $padding;
+
+                $seed = $seed+1;
+            }
+
+            print "\n";
+        }
+    }
+    else {
+        for( $dimone = 0; $dimone < scalar @arr; $dimone++ ) {
+
+            $seed = ($dimone % 6) * -1;
+            for( $dimtwo = 0; $dimtwo < 6; $dimtwo++ ) {
+
+                $movone = $seed;
+                $movtwo = $seed * -1;
+
+                $newone = $dimone+$movone;
+                $newtwo = $dimtwo+$movtwo;
+
+                if( $newone < scalar @arr ){
+                    print $arr[$newone][$newtwo] . $padding;
+                }
+
+                $seed = $seed+1;
+            }
+
+            print "\n";
+        }
+    }
+    print "\n";
+    print "\n";
+
+}
+else {
+    print "[38;5;16m 16:  00/00/00\n";
+    print "[38;5;17m 17:  00/00/5f\n";
+    print "[38;5;18m 18:  00/00/87\n";
+    print "[38;5;19m 19:  00/00/af\n";
+    print "[38;5;20m 20:  00/00/d7\n";
+    print "[38;5;21m 21:  00/00/ff\n";
+    print "[38;5;22m 22:  00/5f/00\n";
+    print "[38;5;23m 23:  00/5f/5f\n";
+    print "[38;5;24m 24:  00/5f/87\n";
+    print "[38;5;25m 25:  00/5f/af\n";
+    print "[38;5;26m 26:  00/5f/d7\n";
+    print "[38;5;27m 27:  00/5f/ff\n";
+    print "[38;5;28m 28:  00/87/00\n";
+    print "[38;5;29m 29:  00/87/5f\n";
+    print "[38;5;30m 30:  00/87/87\n";
+    print "[38;5;31m 31:  00/87/af\n";
+    print "[38;5;32m 32:  00/87/d7\n";
+    print "[38;5;33m 33:  00/87/ff\n";
+    print "[38;5;34m 34:  00/af/00\n";
+    print "[38;5;35m 35:  00/af/5f\n";
+    print "[38;5;36m 36:  00/af/87\n";
+    print "[38;5;37m 37:  00/af/af\n";
+    print "[38;5;38m 38:  00/af/d7\n";
+    print "[38;5;39m 39:  00/af/ff\n";
+    print "[38;5;40m 40:  00/d7/00\n";
+    print "[38;5;41m 41:  00/d7/5f\n";
+    print "[38;5;42m 42:  00/d7/87\n";
+    print "[38;5;43m 43:  00/d7/af\n";
+    print "[38;5;44m 44:  00/d7/d7\n";
+    print "[38;5;45m 45:  00/d7/ff\n";
+    print "[38;5;46m 46:  00/ff/00\n";
+    print "[38;5;47m 47:  00/ff/5f\n";
+    print "[38;5;48m 48:  00/ff/87\n";
+    print "[38;5;49m 49:  00/ff/af\n";
+    print "[38;5;50m 50:  00/ff/d7\n";
+    print "[38;5;51m 51:  00/ff/ff\n";
+    print "[38;5;52m 52:  5f/00/00\n";
+    print "[38;5;53m 53:  5f/00/5f\n";
+    print "[38;5;54m 54:  5f/00/87\n";
+    print "[38;5;55m 55:  5f/00/af\n";
+    print "[38;5;56m 56:  5f/00/d7\n";
+    print "[38;5;57m 57:  5f/00/ff\n";
+    print "[38;5;58m 58:  5f/5f/00\n";
+    print "[38;5;59m 59:  5f/5f/5f\n";
+    print "[38;5;60m 60:  5f/5f/87\n";
+    print "[38;5;61m 61:  5f/5f/af\n";
+    print "[38;5;62m 62:  5f/5f/d7\n";
+    print "[38;5;63m 63:  5f/5f/ff\n";
+    print "[38;5;64m 64:  5f/87/00\n";
+    print "[38;5;65m 65:  5f/87/5f\n";
+    print "[38;5;66m 66:  5f/87/87\n";
+    print "[38;5;67m 67:  5f/87/af\n";
+    print "[38;5;68m 68:  5f/87/d7\n";
+    print "[38;5;69m 69:  5f/87/ff\n";
+    print "[38;5;70m 70:  5f/af/00\n";
+    print "[38;5;71m 71:  5f/af/5f\n";
+    print "[38;5;72m 72:  5f/af/87\n";
+    print "[38;5;73m 73:  5f/af/af\n";
+    print "[38;5;74m 74:  5f/af/d7\n";
+    print "[38;5;75m 75:  5f/af/ff\n";
+    print "[38;5;76m 76:  5f/d7/00\n";
+    print "[38;5;77m 77:  5f/d7/5f\n";
+    print "[38;5;78m 78:  5f/d7/87\n";
+    print "[38;5;79m 79:  5f/d7/af\n";
+    print "[38;5;80m 80:  5f/d7/d7\n";
+    print "[38;5;81m 81:  5f/d7/ff\n";
+    print "[38;5;82m 82:  5f/ff/00\n";
+    print "[38;5;83m 83:  5f/ff/5f\n";
+    print "[38;5;84m 84:  5f/ff/87\n";
+    print "[38;5;85m 85:  5f/ff/af\n";
+    print "[38;5;86m 86:  5f/ff/d7\n";
+    print "[38;5;87m 87:  5f/ff/ff\n";
+    print "[38;5;88m 88:  87/00/00\n";
+    print "[38;5;89m 89:  87/00/5f\n";
+    print "[38;5;90m 90:  87/00/87\n";
+    print "[38;5;91m 91:  87/00/af\n";
+    print "[38;5;92m 92:  87/00/d7\n";
+    print "[38;5;93m 93:  87/00/ff\n";
+    print "[38;5;94m 94:  87/5f/00\n";
+    print "[38;5;95m 95:  87/5f/5f\n";
+    print "[38;5;96m 96:  87/5f/87\n";
+    print "[38;5;97m 97:  87/5f/af\n";
+    print "[38;5;98m 98:  87/5f/d7\n";
+    print "[38;5;99m 99:  87/5f/ff\n";
+    print "[38;5;100m 100 :87/87/00\n";
+    print "[38;5;101m 101 :87/87/5f\n";
+    print "[38;5;102m 102 :87/87/87\n";
+    print "[38;5;103m 103 :87/87/af\n";
+    print "[38;5;104m 104 :87/87/d7\n";
+    print "[38;5;105m 105 :87/87/ff\n";
+    print "[38;5;106m 106 :87/af/00\n";
+    print "[38;5;107m 107 :87/af/5f\n";
+    print "[38;5;108m 108 :87/af/87\n";
+    print "[38;5;109m 109 :87/af/af\n";
+    print "[38;5;110m 110 :87/af/d7\n";
+    print "[38;5;111m 111 :87/af/ff\n";
+    print "[38;5;112m 112 :87/d7/00\n";
+    print "[38;5;113m 113 :87/d7/5f\n";
+    print "[38;5;114m 114 :87/d7/87\n";
+    print "[38;5;115m 115 :87/d7/af\n";
+    print "[38;5;116m 116 :87/d7/d7\n";
+    print "[38;5;117m 117 :87/d7/ff\n";
+    print "[38;5;118m 118 :87/ff/00\n";
+    print "[38;5;119m 119 :87/ff/5f\n";
+    print "[38;5;120m 120 :87/ff/87\n";
+    print "[38;5;121m 121 :87/ff/af\n";
+    print "[38;5;122m 122 :87/ff/d7\n";
+    print "[38;5;123m 123 :87/ff/ff\n";
+    print "[38;5;124m 124 :af/00/00\n";
+    print "[38;5;125m 125 :af/00/5f\n";
+    print "[38;5;126m 126 :af/00/87\n";
+    print "[38;5;127m 127 :af/00/af\n";
+    print "[38;5;128m 128 :af/00/d7\n";
+    print "[38;5;129m 129 :af/00/ff\n";
+    print "[38;5;130m 130 :af/5f/00\n";
+    print "[38;5;131m 131 :af/5f/5f\n";
+    print "[38;5;132m 132 :af/5f/87\n";
+    print "[38;5;133m 133 :af/5f/af\n";
+    print "[38;5;134m 134 :af/5f/d7\n";
+    print "[38;5;135m 135 :af/5f/ff\n";
+    print "[38;5;136m 136 :af/87/00\n";
+    print "[38;5;137m 137 :af/87/5f\n";
+    print "[38;5;138m 138 :af/87/87\n";
+    print "[38;5;139m 139 :af/87/af\n";
+    print "[38;5;140m 140 :af/87/d7\n";
+    print "[38;5;141m 141 :af/87/ff\n";
+    print "[38;5;142m 142 :af/af/00\n";
+    print "[38;5;143m 143 :af/af/5f\n";
+    print "[38;5;144m 144 :af/af/87\n";
+    print "[38;5;145m 145 :af/af/af\n";
+    print "[38;5;146m 146 :af/af/d7\n";
+    print "[38;5;147m 147 :af/af/ff\n";
+    print "[38;5;148m 148 :af/d7/00\n";
+    print "[38;5;149m 149 :af/d7/5f\n";
+    print "[38;5;150m 150 :af/d7/87\n";
+    print "[38;5;151m 151 :af/d7/af\n";
+    print "[38;5;152m 152 :af/d7/d7\n";
+    print "[38;5;153m 153 :af/d7/ff\n";
+    print "[38;5;154m 154 :af/ff/00\n";
+    print "[38;5;155m 155 :af/ff/5f\n";
+    print "[38;5;156m 156 :af/ff/87\n";
+    print "[38;5;157m 157 :af/ff/af\n";
+    print "[38;5;158m 158 :af/ff/d7\n";
+    print "[38;5;159m 159 :af/ff/ff\n";
+    print "[38;5;160m 160 :d7/00/00\n";
+    print "[38;5;161m 161 :d7/00/5f\n";
+    print "[38;5;162m 162 :d7/00/87\n";
+    print "[38;5;163m 163 :d7/00/af\n";
+    print "[38;5;164m 164 :d7/00/d7\n";
+    print "[38;5;165m 165 :d7/00/ff\n";
+    print "[38;5;166m 166 :d7/5f/00\n";
+    print "[38;5;167m 167 :d7/5f/5f\n";
+    print "[38;5;168m 168 :d7/5f/87\n";
+    print "[38;5;169m 169 :d7/5f/af\n";
+    print "[38;5;170m 170 :d7/5f/d7\n";
+    print "[38;5;171m 171 :d7/5f/ff\n";
+    print "[38;5;172m 172 :d7/87/00\n";
+    print "[38;5;173m 173 :d7/87/5f\n";
+    print "[38;5;174m 174 :d7/87/87\n";
+    print "[38;5;175m 175 :d7/87/af\n";
+    print "[38;5;176m 176 :d7/87/d7\n";
+    print "[38;5;177m 177 :d7/87/ff\n";
+    print "[38;5;178m 178 :d7/af/00\n";
+    print "[38;5;179m 179 :d7/af/5f\n";
+    print "[38;5;180m 180 :d7/af/87\n";
+    print "[38;5;181m 181 :d7/af/af\n";
+    print "[38;5;182m 182 :d7/af/d7\n";
+    print "[38;5;183m 183 :d7/af/ff\n";
+    print "[38;5;184m 184 :d7/d7/00\n";
+    print "[38;5;185m 185 :d7/d7/5f\n";
+    print "[38;5;186m 186 :d7/d7/87\n";
+    print "[38;5;187m 187 :d7/d7/af\n";
+    print "[38;5;188m 188 :d7/d7/d7\n";
+    print "[38;5;189m 189 :d7/d7/ff\n";
+    print "[38;5;190m 190 :d7/ff/00\n";
+    print "[38;5;191m 191 :d7/ff/5f\n";
+    print "[38;5;192m 192 :d7/ff/87\n";
+    print "[38;5;193m 193 :d7/ff/af\n";
+    print "[38;5;194m 194 :d7/ff/d7\n";
+    print "[38;5;195m 195 :d7/ff/ff\n";
+    print "[38;5;196m 196 :ff/00/00\n";
+    print "[38;5;197m 197 :ff/00/5f\n";
+    print "[38;5;198m 198 :ff/00/87\n";
+    print "[38;5;199m 199 :ff/00/af\n";
+    print "[38;5;200m 200 :ff/00/d7\n";
+    print "[38;5;201m 201 :ff/00/ff\n";
+    print "[38;5;202m 202 :ff/5f/00\n";
+    print "[38;5;203m 203 :ff/5f/5f\n";
+    print "[38;5;204m 204 :ff/5f/87\n";
+    print "[38;5;205m 205 :ff/5f/af\n";
+    print "[38;5;206m 206 :ff/5f/d7\n";
+    print "[38;5;207m 207 :ff/5f/ff\n";
+    print "[38;5;208m 208 :ff/87/00\n";
+    print "[38;5;209m 209 :ff/87/5f\n";
+    print "[38;5;210m 210 :ff/87/87\n";
+    print "[38;5;211m 211 :ff/87/af\n";
+    print "[38;5;212m 212 :ff/87/d7\n";
+    print "[38;5;213m 213 :ff/87/ff\n";
+    print "[38;5;214m 214 :ff/af/00\n";
+    print "[38;5;215m 215 :ff/af/5f\n";
+    print "[38;5;216m 216 :ff/af/87\n";
+    print "[38;5;217m 217 :ff/af/af\n";
+    print "[38;5;218m 218 :ff/af/d7\n";
+    print "[38;5;219m 219 :ff/af/ff\n";
+    print "[38;5;220m 220 :ff/d7/00\n";
+    print "[38;5;221m 221 :ff/d7/5f\n";
+    print "[38;5;222m 222 :ff/d7/87\n";
+    print "[38;5;223m 223 :ff/d7/af\n";
+    print "[38;5;224m 224 :ff/d7/d7\n";
+    print "[38;5;225m 225 :ff/d7/ff\n";
+    print "[38;5;226m 226 :ff/ff/00\n";
+    print "[38;5;227m 227 :ff/ff/5f\n";
+    print "[38;5;228m 228 :ff/ff/87\n";
+    print "[38;5;229m 229 :ff/ff/af\n";
+    print "[38;5;230m 230 :ff/ff/d7\n";
+    print "[38;5;231m 231 :ff/ff/ff\n";
+    print "[38;5;232m 232 :08/08/08\n";
+    print "[38;5;233m 233 :12/12/12\n";
+    print "[38;5;234m 234 :1c/1c/1c\n";
+    print "[38;5;235m 235 :26/26/26\n";
+    print "[38;5;236m 236 :30/30/30\n";
+    print "[38;5;237m 237 :3a/3a/3a\n";
+    print "[38;5;238m 238 :44/44/44\n";
+    print "[38;5;239m 239 :4e/4e/4e\n";
+    print "[38;5;240m 240 :58/58/58\n";
+    print "[38;5;241m 241 :62/62/62\n";
+    print "[38;5;242m 242 :6c/6c/6c\n";
+    print "[38;5;243m 243 :76/76/76\n";
+    print "[38;5;244m 244 :80/80/80\n";
+    print "[38;5;245m 245 :8a/8a/8a\n";
+    print "[38;5;246m 246 :94/94/94\n";
+    print "[38;5;247m 247 :9e/9e/9e\n";
+    print "[38;5;248m 248 :a8/a8/a8\n";
+    print "[38;5;249m 249 :b2/b2/b2\n";
+    print "[38;5;250m 250 :bc/bc/bc\n";
+    print "[38;5;251m 251 :c6/c6/c6\n";
+    print "[38;5;252m 252 :d0/d0/d0\n";
+    print "[38;5;253m 253 :da/da/da\n";
+    print "[38;5;254m 254 :e4/e4/e4\n";
+    print "[38;5;255m 255 :ee/ee/ee\n";
+    print "\n";
+    print "\n";
+}
+print "0m";
+exit;
+#+end_src

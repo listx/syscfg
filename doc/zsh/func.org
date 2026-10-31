@@ -1474,7 +1474,7 @@ vertical_label()
 
 ** ~color_cycle~
 
-Change the terminal's color theme, using ~script/terminal-themes~.
+Change the terminal's color theme, using [[id:205ec9d4-2e2f-46f7-a1aa-c3105e1ba491::change-theme][~script/terminal-themes~]].
 
 #+name: func-color-cycle
 #+header: :tangle zsh/func/color_cycle

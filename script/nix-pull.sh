@@ -25,4 +25,3 @@ shift
 for closure in $(ssh "${USER}@${remote}" nix-env -q --out-path | awk '{print $2}'); do
     nix_pull "${remote}" "${closure}"
 done
-

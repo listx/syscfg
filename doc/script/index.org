@@ -7,6 +7,8 @@
 #+begin_src txt
 find-long-lines.org
 prepare-commit-msg.org
+utilities.org
+terminal-themes.org
 #+end_src
 
 * Introduction

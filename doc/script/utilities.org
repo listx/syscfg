@@ -1,0 +1,1033 @@
+:PROPERTIES:
+:ID:       c4dffde2-6b58-43f4-92bb-d9bc5b4931f2
+:END:
+#+title: Utility scripts
+
+* Files and archives
+
+** ~aex.sh~
+
+~aex~ ("advanced extractor") extracts one or more archives of mixed types, each into its own directory. This avoids archives that scatter files into the current directory, and it removes any chain of nested directories left over after extraction.
+
+#+name: aex
+#+header: :shebang #!/usr/bin/env zsh
+#+header: :tangle script/aex.sh
+#+begin_src zsh
+# Program: aex
+# Version: 1.0
+# Author: Linus Arver
+# License: GPLv3
+
+# Copyright (C) 2010 Linus Arver
+
+# aex, for "advanced extractor," takes one or more archive files and extracts
+# them all intelligently to prevent (1) so-called "tar bombs" that have twenty,
+# thirty files in them in the archive's root directory, and (2) spurious,
+# nested folders that simply contain other folders (i.e., if an archive,
+# after extraction, looks like ./archive-name/archive-name/archive-name/files,
+# or the like, aex will remove these middle-men folders to make it look like
+# ./archive-name/files).
+#
+# The beauty of aex is that it can take multiple archive types (a mixture of, say, *.zip and *.tar.gz) and extract them all in one go.
+#
+# Below is a quick summary of how aex operates.
+#
+# 1. Verify that every single file passed is a recognized archive type, is a valid existing file, and ensure that a directory bearing the same basename(s) as the file(s) do not already exist
+# 2. For each file, do the following:
+#    a. Create a new directory based on the file's name
+#    b. Extract the file into that directory
+#    c. Remove the chain of nested directories, if any
+
+# Colors (comment out to disable)
+c1="\x1b[1;32m" # bright green
+c2="\x1b[1;33m" # bright yellow
+c3="\x1b[1;34m" # bright blue
+c4="\x1b[1;36m" # bright cyan
+c5="\x1b[1;35m" # bright purple
+c6="\x1b[1;31m" # bright red
+ce="\x1b[0m"
+
+# Error messages
+aex_msg() {
+	case $1 in
+		0)
+			echo "aex: operation aborted (no change)"
+			exit 1
+			;;
+		1)
+			echo "aex: directory \`$2' was created by someone since this script was initially called"
+			echo "aex: operation aborted"
+			exit 1
+			;;
+		2)
+			echo "aex: extraction of file \`$c1$2$ce' failed (file format/extension mismatch, or damaged archive)"
+			exit 1
+			;;
+		8)
+			echo "aex: extracting file \`$c1$2$ce' into current directory with \`"$c3$3$ce"'...\n"
+			;;
+		9)
+			echo "aex: extracting file \`$c1$2$ce' into \`$c2$3$ce' with \`"$c3$4$ce"'...\n"
+			;;
+		99)
+			echo "aex: unexpected fatal error while working with file \`$c1$2$ce'"
+			echo "aex: operation aborted"
+			exit 1
+			;;
+		*) # this will only happen if we have a typo in our code when calling aex_msg()!
+			echo "aex: unrecognized error"
+			;;
+	esac
+}
+
+# A function to get the basename of an archive
+aex_fb() {
+	fb=""
+	# get basename of archive file
+	case $1 in
+		*.tar.bz2)
+			fb=$(basename $1 .tar.bz2)
+			;;
+		*.tar.gz)
+			fb=$(basename $1 .tar.gz)
+			;;
+		*.tar.xz)
+			fb=$(basename $1 .tar.xz)
+			;;
+		*)
+			# use zsh's built-in ':r' extension-remover
+			fb=$1:r
+			;;
+	esac
+	echo $fb
+}
+
+#----------------#
+# PROGRAM START! #
+#----------------#
+
+#------------------#
+# check for errors #
+#------------------#
+
+# exit if no files were given by the user
+[[ -z $@ ]] && echo "aex: no files specified" && exit 1
+
+fb=""
+# various error checking before we do anything
+for f in $@; do
+	if [[ ! -f $f ]]; then
+		echo "aex: invalid file \`$f'"
+		aex_msg 0
+	fi
+	# ensure that we recognize all arguments' archive types
+	case $f in
+		*.tar|*.tar.bz2|*.tbz2|*.bz2|*.tar.gz|*.tgz|*.gz|*.tar.xz|*.txz|*.xz|*.zip|*.rar|*.7z)
+			# ensure that the given file(s) actually exist (as a regular file, not a
+			# special file or directory)
+			# ensure that a directory with the same basename does not already exist
+			fb=$(aex_fb $f) # can safely do this because $f is a valid and recognized file type
+			if [[ -d $fb ]]; then
+				echo "aex: destination directory \`$fb' already exists"
+				aex_msg 0
+			fi
+			;;
+		*)
+			echo "aex: $f: \`$f:e' is not a recognized archive file format"
+			aex_msg 0
+			;;
+	esac
+done
+
+#-------------------#
+# begin extraction! #
+#-------------------#
+
+fbs=() # array to be filled by basename directory names ($fb below)
+dir0=$PWD
+current=1
+for f in $@; do
+	fb=$(aex_fb $f)
+	fbs+=($fb) # append $fb as an element into the $fbs array
+	echo "\naex: ($current/$#): processing \`$c1$f$ce'..."
+
+	# For the tar archives (since they are easy to work with uniformly), first
+	# into the archive, and see if (1) the archive holds a SINGLE DIRECTORY
+	# that contains all files and (2) this directory has the SAME NAME as the
+	# archive's basename ($fb) -- if so, we can skip the creation of a
+	# directory named ($fb) (thus avoiding the waste of detecting 1 single
+	# "nested directory") for most archive types
+	dir_create=true
+	com_info=""
+	case $f in
+		*.tar|*.tar.gz|*.tgz|*.tar.bz|*.tar.bz2|*.tbz|*.tbz2|*.tar.xz|*.txz)
+			com_info="tar tf"
+			;;
+		*.rar)
+			com_info="unrar vb"
+			;;
+		*.zip)
+			com_info="zipinfo -1"
+			;;
+		*.7z)
+			com_info="" # 7z does not support bare listing of archived contents yet (June 2010)
+			;;
+	esac
+	# find the root dir in this archive -- sometimes the root dir is displayed
+	# on its own line, but sometimes not (even though it exists!) so we have to
+	# manually check ourselves
+	if [[ -n $com_info ]]; then
+		top=$(eval $com_info ${(q)f} | sort | head -n 1 | sed 's/\/.*//')
+		if [[ $(eval $com_info ${(q)f} | sed "s/^$top$/\//" | sed "s/^$top\//\//g" | sed 's/^\/.*//g' | sed '/^$/d' | wc -l) -eq 0 && $top == $fb ]]; then
+			dir_create=false
+			echo "aex: root directory in archive matches suggested destination directory name"
+			echo "aex: skipping directory creation"
+		fi
+	fi
+
+	if $dir_create; then
+		echo -n "aex: creating destination directory \`$c2$fb$ce'... "
+		# raise error and exit if between the starting of this script, and
+		# until it finishes, someone manually created a directory with the same
+		# name that we are about to extract into (thus making the "mkdir $fb"
+		# command fail)
+		mkdir $fb 1>&- 2>&- || aex_msg 1 $fb
+		# (FYI: the "1>&- 2>&-" syntax manually suppresses stdout and stderr, without using /dev/null)
+		echo "done"
+	fi
+
+	case $f in
+		*.tar|*.tar.gz|*.tgz|*.tar.bz|*.tar.bz2|*.tbz|*.tbz2|*.tar.xz|*.txz)
+			# two -v's for more verbosity than just a single -v
+			# extract the file with given info, but if the extracting program fails, then inform user of this (in case the program's own error messages aren't clear enough)
+			# the '2>&1' makes stderr print to stdout (so that sed can catch it)
+			if $dir_create; then
+				aex_msg 9 $f $fb "tar xvf $f -C $fb"
+				tar xvf $f -C $fb 2>&1 | sed "s/^/  $c1>$ce /" || aex_msg 2 $f
+			else
+				aex_msg 8 $f "tar xvf $f"
+				tar xvf $f 2>&1 | sed "s/^/  $c1>$ce /" || aex_msg 2 $f
+			fi
+			;;
+		*.gz)
+			cd $fb
+			aex_msg 9 $f $fb "gzip -dv ../$f"
+			gzip -dv ../$f 2>&1 | sed "s/^/  $c1>$ce /" || aex_msg 2 $f
+			cd ..
+			;;
+		*.bz|*.bz2)
+			cd $fb
+			aex_msg 9 $f $fb "bzip2 -dv ../$f"
+			bzip2 -dv ../$f 2>&1 | sed "s/^/  $c1>$ce /" || aex_msg 2 $f
+			cd ..
+			;;
+		*.xz)
+			cd $fb
+			aex_msg 9 $f $fb "xz -dv ../$f"
+			xz -dv ../$f 2>&1 | sed "s/^/  $c1>$ce /" || aex_msg 2 $f
+			cd ..
+			;;
+		*.zip)
+			if $dir_create; then
+				aex_msg 9 $f $fb "unzip $f -d $fb"
+				unzip $f -d $fb 2>&1 | sed "s/^/  $c1>$ce /" || aex_msg 2 $f
+			else
+				aex_msg 8 $f "unzip $f"
+				unzip $f 2>&1 | sed "s/^/  $c1>$ce /" || aex_msg 2 $f
+			fi
+			;;
+		*.rar)
+			if $dir_create; then
+				aex_msg 9 $f $fb "urar x $f $fb"
+				unrar x $f $fb 2>&1 | sed "s/^/  $c1>$ce /" || aex_msg 2 $f
+			else
+				aex_msg 8 $f "unrar x $f"
+				unrar x $f 2>&1 | sed "s/^/  $c1>$ce /" || aex_msg 2 $f
+			fi
+			;;
+		*.7z)
+			aex_msg 9 $f $fb "7z x -o$fb $f"
+			7z x -o$fb $f 2>&1 | sed "s/^/  $c1>$ce /" || aex_msg 2 $f
+			;;
+		*)
+			# NOTE: this should never happen (I've tried to make message 99 happen, by starting the extraction on a file, then renaming it before the extraction program is called, but still it does not reach this area!)
+			aex_msg 99 $f # should never occur -- it's just in here for the sake of completeness
+			;;
+	esac
+
+	# remove nested directories (directories that only contain 1 child directory) in
+	# the extracted-to directory above (we call such directories "eggs")
+	cd $fb
+	dir1=$PWD # $dir1 is same as $fb, but is nicer b/c it is the full directory path
+	dir2=""
+
+	eggs=0
+	echo -n "\naex: nested directories detected inside \`$c2$fb$ce': "
+	if [[ $(ls -A1 | wc -l) -eq 1 && -d $(ls -A) ]]; then
+		echo -n "$c4$(ls -A)$ce "
+		cd "$(ls -A)"
+		let eggs=eggs+1
+		[[ eggs -eq 1 ]] && dir2=$PWD # name the very first egg "dir2"
+		while [[ $(ls -A1 | wc -l) -eq 1 && -d $(ls -A) ]]; do
+			echo -n $c2"->"$ce $c4$(ls -A)$ce" "
+			cd "$(ls -A)"
+			let eggs=eggs+1
+		done
+		echo
+	else
+		echo "none"
+	fi
+
+	# if there were any eggs, move the children up to $fb's level
+	if [[ $eggs -gt 0 ]]; then
+		echo "aex: moving contents of non-nested directory \`$c4$(echo $PWD:t)$ce' to \`$c2$dir1:t$ce'\n"
+		# the *(D) simply means the same as '*', but will also match dotfiles ('D' does this)
+		mv -v *(D) $dir1 2>&1 | sed "s/^/  $c4>$ce /"
+
+		# move back to root of destination directory, to remove the lineage of eggs (everything
+		# below $dir2 contains a single lineage of nested directories -- so we remove them all with
+		# the 'find' command below)
+		cd $dir1
+		echo "\naex: removing nested empty directories\n"
+		find $dir2 -depth -type d -empty -exec rmdir -v {} \; 2>&1 | sed "s/^/  $c5>$ce /"
+	fi
+
+	echo "\naex: ($current/$#): \`$c1$f$ce' processed\n"
+	# move back to our original working directory to process the next archive
+	cd $dir0
+
+	echo "$c6----------------------------------------$ce"
+	let current=current+1 # use "let" to tell shell that we're working with integers, not strings
+done
+
+fs=""; ds=""
+if [[ $# -eq 1 ]]; then
+	fs="\`$c1$1$ce'"
+	ds="directory"
+else
+	fs="all files $c1$@$ce"
+	ds="directories"
+fi
+echo "\naex: $fs extracted successfully"
+echo "aex: new extracted-to $ds:"
+for dir_new in $fbs; do
+	echo "  $c5$dir_new$ce"
+done
+echo
+
+# vim: syntax=zsh
+#+end_src
+
+** ~decrypt.sh~
+
+Decrypt a GPG file, either to an output file (~outfile~) or to a pager (~viewfile~). The ~dec~ [[id:9b76d360-8483-4449-b3a5-6c3678defc58][alias]] in Zsh uses this.
+
+#+name: decrypt
+#+header: :shebang #!/usr/bin/env bash
+#+header: :tangle script/decrypt.sh
+#+begin_src bash
+# decrypt files painlessly
+
+if [[ $1 == "outfile" ]]; then
+	gpg2 -o "$(basename "$2" ".gpg")" -d "$2"
+elif [[ $1 == "viewfile" ]]; then
+	gpg2 -d "$2" | less
+else
+	echo "error: ivalid mode \`$1'"
+fi
+#+end_src
+
+** ~yodel.sh~
+
+Read YouTube links or video IDs from standard input, download their audio, and normalize its loudness with ~r128gain~.
+
+#+name: yodel
+#+header: :shebang #!/usr/bin/env bash
+#+header: :tangle script/yodel.sh
+#+begin_src bash
+
+set -o errexit
+set -o nounset
+set -o pipefail
+
+# Given a list of youtube links, download them all.
+
+while IFS= read -r link; do
+	# If the link is just a plain video ID, construct the link.
+	if [[ ! "${link}" =~ ^https://.* ]]; then
+		link="https://www.youtube.com/watch?v=${link}"
+	fi
+
+	f="$(youtube-dl --get-filename -o '%(title)s-%(id)s' "$link")"
+	youtube-dl --extract-audio "$link"
+	r128gain "${f}"*
+done
+#+end_src
+
+* Clipboard and paths
+
+** ~copy-clipboard.sh~
+
+Copy standard input to the clipboard, and echo it back. This prefers ~tmux~ if we're inside it, because ~tmux~ can also set the system clipboard. [[id:100011e3-ba36-4078-975e-6136d25e60cc][Emacs]], [[id:a4d31d6e-b7ac-4638-8608-8a1bb80ae781][Git]], and [[id:a4d31d6e-b7ac-4638-8608-8a1bb80ae781][Tig]] commands all call this.
+
+#+name: copy-clipboard
+#+header: :shebang #!/usr/bin/env bash
+#+header: :tangle script/copy-clipboard.sh
+#+begin_src bash
+
+set -euo pipefail
+
+copy_prefer_tmux()
+{
+	# Prefer to copy into tmux if possible, because it can also (with the -w
+	# flag) attempt to copy into the system clipboard.
+	if [[ -n "${TMUX:-}" ]]; then
+		tmux load-buffer -w -
+	else
+		copy_clipboard
+	fi
+}
+
+copy_clipboard()
+{
+	case "$(uname)" in
+	Linux) xsel --clipboard ;;
+	Darwin) pbcopy ;;
+	esac
+}
+
+main()
+{
+	local input
+	input=$(</dev/stdin)
+	if [[ "${1:-}" == "--base64" ]]; then
+		input="$(echo -n "${input}" | base64 --decode)"
+	fi
+	echo -n "${input}" | copy_prefer_tmux
+	echo "${input}"
+}
+
+main "$@"
+#+end_src
+
+** ~simplify_path.sh~
+
+Shorten a path by truncating its leading directories, so that ~\~/aaa/bbb/ccc/hello~ becomes ~\~/a/b/c/hello~. Our [[id:9170fae9-85de-4fd8-96fb-f3d3d2215f94][~tmux~ window titles]] and our [[id:fd0afd0c-d608-4ad5-83ff-6a080a62bc66::func-prompt-kody-setup][Zsh prompt]] use this. It also reads [[id:4ef05c5a-117f-4b9c-8bee-dc1eaae8efc7::path-aliases][~zsh/path-aliases~]] to recognize named directories.
+
+#+name: simplify-path
+#+header: :shebang #!/usr/bin/env bash
+#+header: :tangle script/simplify_path.sh
+#+begin_src bash
+
+# Truncate a path, based on __TRUNCATE_THRESHOLD. E.g., this script converts
+#
+#   ~/aaaaaaaaaaaaaa/bbbbbbbbbbbbbbbbb/cccccccccccccc/hello
+#
+# into
+#
+#   ~/a/b/c/hello
+#
+# and is meant to be used for TMUX window titles, although it can be used
+# elsewhere as well.
+
+set -euo pipefail
+
+# Recognize specially-named paths.
+__l_get_named_paths()
+{
+	local path_expanded
+	local path_alias
+	__l_named_paths_definition="$HOME/syscfg/zsh/path-aliases"
+	__l_named_paths=()
+	while IFS= read -r line; do
+		# Skip empty lines.
+		if [[ -z "${line}" ]]; then
+			continue
+		fi
+		# Skip comment lines.
+		if [[ "${line}" == \#* ]]; then
+			continue
+		fi
+
+		path_expanded="${line#*=}"
+		# Convert literal "$HOME" to actual value of "$HOME".
+		if [[ "${path_expanded}" == "\${HOME}"* ]]; then
+			path_expanded="${path_expanded/\$\{HOME\}/$HOME}"
+		fi
+		path_alias="${line%=*}"
+		path_alias="${path_alias#hash -d}"
+		# Remove leading whitespace characters. See
+		# https://stackoverflow.com/a/3352015/437583.
+		path_alias="${path_alias#"${path_alias%%[![:space:]]*}"}"
+		__l_named_paths+=("${path_alias}=${path_expanded}")
+	done < "${__l_named_paths_definition}"
+}
+
+path="${1:-}"
+
+is_named_path=0
+
+__l_get_named_paths
+
+# See if we hit any of the specially-named paths. If so, then we set final_path
+# to include it.
+for named_path in "${__l_named_paths[@]}"; do
+	if [[ "${path}" != "${named_path#*=}"* ]]; then
+		continue
+	fi
+
+	# Grab the path alias name. E.g., "s" for ~/syscfg.
+	path_aliased="~${named_path%=*}"
+
+	# Determine how long the full expanded path is. E.g., for ~/syscfg it may be
+	# 14 characters for "/home/l/syscfg".
+	path_expanded_len="${named_path#*=}"
+	path_expanded_len="${#path_expanded_len}"
+
+	# For the "prefix" that can be truncated, make it start from the portion of
+	# the path that excludes the leading prefix that lines up with the expanded
+	# path. E.g., if path is set to "/home/l/syscfg/foo/bar", then we want the
+	# "prefix" to be just "foo/bar".
+	prefix="${path:${path_expanded_len}}"
+	# Remove leading '/', if any.
+	prefix="${prefix#/}"
+
+	# If the prefix has a slash in it (e.g., "foo/bar"), then we need to
+	# identify the last portion "bar" as the basename, and any leading bit as
+	# the prefix (which can be truncated).
+	if [[ "${prefix}" == */* ]]; then
+		basename="${prefix##*/}"
+		prefix="${prefix%/*}"
+		final_path="${path_aliased}/${prefix}/${basename}"
+	else
+		# This is a case where we're given just 1 child directory underneath the
+		# expanded alias. E.g., "/home/l/syscfg/foo". In this case there is
+		# nothing to truncate (both the path alias and the basename should be
+		# fully displayed), so the final_path lacks a "prefix" portion.
+		basename="${prefix}"
+		final_path="${path_aliased}/${basename}"
+	fi
+	is_named_path=1
+	break
+done
+
+if ! (( is_named_path )); then
+	# Convert expanded $HOME path to just "~".
+	if [[ "${path}" == "$HOME"* ]]; then
+		path="~${path#"$HOME"}"
+	fi
+	prefix="${path%/*}"
+	basename="${path##*/}"
+	final_path="${prefix}/${basename}"
+fi
+
+# Truncate long prefix paths.
+__TRUNCATE_THRESHOLD=30
+
+i=0
+mapfile -td / fields < <(printf "%s\0" "${prefix}")
+while (( "${#final_path}" > "${__TRUNCATE_THRESHOLD}" )) && (( i < "${#fields[@]}" )); do
+	# Truncate this portion of the prefix to its first letter.
+	fields["${i}"]="${fields[${i}]::1}"
+	prefix=$(IFS=/; printf '%s' "${fields[*]}")
+	if (( is_named_path )); then
+		final_path="${path_aliased}/${prefix}/${basename}"
+	else
+		final_path="${prefix}/${basename}"
+	fi
+	i=$((i + 1))
+done
+
+# Handle edge cases.
+# shellcheck disable=SC2088
+case "${final_path}" in
+# $HOME path as input.
+"~/~")
+	echo "~"
+	;;
+"/")
+	echo "/"
+	;;
+*)
+	echo "${final_path%/}"
+	;;
+esac
+#+end_src
+
+* Git
+
+** ~gtag.sh~
+
+Commit all changes to tracked files as a new version of a program, and tag that commit.
+
+#+name: gtag
+#+header: :shebang #!/usr/bin/env bash
+#+header: :tangle script/gtag.sh
+#+begin_src bash
+# Git tagging script
+
+# Usage: gtag <PROGRAM_NAME> <VERSION_NUMBER>
+
+# Note: <VERSION_NUMBER> should only be the version number itself; this script
+# will add "v" as a prefix when tagging it with git.
+
+program_name=$1
+version_number=$2
+
+if [[ -z $program_name || -z $version_number ]]; then
+	echo "usage: gtag.sh <PROGRAM_NAME> <VERSION_NUMBER>"
+	exit 1
+fi
+
+git commit -am "$program_name $version_number"
+git tag -a "v$version_number" -m "$program_name $version_number"
+#+end_src
+
+** ~seepr~
+
+Check out a GitHub pull request into a uniquely named local branch, for browsing it locally.
+
+#+name: seepr
+#+header: :shebang #!/usr/bin/env bash
+#+header: :tangle script/seepr
+#+begin_src bash
+
+set -euo pipefail
+
+# Checkout PR from GitHub into a local (uniquely named) branch for local
+# browsing.
+
+usage()
+{
+	echo >&2 "usage: $(basename "${0}") <REMOTE> <PR_NUMBER>"
+}
+
+get_desired_branch_name()
+{
+	local remote
+	local pr_number
+	local branch
+	remote="${1}"
+	pr_number="${2}"
+	branch="${remote}-PR${pr_number}-v1"
+
+	echo "${branch}"
+}
+
+local_branch_name_exists()
+{
+	git branch | grep -q "${1}"
+}
+
+get_unique_desired_branch_name()
+{
+	local branch
+	local counter
+	local counter_len
+	branch="${1}"
+
+	if ! local_branch_name_exists "${branch}"; then
+		echo "${branch}"
+		return
+	fi
+
+	# If the branch name already exists, append a "-v<NUM>" to it, like "-v0" or
+	# "-v1".
+	if [[ "${branch}" =~ .*-v([0-9]+)$ ]]; then
+		counter="${BASH_REMATCH[1]}"
+		counter_len="${#counter}"
+
+		# Make it unique.
+		if [[ -n "${counter:-}" ]]; then
+			((++counter))
+		fi
+
+		# Strip the old counter and replace it with the new one to make this branch
+		# unique.
+		branch="${branch::-${counter_len}}"
+		branch="${branch}${counter}"
+	else
+		# This should never happen, because we always append a "-v1" in
+		# get_desired_branch_name.
+		echo >&2 "error: could not uniquify branch name \`${branch}'"
+		return 1
+	fi
+
+	echo "${branch}"
+}
+
+checkout_pr()
+{
+	local branch
+	local remote
+	local pr_number
+	remote="${1}"
+	pr_number="${2}"
+	branch=$(get_desired_branch_name "${1}" "${2}")
+	branch=$(get_unique_desired_branch_name "${branch}")
+
+	echo >&2 "using unique local branch name: \`$branch'"
+	git fetch "${remote}" "pull/${pr_number}/head:${branch}"
+	git checkout "${branch}"
+}
+
+main()
+{
+	if (( $# != 2 )); then
+		usage
+		exit 1
+	fi
+
+	checkout_pr "${1}" "${2}"
+}
+
+main "$@"
+#+end_src
+
+** ~ref-to-org-link.sh~
+
+Turn a commit SHA into a link to that commit's upstream web page. Only GitHub is supported. Our [[id:a4d31d6e-b7ac-4638-8608-8a1bb80ae781][Git and Tig configurations]] call this.
+
+#+name: ref-to-org-link
+#+header: :shebang #!/usr/bin/env bash
+#+header: :tangle script/git/ref-to-org-link.sh
+#+begin_src bash
+#
+# Given a Git commit SHA from either the command line or STDIN, get a link to
+# the upstream web page for that commit. Currently only GitHub is supported.
+
+set -euo pipefail
+
+get_upstream_link()
+{
+	local sha="${1:-}"
+	local remote
+
+	# A remote will typically look like "git@github.com:foo/bar.git". We
+	# have to clean this up to look like
+	# "https://github.com/foo/bar/commit/<SHA>".
+	remote="$(git rev-parse --abbrev-ref --symbolic-full-name "@{u}")"
+
+	# Get rid of the "/master" if the remote is "origin/master", so we just
+	# have "origin".
+	remote="${remote%/*}"
+
+	remote="$(git remote get-url "${remote}")"
+	case "${remote}" in
+	git@github.com*)
+		if [[ "${remote}" =~ git@github.com: ]]; then
+			remote="${remote#git@github.com:}"
+			remote="${remote%.git}"
+			remote="https://github.com/${remote}"
+		fi
+		;;
+	*)
+		echo >&2 "non-github upstreams are not supported"
+		return 1
+		;;
+	esac
+
+	echo "${remote}/commit/${sha}"
+}
+
+main()
+{
+	local sha="${1:-}"
+	if [[ -z "${sha}" ]]; then
+		sha=$(</dev/stdin)
+	fi
+
+	local link_target
+	local link_desc
+
+	link_target="$(get_upstream_link "${sha}")"
+	link_desc="$(git show --no-patch --pretty=reference "${sha}")"
+
+	echo "[[${link_target}][${link_desc}]]"
+}
+
+main "$@"
+#+end_src
+
+* Photos
+
+** ~sync-sd-card.sh~
+
+Copy an SD card to an external drive, and then [[raw-to-jpg][convert]] the RAF raw files in the given Fuji folder to JPEG in ~\~/converted~.
+
+#+name: sync-sd-card
+#+header: :shebang #!/usr/bin/env bash
+#+header: :tangle script/sync-sd-card.sh
+#+begin_src bash
+
+set -o errexit
+set -o nounset
+set -o pipefail
+
+if (( $# != 1 )) || [[ -z $1 ]]; then
+	echo >&2 "usage: $0 <FUJI_FOLDER_PREFIX>"
+fi
+
+if [[ -d /Volumes/sd128GB ]]; then
+	rsync -ahP --no-whole-file --inplace \
+		--exclude='.*/' \
+		--exclude='*.DAT' \
+		/Volumes/{sd128GB,wd1TB}
+fi
+
+if [[ -d /Volumes/wd1TB ]]; then
+	mapfile -t raws < <(find "/Volumes/wd1TB/sd128GB/DCIM/${1}_FUJI" -name '*.RAF' | sort)
+	if ! (( ${#raws[@]} )); then
+		echo >&2 "no *.RAF raws found in ${1}_FUJI"
+		exit
+	fi
+	parallel -j "$(nproc --all)" -m raw-to-jpg.sh \
+		~/converted \
+		::: "${raws[@]}"
+fi
+#+end_src
+
+** ~raw-to-jpg.sh~
+
+Convert the given files to JPEG with ~sips~ (so this only works on macOS), skipping any that are already converted.
+
+#+name: raw-to-jpg
+#+header: :shebang #!/bin/bash
+#+header: :tangle script/raw-to-jpg.sh
+#+begin_src bash
+
+# Convert to jpeg.
+
+# Output directory (remove any trailing slash).
+outdir=${1%%/}
+shift
+
+inputs=("$@")
+for input in "${inputs[@]}"; do
+    # Input file: isolate filename (strip leading directories).
+    infile="${input##*/}"
+    # Output file: rename to .jpg extension.
+    outfile="${infile%.*}.jpg"
+
+    output="${outdir}/${outfile}"
+    if [[ -f "${output}" ]]; then
+        continue
+    fi
+    sips -s format jpeg "$input" --out "${output}"
+done
+#+end_src
+
+** ~jpg-dng-diff.sh~
+
+List the DNG files which no longer have a matching JPEG. The idea is to delete the JPEGs that we don't want, and then use this to find the matching raw files to delete.
+
+#+name: jpg-dng-diff
+#+header: :shebang #!/usr/bin/env bash
+#+header: :tangle script/jpg-dng-diff.sh
+#+begin_src bash
+
+set -o errexit
+set -o nounset
+set -o pipefail
+
+# Get *.jpg files in foo/, and list *.dng files in bar/. List all *.dng files
+# that are in bar (matching filename without the extension) that are not in
+# foo/.
+#
+# Usage: $0 <JPG_FOLDER> <DNG_FOLDER> | xargs rm
+
+if (( $# != 2 )) || [[ -z $1 ]] || [[ -z $2 ]]; then
+	echo >&2 "usage: $0 <JPG_FOLDER> <DNG_FOLDER>"
+fi
+
+jpg_dir=$1
+dng_dir=$2
+
+for dng in "${dng_dir}"/*.dng; do
+	photo="$(basename "${dng%.dng}")"
+	hi_res="${dng}"
+	lo_res="${jpg_dir}/${photo}.jpg"
+	# If the hi-res photo does not have a lo-res counterpart, then it is a
+	# candidate for deletion. The idea is that we would have gone through the
+	# jpgs to delete those jpgs we were not interested in.
+	if [[ ! -f "${lo_res}" ]]; then
+		echo "${hi_res}"
+	fi
+done
+#+end_src
+
+** ~rm-raf-if-dng.sh~
+
+Delete each RAF file in a directory that has a matching DNG file.
+
+#+name: rm-raf-if-dng
+#+header: :shebang #!/usr/bin/env bash
+#+header: :tangle script/rm-raf-if-dng.sh
+#+begin_src bash
+
+set -o errexit
+set -o nounset
+set -o pipefail
+
+if (( $# != 1 )); then
+	echo >&2 "usage: $0 <DIRECTORY>"
+fi
+
+if [[ -z $1 ]]; then
+	echo >&2 "usage: $0 <DIRECTORY>"
+fi
+
+mapfile -t raws < <(find "$1" -type f -name '*.RAF' | sort)
+
+for raw in "${raws[@]}"; do
+	# Delete *.RAF file if a corresponding *.dng file exists.
+	if [[ -f "${raw/RAF/dng}" ]]; then
+		rm -fv "${raw}"
+	fi
+done
+
+echo DONE
+#+end_src
+
+* System setup
+
+** ~startup_hook.sh~
+
+Start background services for each host. [[id:68954bd6-189f-48ab-9ded-8b6cbe3a0952][XMonad]] calls this on startup, which lets us change these services without recompiling XMonad.
+
+#+name: startup-hook
+#+header: :shebang #!/usr/bin/env bash
+#+header: :tangle script/startup_hook.sh
+#+begin_src bash
+
+set -o errexit
+set -o nounset
+set -o pipefail
+
+# Start up various background services. This script is expected to be called
+# from XMonad on startup. The advantage of using this script is that we don't
+# have to recompile XMonad every time we want to change something here (as this
+# script is just Bash, not Haskell).
+
+case $(hostname) in
+k0)
+	# Start mpd.
+	mpd &
+;;
+esac
+#+end_src
+
+** ~susp.sh~
+
+Suspend the system with ~systemctl~.
+
+#+name: susp
+#+header: :shebang #!/bin/sh
+#+header: :tangle script/susp.sh
+#+begin_src sh
+
+set -eu
+
+systemctl suspend
+# For whatever reason, we cannot restart the openvpn-home.service with sudo (it
+# dies immediately).
+# systemctl restart openvpn-home.service
+#+end_src
+
+** ~nix-pull.sh~
+
+Copy all of the ~nix-env~ packages from a remote host to this one.
+
+#+name: nix-pull
+#+header: :shebang #!/usr/bin/env bash
+#+header: :tangle script/nix-pull.sh
+#+begin_src bash
+
+# Usage: nix-pull.sh <HOST>
+#
+# This clones all "nix-env" packages in the remote host into the current
+# system.
+
+set -o errexit
+set -o nounset
+set -o pipefail
+
+nix_pull()
+{
+    local remote
+    local closure
+    remote="${1}"
+    closure="${2}"
+    nix-copy-closure --from "${remote}" "${closure}"
+    nix-env --install "${closure}"
+}
+
+remote="${1}"
+shift
+
+for closure in $(ssh "${USER}@${remote}" nix-env -q --out-path | awk '{print $2}'); do
+    nix_pull "${remote}" "${closure}"
+done
+#+end_src
+
+** ~mac-setup.sh~
+
+Stop Finder from creating ~.DS_Store~ files on network drives.
+
+#+name: mac-setup
+#+header: :shebang #!/usr/bin/env bash
+#+header: :tangle script/mac-setup.sh
+#+begin_src bash
+
+set -o errexit
+set -o nounset
+set -o pipefail
+set -o xtrace
+
+# Disable creation of .DS_Store files from Finder.
+defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool TRUE
+#+end_src
+
+** ~keyboard-repeat-mac.sh~
+
+Make keys repeat faster on macOS than its settings normally allow.
+
+#+name: keyboard-repeat-mac
+#+header: :shebang #!/usr/bin/env bash
+#+header: :tangle script/keyboard-repeat-mac.sh
+#+begin_src bash
+
+# References.
+# https://apple.stackexchange.com/questions/10467/how-to-increase-keyboard-key-repeat-rate-on-os-x
+# https://stackoverflow.com/questions/43868520/how-to-adjust-keyrepeat-and-repeatdelay-in-osx-sierra
+
+# Based on our own testing, "InitialKeyRepeat" is how long we wait, and
+# "KeyRepeat" is the rate of keys that are repeated. For "InitialKeyRepeat", we
+# assume that each unit is equivalent to 15ms, based on the comment of 15 ==
+# 225ms.
+defaults write -g InitialKeyRepeat -float 16.67 # normal minimum is 15 (225 ms)
+defaults write -g KeyRepeat -int 1 # normal minimum is 2 (30 ms)
+defaults write -g ApplePressAndHoldEnabled -bool false
+#+end_src
+
+** ~set-ssh-authorized-keys-acl.ps1~
+
+Fix the permissions of the ~administrators_authorized_keys~ file on Windows, for OpenSSH.
+
+#+name: set-ssh-authorized-keys-acl
+#+header: :tangle script/windows/set-ssh-authorized-keys-acl.ps1
+#+begin_src powershell
+
+# Fix permissions for authorized_keys file.
+# https://www.concurrency.com/blog/may-2019/key-based-authentication-for-openssh-on-windows
+
+$acl = Get-Acl C:\ProgramData\ssh\administrators_authorized_keys
+$acl.SetAccessRuleProtection($true, $false)
+$administratorsRule = New-Object system.security.accesscontrol.filesystemaccessrule("Administrators","FullControl","Allow")
+$systemRule = New-Object system.security.accesscontrol.filesystemaccessrule("SYSTEM","FullControl","Allow")
+$acl.SetAccessRule($administratorsRule)
+$acl.SetAccessRule($systemRule)
+$acl | Set-Acl
+
+Write-Host "Done"
+#+end_src
