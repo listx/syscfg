@@ -131,7 +131,9 @@ Other syntax constraints:
 - Not supported: `#+include`, radio links, links to other files by path, TeX
   export, `+strike-through+`. Don't use them.
 - Files may set `lilac_maxHeadingLevel` / `lilac_maxListLevel` limits; respect
-  whatever the file declares.
+  whatever the file declares. To allow deeper headings than the default, put
+  `#+lilac_maxHeadingLevel: 5` (with the level you need) just below the
+  document's title.
 
 ## Style: how to write a *literate* change
 
