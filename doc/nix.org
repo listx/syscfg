@@ -686,6 +686,236 @@ Section "Screen"
 EndSection
 #+end_src
 
+** ~m0~ machine
+
+This machine boots with GRUB from a LUKS-encrypted root, and has a static IP. It
+also makes the kernel reluctant to use swap.
+
+#+name: m0-configuration.nix
+#+header: :tangle nixos/m0/configuration.nix
+#+begin_src nix
+{ config, pkgs, ... }:
+
+{
+  imports = [ ../extra.nix ./hardware-configuration.nix ];
+
+  boot.loader.grub.enable = true;
+  boot.loader.grub.device =
+    "/dev/disk/by-id/ata-KINGSTON_SVP100S296G_X0NA40R9K0KK";
+
+  boot.initrd.luks.devices = {
+    luksroot = {
+      device = "/dev/disk/by-id/ata-KINGSTON_SVP100S296G_X0NA40R9K0KK-part2";
+      preLVM = true;
+    };
+  };
+
+  # Mount our secondary luks (RAID1) device. Actual path is just
+  # "/root/keyfile", but we are in "stage 1" where the root filesystem is
+  # mounted at "/mnt-root", not "/".
+  #boot.initrd.postMountCommands =
+  #  "cryptsetup luksOpen --key-file /mnt-root/root/keyfile /dev/md127 craid";
+
+  boot.kernel.sysctl = {
+    # Make the kernel reluctant to use swap.
+    "vm.swappiness" = 5;
+  };
+
+  networking = {
+    hostName = "m0";
+
+    # Static IP.
+    interfaces.enp2s0.ipv4.addresses = [{
+      address = "192.168.1.3";
+      prefixLength = 24;
+    }];
+    defaultGateway = "192.168.1.1";
+    nameservers = [ "8.8.8.8" ];
+  };
+}
+#+end_src
+
+** ~w0~ machine
+
+This is NixOS running in WSL on Windows. WSL is closer to a container than a full
+machine, so we turn off the services that don't make sense there.
+
+#+name: w0-configuration.nix
+#+header: :tangle nixos/w0/configuration.nix
+#+begin_src nix
+{ lib, pkgs, config, modulesPath, ... }:
+
+with lib;
+let
+  defaultUser = "l";
+  syschdemd = import ./syschdemd.nix { inherit lib pkgs config defaultUser; };
+in {
+  imports = [ "${modulesPath}/profiles/minimal.nix" ];
+
+  # WSL is closer to a container than anything else
+  boot.isContainer = true;
+
+  environment.systemPackages = with pkgs; [ zsh ];
+
+  environment.etc.hosts.enable = false;
+  environment.etc."resolv.conf".enable = false;
+
+  environment.etc."wsl.conf".source = ./wsl.conf;
+  environment.etc."resolv.conf".source = ./resolv.conf;
+
+  networking.hostName = "w0";
+  networking.dhcpcd.enable = false;
+
+  users.users.${defaultUser} = {
+    isNormalUser = true;
+    extraGroups = [ "wheel" ];
+    shell = pkgs.zsh;
+  };
+
+  users.users.root = {
+    shell = "${syschdemd}/bin/syschdemd";
+    # Otherwise WSL fails to login as root with "initgroups failed 5"
+    extraGroups = [ "root" ];
+  };
+
+  security.sudo.wheelNeedsPassword = false;
+
+  # Disable systemd units that don't make sense on WSL
+  systemd.services."serial-getty@ttyS0".enable = false;
+  systemd.services."serial-getty@hvc0".enable = false;
+  systemd.services."getty@tty1".enable = false;
+  systemd.services."autovt@".enable = false;
+
+  systemd.services.firewall.enable = false;
+  systemd.services.systemd-resolved.enable = false;
+  systemd.services.systemd-udevd.enable = false;
+
+  # Don't allow emergency mode, because we don't have a console.
+  systemd.enableEmergencyMode = false;
+}
+#+end_src
+
+WSL logs in as root, so we set root's shell to [[w0-syschdemd.sh][~syschdemd~]]. This script starts
+~systemd~ in its own namespace if it isn't running yet, and then opens a shell for
+our default user inside that namespace. It's a template, so [[w0-syschdemd.nix][~syschdemd.nix~]] fills
+in the ~@...@~ placeholders.
+
+#+name: w0-syschdemd.nix
+#+header: :tangle nixos/w0/syschdemd.nix
+#+begin_src nix
+{ lib, pkgs, config, defaultUser, ... }:
+
+pkgs.substituteAll {
+  name = "syschdemd";
+  src = ./syschdemd.sh;
+  dir = "bin";
+  isExecutable = true;
+
+  buildInputs = with pkgs; [ daemonize ];
+
+  inherit (pkgs) daemonize;
+  inherit defaultUser;
+  inherit (config.security) wrapperDir;
+  fsPackagesPath = lib.makeBinPath config.system.fsPackages;
+}
+#+end_src
+
+#+name: w0-syschdemd.sh
+#+header: :tangle nixos/w0/syschdemd.sh
+#+begin_src sh
+#! @shell@
+
+set -e
+
+sw="/nix/var/nix/profiles/system/sw/bin"
+systemPath=`${sw}/readlink -f /nix/var/nix/profiles/system`
+
+# Needs root to work
+if [[ $EUID -ne 0 ]]; then
+    echo "[ERROR] Requires root! :( Make sure the WSL default user is set to root"
+    exit 1
+fi
+
+if [ ! -e "/run/current-system" ]; then
+    LANG="C.UTF-8" /nix/var/nix/profiles/system/activate
+fi
+
+if [ ! -e "/run/systemd.pid" ]; then
+    PATH=/run/current-system/systemd/lib/systemd:@fsPackagesPath@ \
+        LOCALE_ARCHIVE=/run/current-system/sw/lib/locale/locale-archive \
+        @daemonize@/bin/daemonize /run/current-system/sw/bin/unshare -fp --mount-proc systemd
+    /run/current-system/sw/bin/pgrep -xf systemd > /run/systemd.pid
+
+    # Wait for systemd to start
+    status=1
+    while [[ $status -gt 0 ]]; do
+        $sw/sleep 1
+        status=0
+        $sw/nsenter -t $(< /run/systemd.pid) -p -m -- \
+                    $sw/systemctl is-system-running -q --wait 2>/dev/null \
+            || status=$?
+    done
+fi
+
+userShell=$($sw/getent passwd @defaultUser@ | $sw/cut -d: -f7)
+if [[ $# -gt 0 ]]; then
+    # wsl seems to prefix with "-c"
+    shift
+    cmd="$@"
+else
+    cmd="$userShell"
+fi
+exec $sw/nsenter -t $(< /run/systemd.pid) -p -m -- $sw/machinectl -q --uid=@defaultUser@ shell .host /bin/sh -c "cd \"$PWD\"; exec $cmd"
+#+end_src
+
+[[w0-wsl.conf][~wsl.conf~]] stops WSL from generating [[w0-hosts][~/etc/hosts~]] and [[w0-resolv.conf][~/etc/resolv.conf~]], which
+lets us manage them ourselves with the two files below. Both started out as files
+that WSL generated.
+
+#+name: w0-wsl.conf
+#+header: :tangle nixos/w0/wsl.conf
+#+begin_src conf
+[network]
+generateHosts = false
+generateResolvConf = false
+hostname = w0
+#+end_src
+
+#+name: w0-hosts
+#+header: :tangle nixos/w0/hosts
+#+begin_src conf
+# This file was automatically generated by WSL. To stop automatic generation of this file, add the following entry to /etc/wsl.conf:
+# [network]
+# generateHosts = false
+127.0.0.1	localhost
+127.0.1.1	w0.localdomain	w0
+
+# The following lines are desirable for IPv6 capable hosts
+::1     ip6-localhost ip6-loopback
+fe00::0 ip6-localnet
+ff00::0 ip6-mcastprefix
+ff02::1 ip6-allnodes
+ff02::2 ip6-allrouters
+
+192.168.1.3 m0
+192.168.1.4 k0
+192.168.1.5 k1
+192.168.1.6 w0
+192.168.1.7 macp
+#+end_src
+
+#+name: w0-resolv.conf
+#+header: :tangle nixos/w0/resolv.conf
+#+begin_src conf
+# This file was automatically generated by WSL. To stop automatic generation of this file, add the following entry to /etc/wsl.conf:
+# [network]
+# generateResolvConf = false
+domain T-mobile.com
+nameserver 172.27.16.1
+nameserver 8.8.8.8
+nameserver 192.168.0.1
+#+end_src
+
 * nix-darwin
 
 [[https://github.com/nix-darwin/nix-darwin][nix-darwin]] is useful for making Mac laptops behave similar to NixOS.
