@@ -22,13 +22,11 @@ nonTangledPathspecs = [ #
    ":(exclude,top)qutebrowser/blocked-hosts",
    ":(exclude,top)qutebrowser/keys.conf",
    ":(exclude,top)qutebrowser/qutebrowser.conf",
-   ":(exclude,top)rtorrent",
    ":(exclude,top)wezterm/upstream",
    ":(exclude,top)script/doom",
    ":(exclude,top)script/git/hooks/prepare-commit-msg",
-   ":(exclude,top)uim",
+   ":(exclude,top)uim/customs",
    ":(exclude,top)xmonad/build",
-   ":(exclude,top)xorg",
    ":(exclude,top)zsh/zcomet-upstream"
 ]
 

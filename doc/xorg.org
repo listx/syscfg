@@ -1,0 +1,577 @@
+:PROPERTIES:
+:ID:       d7bd66f6-91ac-4c93-a8cf-2f2dd023b117
+:END:
+#+title: X.Org
+
+These are configuration snippets for the X server. No [[id:bbe0ff18-1b29-4f04-b2a6-5f3d7b003eb5][Makefile]] rule installs them,
+so we copy the ones that a machine needs by hand. The ~k0~ machine's own X
+configuration is in [[id:82cbef73-61b9-43e7-9df6-7b2771000733::nixos/k0/xorg.conf][~doc/nix.org~]].
+
+* Monitor layouts
+
+#+name: dual-monitor-hybrid
+#+header: :tangle xorg/10-dual-monitor-hybrid.conf
+#+begin_src conf
+Section "ServerLayout"
+    Identifier     "Layout0"
+    Screen      0  "Screen0" 0 0 # NOTE: Screen 0 MUST be defined BEFORE Screen 1!!!
+    Screen      1  "Screen1" 1050 295 # push this screen down (vertically) 295 pixels from the top to match the portrait monitor on the left
+    Option         "Xinerama" "1" # XMonad: dual-head won't work properly without this!
+EndSection
+
+Section "Extensions"
+    Option "Composite" "Disable"
+EndSection
+
+Section "Monitor"
+    Identifier     "Monitor0"
+    VendorName     "Unknown"
+    ModelName      "Acer X222W"
+    HorizSync       31.0 - 81.0
+    VertRefresh     56.0 - 75.0
+    Option         "DPMS"
+    Option         "Enable" "true"
+EndSection
+
+Section "Monitor"
+    Identifier     "Monitor1"
+    VendorName     "Unknown"
+    ModelName      "Acer X222W"
+    HorizSync       31.0 - 81.0
+    VertRefresh     56.0 - 75.0
+    Option         "DPMS"
+    Option         "Enable" "true"
+EndSection
+
+Section "Device"
+    Identifier     "Device0"
+    Driver         "nvidia"
+    VendorName     "NVIDIA Corporation"
+    BoardName      "GeForce 8800 GTS"
+    BusID          "PCI:1:0:0"
+    Screen          0 # i.e., the monitor on the LEFT (physically)
+    Option "NoLogo" "1"
+    Option          "UseEdidDpi" "False"
+    Option          "DPI" "90 x 90" # 22 inch monitor, 1680x1050
+EndSection
+
+Section "Device"
+    Identifier     "Device1"
+    Driver         "nvidia"
+    VendorName     "NVIDIA Corporation"
+    BoardName      "GeForce 8800 GTS"
+    BusID          "PCI:1:0:0"
+    Screen          1 # the monitor on the RIGHT (physically)
+    Option "NoLogo" "1"
+    Option          "UseEdidDpi" "False"
+    Option          "DPI" "90 x 90"
+EndSection
+
+Section "Screen"
+
+    Identifier     "Screen0"
+    Device         "Device0"
+    Monitor        "Monitor0"
+    DefaultDepth    24
+    Option         "metamodes" "DFP-0: 1680x1050 +0+0 { Rotation=left }"
+    SubSection     "Display"
+        Depth       24
+    EndSubSection
+EndSection
+
+Section "Screen"
+    Identifier     "Screen1"
+    Device         "Device1"
+    Monitor        "Monitor1"
+    DefaultDepth    24
+    Option         "metamodes" "DFP-1: 1680x1050 +0+0"
+    SubSection     "Display"
+        Depth       24
+    EndSubSection
+EndSection
+#+end_src
+
+#+name: dual-monitor-hybrid-forest
+#+header: :tangle xorg/10-dual-monitor-hybrid-forest.conf
+#+begin_src conf
+Section "ServerLayout"
+    Identifier     "Layout0"
+    Screen      0  "Acer0" 0 370
+    Screen      1  "Acer1" 1680 0
+    Option         "Xinerama" "1" # XMonad: dual-head won't work properly without this!
+EndSection
+
+Section "Monitor"
+    Identifier     "Monitor0"
+    VendorName     "Unknown"
+    ModelName      "Acer X222W"
+    HorizSync       31.0 - 81.0
+    VertRefresh     56.0 - 75.0
+    Option         "DPMS"
+    Option         "Enable" "true"
+EndSection
+
+Section "Monitor"
+    Identifier     "Monitor1"
+    VendorName     "Unknown"
+    ModelName      "Acer X222W"
+    HorizSync       31.0 - 81.0
+    VertRefresh     56.0 - 75.0
+    Option         "DPMS"
+    Option         "Enable" "true"
+EndSection
+
+Section "Device"
+    Identifier     "Device0"
+    Driver         "nvidia"
+    VendorName     "NVIDIA Corporation"
+    BoardName      "GeForce 8800 GTS"
+    BusID          "PCI:1:0:0"
+    Screen          0
+    Option "NoLogo" "1"
+    Option          "UseEdidDpi" "False"
+    Option          "DPI" "90 x 90" # 22 inch monitor, 1680x1050
+EndSection
+
+Section "Device"
+    Identifier     "Device1"
+    Driver         "nvidia"
+    VendorName     "NVIDIA Corporation"
+    BoardName      "GeForce 8800 GTS"
+    BusID          "PCI:1:0:0"
+    BusID          "PCI:1:0:0"
+    Screen          1
+    Option "NoLogo" "1"
+    Option          "UseEdidDpi" "False"
+    Option          "DPI" "90 x 90"
+EndSection
+
+Section "Screen"
+    Identifier     "Acer0"
+    Device         "Device0"
+    Monitor        "Monitor0"
+    DefaultDepth    24
+    Option         "metamodes" "DFP-1: 1680x1050 +0+0"
+    SubSection     "Display"
+        Depth       24
+    EndSubSection
+EndSection
+
+Section "Screen"
+    Identifier     "Acer1"
+    Device         "Device1"
+    Monitor        "Monitor1"
+    DefaultDepth    24
+    Option         "metamodes" "DFP-0: 1680x1050 +0+0 { Rotation=right }"
+    SubSection     "Display"
+        Depth       24
+    EndSubSection
+EndSection
+#+end_src
+
+#+name: dual-monitor-portrait
+#+header: :tangle xorg/10-dual-monitor-portrait.conf
+#+begin_src conf
+Section "ServerLayout"
+    Identifier     "Layout0"
+    Screen      0  "Screen0" 0 0 # NOTE: Screen 0 MUST be defined BEFORE Screen 1!!!
+    Screen      1  "Screen1" 1050 0 # push this screen down (vertically) 295 pixels from the top to match the portrait monitor on the left
+    Option         "Xinerama" "1" # XMonad: dual-head won't work properly without this!
+EndSection
+
+Section "Extensions"
+    Option "Composite" "Disable"
+EndSection
+
+Section "Monitor"
+    Identifier     "Monitor0"
+    VendorName     "Unknown"
+    ModelName      "Acer X222W"
+    HorizSync       31.0 - 81.0
+    VertRefresh     56.0 - 75.0
+    Option         "DPMS"
+EndSection
+
+Section "Monitor"
+    Identifier     "Monitor1"
+    VendorName     "Unknown"
+    ModelName      "Acer X222W"
+    HorizSync       31.0 - 81.0
+    VertRefresh     56.0 - 75.0
+    Option         "DPMS"
+EndSection
+
+Section "Device"
+    Identifier     "Device0"
+    Driver         "nvidia"
+    VendorName     "NVIDIA Corporation"
+    BoardName      "GeForce 8800 GTS"
+    BusID          "PCI:2:0:0"
+    Screen          0 # i.e., the monitor on the LEFT (physically)
+    Option "NoLogo" "1"
+    Option          "UseEdidDpi" "False"
+    Option          "DPI" "90 x 90" # 22 inch monitor, 1680x1050
+EndSection
+
+Section "Device"
+    Identifier     "Device1"
+    Driver         "nvidia"
+    VendorName     "NVIDIA Corporation"
+    BoardName      "GeForce 8800 GTS"
+    BusID          "PCI:2:0:0"
+    Screen          1 # the monitor on the RIGHT (physically)
+    Option "NoLogo" "1"
+    Option          "UseEdidDpi" "False"
+    Option          "DPI" "90 x 90"
+EndSection
+
+Section "Screen"
+
+    Identifier     "Screen0"
+    Device         "Device0"
+    Monitor        "Monitor0"
+    DefaultDepth    24
+    Option         "Stereo" "0"
+    Option         "metamodes" "DVI-I-2: 1680x1050 +0+0 { rotation=left }"
+    Option         "SLI" "Off"
+    Option         "MultiGPU" "Off"
+    Option         "BaseMosaic" "off"
+    SubSection     "Display"
+        Depth       24
+    EndSubSection
+EndSection
+
+Section "Screen"
+    Identifier     "Screen1"
+    Device         "Device1"
+    Monitor        "Monitor1"
+    DefaultDepth    24
+    Option         "Stereo" "0"
+    Option         "metamodes" "DVI-I-3: 1680x1050 +0+0 { rotation=right }"
+    Option         "SLI" "Off"
+    Option         "MultiGPU" "Off"
+    Option         "BaseMosaic" "off"
+    SubSection     "Display"
+        Depth       24
+    EndSubSection
+EndSection
+#+end_src
+
+#+name: quad-monitor-portrait
+#+header: :tangle xorg/10-quad-monitor-portrait.conf
+#+begin_src conf
+# nvidia-settings: X configuration file generated by nvidia-settings
+# nvidia-settings:  version 337.12  (buildmeister@swio-display-x64-rhel04-11)  Fri Apr  4 15:17:43 PDT 2014
+
+Section "ServerLayout"
+    Identifier     "Layout0"
+    Screen      0  "Qnix1" 2490 0
+    Screen      1  "Acer1" 3930 300
+    Screen      2  "Acer2" 0 300
+    Screen      3  "Qnix2" 1050 0
+    Option         "Xinerama" "1"
+EndSection
+
+Section "Extensions"
+    Option "Composite" "Disable"
+EndSection
+
+Section "Monitor"
+    Identifier     "Monitor0"
+    VendorName     "QNIX"
+    ModelName      "QX2710"
+    DisplaySize     597    336
+    HorizSync       88.8 - 160.0
+    VertRefresh     59.5 - 120.0
+    ModeLine       "2560x1440"          241.50 2560 2608 2640 2720 1440 1443 1448 1481 +hsync -vsync
+    ModeLine       "2560x1440_60"       312.25 2560 2752 3024 3488 1440 1443 1448 1493 -hsync +vsync
+    ModeLine       "2560x1440_75"       397.25 2560 2760 3040 3520 1440 1443 1448 1506 -hsync +vsync
+    ModeLine       "2560x1440_85"       454.75 2560 2768 3048 3536 1440 1443 1448 1514 -hsync +vsync
+    ModeLine       "2560x1440_96"       400.00 2560 2608 2640 2744 1440 1443 1448 1512 +hsync +vsync
+    Option         "DPMS"
+EndSection
+
+Section "Monitor"
+    Identifier     "Monitor1"
+    VendorName     "Unknown"
+    ModelName      "Acer X222W"
+    HorizSync       31.0 - 81.0
+    VertRefresh     56.0 - 75.0
+    # Generated via "cvt 1680 1050" with the Acer monitor plugged in; `cvt` is
+    # part of xorg-server 1.15.1-1 package on Arch Linux
+    ModeLine "1680x1050_60.00"  146.25  1680 1784 1960 2240  1050 1053 1059 1089 -hsync +vsync
+    Option         "DPMS"
+EndSection
+
+Section "Monitor"
+    Identifier     "Monitor2"
+    VendorName     "Unknown"
+    ModelName      "Acer X222W"
+    HorizSync       31.0 - 81.0
+    VertRefresh     56.0 - 75.0
+    ModeLine "1680x1050_60.00"  146.25  1680 1784 1960 2240  1050 1053 1059 1089 -hsync +vsync
+    Option         "DPMS"
+EndSection
+
+Section "Monitor"
+    Identifier     "Monitor3"
+    VendorName     "QNIX"
+    ModelName      "QX2710"
+    DisplaySize     597    336
+    HorizSync       88.8 - 160.0
+    VertRefresh     59.5 - 120.0
+    ModeLine       "2560x1440"          241.50 2560 2608 2640 2720 1440 1443 1448 1481 +hsync -vsync
+    ModeLine       "2560x1440_60"       312.25 2560 2752 3024 3488 1440 1443 1448 1493 -hsync +vsync
+    ModeLine       "2560x1440_75"       397.25 2560 2760 3040 3520 1440 1443 1448 1506 -hsync +vsync
+    ModeLine       "2560x1440_85"       454.75 2560 2768 3048 3536 1440 1443 1448 1514 -hsync +vsync
+    ModeLine       "2560x1440_96"       400.00 2560 2608 2640 2744 1440 1443 1448 1512 +hsync +vsync
+    Option         "DPMS"
+EndSection
+
+Section "Device"
+    Identifier     "DVI-port-top"
+    Driver         "nvidia"
+    VendorName     "NVIDIA Corporation"
+    BoardName      "GeForce GTX 750 Ti"
+    BusID          "PCI:2:0:0"
+    Screen          0
+    Option         "UseEdidDpi" "False"
+    Option         "DPI" "108 x 108"
+    Option         "NoLogo" "1"
+EndSection
+
+Section "Device"
+    Identifier     "HDMI-port-right"
+    Driver         "nvidia"
+    VendorName     "NVIDIA Corporation"
+    BoardName      "GeForce GTX 750 Ti"
+    BusID          "PCI:2:0:0"
+    Option         "UseEdidDpi" "False"
+    Option         "DPI" "90 x 90"
+    Option         "NoLogo" "1"
+    Screen          1
+EndSection
+
+Section "Device"
+    Identifier     "HDMI-port-left"
+    Driver         "nvidia"
+    VendorName     "NVIDIA Corporation"
+    BoardName      "GeForce GTX 750 Ti"
+    BusID          "PCI:2:0:0"
+    Option         "UseEdidDpi" "False"
+    Option         "DPI" "90 x 90"
+    Option         "NoLogo" "1"
+    Screen          2
+EndSection
+
+Section "Device"
+    Identifier     "DVI-port-bottom"
+    Driver         "nvidia"
+    VendorName     "NVIDIA Corporation"
+    BoardName      "GeForce GTX 750 Ti"
+    BusID          "PCI:2:0:0"
+    Option         "UseEdidDpi" "False"
+    Option         "DPI" "108 x 108"
+    Option         "NoLogo" "1"
+    Screen          3
+EndSection
+
+Section "Screen"
+    Identifier     "Qnix1"
+    Device         "DVI-port-top"
+    Monitor        "Monitor0"
+    DefaultDepth    24
+    Option         "UseEDID" "False"
+    Option         "UseEDIDDPI" "False"
+    Option         "UseEDIDFreqs" "False"
+    Option         "ExactModeTimingsDVI" "True"
+    Option         "ModeValidation" "AllowNonEdidModes, NoVertRefreshCheck, NoHorizSyncCheck, NoMaxSizeCheck, NoMaxPClkCheck, NoEDIDModes"
+    Option         "NoBandWidthTest" "true"
+    Option         "metamodes" "DVI-I-1: 2560x1440_96 +0+0 {rotation=left}"
+    SubSection     "Display"
+        Depth       24
+    EndSubSection
+EndSection
+
+Section "Screen"
+    Identifier     "Acer1"
+    Device         "HDMI-port-right"
+    Monitor        "Monitor1"
+    DefaultDepth    24
+    Option         "UseEDID" "False"
+    Option         "UseEDIDDPI" "False"
+    Option         "UseEDIDFreqs" "False"
+    Option         "ExactModeTimingsDVI" "True"
+    Option         "ModeValidation" "AllowNonEdidModes, NoVertRefreshCheck, NoHorizSyncCheck, NoMaxSizeCheck, NoMaxPClkCheck, NoEDIDModes"
+    Option         "NoBandWidthTest" "true"
+    Option         "metamodes" "HDMI-0: 1680x1050_60.00 +0+0 {rotation=left}"
+    SubSection     "Display"
+        Depth       24
+    EndSubSection
+EndSection
+
+Section "Screen"
+    Identifier     "Acer2"
+    Device         "HDMI-port-left"
+    Monitor        "Monitor2"
+    DefaultDepth    24
+    Option         "UseEDID" "False"
+    Option         "UseEDIDDPI" "False"
+    Option         "UseEDIDFreqs" "False"
+    Option         "ExactModeTimingsDVI" "True"
+    Option         "ModeValidation" "AllowNonEdidModes, NoVertRefreshCheck, NoHorizSyncCheck, NoMaxSizeCheck, NoMaxPClkCheck, NoEDIDModes"
+    Option         "NoBandWidthTest" "true"
+    Option         "metamodes" "HDMI-1: 1680x1050_60.00 +0+0 {rotation=right}"
+    SubSection     "Display"
+        Depth       24
+    EndSubSection
+EndSection
+
+Section "Screen"
+    Identifier     "Qnix2"
+    Device         "DVI-port-bottom"
+    Monitor        "Monitor3"
+    DefaultDepth    24
+    Option         "UseEDID" "False"
+    Option         "UseEDIDDPI" "False"
+    Option         "UseEDIDFreqs" "False"
+    Option         "ExactModeTimingsDVI" "True"
+    Option         "ModeValidation" "AllowNonEdidModes, NoVertRefreshCheck, NoHorizSyncCheck, NoMaxSizeCheck, NoMaxPClkCheck, NoEDIDModes"
+    Option         "NoBandWidthTest" "true"
+    Option         "metamodes" "DVI-D-0: 2560x1440_96 +0+0 {rotation=left}"
+    SubSection     "Display"
+        Depth       24
+    EndSubSection
+EndSection
+#+end_src
+
+This one is for a single HDTV, and was generated by ~nvidia-settings~.
+
+#+name: hdtv
+#+header: :tangle xorg/10-hdtv.conf
+#+begin_src conf
+# nvidia-settings: X configuration file generated by nvidia-settings
+# nvidia-settings:  version 304.117  (buildmeister@swio-display-x86-rhel47-01)  Tue Nov 26 22:29:30 PST 2013
+
+Section "ServerLayout"
+    Identifier     "Layout0"
+    Screen      0  "Screen0" 0 0
+    Option         "Xinerama" "0"
+EndSection
+
+Section "Monitor"
+    # HorizSync source: edid, VertRefresh source: edid
+    Identifier     "Monitor0"
+    VendorName     "Unknown"
+    ModelName      "SAMSUNG"
+    HorizSync       30.0 - 70.0
+    VertRefresh     59.0 - 71.0
+    Option         "DPMS"
+EndSection
+
+Section "Device"
+    Identifier     "Device0"
+    Driver         "nvidia"
+    VendorName     "NVIDIA Corporation"
+    BoardName      "GeForce 8600 GT"
+    Option "NoLogo" "1"
+EndSection
+
+Section "Screen"
+    Identifier     "Screen0"
+    Device         "Device0"
+    Monitor        "Monitor0"
+    DefaultDepth    24
+    Option         "Stereo" "0"
+    Option         "nvidiaXineramaInfoOrder" "DFP-1"
+    Option         "metamodes" "nvidia-auto-select +0+0"
+    SubSection     "Display"
+        Depth       24
+    EndSubSection
+EndSection
+#+end_src
+
+* Server flags
+
+These set the timeouts for blanking the screen and for turning it off.
+
+#+name: server-flags
+#+header: :tangle xorg/10-server-flags.conf
+#+begin_src conf
+Section "ServerFlags"
+    Option "BlankTime" "50"
+    Option "StandbyTime" "60"
+    Option "SuspendTime" "70"
+    Option "OffTime" "80"
+EndSection
+#+end_src
+
+* Video drivers
+
+These two select the acceleration method for the Intel driver. They differ only in
+which method is active.
+
+#+name: intel-video
+#+header: :tangle xorg/20-intel-video.conf
+#+begin_src conf
+Section "Device"
+   Identifier  "Intel Graphics"
+   Driver      "intel"
+   Option      "AccelMethod"  "sna"
+   #Option      "AccelMethod"  "uxa"
+   #Option      "AccelMethod"  "xaa"
+EndSection
+#+end_src
+
+#+name: intel-video-k2
+#+header: :tangle xorg/20-intel-video-k2.conf
+#+begin_src conf
+Section "Device"
+   Identifier  "Intel Graphics"
+   Driver      "intel"
+   #Option      "AccelMethod"  "sna"
+   Option      "AccelMethod"  "uxa"
+   #Option      "AccelMethod"  "xaa"
+EndSection
+#+end_src
+
+* Input devices
+
+These set the keyboard layout, disable mouse acceleration, and disable tapping on
+touchpads.
+
+#+name: keyboard
+#+header: :tangle xorg/10-keyboard.conf
+#+begin_src conf
+Section "InputClass"
+    Identifier "Keyboard Defaults"
+    MatchIsKeyboard "yes"
+    Option  "XkbLayout" "us"
+EndSection
+#+end_src
+
+#+name: mouse
+#+header: :tangle xorg/50-mouse.conf
+#+begin_src conf
+Section "InputClass"
+	Identifier "My Mouse"
+	MatchIsPointer "yes"
+	# Disable all acceleration/deceleration
+	Option "AccelerationProfile" "-1"
+	Option "AccelerationScheme" "none"
+EndSection
+#+end_src
+
+#+name: synaptics
+#+header: :tangle xorg/50-synaptics.conf
+#+begin_src conf
+Section "InputClass"
+        Identifier "touchpad catchall"
+        Driver "synaptics"
+        MatchIsTouchpad "on"
+        MatchDevicePath "/dev/input/event*"
+        Option "TapButton1" "0"
+        Option "TapButton2" "0"
+        Option "TapButton3" "0"
+EndSection
+#+end_src

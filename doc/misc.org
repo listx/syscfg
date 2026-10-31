@@ -244,3 +244,96 @@ map [normal] <BackSpace> scroll full-up
 
 set font "CommitMono 9"
 #+end_src
+
+* uim
+
+The ~uim~ [[id:bbe0ff18-1b29-4f04-b2a6-5f3d7b003eb5][Makefile]] rule links this to ~\~/.uim~. It defines a custom Hangul layout for
+the ~byeoru~ input method. The settings that uim saves automatically are in
+~uim/customs~, which we don't manage here.
+
+#+name: uim
+#+header: :tangle uim/.uim
+#+begin_src scheme
+(require-module "byeoru")
+(byeoru-define-layout byeoru-layout-hangul2
+
+("a" (jungseong-o . 3))
+("A" (jungseong-o . 3))
+
+("y" (jungseong-u . 3))
+("Y" (jungseong-u . 3))
+
+("i" (jungseong-eu . 3))
+("I" (jungseong-eu . 3))
+
+("x" (jungseong-yo . 1))
+("X" (jungseong-yo . 1))
+
+("o" (jungseong-eo . 1) (jungseong-eo . 4))
+("O" (jungseong-eo . 1) (jungseong-eo . 4))
+
+("e" (jungseong-a . 1) (jungseong-a . 4))
+("E" (jungseong-a . 1) (jungseong-a . 4))
+
+("q" (jungseong-yeo . 1))
+("Q" (jungseong-yeo . 1))
+
+("p" (jungseong-e . 1) (jungseong-e . 4))
+("P" (jungseong-ye . 1))
+
+("u" (jungseong-i . 1) (jungseong-i . 4))
+("U" (jungseong-i . 1) (jungseong-i . 4))
+
+("v" (jungseong-ya . 1))
+("V" (jungseong-ya . 1))
+
+("w" (jungseong-ae . 1) (jungseong-ae . 4))
+("W" (jungseong-yae . 1))
+
+("z" (jungseong-yu . 1))
+("Z" (jungseong-yu . 1))
+
+("f" (choseong-pieup . 1) (jongseong-pieup . 1) (jongseong-pieup . 4))
+("F" (choseong-pieup . 1) (jongseong-pieup . 1) (jongseong-pieup . 4))
+
+("h" (choseong-digeud . 1) (jongseong-digeud . 1))
+("H" (choseong-ssangdigeud . 5))
+
+("b" (choseong-kieuk . 1) (jongseong-kieuk . 1))
+("B" (choseong-kieuk . 1) (jongseong-kieuk . 1))
+
+("d" (choseong-mieum . 1) (jongseong-mieum . 1) (jongseong-mieum . 4))
+("D" (choseong-mieum . 1) (jongseong-mieum . 1) (jongseong-mieum . 4))
+
+("j" (choseong-nieun . 1) (jongseong-nieun . 3))
+("J" (choseong-nieun . 1) (jongseong-nieun . 3))
+
+("m" (choseong-tieut . 1) (jongseong-tieut . 1) (jongseong-tieut . 4))
+("M" (choseong-tieut . 1) (jongseong-tieut . 1) (jongseong-tieut . 4))
+
+("t" (choseong-sios . 1) (jongseong-sios . 1) (jongseong-sios . 4))
+("T" (choseong-ssangsios . 5) (jongseong-ssangsios . 5))
+
+("k" (choseong-ieung . 1) (jongseong-ieung . 1))
+("K" (choseong-ieung . 1) (jongseong-ieung . 1))
+
+("g" (choseong-jieuj . 1) (jongseong-jieuj . 1) (jongseong-jieuj . 4))
+("G" (choseong-ssangjieuj . 5))
+
+("r" (choseong-hieuh . 1) (jongseong-hieuh . 1) (jongseong-hieuh . 4))
+("R" (choseong-hieuh . 1) (jongseong-hieuh . 1) (jongseong-hieuh . 4))
+
+("l" (choseong-giyeog . 1) (jongseong-giyeog . 3) (jongseong-giyeog . 4))
+("L" (choseong-ssanggiyeog . 5) (jongseong-ssanggiyeog . 5))
+
+("c" (choseong-bieub . 1) (jongseong-bieub . 3) (jongseong-bieub . 4))
+("C" (choseong-ssangbieub . 5))
+
+("n" (choseong-rieul . 1) (jongseong-rieul . 3))
+("N" (choseong-rieul . 1) (jongseong-rieul . 3))
+
+("s" (choseong-chieuch . 1) (jongseong-chieuch . 1))
+("S" (choseong-chieuch . 1) (jongseong-chieuch . 1))
+
+)
+#+end_src

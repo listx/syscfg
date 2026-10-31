@@ -17,10 +17,12 @@ mpv.org
 nix.org
 notmuch.org
 qutebrowser.org
+rtorrent.org
 script
 tmux.org
 vim.org
 wezterm.org
+xorg.org
 zsh
 #+end_src
 
@@ -75,13 +77,11 @@ nonTangledPathspecs = [ # (ref:nonTangledPathspecs)
    ":(exclude,top)qutebrowser/blocked-hosts",
    ":(exclude,top)qutebrowser/keys.conf",
    ":(exclude,top)qutebrowser/qutebrowser.conf",
-   ":(exclude,top)rtorrent",
    ":(exclude,top)wezterm/upstream",
    ":(exclude,top)script/doom",
    ":(exclude,top)script/git/hooks/prepare-commit-msg",
-   ":(exclude,top)uim",
+   ":(exclude,top)uim/customs",
    ":(exclude,top)xmonad/build",
-   ":(exclude,top)xorg",
    ":(exclude,top)zsh/zcomet-upstream"
 ]
 
@@ -878,6 +878,3 @@ Some files should stay excluded, because prose around them adds little:
   - data: the ~openvpn~ files and ~qutebrowser/blocked-hosts~, and
 
   - old formats: ~qutebrowser.conf~ and ~keys.conf~, which ~config.py~ doesn't load.
-
-That leaves ~xorg~ and ~rtorrent~, which haven't changed since 2018 and 2017. If
-they're dead, delete them instead of migrating them.
