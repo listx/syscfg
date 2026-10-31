@@ -5,6 +5,18 @@
 
 Settings for Claude Code.
 
+* Project instructions
+
+Claude loads ~CLAUDE.md~ at the start of every session in this repo. Whether it
+uses the Lilac skill is otherwise up to its own judgment, so we state the one
+rule it must not miss here.
+
+#+header: :tangle CLAUDE.md
+#+begin_src markdown
+Files here are tangled from `doc/*.org`; edit the Org source and run `make` in
+`doc/`.
+#+end_src
+
 * Skills
 
 ** Literate programming with Lilac
