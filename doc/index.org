@@ -872,8 +872,49 @@ max_line_length = 72
 ** TODO pre-commit: add formatter linter for emacs lisp
 ** TODO pre-commit: add ormolu formatter for Haskell
 ** TODO pre-commit: add nixfmt formatter to linter
-** TODO migrate everything (at least superficially) to lilac
+** TODO make everything literate (at least superficially) by using Lilac
 
 This basically means chipping away at [[(nonTangledPathspecs)]] to make it much
 leaner. That is, the only reason that section is so long is because most of
 those paths are not tangled from Org files.
+
+In the first pass, wrap each file in one root block with a sentence or two of
+prose. Split it up and explain it properly later, when we next edit that file.
+Check that each output is byte-identical to the original, because a bad tangle
+of a live config like ~.zshrc~ could break the shell. Watch out for trailing
+spaces (Lilac trims them), literal Noweb references, lines that need a comma
+escape, and executable bits.
+
+Do one area per commit, in this order:
+
+  1) ~zsh~, in ~doc/zsh/~: give ~.zshrc~ and ~lib.sh~ their own documents, and put
+     the ~func/~ files in one document with a section each.
+
+  2) The rest of ~script/~, in ~doc/script/~: the standalone scripts first, then
+     ~terminal-themes~ as its own document.
+
+  3) Actively used configs: ~qutebrowser/config.py~, ~nix/nix.conf~, ~mpv~, ~gpg~,
+     ~vim~, and the helper files for ~xmonad~ (in ~doc/xmonad.org~). Check whether
+     Qutebrowser still reads ~qutebrowser.conf~ and ~keys.conf~ before porting them.
+
+  4) ~nixos/m0~ and ~nixos/w0~, and then the very small configs, which can share
+     one new ~doc/misc.org~.
+
+Each commit adds the new documents, lists them in an ~index~ block, and removes
+their entries from ~nonTangledPathspecs~.
+
+Some files should stay excluded, because prose around them adds little:
+
+  - machine-written or pinned files: the ~uim/customs~ settings, the
+    ~hardware-configuration.nix~ files, ~Cargo.lock~, ~nix/sources.json~,
+    ~nix/sources.nix~, and probably ~karabiner/karabiner.json~, and
+
+  - data: the ~openvpn~ certificates and ~qutebrowser/blocked-hosts~.
+
+Two things to decide along the way:
+
+  - ~xorg~ and ~rtorrent~ haven't changed since 2018 and 2017. If they're dead,
+    delete them instead of migrating them. Leave them until last either way.
+
+  - The woven site is public, so review ~gpg~, ~openvpn~, and ~nixos/w0~ for
+    sensitive content before porting them.
