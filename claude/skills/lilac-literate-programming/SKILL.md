@@ -46,10 +46,11 @@ lilac weave project.larc --out-dir site --write-css --write-js
 lilac --project-conf doc/Lilac.toml lint doc/project.larc
 ```
 
-Prefer the project's `make` targets over hand-typed commands. Compilation
-catches broken links and cycles in Noweb references, so a failing compile
-usually means a real structural mistake; read the message instead of working
-around it.
+Prefer the project's `make` targets over hand-typed commands. The build catches
+broken links and cycles in Noweb references, so a failure usually means a real
+structural mistake; read the message instead of working around it. Broken links
+fail at `lilac archive`, so `lilac compile` passing on its own doesn't mean that
+the links are good.
 
 ## Writing blocks
 
@@ -93,9 +94,8 @@ Rules that differ from vanilla Org (this is where agents usually go wrong):
 Other syntax constraints:
 
 - Every document needs a `:PROPERTIES:` drawer with an `:ID:` UUID at the top.
-  Link to documents and headings **by UUID only**, never by filename or heading
-  text. Do not invent UUIDs by hand for real documents; generate a fresh one
-  (e.g. `uuidgen`) for new files and headings.
+  Do not invent UUIDs by hand for real documents; generate a fresh one (e.g.
+  `uuidgen`) for new files and headings.
 - A document only appears in the site's "Site contents" sidebar if it is listed
   in a `txt` block named `index` (`#+name: index`) in the `index.org` of its
   directory, with one path per line relative to that `index.org`. The block is
@@ -110,12 +110,31 @@ Other syntax constraints:
   verbatim. Use verbatim only when asked. Don't rewrite existing verbatim markup
   in text you aren't otherwise changing. To use a tilde inside code emphasis,
   escape it with a backslash, as paths often need: `~\~/.claude~`.
-- Not supported: `#+include`, radio links, links to other files by path, TeX
-  export, `+strike-through+`. Don't use them.
+- Not supported: `#+include`, radio links, TeX export, `+strike-through+`. Don't
+  use them.
 - Files may set `lilac_maxHeadingLevel` / `lilac_maxListLevel` limits; respect
   whatever the file declares. To allow deeper headings than the default, put
   `#+lilac_maxHeadingLevel: 5` (with the level you need) just below the
   document's title.
+
+## Cross-linking
+
+Use `[[...]]` links generously in prose. Whenever you mention a block, a line of
+code, a heading, or another document, link to it instead of only naming it in
+`~code~`. Links let readers navigate, and because Lilac checks them, renaming or
+removing a target breaks the build instead of silently leaving the prose stale.
+
+- Block in the same document: `[[block-name]]` or `[[block-name][shown text]]`.
+- Line in a block: put a `ref:` label in parentheses in a comment on that line,
+  then link to it with `[[(label)]]`. Tangling strips the label but keeps the
+  comment character.
+- Another document, or a heading with its own `:ID:`: `[[id:UUID][shown text]]`.
+- Block or line in another document: `[[id:DOC-UUID::block-name][shown text]]` or
+  `[[id:DOC-UUID::(label)]]`. A bare `[[block-name]]` only resolves
+  within its own document.
+- File that isn't a Lilac document: `[[file:path][shown text]]`. Lilac checks that
+  the file exists.
+- Never link by heading text: `[[*Heading]]` is a broken link.
 
 ## Style: how to write a *literate* change
 
