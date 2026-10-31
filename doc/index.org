@@ -834,7 +834,7 @@ max_line_length = 72
 ** TODO pre-commit: add formatter linter for emacs lisp
 ** TODO pre-commit: add ormolu formatter for Haskell
 ** TODO pre-commit: add nixfmt formatter to linter
-** TODO make everything literate (at least superficially) by using Lilac
+** DONE make everything literate (at least superficially) by using Lilac
 
 This basically means chipping away at [[(nonTangledPathspecs)]] to make it much
 leaner. That is, the only reason that section is so long is because most of
@@ -871,3 +871,20 @@ Some files should stay excluded, because prose around them adds little:
     ~nix/sources.nix~, and probably ~karabiner/karabiner.json~, and
 
   - data: the ~openvpn~ files and ~qutebrowser/blocked-hosts~.
+
+** TODO mpd: fix the streaming port in the ~mpd.conf~ comment
+
+The comment says to connect to port 8030, but the config uses port 8010.
+
+** TODO nixos: check the reference to ~openvpn/us.ovpn~
+
+~nixos/minimal.nix~ reads this file, but it isn't in this repo. Check whether this
+breaks a build, or whether the file is only kept locally.
+
+** TODO xmonad: check whether ~xmonad-start.desktop~ is dead
+
+It runs ~xmonad-start~, which nothing in this repo defines.
+
+** TODO xmonad: check whether ~mac-host-ubuntu-guest-setup.md~ is dead
+
+These are old notes on running XMonad in an Ubuntu virtual machine on a Mac.
