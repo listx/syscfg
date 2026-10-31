@@ -192,6 +192,9 @@ The point of the format is explanation. When adding or changing code:
    `Lilac.toml` excludes them.
 5. If you add a new tangled file, make sure it's committed alongside the Org
    change.
+6. If the change completes a `TODO` item in an Org document, change its keyword
+   to `DONE`. Don't delete the item or its text, so that the record stays
+   visible.
 
 ## Project configuration (`Lilac.toml`)
 
