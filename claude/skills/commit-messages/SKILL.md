@@ -23,9 +23,10 @@ under "Trailers".
 ## Body
 
 - Wrap at 72 characters.
-- Explain WHY the change is needed. Don't restate what the diff already shows.
-- Use imperative mood to describe what's changing in the commit. Use past or
-  present tense to describe existing behavior in the codebase.
+- Explain WHY the change is needed.
+- Then state the action explicitly, in imperative mood and in more detail than
+  the title, instead of leaving it implied. Don't narrate the diff line by line.
+- Use past or present tense to describe existing behavior in the codebase.
 - Omit the body only when the title alone makes the reason obvious.
 
 ## Machine-generated text
@@ -56,6 +57,9 @@ This avoids the warning
     Run `man nix.conf` for more information on the `substituters` configuration option.
 
 which we get from the earlier nix.conf changes.
+
+Add "l" to the trusted users in the nix-darwin configuration, so that Nix
+accepts this substituter for that user.
 
 Signed-off-by: <name> <email>
 ```
