@@ -9,10 +9,6 @@ This is our Qutebrowser configuration. It loads any settings made through the GU
 and then sets our preferences for sessions, the editor, fonts, and hint characters
 (the home row of our ZQ keyboard layout), among other things.
 
-The ~qutebrowser/~ directory also has ~qutebrowser.conf~ and ~keys.conf~. This file
-doesn't load them and they use an older format, so we leave them out of this
-document.
-
 #+name: qutebrowser-config
 #+header: :tangle qutebrowser/config.py
 #+begin_src python

@@ -10,9 +10,6 @@ trim_trailing_whitespace = true
 indent_style = tab
 tab_width = 8
 
-[qutebrowser.conf]
-trim_trailing_whitespace = false
-
 [{zsh/.zshrc,doc/zsh/zshrc.org}]
 end_of_line = unset
 
