@@ -18,6 +18,10 @@ bash:
 clojure:
 	ln -fns ${C}/clojure ${H}/.config/clojure
 
+claude:
+	mkdir -p ${H}/.claude
+	ln -fns ${C}/claude/skills ${H}/.claude/skills
+
 emacs:
 	git -C ${C} submodule update --init ${C}/emacs/doom-upstream
 	# Point .emacs.d to upstream doom code.
@@ -148,6 +152,7 @@ zsh:
 
 .PHONY: \
 	bash \
+	claude \
 	clojure \
 	emacs \
 	git \

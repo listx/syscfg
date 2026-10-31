@@ -15,6 +15,7 @@
 *~
 *.zwc
 cache
+claude/skills/synced/
 cmus/*
 emacs/doom-cfg/custom.el
 emacs/spell-fu/*.data

@@ -207,6 +207,7 @@ S := $(shell cat ${H}/.hostname-short)
 
 <<id:843fde83-4ed2-49dc-8d6f-29f103ae2434::Makefile-bash>>
 <<id:6bbe2554-13c3-43c7-b7b5-f3d7ab09562a::Makefile-clojure>>
+<<id:00a0db98-5605-4c05-886f-e85d3b2f2d65::Makefile-claude>>
 <<id:1a89ad75-4234-4fa9-93d0-27c62d220502::Makefile-emacs>>
 <<id:5a8a24bf-db01-4cf7-8985-e34f86f58ce3::Makefile-git>>
 gpg:
@@ -326,6 +327,7 @@ zsh:
 
 .PHONY: \
 	bash \
+	claude \
 	clojure \
 	emacs \
 	git \
@@ -756,6 +758,7 @@ jobs:
 ,*~
 ,*.zwc
 cache
+<<id:00a0db98-5605-4c05-886f-e85d3b2f2d65::gitignore-claude>>
 cmus/*
 emacs/doom-cfg/custom.el
 emacs/spell-fu/*.data
