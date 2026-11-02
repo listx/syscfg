@@ -274,6 +274,8 @@ under "Trailers".
 - Then state the action explicitly, in imperative mood and in more detail than
   the title, instead of leaving it implied. Don't narrate the diff line by line.
 - Use past or present tense to describe existing behavior in the codebase.
+- Don't mention changes to TODO items or other planning materials, such as
+  marking an item `DONE`. These are obvious from the diff.
 - Omit the body only when the title alone makes the reason obvious.
 
 ## Machine-generated text
