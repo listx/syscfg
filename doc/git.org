@@ -442,17 +442,18 @@ bind generic <Backspace> move-page-up
 
 ** Getting the commit info
 
-Get human-friendly commit information, like
+Get human-friendly commit information in Git's ~reference~ format, like
 
 #+begin_example
-commit 55d4c735 ("explain the primary reason behind why we have CI", 2026-07-25)
+55d4c735 (explain the primary reason behind why we have CI, 2026-07-25)
 #+end_example
 
-This syntax is similar to what is supported in the Linux Kernel documentation
-for it to be automatically linked.
+The format always ends with a newline, which we strip so that pasting the result
+into the middle of a sentence doesn't break the line.
 
 #+name: bind:copy-commit-human-friendly
 #+begin_src conf
-bind generic Y +bash -c "git show %(commit) --no-patch --pretty='format:commit %C(auto)%h (\"%s\", %cd)' --date=short \
+bind generic Y +bash -c "git show %(commit) --no-patch --format=reference \
+  | head -c -1 \
   | ~/syscfg/script/copy-clipboard.sh"
 #+end_src
