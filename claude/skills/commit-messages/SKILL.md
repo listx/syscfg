@@ -31,6 +31,23 @@ under "Trailers".
   marking an item `DONE`. These are obvious from the diff.
 - Omit the body only when the title alone makes the reason obvious.
 
+## Prior commits
+
+When establishing context, refer to the previous commits that led to the
+current state. A little bit of "git archaeology" goes a long way: a reader who
+knows when and why the code became this way can better judge the change.
+
+- Before writing the body, check the history of the code being changed, with
+  tools like `git log -S<string>`, `git log -L`, and `git blame`.
+- Mention a commit only if it helps to explain the change, such as the one that
+  introduced a bug or the behavior being replaced. Say what that commit did or
+  why it matters, instead of only listing it.
+- Refer to commits in Git's reference format, from `git show --no-patch
+  --format=reference <commit>`, like `36ab2c48 (doc: add AI policy requiring
+  attribution, 2026-11-02)`.
+- Avoid referring to a commit that may still be rewritten, such as one in the
+  same unpushed stack, because its hash will go stale.
+
 ## Machine-generated text
 
 Logs and other copied text have no line limit. Indent them by 4 spaces to show
