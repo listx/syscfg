@@ -47,6 +47,14 @@ make emacs vim
 
   - The default repository name, ~syscfg~, is hardcoded in some places.
 
+* AI policy
+
+AI-written code must be attributed. A commit whose diff was mostly written by an
+AI must say so with a ~Co-Authored-by~ trailer that names the AI, such as
+~Co-Authored-by: Claude Opus 5.5 <noreply@anthropic.com>~, so that the history
+stays honest about where the code came from. The [[id:3168c3de-c577-4da3-a557-5c9b8836f386][Claude settings]] include a
+commit message skill that applies this rule.
+
 * Build system
 
 ** Lilac project configuration
