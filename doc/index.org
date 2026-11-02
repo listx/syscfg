@@ -6,6 +6,7 @@
 #+name: index
 #+begin_src txt
 bash.org
+claude.org
 clojure.org
 emacs.org
 git.org
@@ -22,6 +23,7 @@ script
 tmux.org
 vim.org
 wezterm.org
+xmonad.org
 xorg.org
 zsh
 #+end_src
