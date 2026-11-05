@@ -33,7 +33,7 @@ let
   };
   lilacSrc = builtins.fetchGit {
     url = "https://github.com/listx/lilac";
-    ref = "refs/tags/v0.2.0.3";
+    ref = "refs/tags/v0.3.0.0";
     name = "lilac";
     submodules = true;
   };
