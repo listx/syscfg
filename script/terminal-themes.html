@@ -1,0 +1,1347 @@
+<!DOCTYPE HTML><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Terminal color themes</title><link rel="stylesheet" href="/css/default.css"><link rel="shortcut icon" type="image/png" href="/favicon.png"><link rel="stylesheet" href="/vendor/source-fonts/source-fonts.css">
+<script>
+  window.MathJax = {
+      loader: { paths: { "mathjax-newcm": "/vendor/mathjax-newcm-font" } },
+      output: { font: "mathjax-newcm" },
+  tex: {
+      tags: 'ams'
+  },
+  options: {
+      ignoreHtmlClass: 'verbatim|code'
+  }
+};
+</script>
+<script id="MathJax-script" async="" src="/vendor/mathjax/tex-mml-chtml.js"></script>
+</head><body><div class="navbar"><button id="hamburger" class="tocs-toggle-button" aria-label="Toggle table of contents sidebar">&#x2630;</button><div class="breadcrumbs"><a href="https://syscfg.funloop.org"><span class="breadcrumb">Linus Arver&#39;s Dotfiles</span></a> <a href="https://github.com/listx/syscfg" class="repo-link" title="Source repository" aria-label="Source repository"><svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 16 16"
+     aria-hidden="true">
+<g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+<circle cx="4" cy="3" r="1.75"></circle>
+<circle cx="4" cy="13" r="1.75"></circle>
+<circle cx="12" cy="3" r="1.75"></circle>
+<path d="M4 4.75v6.5"></path>
+<path d="M12 4.75c0 4-8 3-8 6.5"></path>
+</g>
+</svg>
+</a> <span class="breadcrumb-separator">/</span> <a href="/script/index.html"><span class="breadcrumb">script</span></a> <span class="breadcrumb-separator">/</span> <a href="#top"><span class="breadcrumb">terminal-themes.org</span></a></div></div><nav id="tocs"><p class="widget-title gtoc-title">Site contents</p><nav class="gtoc"><ul><li><a href="/index.html">Introduction</a></li><li><a href="/bash.html">Bash</a></li><li><a href="/claude.html">Claude</a></li><li><a href="/clojure.html">Clojure</a></li><li><a href="/emacs.html">Emacs</a></li><li><a href="/git.html">Git</a></li><li><a href="/gpg.html">GnuPG</a></li><li><a href="/jj.html">Jujutsu</a></li><li><a href="/keybindings.html">Keybindings (WIP)</a></li><li><a href="/misc.html">Miscellaneous</a></li><li><a href="/mpv.html">mpv</a></li><li><a href="/nix.html">Nix</a></li><li><a href="/notmuch.html">Notmuch</a></li><li><a href="/qutebrowser.html">qutebrowser</a></li><li><a href="/rtorrent.html">rTorrent</a></li><li><a href="/script/index.html">System scripts</a><ul><li><a href="/script/find-long-lines.html">Find long lines</a></li><li><a href="/script/prepare-commit-msg.html">Git commit message hook</a></li><li><a href="/script/utilities.html">Utility scripts</a></li><li><a href="/script/terminal-themes.html" class="bold">Terminal color themes</a></li></ul></li><li><a href="/tmux.html">tmux</a></li><li><a href="/vim.html">Vim</a></li><li><a href="/wezterm.html">Wezterm</a></li><li><a href="/xmonad.html">xmonad</a></li><li><a href="/xorg.html">X.Org</a></li><li><a href="/zsh/index.html">Zsh</a></li></ul></nav><p class="widget-title toc-title">Page contents</p><nav class="toc"><div class="toc-entries"><ol><li class="toc-level-1"><div class="toc-entry"><span class="toc-counter">1</span><a href="#h-1-Overview">Overview</a></div></li><li class="toc-level-1"><div class="toc-entry"><span class="toc-counter">2</span><a href="#h-2-Switching-themes">Switching themes</a></div></li><li class="toc-level-1"><div class="toc-entry"><span class="toc-counter">3</span><a href="#h-3-Types">Types</a></div></li><li class="toc-level-1"><div class="toc-entry"><span class="toc-counter">4</span><a href="#h-4-Rendering">Rendering</a></div></li><li class="toc-level-1"><div class="toc-entry"><span class="toc-counter">5</span><a href="#h-5-Themes">Themes</a></div><ol><li class="toc-level-2"><div class="toc-entry"><span class="toc-counter">5.1</span><a href="#h-5.1-Blue">Blue</a></div></li><li class="toc-level-2"><div class="toc-entry"><span class="toc-counter">5.2</span><a href="#h-5.2-Dark">Dark</a></div></li><li class="toc-level-2"><div class="toc-entry"><span class="toc-counter">5.3</span><a href="#h-5.3-Light">Light</a></div></li><li class="toc-level-2"><div class="toc-entry"><span class="toc-counter">5.4</span><a href="#h-5.4-PastelDark">PastelDark</a></div></li><li class="toc-level-2"><div class="toc-entry"><span class="toc-counter">5.5</span><a href="#h-5.5-Red">Red</a></div></li><li class="toc-level-2"><div class="toc-entry"><span class="toc-counter">5.6</span><a href="#h-5.6-RetroBlue">RetroBlue</a></div></li><li class="toc-level-2"><div class="toc-entry"><span class="toc-counter">5.7</span><a href="#h-5.7-Vanilla">Vanilla</a></div></li></ol></li><li class="toc-level-1"><div class="toc-entry"><span class="toc-counter">6</span><a href="#h-6-Color-tests">Color tests</a></div></li><li class="toc-level-1"><div class="toc-entry"><a href="#h--Page-metrics">Page metrics</a></div><ol><li class="toc-level-2"><div class="toc-entry"><a href="#h--Backlinks">Backlinks</a></div></li><li class="toc-level-2"><div class="toc-entry"><a href="#h--Tangled-files">Tangled files</a></div></li><li class="toc-level-2"><div class="toc-entry"><a href="#h--Named-cells">Named cells</a></div></li></ol></li></ol></div></nav></nav><main><h1 id="top">Terminal color themes</h1><hr class="title-underline"><div id="heading-container-h-1-Overview" class="heading-container"><h2 id="h-1-Overview"><span id="c-0" class="cell-idx"><a href="#h-1-Overview">1&ensp;Overview</a></span></h2><p><span id="c-1" class="cell-idx">These scripts define our terminal color themes in Dhall, and apply them to both the terminal and Emacs. The <a href="/zsh/func.html#b-func-color-cycle" class="internal-link" id="linkNumber-1"><span class="code">color_cycle</span></a> function in Zsh is the usual way to run them, and <a href="/emacs.html" class="internal-link" id="linkNumber-2"><span class="code">doc/emacs.org</span></a> also generates its color definitions from <a href="#b-list-colors-for-emacs" class="internal-link" id="linkNumber-3"><span class="code">listColorsForEmacs.dhall</span></a>.</span></p></div><div id="heading-container-h-2-Switching-themes" class="heading-container"><h2 id="h-2-Switching-themes"><span id="c-2" class="cell-idx"><a href="#h-2-Switching-themes">2&ensp;Switching themes</a></span></h2><p><span id="c-3" class="cell-idx"><a href="#b-change-theme" class="internal-link" id="linkNumber-4"><span class="code">change_theme.sh</span></a> takes a theme&#39;s filename, or <span class="code">next</span> or <span class="code">prev</span> to cycle through the themes. It tells Emacs to load the theme&#39;s colors, and prints the control sequences for the terminal, which the caller then sources.</span></p><div id="c-4" class="cell-idx"><div class="block-container src" id="b-change-theme"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-change-theme">&#x1F517;</a></div><div class="block-meta"><code>change-theme</code><br><code><span class="bold">&#x1F3AF; script/terminal-themes/change_theme.sh</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">bash</span></p></li><li><p><span class="code">shebang</span> = <span class="code">#!/usr/bin/env bash</span></p></li></ul></div><pre class="block-body"><code class="sourceCode">
+<span class="co"># We only need to run this script when we add a new terminal color theme.</span>
+
+<span class="bu">set</span> <span class="at">-euo</span> pipefail
+
+<span class="va">root_dir</span><span class="op">=</span><span class="st">&quot;</span><span class="va">${HOME}</span><span class="st">/syscfg/script/terminal-themes&quot;</span>
+
+<span class="co"># Input is a string like &quot;#abcdef&quot;. We have to convert this to: &quot;#xabab #xcdcd</span>
+<span class="co"># #xefef&quot;.</span>
+<span class="fu">__emacs_color()</span><span class="kw">{</span>
+
+    <span class="bu">local</span> <span class="va">color</span>
+    <span class="bu">local</span> <span class="va">r</span>
+    <span class="bu">local</span> <span class="va">g</span>
+    <span class="bu">local</span> <span class="va">b</span>
+    <span class="va">color</span><span class="op">=</span><span class="va">${1}</span>
+
+    <span class="co"># Return #000000 if we are told to parse an invalid color.</span>
+    <span class="cf">if</span> <span class="kw">[[</span> <span class="ot">!</span> <span class="st">&quot;</span><span class="va">${color}</span><span class="st">&quot;</span> <span class="ot">=~</span> <span class="pp">^</span><span class="ss">#</span><span class="op">[</span><span class="ss">0</span><span class="op">-</span><span class="ss">9a</span><span class="op">-</span><span class="ss">f</span><span class="op">]</span><span class="pp">+</span><span class="op">$</span> <span class="kw">]]</span> <span class="kw">||</span> <span class="kw">((</span> <span class="va">${</span><span class="op">#</span><span class="va">color}</span> <span class="op">!=</span> <span class="dv">7</span> <span class="kw">));</span> <span class="cf">then</span>
+        <span class="bu">echo</span> <span class="st">&quot;#x0000 #x0000 #x0000&quot;</span>
+        <span class="cf">return</span>
+    <span class="cf">fi</span>
+
+    <span class="va">color</span><span class="op">=</span><span class="va">${color</span><span class="op">#</span><span class="dt">\#</span><span class="va">}</span>
+    <span class="va">r</span><span class="op">=</span><span class="va">${color</span><span class="op">:</span><span class="dv">0</span><span class="op">:</span><span class="dv">2</span><span class="va">}</span>
+    <span class="va">g</span><span class="op">=</span><span class="va">${color</span><span class="op">:</span><span class="dv">2</span><span class="op">:</span><span class="dv">2</span><span class="va">}</span>
+    <span class="va">b</span><span class="op">=</span><span class="va">${color</span><span class="op">:</span><span class="dv">4</span><span class="op">:</span><span class="dv">2</span><span class="va">}</span>
+
+    <span class="bu">echo</span> <span class="st">&quot;#x</span><span class="va">${r}${r}</span><span class="st"> #x</span><span class="va">${g}${g}</span><span class="st"> #x</span><span class="va">${b}${b}</span><span class="st">&quot;</span>
+<span class="kw">}</span>
+
+<span class="fu">set_theme()</span> <span class="kw">{</span>
+    <span class="bu">local</span> <span class="va">theme</span>
+    <span class="bu">local</span> <span class="va">for_tmux</span>
+    <span class="bu">local</span> <span class="va">renderer_path</span>
+    <span class="bu">local</span> <span class="va">root_dir</span>
+    <span class="bu">local</span> <span class="va">emacs_theme</span>
+    <span class="bu">local</span> <span class="va">all_colors</span>
+    <span class="bu">local</span> <span class="va">extra_colors</span>
+    <span class="bu">local</span> <span class="va">colorKey</span>
+    <span class="bu">local</span> <span class="va">colorValue</span>
+    <span class="bu">declare</span> <span class="at">-A</span> <span class="va">colors</span>
+    <span class="bu">local</span> <span class="va">__elisp</span>
+
+    <span class="va">theme</span><span class="op">=</span><span class="st">&quot;</span><span class="va">${1}</span><span class="st">&quot;</span>
+    <span class="va">root_dir</span><span class="op">=</span><span class="st">&quot;</span><span class="va">${HOME}</span><span class="st">/syscfg/script/terminal-themes&quot;</span>
+    <span class="va">renderer_path</span><span class="op">=</span><span class="st">&quot;</span><span class="va">${root_dir}</span><span class="st">/renderControlSequences.dhall&quot;</span>
+
+    <span class="co"># Change doom emacs color theme. This doesn&#39;t check if the emacs daemon is</span>
+    <span class="co"># already running --- rather it just executes and forgets about it.</span>
+    <span class="va">emacs_theme</span><span class="op">=</span><span class="st">&quot;</span><span class="va">$(</span><span class="ex">dhall</span> text <span class="op">&lt;&lt;&lt;</span> <span class="st">&quot;(</span><span class="va">${root_dir}</span><span class="st">/themes/</span><span class="va">${theme}</span><span class="st">).emacsTheme&quot;</span><span class="va">)</span><span class="st">&quot;</span>
+
+    <span class="ex">mapfile</span> <span class="at">-t</span> all_colors <span class="op">&lt;</span> <span class="op">&lt;(</span><span class="ex">dhall</span> text <span class="op">&lt;&lt;&lt;</span> <span class="st">&quot;</span><span class="va">${root_dir}</span><span class="st">/listColorsForShell.dhall </span><span class="va">${root_dir}</span><span class="st">/themes/</span><span class="va">${theme}</span><span class="st">&quot;</span><span class="op">)</span>
+    <span class="va">extra_colors</span><span class="op">=</span><span class="st">&quot;</span><span class="va">$(</span><span class="ex">dhall</span> text <span class="op">&lt;&lt;&lt;</span> <span class="st">&quot;</span><span class="va">${root_dir}</span><span class="st">/listColorsForEmacs.dhall </span><span class="va">${root_dir}</span><span class="st">/themes/</span><span class="va">${theme}</span><span class="st">&quot;</span><span class="va">)</span><span class="st">&quot;</span>
+    <span class="cf">for</span> colorline <span class="kw">in</span> <span class="st">&quot;</span><span class="va">${all_colors</span><span class="op">[@]</span><span class="va">}</span><span class="st">&quot;</span><span class="kw">;</span> <span class="cf">do</span>
+        <span class="va">colorKey</span><span class="op">=</span><span class="va">${colorline</span><span class="op">%</span>=<span class="pp">*</span><span class="va">}</span>
+        <span class="va">colorValue</span><span class="op">=</span><span class="va">${colorline</span><span class="op">#</span><span class="pp">*</span>=<span class="va">}</span>
+        <span class="va">colors</span><span class="op">[</span><span class="va">${colorKey}</span><span class="op">]=</span><span class="va">${colorValue}</span>
+    <span class="cf">done</span>
+
+    <span class="va">__elisp</span><span class="op">=</span><span class="va">$(</span><span class="fu">cat</span> <span class="op">&lt;&lt; EOF</span>
+<span class="st">    (progn</span>
+<span class="st">        ; Set custom colors. These are only usable from 24-bit color-enabled</span>
+<span class="st">        ; emacs.</span>
+<span class="va">${extra_colors}</span>
+
+<span class="st">        ; Set 16 colors. This is because the default 16 colors are hardcoded by</span>
+<span class="st">        ; emacs, making it impossible to refer to the colors used by the</span>
+<span class="st">        ; existing terminal color theme.</span>
+<span class="st">        (tty-color-define &quot;black&quot;          0 &#39;(</span><span class="va">$(</span><span class="ex">__emacs_color</span> <span class="st">&quot;</span><span class="va">${colors</span><span class="op">[</span>black<span class="op">]</span><span class="va">}</span><span class="st">&quot;</span><span class="va">)</span><span class="st">))</span>
+<span class="st">        (tty-color-define &quot;red&quot;            1 &#39;(</span><span class="va">$(</span><span class="ex">__emacs_color</span> <span class="st">&quot;</span><span class="va">${colors</span><span class="op">[</span>red<span class="op">]</span><span class="va">}</span><span class="st">&quot;</span><span class="va">)</span><span class="st">))</span>
+<span class="st">        (tty-color-define &quot;green&quot;          2 &#39;(</span><span class="va">$(</span><span class="ex">__emacs_color</span> <span class="st">&quot;</span><span class="va">${colors</span><span class="op">[</span>green<span class="op">]</span><span class="va">}</span><span class="st">&quot;</span><span class="va">)</span><span class="st">))</span>
+<span class="st">        (tty-color-define &quot;yellow&quot;         3 &#39;(</span><span class="va">$(</span><span class="ex">__emacs_color</span> <span class="st">&quot;</span><span class="va">${colors</span><span class="op">[</span>yellow<span class="op">]</span><span class="va">}</span><span class="st">&quot;</span><span class="va">)</span><span class="st">))</span>
+<span class="st">        (tty-color-define &quot;blue&quot;           4 &#39;(</span><span class="va">$(</span><span class="ex">__emacs_color</span> <span class="st">&quot;</span><span class="va">${colors</span><span class="op">[</span>blue<span class="op">]</span><span class="va">}</span><span class="st">&quot;</span><span class="va">)</span><span class="st">))</span>
+<span class="st">        (tty-color-define &quot;magenta&quot;        5 &#39;(</span><span class="va">$(</span><span class="ex">__emacs_color</span> <span class="st">&quot;</span><span class="va">${colors</span><span class="op">[</span>magenta<span class="op">]</span><span class="va">}</span><span class="st">&quot;</span><span class="va">)</span><span class="st">))</span>
+<span class="st">        (tty-color-define &quot;cyan&quot;           6 &#39;(</span><span class="va">$(</span><span class="ex">__emacs_color</span> <span class="st">&quot;</span><span class="va">${colors</span><span class="op">[</span>cyan<span class="op">]</span><span class="va">}</span><span class="st">&quot;</span><span class="va">)</span><span class="st">))</span>
+<span class="st">        (tty-color-define &quot;white&quot;          7 &#39;(</span><span class="va">$(</span><span class="ex">__emacs_color</span> <span class="st">&quot;</span><span class="va">${colors</span><span class="op">[</span>white<span class="op">]</span><span class="va">}</span><span class="st">&quot;</span><span class="va">)</span><span class="st">))</span>
+<span class="st">        (tty-color-define &quot;brightblack&quot;    8 &#39;(</span><span class="va">$(</span><span class="ex">__emacs_color</span> <span class="st">&quot;</span><span class="va">${colors</span><span class="op">[</span>brightblack<span class="op">]</span><span class="va">}</span><span class="st">&quot;</span><span class="va">)</span><span class="st">))</span>
+<span class="st">        (tty-color-define &quot;brightred&quot;      9 &#39;(</span><span class="va">$(</span><span class="ex">__emacs_color</span> <span class="st">&quot;</span><span class="va">${colors</span><span class="op">[</span>brightred<span class="op">]</span><span class="va">}</span><span class="st">&quot;</span><span class="va">)</span><span class="st">))</span>
+<span class="st">        (tty-color-define &quot;brightgreen&quot;   10 &#39;(</span><span class="va">$(</span><span class="ex">__emacs_color</span> <span class="st">&quot;</span><span class="va">${colors</span><span class="op">[</span>brightgreen<span class="op">]</span><span class="va">}</span><span class="st">&quot;</span><span class="va">)</span><span class="st">))</span>
+<span class="st">        (tty-color-define &quot;brightyellow&quot;  11 &#39;(</span><span class="va">$(</span><span class="ex">__emacs_color</span> <span class="st">&quot;</span><span class="va">${colors</span><span class="op">[</span>brightyellow<span class="op">]</span><span class="va">}</span><span class="st">&quot;</span><span class="va">)</span><span class="st">))</span>
+<span class="st">        (tty-color-define &quot;brightblue&quot;    12 &#39;(</span><span class="va">$(</span><span class="ex">__emacs_color</span> <span class="st">&quot;</span><span class="va">${colors</span><span class="op">[</span>brightblue<span class="op">]</span><span class="va">}</span><span class="st">&quot;</span><span class="va">)</span><span class="st">))</span>
+<span class="st">        (tty-color-define &quot;brightmagenta&quot; 13 &#39;(</span><span class="va">$(</span><span class="ex">__emacs_color</span> <span class="st">&quot;</span><span class="va">${colors</span><span class="op">[</span>brightmagenta<span class="op">]</span><span class="va">}</span><span class="st">&quot;</span><span class="va">)</span><span class="st">))</span>
+<span class="st">        (tty-color-define &quot;brightcyan&quot;    14 &#39;(</span><span class="va">$(</span><span class="ex">__emacs_color</span> <span class="st">&quot;</span><span class="va">${colors</span><span class="op">[</span>brightcyan<span class="op">]</span><span class="va">}</span><span class="st">&quot;</span><span class="va">)</span><span class="st">))</span>
+<span class="st">        (tty-color-define &quot;brightwhite&quot;   15 &#39;(</span><span class="va">$(</span><span class="ex">__emacs_color</span> <span class="st">&quot;</span><span class="va">${colors</span><span class="op">[</span>brightwhite<span class="op">]</span><span class="va">}</span><span class="st">&quot;</span><span class="va">)</span><span class="st">))</span>
+<span class="st">        (load-theme &#39;</span><span class="va">${emacs_theme}</span><span class="st"> t)</span>
+<span class="st">        (l/reset-faces)</span>
+<span class="st">    )</span>
+<span class="op">EOF</span>
+    <span class="va">)</span>
+    <span class="op">&gt;</span>/dev/null <span class="dv">2</span><span class="op">&gt;&amp;</span><span class="dv">1</span> <span class="ex">emacsclient</span> <span class="at">-e</span> <span class="st">&quot;</span><span class="va">${__elisp}</span><span class="st">&quot;</span> <span class="at">-a</span> <span class="st">&quot;&quot;</span> <span class="kw">&amp;</span> <span class="bu">disown</span>
+
+    <span class="co"># Print control sequences. These are meant to be sourced by the caller.</span>
+    <span class="va">for_tmux</span><span class="op">=</span><span class="st">&quot;False&quot;</span>
+    <span class="cf">if</span> <span class="kw">[[</span> <span class="ot">-n</span> <span class="st">&quot;</span><span class="va">${TMUX</span><span class="op">:-</span><span class="va">}</span><span class="st">&quot;</span> <span class="kw">]];</span> <span class="cf">then</span>
+        <span class="va">for_tmux</span><span class="op">=</span><span class="st">&quot;True&quot;</span>
+    <span class="cf">fi</span>
+    <span class="bu">echo</span> <span class="st">&quot;</span><span class="va">${renderer_path}</span><span class="st"> </span><span class="va">${for_tmux}</span><span class="st"> </span><span class="va">${root_dir}</span><span class="st">/themes/</span><span class="va">${theme}</span><span class="st">&quot;</span> <span class="kw">|</span> <span class="ex">dhall</span> text
+    <span class="bu">echo</span> <span class="st">&quot;export TERM_COLOR_THEME=</span><span class="va">${theme}</span><span class="st">&quot;</span>
+<span class="kw">}</span>
+
+<span class="fu">cycle_theme()</span>
+<span class="kw">{</span>
+    <span class="bu">local</span> <span class="va">root_dir</span>
+    <span class="bu">local</span> <span class="va">direction</span>
+    <span class="bu">local</span> <span class="va">i</span>
+    <span class="bu">local</span> <span class="va">j</span>
+    <span class="bu">local</span> <span class="va">len</span>
+    <span class="bu">local</span> <span class="va">next_theme</span>
+
+    <span class="va">root_dir</span><span class="op">=</span><span class="st">&quot;</span><span class="va">$HOME</span><span class="st">/syscfg/script/terminal-themes/themes&quot;</span>
+    <span class="va">direction</span><span class="op">=</span><span class="va">$1</span>
+
+    <span class="co"># Cycle through to the next theme in the list.</span>
+    <span class="bu">declare</span> <span class="at">-A</span> <span class="va">themes</span>
+    <span class="bu">declare</span> <span class="at">-A</span> <span class="va">themes_indexed</span>
+    <span class="va">i</span><span class="op">=</span>0
+    <span class="va">len</span><span class="op">=</span>0
+    <span class="cf">for</span> theme <span class="kw">in</span> <span class="st">&quot;</span><span class="va">${root_dir}</span><span class="st">&quot;</span>/<span class="pp">*</span>.dhall<span class="kw">;</span> <span class="cf">do</span>
+        <span class="va">t</span><span class="op">=</span><span class="va">$(</span><span class="fu">basename</span> <span class="st">&quot;</span><span class="va">$theme</span><span class="st">&quot;</span><span class="va">)</span>
+        <span class="va">themes</span><span class="op">[</span><span class="va">$i</span><span class="op">]=</span><span class="st">&quot;</span><span class="va">$t</span><span class="st">&quot;</span>
+        <span class="va">themes_indexed</span><span class="op">[</span><span class="st">&quot;</span><span class="va">$t</span><span class="st">&quot;</span><span class="op">]=</span><span class="va">$i</span>
+        <span class="kw">((</span><span class="va">i</span><span class="op">+=</span><span class="dv">1</span><span class="kw">))</span>
+        <span class="kw">((</span><span class="va">len</span><span class="op">+=</span><span class="dv">1</span><span class="kw">))</span>
+    <span class="cf">done</span>
+    <span class="va">j</span><span class="op">=</span><span class="va">${themes_indexed</span><span class="op">[</span><span class="st">&quot;</span><span class="va">${TERM_COLOR_THEME}</span><span class="st">&quot;</span><span class="op">]</span><span class="va">}</span>
+    <span class="cf">if</span> <span class="kw">[[</span> <span class="st">&quot;</span><span class="va">$direction</span><span class="st">&quot;</span> <span class="ot">==</span> <span class="st">&quot;next&quot;</span> <span class="kw">]];</span> <span class="cf">then</span>
+        <span class="kw">((</span><span class="va">j</span><span class="op">+=</span><span class="dv">1</span><span class="kw">))</span>
+    <span class="cf">else</span>
+        <span class="kw">((</span><span class="va">j</span><span class="op">+=</span><span class="va">len</span> <span class="op">-</span> <span class="dv">1</span><span class="kw">))</span>
+    <span class="cf">fi</span>
+    <span class="va">next_theme</span><span class="op">=</span><span class="va">${themes</span><span class="op">[</span><span class="va">$((j</span><span class="op">%</span><span class="va">len))</span><span class="op">]</span><span class="va">}</span>
+    <span class="ex">set_theme</span> <span class="st">&quot;</span><span class="va">${next_theme}</span><span class="st">&quot;</span>
+<span class="kw">}</span>
+
+<span class="fu">main()</span> <span class="kw">{</span>
+    <span class="va">arg</span><span class="op">=</span><span class="st">&quot;</span><span class="va">${1</span><span class="op">:-</span>next<span class="va">}</span><span class="st">&quot;</span>
+    <span class="cf">case</span> <span class="st">&quot;</span><span class="va">${arg}</span><span class="st">&quot;</span> <span class="kw">in</span>
+        <span class="pp">*</span><span class="ss">.dhall</span><span class="kw">)</span> <span class="ex">set_theme</span> <span class="st">&quot;</span><span class="va">${arg}</span><span class="st">&quot;</span> <span class="cf">;;</span>
+        <span class="ss">next</span><span class="kw">|</span><span class="ss">prev</span><span class="kw">)</span> <span class="ex">cycle_theme</span> <span class="st">&quot;</span><span class="va">${arg}</span><span class="st">&quot;</span> <span class="cf">;;</span>
+        <span class="pp">*</span><span class="kw">)</span>
+            <span class="bu">echo</span> <span class="op">&gt;&amp;</span><span class="dv">2</span> <span class="st">&quot;unrecognized argument </span><span class="va">${arg}</span><span class="st">&quot;</span>
+            <span class="cf">return</span> <span class="dv">1</span>
+            <span class="cf">;;</span>
+    <span class="cf">esac</span>
+<span class="kw">}</span>
+
+<span class="ex">main</span> <span class="st">&quot;</span><span class="va">$@</span><span class="st">&quot;</span></code></pre></div></div></div><div id="heading-container-h-3-Types" class="heading-container"><h2 id="h-3-Types"><span id="c-5" class="cell-idx"><a href="#h-3-Types">3&ensp;Types</a></span></h2><p><span id="c-6" class="cell-idx"><a href="#b-theme-type" class="internal-link" id="linkNumber-5"><span class="code">Theme</span></a> is the type of each theme, and <a href="#b-palette-extra-type" class="internal-link" id="linkNumber-6"><span class="code">PaletteExtra</span></a> is the type of the extra named colors that each theme has in addition to its 16-color palette.</span></p><div id="c-7" class="cell-idx"><div class="block-container src" id="b-theme-type"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-theme-type">&#x1F517;</a></div><div class="block-meta"><code>theme-type</code><br><code><span class="bold">&#x1F3AF; script/terminal-themes/Theme</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">dhall</span></p></li></ul></div><pre class="block-body"><code>{ name : Text
+, emacsTheme : Text
+, text : Text
+, cursor : Text
+, background : Text
+, foreground : Text
+, palette16 : List Text
+, paletteExtra : ./PaletteExtra
+}</code></pre></div></div><div id="c-8" class="cell-idx"><div class="block-container src" id="b-palette-extra-type"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-palette-extra-type">&#x1F517;</a></div><div class="block-meta"><code>palette-extra-type</code><br><code><span class="bold">&#x1F3AF; script/terminal-themes/PaletteExtra</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">dhall</span></p></li></ul></div><pre class="block-body"><code>{ xBrightOrange : Text
+, xDarkGreen : Text
+, xAvocado : Text
+, xLime : Text
+, xMoss : Text
+, xUltraBrightMagenta : Text
+, xUltraBrightGreen : Text
+, xUltraBrightRed : Text
+, xGrey1 : Text
+, xGrey2 : Text
+}</code></pre></div></div></div><div id="heading-container-h-4-Rendering" class="heading-container"><h2 id="h-4-Rendering"><span id="c-9" class="cell-idx"><a href="#h-4-Rendering">4&ensp;Rendering</a></span></h2><p><span id="c-10" class="cell-idx"><a href="#b-to-color-map" class="internal-link" id="linkNumber-7"><span class="code">toColorMap.dhall</span></a> turns a theme into a list of color names and values, which the two <span class="code">listColors</span> functions then print for <a href="#b-list-colors-for-emacs" class="internal-link" id="linkNumber-8">Emacs</a> and <a href="#b-list-colors-for-shell" class="internal-link" id="linkNumber-9">the shell</a>.</span></p><div id="c-11" class="cell-idx"><div class="block-container src" id="b-to-color-map"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-to-color-map">&#x1F517;</a></div><div class="block-meta"><code>to-color-map</code><br><code><span class="bold">&#x1F3AF; script/terminal-themes/toColorMap.dhall</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">dhall</span></p></li></ul></div><pre class="block-body"><code>let Enumerated = { index : Natural, value : Text }
+
+let Mapped = { mapKey : Text, mapValue : Text }
+
+let isIndex =
+      λ(idx : Natural) →
+      λ(n : Natural) →
+            Natural/isZero (Natural/subtract n idx)
+        &amp;&amp;  Natural/isZero (Natural/subtract idx n)
+
+let getColorName =
+      λ(idx : Natural) →
+        if    Natural/isZero idx
+        then  &quot;black&quot;
+        else  if isIndex 1 idx
+        then  &quot;red&quot;
+        else  if isIndex 2 idx
+        then  &quot;green&quot;
+        else  if isIndex 3 idx
+        then  &quot;yellow&quot;
+        else  if isIndex 4 idx
+        then  &quot;blue&quot;
+        else  if isIndex 5 idx
+        then  &quot;magenta&quot;
+        else  if isIndex 6 idx
+        then  &quot;cyan&quot;
+        else  if isIndex 7 idx
+        then  &quot;white&quot;
+        else  if isIndex 8 idx
+        then  &quot;brightblack&quot;
+        else  if isIndex 9 idx
+        then  &quot;brightred&quot;
+        else  if isIndex 10 idx
+        then  &quot;brightgreen&quot;
+        else  if isIndex 11 idx
+        then  &quot;brightyellow&quot;
+        else  if isIndex 12 idx
+        then  &quot;brightblue&quot;
+        else  if isIndex 13 idx
+        then  &quot;brightmagenta&quot;
+        else  if isIndex 14 idx
+        then  &quot;brightcyan&quot;
+        else  if isIndex 15 idx
+        then  &quot;brightwhite&quot;
+        else  &quot;?&quot;
+
+in  λ(theme : ./Theme) →
+        [ { mapKey = &quot;text&quot;, mapValue = theme.text }
+        , { mapKey = &quot;cursor&quot;, mapValue = theme.cursor }
+        , { mapKey = &quot;background&quot;, mapValue = theme.background }
+        , { mapKey = &quot;foreground&quot;, mapValue = theme.foreground }
+        ]
+      # List/fold
+          Enumerated
+          (List/reverse Enumerated (List/indexed Text theme.palette16))
+          (List Mapped)
+          ( λ(a : Enumerated) →
+            λ(b : List Mapped) →
+              b # [ { mapKey = getColorName a.index, mapValue = a.value } ]
+          )
+          ([] : List Mapped)
+      # toMap theme.paletteExtra</code></pre></div></div><div id="c-12" class="cell-idx"><div class="block-container src" id="b-list-colors-for-emacs"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-list-colors-for-emacs">&#x1F517;</a></div><div class="block-meta"><code>list-colors-for-emacs</code><br><code><span class="bold">&#x1F3AF; script/terminal-themes/listColorsForEmacs.dhall</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">dhall</span></p></li></ul></div><pre class="block-body"><code>let Mapped = { mapKey : Text, mapValue : Text }
+
+in  λ(theme : ./Theme) →
+      List/fold
+        Mapped
+        (List/reverse Mapped (./toColorMap.dhall theme))
+        Text
+        ( λ(a : Mapped) →
+          λ(b : Text) →
+                b
+            ++  &#39;&#39;
+                (setq l/color-${a.mapKey} &quot;${a.mapValue}&quot;)
+                &#39;&#39;
+        )
+        &quot;&quot;</code></pre></div></div><div id="c-13" class="cell-idx"><div class="block-container src" id="b-list-colors-for-shell"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-list-colors-for-shell">&#x1F517;</a></div><div class="block-meta"><code>list-colors-for-shell</code><br><code><span class="bold">&#x1F3AF; script/terminal-themes/listColorsForShell.dhall</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">dhall</span></p></li></ul></div><pre class="block-body"><code>let Mapped = { mapKey : Text, mapValue : Text }
+
+in  λ(theme : ./Theme) →
+      List/fold
+        Mapped
+        (./toColorMap.dhall theme)
+        Text
+        ( λ(a : Mapped) →
+          λ(b : Text) →
+                b
+            ++  &#39;&#39;
+                ${a.mapKey}=${a.mapValue}
+                &#39;&#39;
+        )
+        &quot;&quot;</code></pre></div></div><p><span id="c-14" class="cell-idx"><a href="#b-render-control-sequences" class="internal-link" id="linkNumber-10"><span class="code">renderControlSequences.dhall</span></a> prints the control sequences that apply a theme to the terminal, with extra wrapping if we&#39;re inside <span class="code">tmux</span>.</span></p><div id="c-15" class="cell-idx"><div class="block-container src" id="b-render-control-sequences"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-render-control-sequences">&#x1F517;</a></div><div class="block-meta"><code>render-control-sequences</code><br><code><span class="bold">&#x1F3AF; script/terminal-themes/renderControlSequences.dhall</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">dhall</span></p></li></ul></div><pre class="block-body"><code>let Enumerated = { index : Natural, value : Text }
+
+let controlSequence =
+      λ(forTmux : Bool) →
+        if    forTmux
+        then  { start = &quot;\\x1bPtmux;\\x1b\\x1b]&quot;, end = &quot;\\x07\\x1b\\\\&quot; }
+        else  { start = &quot;\\x1b]&quot;, end = &quot;\\x07&quot; }
+
+let setColor =
+      λ(forTmux : Bool) →
+      λ(code : Natural) →
+      λ(color : Text) →
+        &#39;&#39;
+        printf &#39;${    (controlSequence forTmux).start
+                  ++  Natural/show code
+                  ++  &quot;;&quot;
+                  ++  color
+                  ++  (controlSequence forTmux).end}&#39;
+        &#39;&#39;
+
+in  λ(forTmux : Bool) →
+    λ(theme : ./Theme) →
+          &#39;&#39;
+          # Foreground color. (Default text color).
+          ${setColor forTmux 10 theme.foreground}
+
+          # Background color.
+          ${setColor forTmux 11 theme.background}
+
+          # Cursor background color.
+          ${setColor forTmux 12 theme.cursor}
+          &#39;&#39;
+      ++  ( if    forTmux
+            then  &#39;&#39;
+                  # Set colors for TMUX status bar. We just recycle the colors defined
+                  # for the cursor.
+                  tmux set-environment L_TMUX_COLOR_TEXT &quot;${theme.text}&quot;
+                  tmux set-environment L_TMUX_COLOR_CURSOR &quot;${theme.cursor}&quot;
+                  tmux source-file ~/.tmux/colors.conf
+
+                  &#39;&#39;
+            else  &#39;&#39;
+                  export L_TMUX_COLOR_TEXT=&quot;${theme.text}&quot;
+                  export L_TMUX_COLOR_CURSOR=&quot;${theme.cursor}&quot;
+                  &#39;&#39;
+          )
+      ++  &#39;&#39;
+          # Remaining 16 colors.
+          &#39;&#39;
+      ++  List/fold
+            Enumerated
+            (List/indexed Text theme.palette16)
+            Text
+            ( λ(a : Enumerated) →
+              λ(b : Text) →
+                b ++ setColor forTmux 4 &quot;${Natural/show a.index};${a.value}&quot;
+            )
+            &quot;&quot;</code></pre></div></div></div><div id="heading-container-h-5-Themes" class="heading-container"><h2 id="h-5-Themes"><span id="c-16" class="cell-idx"><a href="#h-5-Themes">5&ensp;Themes</a></span></h2></div><div id="heading-container-h-5.1-Blue" class="heading-container"><h3 id="h-5.1-Blue"><span id="c-17" class="cell-idx"><a href="#h-5.1-Blue">5.1&ensp;Blue</a></span></h3><div id="c-18" class="cell-idx"><div class="block-container src" id="b-theme-blue"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-theme-blue">&#x1F517;</a></div><div class="block-meta"><code>theme-blue</code><br><code><span class="bold">&#x1F3AF; script/terminal-themes/themes/Blue.dhall</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">dhall</span></p></li></ul></div><pre class="block-body"><code>-- Based on Codeschool light by Chris Kempson from https://terminal.sexy
+{ name = &quot;Blue&quot;
+, emacsTheme = &quot;doom-one-light&quot;
+, cursor = &quot;#2299dd&quot;
+, text = &quot;#ffffff&quot;
+, background = &quot;#b1eaff&quot;
+, foreground = &quot;#2a343a&quot;
+, palette16 =
+  [ &quot;#84d5ff&quot;
+  , &quot;#c43d16&quot;
+  , &quot;#007836&quot;
+  , &quot;#535000&quot;
+  , &quot;#356ab7&quot;
+  , &quot;#b02f50&quot;
+  , &quot;#31a3a8&quot;
+  , &quot;#2a343a&quot;
+  , &quot;#b1eaff&quot;
+  , &quot;#e45d36&quot;
+  , &quot;#2b8c64&quot;
+  , &quot;#636000&quot;
+  , &quot;#558ad7&quot;
+  , &quot;#d04f70&quot;
+  , &quot;#39bdc4&quot;
+  , &quot;#000000&quot;
+  ]
+, paletteExtra = (./Vanilla.dhall).paletteExtra
+}</code></pre></div></div></div><div id="heading-container-h-5.2-Dark" class="heading-container"><h3 id="h-5.2-Dark"><span id="c-19" class="cell-idx"><a href="#h-5.2-Dark">5.2&ensp;Dark</a></span></h3><div id="c-20" class="cell-idx"><div class="block-container src" id="b-theme-dark"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-theme-dark">&#x1F517;</a></div><div class="block-meta"><code>theme-dark</code><br><code><span class="bold">&#x1F3AF; script/terminal-themes/themes/Dark.dhall</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">dhall</span></p></li></ul></div><pre class="block-body"><code>-- Based on Visibone Alt. 2 from https://terminal.sexy
+{ name = &quot;Dark&quot;
+, emacsTheme = &quot;zenburn&quot;
+, cursor = &quot;#ffffff&quot;
+, text = &quot;#000000&quot;
+, background = &quot;#333333&quot;
+, foreground = &quot;#cccccc&quot;
+, palette16 =
+  [ &quot;#222222&quot;
+  , &quot;#cc6699&quot;
+  , &quot;#99cc66&quot;
+  , &quot;#cc9966&quot;
+  , &quot;#6699cc&quot;
+  , &quot;#9966cc&quot;
+  , &quot;#66cc99&quot;
+  , &quot;#cccccc&quot;
+  , &quot;#333333&quot;
+  , &quot;#ff99cc&quot;
+  , &quot;#ccff99&quot;
+  , &quot;#ffcc99&quot;
+  , &quot;#99ccff&quot;
+  , &quot;#cc99ff&quot;
+  , &quot;#99ffcc&quot;
+  , &quot;#ffffff&quot;
+  ]
+, paletteExtra = (./PastelDark.dhall).paletteExtra
+}</code></pre></div></div></div><div id="heading-container-h-5.3-Light" class="heading-container"><h3 id="h-5.3-Light"><span id="c-21" class="cell-idx"><a href="#h-5.3-Light">5.3&ensp;Light</a></span></h3><div id="c-22" class="cell-idx"><div class="block-container src" id="b-theme-light"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-theme-light">&#x1F517;</a></div><div class="block-meta"><code>theme-light</code><br><code><span class="bold">&#x1F3AF; script/terminal-themes/themes/Light.dhall</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">dhall</span></p></li></ul></div><pre class="block-body"><code>-- Based on Ivory Light by Baskerville from https://terminal.sexy
+{ name = &quot;Light&quot;
+, emacsTheme = &quot;doom-solarized-light&quot;
+, cursor = &quot;#999933&quot;
+, text = &quot;#ffffff&quot;
+, background = &quot;#fef9ec&quot;
+, foreground = &quot;#34363c&quot;
+, palette16 =
+  [ &quot;#eee9dc&quot;
+  , &quot;#cc514e&quot;
+  , &quot;#00a250&quot;
+  , &quot;#a08a00&quot;
+  , &quot;#208ffb&quot;
+  , &quot;#b453a9&quot;
+  , &quot;#00a4c1&quot;
+  , &quot;#34363c&quot;
+  , &quot;#fef9ec&quot;
+  , &quot;#b22b31&quot;
+  , &quot;#007427&quot;
+  , &quot;#715f00&quot;
+  , &quot;#0065ca&quot;
+  , &quot;#a03196&quot;
+  , &quot;#007693&quot;
+  , &quot;#000000&quot;
+  ]
+, paletteExtra = (./Vanilla.dhall).paletteExtra
+}</code></pre></div></div></div><div id="heading-container-h-5.4-PastelDark" class="heading-container"><h3 id="h-5.4-PastelDark"><span id="c-23" class="cell-idx"><a href="#h-5.4-PastelDark">5.4&ensp;PastelDark</a></span></h3><div id="c-24" class="cell-idx"><div class="block-container src" id="b-theme-pasteldark"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-theme-pasteldark">&#x1F517;</a></div><div class="block-meta"><code>theme-pasteldark</code><br><code><span class="bold">&#x1F3AF; script/terminal-themes/themes/PastelDark.dhall</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">dhall</span></p></li></ul></div><pre class="block-body"><code>-- Color definition order for &quot;palette16&quot;.
+-- 00 black
+-- 01 red
+-- 02 green
+-- 03 yellow
+-- 04 blue
+-- 05 magenta
+-- 06 cyan
+-- 07 white
+-- 08 *bright* black
+-- 09 *bright* red
+-- 10 *bright* green
+-- 11 *bright* yellow
+-- 12 *bright* blue
+-- 13 *bright* magenta
+-- 14 *bright* cyan
+-- 15 *bright* white
+--
+-- The &quot;text&quot; field is only used by Alacritty to colorize the text (letter) of
+-- the current cursor position.
+{ name = &quot;PastelDark&quot;
+, emacsTheme = &quot;zenburn&quot;
+, cursor = &quot;#ffffff&quot;
+, text = &quot;#000000&quot;
+, background = &quot;#343c48&quot;
+, foreground = &quot;#e5e7ea&quot;
+, palette16 =
+  [ &quot;#22222f&quot;
+  , &quot;#e49f9f&quot;
+  , &quot;#91e380&quot;
+  , &quot;#eae47c&quot;
+  , &quot;#7cacd3&quot;
+  , &quot;#df9494&quot;
+  , &quot;#8cdbd8&quot;
+  , &quot;#e5e7ea&quot;
+  , &quot;#343c48&quot;
+  , &quot;#e5bfbf&quot;
+  , &quot;#afe0a1&quot;
+  , &quot;#f2fb9e&quot;
+  , &quot;#95add1&quot;
+  , &quot;#f2b0b0&quot;
+  , &quot;#b4f0f0&quot;
+  , &quot;#ffffff&quot;
+  ]
+, paletteExtra =
+  { xBrightOrange = &quot;#ffcfaf&quot;
+  , xDarkGreen = &quot;#2e3330&quot;
+  , xAvocado = &quot;#3f5f4f&quot;
+  , xLime = &quot;#ccff94&quot;
+  , xMoss = &quot;#86ab8e&quot;
+  , xUltraBrightMagenta = &quot;#ff00ff&quot;
+  , xUltraBrightGreen = &quot;#00ff00&quot;
+  , xUltraBrightRed = &quot;#ff0000&quot;
+  , xGrey1 = &quot;#1c1c1c&quot;
+  , xGrey2 = &quot;#262626&quot;
+  }
+}</code></pre></div></div></div><div id="heading-container-h-5.5-Red" class="heading-container"><h3 id="h-5.5-Red"><span id="c-25" class="cell-idx"><a href="#h-5.5-Red">5.5&ensp;Red</a></span></h3><div id="c-26" class="cell-idx"><div class="block-container src" id="b-theme-red"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-theme-red">&#x1F517;</a></div><div class="block-meta"><code>theme-red</code><br><code><span class="bold">&#x1F3AF; script/terminal-themes/themes/Red.dhall</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">dhall</span></p></li></ul></div><pre class="block-body"><code>-- Based on Aiseered.vim by Alexander Evstiougov from https://www.vim.org/scripts/script.php?script_id=750
+{ name = &quot;Red&quot;
+, emacsTheme = &quot;zenburn&quot;
+, cursor = &quot;#ffffff&quot;
+, text = &quot;#000000&quot;
+, background = &quot;#400000&quot;
+, foreground = &quot;#cfcfcf&quot;
+, palette16 =
+  [ &quot;#400000&quot;
+  , &quot;#dd8800&quot;
+  , &quot;#66dd88&quot;
+  , &quot;#ccdd77&quot;
+  , &quot;#1188cc&quot;
+  , &quot;#bb88aa&quot;
+  , &quot;#66cccc&quot;
+  , &quot;#cfcfcf&quot;
+  , &quot;#600000&quot;
+  , &quot;#ffaa00&quot;
+  , &quot;#88ffaa&quot;
+  , &quot;#eeff99&quot;
+  , &quot;#33aaee&quot;
+  , &quot;#ddaacc&quot;
+  , &quot;#88eeee&quot;
+  , &quot;#ffffff&quot;
+  ]
+, paletteExtra = (./PastelDark.dhall).paletteExtra
+}</code></pre></div></div></div><div id="heading-container-h-5.6-RetroBlue" class="heading-container"><h3 id="h-5.6-RetroBlue"><span id="c-27" class="cell-idx"><a href="#h-5.6-RetroBlue">5.6&ensp;RetroBlue</a></span></h3><div id="c-28" class="cell-idx"><div class="block-container src" id="b-theme-retroblue"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-theme-retroblue">&#x1F517;</a></div><div class="block-meta"><code>theme-retroblue</code><br><code><span class="bold">&#x1F3AF; script/terminal-themes/themes/RetroBlue.dhall</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">dhall</span></p></li></ul></div><pre class="block-body"><code>{ name = &quot;RetroBlue&quot;
+, emacsTheme = &quot;zenburn&quot;
+, cursor = &quot;#ffffff&quot;
+, text = &quot;#000000&quot;
+, background = &quot;#1111aa&quot;
+, foreground = &quot;#ffffff&quot;
+, palette16 =
+  [ &quot;#1111aa&quot;
+  , &quot;#ff6666&quot;
+  , &quot;#00ff00&quot;
+  , &quot;#ffff00&quot;
+  , &quot;#ff88ff&quot;
+  , &quot;#ff00ff&quot;
+  , &quot;#00ffff&quot;
+  , &quot;#ffffff&quot;
+  , &quot;#3333ff&quot;
+  , &quot;#ff6666&quot;
+  , &quot;#00ff00&quot;
+  , &quot;#ffff00&quot;
+  , &quot;#ff88ff&quot;
+  , &quot;#ff00ff&quot;
+  , &quot;#00ffff&quot;
+  , &quot;#ffffff&quot;
+  ]
+, paletteExtra = (./PastelDark.dhall).paletteExtra
+}</code></pre></div></div></div><div id="heading-container-h-5.7-Vanilla" class="heading-container"><h3 id="h-5.7-Vanilla"><span id="c-29" class="cell-idx"><a href="#h-5.7-Vanilla">5.7&ensp;Vanilla</a></span></h3><div id="c-30" class="cell-idx"><div class="block-container src" id="b-theme-vanilla"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-theme-vanilla">&#x1F517;</a></div><div class="block-meta"><code>theme-vanilla</code><br><code><span class="bold">&#x1F3AF; script/terminal-themes/themes/Vanilla.dhall</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">dhall</span></p></li></ul></div><pre class="block-body"><code>{ name = &quot;Vanilla&quot;
+, emacsTheme = &quot;doom-one-light&quot;
+, cursor = &quot;#aaaaaa&quot;
+, text = &quot;#ffffff&quot;
+, background = &quot;#ffffff&quot;
+, foreground = &quot;#222222&quot;
+, palette16 =
+  [ &quot;#cccccc&quot;
+  , &quot;#ff0000&quot;
+  , &quot;#007700&quot;
+  , &quot;#999900&quot;
+  , &quot;#0000ff&quot;
+  , &quot;#cc00cc&quot;
+  , &quot;#00aaaa&quot;
+  , &quot;#222222&quot;
+  , &quot;#ffffff&quot;
+  , &quot;#ff6666&quot;
+  , &quot;#33cc33&quot;
+  , &quot;#aaaa66&quot;
+  , &quot;#3333ff&quot;
+  , &quot;#cc66cc&quot;
+  , &quot;#33aaaa&quot;
+  , &quot;#000000&quot;
+  ]
+, paletteExtra =
+  { xBrightOrange = &quot;#cc7700&quot;
+  , xDarkGreen = &quot;#2e3330&quot;
+  , xAvocado = &quot;#3f5f4f&quot;
+  , xLime = &quot;#ccff94&quot;
+  , xMoss = &quot;#86ab8e&quot;
+  , xUltraBrightMagenta = &quot;#ff00ff&quot;
+  , xUltraBrightGreen = &quot;#00ff00&quot;
+  , xUltraBrightRed = &quot;#ff0000&quot;
+  , xGrey1 = &quot;#1c1c1c&quot;
+  , xGrey2 = &quot;#262626&quot;
+  }
+}</code></pre></div></div></div><div id="heading-container-h-6-Color-tests" class="heading-container"><h2 id="h-6-Color-tests"><span id="c-31" class="cell-idx"><a href="#h-6-Color-tests">6&ensp;Color tests</a></span></h2><p><span id="c-32" class="cell-idx">These print test patterns for checking a terminal&#39;s color support. They aren&#39;t part of the theme machinery, and some of them are from other authors, as their headers show.</span></p><div id="c-33" class="cell-idx"><div class="block-container src" id="b-test-24-bit-color"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-test-24-bit-color">&#x1F517;</a></div><div class="block-meta"><code>test-24-bit-color</code><br><code><span class="bold">&#x1F3AF; script/terminal-themes/color-tests/24-bit-color.sh</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">bash</span></p></li><li><p><span class="code">shebang</span> = <span class="code">#!/usr/bin/env bash</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="co"># shellcheck disable=all</span>
+<span class="co">#</span>
+<span class="co">#   This file echoes a bunch of 24-bit color codes</span>
+<span class="co">#   to the terminal to demonstrate its functionality.</span>
+<span class="co">#   The foreground escape sequence is ^[38;2;&lt;r&gt;;&lt;g&gt;;&lt;b&gt;m</span>
+<span class="co">#   The background escape sequence is ^[48;2;&lt;r&gt;;&lt;g&gt;;&lt;b&gt;m</span>
+<span class="co">#   &lt;r&gt; &lt;g&gt; &lt;b&gt; range from 0 to 255 inclusive.</span>
+<span class="co">#   The escape sequence ^[0m returns output to default</span>
+
+<span class="co"># If the terminal ($TERM) supports 24-bit colors, then this script will output a</span>
+<span class="co"># smooth gradient.  This script was taken from</span>
+<span class="co"># https://gist.githubusercontent.com/lifepillar/09a44b8cf0f9397465614e622979107f/raw/24-bit-color.sh.</span>
+<span class="co"># See https://github.com/alacritty/alacritty/issues/109#issuecomment-507026155</span>
+<span class="co"># for context.</span>
+
+<span class="fu">setBackgroundColor()</span>
+<span class="kw">{</span>
+    <span class="bu">echo</span> <span class="at">-en</span> <span class="st">&quot;\x1b[48;2;</span><span class="va">$1</span><span class="st">;</span><span class="va">$2</span><span class="st">;</span><span class="va">$3</span><span class="st">&quot;&quot;m&quot;</span>
+<span class="kw">}</span>
+
+<span class="fu">resetOutput()</span>
+<span class="kw">{</span>
+    <span class="bu">echo</span> <span class="at">-en</span> <span class="st">&quot;\x1b[0m\n&quot;</span>
+<span class="kw">}</span>
+
+<span class="co"># Gives a color $1/255 % along HSV</span>
+<span class="co"># Who knows what happens when $1 is outside 0-255</span>
+<span class="co"># Echoes &quot;$red $green $blue&quot; where</span>
+<span class="co"># $red $green and $blue are integers</span>
+<span class="co"># ranging between 0 and 255 inclusive</span>
+<span class="fu">rainbowColor()</span>
+<span class="kw">{</span>
+    <span class="bu">let</span> <span class="va">h</span><span class="op">=</span><span class="va">$1</span><span class="op">/</span><span class="dv">43</span>
+    <span class="bu">let</span> <span class="va">f</span><span class="op">=</span><span class="va">$1</span><span class="op">-</span><span class="dv">43</span><span class="pp">*</span><span class="va">$h</span>
+    <span class="bu">let</span> <span class="va">t</span><span class="op">=</span><span class="va">$f</span><span class="pp">*</span>255/43
+    <span class="bu">let</span> <span class="va">q</span><span class="op">=</span><span class="dv">255</span><span class="op">-</span><span class="va">t</span>
+
+    <span class="cf">if</span> <span class="bu">[</span> <span class="va">$h</span> <span class="ot">-eq</span> 0 <span class="bu">]</span>
+    <span class="cf">then</span>
+        <span class="bu">echo</span> <span class="st">&quot;255 </span><span class="va">$t</span><span class="st"> 0&quot;</span>
+    <span class="cf">elif</span> <span class="bu">[</span> <span class="va">$h</span> <span class="ot">-eq</span> 1 <span class="bu">]</span>
+    <span class="cf">then</span>
+        <span class="bu">echo</span> <span class="st">&quot;</span><span class="va">$q</span><span class="st"> 255 0&quot;</span>
+    <span class="cf">elif</span> <span class="bu">[</span> <span class="va">$h</span> <span class="ot">-eq</span> 2 <span class="bu">]</span>
+    <span class="cf">then</span>
+        <span class="bu">echo</span> <span class="st">&quot;0 255 </span><span class="va">$t</span><span class="st">&quot;</span>
+    <span class="cf">elif</span> <span class="bu">[</span> <span class="va">$h</span> <span class="ot">-eq</span> 3 <span class="bu">]</span>
+    <span class="cf">then</span>
+        <span class="bu">echo</span> <span class="st">&quot;0 </span><span class="va">$q</span><span class="st"> 255&quot;</span>
+    <span class="cf">elif</span> <span class="bu">[</span> <span class="va">$h</span> <span class="ot">-eq</span> 4 <span class="bu">]</span>
+    <span class="cf">then</span>
+        <span class="bu">echo</span> <span class="st">&quot;</span><span class="va">$t</span><span class="st"> 0 255&quot;</span>
+    <span class="cf">elif</span> <span class="bu">[</span> <span class="va">$h</span> <span class="ot">-eq</span> 5 <span class="bu">]</span>
+    <span class="cf">then</span>
+        <span class="bu">echo</span> <span class="st">&quot;255 0 </span><span class="va">$q</span><span class="st">&quot;</span>
+    <span class="cf">else</span>
+        <span class="co"># execution should never reach here</span>
+        <span class="bu">echo</span> <span class="st">&quot;0 0 0&quot;</span>
+    <span class="cf">fi</span>
+<span class="kw">}</span>
+
+<span class="cf">for</span> i <span class="kw">in</span> <span class="kw">`</span><span class="fu">seq</span> 0 127<span class="kw">`;</span> <span class="cf">do</span>
+    <span class="ex">setBackgroundColor</span> <span class="va">$i</span> 0 0
+    <span class="bu">echo</span> <span class="at">-en</span> <span class="st">&quot; &quot;</span>
+<span class="cf">done</span>
+<span class="ex">resetOutput</span>
+<span class="cf">for</span> i <span class="kw">in</span> <span class="kw">`</span><span class="fu">seq</span> 255 128<span class="kw">`;</span> <span class="cf">do</span>
+    <span class="ex">setBackgroundColor</span> <span class="va">$i</span> 0 0
+    <span class="bu">echo</span> <span class="at">-en</span> <span class="st">&quot; &quot;</span>
+<span class="cf">done</span>
+<span class="ex">resetOutput</span>
+
+<span class="cf">for</span> i <span class="kw">in</span> <span class="kw">`</span><span class="fu">seq</span> 0 127<span class="kw">`;</span> <span class="cf">do</span>
+    <span class="ex">setBackgroundColor</span> 0 <span class="va">$i</span> 0
+    <span class="bu">echo</span> <span class="at">-n</span> <span class="st">&quot; &quot;</span>
+<span class="cf">done</span>
+<span class="ex">resetOutput</span>
+<span class="cf">for</span> i <span class="kw">in</span> <span class="kw">`</span><span class="fu">seq</span> 255 128<span class="kw">`;</span> <span class="cf">do</span>
+    <span class="ex">setBackgroundColor</span> 0 <span class="va">$i</span> 0
+    <span class="bu">echo</span> <span class="at">-n</span> <span class="st">&quot; &quot;</span>
+<span class="cf">done</span>
+<span class="ex">resetOutput</span>
+
+<span class="cf">for</span> i <span class="kw">in</span> <span class="kw">`</span><span class="fu">seq</span> 0 127<span class="kw">`;</span> <span class="cf">do</span>
+    <span class="ex">setBackgroundColor</span> 0 0 <span class="va">$i</span>
+    <span class="bu">echo</span> <span class="at">-n</span> <span class="st">&quot; &quot;</span>
+<span class="cf">done</span>
+<span class="ex">resetOutput</span>
+<span class="cf">for</span> i <span class="kw">in</span> <span class="kw">`</span><span class="fu">seq</span> 255 128<span class="kw">`;</span> <span class="cf">do</span>
+    <span class="ex">setBackgroundColor</span> 0 0 <span class="va">$i</span>
+    <span class="bu">echo</span> <span class="at">-n</span> <span class="st">&quot; &quot;</span>
+<span class="cf">done</span>
+<span class="ex">resetOutput</span>
+
+<span class="cf">for</span> i <span class="kw">in</span> <span class="kw">`</span><span class="fu">seq</span> 0 127<span class="kw">`;</span> <span class="cf">do</span>
+    <span class="ex">setBackgroundColor</span> <span class="kw">`</span><span class="ex">rainbowColor</span> <span class="va">$i</span><span class="kw">`</span>
+    <span class="bu">echo</span> <span class="at">-n</span> <span class="st">&quot; &quot;</span>
+<span class="cf">done</span>
+<span class="ex">resetOutput</span>
+<span class="cf">for</span> i <span class="kw">in</span> <span class="kw">`</span><span class="fu">seq</span> 255 128<span class="kw">`;</span> <span class="cf">do</span>
+    <span class="ex">setBackgroundColor</span> <span class="kw">`</span><span class="ex">rainbowColor</span> <span class="va">$i</span><span class="kw">`</span>
+    <span class="bu">echo</span> <span class="at">-n</span> <span class="st">&quot; &quot;</span>
+<span class="cf">done</span>
+<span class="ex">resetOutput</span>
+
+<span class="co"># Based on: https://gist.github.com/XVilka/8346728.</span>
+<span class="fu">awk</span> <span class="at">-v</span> term_cols=<span class="st">&quot;</span><span class="va">${width</span><span class="op">:-</span><span class="va">$(</span><span class="fu">tput</span> cols <span class="kw">||</span> <span class="bu">echo</span> 80<span class="va">)}</span><span class="st">&quot;</span> <span class="st">&#39;BEGIN{</span>
+<span class="st">    s=&quot;/\\&quot;;</span>
+<span class="st">    for (colnum = 0; colnum&lt;term_cols; colnum++) {</span>
+<span class="st">        r = 255-(colnum*255/term_cols);</span>
+<span class="st">        g = (colnum*510/term_cols);</span>
+<span class="st">        b = (colnum*255/term_cols);</span>
+<span class="st">        if (g&gt;255) g = 510-g;</span>
+<span class="st">        printf &quot;\033[48;2;%d;%d;%dm&quot;, r,g,b;</span>
+<span class="st">        printf &quot;\033[38;2;%d;%d;%dm&quot;, 255-r,255-g,255-b;</span>
+<span class="st">        printf &quot;%s\033[0m&quot;, substr(s,colnum%2+1,1);</span>
+<span class="st">    }</span>
+<span class="st">    printf &quot;\n&quot;;</span>
+<span class="st">}&#39;</span></code></pre></div></div><div id="c-34" class="cell-idx"><div class="block-container src" id="b-test-colortable16"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-test-colortable16">&#x1F517;</a></div><div class="block-meta"><code>test-colortable16</code><br><code><span class="bold">&#x1F3AF; script/terminal-themes/color-tests/colortable16.sh</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">bash</span></p></li><li><p><span class="code">shebang</span> = <span class="code">#!/usr/bin/env bash</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="co"># shellcheck disable=all</span>
+
+<span class="co"># prints a color table of 8bg * 8fg * 2 states (regular/bold)</span>
+<span class="bu">echo</span>
+<span class="bu">echo</span> Table for 16-color terminal escape sequences.
+<span class="bu">echo</span> Replace ESC with <span class="dt">\\</span>033 in bash.
+<span class="bu">echo</span>
+<span class="bu">echo</span> <span class="st">&quot;Background | Foreground colors&quot;</span>
+<span class="bu">echo</span> <span class="st">&quot;---------------------------------------------------------------------&quot;</span>
+<span class="cf">for</span><span class="kw">((</span><span class="va">bg</span><span class="op">=</span><span class="dv">40</span><span class="kw">;</span><span class="va">bg</span><span class="op">&lt;=</span><span class="dv">47</span><span class="kw">;</span><span class="va">bg</span><span class="op">++</span><span class="kw">));</span> <span class="cf">do</span>
+	<span class="cf">for</span><span class="kw">((</span><span class="va">bold</span><span class="op">=</span><span class="dv">0</span><span class="kw">;</span><span class="va">bold</span><span class="op">&lt;=</span><span class="dv">1</span><span class="kw">;</span><span class="va">bold</span><span class="op">++</span><span class="kw">))</span> <span class="cf">do</span>
+		<span class="bu">echo</span> <span class="at">-en</span> <span class="st">&quot;\033[0m&quot;&quot; ESC[</span><span class="va">${bg}</span><span class="st">m   | &quot;</span>
+		<span class="cf">for</span><span class="kw">((</span><span class="va">fg</span><span class="op">=</span><span class="dv">30</span><span class="kw">;</span><span class="va">fg</span><span class="op">&lt;=</span><span class="dv">37</span><span class="kw">;</span><span class="va">fg</span><span class="op">++</span><span class="kw">));</span> <span class="cf">do</span>
+			<span class="cf">if</span> <span class="bu">[</span> <span class="va">$bold</span> <span class="ot">==</span> <span class="st">&quot;0&quot;</span> <span class="bu">]</span><span class="kw">;</span> <span class="cf">then</span>
+				<span class="bu">echo</span> <span class="at">-en</span> <span class="st">&quot;\033[</span><span class="va">${bg}</span><span class="st">m\033[</span><span class="va">${fg}</span><span class="st">m [</span><span class="va">${fg}</span><span class="st">m  &quot;</span>
+			<span class="cf">else</span>
+				<span class="bu">echo</span> <span class="at">-en</span> <span class="st">&quot;\033[</span><span class="va">${bg}</span><span class="st">m\033[1;</span><span class="va">${fg}</span><span class="st">m [1;</span><span class="va">${fg}</span><span class="st">m&quot;</span>
+			<span class="cf">fi</span>
+		<span class="cf">done</span>
+		<span class="bu">echo</span> <span class="at">-e</span> <span class="st">&quot;\033[0m&quot;</span>
+	<span class="cf">done</span>
+	<span class="bu">echo</span> <span class="st">&quot;--------------------------------------------------------------------- &quot;</span>
+<span class="cf">done</span>
+
+<span class="bu">echo</span>
+<span class="bu">echo</span>
+
+<span class="co"># See https://askubuntu.com/a/821163.</span>
+<span class="va">printable_colours</span><span class="op">=</span>256
+
+<span class="co"># Return a colour that contrasts with the given colour</span>
+<span class="co"># Bash only does integer division, so keep it integral</span>
+<span class="kw">function</span><span class="fu"> contrast_colour</span> <span class="kw">{</span>
+    <span class="bu">local</span> <span class="va">r</span> <span class="va">g</span> <span class="va">b</span> <span class="va">luminance</span>
+    <span class="va">colour</span><span class="op">=</span><span class="st">&quot;</span><span class="va">$1</span><span class="st">&quot;</span>
+
+    <span class="cf">if</span> <span class="kw">((</span> <span class="va">colour</span> <span class="op">&lt;</span> <span class="dv">16</span> <span class="kw">));</span> <span class="cf">then</span> <span class="co"># Initial 16 ANSI colours</span>
+        <span class="kw">((</span> <span class="va">colour</span> <span class="op">==</span> <span class="dv">0</span> <span class="kw">))</span> <span class="kw">&amp;&amp;</span> <span class="bu">printf</span> <span class="st">&quot;15&quot;</span> <span class="kw">||</span> <span class="bu">printf</span> <span class="st">&quot;0&quot;</span>
+        <span class="cf">return</span>
+    <span class="cf">fi</span>
+
+    <span class="co"># Greyscale # rgb_R = rgb_G = rgb_B = (number - 232) * 10 + 8</span>
+    <span class="cf">if</span> <span class="kw">((</span> <span class="va">colour</span> <span class="op">&gt;</span> <span class="dv">231</span> <span class="kw">));</span> <span class="cf">then</span> <span class="co"># Greyscale ramp</span>
+        <span class="kw">((</span> <span class="va">colour</span> <span class="op">&lt;</span> <span class="dv">244</span> <span class="kw">))</span> <span class="kw">&amp;&amp;</span> <span class="bu">printf</span> <span class="st">&quot;15&quot;</span> <span class="kw">||</span> <span class="bu">printf</span> <span class="st">&quot;0&quot;</span>
+        <span class="cf">return</span>
+    <span class="cf">fi</span>
+
+    <span class="co"># All other colours:</span>
+    <span class="co"># 6x6x6 colour cube = 16 + 36*R + 6*G + B  # Where RGB are [0..5]</span>
+    <span class="co"># See http://stackoverflow.com/a/27165165/5353461</span>
+
+    <span class="co"># r=$(( (colour-16) / 36 ))</span>
+    <span class="va">g</span><span class="op">=</span><span class="va">$((</span> ((<span class="va">colour</span><span class="op">-</span><span class="dv">16</span>) <span class="op">%</span> <span class="dv">36</span>) <span class="op">/</span> <span class="dv">6</span> <span class="va">))</span>
+    <span class="co"># b=$(( (colour-16) % 6 ))</span>
+
+    <span class="co"># If luminance is bright, print number in black, white otherwise.</span>
+    <span class="co"># Green contributes 587/1000 to human perceived luminance - ITU R-REC-BT.601</span>
+    <span class="kw">((</span> <span class="va">g</span> <span class="op">&gt;</span> <span class="dv">2</span><span class="kw">))</span> <span class="kw">&amp;&amp;</span> <span class="bu">printf</span> <span class="st">&quot;0&quot;</span> <span class="kw">||</span> <span class="bu">printf</span> <span class="st">&quot;15&quot;</span>
+    <span class="cf">return</span>
+
+    <span class="co"># Uncomment the below for more precise luminance calculations</span>
+
+    <span class="co"># # Calculate percieved brightness</span>
+    <span class="co"># # See https://www.w3.org/TR/AERT#color-contrast</span>
+    <span class="co"># # and http://www.itu.int/rec/R-REC-BT.601</span>
+    <span class="co"># # Luminance is in range 0..5000 as each value is 0..5</span>
+    <span class="co"># luminance=$(( (r * 299) + (g * 587) + (b * 114) ))</span>
+    <span class="co"># (( $luminance &gt; 2500 )) &amp;&amp; printf &quot;0&quot; || printf &quot;15&quot;</span>
+<span class="kw">}</span>
+
+<span class="co"># Print a coloured block with the number of that colour</span>
+<span class="kw">function</span><span class="fu"> print_colour</span> <span class="kw">{</span>
+    <span class="bu">local</span> <span class="va">colour</span><span class="op">=</span><span class="st">&quot;</span><span class="va">$1</span><span class="st">&quot;</span> <span class="va">contrast</span>
+    <span class="va">contrast</span><span class="op">=</span><span class="va">$(</span><span class="ex">contrast_colour</span> <span class="st">&quot;</span><span class="va">$1</span><span class="st">&quot;</span><span class="va">)</span>
+    <span class="bu">printf</span> <span class="st">&quot;\e[48;5;%sm&quot;</span> <span class="st">&quot;</span><span class="va">$colour</span><span class="st">&quot;</span>                <span class="co"># Start block of colour</span>
+    <span class="bu">printf</span> <span class="st">&quot;\e[38;5;%sm%3d&quot;</span> <span class="st">&quot;</span><span class="va">$contrast</span><span class="st">&quot;</span> <span class="st">&quot;</span><span class="va">$colour</span><span class="st">&quot;</span> <span class="co"># In contrast, print number</span>
+    <span class="bu">printf</span> <span class="st">&quot;\e[0m &quot;</span>                               <span class="co"># Reset colour</span>
+<span class="kw">}</span>
+
+<span class="co"># Starting at $1, print a run of $2 colours</span>
+<span class="kw">function</span><span class="fu"> print_run</span> <span class="kw">{</span>
+    <span class="bu">local</span> <span class="va">i</span>
+    <span class="cf">for</span> <span class="kw">((</span> <span class="va">i</span> <span class="op">=</span> <span class="st">&quot;</span><span class="va">$1</span><span class="st">&quot;</span><span class="kw">;</span> <span class="va">i</span> <span class="op">&lt;</span> <span class="st">&quot;</span><span class="va">$1</span><span class="st">&quot;</span> <span class="op">+</span> <span class="st">&quot;</span><span class="va">$2</span><span class="st">&quot;</span> <span class="kw">&amp;&amp;</span> <span class="va">i</span> <span class="op">&lt;</span> <span class="va">printable_colours</span><span class="kw">;</span> <span class="va">i</span><span class="op">++</span> <span class="kw">))</span> <span class="cf">do</span>
+        <span class="ex">print_colour</span> <span class="st">&quot;</span><span class="va">$i</span><span class="st">&quot;</span>
+    <span class="cf">done</span>
+    <span class="bu">printf</span> <span class="st">&quot;  &quot;</span>
+<span class="kw">}</span>
+
+<span class="co"># Print blocks of colours</span>
+<span class="kw">function</span><span class="fu"> print_blocks</span> <span class="kw">{</span>
+    <span class="bu">local</span> <span class="va">start</span><span class="op">=</span><span class="st">&quot;</span><span class="va">$1</span><span class="st">&quot;</span> <span class="va">i</span>
+    <span class="bu">local</span> <span class="va">end</span><span class="op">=</span><span class="st">&quot;</span><span class="va">$2</span><span class="st">&quot;</span> <span class="co"># inclusive</span>
+    <span class="bu">local</span> <span class="va">block_cols</span><span class="op">=</span><span class="st">&quot;</span><span class="va">$3</span><span class="st">&quot;</span>
+    <span class="bu">local</span> <span class="va">block_rows</span><span class="op">=</span><span class="st">&quot;</span><span class="va">$4</span><span class="st">&quot;</span>
+    <span class="bu">local</span> <span class="va">blocks_per_line</span><span class="op">=</span><span class="st">&quot;</span><span class="va">$5</span><span class="st">&quot;</span>
+    <span class="bu">local</span> <span class="va">block_length</span><span class="op">=</span><span class="va">$((block_cols</span> <span class="op">*</span> <span class="va">block_rows))</span>
+
+    <span class="co"># Print sets of blocks</span>
+    <span class="cf">for</span> <span class="kw">((</span> <span class="va">i</span> <span class="op">=</span> <span class="va">start</span><span class="kw">;</span> <span class="va">i</span> <span class="op">&lt;=</span> <span class="va">end</span><span class="kw">;</span> <span class="va">i</span> <span class="op">+=</span> (<span class="va">blocks_per_line</span><span class="op">-</span><span class="dv">1</span>) <span class="op">*</span> <span class="va">block_length</span> <span class="kw">))</span> <span class="cf">do</span>
+        <span class="bu">printf</span> <span class="st">&quot;\n&quot;</span> <span class="co"># Space before each set of blocks</span>
+        <span class="co"># For each block row</span>
+        <span class="cf">for</span> <span class="kw">((</span> <span class="va">row</span> <span class="op">=</span> <span class="dv">0</span><span class="kw">;</span> <span class="va">row</span> <span class="op">&lt;</span> <span class="va">block_rows</span><span class="kw">;</span> <span class="va">row</span><span class="op">++</span> <span class="kw">))</span> <span class="cf">do</span>
+            <span class="co"># Print block columns for all blocks on the line</span>
+            <span class="cf">for</span> <span class="kw">((</span> <span class="va">block</span> <span class="op">=</span> <span class="dv">0</span><span class="kw">;</span> <span class="va">block</span> <span class="op">&lt;</span> <span class="va">blocks_per_line</span><span class="kw">;</span> <span class="va">block</span><span class="op">++</span> <span class="kw">))</span> <span class="cf">do</span>
+                <span class="ex">print_run</span> <span class="va">$((</span> <span class="va">i</span> <span class="op">+</span> (<span class="va">block</span> <span class="op">*</span> <span class="va">block_length</span>) <span class="va">))</span> <span class="st">&quot;</span><span class="va">$block_cols</span><span class="st">&quot;</span>
+            <span class="cf">done</span>
+            <span class="kw">((</span> <span class="va">i</span> <span class="op">+=</span> <span class="va">block_cols</span> <span class="kw">))</span> <span class="co"># Prepare to print the next row</span>
+            <span class="bu">printf</span> <span class="st">&quot;\n&quot;</span>
+        <span class="cf">done</span>
+    <span class="cf">done</span>
+<span class="kw">}</span>
+
+<span class="ex">print_run</span> 0 16 <span class="co"># The first 16 colours are spread over the whole spectrum</span>
+<span class="bu">printf</span> <span class="st">&quot;\n&quot;</span>
+<span class="ex">print_blocks</span> 16 231 6 6 3 <span class="co"># 6x6x6 colour cube between 16 and 231 inclusive</span>
+<span class="ex">print_blocks</span> 232 255 12 2 1 <span class="co"># Not 50, but 24 Shades of Grey</span></code></pre></div></div><div id="c-35" class="cell-idx"><div class="block-container src" id="b-test-256colors-rb"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-test-256colors-rb">&#x1F517;</a></div><div class="block-meta"><code>test-256colors-rb</code><br><code><span class="bold">&#x1F3AF; script/terminal-themes/color-tests/256colors.rb</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">ruby</span></p></li><li><p><span class="code">shebang</span> = <span class="code">#!/usr/bin/env ruby</span></p></li></ul></div><pre class="block-body"><code class="sourceCode">
+<span class="cf">class</span> <span class="dt">ColorDemo</span>
+
+  <span class="dt">ColorString</span> <span class="op">=</span> <span class="st">&quot;##&quot;</span>
+  <span class="dt">ColorMode</span> <span class="op">=</span> <span class="op">{</span><span class="vs">&#39;fg&#39;</span> <span class="op">=&gt;</span> <span class="vs">&#39;38&#39;</span>, <span class="vs">&#39;bg&#39;</span> <span class="op">=&gt;</span> <span class="vs">&#39;48&#39;</span><span class="op">}</span>
+
+  <span class="cf">def</span> show_welcome
+    <span class="fu">puts</span> <span class="op">&lt;&lt;-</span><span class="cf">END</span>
+<span class="op">+----------------------------------------------------------------------------+</span>
+<span class="op">|</span> <span class="dt">This</span> program shows <span class="dv">256</span><span class="op">-</span>color support <span class="cf">in</span> xterm<span class="op">-</span>compliant terminals<span class="at">.</span> <span class="dt">You</span> may <span class="op">|</span>
+<span class="op">|</span> notice some flickering <span class="cf">while</span> the color codes are mapped <span class="cf">in</span> your terminal<span class="at">.</span>  <span class="op">|</span>
+<span class="op">|</span> <span class="dt">Please</span> resize your terminal to at least the width of this box<span class="at">.</span> <span class="dt">Try</span> <span class="wa">this:</span>   <span class="op">|</span>
+<span class="op">|</span> xterm <span class="op">-</span>fg beige <span class="op">-</span>bg midnightblue <span class="op">-</span>fa <span class="st">&quot;antialias=true:rgba=0:pixelsize=18&quot;</span>  <span class="op">|</span>
+<span class="op">+-------------+--------------------------------------------------------------+</span>
+<span class="op">|</span> <span class="dt">Color</span> <span class="dt">Range</span> <span class="op">|</span> <span class="dt">Description</span>                                                  <span class="op">|</span>
+<span class="op">+-------------+--------------------------------------------------------------+</span>
+<span class="op">|</span>  <span class="bn">000</span> <span class="op">-</span> <span class="bn">015</span>  <span class="op">|</span> <span class="dt">Standard</span> <span class="cn">ANSI</span> colors, but with more pleasing shades          <span class="op">|</span>
+<span class="op">|</span>  <span class="bn">016</span> <span class="op">-</span> <span class="dv">231</span>  <span class="op">|</span> <span class="dv">6</span><span class="er">x6x6</span> color cube                                             <span class="op">|</span>
+<span class="op">|</span>  <span class="dv">232</span> <span class="op">-</span> <span class="dv">255</span>  <span class="op">|</span> <span class="dt">Greyscale</span> ramp, with black <span class="cf">and</span> white intentionally omitted   <span class="op">|</span>
+<span class="op">+-------------+--------------------------------------------------------------|</span>
+<span class="op">|</span> <span class="wa">Translation:</span> <span class="dv">256</span><span class="er">colors</span><span class="at">.rb</span> by <span class="dt">Daniel</span> <span class="dt">Butler</span> <span class="op">&lt;</span>yup<span class="at">.com</span><span class="ot">@gmail</span><span class="at">.com</span><span class="op">&gt;</span>  <span class="dv">2005</span><span class="op">-</span><span class="dv">10</span><span class="op">-</span><span class="dv">30</span> <span class="op">|</span>
+<span class="op">|</span> <span class="wa">Original:</span> <span class="dv">256</span><span class="er">colors2</span><span class="at">.pl</span> by <span class="dt">Todd</span> <span class="dt">Larason</span> <span class="op">&lt;</span>jtl<span class="ot">@molehill</span><span class="at">.org</span><span class="op">&gt;</span> v1<span class="at">.</span><span class="dv">1</span> <span class="dv">1999</span><span class="op">-</span><span class="bn">07</span><span class="op">-</span><span class="dv">11</span> <span class="op">|</span>
+<span class="op">+----------------------------------------------------------------------------+</span>
+  <span class="cf">END</span>
+  <span class="cf">end</span>
+
+  <span class="cf">def</span> clear_screen
+    <span class="fu">system</span>(<span class="st">&quot;clear&quot;</span>)
+  <span class="cf">end</span>
+
+  <span class="cf">def</span> loop_color_cube(mode <span class="op">=</span> <span class="dv">nil</span>)
+    (<span class="dv">0</span><span class="op">...</span><span class="dv">6</span>)<span class="at">.each</span> <span class="cf">do</span> <span class="op">|</span>red<span class="op">|</span>
+      (<span class="dv">0</span><span class="op">...</span><span class="dv">6</span>)<span class="at">.each</span> <span class="cf">do</span> <span class="op">|</span>green<span class="op">|</span>
+        (<span class="dv">0</span><span class="op">...</span><span class="dv">6</span>)<span class="at">.each</span> <span class="cf">do</span> <span class="op">|</span>blue<span class="op">|</span>
+          <span class="cf">yield</span> red, green, blue
+        <span class="cf">end</span>
+        <span class="fu">print</span> nocolor(<span class="st">&quot; &quot;</span>) <span class="cf">if</span> mode <span class="op">==</span> <span class="wa">:cube</span>
+      <span class="cf">end</span>
+      <span class="fu">print</span> <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span> <span class="cf">if</span> mode <span class="op">==</span> <span class="wa">:cube</span>
+    <span class="cf">end</span>
+  <span class="cf">end</span>
+
+  <span class="cf">def</span> setup_color_cube_color
+    <span class="co"># Colors 16-231 are a 6x6x6 color cube</span>
+    loop_color_cube <span class="cf">do</span> <span class="op">|</span>red, green, blue<span class="op">|</span>
+      <span class="fu">printf</span>(<span class="st">&quot;</span><span class="sc">\x1b</span><span class="st">]4;%d;rgb:%2.2x/%2.2x/%2.2x</span><span class="sc">\x1b\\</span><span class="st">&quot;</span>,
+        <span class="dv">16</span> <span class="op">+</span> (red <span class="op">*</span> <span class="dv">36</span>) <span class="op">+</span> (green <span class="op">*</span> <span class="dv">6</span>) <span class="op">+</span> blue,
+        (red <span class="op">*</span> <span class="fl">42.5</span>)<span class="at">.to_i</span>,
+        (green <span class="op">*</span> <span class="fl">42.5</span>)<span class="at">.to_i</span>,
+        (blue <span class="op">*</span> <span class="fl">42.5</span>)<span class="at">.to_i</span>)
+    <span class="cf">end</span>
+  <span class="cf">end</span>
+
+  <span class="cf">def</span> setup_color_cube_gray
+    <span class="co"># Colors 232-255 are a grayscale ramp, intentionally</span>
+    <span class="co"># leaving out black and white</span>
+    (<span class="dv">0</span><span class="op">...</span><span class="dv">24</span>)<span class="at">.each</span> <span class="cf">do</span> <span class="op">|</span>gray<span class="op">|</span>
+      level <span class="op">=</span> (gray <span class="op">*</span> <span class="dv">10</span>) <span class="op">+</span> <span class="dv">8</span>
+      <span class="fu">printf</span>(<span class="st">&quot;</span><span class="sc">\x1b</span><span class="st">]4;%d;rgb:%2.2x/%2.2x/%2.2x</span><span class="sc">\x1b\\</span><span class="st">&quot;</span>,
+        <span class="dv">232</span> <span class="op">+</span> gray, level, level, level);
+    <span class="cf">end</span>
+  <span class="cf">end</span>
+
+  <span class="cf">def</span> colorize(color, text, mode)
+    <span class="st">&quot;</span><span class="sc">\x1b</span><span class="st">[</span><span class="sc">#{</span><span class="dt">ColorMode</span><span class="kw">[</span>mode<span class="kw">]</span><span class="sc">}</span><span class="st">;5;</span><span class="sc">#{</span>color<span class="sc">}</span><span class="st">m</span><span class="sc">#{</span>text<span class="sc">}</span><span class="st">&quot;</span>
+  <span class="cf">end</span>
+
+  <span class="cf">def</span> nocolor(text)
+    <span class="st">&quot;</span><span class="sc">\x1b</span><span class="st">[0m</span><span class="sc">#{</span>text<span class="sc">}</span><span class="st">&quot;</span>
+  <span class="cf">end</span>
+
+  <span class="cf">def</span> display_system_colors(mode)
+    <span class="fu">puts</span> <span class="st">&quot;System colors (</span><span class="sc">#{</span>mode<span class="sc">}</span><span class="st">):&quot;</span>
+    (<span class="dv">0</span><span class="op">...</span><span class="dv">16</span>)<span class="at">.each</span> <span class="cf">do</span> <span class="op">|</span>color<span class="op">|</span>
+      <span class="fu">print</span> colorize(color, <span class="dt">ColorString</span>, mode)
+      <span class="fu">print</span> nocolor(<span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>) <span class="cf">if</span> <span class="kw">[</span><span class="dv">7</span>, <span class="dv">15</span><span class="kw">]</span><span class="at">.include?</span> color
+    <span class="cf">end</span>
+  <span class="cf">end</span>
+
+  <span class="cf">def</span> display_color_cube(mode)
+    <span class="fu">puts</span> <span class="st">&quot;Color cube, 6x6x6 (</span><span class="sc">#{</span>mode<span class="sc">}</span><span class="st">):&quot;</span>
+    loop_color_cube(<span class="wa">:cube</span>) <span class="cf">do</span> <span class="op">|</span>red, green, blue<span class="op">|</span>
+      <span class="fu">print</span> colorize(<span class="dv">16</span> <span class="op">+</span> (red <span class="op">*</span> <span class="dv">36</span>) <span class="op">+</span>
+        (green <span class="op">*</span> <span class="dv">6</span>) <span class="op">+</span> blue, <span class="dt">ColorString</span>, mode)
+    <span class="cf">end</span>
+  <span class="cf">end</span>
+
+  <span class="cf">def</span> display_grayscale_ramp(mode)
+    <span class="fu">puts</span> <span class="st">&quot;Grayscale ramp (</span><span class="sc">#{</span>mode<span class="sc">}</span><span class="st">):&quot;</span>
+    (<span class="dv">232</span><span class="op">...</span><span class="dv">256</span>)<span class="at">.each</span> <span class="cf">do</span> <span class="op">|</span>color<span class="op">|</span>
+      <span class="fu">print</span> colorize(color, <span class="dt">ColorString</span>, mode)
+    <span class="cf">end</span>
+    <span class="fu">print</span> nocolor(<span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)
+  <span class="cf">end</span>
+
+  <span class="cf">def</span> go
+    clear_screen
+    show_welcome
+    setup_color_cube_color
+    setup_color_cube_gray
+    <span class="kw">[</span><span class="vs">&#39;fg&#39;</span>, <span class="vs">&#39;bg&#39;</span><span class="kw">]</span><span class="at">.each</span> <span class="cf">do</span> <span class="op">|</span>mode<span class="op">|</span>
+      display_system_colors(mode)
+      display_color_cube(mode)
+      display_grayscale_ramp(mode)
+    <span class="cf">end</span>
+  <span class="cf">end</span>
+<span class="cf">end</span>
+
+demo <span class="op">=</span> <span class="dt">ColorDemo</span><span class="at">.new</span>
+demo<span class="at">.go</span></code></pre></div></div><div id="c-36" class="cell-idx"><div class="block-container src" id="b-test-rubycolor"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-test-rubycolor">&#x1F517;</a></div><div class="block-meta"><code>test-rubycolor</code><br><code><span class="bold">&#x1F3AF; script/terminal-themes/color-tests/rubycolor.rb</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">ruby</span></p></li><li><p><span class="code">shebang</span> = <span class="code">#!/usr/bin/env ruby</span></p></li></ul></div><pre class="block-body"><code class="sourceCode">
+<span class="kw">[</span><span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">7</span><span class="kw">]</span><span class="at">.each</span> <span class="cf">do</span> <span class="op">|</span>attr<span class="op">|</span>
+  <span class="fu">puts</span> <span class="vs">&#39;----------------------------------------------------------------&#39;</span>
+  <span class="fu">puts</span> <span class="st">&quot;</span><span class="sc">\\</span><span class="st">033[</span><span class="sc">#{</span>attr<span class="sc">}</span><span class="st">;Foreground;Background&quot;</span>
+  <span class="dv">30</span><span class="at">.upto</span>(<span class="dv">37</span>) <span class="cf">do</span> <span class="op">|</span>fg<span class="op">|</span>
+    <span class="dv">40</span><span class="at">.upto</span>(<span class="dv">47</span>) <span class="cf">do</span> <span class="op">|</span>bg<span class="op">|</span>
+      <span class="fu">print</span> <span class="st">&quot;</span><span class="sc">\033</span><span class="st">[</span><span class="sc">#{</span>attr<span class="sc">}</span><span class="st">;</span><span class="sc">#{</span>fg<span class="sc">}</span><span class="st">;</span><span class="sc">#{</span>bg<span class="sc">}</span><span class="st">m </span><span class="sc">#{</span>fg<span class="sc">}</span><span class="st">;</span><span class="sc">#{</span>bg<span class="sc">}</span><span class="st">  &quot;</span>
+    <span class="cf">end</span>
+  <span class="fu">puts</span> <span class="st">&quot;</span><span class="sc">\033</span><span class="st">[0m&quot;</span>
+  <span class="cf">end</span>
+<span class="cf">end</span></code></pre></div></div><div id="c-37" class="cell-idx"><div class="block-container src" id="b-test-256colors2-pl"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-test-256colors2-pl">&#x1F517;</a></div><div class="block-meta"><code>test-256colors2-pl</code><br><code><span class="bold">&#x1F3AF; script/terminal-themes/color-tests/256colors2.pl</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">perl</span></p></li><li><p><span class="code">shebang</span> = <span class="code">#!/usr/bin/env perl</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="co"># Author: Todd Larason &lt;jtl@molehill.org&gt;</span>
+<span class="co"># $XFree86: xc/programs/xterm/vttests/256colors2.pl,v 1.2 2002/03/26 01:46:43 dickey Exp $</span>
+
+<span class="co"># use the resources for colors 0-15 - usually more-or-less a</span>
+<span class="co"># reproduction of the standard ANSI colors, but possibly more</span>
+<span class="co"># pleasing shades</span>
+
+<span class="co"># colors 16-231 are a 6x6x6 color cube</span>
+<span class="cf">for</span> (<span class="dt">$red</span> = <span class="dv">0</span>; <span class="dt">$red</span> &lt; <span class="dv">6</span>; <span class="dt">$red</span>++) {
+    <span class="cf">for</span> (<span class="dt">$green</span> = <span class="dv">0</span>; <span class="dt">$green</span> &lt; <span class="dv">6</span>; <span class="dt">$green</span>++) {
+	<span class="cf">for</span> (<span class="dt">$blue</span> = <span class="dv">0</span>; <span class="dt">$blue</span> &lt; <span class="dv">6</span>; <span class="dt">$blue</span>++) {
+	    <span class="fu">printf</span>(<span class="ot">&quot;</span><span class="ch">\x1b</span><span class="st">]4;</span><span class="dt">%d</span><span class="st">;rgb:</span><span class="dt">%2</span><span class="st">.2x/</span><span class="dt">%2</span><span class="st">.2x/</span><span class="dt">%2</span><span class="st">.2x</span><span class="ch">\x1b</span><span class="st">\\</span><span class="ot">&quot;</span>,
+		   <span class="dv">16</span> + (<span class="dt">$red</span> <span class="ot">*</span> <span class="dv">36</span>) + (<span class="dt">$green</span> <span class="ot">*</span> <span class="dv">6</span>) + <span class="dt">$blue</span>,
+		   (<span class="dt">$red</span> ? (<span class="dt">$red</span> <span class="ot">*</span> <span class="dv">40</span> + <span class="dv">55</span>) : <span class="dv">0</span>),
+		   (<span class="dt">$green</span> ? (<span class="dt">$green</span> <span class="ot">*</span> <span class="dv">40</span> + <span class="dv">55</span>) : <span class="dv">0</span>),
+		   (<span class="dt">$blue</span> ? (<span class="dt">$blue</span> <span class="ot">*</span> <span class="dv">40</span> + <span class="dv">55</span>) : <span class="dv">0</span>));
+	}
+    }
+}
+
+<span class="co"># colors 232-255 are a grayscale ramp, intentionally leaving out</span>
+<span class="co"># black and white</span>
+<span class="cf">for</span> (<span class="dt">$gray</span> = <span class="dv">0</span>; <span class="dt">$gray</span> &lt; <span class="dv">24</span>; <span class="dt">$gray</span>++) {
+    <span class="dt">$level</span> = (<span class="dt">$gray</span> <span class="ot">*</span> <span class="dv">10</span>) + <span class="dv">8</span>;
+    <span class="fu">printf</span>(<span class="ot">&quot;</span><span class="ch">\x1b</span><span class="st">]4;</span><span class="dt">%d</span><span class="st">;rgb:</span><span class="dt">%2</span><span class="st">.2x/</span><span class="dt">%2</span><span class="st">.2x/</span><span class="dt">%2</span><span class="st">.2x</span><span class="ch">\x1b</span><span class="st">\\</span><span class="ot">&quot;</span>,
+	   <span class="dv">232</span> + <span class="dt">$gray</span>, <span class="dt">$level</span>, <span class="dt">$level</span>, <span class="dt">$level</span>);
+}
+
+
+<span class="co"># display the colors</span>
+
+<span class="co"># first the system ones:</span>
+<span class="fu">print</span> <span class="ot">&quot;</span><span class="st">System colors:</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+<span class="cf">for</span> (<span class="dt">$color</span> = <span class="dv">0</span>; <span class="dt">$color</span> &lt; <span class="dv">8</span>; <span class="dt">$color</span>++) {
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="ch">\x1b</span><span class="st">[48;5;</span><span class="dt">${color}m</span><span class="st">  </span><span class="ot">&quot;</span>;
+}
+
+<span class="co"># test basic colors</span>
+<span class="fu">print</span> <span class="ot">&quot;</span><span class="ch">\x1b</span><span class="st">[0m</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+<span class="cf">for</span> (<span class="dt">$color</span> = <span class="dv">8</span>; <span class="dt">$color</span> &lt; <span class="dv">16</span>; <span class="dt">$color</span>++) {
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="ch">\x1b</span><span class="st">[48;5;</span><span class="dt">${color}m</span><span class="st">  </span><span class="ot">&quot;</span>;
+}
+<span class="fu">print</span> <span class="ot">&quot;</span><span class="ch">\x1b</span><span class="st">[0m</span><span class="ch">\n\n</span><span class="ot">&quot;</span>;
+<span class="cf">for</span> (<span class="dt">$color</span> = <span class="dv">0</span>; <span class="dt">$color</span> &lt; <span class="dv">16</span>; <span class="dt">$color</span>++) {
+    <span class="kw">my</span> <span class="dt">$hex</span> = <span class="fu">sprintf</span>(<span class="ot">&quot;</span><span class="dt">%x</span><span class="ot">&quot;</span>, <span class="dt">$color</span>);
+    <span class="cf">if</span> (<span class="dt">$hex</span> <span class="ot">eq</span> <span class="ot">&quot;</span><span class="st">0</span><span class="ot">&quot;</span>) {
+        <span class="fu">print</span> <span class="ot">&quot;</span><span class="ch">\x1b</span><span class="st">[48;5;</span><span class="dt">${color}</span><span class="st">;38;5;15m</span><span class="dt">${hex}${hex}</span><span class="ot">&quot;</span>;
+    } <span class="cf">elsif</span> (<span class="dt">$hex</span> <span class="ot">eq</span> <span class="ot">&quot;</span><span class="st">8</span><span class="ot">&quot;</span>) {
+        <span class="fu">print</span> <span class="ot">&quot;</span><span class="ch">\x1b</span><span class="st">[48;5;</span><span class="dt">${color}</span><span class="st">;38;5;15m</span><span class="dt">${hex}${hex}</span><span class="ot">&quot;</span>;
+    } <span class="cf">else</span> {
+        <span class="fu">print</span> <span class="ot">&quot;</span><span class="ch">\x1b</span><span class="st">[48;5;</span><span class="dt">${color}</span><span class="st">;38;5;0m</span><span class="dt">${hex}${hex}</span><span class="ot">&quot;</span>;
+    }
+}
+<span class="fu">print</span> <span class="ot">&quot;</span><span class="ch">\x1b</span><span class="st">[0m</span><span class="ch">\n\n</span><span class="ot">&quot;</span>;
+
+<span class="co"># now the color cube</span>
+<span class="fu">print</span> <span class="ot">&quot;</span><span class="st">Color cube, 6x6x6:</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+<span class="cf">for</span> (<span class="dt">$green</span> = <span class="dv">0</span>; <span class="dt">$green</span> &lt; <span class="dv">6</span>; <span class="dt">$green</span>++) {
+    <span class="cf">for</span> (<span class="dt">$red</span> = <span class="dv">0</span>; <span class="dt">$red</span> &lt; <span class="dv">6</span>; <span class="dt">$red</span>++) {
+	<span class="cf">for</span> (<span class="dt">$blue</span> = <span class="dv">0</span>; <span class="dt">$blue</span> &lt; <span class="dv">6</span>; <span class="dt">$blue</span>++) {
+	    <span class="dt">$color</span> = <span class="dv">16</span> + (<span class="dt">$red</span> <span class="ot">*</span> <span class="dv">36</span>) + (<span class="dt">$green</span> <span class="ot">*</span> <span class="dv">6</span>) + <span class="dt">$blue</span>;
+	    <span class="fu">print</span> <span class="ot">&quot;</span><span class="ch">\x1b</span><span class="st">[48;5;</span><span class="dt">${color}m</span><span class="st">  </span><span class="ot">&quot;</span>;
+	}
+	<span class="fu">print</span> <span class="ot">&quot;</span><span class="ch">\x1b</span><span class="st">[0m </span><span class="ot">&quot;</span>;
+    }
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+}
+
+
+<span class="co"># now the grayscale ramp</span>
+<span class="fu">print</span> <span class="ot">&quot;</span><span class="st">Grayscale ramp:</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+<span class="cf">for</span> (<span class="dt">$color</span> = <span class="dv">232</span>; <span class="dt">$color</span> &lt; <span class="dv">256</span>; <span class="dt">$color</span>++) {
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="ch">\x1b</span><span class="st">[48;5;</span><span class="dt">${color}m</span><span class="st">  </span><span class="ot">&quot;</span>;
+}
+<span class="fu">print</span> <span class="ot">&quot;</span><span class="ch">\x1b</span><span class="st">[0m</span><span class="ch">\n</span><span class="ot">&quot;</span>;</code></pre></div></div><div id="c-38" class="cell-idx"><div class="block-container src" id="b-test-xterm-colortest"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-test-xterm-colortest">&#x1F517;</a></div><div class="block-meta"><code>test-xterm-colortest</code><br><code><span class="bold">&#x1F3AF; script/terminal-themes/color-tests/xterm-colortest.pl</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">perl</span></p></li><li><p><span class="code">shebang</span> = <span class="code">#!/usr/bin/env perl</span></p></li></ul></div><pre class="block-body"><code class="sourceCode">
+<span class="co"># by entheon, do whatever the hell you want with this file</span>
+
+<span class="fu">print</span> <span class="ot">&quot;</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+<span class="fu">print</span> <span class="ot">&quot;</span><span class="st">**************************</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+<span class="fu">print</span> <span class="ot">&quot;</span><span class="st">*XTERM 256Color Test Chart</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+<span class="fu">print</span> <span class="ot">&quot;</span><span class="st">**************************</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+<span class="fu">print</span> <span class="ot">&quot;</span><span class="st">* 16  = black</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+<span class="fu">print</span> <span class="ot">&quot;</span><span class="st">* 255 = white</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+<span class="fu">print</span> <span class="ot">&quot;</span><span class="st">*</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+<span class="fu">print</span> <span class="ot">&quot;</span><span class="st">* Usage:</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+<span class="fu">print</span> <span class="ot">&quot;</span><span class="st">* colortest -w</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+<span class="fu">print</span> <span class="ot">&quot;</span><span class="st">*    wide display</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+<span class="fu">print</span> <span class="ot">&quot;</span><span class="st">*</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+<span class="fu">print</span> <span class="ot">&quot;</span><span class="st">* colortest -w -r</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+<span class="fu">print</span> <span class="ot">&quot;</span><span class="st">*    wide display reversed</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+<span class="fu">print</span> <span class="ot">&quot;</span><span class="st">*</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+<span class="fu">print</span> <span class="ot">&quot;</span><span class="st">* colortest -w -s</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+<span class="fu">print</span> <span class="ot">&quot;</span><span class="st">*    extra spaces padding</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+<span class="fu">print</span> <span class="ot">&quot;</span><span class="st">*</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+<span class="fu">print</span> <span class="ot">&quot;</span><span class="st">* colortest -w -r -s</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+<span class="fu">print</span> <span class="ot">&quot;</span><span class="st">*    available combination</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+<span class="fu">print</span> <span class="ot">&quot;</span><span class="st">*</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+<span class="fu">print</span> <span class="ot">&quot;</span><span class="st">**************************</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+
+<span class="cf">if</span>( <span class="wa">$ARGV</span>[<span class="dv">0</span>] <span class="ot">eq</span> <span class="ot">&quot;</span><span class="st">-w</span><span class="ot">&quot;</span> || <span class="wa">$ARGV</span>[<span class="dv">1</span>] <span class="ot">eq</span> <span class="ot">&quot;</span><span class="st">-w</span><span class="ot">&quot;</span> || <span class="wa">$ARGV</span>[<span class="dv">2</span>] <span class="ot">eq</span> <span class="ot">&quot;</span><span class="st">-w</span><span class="ot">&quot;</span> ) {
+    <span class="fu">push</span>(<span class="dt">@arr</span>, [(  <span class="ot">&quot;</span><span class="st">[38;5;16m 16:  00/00/00</span><span class="ot">&quot;</span>,     <span class="ot">&quot;</span><span class="st">[38;5;17m 17:  00/00/5f</span><span class="ot">&quot;</span>,     <span class="ot">&quot;</span><span class="st">[38;5;18m 18:  00/00/87</span><span class="ot">&quot;</span>,     <span class="ot">&quot;</span><span class="st">[38;5;19m 19:  00/00/af</span><span class="ot">&quot;</span>,     <span class="ot">&quot;</span><span class="st">[38;5;20m 20:  00/00/d7</span><span class="ot">&quot;</span>,     <span class="ot">&quot;</span><span class="st">[38;5;21m 21:  00/00/ff</span><span class="ot">&quot;</span>)] );
+    <span class="fu">push</span>(<span class="dt">@arr</span>, [(  <span class="ot">&quot;</span><span class="st">[38;5;22m 22:  00/5f/00</span><span class="ot">&quot;</span>,     <span class="ot">&quot;</span><span class="st">[38;5;23m 23:  00/5f/5f</span><span class="ot">&quot;</span>,     <span class="ot">&quot;</span><span class="st">[38;5;24m 24:  00/5f/87</span><span class="ot">&quot;</span>,     <span class="ot">&quot;</span><span class="st">[38;5;25m 25:  00/5f/af</span><span class="ot">&quot;</span>,     <span class="ot">&quot;</span><span class="st">[38;5;26m 26:  00/5f/d7</span><span class="ot">&quot;</span>,     <span class="ot">&quot;</span><span class="st">[38;5;27m 27:  00/5f/ff</span><span class="ot">&quot;</span>)] );
+    <span class="fu">push</span>(<span class="dt">@arr</span>, [(  <span class="ot">&quot;</span><span class="st">[38;5;28m 28:  00/87/00</span><span class="ot">&quot;</span>,     <span class="ot">&quot;</span><span class="st">[38;5;29m 29:  00/87/5f</span><span class="ot">&quot;</span>,     <span class="ot">&quot;</span><span class="st">[38;5;30m 30:  00/87/87</span><span class="ot">&quot;</span>,     <span class="ot">&quot;</span><span class="st">[38;5;31m 31:  00/87/af</span><span class="ot">&quot;</span>,     <span class="ot">&quot;</span><span class="st">[38;5;32m 32:  00/87/d7</span><span class="ot">&quot;</span>,     <span class="ot">&quot;</span><span class="st">[38;5;33m 33:  00/87/ff</span><span class="ot">&quot;</span>)] );
+    <span class="fu">push</span>(<span class="dt">@arr</span>, [(  <span class="ot">&quot;</span><span class="st">[38;5;34m 34:  00/af/00</span><span class="ot">&quot;</span>,     <span class="ot">&quot;</span><span class="st">[38;5;35m 35:  00/af/5f</span><span class="ot">&quot;</span>,     <span class="ot">&quot;</span><span class="st">[38;5;36m 36:  00/af/87</span><span class="ot">&quot;</span>,     <span class="ot">&quot;</span><span class="st">[38;5;37m 37:  00/af/af</span><span class="ot">&quot;</span>,     <span class="ot">&quot;</span><span class="st">[38;5;38m 38:  00/af/d7</span><span class="ot">&quot;</span>,     <span class="ot">&quot;</span><span class="st">[38;5;39m 39:  00/af/ff</span><span class="ot">&quot;</span>)] );
+    <span class="fu">push</span>(<span class="dt">@arr</span>, [(  <span class="ot">&quot;</span><span class="st">[38;5;40m 40:  00/d7/00</span><span class="ot">&quot;</span>,     <span class="ot">&quot;</span><span class="st">[38;5;41m 41:  00/d7/5f</span><span class="ot">&quot;</span>,     <span class="ot">&quot;</span><span class="st">[38;5;42m 42:  00/d7/87</span><span class="ot">&quot;</span>,     <span class="ot">&quot;</span><span class="st">[38;5;43m 43:  00/d7/af</span><span class="ot">&quot;</span>,     <span class="ot">&quot;</span><span class="st">[38;5;44m 44:  00/d7/d7</span><span class="ot">&quot;</span>,     <span class="ot">&quot;</span><span class="st">[38;5;45m 45:  00/d7/ff</span><span class="ot">&quot;</span>)] );
+    <span class="fu">push</span>(<span class="dt">@arr</span>, [(  <span class="ot">&quot;</span><span class="st">[38;5;46m 46:  00/ff/00</span><span class="ot">&quot;</span>,     <span class="ot">&quot;</span><span class="st">[38;5;47m 47:  00/ff/5f</span><span class="ot">&quot;</span>,     <span class="ot">&quot;</span><span class="st">[38;5;48m 48:  00/ff/87</span><span class="ot">&quot;</span>,     <span class="ot">&quot;</span><span class="st">[38;5;49m 49:  00/ff/af</span><span class="ot">&quot;</span>,     <span class="ot">&quot;</span><span class="st">[38;5;50m 50:  00/ff/d7</span><span class="ot">&quot;</span>,     <span class="ot">&quot;</span><span class="st">[38;5;51m 51:  00/ff/ff</span><span class="ot">&quot;</span>)] );
+    <span class="fu">push</span>(<span class="dt">@arr</span>, [(  <span class="ot">&quot;</span><span class="st">[38;5;52m 52:  5f/00/00</span><span class="ot">&quot;</span>,     <span class="ot">&quot;</span><span class="st">[38;5;53m 53:  5f/00/5f</span><span class="ot">&quot;</span>,     <span class="ot">&quot;</span><span class="st">[38;5;54m 54:  5f/00/87</span><span class="ot">&quot;</span>,     <span class="ot">&quot;</span><span class="st">[38;5;55m 55:  5f/00/af</span><span class="ot">&quot;</span>,     <span class="ot">&quot;</span><span class="st">[38;5;56m 56:  5f/00/d7</span><span class="ot">&quot;</span>,     <span class="ot">&quot;</span><span class="st">[38;5;57m 57:  5f/00/ff</span><span class="ot">&quot;</span>)] );
+    <span class="fu">push</span>(<span class="dt">@arr</span>, [(  <span class="ot">&quot;</span><span class="st">[38;5;58m 58:  5f/5f/00</span><span class="ot">&quot;</span>,     <span class="ot">&quot;</span><span class="st">[38;5;59m 59:  5f/5f/5f</span><span class="ot">&quot;</span>,     <span class="ot">&quot;</span><span class="st">[38;5;60m 60:  5f/5f/87</span><span class="ot">&quot;</span>,     <span class="ot">&quot;</span><span class="st">[38;5;61m 61:  5f/5f/af</span><span class="ot">&quot;</span>,     <span class="ot">&quot;</span><span class="st">[38;5;62m 62:  5f/5f/d7</span><span class="ot">&quot;</span>,     <span class="ot">&quot;</span><span class="st">[38;5;63m 63:  5f/5f/ff</span><span class="ot">&quot;</span>)] );
+    <span class="fu">push</span>(<span class="dt">@arr</span>, [(  <span class="ot">&quot;</span><span class="st">[38;5;64m 64:  5f/87/00</span><span class="ot">&quot;</span>,     <span class="ot">&quot;</span><span class="st">[38;5;65m 65:  5f/87/5f</span><span class="ot">&quot;</span>,     <span class="ot">&quot;</span><span class="st">[38;5;66m 66:  5f/87/87</span><span class="ot">&quot;</span>,     <span class="ot">&quot;</span><span class="st">[38;5;67m 67:  5f/87/af</span><span class="ot">&quot;</span>,     <span class="ot">&quot;</span><span class="st">[38;5;68m 68:  5f/87/d7</span><span class="ot">&quot;</span>,     <span class="ot">&quot;</span><span class="st">[38;5;69m 69:  5f/87/ff</span><span class="ot">&quot;</span>)] );
+    <span class="fu">push</span>(<span class="dt">@arr</span>, [(  <span class="ot">&quot;</span><span class="st">[38;5;70m 70:  5f/af/00</span><span class="ot">&quot;</span>,     <span class="ot">&quot;</span><span class="st">[38;5;71m 71:  5f/af/5f</span><span class="ot">&quot;</span>,     <span class="ot">&quot;</span><span class="st">[38;5;72m 72:  5f/af/87</span><span class="ot">&quot;</span>,     <span class="ot">&quot;</span><span class="st">[38;5;73m 73:  5f/af/af</span><span class="ot">&quot;</span>,     <span class="ot">&quot;</span><span class="st">[38;5;74m 74:  5f/af/d7</span><span class="ot">&quot;</span>,     <span class="ot">&quot;</span><span class="st">[38;5;75m 75:  5f/af/ff</span><span class="ot">&quot;</span>)] );
+    <span class="fu">push</span>(<span class="dt">@arr</span>, [(  <span class="ot">&quot;</span><span class="st">[38;5;76m 76:  5f/d7/00</span><span class="ot">&quot;</span>,     <span class="ot">&quot;</span><span class="st">[38;5;77m 77:  5f/d7/5f</span><span class="ot">&quot;</span>,     <span class="ot">&quot;</span><span class="st">[38;5;78m 78:  5f/d7/87</span><span class="ot">&quot;</span>,     <span class="ot">&quot;</span><span class="st">[38;5;79m 79:  5f/d7/af</span><span class="ot">&quot;</span>,     <span class="ot">&quot;</span><span class="st">[38;5;80m 80:  5f/d7/d7</span><span class="ot">&quot;</span>,     <span class="ot">&quot;</span><span class="st">[38;5;81m 81:  5f/d7/ff</span><span class="ot">&quot;</span>)] );
+    <span class="fu">push</span>(<span class="dt">@arr</span>, [(  <span class="ot">&quot;</span><span class="st">[38;5;82m 82:  5f/ff/00</span><span class="ot">&quot;</span>,     <span class="ot">&quot;</span><span class="st">[38;5;83m 83:  5f/ff/5f</span><span class="ot">&quot;</span>,     <span class="ot">&quot;</span><span class="st">[38;5;84m 84:  5f/ff/87</span><span class="ot">&quot;</span>,     <span class="ot">&quot;</span><span class="st">[38;5;85m 85:  5f/ff/af</span><span class="ot">&quot;</span>,     <span class="ot">&quot;</span><span class="st">[38;5;86m 86:  5f/ff/d7</span><span class="ot">&quot;</span>,     <span class="ot">&quot;</span><span class="st">[38;5;87m 87:  5f/ff/ff</span><span class="ot">&quot;</span>)] );
+    <span class="fu">push</span>(<span class="dt">@arr</span>, [(  <span class="ot">&quot;</span><span class="st">[38;5;88m 88:  87/00/00</span><span class="ot">&quot;</span>,     <span class="ot">&quot;</span><span class="st">[38;5;89m 89:  87/00/5f</span><span class="ot">&quot;</span>,     <span class="ot">&quot;</span><span class="st">[38;5;90m 90:  87/00/87</span><span class="ot">&quot;</span>,     <span class="ot">&quot;</span><span class="st">[38;5;91m 91:  87/00/af</span><span class="ot">&quot;</span>,     <span class="ot">&quot;</span><span class="st">[38;5;92m 92:  87/00/d7</span><span class="ot">&quot;</span>,     <span class="ot">&quot;</span><span class="st">[38;5;93m 93:  87/00/ff</span><span class="ot">&quot;</span>)] );
+    <span class="fu">push</span>(<span class="dt">@arr</span>, [(  <span class="ot">&quot;</span><span class="st">[38;5;94m 94:  87/5f/00</span><span class="ot">&quot;</span>,     <span class="ot">&quot;</span><span class="st">[38;5;95m 95:  87/5f/5f</span><span class="ot">&quot;</span>,     <span class="ot">&quot;</span><span class="st">[38;5;96m 96:  87/5f/87</span><span class="ot">&quot;</span>,     <span class="ot">&quot;</span><span class="st">[38;5;97m 97:  87/5f/af</span><span class="ot">&quot;</span>,     <span class="ot">&quot;</span><span class="st">[38;5;98m 98:  87/5f/d7</span><span class="ot">&quot;</span>,     <span class="ot">&quot;</span><span class="st">[38;5;99m 99:  87/5f/ff</span><span class="ot">&quot;</span>)] );
+    <span class="fu">push</span>(<span class="dt">@arr</span>, [( <span class="ot">&quot;</span><span class="st">[38;5;100m 100: 87/87/00</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;101m 101: 87/87/5f</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;102m 102: 87/87/87</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;103m 103: 87/87/af</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;104m 104: 87/87/d7</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;105m 105: 87/87/ff</span><span class="ot">&quot;</span>)] );
+    <span class="fu">push</span>(<span class="dt">@arr</span>, [( <span class="ot">&quot;</span><span class="st">[38;5;106m 106: 87/af/00</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;107m 107: 87/af/5f</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;108m 108: 87/af/87</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;109m 109: 87/af/af</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;110m 110: 87/af/d7</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;111m 111: 87/af/ff</span><span class="ot">&quot;</span>)] );
+    <span class="fu">push</span>(<span class="dt">@arr</span>, [( <span class="ot">&quot;</span><span class="st">[38;5;112m 112: 87/d7/00</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;113m 113: 87/d7/5f</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;114m 114: 87/d7/87</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;115m 115: 87/d7/af</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;116m 116: 87/d7/d7</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;117m 117: 87/d7/ff</span><span class="ot">&quot;</span>)] );
+    <span class="fu">push</span>(<span class="dt">@arr</span>, [( <span class="ot">&quot;</span><span class="st">[38;5;118m 118: 87/ff/00</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;119m 119: 87/ff/5f</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;120m 120: 87/ff/87</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;121m 121: 87/ff/af</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;122m 122: 87/ff/d7</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;123m 123: 87/ff/ff</span><span class="ot">&quot;</span>)] );
+    <span class="fu">push</span>(<span class="dt">@arr</span>, [( <span class="ot">&quot;</span><span class="st">[38;5;124m 124: af/00/00</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;125m 125: af/00/5f</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;126m 126: af/00/87</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;127m 127: af/00/af</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;128m 128: af/00/d7</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;129m 129: af/00/ff</span><span class="ot">&quot;</span>)] );
+    <span class="fu">push</span>(<span class="dt">@arr</span>, [( <span class="ot">&quot;</span><span class="st">[38;5;130m 130: af/5f/00</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;131m 131: af/5f/5f</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;132m 132: af/5f/87</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;133m 133: af/5f/af</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;134m 134: af/5f/d7</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;135m 135: af/5f/ff</span><span class="ot">&quot;</span>)] );
+    <span class="fu">push</span>(<span class="dt">@arr</span>, [( <span class="ot">&quot;</span><span class="st">[38;5;136m 136: af/87/00</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;137m 137: af/87/5f</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;138m 138: af/87/87</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;139m 139: af/87/af</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;140m 140: af/87/d7</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;141m 141: af/87/ff</span><span class="ot">&quot;</span>)] );
+    <span class="fu">push</span>(<span class="dt">@arr</span>, [( <span class="ot">&quot;</span><span class="st">[38;5;142m 142: af/af/00</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;143m 143: af/af/5f</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;144m 144: af/af/87</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;145m 145: af/af/af</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;146m 146: af/af/d7</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;147m 147: af/af/ff</span><span class="ot">&quot;</span>)] );
+    <span class="fu">push</span>(<span class="dt">@arr</span>, [( <span class="ot">&quot;</span><span class="st">[38;5;148m 148: af/d7/00</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;149m 149: af/d7/5f</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;150m 150: af/d7/87</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;151m 151: af/d7/af</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;152m 152: af/d7/d7</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;153m 153: af/d7/ff</span><span class="ot">&quot;</span>)] );
+    <span class="fu">push</span>(<span class="dt">@arr</span>, [( <span class="ot">&quot;</span><span class="st">[38;5;154m 154: af/ff/00</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;155m 155: af/ff/5f</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;156m 156: af/ff/87</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;157m 157: af/ff/af</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;158m 158: af/ff/d7</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;159m 159: af/ff/ff</span><span class="ot">&quot;</span>)] );
+    <span class="fu">push</span>(<span class="dt">@arr</span>, [( <span class="ot">&quot;</span><span class="st">[38;5;160m 160: d7/00/00</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;161m 161: d7/00/5f</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;162m 162: d7/00/87</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;163m 163: d7/00/af</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;164m 164: d7/00/d7</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;165m 165: d7/00/ff</span><span class="ot">&quot;</span>)] );
+    <span class="fu">push</span>(<span class="dt">@arr</span>, [( <span class="ot">&quot;</span><span class="st">[38;5;166m 166: d7/5f/00</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;167m 167: d7/5f/5f</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;168m 168: d7/5f/87</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;169m 169: d7/5f/af</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;170m 170: d7/5f/d7</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;171m 171: d7/5f/ff</span><span class="ot">&quot;</span>)] );
+    <span class="fu">push</span>(<span class="dt">@arr</span>, [( <span class="ot">&quot;</span><span class="st">[38;5;172m 172: d7/87/00</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;173m 173: d7/87/5f</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;174m 174: d7/87/87</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;175m 175: d7/87/af</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;176m 176: d7/87/d7</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;177m 177: d7/87/ff</span><span class="ot">&quot;</span>)] );
+    <span class="fu">push</span>(<span class="dt">@arr</span>, [( <span class="ot">&quot;</span><span class="st">[38;5;178m 178: d7/af/00</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;179m 179: d7/af/5f</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;180m 180: d7/af/87</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;181m 181: d7/af/af</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;182m 182: d7/af/d7</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;183m 183: d7/af/ff</span><span class="ot">&quot;</span>)] );
+    <span class="fu">push</span>(<span class="dt">@arr</span>, [( <span class="ot">&quot;</span><span class="st">[38;5;184m 184: d7/d7/00</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;185m 185: d7/d7/5f</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;186m 186: d7/d7/87</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;187m 187: d7/d7/af</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;188m 188: d7/d7/d7</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;189m 189: d7/d7/ff</span><span class="ot">&quot;</span>)] );
+    <span class="fu">push</span>(<span class="dt">@arr</span>, [( <span class="ot">&quot;</span><span class="st">[38;5;190m 190: d7/ff/00</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;191m 191: d7/ff/5f</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;192m 192: d7/ff/87</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;193m 193: d7/ff/af</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;194m 194: d7/ff/d7</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;195m 195: d7/ff/ff</span><span class="ot">&quot;</span>)] );
+    <span class="fu">push</span>(<span class="dt">@arr</span>, [( <span class="ot">&quot;</span><span class="st">[38;5;196m 196: ff/00/00</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;197m 197: ff/00/5f</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;198m 198: ff/00/87</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;199m 199: ff/00/af</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;200m 200: ff/00/d7</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;201m 201: ff/00/ff</span><span class="ot">&quot;</span>)] );
+    <span class="fu">push</span>(<span class="dt">@arr</span>, [( <span class="ot">&quot;</span><span class="st">[38;5;202m 202: ff/5f/00</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;203m 203: ff/5f/5f</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;204m 204: ff/5f/87</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;205m 205: ff/5f/af</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;206m 206: ff/5f/d7</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;207m 207: ff/5f/ff</span><span class="ot">&quot;</span>)] );
+    <span class="fu">push</span>(<span class="dt">@arr</span>, [( <span class="ot">&quot;</span><span class="st">[38;5;208m 208: ff/87/00</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;209m 209: ff/87/5f</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;210m 210: ff/87/87</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;211m 211: ff/87/af</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;212m 212: ff/87/d7</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;213m 213: ff/87/ff</span><span class="ot">&quot;</span>)] );
+    <span class="fu">push</span>(<span class="dt">@arr</span>, [( <span class="ot">&quot;</span><span class="st">[38;5;214m 214: ff/af/00</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;215m 215: ff/af/5f</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;216m 216: ff/af/87</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;217m 217: ff/af/af</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;218m 218: ff/af/d7</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;219m 219: ff/af/ff</span><span class="ot">&quot;</span>)] );
+    <span class="fu">push</span>(<span class="dt">@arr</span>, [( <span class="ot">&quot;</span><span class="st">[38;5;220m 220: ff/d7/00</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;221m 221: ff/d7/5f</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;222m 222: ff/d7/87</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;223m 223: ff/d7/af</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;224m 224: ff/d7/d7</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;225m 225: ff/d7/ff</span><span class="ot">&quot;</span>)] );
+    <span class="fu">push</span>(<span class="dt">@arr</span>, [( <span class="ot">&quot;</span><span class="st">[38;5;226m 226: ff/ff/00</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;227m 227: ff/ff/5f</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;228m 228: ff/ff/87</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;229m 229: ff/ff/af</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;230m 230: ff/ff/d7</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;231m 231: ff/ff/ff</span><span class="ot">&quot;</span>)] );
+    <span class="fu">push</span>(<span class="dt">@arr</span>, [( <span class="ot">&quot;</span><span class="st">[38;5;232m 232: 08/08/08</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;233m 233: 12/12/12</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;234m 234: 1c/1c/1c</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;235m 235: 26/26/26</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;236m 236: 30/30/30</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;237m 237: 3a/3a/3a</span><span class="ot">&quot;</span>)] );
+    <span class="fu">push</span>(<span class="dt">@arr</span>, [( <span class="ot">&quot;</span><span class="st">[38;5;238m 238: 44/44/44</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;239m 239: 4e/4e/4e</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;240m 240: 58/58/58</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;241m 241: 62/62/62</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;242m 242: 6c/6c/6c</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;243m 243: 76/76/76</span><span class="ot">&quot;</span>)] );
+    <span class="fu">push</span>(<span class="dt">@arr</span>, [( <span class="ot">&quot;</span><span class="st">[38;5;244m 244: 80/80/80</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;245m 245: 8a/8a/8a</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;246m 246: 94/94/94</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;247m 247: 9e/9e/9e</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;248m 248: a8/a8/a8</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;249m 249: b2/b2/b2</span><span class="ot">&quot;</span>)] );
+    <span class="fu">push</span>(<span class="dt">@arr</span>, [( <span class="ot">&quot;</span><span class="st">[38;5;250m 250: bc/bc/bc</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;251m 251: c6/c6/c6</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;252m 252: d0/d0/d0</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;253m 253: da/da/da</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;254m 254: e4/e4/e4</span><span class="ot">&quot;</span>,    <span class="ot">&quot;</span><span class="st">[38;5;255m 255: ee/ee/ee</span><span class="ot">&quot;</span>)] );
+
+    <span class="cf">if</span>( <span class="wa">$ARGV</span>[<span class="dv">0</span>] <span class="ot">eq</span> <span class="ot">&quot;</span><span class="st">-s</span><span class="ot">&quot;</span> || <span class="wa">$ARGV</span>[<span class="dv">1</span>] <span class="ot">eq</span> <span class="ot">&quot;</span><span class="st">-s</span><span class="ot">&quot;</span> || <span class="wa">$ARGV</span>[<span class="dv">2</span>] <span class="ot">eq</span> <span class="ot">&quot;</span><span class="st">-s</span><span class="ot">&quot;</span> ){
+        <span class="dt">$padding</span> = <span class="ot">&quot;</span><span class="st">    </span><span class="ot">&quot;</span>;
+    }
+    <span class="cf">else</span> {
+
+    }
+
+    <span class="co"># display in reverse order</span>
+    <span class="cf">if</span>( <span class="wa">$ARGV</span>[<span class="dv">0</span>] <span class="ot">eq</span> <span class="ot">&quot;</span><span class="st">-r</span><span class="ot">&quot;</span> || <span class="wa">$ARGV</span>[<span class="dv">1</span>] <span class="ot">eq</span> <span class="ot">&quot;</span><span class="st">-r</span><span class="ot">&quot;</span> || <span class="wa">$ARGV</span>[<span class="dv">2</span>] <span class="ot">eq</span> <span class="ot">&quot;</span><span class="st">-r</span><span class="ot">&quot;</span> ){
+        <span class="cf">for</span>( <span class="dt">$dimone</span> = <span class="dv">0</span>; <span class="dt">$dimone</span> &lt; <span class="fu">scalar</span> <span class="dt">@arr</span>; <span class="dt">$dimone</span>++ ) {
+
+            <span class="dt">$seed</span> = (<span class="dt">$dimone</span> % <span class="dv">6</span>) <span class="ot">*</span> -<span class="dv">1</span>;
+            <span class="cf">for</span>( <span class="dt">$dimtwo</span> = <span class="dv">0</span>; <span class="dt">$dimtwo</span> &lt; <span class="dv">6</span>; <span class="dt">$dimtwo</span>++ ) {
+
+                <span class="dt">$movone</span> = <span class="dt">$seed</span>;
+                <span class="dt">$movtwo</span> = <span class="dt">$seed</span> <span class="ot">*</span> -<span class="dv">1</span>;
+
+                <span class="fu">print</span> <span class="dt">$arr</span>[<span class="dt">$dimone</span>][<span class="dt">$dimtwo</span>] . <span class="dt">$padding</span>;
+
+                <span class="dt">$seed</span> = <span class="dt">$seed</span>+<span class="dv">1</span>;
+            }
+
+            <span class="fu">print</span> <span class="ot">&quot;</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+        }
+    }
+    <span class="cf">else</span> {
+        <span class="cf">for</span>( <span class="dt">$dimone</span> = <span class="dv">0</span>; <span class="dt">$dimone</span> &lt; <span class="fu">scalar</span> <span class="dt">@arr</span>; <span class="dt">$dimone</span>++ ) {
+
+            <span class="dt">$seed</span> = (<span class="dt">$dimone</span> % <span class="dv">6</span>) <span class="ot">*</span> -<span class="dv">1</span>;
+            <span class="cf">for</span>( <span class="dt">$dimtwo</span> = <span class="dv">0</span>; <span class="dt">$dimtwo</span> &lt; <span class="dv">6</span>; <span class="dt">$dimtwo</span>++ ) {
+
+                <span class="dt">$movone</span> = <span class="dt">$seed</span>;
+                <span class="dt">$movtwo</span> = <span class="dt">$seed</span> <span class="ot">*</span> -<span class="dv">1</span>;
+
+                <span class="dt">$newone</span> = <span class="dt">$dimone</span>+<span class="dt">$movone</span>;
+                <span class="dt">$newtwo</span> = <span class="dt">$dimtwo</span>+<span class="dt">$movtwo</span>;
+
+                <span class="cf">if</span>( <span class="dt">$newone</span> &lt; <span class="fu">scalar</span> <span class="dt">@arr</span> ){
+                    <span class="fu">print</span> <span class="dt">$arr</span>[<span class="dt">$newone</span>][<span class="dt">$newtwo</span>] . <span class="dt">$padding</span>;
+                }
+
+                <span class="dt">$seed</span> = <span class="dt">$seed</span>+<span class="dv">1</span>;
+            }
+
+            <span class="fu">print</span> <span class="ot">&quot;</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+        }
+    }
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+
+}
+<span class="cf">else</span> {
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;16m 16:  00/00/00</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;17m 17:  00/00/5f</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;18m 18:  00/00/87</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;19m 19:  00/00/af</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;20m 20:  00/00/d7</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;21m 21:  00/00/ff</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;22m 22:  00/5f/00</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;23m 23:  00/5f/5f</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;24m 24:  00/5f/87</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;25m 25:  00/5f/af</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;26m 26:  00/5f/d7</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;27m 27:  00/5f/ff</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;28m 28:  00/87/00</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;29m 29:  00/87/5f</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;30m 30:  00/87/87</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;31m 31:  00/87/af</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;32m 32:  00/87/d7</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;33m 33:  00/87/ff</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;34m 34:  00/af/00</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;35m 35:  00/af/5f</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;36m 36:  00/af/87</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;37m 37:  00/af/af</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;38m 38:  00/af/d7</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;39m 39:  00/af/ff</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;40m 40:  00/d7/00</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;41m 41:  00/d7/5f</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;42m 42:  00/d7/87</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;43m 43:  00/d7/af</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;44m 44:  00/d7/d7</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;45m 45:  00/d7/ff</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;46m 46:  00/ff/00</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;47m 47:  00/ff/5f</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;48m 48:  00/ff/87</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;49m 49:  00/ff/af</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;50m 50:  00/ff/d7</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;51m 51:  00/ff/ff</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;52m 52:  5f/00/00</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;53m 53:  5f/00/5f</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;54m 54:  5f/00/87</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;55m 55:  5f/00/af</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;56m 56:  5f/00/d7</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;57m 57:  5f/00/ff</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;58m 58:  5f/5f/00</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;59m 59:  5f/5f/5f</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;60m 60:  5f/5f/87</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;61m 61:  5f/5f/af</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;62m 62:  5f/5f/d7</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;63m 63:  5f/5f/ff</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;64m 64:  5f/87/00</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;65m 65:  5f/87/5f</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;66m 66:  5f/87/87</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;67m 67:  5f/87/af</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;68m 68:  5f/87/d7</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;69m 69:  5f/87/ff</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;70m 70:  5f/af/00</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;71m 71:  5f/af/5f</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;72m 72:  5f/af/87</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;73m 73:  5f/af/af</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;74m 74:  5f/af/d7</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;75m 75:  5f/af/ff</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;76m 76:  5f/d7/00</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;77m 77:  5f/d7/5f</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;78m 78:  5f/d7/87</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;79m 79:  5f/d7/af</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;80m 80:  5f/d7/d7</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;81m 81:  5f/d7/ff</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;82m 82:  5f/ff/00</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;83m 83:  5f/ff/5f</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;84m 84:  5f/ff/87</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;85m 85:  5f/ff/af</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;86m 86:  5f/ff/d7</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;87m 87:  5f/ff/ff</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;88m 88:  87/00/00</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;89m 89:  87/00/5f</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;90m 90:  87/00/87</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;91m 91:  87/00/af</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;92m 92:  87/00/d7</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;93m 93:  87/00/ff</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;94m 94:  87/5f/00</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;95m 95:  87/5f/5f</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;96m 96:  87/5f/87</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;97m 97:  87/5f/af</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;98m 98:  87/5f/d7</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;99m 99:  87/5f/ff</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;100m 100 :87/87/00</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;101m 101 :87/87/5f</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;102m 102 :87/87/87</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;103m 103 :87/87/af</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;104m 104 :87/87/d7</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;105m 105 :87/87/ff</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;106m 106 :87/af/00</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;107m 107 :87/af/5f</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;108m 108 :87/af/87</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;109m 109 :87/af/af</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;110m 110 :87/af/d7</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;111m 111 :87/af/ff</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;112m 112 :87/d7/00</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;113m 113 :87/d7/5f</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;114m 114 :87/d7/87</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;115m 115 :87/d7/af</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;116m 116 :87/d7/d7</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;117m 117 :87/d7/ff</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;118m 118 :87/ff/00</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;119m 119 :87/ff/5f</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;120m 120 :87/ff/87</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;121m 121 :87/ff/af</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;122m 122 :87/ff/d7</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;123m 123 :87/ff/ff</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;124m 124 :af/00/00</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;125m 125 :af/00/5f</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;126m 126 :af/00/87</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;127m 127 :af/00/af</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;128m 128 :af/00/d7</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;129m 129 :af/00/ff</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;130m 130 :af/5f/00</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;131m 131 :af/5f/5f</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;132m 132 :af/5f/87</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;133m 133 :af/5f/af</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;134m 134 :af/5f/d7</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;135m 135 :af/5f/ff</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;136m 136 :af/87/00</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;137m 137 :af/87/5f</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;138m 138 :af/87/87</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;139m 139 :af/87/af</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;140m 140 :af/87/d7</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;141m 141 :af/87/ff</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;142m 142 :af/af/00</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;143m 143 :af/af/5f</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;144m 144 :af/af/87</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;145m 145 :af/af/af</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;146m 146 :af/af/d7</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;147m 147 :af/af/ff</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;148m 148 :af/d7/00</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;149m 149 :af/d7/5f</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;150m 150 :af/d7/87</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;151m 151 :af/d7/af</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;152m 152 :af/d7/d7</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;153m 153 :af/d7/ff</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;154m 154 :af/ff/00</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;155m 155 :af/ff/5f</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;156m 156 :af/ff/87</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;157m 157 :af/ff/af</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;158m 158 :af/ff/d7</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;159m 159 :af/ff/ff</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;160m 160 :d7/00/00</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;161m 161 :d7/00/5f</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;162m 162 :d7/00/87</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;163m 163 :d7/00/af</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;164m 164 :d7/00/d7</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;165m 165 :d7/00/ff</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;166m 166 :d7/5f/00</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;167m 167 :d7/5f/5f</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;168m 168 :d7/5f/87</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;169m 169 :d7/5f/af</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;170m 170 :d7/5f/d7</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;171m 171 :d7/5f/ff</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;172m 172 :d7/87/00</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;173m 173 :d7/87/5f</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;174m 174 :d7/87/87</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;175m 175 :d7/87/af</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;176m 176 :d7/87/d7</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;177m 177 :d7/87/ff</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;178m 178 :d7/af/00</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;179m 179 :d7/af/5f</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;180m 180 :d7/af/87</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;181m 181 :d7/af/af</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;182m 182 :d7/af/d7</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;183m 183 :d7/af/ff</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;184m 184 :d7/d7/00</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;185m 185 :d7/d7/5f</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;186m 186 :d7/d7/87</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;187m 187 :d7/d7/af</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;188m 188 :d7/d7/d7</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;189m 189 :d7/d7/ff</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;190m 190 :d7/ff/00</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;191m 191 :d7/ff/5f</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;192m 192 :d7/ff/87</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;193m 193 :d7/ff/af</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;194m 194 :d7/ff/d7</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;195m 195 :d7/ff/ff</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;196m 196 :ff/00/00</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;197m 197 :ff/00/5f</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;198m 198 :ff/00/87</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;199m 199 :ff/00/af</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;200m 200 :ff/00/d7</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;201m 201 :ff/00/ff</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;202m 202 :ff/5f/00</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;203m 203 :ff/5f/5f</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;204m 204 :ff/5f/87</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;205m 205 :ff/5f/af</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;206m 206 :ff/5f/d7</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;207m 207 :ff/5f/ff</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;208m 208 :ff/87/00</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;209m 209 :ff/87/5f</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;210m 210 :ff/87/87</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;211m 211 :ff/87/af</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;212m 212 :ff/87/d7</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;213m 213 :ff/87/ff</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;214m 214 :ff/af/00</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;215m 215 :ff/af/5f</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;216m 216 :ff/af/87</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;217m 217 :ff/af/af</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;218m 218 :ff/af/d7</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;219m 219 :ff/af/ff</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;220m 220 :ff/d7/00</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;221m 221 :ff/d7/5f</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;222m 222 :ff/d7/87</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;223m 223 :ff/d7/af</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;224m 224 :ff/d7/d7</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;225m 225 :ff/d7/ff</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;226m 226 :ff/ff/00</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;227m 227 :ff/ff/5f</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;228m 228 :ff/ff/87</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;229m 229 :ff/ff/af</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;230m 230 :ff/ff/d7</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;231m 231 :ff/ff/ff</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;232m 232 :08/08/08</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;233m 233 :12/12/12</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;234m 234 :1c/1c/1c</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;235m 235 :26/26/26</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;236m 236 :30/30/30</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;237m 237 :3a/3a/3a</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;238m 238 :44/44/44</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;239m 239 :4e/4e/4e</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;240m 240 :58/58/58</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;241m 241 :62/62/62</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;242m 242 :6c/6c/6c</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;243m 243 :76/76/76</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;244m 244 :80/80/80</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;245m 245 :8a/8a/8a</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;246m 246 :94/94/94</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;247m 247 :9e/9e/9e</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;248m 248 :a8/a8/a8</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;249m 249 :b2/b2/b2</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;250m 250 :bc/bc/bc</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;251m 251 :c6/c6/c6</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;252m 252 :d0/d0/d0</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;253m 253 :da/da/da</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;254m 254 :e4/e4/e4</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="st">[38;5;255m 255 :ee/ee/ee</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+    <span class="fu">print</span> <span class="ot">&quot;</span><span class="ch">\n</span><span class="ot">&quot;</span>;
+}
+<span class="fu">print</span> <span class="ot">&quot;</span><span class="st">0m</span><span class="ot">&quot;</span>;
+<span class="fu">exit</span>;</code></pre></div></div></div><div id="heading-container-h--Page-metrics" class="heading-container page-metrics"><h2 id="h--Page-metrics"><a href="#h--Page-metrics">Page metrics</a></h2></div><div id="heading-container-h--Backlinks" class="heading-container backlinks"><h3 id="h--Backlinks"><a href="#h--Backlinks">Backlinks (1)</a></h3><ol><li><a href="/zsh/func.html">zsh/func.org (1)</a><ol><li><a href="#b-change-theme"><span class="verbatim">change-theme</span></a><span class="verbatim"> &#x2190; </span><a href="/zsh/func.html#c-89">¶ (<span class="verbatim">Cell 89</span>)</a></li></ol></li></ol></div><div id="heading-container-h--Tangled-files" class="heading-container tangled-blocks"><h3 id="h--Tangled-files"><a href="#h--Tangled-files">Tangled files (20)</a></h3><ol><li><a href="#b-palette-extra-type" class="verbatim">script/terminal-themes/PaletteExtra</a></li><li><a href="#b-theme-type" class="verbatim">script/terminal-themes/Theme</a></li><li><a href="#b-change-theme" class="verbatim">script/terminal-themes/change_theme.sh</a></li><li><a href="#b-test-24-bit-color" class="verbatim">script/terminal-themes/color-tests/24-bit-color.sh</a></li><li><a href="#b-test-256colors-rb" class="verbatim">script/terminal-themes/color-tests/256colors.rb</a></li><li><a href="#b-test-256colors2-pl" class="verbatim">script/terminal-themes/color-tests/256colors2.pl</a></li><li><a href="#b-test-colortable16" class="verbatim">script/terminal-themes/color-tests/colortable16.sh</a></li><li><a href="#b-test-rubycolor" class="verbatim">script/terminal-themes/color-tests/rubycolor.rb</a></li><li><a href="#b-test-xterm-colortest" class="verbatim">script/terminal-themes/color-tests/xterm-colortest.pl</a></li><li><a href="#b-list-colors-for-emacs" class="verbatim">script/terminal-themes/listColorsForEmacs.dhall</a></li><li><a href="#b-list-colors-for-shell" class="verbatim">script/terminal-themes/listColorsForShell.dhall</a></li><li><a href="#b-render-control-sequences" class="verbatim">script/terminal-themes/renderControlSequences.dhall</a></li><li><a href="#b-theme-blue" class="verbatim">script/terminal-themes/themes/Blue.dhall</a></li><li><a href="#b-theme-dark" class="verbatim">script/terminal-themes/themes/Dark.dhall</a></li><li><a href="#b-theme-light" class="verbatim">script/terminal-themes/themes/Light.dhall</a></li><li><a href="#b-theme-pasteldark" class="verbatim">script/terminal-themes/themes/PastelDark.dhall</a></li><li><a href="#b-theme-red" class="verbatim">script/terminal-themes/themes/Red.dhall</a></li><li><a href="#b-theme-retroblue" class="verbatim">script/terminal-themes/themes/RetroBlue.dhall</a></li><li><a href="#b-theme-vanilla" class="verbatim">script/terminal-themes/themes/Vanilla.dhall</a></li><li><a href="#b-to-color-map" class="verbatim">script/terminal-themes/toColorMap.dhall</a></li></ol></div><div id="heading-container-h--Named-cells" class="heading-container named-cells"><h3 id="h--Named-cells"><a href="#h--Named-cells">Named cells (20)</a></h3><ol><li><a href="#b-change-theme"><span class="verbatim">change-theme</span></a></li><li><a href="#b-list-colors-for-emacs"><span class="verbatim">list-colors-for-emacs</span></a></li><li><a href="#b-list-colors-for-shell"><span class="verbatim">list-colors-for-shell</span></a></li><li><a href="#b-palette-extra-type"><span class="verbatim">palette-extra-type</span></a></li><li><a href="#b-render-control-sequences"><span class="verbatim">render-control-sequences</span></a></li><li><a href="#b-test-24-bit-color"><span class="verbatim">test-24-bit-color</span></a></li><li><a href="#b-test-256colors-rb"><span class="verbatim">test-256colors-rb</span></a></li><li><a href="#b-test-256colors2-pl"><span class="verbatim">test-256colors2-pl</span></a></li><li><a href="#b-test-colortable16"><span class="verbatim">test-colortable16</span></a></li><li><a href="#b-test-rubycolor"><span class="verbatim">test-rubycolor</span></a></li><li><a href="#b-test-xterm-colortest"><span class="verbatim">test-xterm-colortest</span></a></li><li><a href="#b-theme-blue"><span class="verbatim">theme-blue</span></a></li><li><a href="#b-theme-dark"><span class="verbatim">theme-dark</span></a></li><li><a href="#b-theme-light"><span class="verbatim">theme-light</span></a></li><li><a href="#b-theme-pasteldark"><span class="verbatim">theme-pasteldark</span></a></li><li><a href="#b-theme-red"><span class="verbatim">theme-red</span></a></li><li><a href="#b-theme-retroblue"><span class="verbatim">theme-retroblue</span></a></li><li><a href="#b-theme-type"><span class="verbatim">theme-type</span></a></li><li><a href="#b-theme-vanilla"><span class="verbatim">theme-vanilla</span></a></li><li><a href="#b-to-color-map"><span class="verbatim">to-color-map</span></a></li></ol></div><footer><div class="lilac-stamp">Generated by <a href="https://lilac.funloop.org" class="external-link" target="_blank" rel="noopener noreferrer">Lilac</a></div></footer></main><script id="heading-ancestry" type="application/json">{"h--Backlinks":["h--Page-metrics"],"h--Named-cells":["h--Page-metrics"],"h--Page-metrics":[],"h--Tangled-files":["h--Page-metrics"],"h-1-Overview":[],"h-2-Switching-themes":[],"h-3-Types":[],"h-4-Rendering":[],"h-5-Themes":[],"h-5.1-Blue":["h-5-Themes"],"h-5.2-Dark":["h-5-Themes"],"h-5.3-Light":["h-5-Themes"],"h-5.4-PastelDark":["h-5-Themes"],"h-5.5-Red":["h-5-Themes"],"h-5.6-RetroBlue":["h-5-Themes"],"h-5.7-Vanilla":["h-5-Themes"],"h-6-Color-tests":[]}</script><script id="lilac-fe-script" src="/js/lilac.js"></script></body></html>

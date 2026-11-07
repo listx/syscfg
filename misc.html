@@ -1,0 +1,259 @@
+<!DOCTYPE HTML><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Miscellaneous</title><link rel="stylesheet" href="/css/default.css"><link rel="shortcut icon" type="image/png" href="/favicon.png"><link rel="stylesheet" href="/vendor/source-fonts/source-fonts.css">
+<script>
+  window.MathJax = {
+      loader: { paths: { "mathjax-newcm": "/vendor/mathjax-newcm-font" } },
+      output: { font: "mathjax-newcm" },
+  tex: {
+      tags: 'ams'
+  },
+  options: {
+      ignoreHtmlClass: 'verbatim|code'
+  }
+};
+</script>
+<script id="MathJax-script" async="" src="/vendor/mathjax/tex-mml-chtml.js"></script>
+</head><body><div class="navbar"><button id="hamburger" class="tocs-toggle-button" aria-label="Toggle table of contents sidebar">&#x2630;</button><div class="breadcrumbs"><a href="https://syscfg.funloop.org"><span class="breadcrumb">Linus Arver&#39;s Dotfiles</span></a> <a href="https://github.com/listx/syscfg" class="repo-link" title="Source repository" aria-label="Source repository"><svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 16 16"
+     aria-hidden="true">
+<g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+<circle cx="4" cy="3" r="1.75"></circle>
+<circle cx="4" cy="13" r="1.75"></circle>
+<circle cx="12" cy="3" r="1.75"></circle>
+<path d="M4 4.75v6.5"></path>
+<path d="M12 4.75c0 4-8 3-8 6.5"></path>
+</g>
+</svg>
+</a> <span class="breadcrumb-separator">/</span> <a href="#top"><span class="breadcrumb">misc.org</span></a></div></div><nav id="tocs"><p class="widget-title gtoc-title">Site contents</p><nav class="gtoc"><ul><li><a href="/index.html">Introduction</a></li><li><a href="/bash.html">Bash</a></li><li><a href="/claude.html">Claude</a></li><li><a href="/clojure.html">Clojure</a></li><li><a href="/emacs.html">Emacs</a></li><li><a href="/git.html">Git</a></li><li><a href="/gpg.html">GnuPG</a></li><li><a href="/jj.html">Jujutsu</a></li><li><a href="/keybindings.html">Keybindings (WIP)</a></li><li><a href="/misc.html" class="bold">Miscellaneous</a></li><li><a href="/mpv.html">mpv</a></li><li><a href="/nix.html">Nix</a></li><li><a href="/notmuch.html">Notmuch</a></li><li><a href="/qutebrowser.html">qutebrowser</a></li><li><a href="/rtorrent.html">rTorrent</a></li><li><a href="/script/index.html">System scripts</a></li><li><a href="/tmux.html">tmux</a></li><li><a href="/vim.html">Vim</a></li><li><a href="/wezterm.html">Wezterm</a></li><li><a href="/xmonad.html">xmonad</a></li><li><a href="/xorg.html">X.Org</a></li><li><a href="/zsh/index.html">Zsh</a></li></ul></nav><p class="widget-title toc-title">Page contents</p><nav class="toc"><div class="toc-entries"><ol><li class="toc-level-1"><div class="toc-entry"><span class="toc-counter">1</span><a href="#h-1-jjui">jjui</a></div></li><li class="toc-level-1"><div class="toc-entry"><span class="toc-counter">2</span><a href="#h-2-less">less</a></div></li><li class="toc-level-1"><div class="toc-entry"><span class="toc-counter">3</span><a href="#h-3-Melby">Melby</a></div></li><li class="toc-level-1"><div class="toc-entry"><span class="toc-counter">4</span><a href="#h-4-MPD">MPD</a></div></li><li class="toc-level-1"><div class="toc-entry"><span class="toc-counter">5</span><a href="#h-5-PulseAudio">PulseAudio</a></div></li><li class="toc-level-1"><div class="toc-entry"><span class="toc-counter">6</span><a href="#h-6-SSH">SSH</a></div></li><li class="toc-level-1"><div class="toc-entry"><span class="toc-counter">7</span><a href="#h-7-terminfo">terminfo</a></div></li><li class="toc-level-1"><div class="toc-entry"><span class="toc-counter">8</span><a href="#h-8-vimpc">vimpc</a></div></li><li class="toc-level-1"><div class="toc-entry"><span class="toc-counter">9</span><a href="#h-9-zathura">zathura</a></div></li><li class="toc-level-1"><div class="toc-entry"><span class="toc-counter">10</span><a href="#h-10-uim">uim</a></div></li><li class="toc-level-1"><div class="toc-entry"><a href="#h--Page-metrics">Page metrics</a></div><ol><li class="toc-level-2"><div class="toc-entry"><a href="#h--Backlinks">Backlinks</a></div></li><li class="toc-level-2"><div class="toc-entry"><a href="#h--Tangled-files">Tangled files</a></div></li><li class="toc-level-2"><div class="toc-entry"><a href="#h--Named-cells">Named cells</a></div></li></ol></li></ol></div></nav></nav><main><h1 id="top">Miscellaneous</h1><hr class="title-underline"><p><span id="c-0" class="cell-idx">These are small configurations which don&#39;t need a whole page of their own.</span></p><div id="heading-container-h-1-jjui" class="heading-container"><h2 id="h-1-jjui"><span id="c-1" class="cell-idx"><a href="#h-1-jjui">1&ensp;jjui</a></span></h2><p><span id="c-2" class="cell-idx">The colors for <span class="code">jjui</span>, our terminal interface to Jujutsu.</span></p><div id="c-3" class="cell-idx"><div class="block-container src" id="b-jjui-config"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-jjui-config">&#x1F517;</a></div><div class="block-meta"><code>jjui-config</code><br><code><span class="bold">&#x1F3AF; jjui/config.toml</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">toml</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="kw">[ui.colors]</span>
+<span class="dt">&quot;selected&quot;</span> <span class="op">=</span> <span class="op">{</span><span class="dt">bg</span><span class="op"> =</span> <span class="st">&quot;#22222f&quot;</span><span class="op">, </span><span class="dt">bold</span><span class="op"> =</span> <span class="cn">true</span><span class="op"> }</span>
+<span class="dt">&quot;status title&quot;</span> <span class="op">=</span> <span class="op">{ </span><span class="dt">fg</span><span class="op"> =</span> <span class="st">&quot;#000000&quot;</span><span class="op">, </span><span class="dt">bg</span><span class="op"> =</span> <span class="st">&quot;red&quot;</span><span class="op">, </span><span class="dt">bold</span><span class="op"> =</span> <span class="cn">true</span><span class="op"> }</span></code></pre></div></div></div><div id="heading-container-h-2-less" class="heading-container"><h2 id="h-2-less"><span id="c-4" class="cell-idx"><a href="#h-2-less">2&ensp;less</a></span></h2><p><span id="c-5" class="cell-idx">The <span class="code">lesskey</span> <a href="#b-Makefile-lesskey" class="internal-link" id="linkNumber-1">Makefile rule</a> links this to <span class="code">~/.lesskey</span> and runs <span class="code">lesskey</span> on it. This sets up the backspace and delete keys, along with the default options in <span class="code">LESS</span>, which the comments below explain.</span></p><div id="c-6" class="cell-idx"><div class="block-container src" id="b-Makefile-lesskey"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-Makefile-lesskey">&#x1F517;</a></div><div class="block-meta"><code>Makefile-lesskey</code></div><div class="block-meta-other hidden"><p>Used by index.org→<a href="/index.html#b-Makefile-b-Makefile-lesskey" class="internal-link"><span class="verbatim">Makefile</span></a>.</p><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">makefile</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="dv">lesskey:</span>
+	ln -fs <span class="ch">${</span><span class="dt">C</span><span class="ch">}</span>/lesskey/cfg <span class="ch">${</span><span class="dt">H</span><span class="ch">}</span>/.lesskey
+	lesskey</code></pre></div></div><div id="c-7" class="cell-idx"><div class="block-container src" id="b-lesskey"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-lesskey">&#x1F517;</a></div><div class="block-meta"><code>lesskey</code><br><code><span class="bold">&#x1F3AF; lesskey/cfg</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">conf</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="co">#command</span>
+
+<span class="co"># map backspace to back-screen</span>
+<span class="er"></span>      <span class="dt">back-screen</span>
+
+<span class="co">#line-edit</span>
+<span class="er">\</span><span class="dt">e</span><span class="kw">[3</span><span class="er">~</span>          <span class="dt">delete</span>
+
+<span class="co">#env</span>
+
+<span class="co"># -F: exit less if everything can be displayed in one screen</span>
+<span class="co">#</span>
+<span class="co"># -i: make lower-case-only searches case insensitive (mixed-case searches are</span>
+<span class="co"># automatically case-sensitive!)</span>
+<span class="co">#</span>
+<span class="co"># -M: verbose status bar to show location information</span>
+<span class="co">#</span>
+<span class="co"># -R: make &#39;git diff&#39; more compliant with highly customized LESS_TERMCAP options</span>
+<span class="co">#</span>
+<span class="co"># -X: try not to clear the screen</span>
+<span class="co">#</span>
+<span class="co"># --tabs=4: set tab stop to 4 spaces (default 8)</span>
+<span class="dt">LESS</span> <span class="op">=</span> <span class="dt">-FiMRX</span> <span class="dt">--tabs</span><span class="op">=</span><span class="dv">4</span></code></pre></div></div></div><div id="heading-container-h-3-Melby" class="heading-container"><h2 id="h-3-Melby"><span id="c-8" class="cell-idx"><a href="#h-3-Melby">3&ensp;Melby</a></span></h2><p><span id="c-9" class="cell-idx">The environment for running Melby&#39;s daemon under <span class="code">systemd</span>.</span></p><div id="c-10" class="cell-idx"><div class="block-container src" id="b-melby-systemd-env"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-melby-systemd-env">&#x1F517;</a></div><div class="block-meta"><code>melby-systemd-env</code><br><code><span class="bold">&#x1F3AF; melby/systemd/env</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">conf</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="dt">PATH</span><span class="op">=</span><span class="er">/</span><span class="dt">home</span><span class="er">/</span><span class="dt">l</span><span class="er">/</span><span class="dt">.nix-profile</span><span class="er">/</span><span class="dt">bin</span><span class="er">:/</span><span class="dt">run</span><span class="er">/</span><span class="dt">wrappers</span><span class="er">/</span><span class="dt">bin</span><span class="er">:/</span><span class="dt">etc</span><span class="er">/</span><span class="dt">profiles</span><span class="er">/</span><span class="dt">per-user</span><span class="er">/</span><span class="dt">l</span><span class="er">/</span><span class="dt">bin</span><span class="er">:/</span><span class="dt">nix</span><span class="er">/</span><span class="dt">var</span><span class="er">/</span><span class="dt">nix</span><span class="er">/</span><span class="dt">profiles</span><span class="er">/</span><span class="dt">default</span><span class="er">/</span><span class="dt">bin</span><span class="er">:/</span><span class="dt">run</span><span class="er">/</span><span class="dt">current-system</span><span class="er">/</span><span class="dt">sw</span><span class="er">/</span><span class="dt">bin</span>
+<span class="co"># Disable debug logs. To enable them, use MIX_ENV=dev.</span>
+<span class="dt">MIX_ENV</span><span class="op">=</span><span class="dt">prod</span></code></pre></div></div></div><div id="heading-container-h-4-MPD" class="heading-container"><h2 id="h-4-MPD"><span id="c-11" class="cell-idx"><a href="#h-4-MPD">4&ensp;MPD</a></span></h2><p><span id="c-12" class="cell-idx">MPD plays our music both locally through PulseAudio and as an HTTP stream for other machines to listen to.</span></p><div id="c-13" class="cell-idx"><div class="block-container src" id="b-mpd-conf"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-mpd-conf">&#x1F517;</a></div><div class="block-meta"><code>mpd-conf</code><br><code><span class="bold">&#x1F3AF; mpd/mpd.conf</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">conf</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="co"># Adapted from</span>
+<span class="co"># https://raw.githubusercontent.com/MusicPlayerDaemon/MPD/master/doc/mpdconf.example.</span>
+
+<span class="dt">music_directory</span>     <span class="dt">&quot;~/Music&quot;</span>
+<span class="co"># Automatically prune new/deleted files in the music_directory.</span>
+<span class="dt">auto_update</span>         <span class="dt">&quot;yes&quot;</span>
+
+<span class="co"># Allow saving playlists from vimpc.</span>
+<span class="dt">playlist_directory</span>  <span class="dt">&quot;~/Music/playlists&quot;</span>
+
+<span class="co"># Local output.</span>
+<span class="dt">audio_output</span> <span class="er">{</span>
+    <span class="dt">type</span>            <span class="dt">&quot;pulse&quot;</span>
+    <span class="dt">name</span>            <span class="dt">&quot;pulseaudio-output&quot;</span>
+<span class="er">}</span>
+
+<span class="co"># Streaming output. You have to first control MPD via an SSH session. If you</span>
+<span class="co"># did a toplevel `bind_to_address` and `port` configuration, you could control</span>
+<span class="co"># MPD playback (think of it as a remote control) via the IP and port. However</span>
+<span class="co"># we already have SSH access to this machine so there is no point in</span>
+<span class="co"># configuring that. As soon as the playback *begins*, the IP and port here</span>
+<span class="co"># become active clients can then connect to it.</span>
+<span class="co">#</span>
+<span class="co"># So the process is:</span>
+<span class="co">#   (1) start MPD playback via SSH</span>
+<span class="co">#   (2) run `mpv http://192.168.1.4:8030` to start listening to it from the client</span>
+<span class="co">#</span>
+<span class="dt">audio_output</span> <span class="er">{</span>
+    <span class="dt">type</span>            <span class="dt">&quot;httpd&quot;</span>
+    <span class="dt">name</span>            <span class="dt">&quot;http-output&quot;</span>
+    <span class="dt">encoder</span>         <span class="dt">&quot;opus&quot;</span>
+    <span class="dt">port</span>            <span class="dt">&quot;8010&quot;</span>
+    <span class="dt">bind_to_address</span> <span class="dt">&quot;192.168.1.4&quot;</span>
+    <span class="dt">bitrate</span>         <span class="dt">&quot;96000&quot;</span>
+    <span class="dt">format</span>          <span class="dt">&quot;48000:16:2&quot;</span>
+    <span class="dt">always_on</span>       <span class="dt">&quot;yes&quot;</span>
+    <span class="dt">tags</span>            <span class="dt">&quot;yes&quot;</span>
+<span class="er">}</span>
+
+<span class="co"># Enable replay gain.</span>
+<span class="dt">replaygain</span>          <span class="dt">&quot;track&quot;</span></code></pre></div></div></div><div id="heading-container-h-5-PulseAudio" class="heading-container"><h2 id="h-5-PulseAudio"><span id="c-14" class="cell-idx"><a href="#h-5-PulseAudio">5&ensp;PulseAudio</a></span></h2><p><span id="c-15" class="cell-idx">The <span class="code">pulse</span> <a href="#b-Makefile-pulse" class="internal-link" id="linkNumber-2">Makefile rule</a> copies these into place. The <span class="code">k0</span> machine gets its own versions, with a higher quality sample format and rate, and a default sink.</span></p><div id="c-16" class="cell-idx"><div class="block-container src" id="b-Makefile-pulse"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-Makefile-pulse">&#x1F517;</a></div><div class="block-meta"><code>Makefile-pulse</code></div><div class="block-meta-other hidden"><p>Used by index.org→<a href="/index.html#b-Makefile-b-Makefile-pulse" class="internal-link"><span class="verbatim">Makefile</span></a>.</p><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">makefile</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="dv">pulse:</span>
+	rm -rf <span class="ch">${</span><span class="dt">H</span><span class="ch">}</span>/.config/pulse
+	rm -rf <span class="ch">${</span><span class="dt">H</span><span class="ch">}</span>/.pulse
+	mkdir -p <span class="ch">${</span><span class="dt">H</span><span class="ch">}</span>/.config/pulse
+	mkdir <span class="ch">${</span><span class="dt">H</span><span class="ch">}</span>/.pulse
+<span class="cf">ifeq</span> (<span class="st">&#39;</span><span class="ch">${</span><span class="dt">T</span><span class="ch">}</span><span class="st">&#39;</span>,<span class="st">&#39;k0&#39;</span>)
+	cp <span class="ch">${</span><span class="dt">C</span><span class="ch">}</span>/pulse/daemon.conf.k0 <span class="ch">${</span><span class="dt">H</span><span class="ch">}</span>/.config/pulse/daemon.conf
+	cp <span class="ch">${</span><span class="dt">C</span><span class="ch">}</span>/pulse/default.pa.k0 <span class="ch">${</span><span class="dt">H</span><span class="ch">}</span>/.pulse/default.pa
+<span class="cf">else</span>
+	cp <span class="ch">${</span><span class="dt">C</span><span class="ch">}</span>/pulse/default.pa <span class="ch">${</span><span class="dt">H</span><span class="ch">}</span>/.pulse/default.pa
+<span class="cf">endif</span></code></pre></div></div><div id="c-17" class="cell-idx"><div class="block-container src" id="b-pulse-default.pa"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-pulse-default.pa">&#x1F517;</a></div><div class="block-meta"><code>pulse-default.pa</code><br><code><span class="bold">&#x1F3AF; pulse/default.pa</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">conf</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="co"># Load in distro defaults.</span>
+<span class="dt">.include</span> <span class="er">/</span><span class="dt">etc</span><span class="er">/</span><span class="dt">pulse</span><span class="er">/</span><span class="dt">default.pa</span></code></pre></div></div><div id="c-18" class="cell-idx"><div class="block-container src" id="b-pulse-default.pa.k0"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-pulse-default.pa.k0">&#x1F517;</a></div><div class="block-meta"><code>pulse-default.pa.k0</code><br><code><span class="bold">&#x1F3AF; pulse/default.pa.k0</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">conf</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="co"># Load in distro defaults.</span>
+<span class="dt">.include</span> <span class="er">/</span><span class="dt">etc</span><span class="er">/</span><span class="dt">pulse</span><span class="er">/</span><span class="dt">default.pa</span>
+
+<span class="dt">set-default-sink</span> <span class="dt">0</span></code></pre></div></div><div id="c-19" class="cell-idx"><div class="block-container src" id="b-pulse-daemon.conf.k0"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-pulse-daemon.conf.k0">&#x1F517;</a></div><div class="block-meta"><code>pulse-daemon.conf.k0</code><br><code><span class="bold">&#x1F3AF; pulse/daemon.conf.k0</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">conf</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="dt">default-sample-format</span> <span class="op">=</span> <span class="dt">s32le</span>
+<span class="dt">default-sample-rate</span> <span class="op">=</span> <span class="dv">192000</span></code></pre></div></div></div><div id="heading-container-h-6-SSH" class="heading-container"><h2 id="h-6-SSH"><span id="c-20" class="cell-idx"><a href="#h-6-SSH">6&ensp;SSH</a></span></h2><p><span id="c-21" class="cell-idx">The <span class="code">ssh</span> <a href="#b-Makefile-ssh" class="internal-link" id="linkNumber-3">Makefile rule</a> links this to <span class="code">~/.ssh/config</span>. This keeps connections alive, forwards our agent to machines on the home network, and picks the key to use for GitHub and SourceHut.</span></p><div id="c-22" class="cell-idx"><div class="block-container src" id="b-Makefile-ssh"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-Makefile-ssh">&#x1F517;</a></div><div class="block-meta"><code>Makefile-ssh</code></div><div class="block-meta-other hidden"><p>Used by index.org→<a href="/index.html#b-Makefile-b-Makefile-ssh" class="internal-link"><span class="verbatim">Makefile</span></a>.</p><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">makefile</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="dv">ssh:</span>
+<span class="cf">ifeq</span> (<span class="ch">$(</span><span class="kw">wildcard</span><span class="st"> ~/.ssh/.</span><span class="ch">)</span>,)
+	ln -fns <span class="ch">${</span><span class="dt">C</span><span class="ch">}</span>/ssh <span class="ch">${</span><span class="dt">H</span><span class="ch">}</span>/.ssh
+<span class="cf">endif</span>
+	ln -fs <span class="ch">${</span><span class="dt">C</span><span class="ch">}</span>/ssh/config.home.conf <span class="ch">${</span><span class="dt">H</span><span class="ch">}</span>/.ssh/config</code></pre></div></div><div id="c-23" class="cell-idx"><div class="block-container src" id="b-ssh-config"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-ssh-config">&#x1F517;</a></div><div class="block-meta"><code>ssh-config</code><br><code><span class="bold">&#x1F3AF; ssh/config.home.conf</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">conf</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="dt">Host</span> <span class="er">*</span>
+    <span class="dt">ServerAliveInterval</span> <span class="dt">15</span>
+<span class="dt">Host</span> <span class="dt">192.168.1.</span><span class="er">*</span>
+    <span class="dt">ForwardAgent</span> <span class="dt">yes</span>
+<span class="dt">Host</span> <span class="dt">github.com</span>
+    <span class="dt">HostName</span> <span class="dt">github.com</span>
+    <span class="dt">User</span> <span class="dt">git</span>
+    <span class="dt">IdentityFile</span> <span class="er">~/</span><span class="dt">.ssh</span><span class="er">/</span><span class="dt">id_rsa_github</span>
+<span class="dt">Host</span> <span class="dt">git.sr.ht</span>
+    <span class="dt">HostName</span> <span class="dt">git.sr.ht</span>
+    <span class="dt">User</span> <span class="dt">git</span>
+    <span class="dt">IdentityFile</span> <span class="er">~/</span><span class="dt">.ssh</span><span class="er">/</span><span class="dt">id_rsa_github</span>
+<span class="dt">Host</span> <span class="er">*</span><span class="dt">.builds.sr.ht</span>
+    <span class="dt">User</span> <span class="dt">builds</span>
+    <span class="dt">IdentityFile</span> <span class="er">~/</span><span class="dt">.ssh</span><span class="er">/</span><span class="dt">id_rsa_github</span></code></pre></div></div></div><div id="heading-container-h-7-terminfo" class="heading-container"><h2 id="h-7-terminfo"><span id="c-24" class="cell-idx"><a href="#h-7-terminfo">7&ensp;terminfo</a></span></h2><p><span id="c-25" class="cell-idx">This defines the <span class="code">xterm-24bit</span> terminal type, for 24-bit color and italics. The <span class="code">terminfo</span> <a href="#b-Makefile-terminfo" class="internal-link" id="linkNumber-4">Makefile rule</a> compiles it with <span class="code">tic</span>, and <a href="/zsh/index.html#b-zshenv" class="internal-link" id="linkNumber-5"><span class="code">.zshenv</span></a> sets this as our <span class="code">TERM</span> on <span class="code">w0</span>.</span></p><div id="c-26" class="cell-idx"><div class="block-container src" id="b-Makefile-terminfo"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-Makefile-terminfo">&#x1F517;</a></div><div class="block-meta"><code>Makefile-terminfo</code></div><div class="block-meta-other hidden"><p>Used by index.org→<a href="/index.html#b-Makefile-b-Makefile-terminfo" class="internal-link"><span class="verbatim">Makefile</span></a>.</p><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">makefile</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="dv">terminfo:</span>
+	git -C <span class="ch">${</span><span class="dt">C</span><span class="ch">}</span> submodule update --init <span class="ch">${</span><span class="dt">C</span><span class="ch">}</span>/wezterm/upstream
+	tic -x -o ~/.terminfo <span class="ch">${</span><span class="dt">C</span><span class="ch">}</span>/wezterm/upstream/termwiz/data/wezterm.terminfo
+	tic -x -o ~/.terminfo <span class="ch">${</span><span class="dt">C</span><span class="ch">}</span>/terminfo/xterm-24bit.terminfo</code></pre></div></div><div id="c-27" class="cell-idx"><div class="block-container src" id="b-xterm-24bit"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-xterm-24bit">&#x1F517;</a></div><div class="block-meta"><code>xterm-24bit</code><br><code><span class="bold">&#x1F3AF; terminfo/xterm-24bit.terminfo</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">conf</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="dt">xterm-24bit</span><span class="er">|</span><span class="dt">xterm</span> <span class="dt">with</span> <span class="dt">24-bit</span> <span class="dt">direct</span> <span class="dt">color</span> <span class="dt">mode</span><span class="er">,</span>
+   <span class="dt">use</span><span class="op">=</span><span class="dt">xterm-256color</span><span class="er">,</span>
+   <span class="dt">sitm</span><span class="op">=</span><span class="er">\</span><span class="dt">E</span><span class="kw">[3m</span><span class="er">,</span>
+   <span class="dt">ritm</span><span class="op">=</span><span class="er">\</span><span class="dt">E</span><span class="kw">[23m</span><span class="er">,</span>
+   <span class="dt">setb24</span><span class="op">=</span><span class="er">\</span><span class="dt">E</span><span class="kw">[48</span><span class="er">;</span><span class="dt">2</span><span class="er">;%</span><span class="dt">p1</span><span class="er">%{</span><span class="dt">65536</span><span class="er">}%/%</span><span class="dt">d</span><span class="er">;%</span><span class="dt">p1</span><span class="er">%{</span><span class="dt">256</span><span class="er">}%/%{</span><span class="dt">255</span><span class="er">}%&amp;%</span><span class="dt">d</span><span class="er">;%</span><span class="dt">p1</span><span class="er">%{</span><span class="dt">255</span><span class="er">}%&amp;%</span><span class="dt">dm</span><span class="er">,</span>
+   <span class="dt">setf24</span><span class="op">=</span><span class="er">\</span><span class="dt">E</span><span class="kw">[38</span><span class="er">;</span><span class="dt">2</span><span class="er">;%</span><span class="dt">p1</span><span class="er">%{</span><span class="dt">65536</span><span class="er">}%/%</span><span class="dt">d</span><span class="er">;%</span><span class="dt">p1</span><span class="er">%{</span><span class="dt">256</span><span class="er">}%/%{</span><span class="dt">255</span><span class="er">}%&amp;%</span><span class="dt">d</span><span class="er">;%</span><span class="dt">p1</span><span class="er">%{</span><span class="dt">255</span><span class="er">}%&amp;%</span><span class="dt">dm</span><span class="er">,</span></code></pre></div></div></div><div id="heading-container-h-8-vimpc" class="heading-container"><h2 id="h-8-vimpc"><span id="c-28" class="cell-idx"><a href="#h-8-vimpc">8&ensp;vimpc</a></span></h2><p><span id="c-29" class="cell-idx">Vim-like key bindings for <span class="code">vimpc</span>, the client that we use for <a href="#b-mpd-conf" class="internal-link" id="linkNumber-6">MPD</a>.</span></p><div id="c-30" class="cell-idx"><div class="block-container src" id="b-vimpcrc"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-vimpcrc">&#x1F517;</a></div><div class="block-meta"><code>vimpcrc</code><br><code><span class="bold">&#x1F3AF; vimpc/.vimpcrc</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">vim</span></p></li></ul></div><pre class="block-body"><code>set windows playlist,browse,library,lists
+set window playlist
+
+&quot; Navigate up/down any window quickly.
+map &lt;Space&gt; 10j
+map &lt;BS&gt; 10k
+
+&quot; Make tab navigation reasonable. Unfortunately &lt;C-h&gt; cannot be bound as it
+&quot; conflicts with &lt;BS&gt;. So we have to use the Alt key instead.
+map &lt;A-h&gt; :tabprevious&lt;Enter&gt;
+map &lt;A-l&gt; :tabnext&lt;Enter&gt;
+
+&quot; Skip forward/backward 5 seconds.
+map h :seek- 5&lt;Enter&gt;
+map l :seek+ 5&lt;Enter&gt;
+
+&quot; Change songs.
+map H :previous&lt;Enter&gt;
+map L :next&lt;Enter&gt;
+
+map p :pause&lt;Enter&gt;
+
+&quot; &lt;C-c&gt; already exits vimpc.
+map &lt;C-d&gt; :qa&lt;Enter&gt;
+
+&quot; Go to current song.
+map c f
+
+&quot; Go to random song.
+map r %
+
+&quot; Increase volume.
+map = +</code></pre></div></div></div><div id="heading-container-h-9-zathura" class="heading-container"><h2 id="h-9-zathura"><span id="c-31" class="cell-idx"><a href="#h-9-zathura">9&ensp;zathura</a></span></h2><p><span id="c-32" class="cell-idx">Key bindings and the font for the <span class="code">zathura</span> document viewer.</span></p><div id="c-33" class="cell-idx"><div class="block-container src" id="b-zathurarc"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-zathurarc">&#x1F517;</a></div><div class="block-meta"><code>zathurarc</code><br><code><span class="bold">&#x1F3AF; zathura/zathurarc</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">conf</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="dt">map</span> <span class="kw">[normal]</span> <span class="op">=</span> <span class="dt">zoom</span> <span class="dt">in</span>
+<span class="dt">map</span> <span class="kw">[normal]</span> <span class="er">+</span> <span class="dt">zoom</span> <span class="dt">default</span>
+<span class="dt">map</span> <span class="kw">[normal]</span> <span class="dt">r</span> <span class="dt">reload</span>
+<span class="dt">map</span> <span class="kw">[normal]</span> <span class="dt">R</span> <span class="dt">rotate</span>
+<span class="dt">map</span> <span class="kw">[normal]</span> <span class="dt">h</span> <span class="dt">navigate</span> <span class="dt">previous</span>
+<span class="dt">map</span> <span class="kw">[normal]</span> <span class="dt">l</span> <span class="dt">navigate</span> <span class="dt">next</span>
+<span class="dt">map</span> <span class="kw">[normal]</span> <span class="er">&lt;</span><span class="dt">BackSpace</span><span class="er">&gt;</span> <span class="dt">scroll</span> <span class="dt">full-up</span>
+
+<span class="dt">set</span> <span class="dt">font</span> <span class="dt">&quot;CommitMono 9&quot;</span></code></pre></div></div></div><div id="heading-container-h-10-uim" class="heading-container"><h2 id="h-10-uim"><span id="c-34" class="cell-idx"><a href="#h-10-uim">10&ensp;uim</a></span></h2><p><span id="c-35" class="cell-idx">The <span class="code">uim</span> <a href="#b-Makefile-uim" class="internal-link" id="linkNumber-7">Makefile rule</a> links this to <span class="code">~/.uim</span>. It defines a custom Hangul layout for the <span class="code">byeoru</span> input method. The settings that uim saves automatically are in <span class="code">uim/customs</span>, which we don&#39;t manage here.</span></p><div id="c-36" class="cell-idx"><div class="block-container src" id="b-Makefile-uim"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-Makefile-uim">&#x1F517;</a></div><div class="block-meta"><code>Makefile-uim</code></div><div class="block-meta-other hidden"><p>Used by index.org→<a href="/index.html#b-Makefile-b-Makefile-uim" class="internal-link"><span class="verbatim">Makefile</span></a>.</p><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">makefile</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="dv">uim:</span>
+	ln -fns <span class="ch">${</span><span class="dt">C</span><span class="ch">}</span>/uim/.uim <span class="ch">${</span><span class="dt">H</span><span class="ch">}</span>/.uim
+	ln -fns <span class="ch">${</span><span class="dt">C</span><span class="ch">}</span>/uim <span class="ch">${</span><span class="dt">H</span><span class="ch">}</span>/.uim.d
+<a href="/vim.html#b-Makefile-vim" class="internal-link" id="b-Makefile-uim-b-Makefile-vim">Makefile-vim</a></code></pre></div></div><div id="c-37" class="cell-idx"><div class="block-container src" id="b-uim"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-uim">&#x1F517;</a></div><div class="block-meta"><code>uim</code><br><code><span class="bold">&#x1F3AF; uim/.uim</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">scheme</span></p></li></ul></div><pre class="block-body"><code class="sourceCode">(require-module <span class="st">&quot;byeoru&quot;</span>)
+(byeoru-define-layout byeoru-layout-hangul2
+
+(<span class="st">&quot;a&quot;</span> (jungseong-o <span class="op">.</span> <span class="dv">3</span>))
+(<span class="st">&quot;A&quot;</span> (jungseong-o <span class="op">.</span> <span class="dv">3</span>))
+
+(<span class="st">&quot;y&quot;</span> (jungseong-u <span class="op">.</span> <span class="dv">3</span>))
+(<span class="st">&quot;Y&quot;</span> (jungseong-u <span class="op">.</span> <span class="dv">3</span>))
+
+(<span class="st">&quot;i&quot;</span> (jungseong-eu <span class="op">.</span> <span class="dv">3</span>))
+(<span class="st">&quot;I&quot;</span> (jungseong-eu <span class="op">.</span> <span class="dv">3</span>))
+
+(<span class="st">&quot;x&quot;</span> (jungseong-yo <span class="op">.</span> <span class="dv">1</span>))
+(<span class="st">&quot;X&quot;</span> (jungseong-yo <span class="op">.</span> <span class="dv">1</span>))
+
+(<span class="st">&quot;o&quot;</span> (jungseong-eo <span class="op">.</span> <span class="dv">1</span>) (jungseong-eo <span class="op">.</span> <span class="dv">4</span>))
+(<span class="st">&quot;O&quot;</span> (jungseong-eo <span class="op">.</span> <span class="dv">1</span>) (jungseong-eo <span class="op">.</span> <span class="dv">4</span>))
+
+(<span class="st">&quot;e&quot;</span> (jungseong-a <span class="op">.</span> <span class="dv">1</span>) (jungseong-a <span class="op">.</span> <span class="dv">4</span>))
+(<span class="st">&quot;E&quot;</span> (jungseong-a <span class="op">.</span> <span class="dv">1</span>) (jungseong-a <span class="op">.</span> <span class="dv">4</span>))
+
+(<span class="st">&quot;q&quot;</span> (jungseong-yeo <span class="op">.</span> <span class="dv">1</span>))
+(<span class="st">&quot;Q&quot;</span> (jungseong-yeo <span class="op">.</span> <span class="dv">1</span>))
+
+(<span class="st">&quot;p&quot;</span> (jungseong-e <span class="op">.</span> <span class="dv">1</span>) (jungseong-e <span class="op">.</span> <span class="dv">4</span>))
+(<span class="st">&quot;P&quot;</span> (jungseong-ye <span class="op">.</span> <span class="dv">1</span>))
+
+(<span class="st">&quot;u&quot;</span> (jungseong-i <span class="op">.</span> <span class="dv">1</span>) (jungseong-i <span class="op">.</span> <span class="dv">4</span>))
+(<span class="st">&quot;U&quot;</span> (jungseong-i <span class="op">.</span> <span class="dv">1</span>) (jungseong-i <span class="op">.</span> <span class="dv">4</span>))
+
+(<span class="st">&quot;v&quot;</span> (jungseong-ya <span class="op">.</span> <span class="dv">1</span>))
+(<span class="st">&quot;V&quot;</span> (jungseong-ya <span class="op">.</span> <span class="dv">1</span>))
+
+(<span class="st">&quot;w&quot;</span> (jungseong-ae <span class="op">.</span> <span class="dv">1</span>) (jungseong-ae <span class="op">.</span> <span class="dv">4</span>))
+(<span class="st">&quot;W&quot;</span> (jungseong-yae <span class="op">.</span> <span class="dv">1</span>))
+
+(<span class="st">&quot;z&quot;</span> (jungseong-yu <span class="op">.</span> <span class="dv">1</span>))
+(<span class="st">&quot;Z&quot;</span> (jungseong-yu <span class="op">.</span> <span class="dv">1</span>))
+
+(<span class="st">&quot;f&quot;</span> (choseong-pieup <span class="op">.</span> <span class="dv">1</span>) (jongseong-pieup <span class="op">.</span> <span class="dv">1</span>) (jongseong-pieup <span class="op">.</span> <span class="dv">4</span>))
+(<span class="st">&quot;F&quot;</span> (choseong-pieup <span class="op">.</span> <span class="dv">1</span>) (jongseong-pieup <span class="op">.</span> <span class="dv">1</span>) (jongseong-pieup <span class="op">.</span> <span class="dv">4</span>))
+
+(<span class="st">&quot;h&quot;</span> (choseong-digeud <span class="op">.</span> <span class="dv">1</span>) (jongseong-digeud <span class="op">.</span> <span class="dv">1</span>))
+(<span class="st">&quot;H&quot;</span> (choseong-ssangdigeud <span class="op">.</span> <span class="dv">5</span>))
+
+(<span class="st">&quot;b&quot;</span> (choseong-kieuk <span class="op">.</span> <span class="dv">1</span>) (jongseong-kieuk <span class="op">.</span> <span class="dv">1</span>))
+(<span class="st">&quot;B&quot;</span> (choseong-kieuk <span class="op">.</span> <span class="dv">1</span>) (jongseong-kieuk <span class="op">.</span> <span class="dv">1</span>))
+
+(<span class="st">&quot;d&quot;</span> (choseong-mieum <span class="op">.</span> <span class="dv">1</span>) (jongseong-mieum <span class="op">.</span> <span class="dv">1</span>) (jongseong-mieum <span class="op">.</span> <span class="dv">4</span>))
+(<span class="st">&quot;D&quot;</span> (choseong-mieum <span class="op">.</span> <span class="dv">1</span>) (jongseong-mieum <span class="op">.</span> <span class="dv">1</span>) (jongseong-mieum <span class="op">.</span> <span class="dv">4</span>))
+
+(<span class="st">&quot;j&quot;</span> (choseong-nieun <span class="op">.</span> <span class="dv">1</span>) (jongseong-nieun <span class="op">.</span> <span class="dv">3</span>))
+(<span class="st">&quot;J&quot;</span> (choseong-nieun <span class="op">.</span> <span class="dv">1</span>) (jongseong-nieun <span class="op">.</span> <span class="dv">3</span>))
+
+(<span class="st">&quot;m&quot;</span> (choseong-tieut <span class="op">.</span> <span class="dv">1</span>) (jongseong-tieut <span class="op">.</span> <span class="dv">1</span>) (jongseong-tieut <span class="op">.</span> <span class="dv">4</span>))
+(<span class="st">&quot;M&quot;</span> (choseong-tieut <span class="op">.</span> <span class="dv">1</span>) (jongseong-tieut <span class="op">.</span> <span class="dv">1</span>) (jongseong-tieut <span class="op">.</span> <span class="dv">4</span>))
+
+(<span class="st">&quot;t&quot;</span> (choseong-sios <span class="op">.</span> <span class="dv">1</span>) (jongseong-sios <span class="op">.</span> <span class="dv">1</span>) (jongseong-sios <span class="op">.</span> <span class="dv">4</span>))
+(<span class="st">&quot;T&quot;</span> (choseong-ssangsios <span class="op">.</span> <span class="dv">5</span>) (jongseong-ssangsios <span class="op">.</span> <span class="dv">5</span>))
+
+(<span class="st">&quot;k&quot;</span> (choseong-ieung <span class="op">.</span> <span class="dv">1</span>) (jongseong-ieung <span class="op">.</span> <span class="dv">1</span>))
+(<span class="st">&quot;K&quot;</span> (choseong-ieung <span class="op">.</span> <span class="dv">1</span>) (jongseong-ieung <span class="op">.</span> <span class="dv">1</span>))
+
+(<span class="st">&quot;g&quot;</span> (choseong-jieuj <span class="op">.</span> <span class="dv">1</span>) (jongseong-jieuj <span class="op">.</span> <span class="dv">1</span>) (jongseong-jieuj <span class="op">.</span> <span class="dv">4</span>))
+(<span class="st">&quot;G&quot;</span> (choseong-ssangjieuj <span class="op">.</span> <span class="dv">5</span>))
+
+(<span class="st">&quot;r&quot;</span> (choseong-hieuh <span class="op">.</span> <span class="dv">1</span>) (jongseong-hieuh <span class="op">.</span> <span class="dv">1</span>) (jongseong-hieuh <span class="op">.</span> <span class="dv">4</span>))
+(<span class="st">&quot;R&quot;</span> (choseong-hieuh <span class="op">.</span> <span class="dv">1</span>) (jongseong-hieuh <span class="op">.</span> <span class="dv">1</span>) (jongseong-hieuh <span class="op">.</span> <span class="dv">4</span>))
+
+(<span class="st">&quot;l&quot;</span> (choseong-giyeog <span class="op">.</span> <span class="dv">1</span>) (jongseong-giyeog <span class="op">.</span> <span class="dv">3</span>) (jongseong-giyeog <span class="op">.</span> <span class="dv">4</span>))
+(<span class="st">&quot;L&quot;</span> (choseong-ssanggiyeog <span class="op">.</span> <span class="dv">5</span>) (jongseong-ssanggiyeog <span class="op">.</span> <span class="dv">5</span>))
+
+(<span class="st">&quot;c&quot;</span> (choseong-bieub <span class="op">.</span> <span class="dv">1</span>) (jongseong-bieub <span class="op">.</span> <span class="dv">3</span>) (jongseong-bieub <span class="op">.</span> <span class="dv">4</span>))
+(<span class="st">&quot;C&quot;</span> (choseong-ssangbieub <span class="op">.</span> <span class="dv">5</span>))
+
+(<span class="st">&quot;n&quot;</span> (choseong-rieul <span class="op">.</span> <span class="dv">1</span>) (jongseong-rieul <span class="op">.</span> <span class="dv">3</span>))
+(<span class="st">&quot;N&quot;</span> (choseong-rieul <span class="op">.</span> <span class="dv">1</span>) (jongseong-rieul <span class="op">.</span> <span class="dv">3</span>))
+
+(<span class="st">&quot;s&quot;</span> (choseong-chieuch <span class="op">.</span> <span class="dv">1</span>) (jongseong-chieuch <span class="op">.</span> <span class="dv">1</span>))
+(<span class="st">&quot;S&quot;</span> (choseong-chieuch <span class="op">.</span> <span class="dv">1</span>) (jongseong-chieuch <span class="op">.</span> <span class="dv">1</span>))
+
+)</code></pre></div></div></div><div id="heading-container-h--Page-metrics" class="heading-container page-metrics"><h2 id="h--Page-metrics"><a href="#h--Page-metrics">Page metrics</a></h2></div><div id="heading-container-h--Backlinks" class="heading-container backlinks"><h3 id="h--Backlinks"><a href="#h--Backlinks">Backlinks (0)</a></h3></div><div id="heading-container-h--Tangled-files" class="heading-container tangled-blocks"><h3 id="h--Tangled-files"><a href="#h--Tangled-files">Tangled files (12)</a></h3><ol><li><a href="#b-jjui-config" class="verbatim">jjui/config.toml</a></li><li><a href="#b-lesskey" class="verbatim">lesskey/cfg</a></li><li><a href="#b-melby-systemd-env" class="verbatim">melby/systemd/env</a></li><li><a href="#b-mpd-conf" class="verbatim">mpd/mpd.conf</a></li><li><a href="#b-pulse-daemon.conf.k0" class="verbatim">pulse/daemon.conf.k0</a></li><li><a href="#b-pulse-default.pa" class="verbatim">pulse/default.pa</a></li><li><a href="#b-pulse-default.pa.k0" class="verbatim">pulse/default.pa.k0</a></li><li><a href="#b-ssh-config" class="verbatim">ssh/config.home.conf</a></li><li><a href="#b-xterm-24bit" class="verbatim">terminfo/xterm-24bit.terminfo</a></li><li><a href="#b-uim" class="verbatim">uim/.uim</a></li><li><a href="#b-vimpcrc" class="verbatim">vimpc/.vimpcrc</a></li><li><a href="#b-zathurarc" class="verbatim">zathura/zathurarc</a></li></ol></div><div id="heading-container-h--Named-cells" class="heading-container named-cells"><h3 id="h--Named-cells"><a href="#h--Named-cells">Named cells (17)</a></h3><ol><li><a href="#b-Makefile-lesskey"><span class="verbatim">Makefile-lesskey</span></a></li><li><a href="#b-Makefile-pulse"><span class="verbatim">Makefile-pulse</span></a></li><li><a href="#b-Makefile-ssh"><span class="verbatim">Makefile-ssh</span></a></li><li><a href="#b-Makefile-terminfo"><span class="verbatim">Makefile-terminfo</span></a></li><li><a href="#b-Makefile-uim"><span class="verbatim">Makefile-uim</span></a></li><li><a href="#b-jjui-config"><span class="verbatim">jjui-config</span></a></li><li><a href="#b-lesskey"><span class="verbatim">lesskey</span></a></li><li><a href="#b-melby-systemd-env"><span class="verbatim">melby-systemd-env</span></a></li><li><a href="#b-mpd-conf"><span class="verbatim">mpd-conf</span></a></li><li><a href="#b-pulse-daemon.conf.k0"><span class="verbatim">pulse-daemon.conf.k0</span></a></li><li><a href="#b-pulse-default.pa"><span class="verbatim">pulse-default.pa</span></a></li><li><a href="#b-pulse-default.pa.k0"><span class="verbatim">pulse-default.pa.k0</span></a></li><li><a href="#b-ssh-config"><span class="verbatim">ssh-config</span></a></li><li><a href="#b-uim"><span class="verbatim">uim</span></a></li><li><a href="#b-vimpcrc"><span class="verbatim">vimpcrc</span></a></li><li><a href="#b-xterm-24bit"><span class="verbatim">xterm-24bit</span></a></li><li><a href="#b-zathurarc"><span class="verbatim">zathurarc</span></a></li></ol></div><footer><div class="lilac-stamp">Generated by <a href="https://lilac.funloop.org" class="external-link" target="_blank" rel="noopener noreferrer">Lilac</a></div></footer></main><script id="heading-ancestry" type="application/json">{"h--Backlinks":["h--Page-metrics"],"h--Named-cells":["h--Page-metrics"],"h--Page-metrics":[],"h--Tangled-files":["h--Page-metrics"],"h-1-jjui":[],"h-10-uim":[],"h-2-less":[],"h-3-Melby":[],"h-4-MPD":[],"h-5-PulseAudio":[],"h-6-SSH":[],"h-7-terminfo":[],"h-8-vimpc":[],"h-9-zathura":[]}</script><script id="lilac-fe-script" src="/js/lilac.js"></script></body></html>

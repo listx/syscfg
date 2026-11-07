@@ -1,0 +1,222 @@
+<!DOCTYPE HTML><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>rTorrent</title><link rel="stylesheet" href="/css/default.css"><link rel="shortcut icon" type="image/png" href="/favicon.png"><link rel="stylesheet" href="/vendor/source-fonts/source-fonts.css">
+<script>
+  window.MathJax = {
+      loader: { paths: { "mathjax-newcm": "/vendor/mathjax-newcm-font" } },
+      output: { font: "mathjax-newcm" },
+  tex: {
+      tags: 'ams'
+  },
+  options: {
+      ignoreHtmlClass: 'verbatim|code'
+  }
+};
+</script>
+<script id="MathJax-script" async="" src="/vendor/mathjax/tex-mml-chtml.js"></script>
+</head><body><div class="navbar"><button id="hamburger" class="tocs-toggle-button" aria-label="Toggle table of contents sidebar">&#x2630;</button><div class="breadcrumbs"><a href="https://syscfg.funloop.org"><span class="breadcrumb">Linus Arver&#39;s Dotfiles</span></a> <a href="https://github.com/listx/syscfg" class="repo-link" title="Source repository" aria-label="Source repository"><svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 16 16"
+     aria-hidden="true">
+<g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+<circle cx="4" cy="3" r="1.75"></circle>
+<circle cx="4" cy="13" r="1.75"></circle>
+<circle cx="12" cy="3" r="1.75"></circle>
+<path d="M4 4.75v6.5"></path>
+<path d="M12 4.75c0 4-8 3-8 6.5"></path>
+</g>
+</svg>
+</a> <span class="breadcrumb-separator">/</span> <a href="#top"><span class="breadcrumb">rtorrent.org</span></a></div></div><nav id="tocs"><p class="widget-title gtoc-title">Site contents</p><nav class="gtoc"><ul><li><a href="/index.html">Introduction</a></li><li><a href="/bash.html">Bash</a></li><li><a href="/claude.html">Claude</a></li><li><a href="/clojure.html">Clojure</a></li><li><a href="/emacs.html">Emacs</a></li><li><a href="/git.html">Git</a></li><li><a href="/gpg.html">GnuPG</a></li><li><a href="/jj.html">Jujutsu</a></li><li><a href="/keybindings.html">Keybindings (WIP)</a></li><li><a href="/misc.html">Miscellaneous</a></li><li><a href="/mpv.html">mpv</a></li><li><a href="/nix.html">Nix</a></li><li><a href="/notmuch.html">Notmuch</a></li><li><a href="/qutebrowser.html">qutebrowser</a></li><li><a href="/rtorrent.html" class="bold">rTorrent</a></li><li><a href="/script/index.html">System scripts</a></li><li><a href="/tmux.html">tmux</a></li><li><a href="/vim.html">Vim</a></li><li><a href="/wezterm.html">Wezterm</a></li><li><a href="/xmonad.html">xmonad</a></li><li><a href="/xorg.html">X.Org</a></li><li><a href="/zsh/index.html">Zsh</a></li></ul></nav><p class="widget-title toc-title">Page contents</p><nav class="toc"><div class="toc-entries"><ol><li class="toc-level-1"><div class="toc-entry"><span class="toc-counter">1</span><a href="#h-1-Default-configuration">Default configuration</a></div></li><li class="toc-level-1"><div class="toc-entry"><span class="toc-counter">2</span><a href="#h-2-k1-configuration"><span class="code">k1</span> configuration</a></div></li><li class="toc-level-1"><div class="toc-entry"><a href="#h--Page-metrics">Page metrics</a></div><ol><li class="toc-level-2"><div class="toc-entry"><a href="#h--Backlinks">Backlinks</a></div></li><li class="toc-level-2"><div class="toc-entry"><a href="#h--Tangled-files">Tangled files</a></div></li><li class="toc-level-2"><div class="toc-entry"><a href="#h--Named-cells">Named cells</a></div></li></ol></li></ol></div></nav></nav><main><h1 id="top">rTorrent</h1><hr class="title-underline"><p><span id="c-0" class="cell-idx">These are based on rTorrent&#39;s example configuration, so most of the options are commented out.</span></p><div id="heading-container-h-1-Default-configuration" class="heading-container"><h2 id="h-1-Default-configuration"><span id="c-1" class="cell-idx"><a href="#h-1-Default-configuration">1&ensp;Default configuration</a></span></h2><p><span id="c-2" class="cell-idx">The <span class="code">rtorrent</span> <a href="#b-Makefile-rtorrent" class="internal-link" id="linkNumber-1">Makefile rule</a> links this to <span class="code">~/.rtorrent.rc</span>.</span></p><div id="c-3" class="cell-idx"><div class="block-container src" id="b-Makefile-rtorrent"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-Makefile-rtorrent">&#x1F517;</a></div><div class="block-meta"><code>Makefile-rtorrent</code></div><div class="block-meta-other hidden"><p>Used by index.org→<a href="/index.html#b-Makefile-b-Makefile-rtorrent" class="internal-link"><span class="verbatim">Makefile</span></a>.</p><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">makefile</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="dv">rtorrent:</span>
+	ln -fs <span class="ch">${</span><span class="dt">C</span><span class="ch">}</span>/rtorrent/cfg <span class="ch">${</span><span class="dt">H</span><span class="ch">}</span>/.rtorrent.rc</code></pre></div></div><div id="c-4" class="cell-idx"><div class="block-container src" id="b-rtorrent-cfg"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-rtorrent-cfg">&#x1F517;</a></div><div class="block-meta"><code>rtorrent-cfg</code><br><code><span class="bold">&#x1F3AF; rtorrent/cfg</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">conf</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="co"># This is an example resource file for rTorrent. Copy to</span>
+<span class="co"># ~/.rtorrent.rc and enable/modify the options as needed. Remember to</span>
+<span class="co"># uncomment the options you wish to enable.</span>
+
+<span class="co"># Maximum and minimum number of peers to connect to per torrent.</span>
+<span class="co">#min_peers = 40</span>
+<span class="co">#max_peers = 100</span>
+
+<span class="co"># Same as above but for seeding completed torrents (-1 = same as downloading)</span>
+<span class="co">#min_peers_seed = 10</span>
+<span class="co">#max_peers_seed = 50</span>
+
+<span class="co"># Maximum number of simultanious uploads per torrent.</span>
+<span class="co">#max_uploads = 15</span>
+
+<span class="co"># Global upload and download rate in KiB. &quot;0&quot; for unlimited.</span>
+<span class="co">#download_rate = 0</span>
+<span class="dt">upload_rate</span> <span class="op">=</span> <span class="dv">1024</span>
+
+<span class="co"># Default directory to save the downloaded torrents.</span>
+<span class="dt">directory</span> <span class="op">=</span> <span class="er">~/</span><span class="dt">bittor</span>
+
+<span class="co"># Default session directory. Make sure you don&#39;t run multiple instance</span>
+<span class="co"># of rtorrent using the same session directory. Perhaps using a</span>
+<span class="co"># relative path?</span>
+<span class="dt">session</span> <span class="op">=</span> <span class="er">~/</span><span class="dt">bittor</span><span class="er">/</span><span class="dt">session</span>
+
+<span class="co"># Watch a directory for new torrents, and stop those that have been</span>
+<span class="co"># deleted.</span>
+<span class="dt">schedule</span> <span class="op">=</span> <span class="dt">watch_directory</span><span class="er">,</span><span class="dt">5</span><span class="er">,</span><span class="dt">5</span><span class="er">,</span><span class="dt">load.start_verbose</span><span class="op">=</span><span class="er">~/</span><span class="dt">bittor</span><span class="er">/*</span><span class="dt">.torrent</span>
+<span class="dt">schedule</span> <span class="op">=</span> <span class="dt">untied_directory</span><span class="er">,</span><span class="dt">5</span><span class="er">,</span><span class="dt">5</span><span class="er">,</span><span class="dt">stop_untied</span><span class="op">=</span>
+
+<span class="co"># Close torrents when diskspace is low.</span>
+<span class="co">#schedule = low_diskspace,5,60,close_low_diskspace=100M</span>
+
+<span class="co"># The ip address reported to the tracker.</span>
+<span class="co">#ip = 127.0.0.1</span>
+<span class="co">#ip = rakshasa.no</span>
+
+<span class="co"># The ip address the listening socket and outgoing connections is</span>
+<span class="co"># bound to.</span>
+<span class="co">#bind = 127.0.0.1</span>
+<span class="co">#bind = rakshasa.no</span>
+
+<span class="co"># Port range to use for listening.</span>
+<span class="co">#port_range = 6890-6999</span>
+
+<span class="co"># Start opening ports at a random position within the port range.</span>
+<span class="co">#port_random = no</span>
+
+<span class="co"># Check hash for finished torrents. Might be usefull until the bug is</span>
+<span class="co"># fixed that causes lack of diskspace not to be properly reported.</span>
+<span class="co">#check_hash = no</span>
+
+<span class="co"># Set whether the client should try to connect to UDP trackers.</span>
+<span class="co">#use_udp_trackers = yes</span>
+
+<span class="co"># Alternative calls to bind and ip that should handle dynamic ip&#39;s.</span>
+<span class="co">#schedule = ip_tick,0,1800,ip=rakshasa</span>
+<span class="co">#schedule = bind_tick,0,1800,bind=rakshasa</span>
+
+<span class="co"># Encryption options, set to none (default) or any combination of the following:</span>
+<span class="co"># allow_incoming, try_outgoing, require, require_RC4, enable_retry, prefer_plaintext</span>
+<span class="co">#</span>
+<span class="co"># The example value allows incoming encrypted connections, starts unencrypted</span>
+<span class="co"># outgoing connections but retries with encryption if they fail, preferring</span>
+<span class="co"># plaintext to RC4 encryption after the encrypted handshake</span>
+<span class="co">#</span>
+<span class="co"># encryption = allow_incoming,enable_retry,prefer_plaintext</span>
+
+<span class="co"># Enable DHT support for trackerless torrents or when all trackers are down.</span>
+<span class="co"># May be set to &quot;disable&quot; (completely disable DHT), &quot;off&quot; (do not start DHT),</span>
+<span class="co"># &quot;auto&quot; (start and stop DHT as needed), or &quot;on&quot; (start DHT immediately).</span>
+<span class="co"># The default is &quot;off&quot;. For DHT to work, a session directory must be defined.</span>
+<span class="co">#</span>
+<span class="co"># dht = auto</span>
+
+<span class="co"># UDP port to use for DHT.</span>
+<span class="co">#</span>
+<span class="co"># dht_port = 6881</span>
+
+<span class="co"># Enable peer exchange (for torrents not marked private)</span>
+<span class="co">#</span>
+<span class="co"># peer_exchange = yes</span></code></pre></div></div></div><div id="heading-container-h-2-k1-configuration" class="heading-container"><h2 id="h-2-k1-configuration"><span id="c-5" class="cell-idx"><a href="#h-2-k1-configuration">2&ensp;<span class="code">k1</span> configuration</a></span></h2><p><span id="c-6" class="cell-idx">This variant has a much lower upload rate, closes torrents when disk space is low, and removes torrents once they reach a seeding ratio. The <a href="#b-Makefile-rtorrent" class="internal-link" id="linkNumber-2">Makefile rule</a> doesn&#39;t link this one, so we have to do that by hand.</span></p><div id="c-7" class="cell-idx"><div class="block-container src" id="b-rtorrent-cfg-k1"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-rtorrent-cfg-k1">&#x1F517;</a></div><div class="block-meta"><code>rtorrent-cfg-k1</code><br><code><span class="bold">&#x1F3AF; rtorrent/cfg-k1</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">conf</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="co"># This is an example resource file for rTorrent. Copy to</span>
+<span class="co"># ~/.rtorrent.rc and enable/modify the options as needed. Remember to</span>
+<span class="co"># uncomment the options you wish to enable.</span>
+
+<span class="co"># Maximum and minimum number of peers to connect to per torrent.</span>
+<span class="co">#min_peers = 40</span>
+<span class="co">#max_peers = 100</span>
+
+<span class="co"># Same as above but for seeding completed torrents (-1 = same as downloading)</span>
+<span class="co">#min_peers_seed = 10</span>
+<span class="co">#max_peers_seed = 50</span>
+
+<span class="co"># Maximum number of simultanious uploads per torrent.</span>
+<span class="co">#max_uploads = 15</span>
+
+<span class="co"># Global upload and download rate in KiB. &quot;0&quot; for unlimited.</span>
+<span class="co">#download_rate = 0</span>
+<span class="dt">upload_rate</span> <span class="op">=</span> <span class="dv">10</span>
+
+<span class="co"># Default directory to save the downloaded torrents.</span>
+<span class="dt">directory</span> <span class="op">=</span> <span class="er">~/</span><span class="dt">bittor</span>
+
+<span class="co"># Default session directory. Make sure you don&#39;t run multiple instance</span>
+<span class="co"># of rtorrent using the same session directory. Perhaps using a</span>
+<span class="co"># relative path?</span>
+<span class="dt">session</span> <span class="op">=</span> <span class="er">~/</span><span class="dt">bittor</span><span class="er">/</span><span class="dt">session</span>
+
+<span class="co"># Watch a directory for new torrents, and stop those that have been</span>
+<span class="co"># deleted.</span>
+<span class="dt">schedule</span> <span class="op">=</span> <span class="dt">watch_directory</span><span class="er">,</span><span class="dt">5</span><span class="er">,</span><span class="dt">5</span><span class="er">,</span><span class="dt">load_start</span><span class="op">=</span><span class="er">~/</span><span class="dt">bittor</span><span class="er">/*</span><span class="dt">.torrent</span>
+<span class="dt">schedule</span> <span class="op">=</span> <span class="dt">untied_directory</span><span class="er">,</span><span class="dt">5</span><span class="er">,</span><span class="dt">5</span><span class="er">,</span><span class="dt">stop_untied</span><span class="op">=</span>
+
+<span class="co"># Close torrents when diskspace is low.</span>
+<span class="dt">schedule</span> <span class="op">=</span> <span class="dt">low_diskspace</span><span class="er">,</span><span class="dt">5</span><span class="er">,</span><span class="dt">60</span><span class="er">,</span><span class="dt">close_low_diskspace</span><span class="op">=</span><span class="dv">100</span><span class="dt">M</span>
+
+<span class="co"># Enable the default ratio group.</span>
+<span class="dt">ratio.enable</span><span class="op">=</span>
+
+<span class="co"># Change the limits, the defaults should be sufficient.</span>
+<span class="dt">ratio.min.set</span><span class="op">=</span><span class="dv">100</span>
+<span class="dt">ratio.max.set</span><span class="op">=</span><span class="dv">150</span>
+<span class="dt">ratio.upload.set</span><span class="op">=</span><span class="dv">1</span><span class="dt">M</span>
+
+<span class="co"># Changing the command triggered when the ratio is reached.</span>
+<span class="dt">system.method.set</span> <span class="op">=</span> <span class="dt">group.seeding.ratio.command</span><span class="er">,</span> <span class="dt">d.close</span><span class="op">=</span><span class="er">,</span> <span class="dt">d.erase</span><span class="op">=</span>
+
+<span class="co"># The ip address reported to the tracker.</span>
+<span class="co">#ip = 127.0.0.1</span>
+<span class="co">#ip = rakshasa.no</span>
+
+<span class="co"># The ip address the listening socket and outgoing connections is</span>
+<span class="co"># bound to.</span>
+<span class="co">#bind = 127.0.0.1</span>
+<span class="co">#bind = rakshasa.no</span>
+
+<span class="co"># Port range to use for listening.</span>
+<span class="dt">port_range</span> <span class="op">=</span> <span class="dv">6890</span><span class="dt">-6999</span>
+
+<span class="co"># Start opening ports at a random position within the port range.</span>
+<span class="dt">port_random</span> <span class="op">=</span> <span class="dt">yes</span>
+
+<span class="co"># Check hash for finished torrents. Might be usefull until the bug is</span>
+<span class="co"># fixed that causes lack of diskspace not to be properly reported.</span>
+<span class="co">#check_hash = no</span>
+
+<span class="co"># Set whetever the client should try to connect to UDP trackers.</span>
+<span class="dt">use_udp_trackers</span> <span class="op">=</span> <span class="dt">yes</span>
+
+<span class="co"># Alternative calls to bind and ip that should handle dynamic ip&#39;s.</span>
+<span class="co">#schedule = ip_tick,0,1800,ip=rakshasa</span>
+<span class="co">#schedule = bind_tick,0,1800,bind=rakshasa</span>
+
+<span class="co"># Encryption options, set to none (default) or any combination of the following:</span>
+<span class="co"># allow_incoming, try_outgoing, require, require_RC4, enable_retry, prefer_plaintext</span>
+<span class="co">#</span>
+<span class="co"># The example value allows incoming encrypted connections, starts unencrypted</span>
+<span class="co"># outgoing connections but retries with encryption if they fail, preferring</span>
+<span class="co"># plaintext to RC4 encryption after the encrypted handshake</span>
+<span class="co">#</span>
+<span class="co"># encryption = allow_incoming,enable_retry,prefer_plaintext</span>
+
+<span class="co"># Enable DHT support for trackerless torrents or when all trackers are down.</span>
+<span class="co"># May be set to &quot;disable&quot; (completely disable DHT), &quot;off&quot; (do not start DHT),</span>
+<span class="co"># &quot;auto&quot; (start and stop DHT as needed), or &quot;on&quot; (start DHT immediately).</span>
+<span class="co"># The default is &quot;off&quot;. For DHT to work, a session directory must be defined.</span>
+<span class="co">#</span>
+<span class="dt">dht</span> <span class="op">=</span> <span class="dt">auto</span>
+
+<span class="co"># UDP port to use for DHT.</span>
+<span class="co">#</span>
+<span class="dt">dht_port</span> <span class="op">=</span> <span class="dv">6881</span>
+
+<span class="co"># Enable peer exchange (for torrents not marked private)</span>
+<span class="co">#</span>
+<span class="dt">peer_exchange</span> <span class="op">=</span> <span class="dt">yes</span>
+
+<span class="co">#</span>
+<span class="co"># Do not modify the following parameters unless you know what you&#39;re doing.</span>
+<span class="co">#</span>
+
+<span class="co"># Hash read-ahead controls how many MB to request the kernel to read</span>
+<span class="co"># ahead. If the value is too low the disk may not be fully utilized,</span>
+<span class="co"># while if too high the kernel might not be able to keep the read</span>
+<span class="co"># pages in memory thus end up trashing.</span>
+<span class="co">#hash_read_ahead = 10</span>
+
+<span class="co"># Interval between attempts to check the hash, in milliseconds.</span>
+<span class="co">#hash_interval = 100</span>
+
+<span class="co"># Number of attempts to check the hash while using the mincore status,</span>
+<span class="co"># before forcing. Overworked systems might need lower values to get a</span>
+<span class="co"># decent hash checking rate.</span>
+<span class="co">#hash_max_tries = 10</span></code></pre></div></div></div><div id="heading-container-h--Page-metrics" class="heading-container page-metrics"><h2 id="h--Page-metrics"><a href="#h--Page-metrics">Page metrics</a></h2></div><div id="heading-container-h--Backlinks" class="heading-container backlinks"><h3 id="h--Backlinks"><a href="#h--Backlinks">Backlinks (0)</a></h3></div><div id="heading-container-h--Tangled-files" class="heading-container tangled-blocks"><h3 id="h--Tangled-files"><a href="#h--Tangled-files">Tangled files (2)</a></h3><ol><li><a href="#b-rtorrent-cfg" class="verbatim">rtorrent/cfg</a></li><li><a href="#b-rtorrent-cfg-k1" class="verbatim">rtorrent/cfg-k1</a></li></ol></div><div id="heading-container-h--Named-cells" class="heading-container named-cells"><h3 id="h--Named-cells"><a href="#h--Named-cells">Named cells (3)</a></h3><ol><li><a href="#b-Makefile-rtorrent"><span class="verbatim">Makefile-rtorrent</span></a></li><li><a href="#b-rtorrent-cfg"><span class="verbatim">rtorrent-cfg</span></a></li><li><a href="#b-rtorrent-cfg-k1"><span class="verbatim">rtorrent-cfg-k1</span></a></li></ol></div><footer><div class="lilac-stamp">Generated by <a href="https://lilac.funloop.org" class="external-link" target="_blank" rel="noopener noreferrer">Lilac</a></div></footer></main><script id="heading-ancestry" type="application/json">{"h--Backlinks":["h--Page-metrics"],"h--Named-cells":["h--Page-metrics"],"h--Page-metrics":[],"h--Tangled-files":["h--Page-metrics"],"h-1-Default-configuration":[],"h-2-k1-configuration":[]}</script><script id="lilac-fe-script" src="/js/lilac.js"></script></body></html>

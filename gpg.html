@@ -1,0 +1,240 @@
+<!DOCTYPE HTML><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>GnuPG</title><link rel="stylesheet" href="/css/default.css"><link rel="shortcut icon" type="image/png" href="/favicon.png"><link rel="stylesheet" href="/vendor/source-fonts/source-fonts.css">
+<script>
+  window.MathJax = {
+      loader: { paths: { "mathjax-newcm": "/vendor/mathjax-newcm-font" } },
+      output: { font: "mathjax-newcm" },
+  tex: {
+      tags: 'ams'
+  },
+  options: {
+      ignoreHtmlClass: 'verbatim|code'
+  }
+};
+</script>
+<script id="MathJax-script" async="" src="/vendor/mathjax/tex-mml-chtml.js"></script>
+</head><body><div class="navbar"><button id="hamburger" class="tocs-toggle-button" aria-label="Toggle table of contents sidebar">&#x2630;</button><div class="breadcrumbs"><a href="https://syscfg.funloop.org"><span class="breadcrumb">Linus Arver&#39;s Dotfiles</span></a> <a href="https://github.com/listx/syscfg" class="repo-link" title="Source repository" aria-label="Source repository"><svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 16 16"
+     aria-hidden="true">
+<g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+<circle cx="4" cy="3" r="1.75"></circle>
+<circle cx="4" cy="13" r="1.75"></circle>
+<circle cx="12" cy="3" r="1.75"></circle>
+<path d="M4 4.75v6.5"></path>
+<path d="M12 4.75c0 4-8 3-8 6.5"></path>
+</g>
+</svg>
+</a> <span class="breadcrumb-separator">/</span> <a href="#top"><span class="breadcrumb">gpg.org</span></a></div></div><nav id="tocs"><p class="widget-title gtoc-title">Site contents</p><nav class="gtoc"><ul><li><a href="/index.html">Introduction</a></li><li><a href="/bash.html">Bash</a></li><li><a href="/claude.html">Claude</a></li><li><a href="/clojure.html">Clojure</a></li><li><a href="/emacs.html">Emacs</a></li><li><a href="/git.html">Git</a></li><li><a href="/gpg.html" class="bold">GnuPG</a></li><li><a href="/jj.html">Jujutsu</a></li><li><a href="/keybindings.html">Keybindings (WIP)</a></li><li><a href="/misc.html">Miscellaneous</a></li><li><a href="/mpv.html">mpv</a></li><li><a href="/nix.html">Nix</a></li><li><a href="/notmuch.html">Notmuch</a></li><li><a href="/qutebrowser.html">qutebrowser</a></li><li><a href="/rtorrent.html">rTorrent</a></li><li><a href="/script/index.html">System scripts</a></li><li><a href="/tmux.html">tmux</a></li><li><a href="/vim.html">Vim</a></li><li><a href="/wezterm.html">Wezterm</a></li><li><a href="/xmonad.html">xmonad</a></li><li><a href="/xorg.html">X.Org</a></li><li><a href="/zsh/index.html">Zsh</a></li></ul></nav><p class="widget-title toc-title">Page contents</p><nav class="toc"><div class="toc-entries"><ol><li class="toc-level-1"><div class="toc-entry"><span class="toc-counter">1</span><a href="#h-1-gpg.conf"><span class="code">gpg.conf</span></a></div></li><li class="toc-level-1"><div class="toc-entry"><span class="toc-counter">2</span><a href="#h-2-gpg-agent.conf"><span class="code">gpg-agent.conf</span></a></div></li><li class="toc-level-1"><div class="toc-entry"><a href="#h--Page-metrics">Page metrics</a></div><ol><li class="toc-level-2"><div class="toc-entry"><a href="#h--Backlinks">Backlinks</a></div></li><li class="toc-level-2"><div class="toc-entry"><a href="#h--Tangled-files">Tangled files</a></div></li><li class="toc-level-2"><div class="toc-entry"><a href="#h--Named-cells">Named cells</a></div></li></ol></li></ol></div></nav></nav><main><h1 id="top">GnuPG</h1><hr class="title-underline"><div id="heading-container-h-1-gpg.conf" class="heading-container"><h2 id="h-1-gpg.conf"><span id="c-0" class="cell-idx"><a href="#h-1-gpg.conf">1&ensp;<span class="code">gpg.conf</span></a></span></h2><p><span id="c-1" class="cell-idx">This is mostly GnuPG&#39;s stock options file with its explanatory comments. The only settings we turn on are <span class="code">require-cross-certification</span> and a keyserver.</span></p><div id="c-2" class="cell-idx"><div class="block-container src" id="b-gpg.conf"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-gpg.conf">&#x1F517;</a></div><div class="block-meta"><code>gpg.conf</code><br><code><span class="bold">&#x1F3AF; gpg/gpg.conf</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">conf</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="co"># Options for GnuPG</span>
+<span class="co"># Copyright 1998, 1999, 2000, 2001, 2002, 2003,</span>
+<span class="co">#           2010 Free Software Foundation, Inc.</span>
+<span class="co">#</span>
+<span class="co"># This file is free software; as a special exception the author gives</span>
+<span class="co"># unlimited permission to copy and/or distribute it, with or without</span>
+<span class="co"># modifications, as long as this notice is preserved.</span>
+<span class="co">#</span>
+<span class="co"># This file is distributed in the hope that it will be useful, but</span>
+<span class="co"># WITHOUT ANY WARRANTY, to the extent permitted by law; without even the</span>
+<span class="co"># implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.</span>
+<span class="co">#</span>
+<span class="co"># Unless you specify which option file to use (with the command line</span>
+<span class="co"># option &quot;--options filename&quot;), GnuPG uses the file ~/.gnupg/gpg.conf</span>
+<span class="co"># by default.</span>
+<span class="co">#</span>
+<span class="co"># An options file can contain any long options which are available in</span>
+<span class="co"># GnuPG. If the first non white space character of a line is a &#39;#&#39;,</span>
+<span class="co"># this line is ignored.  Empty lines are also ignored.</span>
+<span class="co">#</span>
+<span class="co"># See the man page for a list of options.</span>
+
+<span class="co"># Uncomment the following option to get rid of the copyright notice</span>
+
+<span class="co">#no-greeting</span>
+
+<span class="co"># If you have more than 1 secret key in your keyring, you may want to</span>
+<span class="co"># uncomment the following option and set your preferred keyid.</span>
+
+<span class="co">#default-key 621CC013</span>
+
+<span class="co"># If you do not pass a recipient to gpg, it will ask for one.  Using</span>
+<span class="co"># this option you can encrypt to a default key.  Key validation will</span>
+<span class="co"># not be done in this case.  The second form uses the default key as</span>
+<span class="co"># default recipient.</span>
+
+<span class="co">#default-recipient some-user-id</span>
+<span class="co">#default-recipient-self</span>
+
+<span class="co"># By default GnuPG creates version 4 signatures for data files as</span>
+<span class="co"># specified by OpenPGP.  Some earlier (PGP 6, PGP 7) versions of PGP</span>
+<span class="co"># require the older version 3 signatures.  Setting this option forces</span>
+<span class="co"># GnuPG to create version 3 signatures.</span>
+
+<span class="co">#force-v3-sigs</span>
+
+<span class="co"># Because some mailers change lines starting with &quot;From &quot; to &quot;&gt;From &quot;</span>
+<span class="co"># it is good to handle such lines in a special way when creating</span>
+<span class="co"># cleartext signatures; all other PGP versions do it this way too.</span>
+<span class="co"># To enable full OpenPGP compliance you may want to use this option.</span>
+
+<span class="co">#no-escape-from-lines</span>
+
+<span class="co"># When verifying a signature made from a subkey, ensure that the cross</span>
+<span class="co"># certification &quot;back signature&quot; on the subkey is present and valid.</span>
+<span class="co"># This protects against a subtle attack against subkeys that can sign.</span>
+<span class="co"># Defaults to --no-require-cross-certification.  However for new</span>
+<span class="co"># installations it should be enabled.</span>
+
+<span class="dt">require-cross-certification</span>
+
+
+<span class="co"># If you do not use the Latin-1 (ISO-8859-1) charset, you should tell</span>
+<span class="co"># GnuPG which is the native character set.  Please check the man page</span>
+<span class="co"># for supported character sets.  This character set is only used for</span>
+<span class="co"># metadata and not for the actual message which does not undergo any</span>
+<span class="co"># translation.  Note that future version of GnuPG will change to UTF-8</span>
+<span class="co"># as default character set.</span>
+
+<span class="co">#charset utf-8</span>
+
+<span class="co"># Group names may be defined like this:</span>
+<span class="co">#   group mynames = paige 0x12345678 joe patti</span>
+<span class="co">#</span>
+<span class="co"># Any time &quot;mynames&quot; is a recipient (-r or --recipient), it will be</span>
+<span class="co"># expanded to the names &quot;paige&quot;, &quot;joe&quot;, and &quot;patti&quot;, and the key ID</span>
+<span class="co"># &quot;0x12345678&quot;.  Note there is only one level of expansion - you</span>
+<span class="co"># cannot make an group that points to another group.  Note also that</span>
+<span class="co"># if there are spaces in the recipient name, this will appear as two</span>
+<span class="co"># recipients.  In these cases it is better to use the key ID.</span>
+
+<span class="co">#group mynames = paige 0x12345678 joe patti</span>
+
+<span class="co"># Some old Windows platforms require 8.3 filenames.  If your system</span>
+<span class="co"># can handle long filenames, uncomment this.</span>
+
+<span class="co">#no-mangle-dos-filenames</span>
+
+<span class="co"># Lock the file only once for the lifetime of a process.  If you do</span>
+<span class="co"># not define this, the lock will be obtained and released every time</span>
+<span class="co"># it is needed - normally this is not needed.</span>
+
+<span class="co">#lock-once</span>
+
+<span class="co"># GnuPG can send and receive keys to and from a keyserver.  These</span>
+<span class="co"># servers can be HKP, email, or LDAP (if GnuPG is built with LDAP</span>
+<span class="co"># support).</span>
+<span class="co">#</span>
+<span class="co"># Example HKP keyservers:</span>
+<span class="co">#      hkp://keys.gnupg.net</span>
+<span class="co">#</span>
+<span class="co"># Example LDAP keyservers:</span>
+<span class="co">#      ldap://pgp.surfnet.nl:11370</span>
+<span class="co">#</span>
+<span class="co"># Regular URL syntax applies, and you can set an alternate port</span>
+<span class="co"># through the usual method:</span>
+<span class="co">#      hkp://keyserver.example.net:22742</span>
+<span class="co">#</span>
+<span class="co"># If you have problems connecting to a HKP server through a buggy http</span>
+<span class="co"># proxy, you can use keyserver option broken-http-proxy (see below),</span>
+<span class="co"># but first you should make sure that you have read the man page</span>
+<span class="co"># regarding proxies (keyserver option honor-http-proxy)</span>
+<span class="co">#</span>
+<span class="co"># Most users just set the name and type of their preferred keyserver.</span>
+<span class="co"># Note that most servers (with the notable exception of</span>
+<span class="co"># ldap://keyserver.pgp.com) synchronize changes with each other.  Note</span>
+<span class="co"># also that a single server name may actually point to multiple</span>
+<span class="co"># servers via DNS round-robin.  hkp://keys.gnupg.net is an example of</span>
+<span class="co"># such a &quot;server&quot;, which spreads the load over a number of physical</span>
+<span class="co"># servers.  To see the IP address of the server actually used, you may use</span>
+<span class="co"># the &quot;--keyserver-options debug&quot;.</span>
+
+<span class="dt">keyserver</span> <span class="dt">hkp</span><span class="er">://</span><span class="dt">keys.gnupg.net</span>
+<span class="co">#keyserver http://http-keys.gnupg.net</span>
+<span class="co">#keyserver mailto:pgp-public-keys@keys.nl.pgp.net</span>
+
+<span class="co"># Common options for keyserver functions:</span>
+<span class="co">#</span>
+<span class="co"># include-disabled = when searching, include keys marked as &quot;disabled&quot;</span>
+<span class="co">#                    on the keyserver (not all keyservers support this).</span>
+<span class="co">#</span>
+<span class="co"># no-include-revoked = when searching, do not include keys marked as</span>
+<span class="co">#                      &quot;revoked&quot; on the keyserver.</span>
+<span class="co">#</span>
+<span class="co"># verbose = show more information as the keys are fetched.</span>
+<span class="co">#           Can be used more than once to increase the amount</span>
+<span class="co">#           of information shown.</span>
+<span class="co">#</span>
+<span class="co"># use-temp-files = use temporary files instead of a pipe to talk to the</span>
+<span class="co">#                  keyserver.  Some platforms (Win32 for one) always</span>
+<span class="co">#                  have this on.</span>
+<span class="co">#</span>
+<span class="co"># keep-temp-files = do not delete temporary files after using them</span>
+<span class="co">#                   (really only useful for debugging)</span>
+<span class="co">#</span>
+<span class="co"># honor-http-proxy = if the keyserver uses HTTP, honor the http_proxy</span>
+<span class="co">#                    environment variable</span>
+<span class="co">#</span>
+<span class="co"># broken-http-proxy = try to work around a buggy HTTP proxy</span>
+<span class="co">#</span>
+<span class="co"># auto-key-retrieve = automatically fetch keys as needed from the keyserver</span>
+<span class="co">#                     when verifying signatures or when importing keys that</span>
+<span class="co">#                     have been revoked by a revocation key that is not</span>
+<span class="co">#                     present on the keyring.</span>
+<span class="co">#</span>
+<span class="co"># no-include-attributes = do not include attribute IDs (aka &quot;photo IDs&quot;)</span>
+<span class="co">#                         when sending keys to the keyserver.</span>
+
+<span class="co">#keyserver-options auto-key-retrieve</span>
+
+<span class="co"># Uncomment this line to display photo user IDs in key listings and</span>
+<span class="co"># when a signature from a key with a photo is verified.</span>
+
+<span class="co">#show-photos</span>
+
+<span class="co"># Use this program to display photo user IDs</span>
+<span class="co">#</span>
+<span class="co"># %i is expanded to a temporary file that contains the photo.</span>
+<span class="co"># %I is the same as %i, but the file isn&#39;t deleted afterwards by GnuPG.</span>
+<span class="co"># %k is expanded to the key ID of the key.</span>
+<span class="co"># %K is expanded to the long OpenPGP key ID of the key.</span>
+<span class="co"># %t is expanded to the extension of the image (e.g. &quot;jpg&quot;).</span>
+<span class="co"># %T is expanded to the MIME type of the image (e.g. &quot;image/jpeg&quot;).</span>
+<span class="co"># %f is expanded to the fingerprint of the key.</span>
+<span class="co"># %% is %, of course.</span>
+<span class="co">#</span>
+<span class="co"># If %i or %I are not present, then the photo is supplied to the</span>
+<span class="co"># viewer on standard input.  If your platform supports it, standard</span>
+<span class="co"># input is the best way to do this as it avoids the time and effort in</span>
+<span class="co"># generating and then cleaning up a secure temp file.</span>
+<span class="co">#</span>
+<span class="co"># The default program is &quot;xloadimage -fork -quiet -title &#39;KeyID 0x%k&#39; stdin&quot;</span>
+<span class="co"># On Mac OS X and Windows, the default is to use your regular JPEG image</span>
+<span class="co"># viewer.</span>
+<span class="co">#</span>
+<span class="co"># Some other viewers:</span>
+<span class="co"># photo-viewer &quot;qiv %i&quot;</span>
+<span class="co"># photo-viewer &quot;ee %i&quot;</span>
+<span class="co"># photo-viewer &quot;display -title &#39;KeyID 0x%k&#39;&quot;</span>
+<span class="co">#</span>
+<span class="co"># This one saves a copy of the photo ID in your home directory:</span>
+<span class="co"># photo-viewer &quot;cat &gt; ~/photoid-for-key-%k.%t&quot;</span>
+<span class="co">#</span>
+<span class="co"># Use your MIME handler to view photos:</span>
+<span class="co"># photo-viewer &quot;metamail -q -d -b -c %T -s &#39;KeyID 0x%k&#39; -f GnuPG&quot;</span></code></pre></div></div></div><div id="heading-container-h-2-gpg-agent.conf" class="heading-container"><h2 id="h-2-gpg-agent.conf"><span id="c-3" class="cell-idx"><a href="#h-2-gpg-agent.conf">2&ensp;<span class="code">gpg-agent.conf</span></a></span></h2><p><span id="c-4" class="cell-idx">This caches passphrases for 8 hours, up to a maximum of 16 hours, and uses the agent for SSH as well. The <span class="code">gpg</span> <a href="#b-Makefile-gpg" class="internal-link" id="linkNumber-1">Makefile rule</a> links it to <span class="code">gpg-agent.conf</span>. The <span class="code">pinentry</span> path here is specific to NixOS.</span></p><div id="c-5" class="cell-idx"><div class="block-container src" id="b-Makefile-gpg"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-Makefile-gpg">&#x1F517;</a></div><div class="block-meta"><code>Makefile-gpg</code></div><div class="block-meta-other hidden"><p>Used by index.org→<a href="/index.html#b-Makefile-b-Makefile-gpg" class="internal-link"><span class="verbatim">Makefile</span></a>.</p><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">makefile</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="dv">gpg:</span>
+	ln -fns <span class="ch">${</span><span class="dt">C</span><span class="ch">}</span>/gpg <span class="ch">${</span><span class="dt">H</span><span class="ch">}</span>/.gnupg
+	ln -fs <span class="ch">${</span><span class="dt">C</span><span class="ch">}</span>/gpg/gpg-agent.nixos.conf <span class="ch">${</span><span class="dt">H</span><span class="ch">}</span>/.gnupg/gpg-agent.conf</code></pre></div></div><div id="c-6" class="cell-idx"><div class="block-container src" id="b-gpg-agent.nixos.conf"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-gpg-agent.nixos.conf">&#x1F517;</a></div><div class="block-meta"><code>gpg-agent.nixos.conf</code><br><code><span class="bold">&#x1F3AF; gpg/gpg-agent.nixos.conf</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">conf</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="co"># See gpg-agent(1) for more information.</span>
+
+<span class="co"># Seconds for expiring cached entries (the cache is used to avoid retyping a</span>
+<span class="co"># passphrase). We don&#39;t have entries for ssh because we prefer password-less</span>
+<span class="co"># passphrases --- so we can just let gpg-agent use the defaults (see</span>
+<span class="co"># gpg-agent(1)).</span>
+
+<span class="co"># Cache entry expiration time.</span>
+<span class="dt">default-cache-ttl</span> <span class="dt">28800</span>
+<span class="co"># Global cache expiration time.</span>
+<span class="dt">max-cache-ttl</span> <span class="dt">57600</span>
+
+<span class="co"># Use tty version of pinentry --- because it&#39;s light-weight and is constrained</span>
+<span class="co"># to the terminal(-emulator) screen.</span>
+<span class="dt">pinentry-program</span> <span class="er">/</span><span class="dt">run</span><span class="er">/</span><span class="dt">current-system</span><span class="er">/</span><span class="dt">sw</span><span class="er">/</span><span class="dt">bin</span><span class="er">/</span><span class="dt">pinentry</span>
+
+<span class="co"># In addition to being gpg-agent, act as a drop-in replacement for OpenSSH&#39;s</span>
+<span class="co"># ssh-agent.</span>
+<span class="dt">enable-ssh-support</span></code></pre></div></div></div><div id="heading-container-h--Page-metrics" class="heading-container page-metrics"><h2 id="h--Page-metrics"><a href="#h--Page-metrics">Page metrics</a></h2></div><div id="heading-container-h--Backlinks" class="heading-container backlinks"><h3 id="h--Backlinks"><a href="#h--Backlinks">Backlinks (0)</a></h3></div><div id="heading-container-h--Tangled-files" class="heading-container tangled-blocks"><h3 id="h--Tangled-files"><a href="#h--Tangled-files">Tangled files (2)</a></h3><ol><li><a href="#b-gpg-agent.nixos.conf" class="verbatim">gpg/gpg-agent.nixos.conf</a></li><li><a href="#b-gpg.conf" class="verbatim">gpg/gpg.conf</a></li></ol></div><div id="heading-container-h--Named-cells" class="heading-container named-cells"><h3 id="h--Named-cells"><a href="#h--Named-cells">Named cells (3)</a></h3><ol><li><a href="#b-Makefile-gpg"><span class="verbatim">Makefile-gpg</span></a></li><li><a href="#b-gpg-agent.nixos.conf"><span class="verbatim">gpg-agent.nixos.conf</span></a></li><li><a href="#b-gpg.conf"><span class="verbatim">gpg.conf</span></a></li></ol></div><footer><div class="lilac-stamp">Generated by <a href="https://lilac.funloop.org" class="external-link" target="_blank" rel="noopener noreferrer">Lilac</a></div></footer></main><script id="heading-ancestry" type="application/json">{"h--Backlinks":["h--Page-metrics"],"h--Named-cells":["h--Page-metrics"],"h--Page-metrics":[],"h--Tangled-files":["h--Page-metrics"],"h-1-gpg.conf":[],"h-2-gpg-agent.conf":[]}</script><script id="lilac-fe-script" src="/js/lilac.js"></script></body></html>

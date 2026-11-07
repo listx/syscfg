@@ -1,0 +1,848 @@
+<!DOCTYPE HTML><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Utility scripts</title><link rel="stylesheet" href="/css/default.css"><link rel="shortcut icon" type="image/png" href="/favicon.png"><link rel="stylesheet" href="/vendor/source-fonts/source-fonts.css">
+<script>
+  window.MathJax = {
+      loader: { paths: { "mathjax-newcm": "/vendor/mathjax-newcm-font" } },
+      output: { font: "mathjax-newcm" },
+  tex: {
+      tags: 'ams'
+  },
+  options: {
+      ignoreHtmlClass: 'verbatim|code'
+  }
+};
+</script>
+<script id="MathJax-script" async="" src="/vendor/mathjax/tex-mml-chtml.js"></script>
+</head><body><div class="navbar"><button id="hamburger" class="tocs-toggle-button" aria-label="Toggle table of contents sidebar">&#x2630;</button><div class="breadcrumbs"><a href="https://syscfg.funloop.org"><span class="breadcrumb">Linus Arver&#39;s Dotfiles</span></a> <a href="https://github.com/listx/syscfg" class="repo-link" title="Source repository" aria-label="Source repository"><svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 16 16"
+     aria-hidden="true">
+<g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+<circle cx="4" cy="3" r="1.75"></circle>
+<circle cx="4" cy="13" r="1.75"></circle>
+<circle cx="12" cy="3" r="1.75"></circle>
+<path d="M4 4.75v6.5"></path>
+<path d="M12 4.75c0 4-8 3-8 6.5"></path>
+</g>
+</svg>
+</a> <span class="breadcrumb-separator">/</span> <a href="/script/index.html"><span class="breadcrumb">script</span></a> <span class="breadcrumb-separator">/</span> <a href="#top"><span class="breadcrumb">utilities.org</span></a></div></div><nav id="tocs"><p class="widget-title gtoc-title">Site contents</p><nav class="gtoc"><ul><li><a href="/index.html">Introduction</a></li><li><a href="/bash.html">Bash</a></li><li><a href="/claude.html">Claude</a></li><li><a href="/clojure.html">Clojure</a></li><li><a href="/emacs.html">Emacs</a></li><li><a href="/git.html">Git</a></li><li><a href="/gpg.html">GnuPG</a></li><li><a href="/jj.html">Jujutsu</a></li><li><a href="/keybindings.html">Keybindings (WIP)</a></li><li><a href="/misc.html">Miscellaneous</a></li><li><a href="/mpv.html">mpv</a></li><li><a href="/nix.html">Nix</a></li><li><a href="/notmuch.html">Notmuch</a></li><li><a href="/qutebrowser.html">qutebrowser</a></li><li><a href="/rtorrent.html">rTorrent</a></li><li><a href="/script/index.html">System scripts</a><ul><li><a href="/script/find-long-lines.html">Find long lines</a></li><li><a href="/script/prepare-commit-msg.html">Git commit message hook</a></li><li><a href="/script/utilities.html" class="bold">Utility scripts</a></li><li><a href="/script/terminal-themes.html">Terminal color themes</a></li></ul></li><li><a href="/tmux.html">tmux</a></li><li><a href="/vim.html">Vim</a></li><li><a href="/wezterm.html">Wezterm</a></li><li><a href="/xmonad.html">xmonad</a></li><li><a href="/xorg.html">X.Org</a></li><li><a href="/zsh/index.html">Zsh</a></li></ul></nav><p class="widget-title toc-title">Page contents</p><nav class="toc"><div class="toc-entries"><ol><li class="toc-level-1"><div class="toc-entry"><span class="toc-counter">1</span><a href="#h-1-Files-and-archives">Files and archives</a></div><ol><li class="toc-level-2"><div class="toc-entry"><span class="toc-counter">1.1</span><a href="#h-1.1-aex.sh"><span class="code">aex.sh</span></a></div></li><li class="toc-level-2"><div class="toc-entry"><span class="toc-counter">1.2</span><a href="#h-1.2-decrypt.sh"><span class="code">decrypt.sh</span></a></div></li><li class="toc-level-2"><div class="toc-entry"><span class="toc-counter">1.3</span><a href="#h-1.3-yodel.sh"><span class="code">yodel.sh</span></a></div></li></ol></li><li class="toc-level-1"><div class="toc-entry"><span class="toc-counter">2</span><a href="#h-2-Clipboard-and-paths">Clipboard and paths</a></div><ol><li class="toc-level-2"><div class="toc-entry"><span class="toc-counter">2.1</span><a href="#h-2.1-copy-clipboard.sh"><span class="code">copy-clipboard.sh</span></a></div></li><li class="toc-level-2"><div class="toc-entry"><span class="toc-counter">2.2</span><a href="#h-2.2-simplify_path.sh"><span class="code">simplify_path.sh</span></a></div></li></ol></li><li class="toc-level-1"><div class="toc-entry"><span class="toc-counter">3</span><a href="#h-3-Git">Git</a></div><ol><li class="toc-level-2"><div class="toc-entry"><span class="toc-counter">3.1</span><a href="#h-3.1-gtag.sh"><span class="code">gtag.sh</span></a></div></li><li class="toc-level-2"><div class="toc-entry"><span class="toc-counter">3.2</span><a href="#h-3.2-seepr"><span class="code">seepr</span></a></div></li><li class="toc-level-2"><div class="toc-entry"><span class="toc-counter">3.3</span><a href="#h-3.3-ref-to-org-link.sh"><span class="code">ref-to-org-link.sh</span></a></div></li></ol></li><li class="toc-level-1"><div class="toc-entry"><span class="toc-counter">4</span><a href="#h-4-Photos">Photos</a></div><ol><li class="toc-level-2"><div class="toc-entry"><span class="toc-counter">4.1</span><a href="#h-4.1-sync-sd-card.sh"><span class="code">sync-sd-card.sh</span></a></div></li><li class="toc-level-2"><div class="toc-entry"><span class="toc-counter">4.2</span><a href="#h-4.2-raw-to-jpg.sh"><span class="code">raw-to-jpg.sh</span></a></div></li><li class="toc-level-2"><div class="toc-entry"><span class="toc-counter">4.3</span><a href="#h-4.3-jpg-dng-diff.sh"><span class="code">jpg-dng-diff.sh</span></a></div></li><li class="toc-level-2"><div class="toc-entry"><span class="toc-counter">4.4</span><a href="#h-4.4-rm-raf-if-dng.sh"><span class="code">rm-raf-if-dng.sh</span></a></div></li></ol></li><li class="toc-level-1"><div class="toc-entry"><span class="toc-counter">5</span><a href="#h-5-System-setup">System setup</a></div><ol><li class="toc-level-2"><div class="toc-entry"><span class="toc-counter">5.1</span><a href="#h-5.1-startup_hook.sh"><span class="code">startup_hook.sh</span></a></div></li><li class="toc-level-2"><div class="toc-entry"><span class="toc-counter">5.2</span><a href="#h-5.2-susp.sh"><span class="code">susp.sh</span></a></div></li><li class="toc-level-2"><div class="toc-entry"><span class="toc-counter">5.3</span><a href="#h-5.3-nix-pull.sh"><span class="code">nix-pull.sh</span></a></div></li><li class="toc-level-2"><div class="toc-entry"><span class="toc-counter">5.4</span><a href="#h-5.4-mac-setup.sh"><span class="code">mac-setup.sh</span></a></div></li><li class="toc-level-2"><div class="toc-entry"><span class="toc-counter">5.5</span><a href="#h-5.5-keyboard-repeat-mac.sh"><span class="code">keyboard-repeat-mac.sh</span></a></div></li><li class="toc-level-2"><div class="toc-entry"><span class="toc-counter">5.6</span><a href="#h-5.6-set-ssh-authorized-keys-acl.ps1"><span class="code">set-ssh-authorized-keys-acl.ps1</span></a></div></li></ol></li><li class="toc-level-1"><div class="toc-entry"><a href="#h--Page-metrics">Page metrics</a></div><ol><li class="toc-level-2"><div class="toc-entry"><a href="#h--Backlinks">Backlinks</a></div></li><li class="toc-level-2"><div class="toc-entry"><a href="#h--Tangled-files">Tangled files</a></div></li><li class="toc-level-2"><div class="toc-entry"><a href="#h--Named-cells">Named cells</a></div></li></ol></li></ol></div></nav></nav><main><h1 id="top">Utility scripts</h1><hr class="title-underline"><div id="heading-container-h-1-Files-and-archives" class="heading-container"><h2 id="h-1-Files-and-archives"><span id="c-0" class="cell-idx"><a href="#h-1-Files-and-archives">1&ensp;Files and archives</a></span></h2></div><div id="heading-container-h-1.1-aex.sh" class="heading-container"><h3 id="h-1.1-aex.sh"><span id="c-1" class="cell-idx"><a href="#h-1.1-aex.sh">1.1&ensp;<span class="code">aex.sh</span></a></span></h3><p><span id="c-2" class="cell-idx"><span class="code">aex</span> (&quot;advanced extractor&quot;) extracts one or more archives of mixed types, each into its own directory. This avoids archives that scatter files into the current directory, and it removes any chain of nested directories left over after extraction.</span></p><div id="c-3" class="cell-idx"><div class="block-container src" id="b-aex"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-aex">&#x1F517;</a></div><div class="block-meta"><code>aex</code><br><code><span class="bold">&#x1F3AF; script/aex.sh</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">zsh</span></p></li><li><p><span class="code">shebang</span> = <span class="code">#!/usr/bin/env zsh</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="co"># Program: aex</span>
+<span class="co"># Version: 1.0</span>
+<span class="co"># Author: Linus Arver</span>
+<span class="co"># License: GPLv3</span>
+
+<span class="co"># Copyright (C) 2010 Linus Arver</span>
+
+<span class="co"># aex, for &quot;advanced extractor,&quot; takes one or more archive files and extracts</span>
+<span class="co"># them all intelligently to prevent (1) so-called &quot;tar bombs&quot; that have twenty,</span>
+<span class="co"># thirty files in them in the archive&#39;s root directory, and (2) spurious,</span>
+<span class="co"># nested folders that simply contain other folders (i.e., if an archive,</span>
+<span class="co"># after extraction, looks like ./archive-name/archive-name/archive-name/files,</span>
+<span class="co"># or the like, aex will remove these middle-men folders to make it look like</span>
+<span class="co"># ./archive-name/files).</span>
+<span class="co">#</span>
+<span class="co"># The beauty of aex is that it can take multiple archive types (a mixture of, say, *.zip and *.tar.gz) and extract them all in one go.</span>
+<span class="co">#</span>
+<span class="co"># Below is a quick summary of how aex operates.</span>
+<span class="co">#</span>
+<span class="co"># 1. Verify that every single file passed is a recognized archive type, is a valid existing file, and ensure that a directory bearing the same basename(s) as the file(s) do not already exist</span>
+<span class="co"># 2. For each file, do the following:</span>
+<span class="co">#    a. Create a new directory based on the file&#39;s name</span>
+<span class="co">#    b. Extract the file into that directory</span>
+<span class="co">#    c. Remove the chain of nested directories, if any</span>
+
+<span class="co"># Colors (comment out to disable)</span>
+<span class="va">c1</span><span class="op">=</span><span class="st">&quot;\x1b[1;32m&quot;</span> <span class="co"># bright green</span>
+<span class="va">c2</span><span class="op">=</span><span class="st">&quot;\x1b[1;33m&quot;</span> <span class="co"># bright yellow</span>
+<span class="va">c3</span><span class="op">=</span><span class="st">&quot;\x1b[1;34m&quot;</span> <span class="co"># bright blue</span>
+<span class="va">c4</span><span class="op">=</span><span class="st">&quot;\x1b[1;36m&quot;</span> <span class="co"># bright cyan</span>
+<span class="va">c5</span><span class="op">=</span><span class="st">&quot;\x1b[1;35m&quot;</span> <span class="co"># bright purple</span>
+<span class="va">c6</span><span class="op">=</span><span class="st">&quot;\x1b[1;31m&quot;</span> <span class="co"># bright red</span>
+<span class="va">ce</span><span class="op">=</span><span class="st">&quot;\x1b[0m&quot;</span>
+
+<span class="co"># Error messages</span>
+<span class="fu">aex_msg()</span> <span class="kw">{</span>
+	<span class="cf">case</span> <span class="va">$1</span> <span class="kw">in</span>
+		<span class="ss">0</span><span class="kw">)</span>
+			<span class="bu">echo</span> <span class="st">&quot;aex: operation aborted (no change)&quot;</span>
+			<span class="bu">exit</span> 1
+			<span class="cf">;;</span>
+		<span class="ss">1</span><span class="kw">)</span>
+			<span class="bu">echo</span> <span class="st">&quot;aex: directory </span><span class="dt">\`</span><span class="va">$2</span><span class="st">&#39; was created by someone since this script was initially called&quot;</span>
+			<span class="bu">echo</span> <span class="st">&quot;aex: operation aborted&quot;</span>
+			<span class="bu">exit</span> 1
+			<span class="cf">;;</span>
+		<span class="ss">2</span><span class="kw">)</span>
+			<span class="bu">echo</span> <span class="st">&quot;aex: extraction of file </span><span class="dt">\`</span><span class="va">$c1$2$ce</span><span class="st">&#39; failed (file format/extension mismatch, or damaged archive)&quot;</span>
+			<span class="bu">exit</span> 1
+			<span class="cf">;;</span>
+		<span class="ss">8</span><span class="kw">)</span>
+			<span class="bu">echo</span> <span class="st">&quot;aex: extracting file </span><span class="dt">\`</span><span class="va">$c1$2$ce</span><span class="st">&#39; into current directory with </span><span class="dt">\`</span><span class="st">&quot;</span><span class="va">$c3$3$ce</span><span class="st">&quot;&#39;...\n&quot;</span>
+			<span class="cf">;;</span>
+		<span class="ss">9</span><span class="kw">)</span>
+			<span class="bu">echo</span> <span class="st">&quot;aex: extracting file </span><span class="dt">\`</span><span class="va">$c1$2$ce</span><span class="st">&#39; into </span><span class="dt">\`</span><span class="va">$c2$3$ce</span><span class="st">&#39; with </span><span class="dt">\`</span><span class="st">&quot;</span><span class="va">$c3$4$ce</span><span class="st">&quot;&#39;...\n&quot;</span>
+			<span class="cf">;;</span>
+		<span class="ss">99</span><span class="kw">)</span>
+			<span class="bu">echo</span> <span class="st">&quot;aex: unexpected fatal error while working with file </span><span class="dt">\`</span><span class="va">$c1$2$ce</span><span class="st">&#39;&quot;</span>
+			<span class="bu">echo</span> <span class="st">&quot;aex: operation aborted&quot;</span>
+			<span class="bu">exit</span> 1
+			<span class="cf">;;</span>
+		<span class="pp">*</span><span class="kw">)</span> <span class="co"># this will only happen if we have a typo in our code when calling aex_msg()!</span>
+			<span class="bu">echo</span> <span class="st">&quot;aex: unrecognized error&quot;</span>
+			<span class="cf">;;</span>
+	<span class="cf">esac</span>
+<span class="kw">}</span>
+
+<span class="co"># A function to get the basename of an archive</span>
+<span class="fu">aex_fb()</span> <span class="kw">{</span>
+	<span class="va">fb</span><span class="op">=</span><span class="st">&quot;&quot;</span>
+	<span class="co"># get basename of archive file</span>
+	<span class="cf">case</span> <span class="va">$1</span> <span class="kw">in</span>
+		<span class="pp">*</span><span class="ss">.tar.bz2</span><span class="kw">)</span>
+			<span class="va">fb</span><span class="op">=</span><span class="va">$(</span><span class="fu">basename</span> <span class="va">$1</span> .tar.bz2<span class="va">)</span>
+			<span class="cf">;;</span>
+		<span class="pp">*</span><span class="ss">.tar.gz</span><span class="kw">)</span>
+			<span class="va">fb</span><span class="op">=</span><span class="va">$(</span><span class="fu">basename</span> <span class="va">$1</span> .tar.gz<span class="va">)</span>
+			<span class="cf">;;</span>
+		<span class="pp">*</span><span class="ss">.tar.xz</span><span class="kw">)</span>
+			<span class="va">fb</span><span class="op">=</span><span class="va">$(</span><span class="fu">basename</span> <span class="va">$1</span> .tar.xz<span class="va">)</span>
+			<span class="cf">;;</span>
+		<span class="pp">*</span><span class="kw">)</span>
+			<span class="co"># use zsh&#39;s built-in &#39;:r&#39; extension-remover</span>
+			<span class="va">fb</span><span class="op">=</span><span class="va">$1:r</span>
+			<span class="cf">;;</span>
+	<span class="cf">esac</span>
+	<span class="bu">echo</span> <span class="va">$fb</span>
+<span class="kw">}</span>
+
+<span class="co">#----------------#</span>
+<span class="co"># PROGRAM START! #</span>
+<span class="co">#----------------#</span>
+
+<span class="co">#------------------#</span>
+<span class="co"># check for errors #</span>
+<span class="co">#------------------#</span>
+
+<span class="co"># exit if no files were given by the user</span>
+<span class="kw">[[</span> <span class="ot">-z</span> <span class="va">$@</span> <span class="kw">]]</span> <span class="kw">&amp;&amp;</span> <span class="bu">echo</span> <span class="st">&quot;aex: no files specified&quot;</span> <span class="kw">&amp;&amp;</span> <span class="bu">exit</span> 1
+
+<span class="va">fb</span><span class="op">=</span><span class="st">&quot;&quot;</span>
+<span class="co"># various error checking before we do anything</span>
+<span class="cf">for</span> f <span class="kw">in</span> <span class="va">$@</span><span class="kw">;</span> <span class="cf">do</span>
+	<span class="cf">if</span> <span class="kw">[[</span> <span class="ot">!</span> <span class="ot">-f</span> <span class="va">$f</span> <span class="kw">]];</span> <span class="cf">then</span>
+		<span class="bu">echo</span> <span class="st">&quot;aex: invalid file </span><span class="dt">\`</span><span class="va">$f</span><span class="st">&#39;&quot;</span>
+		<span class="ex">aex_msg</span> 0
+	<span class="cf">fi</span>
+	<span class="co"># ensure that we recognize all arguments&#39; archive types</span>
+	<span class="cf">case</span> <span class="va">$f</span> <span class="kw">in</span>
+		<span class="pp">*</span><span class="ss">.tar</span><span class="kw">|</span><span class="pp">*</span><span class="ss">.tar.bz2</span><span class="kw">|</span><span class="pp">*</span><span class="ss">.tbz2</span><span class="kw">|</span><span class="pp">*</span><span class="ss">.bz2</span><span class="kw">|</span><span class="pp">*</span><span class="ss">.tar.gz</span><span class="kw">|</span><span class="pp">*</span><span class="ss">.tgz</span><span class="kw">|</span><span class="pp">*</span><span class="ss">.gz</span><span class="kw">|</span><span class="pp">*</span><span class="ss">.tar.xz</span><span class="kw">|</span><span class="pp">*</span><span class="ss">.txz</span><span class="kw">|</span><span class="pp">*</span><span class="ss">.xz</span><span class="kw">|</span><span class="pp">*</span><span class="ss">.zip</span><span class="kw">|</span><span class="pp">*</span><span class="ss">.rar</span><span class="kw">|</span><span class="pp">*</span><span class="ss">.7z</span><span class="kw">)</span>
+			<span class="co"># ensure that the given file(s) actually exist (as a regular file, not a</span>
+			<span class="co"># special file or directory)</span>
+			<span class="co"># ensure that a directory with the same basename does not already exist</span>
+			<span class="va">fb</span><span class="op">=</span><span class="va">$(</span><span class="ex">aex_fb</span> <span class="va">$f)</span> <span class="co"># can safely do this because $f is a valid and recognized file type</span>
+			<span class="cf">if</span> <span class="kw">[[</span> <span class="ot">-d</span> <span class="va">$fb</span> <span class="kw">]];</span> <span class="cf">then</span>
+				<span class="bu">echo</span> <span class="st">&quot;aex: destination directory </span><span class="dt">\`</span><span class="va">$fb</span><span class="st">&#39; already exists&quot;</span>
+				<span class="ex">aex_msg</span> 0
+			<span class="cf">fi</span>
+			<span class="cf">;;</span>
+		<span class="pp">*</span><span class="kw">)</span>
+			<span class="bu">echo</span> <span class="st">&quot;aex: </span><span class="va">$f</span><span class="st">: </span><span class="dt">\`</span><span class="va">$f:e</span><span class="st">&#39; is not a recognized archive file format&quot;</span>
+			<span class="ex">aex_msg</span> 0
+			<span class="cf">;;</span>
+	<span class="cf">esac</span>
+<span class="cf">done</span>
+
+<span class="co">#-------------------#</span>
+<span class="co"># begin extraction! #</span>
+<span class="co">#-------------------#</span>
+
+<span class="va">fbs</span><span class="op">=</span><span class="va">()</span> <span class="co"># array to be filled by basename directory names ($fb below)</span>
+<span class="va">dir0</span><span class="op">=</span><span class="va">$PWD</span>
+<span class="va">current</span><span class="op">=</span>1
+<span class="cf">for</span> f <span class="kw">in</span> <span class="va">$@</span><span class="kw">;</span> <span class="cf">do</span>
+	<span class="va">fb</span><span class="op">=</span><span class="va">$(</span><span class="ex">aex_fb</span> <span class="va">$f)</span>
+	<span class="va">fbs</span><span class="op">+=</span><span class="va">($fb)</span> <span class="co"># append $fb as an element into the $fbs array</span>
+	<span class="bu">echo</span> <span class="st">&quot;\naex: (</span><span class="va">$current</span><span class="st">/</span><span class="va">$</span><span class="op">#</span><span class="st">): processing </span><span class="dt">\`</span><span class="va">$c1$f$ce</span><span class="st">&#39;...&quot;</span>
+
+	<span class="co"># For the tar archives (since they are easy to work with uniformly), first</span>
+	<span class="co"># into the archive, and see if (1) the archive holds a SINGLE DIRECTORY</span>
+	<span class="co"># that contains all files and (2) this directory has the SAME NAME as the</span>
+	<span class="co"># archive&#39;s basename ($fb) -- if so, we can skip the creation of a</span>
+	<span class="co"># directory named ($fb) (thus avoiding the waste of detecting 1 single</span>
+	<span class="co"># &quot;nested directory&quot;) for most archive types</span>
+	<span class="va">dir_create</span><span class="op">=</span>true
+	<span class="va">com_info</span><span class="op">=</span><span class="st">&quot;&quot;</span>
+	<span class="cf">case</span> <span class="va">$f</span> <span class="kw">in</span>
+		<span class="pp">*</span><span class="ss">.tar</span><span class="kw">|</span><span class="pp">*</span><span class="ss">.tar.gz</span><span class="kw">|</span><span class="pp">*</span><span class="ss">.tgz</span><span class="kw">|</span><span class="pp">*</span><span class="ss">.tar.bz</span><span class="kw">|</span><span class="pp">*</span><span class="ss">.tar.bz2</span><span class="kw">|</span><span class="pp">*</span><span class="ss">.tbz</span><span class="kw">|</span><span class="pp">*</span><span class="ss">.tbz2</span><span class="kw">|</span><span class="pp">*</span><span class="ss">.tar.xz</span><span class="kw">|</span><span class="pp">*</span><span class="ss">.txz</span><span class="kw">)</span>
+			<span class="va">com_info</span><span class="op">=</span><span class="st">&quot;tar tf&quot;</span>
+			<span class="cf">;;</span>
+		<span class="pp">*</span><span class="ss">.rar</span><span class="kw">)</span>
+			<span class="va">com_info</span><span class="op">=</span><span class="st">&quot;unrar vb&quot;</span>
+			<span class="cf">;;</span>
+		<span class="pp">*</span><span class="ss">.zip</span><span class="kw">)</span>
+			<span class="va">com_info</span><span class="op">=</span><span class="st">&quot;zipinfo -1&quot;</span>
+			<span class="cf">;;</span>
+		<span class="pp">*</span><span class="ss">.7z</span><span class="kw">)</span>
+			<span class="va">com_info</span><span class="op">=</span><span class="st">&quot;&quot;</span> <span class="co"># 7z does not support bare listing of archived contents yet (June 2010)</span>
+			<span class="cf">;;</span>
+	<span class="cf">esac</span>
+	<span class="co"># find the root dir in this archive -- sometimes the root dir is displayed</span>
+	<span class="co"># on its own line, but sometimes not (even though it exists!) so we have to</span>
+	<span class="co"># manually check ourselves</span>
+	<span class="cf">if</span> <span class="kw">[[</span> <span class="ot">-n</span> <span class="va">$com_info</span> <span class="kw">]];</span> <span class="cf">then</span>
+		<span class="va">top</span><span class="op">=</span><span class="va">$(</span><span class="bu">eval</span> <span class="va">$com_info</span> <span class="va">${(</span><span class="op">q</span><span class="va">)f}</span> <span class="kw">|</span> <span class="fu">sort</span> <span class="kw">|</span> <span class="fu">head</span> <span class="at">-n</span> 1 <span class="kw">|</span> <span class="fu">sed</span> <span class="st">&#39;s/\/.*//&#39;</span><span class="va">)</span>
+		<span class="cf">if</span> <span class="kw">[[</span> <span class="va">$(</span><span class="bu">eval</span> <span class="va">$com_info</span> <span class="va">${(</span><span class="op">q</span><span class="va">)f}</span> <span class="kw">|</span> <span class="fu">sed</span> <span class="st">&quot;s/^</span><span class="va">$top</span><span class="st">$/\//&quot;</span> <span class="kw">|</span> <span class="fu">sed</span> <span class="st">&quot;s/^</span><span class="va">$top</span><span class="st">\//\//g&quot;</span> <span class="kw">|</span> <span class="fu">sed</span> <span class="st">&#39;s/^\/.*//g&#39;</span> <span class="kw">|</span> <span class="fu">sed</span> <span class="st">&#39;/^$/d&#39;</span> <span class="kw">|</span> <span class="fu">wc</span> <span class="at">-l</span><span class="va">)</span> <span class="ot">-eq</span> 0 <span class="kw">&amp;&amp;</span> <span class="va">$top</span> <span class="ot">==</span> <span class="va">$fb</span> <span class="kw">]];</span> <span class="cf">then</span>
+			<span class="va">dir_create</span><span class="op">=</span>false
+			<span class="bu">echo</span> <span class="st">&quot;aex: root directory in archive matches suggested destination directory name&quot;</span>
+			<span class="bu">echo</span> <span class="st">&quot;aex: skipping directory creation&quot;</span>
+		<span class="cf">fi</span>
+	<span class="cf">fi</span>
+
+	<span class="cf">if</span> <span class="va">$dir_create</span><span class="kw">;</span> <span class="cf">then</span>
+		<span class="bu">echo</span> <span class="at">-n</span> <span class="st">&quot;aex: creating destination directory </span><span class="dt">\`</span><span class="va">$c2$fb$ce</span><span class="st">&#39;... &quot;</span>
+		<span class="co"># raise error and exit if between the starting of this script, and</span>
+		<span class="co"># until it finishes, someone manually created a directory with the same</span>
+		<span class="co"># name that we are about to extract into (thus making the &quot;mkdir $fb&quot;</span>
+		<span class="co"># command fail)</span>
+		<span class="fu">mkdir</span> <span class="va">$fb</span> <span class="dv">1</span><span class="op">&gt;&amp;</span>- <span class="dv">2</span><span class="op">&gt;&amp;</span>- <span class="kw">||</span> <span class="ex">aex_msg</span> 1 <span class="va">$fb</span>
+		<span class="co"># (FYI: the &quot;1&gt;&amp;- 2&gt;&amp;-&quot; syntax manually suppresses stdout and stderr, without using /dev/null)</span>
+		<span class="bu">echo</span> <span class="st">&quot;done&quot;</span>
+	<span class="cf">fi</span>
+
+	<span class="cf">case</span> <span class="va">$f</span> <span class="kw">in</span>
+		<span class="pp">*</span><span class="ss">.tar</span><span class="kw">|</span><span class="pp">*</span><span class="ss">.tar.gz</span><span class="kw">|</span><span class="pp">*</span><span class="ss">.tgz</span><span class="kw">|</span><span class="pp">*</span><span class="ss">.tar.bz</span><span class="kw">|</span><span class="pp">*</span><span class="ss">.tar.bz2</span><span class="kw">|</span><span class="pp">*</span><span class="ss">.tbz</span><span class="kw">|</span><span class="pp">*</span><span class="ss">.tbz2</span><span class="kw">|</span><span class="pp">*</span><span class="ss">.tar.xz</span><span class="kw">|</span><span class="pp">*</span><span class="ss">.txz</span><span class="kw">)</span>
+			<span class="co"># two -v&#39;s for more verbosity than just a single -v</span>
+			<span class="co"># extract the file with given info, but if the extracting program fails, then inform user of this (in case the program&#39;s own error messages aren&#39;t clear enough)</span>
+			<span class="co"># the &#39;2&gt;&amp;1&#39; makes stderr print to stdout (so that sed can catch it)</span>
+			<span class="cf">if</span> <span class="va">$dir_create</span><span class="kw">;</span> <span class="cf">then</span>
+				<span class="ex">aex_msg</span> 9 <span class="va">$f</span> <span class="va">$fb</span> <span class="st">&quot;tar xvf </span><span class="va">$f</span><span class="st"> -C </span><span class="va">$fb</span><span class="st">&quot;</span>
+				<span class="fu">tar</span> xvf <span class="va">$f</span> <span class="at">-C</span> <span class="va">$fb</span> <span class="dv">2</span><span class="op">&gt;&amp;</span><span class="dv">1</span> <span class="kw">|</span> <span class="fu">sed</span> <span class="st">&quot;s/^/  </span><span class="va">$c1</span><span class="st">&gt;</span><span class="va">$ce</span><span class="st"> /&quot;</span> <span class="kw">||</span> <span class="ex">aex_msg</span> 2 <span class="va">$f</span>
+			<span class="cf">else</span>
+				<span class="ex">aex_msg</span> 8 <span class="va">$f</span> <span class="st">&quot;tar xvf </span><span class="va">$f</span><span class="st">&quot;</span>
+				<span class="fu">tar</span> xvf <span class="va">$f</span> <span class="dv">2</span><span class="op">&gt;&amp;</span><span class="dv">1</span> <span class="kw">|</span> <span class="fu">sed</span> <span class="st">&quot;s/^/  </span><span class="va">$c1</span><span class="st">&gt;</span><span class="va">$ce</span><span class="st"> /&quot;</span> <span class="kw">||</span> <span class="ex">aex_msg</span> 2 <span class="va">$f</span>
+			<span class="cf">fi</span>
+			<span class="cf">;;</span>
+		<span class="pp">*</span><span class="ss">.gz</span><span class="kw">)</span>
+			<span class="bu">cd</span> <span class="va">$fb</span>
+			<span class="ex">aex_msg</span> 9 <span class="va">$f</span> <span class="va">$fb</span> <span class="st">&quot;gzip -dv ../</span><span class="va">$f</span><span class="st">&quot;</span>
+			<span class="fu">gzip</span> <span class="at">-dv</span> ../<span class="va">$f</span> <span class="dv">2</span><span class="op">&gt;&amp;</span><span class="dv">1</span> <span class="kw">|</span> <span class="fu">sed</span> <span class="st">&quot;s/^/  </span><span class="va">$c1</span><span class="st">&gt;</span><span class="va">$ce</span><span class="st"> /&quot;</span> <span class="kw">||</span> <span class="ex">aex_msg</span> 2 <span class="va">$f</span>
+			<span class="bu">cd</span> ..
+			<span class="cf">;;</span>
+		<span class="pp">*</span><span class="ss">.bz</span><span class="kw">|</span><span class="pp">*</span><span class="ss">.bz2</span><span class="kw">)</span>
+			<span class="bu">cd</span> <span class="va">$fb</span>
+			<span class="ex">aex_msg</span> 9 <span class="va">$f</span> <span class="va">$fb</span> <span class="st">&quot;bzip2 -dv ../</span><span class="va">$f</span><span class="st">&quot;</span>
+			<span class="fu">bzip2</span> <span class="at">-dv</span> ../<span class="va">$f</span> <span class="dv">2</span><span class="op">&gt;&amp;</span><span class="dv">1</span> <span class="kw">|</span> <span class="fu">sed</span> <span class="st">&quot;s/^/  </span><span class="va">$c1</span><span class="st">&gt;</span><span class="va">$ce</span><span class="st"> /&quot;</span> <span class="kw">||</span> <span class="ex">aex_msg</span> 2 <span class="va">$f</span>
+			<span class="bu">cd</span> ..
+			<span class="cf">;;</span>
+		<span class="pp">*</span><span class="ss">.xz</span><span class="kw">)</span>
+			<span class="bu">cd</span> <span class="va">$fb</span>
+			<span class="ex">aex_msg</span> 9 <span class="va">$f</span> <span class="va">$fb</span> <span class="st">&quot;xz -dv ../</span><span class="va">$f</span><span class="st">&quot;</span>
+			<span class="fu">xz</span> <span class="at">-dv</span> ../<span class="va">$f</span> <span class="dv">2</span><span class="op">&gt;&amp;</span><span class="dv">1</span> <span class="kw">|</span> <span class="fu">sed</span> <span class="st">&quot;s/^/  </span><span class="va">$c1</span><span class="st">&gt;</span><span class="va">$ce</span><span class="st"> /&quot;</span> <span class="kw">||</span> <span class="ex">aex_msg</span> 2 <span class="va">$f</span>
+			<span class="bu">cd</span> ..
+			<span class="cf">;;</span>
+		<span class="pp">*</span><span class="ss">.zip</span><span class="kw">)</span>
+			<span class="cf">if</span> <span class="va">$dir_create</span><span class="kw">;</span> <span class="cf">then</span>
+				<span class="ex">aex_msg</span> 9 <span class="va">$f</span> <span class="va">$fb</span> <span class="st">&quot;unzip </span><span class="va">$f</span><span class="st"> -d </span><span class="va">$fb</span><span class="st">&quot;</span>
+				<span class="fu">unzip</span> <span class="va">$f</span> <span class="at">-d</span> <span class="va">$fb</span> <span class="dv">2</span><span class="op">&gt;&amp;</span><span class="dv">1</span> <span class="kw">|</span> <span class="fu">sed</span> <span class="st">&quot;s/^/  </span><span class="va">$c1</span><span class="st">&gt;</span><span class="va">$ce</span><span class="st"> /&quot;</span> <span class="kw">||</span> <span class="ex">aex_msg</span> 2 <span class="va">$f</span>
+			<span class="cf">else</span>
+				<span class="ex">aex_msg</span> 8 <span class="va">$f</span> <span class="st">&quot;unzip </span><span class="va">$f</span><span class="st">&quot;</span>
+				<span class="fu">unzip</span> <span class="va">$f</span> <span class="dv">2</span><span class="op">&gt;&amp;</span><span class="dv">1</span> <span class="kw">|</span> <span class="fu">sed</span> <span class="st">&quot;s/^/  </span><span class="va">$c1</span><span class="st">&gt;</span><span class="va">$ce</span><span class="st"> /&quot;</span> <span class="kw">||</span> <span class="ex">aex_msg</span> 2 <span class="va">$f</span>
+			<span class="cf">fi</span>
+			<span class="cf">;;</span>
+		<span class="pp">*</span><span class="ss">.rar</span><span class="kw">)</span>
+			<span class="cf">if</span> <span class="va">$dir_create</span><span class="kw">;</span> <span class="cf">then</span>
+				<span class="ex">aex_msg</span> 9 <span class="va">$f</span> <span class="va">$fb</span> <span class="st">&quot;urar x </span><span class="va">$f</span><span class="st"> </span><span class="va">$fb</span><span class="st">&quot;</span>
+				<span class="ex">unrar</span> x <span class="va">$f</span> <span class="va">$fb</span> <span class="dv">2</span><span class="op">&gt;&amp;</span><span class="dv">1</span> <span class="kw">|</span> <span class="fu">sed</span> <span class="st">&quot;s/^/  </span><span class="va">$c1</span><span class="st">&gt;</span><span class="va">$ce</span><span class="st"> /&quot;</span> <span class="kw">||</span> <span class="ex">aex_msg</span> 2 <span class="va">$f</span>
+			<span class="cf">else</span>
+				<span class="ex">aex_msg</span> 8 <span class="va">$f</span> <span class="st">&quot;unrar x </span><span class="va">$f</span><span class="st">&quot;</span>
+				<span class="ex">unrar</span> x <span class="va">$f</span> <span class="dv">2</span><span class="op">&gt;&amp;</span><span class="dv">1</span> <span class="kw">|</span> <span class="fu">sed</span> <span class="st">&quot;s/^/  </span><span class="va">$c1</span><span class="st">&gt;</span><span class="va">$ce</span><span class="st"> /&quot;</span> <span class="kw">||</span> <span class="ex">aex_msg</span> 2 <span class="va">$f</span>
+			<span class="cf">fi</span>
+			<span class="cf">;;</span>
+		<span class="pp">*</span><span class="ss">.7z</span><span class="kw">)</span>
+			<span class="ex">aex_msg</span> 9 <span class="va">$f</span> <span class="va">$fb</span> <span class="st">&quot;7z x -o</span><span class="va">$fb</span><span class="st"> </span><span class="va">$f</span><span class="st">&quot;</span>
+			<span class="ex">7z</span> x <span class="at">-o</span><span class="va">$fb</span> <span class="va">$f</span> <span class="dv">2</span><span class="op">&gt;&amp;</span><span class="dv">1</span> <span class="kw">|</span> <span class="fu">sed</span> <span class="st">&quot;s/^/  </span><span class="va">$c1</span><span class="st">&gt;</span><span class="va">$ce</span><span class="st"> /&quot;</span> <span class="kw">||</span> <span class="ex">aex_msg</span> 2 <span class="va">$f</span>
+			<span class="cf">;;</span>
+		<span class="pp">*</span><span class="kw">)</span>
+			<span class="co"># </span><span class="al">NOTE</span><span class="co">: this should never happen (I&#39;ve tried to make message 99 happen, by starting the extraction on a file, then renaming it before the extraction program is called, but still it does not reach this area!)</span>
+			<span class="ex">aex_msg</span> 99 <span class="va">$f</span> <span class="co"># should never occur -- it&#39;s just in here for the sake of completeness</span>
+			<span class="cf">;;</span>
+	<span class="cf">esac</span>
+
+	<span class="co"># remove nested directories (directories that only contain 1 child directory) in</span>
+	<span class="co"># the extracted-to directory above (we call such directories &quot;eggs&quot;)</span>
+	<span class="bu">cd</span> <span class="va">$fb</span>
+	<span class="va">dir1</span><span class="op">=</span><span class="va">$PWD</span> <span class="co"># $dir1 is same as $fb, but is nicer b/c it is the full directory path</span>
+	<span class="va">dir2</span><span class="op">=</span><span class="st">&quot;&quot;</span>
+
+	<span class="va">eggs</span><span class="op">=</span>0
+	<span class="bu">echo</span> <span class="at">-n</span> <span class="st">&quot;\naex: nested directories detected inside </span><span class="dt">\`</span><span class="va">$c2$fb$ce</span><span class="st">&#39;: &quot;</span>
+	<span class="cf">if</span> <span class="kw">[[</span> <span class="va">$(</span><span class="fu">ls</span> <span class="at">-A1</span> <span class="kw">|</span> <span class="fu">wc</span> <span class="at">-l</span><span class="va">)</span> <span class="ot">-eq</span> 1 <span class="kw">&amp;&amp;</span> <span class="ot">-d</span> <span class="va">$(</span><span class="fu">ls</span> <span class="at">-A</span><span class="va">)</span> <span class="kw">]];</span> <span class="cf">then</span>
+		<span class="bu">echo</span> <span class="at">-n</span> <span class="st">&quot;</span><span class="va">$c4$(</span><span class="fu">ls</span> <span class="at">-A</span><span class="va">)$ce</span><span class="st"> &quot;</span>
+		<span class="bu">cd</span> <span class="st">&quot;</span><span class="va">$(</span><span class="fu">ls</span> <span class="at">-A</span><span class="va">)</span><span class="st">&quot;</span>
+		<span class="bu">let</span> <span class="va">eggs</span><span class="op">=</span><span class="va">eggs</span><span class="op">+</span><span class="dv">1</span>
+		<span class="kw">[[</span> eggs <span class="ot">-eq</span> 1 <span class="kw">]]</span> <span class="kw">&amp;&amp;</span> <span class="va">dir2</span><span class="op">=</span><span class="va">$PWD</span> <span class="co"># name the very first egg &quot;dir2&quot;</span>
+		<span class="cf">while</span> <span class="kw">[[</span> <span class="va">$(</span><span class="fu">ls</span> <span class="at">-A1</span> <span class="kw">|</span> <span class="fu">wc</span> <span class="at">-l</span><span class="va">)</span> <span class="ot">-eq</span> 1 <span class="kw">&amp;&amp;</span> <span class="ot">-d</span> <span class="va">$(</span><span class="fu">ls</span> <span class="at">-A</span><span class="va">)</span> <span class="kw">]];</span> <span class="cf">do</span>
+			<span class="bu">echo</span> <span class="at">-n</span> <span class="va">$c2</span><span class="st">&quot;-&gt;&quot;</span><span class="va">$ce</span> <span class="va">$c4$(</span><span class="fu">ls</span> <span class="at">-A</span><span class="va">)$ce</span><span class="st">&quot; &quot;</span>
+			<span class="bu">cd</span> <span class="st">&quot;</span><span class="va">$(</span><span class="fu">ls</span> <span class="at">-A</span><span class="va">)</span><span class="st">&quot;</span>
+			<span class="bu">let</span> <span class="va">eggs</span><span class="op">=</span><span class="va">eggs</span><span class="op">+</span><span class="dv">1</span>
+		<span class="cf">done</span>
+		<span class="bu">echo</span>
+	<span class="cf">else</span>
+		<span class="bu">echo</span> <span class="st">&quot;none&quot;</span>
+	<span class="cf">fi</span>
+
+	<span class="co"># if there were any eggs, move the children up to $fb&#39;s level</span>
+	<span class="cf">if</span> <span class="kw">[[</span> <span class="va">$eggs</span> <span class="ot">-gt</span> 0 <span class="kw">]];</span> <span class="cf">then</span>
+		<span class="bu">echo</span> <span class="st">&quot;aex: moving contents of non-nested directory </span><span class="dt">\`</span><span class="va">$c4$(</span><span class="bu">echo</span> <span class="va">$PWD:t)$ce</span><span class="st">&#39; to </span><span class="dt">\`</span><span class="va">$c2$dir1:t$ce</span><span class="st">&#39;\n&quot;</span>
+		<span class="co"># the *(D) simply means the same as &#39;*&#39;, but will also match dotfiles (&#39;D&#39; does this)</span>
+		<span class="fu">mv</span> <span class="at">-v</span> <span class="pp">*</span><span class="op">(D)</span> <span class="va">$dir1</span> <span class="dv">2</span><span class="op">&gt;&amp;</span><span class="dv">1</span> <span class="kw">|</span> <span class="fu">sed</span> <span class="st">&quot;s/^/  </span><span class="va">$c4</span><span class="st">&gt;</span><span class="va">$ce</span><span class="st"> /&quot;</span>
+
+		<span class="co"># move back to root of destination directory, to remove the lineage of eggs (everything</span>
+		<span class="co"># below $dir2 contains a single lineage of nested directories -- so we remove them all with</span>
+		<span class="co"># the &#39;find&#39; command below)</span>
+		<span class="bu">cd</span> <span class="va">$dir1</span>
+		<span class="bu">echo</span> <span class="st">&quot;\naex: removing nested empty directories\n&quot;</span>
+		<span class="fu">find</span> <span class="va">$dir2</span> <span class="at">-depth</span> <span class="at">-type</span> d <span class="at">-empty</span> <span class="at">-exec</span> rmdir <span class="at">-v</span> {} <span class="dt">\;</span> <span class="dv">2</span><span class="op">&gt;&amp;</span><span class="dv">1</span> <span class="kw">|</span> <span class="fu">sed</span> <span class="st">&quot;s/^/  </span><span class="va">$c5</span><span class="st">&gt;</span><span class="va">$ce</span><span class="st"> /&quot;</span>
+	<span class="cf">fi</span>
+
+	<span class="bu">echo</span> <span class="st">&quot;\naex: (</span><span class="va">$current</span><span class="st">/</span><span class="va">$</span><span class="op">#</span><span class="st">): </span><span class="dt">\`</span><span class="va">$c1$f$ce</span><span class="st">&#39; processed\n&quot;</span>
+	<span class="co"># move back to our original working directory to process the next archive</span>
+	<span class="bu">cd</span> <span class="va">$dir0</span>
+
+	<span class="bu">echo</span> <span class="st">&quot;</span><span class="va">$c6</span><span class="st">----------------------------------------</span><span class="va">$ce</span><span class="st">&quot;</span>
+	<span class="bu">let</span> <span class="va">current</span><span class="op">=</span><span class="va">current</span><span class="op">+</span><span class="dv">1</span> <span class="co"># use &quot;let&quot; to tell shell that we&#39;re working with integers, not strings</span>
+<span class="cf">done</span>
+
+<span class="va">fs</span><span class="op">=</span><span class="st">&quot;&quot;</span><span class="kw">;</span> <span class="va">ds</span><span class="op">=</span><span class="st">&quot;&quot;</span>
+<span class="cf">if</span> <span class="kw">[[</span> <span class="va">$</span><span class="op">#</span> <span class="ot">-eq</span> 1 <span class="kw">]];</span> <span class="cf">then</span>
+	<span class="va">fs</span><span class="op">=</span><span class="st">&quot;</span><span class="dt">\`</span><span class="va">$c1$1$ce</span><span class="st">&#39;&quot;</span>
+	<span class="va">ds</span><span class="op">=</span><span class="st">&quot;directory&quot;</span>
+<span class="cf">else</span>
+	<span class="va">fs</span><span class="op">=</span><span class="st">&quot;all files </span><span class="va">$c1$@$ce</span><span class="st">&quot;</span>
+	<span class="va">ds</span><span class="op">=</span><span class="st">&quot;directories&quot;</span>
+<span class="cf">fi</span>
+<span class="bu">echo</span> <span class="st">&quot;\naex: </span><span class="va">$fs</span><span class="st"> extracted successfully&quot;</span>
+<span class="bu">echo</span> <span class="st">&quot;aex: new extracted-to </span><span class="va">$ds</span><span class="st">:&quot;</span>
+<span class="cf">for</span> dir_new <span class="kw">in</span> <span class="va">$fbs</span><span class="kw">;</span> <span class="cf">do</span>
+	<span class="bu">echo</span> <span class="st">&quot;  </span><span class="va">$c5$dir_new$ce</span><span class="st">&quot;</span>
+<span class="cf">done</span>
+<span class="bu">echo</span>
+
+<span class="co"># vim: syntax=zsh</span></code></pre></div></div></div><div id="heading-container-h-1.2-decrypt.sh" class="heading-container"><h3 id="h-1.2-decrypt.sh"><span id="c-4" class="cell-idx"><a href="#h-1.2-decrypt.sh">1.2&ensp;<span class="code">decrypt.sh</span></a></span></h3><p><span id="c-5" class="cell-idx">Decrypt a GPG file, either to an output file (<span class="code">outfile</span>) or to a pager (<span class="code">viewfile</span>). The <span class="code">dec</span> <a href="/zsh/zshrc.html#b-zshrc-aliases" class="internal-link" id="linkNumber-1">alias</a> in Zsh uses this.</span></p><div id="c-6" class="cell-idx"><div class="block-container src" id="b-decrypt"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-decrypt">&#x1F517;</a></div><div class="block-meta"><code>decrypt</code><br><code><span class="bold">&#x1F3AF; script/decrypt.sh</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">bash</span></p></li><li><p><span class="code">shebang</span> = <span class="code">#!/usr/bin/env bash</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="co"># decrypt files painlessly</span>
+
+<span class="cf">if</span> <span class="kw">[[</span> <span class="va">$1</span> <span class="ot">==</span> <span class="st">&quot;outfile&quot;</span> <span class="kw">]];</span> <span class="cf">then</span>
+	<span class="ex">gpg2</span> <span class="at">-o</span> <span class="st">&quot;</span><span class="va">$(</span><span class="fu">basename</span> <span class="st">&quot;</span><span class="va">$2</span><span class="st">&quot;</span> <span class="st">&quot;.gpg&quot;</span><span class="va">)</span><span class="st">&quot;</span> <span class="at">-d</span> <span class="st">&quot;</span><span class="va">$2</span><span class="st">&quot;</span>
+<span class="cf">elif</span> <span class="kw">[[</span> <span class="va">$1</span> <span class="ot">==</span> <span class="st">&quot;viewfile&quot;</span> <span class="kw">]];</span> <span class="cf">then</span>
+	<span class="ex">gpg2</span> <span class="at">-d</span> <span class="st">&quot;</span><span class="va">$2</span><span class="st">&quot;</span> <span class="kw">|</span> <span class="fu">less</span>
+<span class="cf">else</span>
+	<span class="bu">echo</span> <span class="st">&quot;error: ivalid mode </span><span class="dt">\`</span><span class="va">$1</span><span class="st">&#39;&quot;</span>
+<span class="cf">fi</span></code></pre></div></div></div><div id="heading-container-h-1.3-yodel.sh" class="heading-container"><h3 id="h-1.3-yodel.sh"><span id="c-7" class="cell-idx"><a href="#h-1.3-yodel.sh">1.3&ensp;<span class="code">yodel.sh</span></a></span></h3><p><span id="c-8" class="cell-idx">Read YouTube links or video IDs from standard input, download their audio, and normalize its loudness with <span class="code">r128gain</span>.</span></p><div id="c-9" class="cell-idx"><div class="block-container src" id="b-yodel"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-yodel">&#x1F517;</a></div><div class="block-meta"><code>yodel</code><br><code><span class="bold">&#x1F3AF; script/yodel.sh</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">bash</span></p></li><li><p><span class="code">shebang</span> = <span class="code">#!/usr/bin/env bash</span></p></li></ul></div><pre class="block-body"><code class="sourceCode">
+<span class="bu">set</span> <span class="at">-o</span> errexit
+<span class="bu">set</span> <span class="at">-o</span> nounset
+<span class="bu">set</span> <span class="at">-o</span> pipefail
+
+<span class="co"># Given a list of youtube links, download them all.</span>
+
+<span class="cf">while</span> <span class="va">IFS</span><span class="op">=</span> <span class="bu">read</span> <span class="at">-r</span> <span class="va">link</span><span class="kw">;</span> <span class="cf">do</span>
+	<span class="co"># If the link is just a plain video ID, construct the link.</span>
+	<span class="cf">if</span> <span class="kw">[[</span> <span class="ot">!</span> <span class="st">&quot;</span><span class="va">${link}</span><span class="st">&quot;</span> <span class="ot">=~</span> <span class="pp">^</span><span class="ss">https://</span><span class="pp">.*</span> <span class="kw">]];</span> <span class="cf">then</span>
+		<span class="va">link</span><span class="op">=</span><span class="st">&quot;https://www.youtube.com/watch?v=</span><span class="va">${link}</span><span class="st">&quot;</span>
+	<span class="cf">fi</span>
+
+	<span class="va">f</span><span class="op">=</span><span class="st">&quot;</span><span class="va">$(</span><span class="ex">youtube-dl</span> <span class="at">--get-filename</span> <span class="at">-o</span> <span class="st">&#39;%(title)s-%(id)s&#39;</span> <span class="st">&quot;</span><span class="va">$link</span><span class="st">&quot;</span><span class="va">)</span><span class="st">&quot;</span>
+	<span class="ex">youtube-dl</span> <span class="at">--extract-audio</span> <span class="st">&quot;</span><span class="va">$link</span><span class="st">&quot;</span>
+	<span class="ex">r128gain</span> <span class="st">&quot;</span><span class="va">${f}</span><span class="st">&quot;</span><span class="pp">*</span>
+<span class="cf">done</span></code></pre></div></div></div><div id="heading-container-h-2-Clipboard-and-paths" class="heading-container"><h2 id="h-2-Clipboard-and-paths"><span id="c-10" class="cell-idx"><a href="#h-2-Clipboard-and-paths">2&ensp;Clipboard and paths</a></span></h2></div><div id="heading-container-h-2.1-copy-clipboard.sh" class="heading-container"><h3 id="h-2.1-copy-clipboard.sh"><span id="c-11" class="cell-idx"><a href="#h-2.1-copy-clipboard.sh">2.1&ensp;<span class="code">copy-clipboard.sh</span></a></span></h3><p><span id="c-12" class="cell-idx">Copy standard input to the clipboard, and echo it back. This prefers <span class="code">tmux</span> if we&#39;re inside it, because <span class="code">tmux</span> can also set the system clipboard. <a href="/emacs.html" class="internal-link" id="linkNumber-2">Emacs</a>, <a href="/git.html" class="internal-link" id="linkNumber-3">Git</a>, and <a href="/git.html" class="internal-link" id="linkNumber-4">Tig</a> commands all call this.</span></p><div id="c-13" class="cell-idx"><div class="block-container src" id="b-copy-clipboard"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-copy-clipboard">&#x1F517;</a></div><div class="block-meta"><code>copy-clipboard</code><br><code><span class="bold">&#x1F3AF; script/copy-clipboard.sh</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">bash</span></p></li><li><p><span class="code">shebang</span> = <span class="code">#!/usr/bin/env bash</span></p></li></ul></div><pre class="block-body"><code class="sourceCode">
+<span class="bu">set</span> <span class="at">-euo</span> pipefail
+
+<span class="fu">copy_prefer_tmux()</span>
+<span class="kw">{</span>
+	<span class="co"># Prefer to copy into tmux if possible, because it can also (with the -w</span>
+	<span class="co"># flag) attempt to copy into the system clipboard.</span>
+	<span class="cf">if</span> <span class="kw">[[</span> <span class="ot">-n</span> <span class="st">&quot;</span><span class="va">${TMUX</span><span class="op">:-</span><span class="va">}</span><span class="st">&quot;</span> <span class="kw">]];</span> <span class="cf">then</span>
+		<span class="ex">tmux</span> load-buffer <span class="at">-w</span> <span class="at">-</span>
+	<span class="cf">else</span>
+		<span class="ex">copy_clipboard</span>
+	<span class="cf">fi</span>
+<span class="kw">}</span>
+
+<span class="fu">copy_clipboard()</span>
+<span class="kw">{</span>
+	<span class="cf">case</span> <span class="st">&quot;</span><span class="va">$(</span><span class="fu">uname</span><span class="va">)</span><span class="st">&quot;</span> <span class="kw">in</span>
+	<span class="ss">Linux</span><span class="kw">)</span> <span class="ex">xsel</span> <span class="at">--clipboard</span> <span class="cf">;;</span>
+	<span class="ss">Darwin</span><span class="kw">)</span> <span class="ex">pbcopy</span> <span class="cf">;;</span>
+	<span class="cf">esac</span>
+<span class="kw">}</span>
+
+<span class="fu">main()</span>
+<span class="kw">{</span>
+	<span class="bu">local</span> <span class="va">input</span>
+	<span class="va">input</span><span class="op">=</span><span class="va">$(</span><span class="op">&lt;</span>/dev/stdin<span class="va">)</span>
+	<span class="cf">if</span> <span class="kw">[[</span> <span class="st">&quot;</span><span class="va">${1</span><span class="op">:-</span><span class="va">}</span><span class="st">&quot;</span> <span class="ot">==</span> <span class="st">&quot;--base64&quot;</span> <span class="kw">]];</span> <span class="cf">then</span>
+		<span class="va">input</span><span class="op">=</span><span class="st">&quot;</span><span class="va">$(</span><span class="bu">echo</span> <span class="at">-n</span> <span class="st">&quot;</span><span class="va">${input}</span><span class="st">&quot;</span> <span class="kw">|</span> <span class="fu">base64</span> <span class="at">--decode</span><span class="va">)</span><span class="st">&quot;</span>
+	<span class="cf">fi</span>
+	<span class="bu">echo</span> <span class="at">-n</span> <span class="st">&quot;</span><span class="va">${input}</span><span class="st">&quot;</span> <span class="kw">|</span> <span class="ex">copy_prefer_tmux</span>
+	<span class="bu">echo</span> <span class="st">&quot;</span><span class="va">${input}</span><span class="st">&quot;</span>
+<span class="kw">}</span>
+
+<span class="ex">main</span> <span class="st">&quot;</span><span class="va">$@</span><span class="st">&quot;</span></code></pre></div></div></div><div id="heading-container-h-2.2-simplify_path.sh" class="heading-container"><h3 id="h-2.2-simplify_path.sh"><span id="c-14" class="cell-idx"><a href="#h-2.2-simplify_path.sh">2.2&ensp;<span class="code">simplify_path.sh</span></a></span></h3><p><span id="c-15" class="cell-idx">Shorten a path by truncating its leading directories, so that <span class="code">~/aaa/bbb/ccc/hello</span> becomes <span class="code">~/a/b/c/hello</span>. Our <a href="/tmux.html" class="internal-link" id="linkNumber-5"><span class="code">tmux</span> window titles</a> and our <a href="/zsh/func.html#b-func-prompt-kody-setup" class="internal-link" id="linkNumber-6">Zsh prompt</a> use this. It also reads <a href="/zsh/index.html#b-path-aliases" class="internal-link" id="linkNumber-7"><span class="code">zsh/path-aliases</span></a> to recognize named directories.</span></p><div id="c-16" class="cell-idx"><div class="block-container src" id="b-simplify-path"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-simplify-path">&#x1F517;</a></div><div class="block-meta"><code>simplify-path</code><br><code><span class="bold">&#x1F3AF; script/simplify_path.sh</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">bash</span></p></li><li><p><span class="code">shebang</span> = <span class="code">#!/usr/bin/env bash</span></p></li></ul></div><pre class="block-body"><code class="sourceCode">
+<span class="co"># Truncate a path, based on __TRUNCATE_THRESHOLD. E.g., this script converts</span>
+<span class="co">#</span>
+<span class="co">#   ~/aaaaaaaaaaaaaa/bbbbbbbbbbbbbbbbb/cccccccccccccc/hello</span>
+<span class="co">#</span>
+<span class="co"># into</span>
+<span class="co">#</span>
+<span class="co">#   ~/a/b/c/hello</span>
+<span class="co">#</span>
+<span class="co"># and is meant to be used for TMUX window titles, although it can be used</span>
+<span class="co"># elsewhere as well.</span>
+
+<span class="bu">set</span> <span class="at">-euo</span> pipefail
+
+<span class="co"># Recognize specially-named paths.</span>
+<span class="fu">__l_get_named_paths()</span>
+<span class="kw">{</span>
+	<span class="bu">local</span> <span class="va">path_expanded</span>
+	<span class="bu">local</span> <span class="va">path_alias</span>
+	<span class="va">__l_named_paths_definition</span><span class="op">=</span><span class="st">&quot;</span><span class="va">$HOME</span><span class="st">/syscfg/zsh/path-aliases&quot;</span>
+	<span class="va">__l_named_paths</span><span class="op">=</span><span class="va">()</span>
+	<span class="cf">while</span> <span class="va">IFS</span><span class="op">=</span> <span class="bu">read</span> <span class="at">-r</span> <span class="va">line</span><span class="kw">;</span> <span class="cf">do</span>
+		<span class="co"># Skip empty lines.</span>
+		<span class="cf">if</span> <span class="kw">[[</span> <span class="ot">-z</span> <span class="st">&quot;</span><span class="va">${line}</span><span class="st">&quot;</span> <span class="kw">]];</span> <span class="cf">then</span>
+			<span class="cf">continue</span>
+		<span class="cf">fi</span>
+		<span class="co"># Skip comment lines.</span>
+		<span class="cf">if</span> <span class="kw">[[</span> <span class="st">&quot;</span><span class="va">${line}</span><span class="st">&quot;</span> <span class="ot">==</span> <span class="dt">\#</span><span class="pp">*</span> <span class="kw">]];</span> <span class="cf">then</span>
+			<span class="cf">continue</span>
+		<span class="cf">fi</span>
+
+		<span class="va">path_expanded</span><span class="op">=</span><span class="st">&quot;</span><span class="va">${line</span><span class="op">#</span><span class="pp">*</span>=<span class="va">}</span><span class="st">&quot;</span>
+		<span class="co"># Convert literal &quot;$HOME&quot; to actual value of &quot;$HOME&quot;.</span>
+		<span class="cf">if</span> <span class="kw">[[</span> <span class="st">&quot;</span><span class="va">${path_expanded}</span><span class="st">&quot;</span> <span class="ot">==</span> <span class="st">&quot;</span><span class="dt">\$</span><span class="st">{HOME}&quot;</span><span class="pp">*</span> <span class="kw">]];</span> <span class="cf">then</span>
+			<span class="va">path_expanded</span><span class="op">=</span><span class="st">&quot;</span><span class="va">${path_expanded</span><span class="op">/</span><span class="dt">\$\{</span><span class="ss">HOME</span><span class="dt">\}</span><span class="op">/</span><span class="va">$HOME}</span><span class="st">&quot;</span>
+		<span class="cf">fi</span>
+		<span class="va">path_alias</span><span class="op">=</span><span class="st">&quot;</span><span class="va">${line</span><span class="op">%</span>=<span class="pp">*</span><span class="va">}</span><span class="st">&quot;</span>
+		<span class="va">path_alias</span><span class="op">=</span><span class="st">&quot;</span><span class="va">${path_alias</span><span class="op">#</span>hash -d<span class="va">}</span><span class="st">&quot;</span>
+		<span class="co"># Remove leading whitespace characters. See</span>
+		<span class="co"># https://stackoverflow.com/a/3352015/437583.</span>
+		<span class="va">path_alias</span><span class="op">=</span><span class="st">&quot;</span><span class="va">${path_alias</span><span class="op">#</span><span class="st">&quot;</span><span class="va">${path_alias</span><span class="op">%%</span>[![:space:]]<span class="pp">*</span><span class="va">}</span><span class="st">&quot;</span><span class="va">}</span><span class="st">&quot;</span>
+		<span class="va">__l_named_paths</span><span class="op">+=</span><span class="va">(</span><span class="st">&quot;</span><span class="va">${path_alias}</span><span class="st">=</span><span class="va">${path_expanded}</span><span class="st">&quot;</span><span class="va">)</span>
+	<span class="cf">done</span> <span class="op">&lt;</span> <span class="st">&quot;</span><span class="va">${__l_named_paths_definition}</span><span class="st">&quot;</span>
+<span class="kw">}</span>
+
+<span class="va">path</span><span class="op">=</span><span class="st">&quot;</span><span class="va">${1</span><span class="op">:-</span><span class="va">}</span><span class="st">&quot;</span>
+
+<span class="va">is_named_path</span><span class="op">=</span>0
+
+<span class="ex">__l_get_named_paths</span>
+
+<span class="co"># See if we hit any of the specially-named paths. If so, then we set final_path</span>
+<span class="co"># to include it.</span>
+<span class="cf">for</span> named_path <span class="kw">in</span> <span class="st">&quot;</span><span class="va">${__l_named_paths</span><span class="op">[@]</span><span class="va">}</span><span class="st">&quot;</span><span class="kw">;</span> <span class="cf">do</span>
+	<span class="cf">if</span> <span class="kw">[[</span> <span class="st">&quot;</span><span class="va">${path}</span><span class="st">&quot;</span> <span class="ot">!=</span> <span class="st">&quot;</span><span class="va">${named_path</span><span class="op">#</span><span class="pp">*</span>=<span class="va">}</span><span class="st">&quot;</span><span class="pp">*</span> <span class="kw">]];</span> <span class="cf">then</span>
+		<span class="cf">continue</span>
+	<span class="cf">fi</span>
+
+	<span class="co"># Grab the path alias name. E.g., &quot;s&quot; for ~/syscfg.</span>
+	<span class="va">path_aliased</span><span class="op">=</span><span class="st">&quot;~</span><span class="va">${named_path</span><span class="op">%</span>=<span class="pp">*</span><span class="va">}</span><span class="st">&quot;</span>
+
+	<span class="co"># Determine how long the full expanded path is. E.g., for ~/syscfg it may be</span>
+	<span class="co"># 14 characters for &quot;/home/l/syscfg&quot;.</span>
+	<span class="va">path_expanded_len</span><span class="op">=</span><span class="st">&quot;</span><span class="va">${named_path</span><span class="op">#</span><span class="pp">*</span>=<span class="va">}</span><span class="st">&quot;</span>
+	<span class="va">path_expanded_len</span><span class="op">=</span><span class="st">&quot;</span><span class="va">${</span><span class="op">#</span><span class="va">path_expanded_len}</span><span class="st">&quot;</span>
+
+	<span class="co"># For the &quot;prefix&quot; that can be truncated, make it start from the portion of</span>
+	<span class="co"># the path that excludes the leading prefix that lines up with the expanded</span>
+	<span class="co"># path. E.g., if path is set to &quot;/home/l/syscfg/foo/bar&quot;, then we want the</span>
+	<span class="co"># &quot;prefix&quot; to be just &quot;foo/bar&quot;.</span>
+	<span class="va">prefix</span><span class="op">=</span><span class="st">&quot;</span><span class="va">${path</span><span class="op">:</span><span class="va">${path_expanded_len}}</span><span class="st">&quot;</span>
+	<span class="co"># Remove leading &#39;/&#39;, if any.</span>
+	<span class="va">prefix</span><span class="op">=</span><span class="st">&quot;</span><span class="va">${prefix</span><span class="op">#</span>/<span class="va">}</span><span class="st">&quot;</span>
+
+	<span class="co"># If the prefix has a slash in it (e.g., &quot;foo/bar&quot;), then we need to</span>
+	<span class="co"># identify the last portion &quot;bar&quot; as the basename, and any leading bit as</span>
+	<span class="co"># the prefix (which can be truncated).</span>
+	<span class="cf">if</span> <span class="kw">[[</span> <span class="st">&quot;</span><span class="va">${prefix}</span><span class="st">&quot;</span> <span class="ot">==</span> <span class="pp">*</span>/<span class="pp">*</span> <span class="kw">]];</span> <span class="cf">then</span>
+		<span class="va">basename</span><span class="op">=</span><span class="st">&quot;</span><span class="va">${prefix</span><span class="op">##</span><span class="pp">*</span>/<span class="va">}</span><span class="st">&quot;</span>
+		<span class="va">prefix</span><span class="op">=</span><span class="st">&quot;</span><span class="va">${prefix</span><span class="op">%</span>/<span class="pp">*</span><span class="va">}</span><span class="st">&quot;</span>
+		<span class="va">final_path</span><span class="op">=</span><span class="st">&quot;</span><span class="va">${path_aliased}</span><span class="st">/</span><span class="va">${prefix}</span><span class="st">/</span><span class="va">${basename}</span><span class="st">&quot;</span>
+	<span class="cf">else</span>
+		<span class="co"># This is a case where we&#39;re given just 1 child directory underneath the</span>
+		<span class="co"># expanded alias. E.g., &quot;/home/l/syscfg/foo&quot;. In this case there is</span>
+		<span class="co"># nothing to truncate (both the path alias and the basename should be</span>
+		<span class="co"># fully displayed), so the final_path lacks a &quot;prefix&quot; portion.</span>
+		<span class="va">basename</span><span class="op">=</span><span class="st">&quot;</span><span class="va">${prefix}</span><span class="st">&quot;</span>
+		<span class="va">final_path</span><span class="op">=</span><span class="st">&quot;</span><span class="va">${path_aliased}</span><span class="st">/</span><span class="va">${basename}</span><span class="st">&quot;</span>
+	<span class="cf">fi</span>
+	<span class="va">is_named_path</span><span class="op">=</span>1
+	<span class="cf">break</span>
+<span class="cf">done</span>
+
+<span class="cf">if</span> <span class="ot">! </span><span class="kw">((</span> <span class="va">is_named_path</span> <span class="kw">));</span> <span class="cf">then</span>
+	<span class="co"># Convert expanded $HOME path to just &quot;~&quot;.</span>
+	<span class="cf">if</span> <span class="kw">[[</span> <span class="st">&quot;</span><span class="va">${path}</span><span class="st">&quot;</span> <span class="ot">==</span> <span class="st">&quot;</span><span class="va">$HOME</span><span class="st">&quot;</span><span class="pp">*</span> <span class="kw">]];</span> <span class="cf">then</span>
+		<span class="va">path</span><span class="op">=</span><span class="st">&quot;~</span><span class="va">${path</span><span class="op">#</span><span class="st">&quot;</span><span class="va">$HOME</span><span class="st">&quot;</span><span class="va">}</span><span class="st">&quot;</span>
+	<span class="cf">fi</span>
+	<span class="va">prefix</span><span class="op">=</span><span class="st">&quot;</span><span class="va">${path</span><span class="op">%</span>/<span class="pp">*</span><span class="va">}</span><span class="st">&quot;</span>
+	<span class="va">basename</span><span class="op">=</span><span class="st">&quot;</span><span class="va">${path</span><span class="op">##</span><span class="pp">*</span>/<span class="va">}</span><span class="st">&quot;</span>
+	<span class="va">final_path</span><span class="op">=</span><span class="st">&quot;</span><span class="va">${prefix}</span><span class="st">/</span><span class="va">${basename}</span><span class="st">&quot;</span>
+<span class="cf">fi</span>
+
+<span class="co"># Truncate long prefix paths.</span>
+<span class="va">__TRUNCATE_THRESHOLD</span><span class="op">=</span>30
+
+<span class="va">i</span><span class="op">=</span>0
+<span class="ex">mapfile</span> <span class="at">-td</span> / fields <span class="op">&lt;</span> <span class="op">&lt;(</span><span class="bu">printf</span> <span class="st">&quot;%s\0&quot;</span> <span class="st">&quot;</span><span class="va">${prefix}</span><span class="st">&quot;</span><span class="op">)</span>
+<span class="cf">while</span> <span class="kw">((</span> <span class="st">&quot;</span><span class="va">${</span><span class="op">#</span><span class="va">final_path}</span><span class="st">&quot;</span> <span class="op">&gt;</span> <span class="st">&quot;</span><span class="va">${__TRUNCATE_THRESHOLD}</span><span class="st">&quot;</span> <span class="kw">))</span> <span class="kw">&amp;&amp;</span> <span class="kw">((</span> <span class="ex">i</span> <span class="op">&lt;</span> <span class="st">&quot;</span><span class="va">${</span><span class="op">#</span><span class="va">fields</span><span class="op">[@]</span><span class="va">}</span><span class="st">&quot;</span> <span class="kw">));</span> <span class="cf">do</span>
+	<span class="co"># Truncate this portion of the prefix to its first letter.</span>
+	<span class="va">fields</span><span class="op">[</span><span class="st">&quot;</span><span class="va">${i}</span><span class="st">&quot;</span><span class="op">]=</span><span class="st">&quot;</span><span class="va">${fields</span><span class="op">[</span><span class="va">${i}</span><span class="op">]::</span><span class="dv">1</span><span class="va">}</span><span class="st">&quot;</span>
+	<span class="va">prefix</span><span class="op">=</span><span class="va">$(IFS</span><span class="op">=</span>/<span class="kw">;</span> <span class="bu">printf</span> <span class="st">&#39;%s&#39;</span> <span class="st">&quot;</span><span class="va">${fields</span><span class="op">[*]</span><span class="va">}</span><span class="st">&quot;</span><span class="va">)</span>
+	<span class="cf">if</span> <span class="kw">((</span> <span class="va">is_named_path</span> <span class="kw">));</span> <span class="cf">then</span>
+		<span class="va">final_path</span><span class="op">=</span><span class="st">&quot;</span><span class="va">${path_aliased}</span><span class="st">/</span><span class="va">${prefix}</span><span class="st">/</span><span class="va">${basename}</span><span class="st">&quot;</span>
+	<span class="cf">else</span>
+		<span class="va">final_path</span><span class="op">=</span><span class="st">&quot;</span><span class="va">${prefix}</span><span class="st">/</span><span class="va">${basename}</span><span class="st">&quot;</span>
+	<span class="cf">fi</span>
+	<span class="va">i</span><span class="op">=</span><span class="va">$((i</span> <span class="op">+</span> <span class="dv">1</span><span class="va">))</span>
+<span class="cf">done</span>
+
+<span class="co"># Handle edge cases.</span>
+<span class="co"># shellcheck disable=SC2088</span>
+<span class="cf">case</span> <span class="st">&quot;</span><span class="va">${final_path}</span><span class="st">&quot;</span> <span class="kw">in</span>
+<span class="co"># $HOME path as input.</span>
+<span class="st">&quot;~/~&quot;</span><span class="kw">)</span>
+	<span class="bu">echo</span> <span class="st">&quot;~&quot;</span>
+	<span class="cf">;;</span>
+<span class="st">&quot;/&quot;</span><span class="kw">)</span>
+	<span class="bu">echo</span> <span class="st">&quot;/&quot;</span>
+	<span class="cf">;;</span>
+<span class="pp">*</span><span class="kw">)</span>
+	<span class="bu">echo</span> <span class="st">&quot;</span><span class="va">${final_path</span><span class="op">%</span>/<span class="va">}</span><span class="st">&quot;</span>
+	<span class="cf">;;</span>
+<span class="cf">esac</span></code></pre></div></div></div><div id="heading-container-h-3-Git" class="heading-container"><h2 id="h-3-Git"><span id="c-17" class="cell-idx"><a href="#h-3-Git">3&ensp;Git</a></span></h2></div><div id="heading-container-h-3.1-gtag.sh" class="heading-container"><h3 id="h-3.1-gtag.sh"><span id="c-18" class="cell-idx"><a href="#h-3.1-gtag.sh">3.1&ensp;<span class="code">gtag.sh</span></a></span></h3><p><span id="c-19" class="cell-idx">Commit all changes to tracked files as a new version of a program, and tag that commit.</span></p><div id="c-20" class="cell-idx"><div class="block-container src" id="b-gtag"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-gtag">&#x1F517;</a></div><div class="block-meta"><code>gtag</code><br><code><span class="bold">&#x1F3AF; script/gtag.sh</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">bash</span></p></li><li><p><span class="code">shebang</span> = <span class="code">#!/usr/bin/env bash</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="co"># Git tagging script</span>
+
+<span class="co"># Usage: gtag &lt;PROGRAM_NAME&gt; &lt;VERSION_NUMBER&gt;</span>
+
+<span class="co"># Note: &lt;VERSION_NUMBER&gt; should only be the version number itself; this script</span>
+<span class="co"># will add &quot;v&quot; as a prefix when tagging it with git.</span>
+
+<span class="va">program_name</span><span class="op">=</span><span class="va">$1</span>
+<span class="va">version_number</span><span class="op">=</span><span class="va">$2</span>
+
+<span class="cf">if</span> <span class="kw">[[</span> <span class="ot">-z</span> <span class="va">$program_name</span> <span class="kw">||</span> <span class="ot">-z</span> <span class="va">$version_number</span> <span class="kw">]];</span> <span class="cf">then</span>
+	<span class="bu">echo</span> <span class="st">&quot;usage: gtag.sh &lt;PROGRAM_NAME&gt; &lt;VERSION_NUMBER&gt;&quot;</span>
+	<span class="bu">exit</span> 1
+<span class="cf">fi</span>
+
+<span class="fu">git</span> commit <span class="at">-am</span> <span class="st">&quot;</span><span class="va">$program_name</span><span class="st"> </span><span class="va">$version_number</span><span class="st">&quot;</span>
+<span class="fu">git</span> tag <span class="at">-a</span> <span class="st">&quot;v</span><span class="va">$version_number</span><span class="st">&quot;</span> <span class="at">-m</span> <span class="st">&quot;</span><span class="va">$program_name</span><span class="st"> </span><span class="va">$version_number</span><span class="st">&quot;</span></code></pre></div></div></div><div id="heading-container-h-3.2-seepr" class="heading-container"><h3 id="h-3.2-seepr"><span id="c-21" class="cell-idx"><a href="#h-3.2-seepr">3.2&ensp;<span class="code">seepr</span></a></span></h3><p><span id="c-22" class="cell-idx">Check out a GitHub pull request into a uniquely named local branch, for browsing it locally.</span></p><div id="c-23" class="cell-idx"><div class="block-container src" id="b-seepr"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-seepr">&#x1F517;</a></div><div class="block-meta"><code>seepr</code><br><code><span class="bold">&#x1F3AF; script/seepr</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">bash</span></p></li><li><p><span class="code">shebang</span> = <span class="code">#!/usr/bin/env bash</span></p></li></ul></div><pre class="block-body"><code class="sourceCode">
+<span class="bu">set</span> <span class="at">-euo</span> pipefail
+
+<span class="co"># Checkout PR from GitHub into a local (uniquely named) branch for local</span>
+<span class="co"># browsing.</span>
+
+<span class="fu">usage()</span>
+<span class="kw">{</span>
+	<span class="bu">echo</span> <span class="op">&gt;&amp;</span><span class="dv">2</span> <span class="st">&quot;usage: </span><span class="va">$(</span><span class="fu">basename</span> <span class="st">&quot;</span><span class="va">${0}</span><span class="st">&quot;</span><span class="va">)</span><span class="st"> &lt;REMOTE&gt; &lt;PR_NUMBER&gt;&quot;</span>
+<span class="kw">}</span>
+
+<span class="fu">get_desired_branch_name()</span>
+<span class="kw">{</span>
+	<span class="bu">local</span> <span class="va">remote</span>
+	<span class="bu">local</span> <span class="va">pr_number</span>
+	<span class="bu">local</span> <span class="va">branch</span>
+	<span class="va">remote</span><span class="op">=</span><span class="st">&quot;</span><span class="va">${1}</span><span class="st">&quot;</span>
+	<span class="va">pr_number</span><span class="op">=</span><span class="st">&quot;</span><span class="va">${2}</span><span class="st">&quot;</span>
+	<span class="va">branch</span><span class="op">=</span><span class="st">&quot;</span><span class="va">${remote}</span><span class="st">-PR</span><span class="va">${pr_number}</span><span class="st">-v1&quot;</span>
+
+	<span class="bu">echo</span> <span class="st">&quot;</span><span class="va">${branch}</span><span class="st">&quot;</span>
+<span class="kw">}</span>
+
+<span class="fu">local_branch_name_exists()</span>
+<span class="kw">{</span>
+	<span class="fu">git</span> branch <span class="kw">|</span> <span class="fu">grep</span> <span class="at">-q</span> <span class="st">&quot;</span><span class="va">${1}</span><span class="st">&quot;</span>
+<span class="kw">}</span>
+
+<span class="fu">get_unique_desired_branch_name()</span>
+<span class="kw">{</span>
+	<span class="bu">local</span> <span class="va">branch</span>
+	<span class="bu">local</span> <span class="va">counter</span>
+	<span class="bu">local</span> <span class="va">counter_len</span>
+	<span class="va">branch</span><span class="op">=</span><span class="st">&quot;</span><span class="va">${1}</span><span class="st">&quot;</span>
+
+	<span class="cf">if</span> <span class="ot">! </span><span class="ex">local_branch_name_exists</span> <span class="st">&quot;</span><span class="va">${branch}</span><span class="st">&quot;</span><span class="kw">;</span> <span class="cf">then</span>
+		<span class="bu">echo</span> <span class="st">&quot;</span><span class="va">${branch}</span><span class="st">&quot;</span>
+		<span class="cf">return</span>
+	<span class="cf">fi</span>
+
+	<span class="co"># If the branch name already exists, append a &quot;-v&lt;NUM&gt;&quot; to it, like &quot;-v0&quot; or</span>
+	<span class="co"># &quot;-v1&quot;.</span>
+	<span class="cf">if</span> <span class="kw">[[</span> <span class="st">&quot;</span><span class="va">${branch}</span><span class="st">&quot;</span> <span class="ot">=~</span> <span class="pp">.*</span><span class="ss">-v</span><span class="op">([</span><span class="ss">0</span><span class="op">-</span><span class="ss">9</span><span class="op">]</span><span class="pp">+</span><span class="op">)$</span> <span class="kw">]];</span> <span class="cf">then</span>
+		<span class="va">counter</span><span class="op">=</span><span class="st">&quot;</span><span class="va">${BASH_REMATCH</span><span class="op">[</span><span class="dv">1</span><span class="op">]</span><span class="va">}</span><span class="st">&quot;</span>
+		<span class="va">counter_len</span><span class="op">=</span><span class="st">&quot;</span><span class="va">${</span><span class="op">#</span><span class="va">counter}</span><span class="st">&quot;</span>
+
+		<span class="co"># Make it unique.</span>
+		<span class="cf">if</span> <span class="kw">[[</span> <span class="ot">-n</span> <span class="st">&quot;</span><span class="va">${counter</span><span class="op">:-</span><span class="va">}</span><span class="st">&quot;</span> <span class="kw">]];</span> <span class="cf">then</span>
+			<span class="kw">((</span><span class="op">++</span><span class="va">counter</span><span class="kw">))</span>
+		<span class="cf">fi</span>
+
+		<span class="co"># Strip the old counter and replace it with the new one to make this branch</span>
+		<span class="co"># unique.</span>
+		<span class="va">branch</span><span class="op">=</span><span class="st">&quot;</span><span class="va">${branch</span><span class="op">::</span>-<span class="va">${counter_len}}</span><span class="st">&quot;</span>
+		<span class="va">branch</span><span class="op">=</span><span class="st">&quot;</span><span class="va">${branch}${counter}</span><span class="st">&quot;</span>
+	<span class="cf">else</span>
+		<span class="co"># This should never happen, because we always append a &quot;-v1&quot; in</span>
+		<span class="co"># get_desired_branch_name.</span>
+		<span class="bu">echo</span> <span class="op">&gt;&amp;</span><span class="dv">2</span> <span class="st">&quot;error: could not uniquify branch name </span><span class="dt">\`</span><span class="va">${branch}</span><span class="st">&#39;&quot;</span>
+		<span class="cf">return</span> <span class="dv">1</span>
+	<span class="cf">fi</span>
+
+	<span class="bu">echo</span> <span class="st">&quot;</span><span class="va">${branch}</span><span class="st">&quot;</span>
+<span class="kw">}</span>
+
+<span class="fu">checkout_pr()</span>
+<span class="kw">{</span>
+	<span class="bu">local</span> <span class="va">branch</span>
+	<span class="bu">local</span> <span class="va">remote</span>
+	<span class="bu">local</span> <span class="va">pr_number</span>
+	<span class="va">remote</span><span class="op">=</span><span class="st">&quot;</span><span class="va">${1}</span><span class="st">&quot;</span>
+	<span class="va">pr_number</span><span class="op">=</span><span class="st">&quot;</span><span class="va">${2}</span><span class="st">&quot;</span>
+	<span class="va">branch</span><span class="op">=</span><span class="va">$(</span><span class="ex">get_desired_branch_name</span> <span class="st">&quot;</span><span class="va">${1}</span><span class="st">&quot;</span> <span class="st">&quot;</span><span class="va">${2}</span><span class="st">&quot;</span><span class="va">)</span>
+	<span class="va">branch</span><span class="op">=</span><span class="va">$(</span><span class="ex">get_unique_desired_branch_name</span> <span class="st">&quot;</span><span class="va">${branch}</span><span class="st">&quot;</span><span class="va">)</span>
+
+	<span class="bu">echo</span> <span class="op">&gt;&amp;</span><span class="dv">2</span> <span class="st">&quot;using unique local branch name: </span><span class="dt">\`</span><span class="va">$branch</span><span class="st">&#39;&quot;</span>
+	<span class="fu">git</span> fetch <span class="st">&quot;</span><span class="va">${remote}</span><span class="st">&quot;</span> <span class="st">&quot;pull/</span><span class="va">${pr_number}</span><span class="st">/head:</span><span class="va">${branch}</span><span class="st">&quot;</span>
+	<span class="fu">git</span> checkout <span class="st">&quot;</span><span class="va">${branch}</span><span class="st">&quot;</span>
+<span class="kw">}</span>
+
+<span class="fu">main()</span>
+<span class="kw">{</span>
+	<span class="cf">if</span> <span class="kw">((</span> <span class="va">$#</span> <span class="op">!=</span> <span class="dv">2</span> <span class="kw">));</span> <span class="cf">then</span>
+		<span class="ex">usage</span>
+		<span class="bu">exit</span> 1
+	<span class="cf">fi</span>
+
+	<span class="ex">checkout_pr</span> <span class="st">&quot;</span><span class="va">${1}</span><span class="st">&quot;</span> <span class="st">&quot;</span><span class="va">${2}</span><span class="st">&quot;</span>
+<span class="kw">}</span>
+
+<span class="ex">main</span> <span class="st">&quot;</span><span class="va">$@</span><span class="st">&quot;</span></code></pre></div></div></div><div id="heading-container-h-3.3-ref-to-org-link.sh" class="heading-container"><h3 id="h-3.3-ref-to-org-link.sh"><span id="c-24" class="cell-idx"><a href="#h-3.3-ref-to-org-link.sh">3.3&ensp;<span class="code">ref-to-org-link.sh</span></a></span></h3><p><span id="c-25" class="cell-idx">Turn a commit SHA into a link to that commit&#39;s upstream web page. Only GitHub is supported. Our <a href="/git.html" class="internal-link" id="linkNumber-8">Git and Tig configurations</a> call this.</span></p><div id="c-26" class="cell-idx"><div class="block-container src" id="b-ref-to-org-link"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-ref-to-org-link">&#x1F517;</a></div><div class="block-meta"><code>ref-to-org-link</code><br><code><span class="bold">&#x1F3AF; script/git/ref-to-org-link.sh</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">bash</span></p></li><li><p><span class="code">shebang</span> = <span class="code">#!/usr/bin/env bash</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="co">#</span>
+<span class="co"># Given a Git commit SHA from either the command line or STDIN, get a link to</span>
+<span class="co"># the upstream web page for that commit. Currently only GitHub is supported.</span>
+
+<span class="bu">set</span> <span class="at">-euo</span> pipefail
+
+<span class="fu">get_upstream_link()</span>
+<span class="kw">{</span>
+	<span class="bu">local</span> <span class="va">sha</span><span class="op">=</span><span class="st">&quot;</span><span class="va">${1</span><span class="op">:-</span><span class="va">}</span><span class="st">&quot;</span>
+	<span class="bu">local</span> <span class="va">remote</span>
+
+	<span class="co"># A remote will typically look like &quot;git@github.com:foo/bar.git&quot;. We</span>
+	<span class="co"># have to clean this up to look like</span>
+	<span class="co"># &quot;https://github.com/foo/bar/commit/&lt;SHA&gt;&quot;.</span>
+	<span class="va">remote</span><span class="op">=</span><span class="st">&quot;</span><span class="va">$(</span><span class="fu">git</span> rev-parse <span class="at">--abbrev-ref</span> <span class="at">--symbolic-full-name</span> <span class="st">&quot;@{u}&quot;</span><span class="va">)</span><span class="st">&quot;</span>
+
+	<span class="co"># Get rid of the &quot;/master&quot; if the remote is &quot;origin/master&quot;, so we just</span>
+	<span class="co"># have &quot;origin&quot;.</span>
+	<span class="va">remote</span><span class="op">=</span><span class="st">&quot;</span><span class="va">${remote</span><span class="op">%</span>/<span class="pp">*</span><span class="va">}</span><span class="st">&quot;</span>
+
+	<span class="va">remote</span><span class="op">=</span><span class="st">&quot;</span><span class="va">$(</span><span class="fu">git</span> remote get-url <span class="st">&quot;</span><span class="va">${remote}</span><span class="st">&quot;</span><span class="va">)</span><span class="st">&quot;</span>
+	<span class="cf">case</span> <span class="st">&quot;</span><span class="va">${remote}</span><span class="st">&quot;</span> <span class="kw">in</span>
+	<span class="ss">git@github.com</span><span class="pp">*</span><span class="kw">)</span>
+		<span class="cf">if</span> <span class="kw">[[</span> <span class="st">&quot;</span><span class="va">${remote}</span><span class="st">&quot;</span> <span class="ot">=~</span> <span class="ss">git@github</span><span class="pp">.</span><span class="ss">com:</span> <span class="kw">]];</span> <span class="cf">then</span>
+			<span class="va">remote</span><span class="op">=</span><span class="st">&quot;</span><span class="va">${remote</span><span class="op">#</span>git@github.com:<span class="va">}</span><span class="st">&quot;</span>
+			<span class="va">remote</span><span class="op">=</span><span class="st">&quot;</span><span class="va">${remote</span><span class="op">%</span>.git<span class="va">}</span><span class="st">&quot;</span>
+			<span class="va">remote</span><span class="op">=</span><span class="st">&quot;https://github.com/</span><span class="va">${remote}</span><span class="st">&quot;</span>
+		<span class="cf">fi</span>
+		<span class="cf">;;</span>
+	<span class="pp">*</span><span class="kw">)</span>
+		<span class="bu">echo</span> <span class="op">&gt;&amp;</span><span class="dv">2</span> <span class="st">&quot;non-github upstreams are not supported&quot;</span>
+		<span class="cf">return</span> <span class="dv">1</span>
+		<span class="cf">;;</span>
+	<span class="cf">esac</span>
+
+	<span class="bu">echo</span> <span class="st">&quot;</span><span class="va">${remote}</span><span class="st">/commit/</span><span class="va">${sha}</span><span class="st">&quot;</span>
+<span class="kw">}</span>
+
+<span class="fu">main()</span>
+<span class="kw">{</span>
+	<span class="bu">local</span> <span class="va">sha</span><span class="op">=</span><span class="st">&quot;</span><span class="va">${1</span><span class="op">:-</span><span class="va">}</span><span class="st">&quot;</span>
+	<span class="cf">if</span> <span class="kw">[[</span> <span class="ot">-z</span> <span class="st">&quot;</span><span class="va">${sha}</span><span class="st">&quot;</span> <span class="kw">]];</span> <span class="cf">then</span>
+		<span class="va">sha</span><span class="op">=</span><span class="va">$(</span><span class="op">&lt;</span>/dev/stdin<span class="va">)</span>
+	<span class="cf">fi</span>
+
+	<span class="bu">local</span> <span class="va">link_target</span>
+	<span class="bu">local</span> <span class="va">link_desc</span>
+
+	<span class="va">link_target</span><span class="op">=</span><span class="st">&quot;</span><span class="va">$(</span><span class="ex">get_upstream_link</span> <span class="st">&quot;</span><span class="va">${sha}</span><span class="st">&quot;</span><span class="va">)</span><span class="st">&quot;</span>
+	<span class="va">link_desc</span><span class="op">=</span><span class="st">&quot;</span><span class="va">$(</span><span class="fu">git</span> show <span class="at">--no-patch</span> <span class="at">--pretty</span><span class="op">=</span>reference <span class="st">&quot;</span><span class="va">${sha}</span><span class="st">&quot;</span><span class="va">)</span><span class="st">&quot;</span>
+
+	<span class="bu">echo</span> <span class="st">&quot;[[</span><span class="va">${link_target}</span><span class="st">][</span><span class="va">${link_desc}</span><span class="st">]]&quot;</span>
+<span class="kw">}</span>
+
+<span class="ex">main</span> <span class="st">&quot;</span><span class="va">$@</span><span class="st">&quot;</span></code></pre></div></div></div><div id="heading-container-h-4-Photos" class="heading-container"><h2 id="h-4-Photos"><span id="c-27" class="cell-idx"><a href="#h-4-Photos">4&ensp;Photos</a></span></h2></div><div id="heading-container-h-4.1-sync-sd-card.sh" class="heading-container"><h3 id="h-4.1-sync-sd-card.sh"><span id="c-28" class="cell-idx"><a href="#h-4.1-sync-sd-card.sh">4.1&ensp;<span class="code">sync-sd-card.sh</span></a></span></h3><p><span id="c-29" class="cell-idx">Copy an SD card to an external drive, and then <a href="#b-raw-to-jpg" class="internal-link" id="linkNumber-9">convert</a> the RAF raw files in the given Fuji folder to JPEG in <span class="code">~/converted</span>.</span></p><div id="c-30" class="cell-idx"><div class="block-container src" id="b-sync-sd-card"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-sync-sd-card">&#x1F517;</a></div><div class="block-meta"><code>sync-sd-card</code><br><code><span class="bold">&#x1F3AF; script/sync-sd-card.sh</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">bash</span></p></li><li><p><span class="code">shebang</span> = <span class="code">#!/usr/bin/env bash</span></p></li></ul></div><pre class="block-body"><code class="sourceCode">
+<span class="bu">set</span> <span class="at">-o</span> errexit
+<span class="bu">set</span> <span class="at">-o</span> nounset
+<span class="bu">set</span> <span class="at">-o</span> pipefail
+
+<span class="cf">if</span> <span class="kw">((</span> <span class="va">$#</span> <span class="op">!=</span> <span class="dv">1</span> <span class="kw">))</span> <span class="kw">||</span> <span class="kw">[[</span> <span class="ot">-z</span> <span class="va">$1</span> <span class="kw">]];</span> <span class="cf">then</span>
+	<span class="bu">echo</span> <span class="op">&gt;&amp;</span><span class="dv">2</span> <span class="st">&quot;usage: </span><span class="va">$0</span><span class="st"> &lt;FUJI_FOLDER_PREFIX&gt;&quot;</span>
+<span class="cf">fi</span>
+
+<span class="cf">if</span> <span class="kw">[[</span> <span class="ot">-d</span> /Volumes/sd128GB <span class="kw">]];</span> <span class="cf">then</span>
+	<span class="fu">rsync</span> <span class="at">-ahP</span> <span class="at">--no-whole-file</span> <span class="at">--inplace</span> <span class="dt">\</span>
+		<span class="at">--exclude</span><span class="op">=</span><span class="st">&#39;.*/&#39;</span> <span class="dt">\</span>
+		<span class="at">--exclude</span><span class="op">=</span><span class="st">&#39;*.DAT&#39;</span> <span class="dt">\</span>
+		/Volumes/<span class="dt">{sd128GB</span><span class="op">,</span><span class="dt">wd1TB}</span>
+<span class="cf">fi</span>
+
+<span class="cf">if</span> <span class="kw">[[</span> <span class="ot">-d</span> /Volumes/wd1TB <span class="kw">]];</span> <span class="cf">then</span>
+	<span class="ex">mapfile</span> <span class="at">-t</span> raws <span class="op">&lt;</span> <span class="op">&lt;(</span><span class="fu">find</span> <span class="st">&quot;/Volumes/wd1TB/sd128GB/DCIM/</span><span class="va">${1}</span><span class="st">_FUJI&quot;</span> <span class="at">-name</span> <span class="st">&#39;*.RAF&#39;</span> <span class="kw">|</span> <span class="fu">sort</span><span class="op">)</span>
+	<span class="cf">if</span> <span class="ot">! </span><span class="kw">((</span> <span class="va">${</span><span class="op">#</span><span class="va">raws</span><span class="op">[@]</span><span class="va">}</span> <span class="kw">));</span> <span class="cf">then</span>
+		<span class="bu">echo</span> <span class="op">&gt;&amp;</span><span class="dv">2</span> <span class="st">&quot;no *.RAF raws found in </span><span class="va">${1}</span><span class="st">_FUJI&quot;</span>
+		<span class="bu">exit</span>
+	<span class="cf">fi</span>
+	<span class="ex">parallel</span> <span class="at">-j</span> <span class="st">&quot;</span><span class="va">$(</span><span class="fu">nproc</span> <span class="at">--all</span><span class="va">)</span><span class="st">&quot;</span> <span class="at">-m</span> raw-to-jpg.sh <span class="dt">\</span>
+		~/converted <span class="dt">\</span>
+		::: <span class="st">&quot;</span><span class="va">${raws</span><span class="op">[@]</span><span class="va">}</span><span class="st">&quot;</span>
+<span class="cf">fi</span></code></pre></div></div></div><div id="heading-container-h-4.2-raw-to-jpg.sh" class="heading-container"><h3 id="h-4.2-raw-to-jpg.sh"><span id="c-31" class="cell-idx"><a href="#h-4.2-raw-to-jpg.sh">4.2&ensp;<span class="code">raw-to-jpg.sh</span></a></span></h3><p><span id="c-32" class="cell-idx">Convert the given files to JPEG with <span class="code">sips</span> (so this only works on macOS), skipping any that are already converted.</span></p><div id="c-33" class="cell-idx"><div class="block-container src" id="b-raw-to-jpg"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-raw-to-jpg">&#x1F517;</a></div><div class="block-meta"><code>raw-to-jpg</code><br><code><span class="bold">&#x1F3AF; script/raw-to-jpg.sh</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">bash</span></p></li><li><p><span class="code">shebang</span> = <span class="code">#!/bin/bash</span></p></li></ul></div><pre class="block-body"><code class="sourceCode">
+<span class="co"># Convert to jpeg.</span>
+
+<span class="co"># Output directory (remove any trailing slash).</span>
+<span class="va">outdir</span><span class="op">=</span><span class="va">${1</span><span class="op">%%</span>/<span class="va">}</span>
+<span class="bu">shift</span>
+
+<span class="va">inputs</span><span class="op">=</span><span class="va">(</span><span class="st">&quot;</span><span class="va">$@</span><span class="st">&quot;</span><span class="va">)</span>
+<span class="cf">for</span> input <span class="kw">in</span> <span class="st">&quot;</span><span class="va">${inputs</span><span class="op">[@]</span><span class="va">}</span><span class="st">&quot;</span><span class="kw">;</span> <span class="cf">do</span>
+    <span class="co"># Input file: isolate filename (strip leading directories).</span>
+    <span class="va">infile</span><span class="op">=</span><span class="st">&quot;</span><span class="va">${input</span><span class="op">##</span><span class="pp">*</span>/<span class="va">}</span><span class="st">&quot;</span>
+    <span class="co"># Output file: rename to .jpg extension.</span>
+    <span class="va">outfile</span><span class="op">=</span><span class="st">&quot;</span><span class="va">${infile</span><span class="op">%</span>.<span class="pp">*</span><span class="va">}</span><span class="st">.jpg&quot;</span>
+
+    <span class="va">output</span><span class="op">=</span><span class="st">&quot;</span><span class="va">${outdir}</span><span class="st">/</span><span class="va">${outfile}</span><span class="st">&quot;</span>
+    <span class="cf">if</span> <span class="kw">[[</span> <span class="ot">-f</span> <span class="st">&quot;</span><span class="va">${output}</span><span class="st">&quot;</span> <span class="kw">]];</span> <span class="cf">then</span>
+        <span class="cf">continue</span>
+    <span class="cf">fi</span>
+    <span class="ex">sips</span> <span class="at">-s</span> format jpeg <span class="st">&quot;</span><span class="va">$input</span><span class="st">&quot;</span> <span class="at">--out</span> <span class="st">&quot;</span><span class="va">${output}</span><span class="st">&quot;</span>
+<span class="cf">done</span></code></pre></div></div></div><div id="heading-container-h-4.3-jpg-dng-diff.sh" class="heading-container"><h3 id="h-4.3-jpg-dng-diff.sh"><span id="c-34" class="cell-idx"><a href="#h-4.3-jpg-dng-diff.sh">4.3&ensp;<span class="code">jpg-dng-diff.sh</span></a></span></h3><p><span id="c-35" class="cell-idx">List the DNG files which no longer have a matching JPEG. The idea is to delete the JPEGs that we don&#39;t want, and then use this to find the matching raw files to delete.</span></p><div id="c-36" class="cell-idx"><div class="block-container src" id="b-jpg-dng-diff"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-jpg-dng-diff">&#x1F517;</a></div><div class="block-meta"><code>jpg-dng-diff</code><br><code><span class="bold">&#x1F3AF; script/jpg-dng-diff.sh</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">bash</span></p></li><li><p><span class="code">shebang</span> = <span class="code">#!/usr/bin/env bash</span></p></li></ul></div><pre class="block-body"><code class="sourceCode">
+<span class="bu">set</span> <span class="at">-o</span> errexit
+<span class="bu">set</span> <span class="at">-o</span> nounset
+<span class="bu">set</span> <span class="at">-o</span> pipefail
+
+<span class="co"># Get *.jpg files in foo/, and list *.dng files in bar/. List all *.dng files</span>
+<span class="co"># that are in bar (matching filename without the extension) that are not in</span>
+<span class="co"># foo/.</span>
+<span class="co">#</span>
+<span class="co"># Usage: $0 &lt;JPG_FOLDER&gt; &lt;DNG_FOLDER&gt; | xargs rm</span>
+
+<span class="cf">if</span> <span class="kw">((</span> <span class="va">$#</span> <span class="op">!=</span> <span class="dv">2</span> <span class="kw">))</span> <span class="kw">||</span> <span class="kw">[[</span> <span class="ot">-z</span> <span class="va">$1</span> <span class="kw">]]</span> <span class="kw">||</span> <span class="kw">[[</span> <span class="ot">-z</span> <span class="va">$2</span> <span class="kw">]];</span> <span class="cf">then</span>
+	<span class="bu">echo</span> <span class="op">&gt;&amp;</span><span class="dv">2</span> <span class="st">&quot;usage: </span><span class="va">$0</span><span class="st"> &lt;JPG_FOLDER&gt; &lt;DNG_FOLDER&gt;&quot;</span>
+<span class="cf">fi</span>
+
+<span class="va">jpg_dir</span><span class="op">=</span><span class="va">$1</span>
+<span class="va">dng_dir</span><span class="op">=</span><span class="va">$2</span>
+
+<span class="cf">for</span> dng <span class="kw">in</span> <span class="st">&quot;</span><span class="va">${dng_dir}</span><span class="st">&quot;</span>/<span class="pp">*</span>.dng<span class="kw">;</span> <span class="cf">do</span>
+	<span class="va">photo</span><span class="op">=</span><span class="st">&quot;</span><span class="va">$(</span><span class="fu">basename</span> <span class="st">&quot;</span><span class="va">${dng</span><span class="op">%</span>.dng<span class="va">}</span><span class="st">&quot;</span><span class="va">)</span><span class="st">&quot;</span>
+	<span class="va">hi_res</span><span class="op">=</span><span class="st">&quot;</span><span class="va">${dng}</span><span class="st">&quot;</span>
+	<span class="va">lo_res</span><span class="op">=</span><span class="st">&quot;</span><span class="va">${jpg_dir}</span><span class="st">/</span><span class="va">${photo}</span><span class="st">.jpg&quot;</span>
+	<span class="co"># If the hi-res photo does not have a lo-res counterpart, then it is a</span>
+	<span class="co"># candidate for deletion. The idea is that we would have gone through the</span>
+	<span class="co"># jpgs to delete those jpgs we were not interested in.</span>
+	<span class="cf">if</span> <span class="kw">[[</span> <span class="ot">!</span> <span class="ot">-f</span> <span class="st">&quot;</span><span class="va">${lo_res}</span><span class="st">&quot;</span> <span class="kw">]];</span> <span class="cf">then</span>
+		<span class="bu">echo</span> <span class="st">&quot;</span><span class="va">${hi_res}</span><span class="st">&quot;</span>
+	<span class="cf">fi</span>
+<span class="cf">done</span></code></pre></div></div></div><div id="heading-container-h-4.4-rm-raf-if-dng.sh" class="heading-container"><h3 id="h-4.4-rm-raf-if-dng.sh"><span id="c-37" class="cell-idx"><a href="#h-4.4-rm-raf-if-dng.sh">4.4&ensp;<span class="code">rm-raf-if-dng.sh</span></a></span></h3><p><span id="c-38" class="cell-idx">Delete each RAF file in a directory that has a matching DNG file.</span></p><div id="c-39" class="cell-idx"><div class="block-container src" id="b-rm-raf-if-dng"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-rm-raf-if-dng">&#x1F517;</a></div><div class="block-meta"><code>rm-raf-if-dng</code><br><code><span class="bold">&#x1F3AF; script/rm-raf-if-dng.sh</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">bash</span></p></li><li><p><span class="code">shebang</span> = <span class="code">#!/usr/bin/env bash</span></p></li></ul></div><pre class="block-body"><code class="sourceCode">
+<span class="bu">set</span> <span class="at">-o</span> errexit
+<span class="bu">set</span> <span class="at">-o</span> nounset
+<span class="bu">set</span> <span class="at">-o</span> pipefail
+
+<span class="cf">if</span> <span class="kw">((</span> <span class="va">$#</span> <span class="op">!=</span> <span class="dv">1</span> <span class="kw">));</span> <span class="cf">then</span>
+	<span class="bu">echo</span> <span class="op">&gt;&amp;</span><span class="dv">2</span> <span class="st">&quot;usage: </span><span class="va">$0</span><span class="st"> &lt;DIRECTORY&gt;&quot;</span>
+<span class="cf">fi</span>
+
+<span class="cf">if</span> <span class="kw">[[</span> <span class="ot">-z</span> <span class="va">$1</span> <span class="kw">]];</span> <span class="cf">then</span>
+	<span class="bu">echo</span> <span class="op">&gt;&amp;</span><span class="dv">2</span> <span class="st">&quot;usage: </span><span class="va">$0</span><span class="st"> &lt;DIRECTORY&gt;&quot;</span>
+<span class="cf">fi</span>
+
+<span class="ex">mapfile</span> <span class="at">-t</span> raws <span class="op">&lt;</span> <span class="op">&lt;(</span><span class="fu">find</span> <span class="st">&quot;</span><span class="va">$1</span><span class="st">&quot;</span> <span class="at">-type</span> f <span class="at">-name</span> <span class="st">&#39;*.RAF&#39;</span> <span class="kw">|</span> <span class="fu">sort</span><span class="op">)</span>
+
+<span class="cf">for</span> raw <span class="kw">in</span> <span class="st">&quot;</span><span class="va">${raws</span><span class="op">[@]</span><span class="va">}</span><span class="st">&quot;</span><span class="kw">;</span> <span class="cf">do</span>
+	<span class="co"># Delete *.RAF file if a corresponding *.dng file exists.</span>
+	<span class="cf">if</span> <span class="kw">[[</span> <span class="ot">-f</span> <span class="st">&quot;</span><span class="va">${raw</span><span class="op">/</span><span class="ss">RAF</span><span class="op">/</span>dng<span class="va">}</span><span class="st">&quot;</span> <span class="kw">]];</span> <span class="cf">then</span>
+		<span class="fu">rm</span> <span class="at">-fv</span> <span class="st">&quot;</span><span class="va">${raw}</span><span class="st">&quot;</span>
+	<span class="cf">fi</span>
+<span class="cf">done</span>
+
+<span class="bu">echo</span> DONE</code></pre></div></div></div><div id="heading-container-h-5-System-setup" class="heading-container"><h2 id="h-5-System-setup"><span id="c-40" class="cell-idx"><a href="#h-5-System-setup">5&ensp;System setup</a></span></h2></div><div id="heading-container-h-5.1-startup_hook.sh" class="heading-container"><h3 id="h-5.1-startup_hook.sh"><span id="c-41" class="cell-idx"><a href="#h-5.1-startup_hook.sh">5.1&ensp;<span class="code">startup_hook.sh</span></a></span></h3><p><span id="c-42" class="cell-idx">Start background services for each host. <a href="/xmonad.html" class="internal-link" id="linkNumber-10">XMonad</a> calls this on startup, which lets us change these services without recompiling XMonad.</span></p><div id="c-43" class="cell-idx"><div class="block-container src" id="b-startup-hook"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-startup-hook">&#x1F517;</a></div><div class="block-meta"><code>startup-hook</code><br><code><span class="bold">&#x1F3AF; script/startup_hook.sh</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">bash</span></p></li><li><p><span class="code">shebang</span> = <span class="code">#!/usr/bin/env bash</span></p></li></ul></div><pre class="block-body"><code class="sourceCode">
+<span class="bu">set</span> <span class="at">-o</span> errexit
+<span class="bu">set</span> <span class="at">-o</span> nounset
+<span class="bu">set</span> <span class="at">-o</span> pipefail
+
+<span class="co"># Start up various background services. This script is expected to be called</span>
+<span class="co"># from XMonad on startup. The advantage of using this script is that we don&#39;t</span>
+<span class="co"># have to recompile XMonad every time we want to change something here (as this</span>
+<span class="co"># script is just Bash, not Haskell).</span>
+
+<span class="cf">case</span> <span class="va">$(</span><span class="fu">hostname</span><span class="va">)</span> <span class="kw">in</span>
+<span class="ss">k0</span><span class="kw">)</span>
+	<span class="co"># Start mpd.</span>
+	<span class="ex">mpd</span> <span class="kw">&amp;</span>
+<span class="cf">;;</span>
+<span class="cf">esac</span></code></pre></div></div></div><div id="heading-container-h-5.2-susp.sh" class="heading-container"><h3 id="h-5.2-susp.sh"><span id="c-44" class="cell-idx"><a href="#h-5.2-susp.sh">5.2&ensp;<span class="code">susp.sh</span></a></span></h3><p><span id="c-45" class="cell-idx">Suspend the system with <span class="code">systemctl</span>.</span></p><div id="c-46" class="cell-idx"><div class="block-container src" id="b-susp"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-susp">&#x1F517;</a></div><div class="block-meta"><code>susp</code><br><code><span class="bold">&#x1F3AF; script/susp.sh</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">sh</span></p></li><li><p><span class="code">shebang</span> = <span class="code">#!/bin/sh</span></p></li></ul></div><pre class="block-body"><code class="sourceCode">
+<span class="bu">set</span> <span class="at">-eu</span>
+
+<span class="ex">systemctl</span> suspend
+<span class="co"># For whatever reason, we cannot restart the openvpn-home.service with sudo (it</span>
+<span class="co"># dies immediately).</span>
+<span class="co"># systemctl restart openvpn-home.service</span></code></pre></div></div></div><div id="heading-container-h-5.3-nix-pull.sh" class="heading-container"><h3 id="h-5.3-nix-pull.sh"><span id="c-47" class="cell-idx"><a href="#h-5.3-nix-pull.sh">5.3&ensp;<span class="code">nix-pull.sh</span></a></span></h3><p><span id="c-48" class="cell-idx">Copy all of the <span class="code">nix-env</span> packages from a remote host to this one.</span></p><div id="c-49" class="cell-idx"><div class="block-container src" id="b-nix-pull"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-nix-pull">&#x1F517;</a></div><div class="block-meta"><code>nix-pull</code><br><code><span class="bold">&#x1F3AF; script/nix-pull.sh</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">bash</span></p></li><li><p><span class="code">shebang</span> = <span class="code">#!/usr/bin/env bash</span></p></li></ul></div><pre class="block-body"><code class="sourceCode">
+<span class="co"># Usage: nix-pull.sh &lt;HOST&gt;</span>
+<span class="co">#</span>
+<span class="co"># This clones all &quot;nix-env&quot; packages in the remote host into the current</span>
+<span class="co"># system.</span>
+
+<span class="bu">set</span> <span class="at">-o</span> errexit
+<span class="bu">set</span> <span class="at">-o</span> nounset
+<span class="bu">set</span> <span class="at">-o</span> pipefail
+
+<span class="fu">nix_pull()</span>
+<span class="kw">{</span>
+    <span class="bu">local</span> <span class="va">remote</span>
+    <span class="bu">local</span> <span class="va">closure</span>
+    <span class="va">remote</span><span class="op">=</span><span class="st">&quot;</span><span class="va">${1}</span><span class="st">&quot;</span>
+    <span class="va">closure</span><span class="op">=</span><span class="st">&quot;</span><span class="va">${2}</span><span class="st">&quot;</span>
+    <span class="ex">nix-copy-closure</span> <span class="at">--from</span> <span class="st">&quot;</span><span class="va">${remote}</span><span class="st">&quot;</span> <span class="st">&quot;</span><span class="va">${closure}</span><span class="st">&quot;</span>
+    <span class="ex">nix-env</span> <span class="at">--install</span> <span class="st">&quot;</span><span class="va">${closure}</span><span class="st">&quot;</span>
+<span class="kw">}</span>
+
+<span class="va">remote</span><span class="op">=</span><span class="st">&quot;</span><span class="va">${1}</span><span class="st">&quot;</span>
+<span class="bu">shift</span>
+
+<span class="cf">for</span> closure <span class="kw">in</span> <span class="va">$(</span><span class="fu">ssh</span> <span class="st">&quot;</span><span class="va">${USER}</span><span class="st">@</span><span class="va">${remote}</span><span class="st">&quot;</span> nix-env <span class="at">-q</span> <span class="at">--out-path</span> <span class="kw">|</span> <span class="fu">awk</span> <span class="st">&#39;{print $2}&#39;</span><span class="va">)</span><span class="kw">;</span> <span class="cf">do</span>
+    <span class="ex">nix_pull</span> <span class="st">&quot;</span><span class="va">${remote}</span><span class="st">&quot;</span> <span class="st">&quot;</span><span class="va">${closure}</span><span class="st">&quot;</span>
+<span class="cf">done</span></code></pre></div></div></div><div id="heading-container-h-5.4-mac-setup.sh" class="heading-container"><h3 id="h-5.4-mac-setup.sh"><span id="c-50" class="cell-idx"><a href="#h-5.4-mac-setup.sh">5.4&ensp;<span class="code">mac-setup.sh</span></a></span></h3><p><span id="c-51" class="cell-idx">Stop Finder from creating <span class="code">.DS_Store</span> files on network drives.</span></p><div id="c-52" class="cell-idx"><div class="block-container src" id="b-mac-setup"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-mac-setup">&#x1F517;</a></div><div class="block-meta"><code>mac-setup</code><br><code><span class="bold">&#x1F3AF; script/mac-setup.sh</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">bash</span></p></li><li><p><span class="code">shebang</span> = <span class="code">#!/usr/bin/env bash</span></p></li></ul></div><pre class="block-body"><code class="sourceCode">
+<span class="bu">set</span> <span class="at">-o</span> errexit
+<span class="bu">set</span> <span class="at">-o</span> nounset
+<span class="bu">set</span> <span class="at">-o</span> pipefail
+<span class="bu">set</span> <span class="at">-o</span> xtrace
+
+<span class="co"># Disable creation of .DS_Store files from Finder.</span>
+<span class="ex">defaults</span> write com.apple.desktopservices DSDontWriteNetworkStores <span class="at">-bool</span> TRUE</code></pre></div></div></div><div id="heading-container-h-5.5-keyboard-repeat-mac.sh" class="heading-container"><h3 id="h-5.5-keyboard-repeat-mac.sh"><span id="c-53" class="cell-idx"><a href="#h-5.5-keyboard-repeat-mac.sh">5.5&ensp;<span class="code">keyboard-repeat-mac.sh</span></a></span></h3><p><span id="c-54" class="cell-idx">Make keys repeat faster on macOS than its settings normally allow.</span></p><div id="c-55" class="cell-idx"><div class="block-container src" id="b-keyboard-repeat-mac"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-keyboard-repeat-mac">&#x1F517;</a></div><div class="block-meta"><code>keyboard-repeat-mac</code><br><code><span class="bold">&#x1F3AF; script/keyboard-repeat-mac.sh</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">bash</span></p></li><li><p><span class="code">shebang</span> = <span class="code">#!/usr/bin/env bash</span></p></li></ul></div><pre class="block-body"><code class="sourceCode">
+<span class="co"># References.</span>
+<span class="co"># https://apple.stackexchange.com/questions/10467/how-to-increase-keyboard-key-repeat-rate-on-os-x</span>
+<span class="co"># https://stackoverflow.com/questions/43868520/how-to-adjust-keyrepeat-and-repeatdelay-in-osx-sierra</span>
+
+<span class="co"># Based on our own testing, &quot;InitialKeyRepeat&quot; is how long we wait, and</span>
+<span class="co"># &quot;KeyRepeat&quot; is the rate of keys that are repeated. For &quot;InitialKeyRepeat&quot;, we</span>
+<span class="co"># assume that each unit is equivalent to 15ms, based on the comment of 15 ==</span>
+<span class="co"># 225ms.</span>
+<span class="ex">defaults</span> write <span class="at">-g</span> InitialKeyRepeat <span class="at">-float</span> 16.67 <span class="co"># normal minimum is 15 (225 ms)</span>
+<span class="ex">defaults</span> write <span class="at">-g</span> KeyRepeat <span class="at">-int</span> 1 <span class="co"># normal minimum is 2 (30 ms)</span>
+<span class="ex">defaults</span> write <span class="at">-g</span> ApplePressAndHoldEnabled <span class="at">-bool</span> false</code></pre></div></div></div><div id="heading-container-h-5.6-set-ssh-authorized-keys-acl.ps1" class="heading-container"><h3 id="h-5.6-set-ssh-authorized-keys-acl.ps1"><span id="c-56" class="cell-idx"><a href="#h-5.6-set-ssh-authorized-keys-acl.ps1">5.6&ensp;<span class="code">set-ssh-authorized-keys-acl.ps1</span></a></span></h3><p><span id="c-57" class="cell-idx">Fix the permissions of the <span class="code">administrators_authorized_keys</span> file on Windows, for OpenSSH.</span></p><div id="c-58" class="cell-idx"><div class="block-container src" id="b-set-ssh-authorized-keys-acl"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-set-ssh-authorized-keys-acl">&#x1F517;</a></div><div class="block-meta"><code>set-ssh-authorized-keys-acl</code><br><code><span class="bold">&#x1F3AF; script/windows/set-ssh-authorized-keys-acl.ps1</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">powershell</span></p></li></ul></div><pre class="block-body"><code class="sourceCode">
+<span class="co"># Fix permissions for authorized_keys file.</span>
+<span class="co"># https://www.concurrency.com/blog/may-2019/key-based-authentication-for-openssh-on-windows</span>
+
+<span class="va">$acl</span> <span class="op">=</span> <span class="fu">Get-Acl</span> C<span class="op">:</span>\ProgramData\ssh\administrators_authorized_keys
+<span class="va">$acl</span><span class="op">.</span><span class="fu">SetAccessRuleProtection</span><span class="op">(</span><span class="va">$true</span><span class="op">,</span> <span class="va">$false</span><span class="op">)</span>
+<span class="va">$administratorsRule</span> <span class="op">=</span> <span class="fu">New-Object</span> system<span class="op">.</span><span class="fu">security</span><span class="op">.</span><span class="fu">accesscontrol</span><span class="op">.</span><span class="fu">filesystemaccessrule</span><span class="op">(</span><span class="st">&quot;Administrators&quot;</span><span class="op">,</span><span class="st">&quot;FullControl&quot;</span><span class="op">,</span><span class="st">&quot;Allow&quot;</span><span class="op">)</span>
+<span class="va">$systemRule</span> <span class="op">=</span> <span class="fu">New-Object</span> system<span class="op">.</span><span class="fu">security</span><span class="op">.</span><span class="fu">accesscontrol</span><span class="op">.</span><span class="fu">filesystemaccessrule</span><span class="op">(</span><span class="st">&quot;SYSTEM&quot;</span><span class="op">,</span><span class="st">&quot;FullControl&quot;</span><span class="op">,</span><span class="st">&quot;Allow&quot;</span><span class="op">)</span>
+<span class="va">$acl</span><span class="op">.</span><span class="fu">SetAccessRule</span><span class="op">(</span><span class="va">$administratorsRule</span><span class="op">)</span>
+<span class="va">$acl</span><span class="op">.</span><span class="fu">SetAccessRule</span><span class="op">(</span><span class="va">$systemRule</span><span class="op">)</span>
+<span class="va">$acl</span> <span class="op">|</span> <span class="fu">Set-Acl</span>
+
+<span class="fu">Write-Host</span> <span class="st">&quot;Done&quot;</span></code></pre></div></div></div><div id="heading-container-h--Page-metrics" class="heading-container page-metrics"><h2 id="h--Page-metrics"><a href="#h--Page-metrics">Page metrics</a></h2></div><div id="heading-container-h--Backlinks" class="heading-container backlinks"><h3 id="h--Backlinks"><a href="#h--Backlinks">Backlinks (0)</a></h3></div><div id="heading-container-h--Tangled-files" class="heading-container tangled-blocks"><h3 id="h--Tangled-files"><a href="#h--Tangled-files">Tangled files (18)</a></h3><ol><li><a href="#b-aex" class="verbatim">script/aex.sh</a></li><li><a href="#b-copy-clipboard" class="verbatim">script/copy-clipboard.sh</a></li><li><a href="#b-decrypt" class="verbatim">script/decrypt.sh</a></li><li><a href="#b-ref-to-org-link" class="verbatim">script/git/ref-to-org-link.sh</a></li><li><a href="#b-gtag" class="verbatim">script/gtag.sh</a></li><li><a href="#b-jpg-dng-diff" class="verbatim">script/jpg-dng-diff.sh</a></li><li><a href="#b-keyboard-repeat-mac" class="verbatim">script/keyboard-repeat-mac.sh</a></li><li><a href="#b-mac-setup" class="verbatim">script/mac-setup.sh</a></li><li><a href="#b-nix-pull" class="verbatim">script/nix-pull.sh</a></li><li><a href="#b-raw-to-jpg" class="verbatim">script/raw-to-jpg.sh</a></li><li><a href="#b-rm-raf-if-dng" class="verbatim">script/rm-raf-if-dng.sh</a></li><li><a href="#b-seepr" class="verbatim">script/seepr</a></li><li><a href="#b-simplify-path" class="verbatim">script/simplify_path.sh</a></li><li><a href="#b-startup-hook" class="verbatim">script/startup_hook.sh</a></li><li><a href="#b-susp" class="verbatim">script/susp.sh</a></li><li><a href="#b-sync-sd-card" class="verbatim">script/sync-sd-card.sh</a></li><li><a href="#b-set-ssh-authorized-keys-acl" class="verbatim">script/windows/set-ssh-authorized-keys-acl.ps1</a></li><li><a href="#b-yodel" class="verbatim">script/yodel.sh</a></li></ol></div><div id="heading-container-h--Named-cells" class="heading-container named-cells"><h3 id="h--Named-cells"><a href="#h--Named-cells">Named cells (18)</a></h3><ol><li><a href="#b-aex"><span class="verbatim">aex</span></a></li><li><a href="#b-copy-clipboard"><span class="verbatim">copy-clipboard</span></a></li><li><a href="#b-decrypt"><span class="verbatim">decrypt</span></a></li><li><a href="#b-gtag"><span class="verbatim">gtag</span></a></li><li><a href="#b-jpg-dng-diff"><span class="verbatim">jpg-dng-diff</span></a></li><li><a href="#b-keyboard-repeat-mac"><span class="verbatim">keyboard-repeat-mac</span></a></li><li><a href="#b-mac-setup"><span class="verbatim">mac-setup</span></a></li><li><a href="#b-nix-pull"><span class="verbatim">nix-pull</span></a></li><li><a href="#b-raw-to-jpg"><span class="verbatim">raw-to-jpg</span></a></li><li><a href="#b-ref-to-org-link"><span class="verbatim">ref-to-org-link</span></a></li><li><a href="#b-rm-raf-if-dng"><span class="verbatim">rm-raf-if-dng</span></a></li><li><a href="#b-seepr"><span class="verbatim">seepr</span></a></li><li><a href="#b-set-ssh-authorized-keys-acl"><span class="verbatim">set-ssh-authorized-keys-acl</span></a></li><li><a href="#b-simplify-path"><span class="verbatim">simplify-path</span></a></li><li><a href="#b-startup-hook"><span class="verbatim">startup-hook</span></a></li><li><a href="#b-susp"><span class="verbatim">susp</span></a></li><li><a href="#b-sync-sd-card"><span class="verbatim">sync-sd-card</span></a></li><li><a href="#b-yodel"><span class="verbatim">yodel</span></a></li></ol></div><footer><div class="lilac-stamp">Generated by <a href="https://lilac.funloop.org" class="external-link" target="_blank" rel="noopener noreferrer">Lilac</a></div></footer></main><script id="heading-ancestry" type="application/json">{"h--Backlinks":["h--Page-metrics"],"h--Named-cells":["h--Page-metrics"],"h--Page-metrics":[],"h--Tangled-files":["h--Page-metrics"],"h-1-Files-and-archives":[],"h-1.1-aex.sh":["h-1-Files-and-archives"],"h-1.2-decrypt.sh":["h-1-Files-and-archives"],"h-1.3-yodel.sh":["h-1-Files-and-archives"],"h-2-Clipboard-and-paths":[],"h-2.1-copy-clipboard.sh":["h-2-Clipboard-and-paths"],"h-2.2-simplify_path.sh":["h-2-Clipboard-and-paths"],"h-3-Git":[],"h-3.1-gtag.sh":["h-3-Git"],"h-3.2-seepr":["h-3-Git"],"h-3.3-ref-to-org-link.sh":["h-3-Git"],"h-4-Photos":[],"h-4.1-sync-sd-card.sh":["h-4-Photos"],"h-4.2-raw-to-jpg.sh":["h-4-Photos"],"h-4.3-jpg-dng-diff.sh":["h-4-Photos"],"h-4.4-rm-raf-if-dng.sh":["h-4-Photos"],"h-5-System-setup":[],"h-5.1-startup_hook.sh":["h-5-System-setup"],"h-5.2-susp.sh":["h-5-System-setup"],"h-5.3-nix-pull.sh":["h-5-System-setup"],"h-5.4-mac-setup.sh":["h-5-System-setup"],"h-5.5-keyboard-repeat-mac.sh":["h-5-System-setup"],"h-5.6-set-ssh-authorized-keys-acl.ps1":["h-5-System-setup"]}</script><script id="lilac-fe-script" src="/js/lilac.js"></script></body></html>

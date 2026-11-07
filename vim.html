@@ -1,0 +1,214 @@
+<!DOCTYPE HTML><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Vim</title><link rel="stylesheet" href="/css/default.css"><link rel="shortcut icon" type="image/png" href="/favicon.png"><link rel="stylesheet" href="/vendor/source-fonts/source-fonts.css">
+<script>
+  window.MathJax = {
+      loader: { paths: { "mathjax-newcm": "/vendor/mathjax-newcm-font" } },
+      output: { font: "mathjax-newcm" },
+  tex: {
+      tags: 'ams'
+  },
+  options: {
+      ignoreHtmlClass: 'verbatim|code'
+  }
+};
+</script>
+<script id="MathJax-script" async="" src="/vendor/mathjax/tex-mml-chtml.js"></script>
+</head><body><div class="navbar"><button id="hamburger" class="tocs-toggle-button" aria-label="Toggle table of contents sidebar">&#x2630;</button><div class="breadcrumbs"><a href="https://syscfg.funloop.org"><span class="breadcrumb">Linus Arver&#39;s Dotfiles</span></a> <a href="https://github.com/listx/syscfg" class="repo-link" title="Source repository" aria-label="Source repository"><svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 16 16"
+     aria-hidden="true">
+<g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+<circle cx="4" cy="3" r="1.75"></circle>
+<circle cx="4" cy="13" r="1.75"></circle>
+<circle cx="12" cy="3" r="1.75"></circle>
+<path d="M4 4.75v6.5"></path>
+<path d="M12 4.75c0 4-8 3-8 6.5"></path>
+</g>
+</svg>
+</a> <span class="breadcrumb-separator">/</span> <a href="#top"><span class="breadcrumb">vim.org</span></a></div></div><nav id="tocs"><p class="widget-title gtoc-title">Site contents</p><nav class="gtoc"><ul><li><a href="/index.html">Introduction</a></li><li><a href="/bash.html">Bash</a></li><li><a href="/claude.html">Claude</a></li><li><a href="/clojure.html">Clojure</a></li><li><a href="/emacs.html">Emacs</a></li><li><a href="/git.html">Git</a></li><li><a href="/gpg.html">GnuPG</a></li><li><a href="/jj.html">Jujutsu</a></li><li><a href="/keybindings.html">Keybindings (WIP)</a></li><li><a href="/misc.html">Miscellaneous</a></li><li><a href="/mpv.html">mpv</a></li><li><a href="/nix.html">Nix</a></li><li><a href="/notmuch.html">Notmuch</a></li><li><a href="/qutebrowser.html">qutebrowser</a></li><li><a href="/rtorrent.html">rTorrent</a></li><li><a href="/script/index.html">System scripts</a></li><li><a href="/tmux.html">tmux</a></li><li><a href="/vim.html" class="bold">Vim</a></li><li><a href="/wezterm.html">Wezterm</a></li><li><a href="/xmonad.html">xmonad</a></li><li><a href="/xorg.html">X.Org</a></li><li><a href="/zsh/index.html">Zsh</a></li></ul></nav><p class="widget-title toc-title">Page contents</p><nav class="toc"><div class="toc-entries"><ol><li class="toc-level-1"><div class="toc-entry"><span class="toc-counter">1</span><a href="#h-1-Configuration">Configuration</a></div></li><li class="toc-level-1"><div class="toc-entry"><a href="#h--Page-metrics">Page metrics</a></div><ol><li class="toc-level-2"><div class="toc-entry"><a href="#h--Backlinks">Backlinks</a></div></li><li class="toc-level-2"><div class="toc-entry"><a href="#h--Tangled-files">Tangled files</a></div></li><li class="toc-level-2"><div class="toc-entry"><a href="#h--Named-cells">Named cells</a></div></li></ol></li></ol></div></nav></nav><main><h1 id="top">Vim</h1><hr class="title-underline"><div id="heading-container-h-1-Configuration" class="heading-container"><h2 id="h-1-Configuration"><span id="c-0" class="cell-idx"><a href="#h-1-Configuration">1&ensp;Configuration</a></span></h2><p><span id="c-1" class="cell-idx">We share this one configuration between Vim and Neovim: the <span class="code">vim</span> <a href="#b-Makefile-vim" class="internal-link" id="linkNumber-1">Makefile rule</a> links it to both <span class="code">.vimrc</span> and <span class="code">.gvimrc</span>, and <span class="code">nvim/init.vim</span> is a symlink to it. It&#39;s meant for quick edits, because we don&#39;t do any serious work in Vim.</span></p><div id="c-2" class="cell-idx"><div class="block-container src" id="b-Makefile-vim"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-Makefile-vim">&#x1F517;</a></div><div class="block-meta"><code>Makefile-vim</code></div><div class="block-meta-other hidden"><p>Used by misc.org→<a href="/misc.html#b-Makefile-uim-b-Makefile-vim" class="internal-link"><span class="verbatim">Makefile-uim</span></a>.</p><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">makefile</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="dv">vim:</span>
+	ln -fns <span class="ch">${</span><span class="dt">C</span><span class="ch">}</span>/vim <span class="ch">${</span><span class="dt">H</span><span class="ch">}</span>/.vim
+	ln -fs <span class="ch">${</span><span class="dt">C</span><span class="ch">}</span>/vim/cfg <span class="ch">${</span><span class="dt">H</span><span class="ch">}</span>/.vimrc
+	ln -fs <span class="ch">${</span><span class="dt">C</span><span class="ch">}</span>/vim/cfg <span class="ch">${</span><span class="dt">H</span><span class="ch">}</span>/.gvimrc</code></pre></div></div><div id="c-3" class="cell-idx"><div class="block-container src" id="b-vim-cfg"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-vim-cfg">&#x1F517;</a></div><div class="block-meta"><code>vim-cfg</code><br><code><span class="bold">&#x1F3AF; vim/cfg</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">vim</span></p></li></ul></div><pre class="block-body"><code>&quot; Remove Vi compatibility. No one cares about this.
+set nocp
+
+&quot; Prefer unix newlines whenever possible, but leave DOS files as DOS
+&quot; (don&#39;t change their line endings).
+set ffs=unix,dos
+
+&quot; Disable backups, because we don&#39;t do any serious work in Vim. Plus we save
+&quot; incessantly.
+set nobackup
+
+&quot; Default tabstop and shiftwidths.
+set tabstop=4
+set shiftwidth=4
+set expandtab
+
+&quot; Linux Kernel style indentation.
+au FileType c,cpp set noexpandtab shiftwidth=8 softtabstop=8 tabstop=8
+
+&quot; Backspace works in Insert mode (e.g. not inserting a ^?), but won&#39;t delete
+&quot; over line breaks, or automatically-inserted indentation, or the place where
+&quot; insert mode started. Use backspace=2 to solve this from
+&quot; http://vim.wikia.com/wiki/Backspace_and_delete_problems.
+&quot; This is only necessary because of the funny backspace behavior in Nixos.
+set backspace=2
+
+&quot; When the page starts to scroll, keep the cursor 3 lines from the top and 3
+&quot; lines from the bottom (i.e., keep the cursor with at least 3 lines of
+&quot; context)
+set scrolloff=3
+
+&quot; Place help page on its own tab.
+cabbrev help tab h
+
+&quot; Always display status line.
+set laststatus=2
+
+&quot; Turn on automatic indenting based on filetype recognition.
+filetype indent on
+
+&quot; Automatically load the corresponding filetype plugin if we&#39;ve detected a filetype.
+filetype plugin on
+
+&quot; Enable syntax highlighting.
+syntax enable
+
+&quot; Turn on search highlighting.
+set hlsearch
+
+&quot; Search any match IMMEDIATELY.
+set incsearch
+
+&quot; Disable incremental search highlighting after `updatetime` seconds. By
+&quot; default this is set to 4 seconds.
+&quot; https://stackoverflow.com/questions/22798473/vim-how-to-turn-off-search-highlight-after-timeout-x-seconds
+autocmd CursorHold,CursorHoldI * let v:hlsearch = 0 | redraw
+
+set background=dark
+&quot; Use 24-bit colors (aka &quot;true color&quot; support).
+set termguicolors
+
+&quot; Explicitly set default colorscheme.
+if has(&#39;nvim&#39;)
+  colorscheme vim
+else
+  colorscheme default
+endif
+
+&quot; Word-wrap based on words, not characters (would anyone on Earth want it the other
+&quot; way?).
+set lbr
+
+&quot; Make cursor look square, and prevent cursor blinking.
+set guicursor+=a:block-blinkon0
+
+&quot; Set maximum number of tabs on startup to 50, instead of the default 10.
+set tabpagemax=50
+
+&quot; Wait 1 second instead of 0.5 seconds before erasing any &quot;half-finished&quot;
+&quot; commands in normal/visual mode.
+set timeoutlen=1000
+
+&quot; Leader key (works with Intellij IDEA&#39;s Vim plugin).
+let mapleader = &quot;,&quot;
+
+&quot; We only want to load autocommands ONCE (esp. for GVim, which sources
+&quot; ~/.vimrc).
+if !exists(&quot;autocommands_loaded&quot;)
+    let autocommands_loaded = 1
+
+    &quot; Highlight red any trailing whitespace.
+    highlight ExtraWhitespace ctermbg=red guibg=red
+    au ColorScheme * highlight ExtraWhitespace guibg=red
+    au BufEnter * match ExtraWhitespace /\s\+$/
+    au InsertEnter * match ExtraWhitespace /\s\+\%#\@&lt;!$/
+    au InsertLeave * match ExtraWhiteSpace /\s\+$/
+
+    &quot; Always run highlighting regex from the beginning of the file, not just
+    &quot; what is displayed on-screen (useful for multiline highlighting patterns).
+    au BufEnter *.hs :syntax sync fromstart
+endif
+
+&quot; Quick copy and paste from CLIPBOARD (&quot;+y and &quot;+p).
+vmap &lt;leader&gt;y &quot;+y
+nmap &lt;leader&gt;p &quot;+p
+nmap &lt;leader&gt;P &quot;+P
+
+&quot; Change K from being mapped to interactive man pages to being used as the
+&quot; vanilla comma &#39;,&#39; key&#39;s functionality (intra-line backwards search repeat for
+&quot; any t, T, f, F searches).
+nnoremap K ,
+vnoremap K ,
+
+&quot; Quicksave files.
+nmap &lt;leader&gt;w :up&lt;cr&gt;
+&quot; Force save.
+nmap &lt;leader&gt;W :w&lt;cr&gt;
+
+&quot; Exit.
+nmap &lt;leader&gt;q :q&lt;cr&gt;
+nmap &lt;leader&gt;Q :q!&lt;cr&gt;
+
+&quot; Save and exit (equivalent to &quot;ZZ&quot;).
+nmap &lt;leader&gt;x :x&lt;cr&gt;
+
+&quot; Move across tabs.
+nnoremap &lt;C-l&gt; :tabnext&lt;cr&gt;
+nnoremap &lt;C-h&gt; :tabprevious&lt;cr&gt;
+inoremap &lt;C-l&gt; &lt;esc&gt;:tabnext&lt;cr&gt;
+inoremap &lt;C-h&gt; &lt;esc&gt;:tabprevious&lt;cr&gt;
+
+&quot; Window movement (i.e., moving around INSIDE a tab).
+nmap &lt;Tab&gt; &lt;C-w&gt;w
+nmap &lt;S-Tab&gt; &lt;C-w&gt;W
+nmap &lt;C-j&gt; &lt;C-w&gt;w
+nmap &lt;C-k&gt; &lt;C-w&gt;W
+nmap &lt;C-S-j&gt; &lt;C-w&gt;r
+nmap &lt;C-S-k&gt; &lt;C-w&gt;R
+
+&quot; Buffer movement (i.e., moving around INSIDE a window).
+nmap &lt;S-h&gt; :bn&lt;cr&gt;
+nmap &lt;S-l&gt; :bp&lt;cr&gt;
+
+&quot; Faster access to normal mode.
+imap kj &lt;esc&gt;
+
+&quot; Faster vertical buffer navigation.
+nnoremap &lt;space&gt; 10jzz
+nnoremap &lt;backspace&gt; 10kzz
+vnoremap &lt;space&gt; 10jzz
+vnoremap &lt;backspace&gt; 10kzz
+
+&quot; Create a new blank tab.
+nmap &lt;leader&gt;n :tabe&lt;cr&gt;
+
+&quot; Horizontally/vertically split current window.
+nmap &lt;leader&gt;h :sp&lt;cr&gt;
+nmap &lt;leader&gt;H :sp&lt;space&gt;.&lt;cr&gt;
+nmap &lt;leader&gt;v :vsp&lt;cr&gt;
+nmap &lt;leader&gt;V :vsp&lt;space&gt;.&lt;cr&gt;
+
+&quot; Set terminal search highlight colors to a higher contrast combination. The
+&quot; default use of a yellow background makes it hard to read if the text is white
+&quot; (which is typically the case in dark terminals color themes independent of Vim).
+highlight Search cterm=bold ctermfg=black ctermbg=green
+
+&quot; ------------
+&quot; GUI settings
+&quot; ------------
+
+&quot; Hide the mouse cursor when typing (only for GVIM).
+set mousehide
+
+&quot; Set GUI font.
+set gfn=Terminus\ 9
+
+&quot; Remove mouse-friendly options from GUI, because we simply don&#39;t use the mouse when
+&quot; in Vim.
+set guioptions-=T
+set guioptions-=m
+set guioptions-=l
+set guioptions-=r
+set guioptions-=L
+set guioptions-=R
+
+&quot; vim: syntax=vim</code></pre></div></div></div><div id="heading-container-h--Page-metrics" class="heading-container page-metrics"><h2 id="h--Page-metrics"><a href="#h--Page-metrics">Page metrics</a></h2></div><div id="heading-container-h--Backlinks" class="heading-container backlinks"><h3 id="h--Backlinks"><a href="#h--Backlinks">Backlinks (0)</a></h3></div><div id="heading-container-h--Tangled-files" class="heading-container tangled-blocks"><h3 id="h--Tangled-files"><a href="#h--Tangled-files">Tangled files (1)</a></h3><ol><li><a href="#b-vim-cfg" class="verbatim">vim/cfg</a></li></ol></div><div id="heading-container-h--Named-cells" class="heading-container named-cells"><h3 id="h--Named-cells"><a href="#h--Named-cells">Named cells (2)</a></h3><ol><li><a href="#b-Makefile-vim"><span class="verbatim">Makefile-vim</span></a></li><li><a href="#b-vim-cfg"><span class="verbatim">vim-cfg</span></a></li></ol></div><footer><div class="lilac-stamp">Generated by <a href="https://lilac.funloop.org" class="external-link" target="_blank" rel="noopener noreferrer">Lilac</a></div></footer></main><script id="heading-ancestry" type="application/json">{"h--Backlinks":["h--Page-metrics"],"h--Named-cells":["h--Page-metrics"],"h--Page-metrics":[],"h--Tangled-files":["h--Page-metrics"],"h-1-Configuration":[]}</script><script id="lilac-fe-script" src="/js/lilac.js"></script></body></html>

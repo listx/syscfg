@@ -1,0 +1,362 @@
+<!DOCTYPE HTML><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>lib.sh</title><link rel="stylesheet" href="/css/default.css"><link rel="shortcut icon" type="image/png" href="/favicon.png"><link rel="stylesheet" href="/vendor/source-fonts/source-fonts.css">
+<script>
+  window.MathJax = {
+      loader: { paths: { "mathjax-newcm": "/vendor/mathjax-newcm-font" } },
+      output: { font: "mathjax-newcm" },
+  tex: {
+      tags: 'ams'
+  },
+  options: {
+      ignoreHtmlClass: 'verbatim|code'
+  }
+};
+</script>
+<script id="MathJax-script" async="" src="/vendor/mathjax/tex-mml-chtml.js"></script>
+</head><body><div class="navbar"><button id="hamburger" class="tocs-toggle-button" aria-label="Toggle table of contents sidebar">&#x2630;</button><div class="breadcrumbs"><a href="https://syscfg.funloop.org"><span class="breadcrumb">Linus Arver&#39;s Dotfiles</span></a> <a href="https://github.com/listx/syscfg" class="repo-link" title="Source repository" aria-label="Source repository"><svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 16 16"
+     aria-hidden="true">
+<g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+<circle cx="4" cy="3" r="1.75"></circle>
+<circle cx="4" cy="13" r="1.75"></circle>
+<circle cx="12" cy="3" r="1.75"></circle>
+<path d="M4 4.75v6.5"></path>
+<path d="M12 4.75c0 4-8 3-8 6.5"></path>
+</g>
+</svg>
+</a> <span class="breadcrumb-separator">/</span> <a href="/zsh/index.html"><span class="breadcrumb">zsh</span></a> <span class="breadcrumb-separator">/</span> <a href="#top"><span class="breadcrumb">lib.org</span></a></div></div><nav id="tocs"><p class="widget-title gtoc-title">Site contents</p><nav class="gtoc"><ul><li><a href="/index.html">Introduction</a></li><li><a href="/bash.html">Bash</a></li><li><a href="/claude.html">Claude</a></li><li><a href="/clojure.html">Clojure</a></li><li><a href="/emacs.html">Emacs</a></li><li><a href="/git.html">Git</a></li><li><a href="/gpg.html">GnuPG</a></li><li><a href="/jj.html">Jujutsu</a></li><li><a href="/keybindings.html">Keybindings (WIP)</a></li><li><a href="/misc.html">Miscellaneous</a></li><li><a href="/mpv.html">mpv</a></li><li><a href="/nix.html">Nix</a></li><li><a href="/notmuch.html">Notmuch</a></li><li><a href="/qutebrowser.html">qutebrowser</a></li><li><a href="/rtorrent.html">rTorrent</a></li><li><a href="/script/index.html">System scripts</a></li><li><a href="/tmux.html">tmux</a></li><li><a href="/vim.html">Vim</a></li><li><a href="/wezterm.html">Wezterm</a></li><li><a href="/xmonad.html">xmonad</a></li><li><a href="/xorg.html">X.Org</a></li><li><a href="/zsh/index.html">Zsh</a><ul><li><a href="/zsh/zshrc.html">.zshrc</a></li><li><a href="/zsh/lib.html" class="bold">lib.sh</a></li><li><a href="/zsh/func.html">Zsh functions</a></li></ul></li></ul></nav><p class="widget-title toc-title">Page contents</p><nav class="toc"><div class="toc-entries"><ol><li class="toc-level-1"><div class="toc-entry"><span class="toc-counter">1</span><a href="#h-1-__l_prompt_tick"><span class="code">__l_prompt_tick</span></a></div></li><li class="toc-level-1"><div class="toc-entry"><span class="toc-counter">2</span><a href="#h-2-__l_accept_line"><span class="code">__l_accept_line</span></a></div></li><li class="toc-level-1"><div class="toc-entry"><span class="toc-counter">3</span><a href="#h-3-__l_command_not_found"><span class="code">__l_command_not_found</span></a></div></li><li class="toc-level-1"><div class="toc-entry"><span class="toc-counter">4</span><a href="#h-4-__l_maybe_load_completions_and_autocorrect"><span class="code">__l_maybe_load_completions_and_autocorrect</span></a></div></li><li class="toc-level-1"><div class="toc-entry"><span class="toc-counter">5</span><a href="#h-5-__l_lazy_load_completions"><span class="code">__l_lazy_load_completions</span></a></div></li><li class="toc-level-1"><div class="toc-entry"><span class="toc-counter">6</span><a href="#h-6-__l_is_ssh_connection"><span class="code">__l_is_ssh_connection</span></a></div></li><li class="toc-level-1"><div class="toc-entry"><span class="toc-counter">7</span><a href="#h-7-__l_get_hostname"><span class="code">__l_get_hostname</span></a></div></li><li class="toc-level-1"><div class="toc-entry"><span class="toc-counter">8</span><a href="#h-8-__l_get_tmux_sessions"><span class="code">__l_get_tmux_sessions</span></a></div></li><li class="toc-level-1"><div class="toc-entry"><span class="toc-counter">9</span><a href="#h-9-__l_get_tmux_sessions_attached"><span class="code">__l_get_tmux_sessions_attached</span></a></div></li><li class="toc-level-1"><div class="toc-entry"><span class="toc-counter">10</span><a href="#h-10-__l_find_free_tmux_session_id"><span class="code">__l_find_free_tmux_session_id</span></a></div></li><li class="toc-level-1"><div class="toc-entry"><span class="toc-counter">11</span><a href="#h-11-__l_new_tmux_session_command"><span class="code">__l_new_tmux_session_command</span></a></div></li><li class="toc-level-1"><div class="toc-entry"><span class="toc-counter">12</span><a href="#h-12-__l_tmux_command"><span class="code">__l_tmux_command</span></a></div></li><li class="toc-level-1"><div class="toc-entry"><span class="toc-counter">13</span><a href="#h-13-__l_prepend_path"><span class="code">__l_prepend_path</span></a></div></li><li class="toc-level-1"><div class="toc-entry"><span class="toc-counter">14</span><a href="#h-14-t"><span class="code">t</span></a></div></li><li class="toc-level-1"><div class="toc-entry"><span class="toc-counter">15</span><a href="#h-15-__l_vi_yank_system_clipboard"><span class="code">__l_vi_yank_system_clipboard</span></a></div></li><li class="toc-level-1"><div class="toc-entry"><a href="#h--Page-metrics">Page metrics</a></div><ol><li class="toc-level-2"><div class="toc-entry"><a href="#h--Backlinks">Backlinks</a></div></li><li class="toc-level-2"><div class="toc-entry"><a href="#h--Tangled-files">Tangled files</a></div></li><li class="toc-level-2"><div class="toc-entry"><a href="#h--Named-cells">Named cells</a></div></li></ol></li></ol></div></nav></nav><main><h1 id="top">lib.sh</h1><hr class="title-underline"><p><span id="c-0" class="cell-idx">Both <a href="/zsh/index.html#b-zshenv" class="internal-link" id="linkNumber-1"><span class="code">.zshenv</span></a> and <a href="/zsh/zshrc.html" class="internal-link" id="linkNumber-2"><span class="code">.zshrc</span></a> source this file, so that its functions are available early on. Functions with the <span class="code">__l_</span> prefix are internal helpers. They cover</span></p><ul><li><p><span id="c-2" class="cell-idx">redrawing the prompt every second (<a href="#b-lib-prompt-tick" class="internal-link" id="linkNumber-3"><span class="code">__l_prompt_tick</span></a>),</span></p></li><li><p><span id="c-4" class="cell-idx">the <a href="#b-lib-accept-line" class="internal-link" id="linkNumber-4"><span class="code">d.&lt;alias&gt;</span> shorthand</a> for <a href="/zsh/index.html#b-path-aliases" class="internal-link" id="linkNumber-5">named directories</a> (<span class="code">__l_accept_line</span>),</span></p></li><li><p><span id="c-6" class="cell-idx">pulling mistyped commands back out of the history (<a href="#b-lib-command-not-found" class="internal-link" id="linkNumber-6"><span class="code">__l_command_not_found</span></a>),</span></p></li><li><p><span id="c-8" class="cell-idx">lazily loading <span class="code">kubectl</span> completions (<a href="#b-lib-lazy-load-completions" class="internal-link" id="linkNumber-7"><span class="code">__l_lazy_load_completions</span></a>),</span></p></li><li><p><span id="c-10" class="cell-idx">picking a <span class="code">tmux</span> session name, reusing the smallest free number (<a href="#b-lib-tmux-command" class="internal-link" id="linkNumber-8"><span class="code">__l_tmux_command</span></a>),</span></p></li><li><p><span id="c-12" class="cell-idx">managing the <span class="code">PATH</span> without duplicates (<a href="#b-lib-prepend-path" class="internal-link" id="linkNumber-9"><span class="code">__l_prepend_path</span></a>), and</span></p></li><li><p><span id="c-14" class="cell-idx">yanking to the system clipboard from Vim mode (<a href="#b-lib-vi-yank-system-clipboard" class="internal-link" id="linkNumber-10"><span class="code">__l_vi_yank_system_clipboard</span></a>).</span></p></li></ul><p><span id="c-16" class="cell-idx">The function <a href="#b-lib-t" class="internal-link" id="linkNumber-11"><span class="code">t</span></a> is the exception to the prefix: it&#39;s a command that we run directly to start a new <span class="code">tmux</span> session and switch to it, without nesting.</span></p><div id="c-17" class="cell-idx"><div class="block-container src" id="b-lib"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-lib">&#x1F517;</a></div><div class="block-meta"><code>lib</code><br><code><span class="bold">&#x1F3AF; zsh/lib.sh</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">zsh</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="co">#!/usr/bin/env zsh</span>
+
+<span class="ex"><a href="#b-lib-prompt-tick" class="internal-link" id="b-lib-b-lib-prompt-tick">lib-prompt-tick</a></span>
+<span class="ex"><a href="#b-lib-accept-line" class="internal-link" id="b-lib-b-lib-accept-line">lib-accept-line</a></span>
+<span class="ex"><a href="#b-lib-command-not-found" class="internal-link" id="b-lib-b-lib-command-not-found">lib-command-not-found</a></span>
+<span class="ex"><a href="#b-lib-maybe-load-completions" class="internal-link" id="b-lib-b-lib-maybe-load-completions">lib-maybe-load-completions</a></span>
+<span class="ex"><a href="#b-lib-lazy-load-completions" class="internal-link" id="b-lib-b-lib-lazy-load-completions">lib-lazy-load-completions</a></span>
+<span class="ex"><a href="#b-lib-is-ssh-connection" class="internal-link" id="b-lib-b-lib-is-ssh-connection">lib-is-ssh-connection</a></span>
+<span class="ex"><a href="#b-lib-get-hostname" class="internal-link" id="b-lib-b-lib-get-hostname">lib-get-hostname</a></span>
+<span class="ex"><a href="#b-lib-get-tmux-sessions" class="internal-link" id="b-lib-b-lib-get-tmux-sessions">lib-get-tmux-sessions</a></span>
+<span class="ex"><a href="#b-lib-get-tmux-sessions-attached" class="internal-link" id="b-lib-b-lib-get-tmux-sessions-attached">lib-get-tmux-sessions-attached</a></span>
+<span class="ex"><a href="#b-lib-find-free-tmux-session-id" class="internal-link" id="b-lib-b-lib-find-free-tmux-session-id">lib-find-free-tmux-session-id</a></span>
+<span class="ex"><a href="#b-lib-new-tmux-session-command" class="internal-link" id="b-lib-b-lib-new-tmux-session-command">lib-new-tmux-session-command</a></span>
+<span class="ex"><a href="#b-lib-tmux-command" class="internal-link" id="b-lib-b-lib-tmux-command">lib-tmux-command</a></span>
+<span class="ex"><a href="#b-lib-prepend-path" class="internal-link" id="b-lib-b-lib-prepend-path">lib-prepend-path</a></span>
+<span class="ex"><a href="#b-lib-t" class="internal-link" id="b-lib-b-lib-t">lib-t</a></span>
+<span class="ex"><a href="#b-lib-vi-yank-system-clipboard" class="internal-link" id="b-lib-b-lib-vi-yank-system-clipboard">lib-vi-yank-system-clipboard</a></span></code></pre></div></div><div id="heading-container-h-1-__l_prompt_tick" class="heading-container"><h2 id="h-1-__l_prompt_tick"><span id="c-18" class="cell-idx"><a href="#h-1-__l_prompt_tick">1&ensp;<span class="code">__l_prompt_tick</span></a></span></h2><div id="c-19" class="cell-idx"><div class="block-container src" id="b-lib-prompt-tick"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-lib-prompt-tick">&#x1F517;</a></div><div class="block-meta"><code>lib-prompt-tick</code></div><div class="block-meta-other hidden"><p>Used by <a href="#b-lib-b-lib-prompt-tick" class="internal-link"><span class="verbatim">lib</span></a>.</p><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">zsh</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="co"># Don&#39;t redraw the prompt if we are in the middle of a completion widget. See</span>
+<span class="co"># https://stackoverflow.com/a/30456173/437583.</span>
+<span class="fu">__l_prompt_tick ()</span>
+<span class="kw">{</span>
+  <span class="co"># Don&#39;t redraw the prompt if we are inside an Emacs vterm session, because</span>
+  <span class="co"># redrawing it forces the cursor to move to the bottom of the screen after</span>
+  <span class="co"># each redraw even if we&#39;re in Evil&#39;s &quot;normal&quot; mode, rendering normal mode</span>
+  <span class="co"># useless.</span>
+  <span class="cf">if</span> <span class="kw">[[</span> <span class="ot">-n</span> <span class="st">&quot;</span><span class="va">${EMACS_VTERM_PATH</span><span class="op">:-</span><span class="va">}</span><span class="st">&quot;</span> <span class="kw">]];</span> <span class="cf">then</span>
+    <span class="cf">return</span>
+  <span class="cf">fi</span>
+
+  <span class="co"># Don&#39;t redraw the prompt if we&#39;ve typed *anything* into the command line.</span>
+  <span class="co"># This way we can at least save an approximate timestamp of when we last</span>
+  <span class="co"># started typing.</span>
+  <span class="cf">if</span> <span class="kw">((</span> <span class="va">${</span><span class="op">#</span><span class="va">BUFFER}</span> <span class="op">&gt;</span> <span class="dv">0</span> <span class="kw">));</span> <span class="cf">then</span>
+    <span class="cf">return</span>
+  <span class="cf">fi</span>
+
+  <span class="cf">case</span> <span class="st">&quot;</span><span class="va">$WIDGET</span><span class="st">&quot;</span> <span class="kw">in</span>
+    <span class="co"># Don&#39;t call reset-prompt if we are using fzf widgets. This checks 4</span>
+    <span class="co"># known cases:</span>
+    <span class="co">#   fzf-cd-widget (ALT-D)</span>
+    <span class="co">#   fzf-history-widget (CTRL-R)</span>
+    <span class="co">#   fzf-file-widget (CTRL-T)</span>
+    <span class="co">#   fzf-completion (TAB-completion)</span>
+    <span class="ss">fzf-</span><span class="pp">*</span><span class="kw">)</span> <span class="cf">return</span> <span class="cf">;;</span>
+    <span class="co"># Multi-line input with &quot;\&quot; character at the end.</span>
+    <span class="ss">accept-line</span><span class="kw">)</span> <span class="kw">((</span> <span class="va">$</span><span class="op">#</span><span class="va">BUFFER</span> <span class="op">&gt;</span> <span class="dv">0</span> <span class="kw">))</span> <span class="kw">&amp;&amp;</span> <span class="cf">return</span> <span class="cf">;;</span>
+  <span class="cf">esac</span>
+
+  <span class="ex">construct_prompt</span>
+  <span class="bu">zle</span> reset-prompt
+<span class="kw">}</span></code></pre></div></div></div><div id="heading-container-h-2-__l_accept_line" class="heading-container"><h2 id="h-2-__l_accept_line"><span id="c-20" class="cell-idx"><a href="#h-2-__l_accept_line">2&ensp;<span class="code">__l_accept_line</span></a></span></h2><div id="c-21" class="cell-idx"><div class="block-container src" id="b-lib-accept-line"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-lib-accept-line">&#x1F517;</a></div><div class="block-meta"><code>lib-accept-line</code></div><div class="block-meta-other hidden"><p>Used by <a href="#b-lib-b-lib-accept-line" class="internal-link"><span class="verbatim">lib</span></a>.</p><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">zsh</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="co"># Wrap around default accept-line zle widget in order to do special handling of</span>
+<span class="co"># `d.&lt;aliased_directory&gt;&#39;, where `&lt;aliased_directory&#39; comes from</span>
+<span class="co"># ~/zsh/path-aliases. See https://stackoverflow.com/a/28101424.</span>
+<span class="fu">__l_accept_line ()</span> <span class="kw">{</span>
+  <span class="co"># Check for a command that starts with `d.&#39;.</span>
+  <span class="cf">if</span> <span class="kw">[[</span> <span class="st">&quot;</span><span class="va">$BUFFER</span><span class="st">&quot;</span> <span class="ot">==</span> <span class="st">&quot;d.&quot;</span><span class="pp">*</span> <span class="kw">]];</span> <span class="cf">then</span>
+    <span class="co"># Only convert to a named directory buffer if we get a match of the named</span>
+    <span class="co"># directory in the hash table.</span>
+    <span class="bu">local</span> <span class="va">dir_alias</span>
+    <span class="bu">local</span> <span class="va">dir_expanded_alias</span>
+    <span class="va">dir_alias</span><span class="op">=</span><span class="st">&quot;</span><span class="va">${BUFFER</span><span class="op">#</span><span class="st">d.</span><span class="va">}</span><span class="st">&quot;</span>
+    <span class="va">dir_expanded_alias</span><span class="op">=</span><span class="va">$(</span><span class="bu">hash</span> <span class="at">-dm</span> <span class="st">&quot;</span><span class="va">${dir_alias}</span><span class="st">&quot;</span><span class="va">)</span>
+    <span class="va">dir_expanded_alias</span><span class="op">=</span><span class="st">&quot;</span><span class="va">${dir_expanded_alias</span><span class="op">#</span><span class="pp">*</span><span class="st">=</span><span class="va">}</span><span class="st">&quot;</span>
+    <span class="cf">if</span> <span class="kw">[[</span> <span class="ot">-e</span> <span class="st">&quot;</span><span class="va">${dir_expanded_alias}</span><span class="st">&quot;</span> <span class="kw">]];</span> <span class="cf">then</span>
+      <span class="va">BUFFER</span><span class="op">=</span><span class="st">&quot;d ~</span><span class="va">${dir_alias}</span><span class="st">&quot;</span>
+    <span class="cf">else</span>
+      <span class="bu">echo</span> <span class="at">-e</span> <span class="op">&gt;&amp;</span><span class="dv">2</span> <span class="st">&quot;\nunrecognized directory alias </span><span class="va">${(</span><span class="op">q</span><span class="va">)dir_alias}</span><span class="st">&quot;</span>
+    <span class="cf">fi</span>
+  <span class="cf">fi</span>
+  <span class="co"># Call original `accept-line&#39; widget by prepending the leading period.</span>
+  <span class="bu">zle</span> .accept-line
+<span class="kw">}</span></code></pre></div></div></div><div id="heading-container-h-3-__l_command_not_found" class="heading-container"><h2 id="h-3-__l_command_not_found"><span id="c-22" class="cell-idx"><a href="#h-3-__l_command_not_found">3&ensp;<span class="code">__l_command_not_found</span></a></span></h2><div id="c-23" class="cell-idx"><div class="block-container src" id="b-lib-command-not-found"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-lib-command-not-found">&#x1F517;</a></div><div class="block-meta"><code>lib-command-not-found</code></div><div class="block-meta-other hidden"><p>Used by <a href="#b-lib-b-lib-command-not-found" class="internal-link"><span class="verbatim">lib</span></a>.</p><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">zsh</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="fu">__l_command_not_found ()</span> <span class="kw">{</span>
+  <span class="co"># $global_exit_status is set by the prompt. If we simply use &quot;$?&quot; as the variable</span>
+  <span class="co"># to check, unfortunately it does not get cleared when we (1) invoke an</span>
+  <span class="co"># unknown command, then (2) delete the contents of BUFFER loaded by `hist -fs</span>
+  <span class="co"># f -1&#39;.</span>
+  <span class="cf">if</span> <span class="kw">((</span> <span class="va">global_exit_status</span> <span class="op">==</span> <span class="dv">127</span> <span class="kw">))</span> <span class="kw">;</span> <span class="cf">then</span>
+    <span class="ex">hist</span> <span class="at">-fs</span> f <span class="at">-1</span> <span class="kw">||</span> <span class="bu">echo</span> <span class="st">&quot;</span><span class="dt">\`</span><span class="st">hist&#39; is not installed&quot;</span>
+  <span class="cf">fi</span>
+<span class="kw">}</span></code></pre></div></div></div><div id="heading-container-h-4-__l_maybe_load_completions_and_autocorrect" class="heading-container"><h2 id="h-4-__l_maybe_load_completions_and_autocorrect"><span id="c-24" class="cell-idx"><a href="#h-4-__l_maybe_load_completions_and_autocorrect">4&ensp;<span class="code">__l_maybe_load_completions_and_autocorrect</span></a></span></h2><div id="c-25" class="cell-idx"><div class="block-container src" id="b-lib-maybe-load-completions"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-lib-maybe-load-completions">&#x1F517;</a></div><div class="block-meta"><code>lib-maybe-load-completions</code></div><div class="block-meta-other hidden"><p>Used by <a href="#b-lib-b-lib-maybe-load-completions" class="internal-link"><span class="verbatim">lib</span></a>.</p><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">zsh</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="fu">__l_maybe_load_completions_and_autocorrect()</span>
+<span class="kw">{</span>
+  <span class="co"># Remove leading whitespace from BUFFER, to catch cases where we enter some</span>
+  <span class="co"># spaces or tabs before actually typing the command name. See</span>
+  <span class="co"># https://stackoverflow.com/a/3352015.</span>
+
+  <span class="co"># The BUFFER may be something that we type from scratch (where it may have</span>
+  <span class="co"># some leading whitespace), or it may be something we load in from C-r</span>
+  <span class="co"># which already has many words in it. In both cases we want to (1) remove any</span>
+  <span class="co"># leading whitespace, and (2) isolate the first word found. This</span>
+  <span class="co"># whitespace-free first word is the name of the command we want to complete</span>
+  <span class="co"># (and check completions for).</span>
+  <span class="bu">local</span> <span class="va">leading_whitespace</span>
+  <span class="bu">local</span> <span class="va">cmd_all_words</span>
+  <span class="bu">local</span> <span class="va">cmd_first_word</span>
+  <span class="bu">local</span> <span class="va">cmd_remaining_words</span>
+  <span class="va">leading_whitespace</span><span class="op">=</span><span class="st">&quot;</span><span class="va">${BUFFER</span><span class="op">%%</span><span class="pp">[</span><span class="st">!</span><span class="pp">[:</span><span class="ss">space</span><span class="pp">:]]*</span><span class="va">}</span><span class="st">&quot;</span>
+  <span class="co"># Remove leading whitespace.</span>
+  <span class="va">cmd_all_words</span><span class="op">=</span><span class="st">&quot;</span><span class="va">${BUFFER</span><span class="op">#</span><span class="va">${leading_whitespace}}</span><span class="st">&quot;</span>
+  <span class="co"># Get the first word without the leading whitespace (if any).</span>
+  <span class="va">cmd_first_word</span><span class="op">=</span><span class="st">&quot;</span><span class="va">${cmd_all_words</span><span class="op">%%</span><span class="pp">[[:</span><span class="ss">space</span><span class="pp">:]]*</span><span class="va">}</span><span class="st">&quot;</span>
+  <span class="co"># Get remaining words.</span>
+  <span class="va">cmd_remaining_words</span><span class="op">=</span><span class="st">&quot;</span><span class="va">${cmd_all_words</span><span class="op">#</span><span class="va">${leading_whitespace}${cmd_first_word}}</span><span class="st">&quot;</span>
+  <span class="va">__l_run_fzf</span><span class="op">=</span>0
+  <span class="cf">case</span> <span class="st">&quot;</span><span class="va">${cmd_first_word}</span><span class="st">&quot;</span> <span class="kw">in</span>
+  <span class="ss">d</span><span class="kw">)</span>
+    <span class="cf">if</span> <span class="kw">[[</span> <span class="st">&quot;</span><span class="va">${BUFFER}</span><span class="st">&quot;</span> <span class="ot">==</span> <span class="st">&quot;d &quot;</span> <span class="kw">]];</span> <span class="cf">then</span>
+      <span class="va">__l_run_fzf</span><span class="op">=</span>1
+    <span class="cf">fi</span>
+    <span class="cf">;;</span>
+  <span class="ss">kl</span><span class="kw">|</span><span class="ss">kubectl</span><span class="kw">)</span>
+    <span class="co"># The first word could be either &quot;kl &quot; or &quot;kubectl&quot;. For &quot;kl&quot;, expand it out</span>
+    <span class="co"># to &quot;kubectl&quot; because it&#39;s more explicit and better for copy-pasting to</span>
+    <span class="co"># others who may not use the same abbreviations as us.  Preserve any leading</span>
+    <span class="co"># whitespace and trailing words.</span>
+    <span class="cf">if</span> <span class="kw">[[</span> <span class="st">&quot;</span><span class="va">${cmd_first_word}</span><span class="st">&quot;</span> <span class="ot">==</span> <span class="st">&quot;kl&quot;</span> <span class="kw">]];</span> <span class="cf">then</span>
+      <span class="va">BUFFER</span><span class="op">=</span><span class="st">&quot;</span><span class="va">${leading_whitespace</span><span class="op">=</span><span class="va">}</span><span class="st">kubectl</span><span class="va">${cmd_remaining_words</span><span class="op">=</span><span class="va">}</span><span class="st">&quot;</span>
+      <span class="co"># Move to the end of the line because our cursor is at the end of &quot;l&quot; in</span>
+      <span class="co"># &quot;kl&quot; and we just put in the longer &quot;kubectl&quot;.</span>
+      <span class="bu">zle</span> end-of-line
+    <span class="cf">fi</span>
+
+    <span class="co"># For the &quot;kubectl&quot; case, we&#39;ll see this case if we are doing</span>
+    <span class="co"># C-r and going back through history where we typed in &quot;kl&quot; but it was</span>
+    <span class="co"># replaced (by us) with &quot;kubectl&quot; when we pressed TAB or space after &quot;kl&quot;</span>
+    <span class="co"># earlier, but in another shell process (history is saved across</span>
+    <span class="co"># processes). There is nothing extra to do because &quot;kubectl&quot; is already what</span>
+    <span class="co"># we want.</span>
+
+    <span class="cf">if</span> <span class="kw">((</span> <span class="st">&quot;</span><span class="va">${__l_already_loaded_kl_comps</span><span class="op">:-</span><span class="st">0</span><span class="va">}</span><span class="st">&quot;</span> <span class="kw">));</span> <span class="cf">then</span>
+      <span class="cf">return</span>
+    <span class="cf">fi</span>
+
+    <span class="bu">source</span> <span class="op">&lt;(</span><span class="bu">command</span> kubectl completion zsh<span class="op">)</span>
+    <span class="va">__l_already_loaded_kl_comps</span><span class="op">=</span>1
+    <span class="cf">;;</span>
+  <span class="st">&quot;watch kl&quot;</span><span class="kw">)</span>
+    <span class="va">BUFFER</span><span class="op">=</span><span class="st">&quot;</span><span class="va">${leading_whitespace}</span><span class="st">watch kubectl&quot;</span>
+    <span class="cf">;;</span>
+  <span class="pp">*</span><span class="kw">)</span>
+    <span class="cf">;;</span>
+  <span class="cf">esac</span>
+<span class="kw">}</span></code></pre></div></div></div><div id="heading-container-h-5-__l_lazy_load_completions" class="heading-container"><h2 id="h-5-__l_lazy_load_completions"><span id="c-26" class="cell-idx"><a href="#h-5-__l_lazy_load_completions">5&ensp;<span class="code">__l_lazy_load_completions</span></a></span></h2><div id="c-27" class="cell-idx"><div class="block-container src" id="b-lib-lazy-load-completions"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-lib-lazy-load-completions">&#x1F517;</a></div><div class="block-meta"><code>lib-lazy-load-completions</code></div><div class="block-meta-other hidden"><p>Used by <a href="#b-lib-b-lib-lazy-load-completions" class="internal-link"><span class="verbatim">lib</span></a>.</p><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">zsh</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="fu">__l_lazy_load_completions()</span>
+<span class="kw">{</span>
+  <span class="ex">__l_maybe_load_completions_and_autocorrect</span>
+
+  <span class="cf">if</span> <span class="kw">((</span><span class="va">__l_run_fzf</span><span class="kw">));</span> <span class="cf">then</span>
+    <span class="ex">fzf-file-and-enter-widget</span>
+    <span class="cf">return</span>
+  <span class="cf">fi</span>
+  <span class="co"># Now invoke the vanilla zle widget that was supposed to have been called</span>
+  <span class="co"># from viins mode.</span>
+  <span class="cf">case</span> <span class="st">&quot;</span><span class="va">${KEYS</span><span class="op">[</span><span class="dv">-1</span><span class="op">]</span><span class="va">}</span><span class="st">&quot;</span> <span class="kw">in</span>
+  <span class="st">&quot; &quot;</span><span class="kw">)</span> <span class="bu">zle</span> .self-insert
+    <span class="cf">;;</span>
+  <span class="st">&quot;	&quot;</span><span class="kw">)</span> <span class="bu">zle</span> fzf-completion
+    <span class="cf">;;</span>
+  <span class="co"># We&#39;d never reach this branch, unless we bound our keys wrong. Since we</span>
+  <span class="co"># have nothing better to do, just insert KEYS into the zle buffer.</span>
+  <span class="pp">*</span><span class="kw">)</span> <span class="bu">zle</span> .self-insert
+    <span class="cf">;;</span>
+  <span class="cf">esac</span>
+<span class="kw">}</span></code></pre></div></div></div><div id="heading-container-h-6-__l_is_ssh_connection" class="heading-container"><h2 id="h-6-__l_is_ssh_connection"><span id="c-28" class="cell-idx"><a href="#h-6-__l_is_ssh_connection">6&ensp;<span class="code">__l_is_ssh_connection</span></a></span></h2><div id="c-29" class="cell-idx"><div class="block-container src" id="b-lib-is-ssh-connection"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-lib-is-ssh-connection">&#x1F517;</a></div><div class="block-meta"><code>lib-is-ssh-connection</code></div><div class="block-meta-other hidden"><p>Used by <a href="#b-lib-b-lib-is-ssh-connection" class="internal-link"><span class="verbatim">lib</span></a>.</p><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">zsh</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="co"># Check if the current shell session is an SSH session (a remote session).</span>
+<span class="fu">__l_is_ssh_connection()</span>
+<span class="kw">{</span>
+  <span class="cf">if</span> <span class="kw">[[</span> <span class="ot">-n</span> <span class="st">&quot;</span><span class="va">${SSH_CLIENT</span><span class="op">:-</span><span class="va">}</span><span class="st">&quot;</span> <span class="kw">]]</span> <span class="kw">||</span> <span class="kw">[[</span> <span class="ot">-n</span> <span class="st">&quot;</span><span class="va">${SSH_TTY</span><span class="op">:-</span><span class="va">}</span><span class="st">&quot;</span> <span class="kw">]];</span> <span class="cf">then</span>
+    <span class="cf">return</span>
+  <span class="cf">fi</span>
+
+  <span class="cf">case</span> <span class="va">$(</span><span class="fu">ps</span> <span class="at">-o</span> comm= <span class="at">-p</span> <span class="st">&quot;</span><span class="va">$PPID</span><span class="st">&quot;</span><span class="va">)</span> <span class="kw">in</span>
+    <span class="ss">sshd</span><span class="kw">|</span><span class="pp">*</span><span class="ss">/sshd</span><span class="kw">)</span> <span class="cf">return;;</span>
+  <span class="cf">esac</span>
+
+  <span class="cf">return</span> <span class="dv">1</span>
+<span class="kw">}</span></code></pre></div></div></div><div id="heading-container-h-7-__l_get_hostname" class="heading-container"><h2 id="h-7-__l_get_hostname"><span id="c-30" class="cell-idx"><a href="#h-7-__l_get_hostname">7&ensp;<span class="code">__l_get_hostname</span></a></span></h2><div id="c-31" class="cell-idx"><div class="block-container src" id="b-lib-get-hostname"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-lib-get-hostname">&#x1F517;</a></div><div class="block-meta"><code>lib-get-hostname</code></div><div class="block-meta-other hidden"><p>Used by <a href="#b-lib-b-lib-get-hostname" class="internal-link"><span class="verbatim">lib</span></a>.</p><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">zsh</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="co"># Grab hostname. If we&#39;re using our own home-grown convention of using</span>
+<span class="co"># ~/.hostname-short as a shorter hostname alias for scripting, use that instead</span>
+<span class="co"># if it is available.</span>
+<span class="fu">__l_get_hostname()</span>
+<span class="kw">{</span>
+  <span class="bu">local</span> <span class="va">_hostname</span>
+
+  <span class="va">_hostname</span><span class="op">=</span><span class="va">$(</span><span class="fu">hostname</span><span class="va">)</span>
+  <span class="cf">if</span> <span class="kw">[[</span> <span class="ot">-f</span> ~/.hostname-short <span class="kw">]];</span> <span class="cf">then</span>
+    <span class="va">_hostname</span><span class="op">=</span><span class="va">$(</span><span class="fu">cat</span> ~/.hostname-short<span class="va">)</span>
+  <span class="cf">fi</span>
+
+  <span class="bu">echo</span> <span class="st">&quot;</span><span class="va">${_hostname}</span><span class="st">&quot;</span>
+<span class="kw">}</span></code></pre></div></div></div><div id="heading-container-h-8-__l_get_tmux_sessions" class="heading-container"><h2 id="h-8-__l_get_tmux_sessions"><span id="c-32" class="cell-idx"><a href="#h-8-__l_get_tmux_sessions">8&ensp;<span class="code">__l_get_tmux_sessions</span></a></span></h2><div id="c-33" class="cell-idx"><div class="block-container src" id="b-lib-get-tmux-sessions"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-lib-get-tmux-sessions">&#x1F517;</a></div><div class="block-meta"><code>lib-get-tmux-sessions</code></div><div class="block-meta-other hidden"><p>Used by <a href="#b-lib-b-lib-get-tmux-sessions" class="internal-link"><span class="verbatim">lib</span></a>.</p><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">zsh</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="fu">__l_get_tmux_sessions()</span>
+<span class="kw">{</span>
+  <span class="bu">local</span> <span class="va">_hostname</span>
+
+  <span class="va">_hostname</span><span class="op">=</span><span class="st">&quot;</span><span class="va">${1}</span><span class="st">&quot;</span>
+
+  <span class="ex">tmux</span> list-sessions <span class="dt">\</span>
+    <span class="kw">|</span> <span class="fu">cut</span> <span class="at">-d:</span> <span class="at">-f1</span> <span class="dt">\</span>
+    <span class="kw">|</span> <span class="fu">grep</span> <span class="st">&quot;^</span><span class="va">${_hostname}</span><span class="st">-[0-9]\+</span><span class="dt">\$</span><span class="st">&quot;</span> <span class="dt">\</span>
+    <span class="kw">|</span> <span class="fu">sort</span>
+<span class="kw">}</span></code></pre></div></div></div><div id="heading-container-h-9-__l_get_tmux_sessions_attached" class="heading-container"><h2 id="h-9-__l_get_tmux_sessions_attached"><span id="c-34" class="cell-idx"><a href="#h-9-__l_get_tmux_sessions_attached">9&ensp;<span class="code">__l_get_tmux_sessions_attached</span></a></span></h2><div id="c-35" class="cell-idx"><div class="block-container src" id="b-lib-get-tmux-sessions-attached"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-lib-get-tmux-sessions-attached">&#x1F517;</a></div><div class="block-meta"><code>lib-get-tmux-sessions-attached</code></div><div class="block-meta-other hidden"><p>Used by <a href="#b-lib-b-lib-get-tmux-sessions-attached" class="internal-link"><span class="verbatim">lib</span></a>.</p><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">zsh</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="fu">__l_get_tmux_sessions_attached()</span>
+<span class="kw">{</span>
+  <span class="bu">local</span> <span class="va">_hostname</span>
+
+  <span class="va">_hostname</span><span class="op">=</span><span class="st">&quot;</span><span class="va">${1}</span><span class="st">&quot;</span>
+
+  <span class="ex">tmux</span> list-clients <span class="dt">\</span>
+    <span class="kw">|</span> <span class="fu">cut</span> <span class="at">-d</span><span class="st">&#39; &#39;</span> <span class="at">-f2</span> <span class="dt">\</span>
+    <span class="kw">|</span> <span class="fu">grep</span> <span class="st">&quot;^</span><span class="va">${_hostname}</span><span class="st">-[0-9]\+</span><span class="dt">\$</span><span class="st">&quot;</span> <span class="dt">\</span>
+    <span class="kw">|</span> <span class="fu">sort</span>
+<span class="kw">}</span></code></pre></div></div></div><div id="heading-container-h-10-__l_find_free_tmux_session_id" class="heading-container"><h2 id="h-10-__l_find_free_tmux_session_id"><span id="c-36" class="cell-idx"><a href="#h-10-__l_find_free_tmux_session_id">10&ensp;<span class="code">__l_find_free_tmux_session_id</span></a></span></h2><div id="c-37" class="cell-idx"><div class="block-container src" id="b-lib-find-free-tmux-session-id"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-lib-find-free-tmux-session-id">&#x1F517;</a></div><div class="block-meta"><code>lib-find-free-tmux-session-id</code></div><div class="block-meta-other hidden"><p>Used by <a href="#b-lib-b-lib-find-free-tmux-session-id" class="internal-link"><span class="verbatim">lib</span></a>.</p><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">zsh</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="co"># Return the smallest free available session ID for tmux, using the template</span>
+<span class="co"># &lt;HOSTNAME&gt;-&lt;NUMBER&gt;. This is the &quot;parking lot&quot; problem described at</span>
+<span class="co"># https://funloop.org/post/2016-09-24-parking-lot-problem-revisited.html.</span>
+<span class="co">#</span>
+<span class="co"># One slight tweak is that instead of always creating a &quot;next highest number&quot;</span>
+<span class="co"># desired_id, we prioritize the sessions that are not connected by a terminal.</span>
+<span class="co"># This way we never &quot;abandon&quot; a tmux session by creating a new session. We</span>
+<span class="co"># basically never want to have unattached sessions.</span>
+<span class="fu">__l_find_free_tmux_session_id()</span>
+<span class="kw">{</span>
+  <span class="bu">local</span> <span class="va">desired_id</span><span class="op">=</span>0
+  <span class="bu">local</span> <span class="va">session_ids</span>
+  <span class="bu">local</span> <span class="va">_hostname</span>
+
+  <span class="va">_hostname</span><span class="op">=</span><span class="st">&quot;</span><span class="va">${1}</span><span class="st">&quot;</span>
+
+  <span class="co"># Collect all existing attached session names to try to pick the first free</span>
+  <span class="co"># (unattached) session id.</span>
+  <span class="co">#</span>
+  <span class="co"># (f) causes the output to be split on newlines.</span>
+  <span class="va">session_ids</span><span class="op">=</span><span class="va">(${(</span><span class="op">f</span><span class="va">)</span><span class="st">&quot;</span><span class="va">$(</span><span class="ex">__l_get_tmux_sessions_attached</span> <span class="va">${_hostname})</span><span class="st">&quot;</span><span class="va">})</span>
+
+  <span class="co"># Note that in Zsh, arrays indices start from 1, not 0.</span>
+  <span class="cf">if</span> <span class="kw">[[</span> <span class="ot">-n</span> <span class="st">&quot;</span><span class="va">${session_ids</span><span class="op">[</span><span class="dv">1</span><span class="op">]:-</span><span class="va">}</span><span class="st">&quot;</span> <span class="kw">]];</span> <span class="cf">then</span>
+    <span class="cf">for</span> session_id <span class="kw">in</span> <span class="st">&quot;</span><span class="va">${session_ids</span><span class="op">[@]</span><span class="va">}</span><span class="st">&quot;</span><span class="kw">;</span> <span class="cf">do</span>
+      <span class="cf">if</span> <span class="kw">((</span> <span class="va">desired_id</span> <span class="op">&lt;</span> <span class="va">${session_id</span><span class="op">##</span><span class="pp">*</span><span class="st">-</span><span class="va">}</span> <span class="kw">));</span> <span class="cf">then</span>
+        <span class="cf">break</span>
+      <span class="cf">else</span>
+        <span class="kw">((</span><span class="va">desired_id</span><span class="op">++</span><span class="kw">))</span>
+      <span class="cf">fi</span>
+    <span class="cf">done</span>
+  <span class="cf">fi</span>
+
+  <span class="bu">echo</span> <span class="st">&quot;</span><span class="va">${desired_id}</span><span class="st">&quot;</span>
+<span class="kw">}</span></code></pre></div></div></div><div id="heading-container-h-11-__l_new_tmux_session_command" class="heading-container"><h2 id="h-11-__l_new_tmux_session_command"><span id="c-38" class="cell-idx"><a href="#h-11-__l_new_tmux_session_command">11&ensp;<span class="code">__l_new_tmux_session_command</span></a></span></h2><div id="c-39" class="cell-idx"><div class="block-container src" id="b-lib-new-tmux-session-command"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-lib-new-tmux-session-command">&#x1F517;</a></div><div class="block-meta"><code>lib-new-tmux-session-command</code></div><div class="block-meta-other hidden"><p>Used by <a href="#b-lib-b-lib-new-tmux-session-command" class="internal-link"><span class="verbatim">lib</span></a>.</p><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">zsh</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="fu">__l_new_tmux_session_command()</span>
+<span class="kw">{</span>
+  <span class="bu">local</span> <span class="va">_hostname</span>
+  <span class="bu">local</span> <span class="va">desired_id</span>
+
+  <span class="va">_hostname</span><span class="op">=</span><span class="st">&quot;</span><span class="va">${1}</span><span class="st">&quot;</span>
+  <span class="va">desired_id</span><span class="op">=</span><span class="st">&quot;</span><span class="va">${2}</span><span class="st">&quot;</span>
+
+  <span class="bu">echo</span> <span class="st">&quot;tmux new-session -A -s </span><span class="va">${_hostname}</span><span class="st">-</span><span class="va">${desired_id}</span><span class="st">&quot;</span>
+<span class="kw">}</span></code></pre></div></div></div><div id="heading-container-h-12-__l_tmux_command" class="heading-container"><h2 id="h-12-__l_tmux_command"><span id="c-40" class="cell-idx"><a href="#h-12-__l_tmux_command">12&ensp;<span class="code">__l_tmux_command</span></a></span></h2><div id="c-41" class="cell-idx"><div class="block-container src" id="b-lib-tmux-command"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-lib-tmux-command">&#x1F517;</a></div><div class="block-meta"><code>lib-tmux-command</code></div><div class="block-meta-other hidden"><p>Used by <a href="#b-lib-b-lib-tmux-command" class="internal-link"><span class="verbatim">lib</span></a>.</p><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">zsh</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="co"># Invoke tmux, but find the smallest free number among the existing session</span>
+<span class="co"># names, and use that. This avoids having always-increasing session numbers,</span>
+<span class="co"># which can get out of hand if we&#39;re invoking tmux many times on a machine</span>
+<span class="co"># that&#39;s on for weeks or months.</span>
+<span class="co">#</span>
+<span class="co"># We prefer to use default session names where the format is</span>
+<span class="co"># &lt;hostname&gt;-&lt;session_id&gt;, and &lt;session_id&gt; is the smallest number possible.</span>
+<span class="co">#</span>
+<span class="co"># See https://funloop.org/post/2016-09-24-parking-lot-problem-revisited.html for</span>
+<span class="co"># a discussion about optimal ways to find the smallest free number. We just use</span>
+<span class="co"># a brute-force approach here because (1) we&#39;re lazy and (2) this is shell code.</span>
+<span class="fu">__l_tmux_command()</span>
+<span class="kw">{</span>
+  <span class="bu">local</span> <span class="va">desired_id</span><span class="op">=</span>0
+  <span class="bu">local</span> <span class="va">session_ids</span>
+  <span class="bu">local</span> <span class="va">_hostname</span>
+
+  <span class="va">_hostname</span><span class="op">=</span><span class="st">&quot;</span><span class="va">$(</span><span class="ex">__l_get_hostname</span><span class="va">)</span><span class="st">&quot;</span>
+
+  <span class="co"># If connecting over SSH, don&#39;t try to create a new session, because chances</span>
+  <span class="co"># are that we want to just reattach to an existing session. Users can create a</span>
+  <span class="co"># separate, new tmux session manually if they need one.</span>
+  <span class="cf">if</span> <span class="ex">__l_is_ssh_connection</span><span class="kw">;</span> <span class="cf">then</span>
+
+    <span class="co"># Collect all existing session names to try to pick the first free session</span>
+    <span class="co"># id.</span>
+    <span class="co">#</span>
+    <span class="co"># (f) causes the output to be split on newlines.</span>
+    <span class="va">session_ids</span><span class="op">=</span><span class="va">(${(</span><span class="op">f</span><span class="va">)</span><span class="st">&quot;</span><span class="va">$(</span><span class="ex">__l_get_tmux_sessions</span> <span class="va">${_hostname})</span><span class="st">&quot;</span><span class="va">})</span>
+
+    <span class="cf">if</span> <span class="kw">[[</span> <span class="ot">-n</span> <span class="st">&quot;</span><span class="va">${session_ids</span><span class="op">[</span><span class="dv">1</span><span class="op">]:-</span><span class="va">}</span><span class="st">&quot;</span> <span class="kw">]];</span> <span class="cf">then</span>
+      <span class="co"># Get last element of array.</span>
+      <span class="va">desired_id</span><span class="op">=</span><span class="va">${session_ids</span><span class="op">[</span><span class="dv">-1</span><span class="op">]##</span><span class="pp">*</span><span class="st">-</span><span class="va">}</span>
+    <span class="cf">fi</span>
+
+    <span class="ex">__l_new_tmux_session_command</span> <span class="st">&quot;</span><span class="va">${_hostname}</span><span class="st">&quot;</span> <span class="st">&quot;</span><span class="va">${desired_id}</span><span class="st">&quot;</span>
+    <span class="cf">return</span>
+  <span class="cf">fi</span>
+
+  <span class="va">desired_id</span><span class="op">=</span><span class="st">&quot;</span><span class="va">$(</span><span class="ex">__l_find_free_tmux_session_id</span> <span class="st">&quot;</span><span class="va">${_hostname}</span><span class="st">&quot;</span><span class="va">)</span><span class="st">&quot;</span>
+  <span class="ex">__l_new_tmux_session_command</span> <span class="st">&quot;</span><span class="va">${_hostname}</span><span class="st">&quot;</span> <span class="st">&quot;</span><span class="va">${desired_id}</span><span class="st">&quot;</span>
+<span class="kw">}</span></code></pre></div></div></div><div id="heading-container-h-13-__l_prepend_path" class="heading-container"><h2 id="h-13-__l_prepend_path"><span id="c-42" class="cell-idx"><a href="#h-13-__l_prepend_path">13&ensp;<span class="code">__l_prepend_path</span></a></span></h2><div id="c-43" class="cell-idx"><div class="block-container src" id="b-lib-prepend-path"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-lib-prepend-path">&#x1F517;</a></div><div class="block-meta"><code>lib-prepend-path</code></div><div class="block-meta-other hidden"><p>Used by <a href="#b-lib-b-lib-prepend-path" class="internal-link"><span class="verbatim">lib</span></a>.</p><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">zsh</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="co"># Use this to avoid putting in duplicate entries into the $PATH. This can happen</span>
+<span class="co"># if you log in with zsh as your login shell (resulting in reading ~/.zshrc),</span>
+<span class="co"># and then invoke tmux (which itself invokes zsh again, as a login shell). This</span>
+<span class="co"># scenario will result in ~/.zshrc being read 2x --- so if you have plain</span>
+<span class="co"># &quot;export PATH=...&quot; statements, it will result in a duplicate entry.</span>
+<span class="co">#</span>
+<span class="co"># To avoid duplicate entries, we only prepend to the path if we have a non-empty</span>
+<span class="co"># string and it isn&#39;t already in the PATH.</span>
+<span class="fu">__l_prepend_path()</span>
+<span class="kw">{</span>
+  <span class="bu">local</span> <span class="va">dir</span><span class="op">=</span><span class="st">&quot;</span><span class="va">${1</span><span class="op">:-</span><span class="va">}</span><span class="st">&quot;</span>
+  <span class="bu">local</span> <span class="va">tmp_path</span>
+
+  <span class="kw">[[</span> <span class="ot">-z</span> <span class="st">&quot;</span><span class="va">${dir}</span><span class="st">&quot;</span> <span class="kw">]]</span> <span class="kw">&amp;&amp;</span> <span class="cf">return</span>
+
+  <span class="co"># If dir is already in the PATH, move it to the front.</span>
+  <span class="cf">if</span> <span class="kw">[[</span> <span class="st">&quot;</span><span class="va">${PATH}</span><span class="st">&quot;</span> <span class="ot">==</span> <span class="pp">*</span><span class="st">&quot;</span><span class="va">${dir}</span><span class="st">&quot;</span><span class="pp">*</span> <span class="kw">]];</span> <span class="cf">then</span>
+    <span class="co"># Catch edge case where we want to promote the very last dir.</span>
+    <span class="va">tmp_path</span><span class="op">=</span><span class="st">&quot;</span><span class="va">${PATH}</span><span class="st">:&quot;</span>
+    <span class="va">tmp_path</span><span class="op">=</span><span class="st">&quot;</span><span class="va">${tmp_path</span><span class="op">//</span><span class="va">${dir}</span><span class="ss">:</span><span class="op">/</span><span class="va">}</span><span class="st">&quot;</span>
+    <span class="co"># Remove trailing &quot;:&quot;.</span>
+    <span class="bu">export</span> <span class="va">PATH</span><span class="op">=</span><span class="st">&quot;</span><span class="va">${dir}</span><span class="st">:</span><span class="va">${tmp_path</span><span class="op">%</span><span class="st">:</span><span class="va">}</span><span class="st">&quot;</span>
+    <span class="cf">return</span>
+  <span class="cf">fi</span>
+
+  <span class="bu">export</span> <span class="va">PATH</span><span class="op">=</span><span class="va">${dir}</span>:<span class="va">$PATH</span>
+<span class="kw">}</span></code></pre></div></div></div><div id="heading-container-h-14-t" class="heading-container"><h2 id="h-14-t"><span id="c-44" class="cell-idx"><a href="#h-14-t">14&ensp;<span class="code">t</span></a></span></h2><div id="c-45" class="cell-idx"><div class="block-container src" id="b-lib-t"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-lib-t">&#x1F517;</a></div><div class="block-meta"><code>lib-t</code></div><div class="block-meta-other hidden"><p>Used by <a href="#b-lib-b-lib-t" class="internal-link"><span class="verbatim">lib</span></a>.</p><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">zsh</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="co"># Start a new tmux session in the background, then switch to it. Note that this</span>
+<span class="co"># is different than using `tmux attach-session ...` because we do *NOT* start a</span>
+<span class="co"># nested tmux session.</span>
+<span class="fu">t()</span>
+<span class="kw">{</span>
+  <span class="bu">local</span> <span class="va">desired_id</span><span class="op">=</span>0
+  <span class="bu">local</span> <span class="va">_hostname</span>
+  <span class="bu">local</span> <span class="va">session_id</span>
+
+  <span class="va">_hostname</span><span class="op">=</span><span class="st">&quot;</span><span class="va">$(</span><span class="ex">__l_get_hostname</span><span class="va">)</span><span class="st">&quot;</span>
+  <span class="va">desired_id</span><span class="op">=</span><span class="st">&quot;</span><span class="va">$(</span><span class="ex">__l_find_free_tmux_session_id</span> <span class="st">&quot;</span><span class="va">${_hostname}</span><span class="st">&quot;</span><span class="va">)</span><span class="st">&quot;</span>
+  <span class="va">session_id</span><span class="op">=</span><span class="st">&quot;</span><span class="va">${_hostname}</span><span class="st">-</span><span class="va">${desired_id}</span><span class="st">&quot;</span>
+
+  <span class="ex">tmux</span> new-session <span class="at">-d</span> <span class="at">-s</span> <span class="st">&quot;</span><span class="va">${session_id}</span><span class="st">&quot;</span>
+  <span class="ex">tmux</span> switch-client <span class="at">-t</span> <span class="st">&quot;</span><span class="va">${session_id}</span><span class="st">&quot;</span>
+<span class="kw">}</span></code></pre></div></div></div><div id="heading-container-h-15-__l_vi_yank_system_clipboard" class="heading-container"><h2 id="h-15-__l_vi_yank_system_clipboard"><span id="c-46" class="cell-idx"><a href="#h-15-__l_vi_yank_system_clipboard">15&ensp;<span class="code">__l_vi_yank_system_clipboard</span></a></span></h2><div id="c-47" class="cell-idx"><div class="block-container src" id="b-lib-vi-yank-system-clipboard"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-lib-vi-yank-system-clipboard">&#x1F517;</a></div><div class="block-meta"><code>lib-vi-yank-system-clipboard</code></div><div class="block-meta-other hidden"><p>Used by <a href="#b-lib-b-lib-vi-yank-system-clipboard" class="internal-link"><span class="verbatim">lib</span></a>.</p><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">zsh</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="co"># Yank to the system clipboard.</span>
+<span class="fu">__l_vi_yank_system_clipboard()</span> <span class="kw">{</span>
+  <span class="co"># Execute the normal copying widget to copy to Zsh&#39;s own register.</span>
+  <span class="bu">zle</span> vi-yank
+  <span class="co"># Also copy to the system clipboard.</span>
+  <span class="bu">echo</span> <span class="st">&quot;</span><span class="va">$CUTBUFFER</span><span class="st">&quot;</span> <span class="kw">|</span> <span class="op">&gt;</span>/dev/null <span class="ex">~/syscfg/script/copy-clipboard.sh</span>
+<span class="kw">}</span></code></pre></div></div></div><div id="heading-container-h--Page-metrics" class="heading-container page-metrics"><h2 id="h--Page-metrics"><a href="#h--Page-metrics">Page metrics</a></h2></div><div id="heading-container-h--Backlinks" class="heading-container backlinks"><h3 id="h--Backlinks"><a href="#h--Backlinks">Backlinks (4)</a></h3><ol><li><a href="/zsh/index.html">zsh/index.org (2)</a><ol><li><a href="#top">^ Top</a><span class="verbatim"> &#x2190; </span><a href="/zsh/index.html#c-2">¶ (<span class="verbatim">Cell 2</span>)</a></li><li><a href="#b-lib-accept-line"><span class="verbatim">lib-accept-line</span></a><span class="verbatim"> &#x2190; </span><a href="/zsh/index.html#c-33">¶ (<span class="verbatim">Cell 33</span>)</a></li></ol></li><li><a href="/zsh/func.html">zsh/func.org (1)</a><ol><li><a href="#b-lib-prompt-tick"><span class="verbatim">lib-prompt-tick</span></a><span class="verbatim"> &#x2190; </span><a href="/zsh/func.html#c-78">¶ (<span class="verbatim">Cell 78</span>)</a></li></ol></li><li><a href="/zsh/zshrc.html">zsh/zshrc.org (1)</a><ol><li><a href="#top">^ Top</a><span class="verbatim"> &#x2190; </span><a href="/zsh/zshrc.html#c-2">¶ (<span class="verbatim">Cell 2</span>)</a></li></ol></li></ol></div><div id="heading-container-h--Tangled-files" class="heading-container tangled-blocks"><h3 id="h--Tangled-files"><a href="#h--Tangled-files">Tangled files (1)</a></h3><ol><li><a href="#b-lib" class="verbatim">zsh/lib.sh</a></li></ol></div><div id="heading-container-h--Named-cells" class="heading-container named-cells"><h3 id="h--Named-cells"><a href="#h--Named-cells">Named cells (16)</a></h3><ol><li><a href="#b-lib"><span class="verbatim">lib</span></a></li><li><a href="#b-lib-accept-line"><span class="verbatim">lib-accept-line</span></a></li><li><a href="#b-lib-command-not-found"><span class="verbatim">lib-command-not-found</span></a></li><li><a href="#b-lib-find-free-tmux-session-id"><span class="verbatim">lib-find-free-tmux-session-id</span></a></li><li><a href="#b-lib-get-hostname"><span class="verbatim">lib-get-hostname</span></a></li><li><a href="#b-lib-get-tmux-sessions"><span class="verbatim">lib-get-tmux-sessions</span></a></li><li><a href="#b-lib-get-tmux-sessions-attached"><span class="verbatim">lib-get-tmux-sessions-attached</span></a></li><li><a href="#b-lib-is-ssh-connection"><span class="verbatim">lib-is-ssh-connection</span></a></li><li><a href="#b-lib-lazy-load-completions"><span class="verbatim">lib-lazy-load-completions</span></a></li><li><a href="#b-lib-maybe-load-completions"><span class="verbatim">lib-maybe-load-completions</span></a></li><li><a href="#b-lib-new-tmux-session-command"><span class="verbatim">lib-new-tmux-session-command</span></a></li><li><a href="#b-lib-prepend-path"><span class="verbatim">lib-prepend-path</span></a></li><li><a href="#b-lib-prompt-tick"><span class="verbatim">lib-prompt-tick</span></a></li><li><a href="#b-lib-t"><span class="verbatim">lib-t</span></a></li><li><a href="#b-lib-tmux-command"><span class="verbatim">lib-tmux-command</span></a></li><li><a href="#b-lib-vi-yank-system-clipboard"><span class="verbatim">lib-vi-yank-system-clipboard</span></a></li></ol></div><footer><div class="lilac-stamp">Generated by <a href="https://lilac.funloop.org" class="external-link" target="_blank" rel="noopener noreferrer">Lilac</a></div></footer></main><script id="heading-ancestry" type="application/json">{"h--Backlinks":["h--Page-metrics"],"h--Named-cells":["h--Page-metrics"],"h--Page-metrics":[],"h--Tangled-files":["h--Page-metrics"],"h-1-__l_prompt_tick":[],"h-10-__l_find_free_tmux_session_id":[],"h-11-__l_new_tmux_session_command":[],"h-12-__l_tmux_command":[],"h-13-__l_prepend_path":[],"h-14-t":[],"h-15-__l_vi_yank_system_clipboard":[],"h-2-__l_accept_line":[],"h-3-__l_command_not_found":[],"h-4-__l_maybe_load_completions_and_autocorrect":[],"h-5-__l_lazy_load_completions":[],"h-6-__l_is_ssh_connection":[],"h-7-__l_get_hostname":[],"h-8-__l_get_tmux_sessions":[],"h-9-__l_get_tmux_sessions_attached":[]}</script><script id="lilac-fe-script" src="/js/lilac.js"></script></body></html>

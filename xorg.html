@@ -1,0 +1,511 @@
+<!DOCTYPE HTML><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>X.Org</title><link rel="stylesheet" href="/css/default.css"><link rel="shortcut icon" type="image/png" href="/favicon.png"><link rel="stylesheet" href="/vendor/source-fonts/source-fonts.css">
+<script>
+  window.MathJax = {
+      loader: { paths: { "mathjax-newcm": "/vendor/mathjax-newcm-font" } },
+      output: { font: "mathjax-newcm" },
+  tex: {
+      tags: 'ams'
+  },
+  options: {
+      ignoreHtmlClass: 'verbatim|code'
+  }
+};
+</script>
+<script id="MathJax-script" async="" src="/vendor/mathjax/tex-mml-chtml.js"></script>
+</head><body><div class="navbar"><button id="hamburger" class="tocs-toggle-button" aria-label="Toggle table of contents sidebar">&#x2630;</button><div class="breadcrumbs"><a href="https://syscfg.funloop.org"><span class="breadcrumb">Linus Arver&#39;s Dotfiles</span></a> <a href="https://github.com/listx/syscfg" class="repo-link" title="Source repository" aria-label="Source repository"><svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 16 16"
+     aria-hidden="true">
+<g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+<circle cx="4" cy="3" r="1.75"></circle>
+<circle cx="4" cy="13" r="1.75"></circle>
+<circle cx="12" cy="3" r="1.75"></circle>
+<path d="M4 4.75v6.5"></path>
+<path d="M12 4.75c0 4-8 3-8 6.5"></path>
+</g>
+</svg>
+</a> <span class="breadcrumb-separator">/</span> <a href="#top"><span class="breadcrumb">xorg.org</span></a></div></div><nav id="tocs"><p class="widget-title gtoc-title">Site contents</p><nav class="gtoc"><ul><li><a href="/index.html">Introduction</a></li><li><a href="/bash.html">Bash</a></li><li><a href="/claude.html">Claude</a></li><li><a href="/clojure.html">Clojure</a></li><li><a href="/emacs.html">Emacs</a></li><li><a href="/git.html">Git</a></li><li><a href="/gpg.html">GnuPG</a></li><li><a href="/jj.html">Jujutsu</a></li><li><a href="/keybindings.html">Keybindings (WIP)</a></li><li><a href="/misc.html">Miscellaneous</a></li><li><a href="/mpv.html">mpv</a></li><li><a href="/nix.html">Nix</a></li><li><a href="/notmuch.html">Notmuch</a></li><li><a href="/qutebrowser.html">qutebrowser</a></li><li><a href="/rtorrent.html">rTorrent</a></li><li><a href="/script/index.html">System scripts</a></li><li><a href="/tmux.html">tmux</a></li><li><a href="/vim.html">Vim</a></li><li><a href="/wezterm.html">Wezterm</a></li><li><a href="/xmonad.html">xmonad</a></li><li><a href="/xorg.html" class="bold">X.Org</a></li><li><a href="/zsh/index.html">Zsh</a></li></ul></nav><p class="widget-title toc-title">Page contents</p><nav class="toc"><div class="toc-entries"><ol><li class="toc-level-1"><div class="toc-entry"><span class="toc-counter">1</span><a href="#h-1-Monitor-layouts">Monitor layouts</a></div></li><li class="toc-level-1"><div class="toc-entry"><span class="toc-counter">2</span><a href="#h-2-Server-flags">Server flags</a></div></li><li class="toc-level-1"><div class="toc-entry"><span class="toc-counter">3</span><a href="#h-3-Video-drivers">Video drivers</a></div></li><li class="toc-level-1"><div class="toc-entry"><span class="toc-counter">4</span><a href="#h-4-Input-devices">Input devices</a></div></li><li class="toc-level-1"><div class="toc-entry"><a href="#h--Page-metrics">Page metrics</a></div><ol><li class="toc-level-2"><div class="toc-entry"><a href="#h--Backlinks">Backlinks</a></div></li><li class="toc-level-2"><div class="toc-entry"><a href="#h--Tangled-files">Tangled files</a></div></li><li class="toc-level-2"><div class="toc-entry"><a href="#h--Named-cells">Named cells</a></div></li></ol></li></ol></div></nav></nav><main><h1 id="top">X.Org</h1><hr class="title-underline"><p><span id="c-0" class="cell-idx">These are configuration snippets for the X server. No <a href="/index.html#b-Makefile" class="internal-link" id="linkNumber-1">Makefile</a> rule installs them, so we copy the ones that a machine needs by hand. The <span class="code">k0</span> machine&#39;s own X configuration is in <a href="/nix.html#b-nixos-k0-xorg.conf" class="internal-link" id="linkNumber-2"><span class="code">doc/nix.org</span></a>.</span></p><div id="heading-container-h-1-Monitor-layouts" class="heading-container"><h2 id="h-1-Monitor-layouts"><span id="c-1" class="cell-idx"><a href="#h-1-Monitor-layouts">1&ensp;Monitor layouts</a></span></h2><div id="c-2" class="cell-idx"><div class="block-container src" id="b-dual-monitor-hybrid"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-dual-monitor-hybrid">&#x1F517;</a></div><div class="block-meta"><code>dual-monitor-hybrid</code><br><code><span class="bold">&#x1F3AF; xorg/10-dual-monitor-hybrid.conf</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">conf</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="dt">Section</span> <span class="dt">&quot;ServerLayout&quot;</span>
+    <span class="dt">Identifier</span>     <span class="dt">&quot;Layout0&quot;</span>
+    <span class="dt">Screen</span>      <span class="dt">0</span>  <span class="dt">&quot;Screen0&quot;</span> <span class="dt">0</span> <span class="dt">0</span> <span class="co"># </span><span class="al">NOTE</span><span class="co">: Screen 0 MUST be defined BEFORE Screen 1!!!</span>
+    <span class="dt">Screen</span>      <span class="dt">1</span>  <span class="dt">&quot;Screen1&quot;</span> <span class="dt">1050</span> <span class="dt">295</span> <span class="co"># push this screen down (vertically) 295 pixels from the top to match the portrait monitor on the left</span>
+    <span class="dt">Option</span>         <span class="dt">&quot;Xinerama&quot;</span> <span class="dt">&quot;1&quot;</span> <span class="co"># XMonad: dual-head won&#39;t work properly without this!</span>
+<span class="dt">EndSection</span>
+
+<span class="dt">Section</span> <span class="dt">&quot;Extensions&quot;</span>
+    <span class="dt">Option</span> <span class="dt">&quot;Composite&quot;</span> <span class="dt">&quot;Disable&quot;</span>
+<span class="dt">EndSection</span>
+
+<span class="dt">Section</span> <span class="dt">&quot;Monitor&quot;</span>
+    <span class="dt">Identifier</span>     <span class="dt">&quot;Monitor0&quot;</span>
+    <span class="dt">VendorName</span>     <span class="dt">&quot;Unknown&quot;</span>
+    <span class="dt">ModelName</span>      <span class="dt">&quot;Acer X222W&quot;</span>
+    <span class="dt">HorizSync</span>       <span class="dt">31.0</span> <span class="dt">-</span> <span class="dt">81.0</span>
+    <span class="dt">VertRefresh</span>     <span class="dt">56.0</span> <span class="dt">-</span> <span class="dt">75.0</span>
+    <span class="dt">Option</span>         <span class="dt">&quot;DPMS&quot;</span>
+    <span class="dt">Option</span>         <span class="dt">&quot;Enable&quot;</span> <span class="dt">&quot;true&quot;</span>
+<span class="dt">EndSection</span>
+
+<span class="dt">Section</span> <span class="dt">&quot;Monitor&quot;</span>
+    <span class="dt">Identifier</span>     <span class="dt">&quot;Monitor1&quot;</span>
+    <span class="dt">VendorName</span>     <span class="dt">&quot;Unknown&quot;</span>
+    <span class="dt">ModelName</span>      <span class="dt">&quot;Acer X222W&quot;</span>
+    <span class="dt">HorizSync</span>       <span class="dt">31.0</span> <span class="dt">-</span> <span class="dt">81.0</span>
+    <span class="dt">VertRefresh</span>     <span class="dt">56.0</span> <span class="dt">-</span> <span class="dt">75.0</span>
+    <span class="dt">Option</span>         <span class="dt">&quot;DPMS&quot;</span>
+    <span class="dt">Option</span>         <span class="dt">&quot;Enable&quot;</span> <span class="dt">&quot;true&quot;</span>
+<span class="dt">EndSection</span>
+
+<span class="dt">Section</span> <span class="dt">&quot;Device&quot;</span>
+    <span class="dt">Identifier</span>     <span class="dt">&quot;Device0&quot;</span>
+    <span class="dt">Driver</span>         <span class="dt">&quot;nvidia&quot;</span>
+    <span class="dt">VendorName</span>     <span class="dt">&quot;NVIDIA Corporation&quot;</span>
+    <span class="dt">BoardName</span>      <span class="dt">&quot;GeForce 8800 GTS&quot;</span>
+    <span class="dt">BusID</span>          <span class="dt">&quot;PCI:1:0:0&quot;</span>
+    <span class="dt">Screen</span>          <span class="dt">0</span> <span class="co"># i.e., the monitor on the LEFT (physically)</span>
+    <span class="dt">Option</span> <span class="dt">&quot;NoLogo&quot;</span> <span class="dt">&quot;1&quot;</span>
+    <span class="dt">Option</span>          <span class="dt">&quot;UseEdidDpi&quot;</span> <span class="dt">&quot;False&quot;</span>
+    <span class="dt">Option</span>          <span class="dt">&quot;DPI&quot;</span> <span class="dt">&quot;90 x 90&quot;</span> <span class="co"># 22 inch monitor, 1680x1050</span>
+<span class="dt">EndSection</span>
+
+<span class="dt">Section</span> <span class="dt">&quot;Device&quot;</span>
+    <span class="dt">Identifier</span>     <span class="dt">&quot;Device1&quot;</span>
+    <span class="dt">Driver</span>         <span class="dt">&quot;nvidia&quot;</span>
+    <span class="dt">VendorName</span>     <span class="dt">&quot;NVIDIA Corporation&quot;</span>
+    <span class="dt">BoardName</span>      <span class="dt">&quot;GeForce 8800 GTS&quot;</span>
+    <span class="dt">BusID</span>          <span class="dt">&quot;PCI:1:0:0&quot;</span>
+    <span class="dt">Screen</span>          <span class="dt">1</span> <span class="co"># the monitor on the RIGHT (physically)</span>
+    <span class="dt">Option</span> <span class="dt">&quot;NoLogo&quot;</span> <span class="dt">&quot;1&quot;</span>
+    <span class="dt">Option</span>          <span class="dt">&quot;UseEdidDpi&quot;</span> <span class="dt">&quot;False&quot;</span>
+    <span class="dt">Option</span>          <span class="dt">&quot;DPI&quot;</span> <span class="dt">&quot;90 x 90&quot;</span>
+<span class="dt">EndSection</span>
+
+<span class="dt">Section</span> <span class="dt">&quot;Screen&quot;</span>
+
+    <span class="dt">Identifier</span>     <span class="dt">&quot;Screen0&quot;</span>
+    <span class="dt">Device</span>         <span class="dt">&quot;Device0&quot;</span>
+    <span class="dt">Monitor</span>        <span class="dt">&quot;Monitor0&quot;</span>
+    <span class="dt">DefaultDepth</span>    <span class="dt">24</span>
+    <span class="dt">Option</span>         <span class="dt">&quot;metamodes&quot;</span> <span class="dt">&quot;DFP-0: 1680x1050 +0+0 { Rotation=left }&quot;</span>
+    <span class="dt">SubSection</span>     <span class="dt">&quot;Display&quot;</span>
+        <span class="dt">Depth</span>       <span class="dt">24</span>
+    <span class="dt">EndSubSection</span>
+<span class="dt">EndSection</span>
+
+<span class="dt">Section</span> <span class="dt">&quot;Screen&quot;</span>
+    <span class="dt">Identifier</span>     <span class="dt">&quot;Screen1&quot;</span>
+    <span class="dt">Device</span>         <span class="dt">&quot;Device1&quot;</span>
+    <span class="dt">Monitor</span>        <span class="dt">&quot;Monitor1&quot;</span>
+    <span class="dt">DefaultDepth</span>    <span class="dt">24</span>
+    <span class="dt">Option</span>         <span class="dt">&quot;metamodes&quot;</span> <span class="dt">&quot;DFP-1: 1680x1050 +0+0&quot;</span>
+    <span class="dt">SubSection</span>     <span class="dt">&quot;Display&quot;</span>
+        <span class="dt">Depth</span>       <span class="dt">24</span>
+    <span class="dt">EndSubSection</span>
+<span class="dt">EndSection</span></code></pre></div></div><div id="c-3" class="cell-idx"><div class="block-container src" id="b-dual-monitor-hybrid-forest"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-dual-monitor-hybrid-forest">&#x1F517;</a></div><div class="block-meta"><code>dual-monitor-hybrid-forest</code><br><code><span class="bold">&#x1F3AF; xorg/10-dual-monitor-hybrid-forest.conf</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">conf</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="dt">Section</span> <span class="dt">&quot;ServerLayout&quot;</span>
+    <span class="dt">Identifier</span>     <span class="dt">&quot;Layout0&quot;</span>
+    <span class="dt">Screen</span>      <span class="dt">0</span>  <span class="dt">&quot;Acer0&quot;</span> <span class="dt">0</span> <span class="dt">370</span>
+    <span class="dt">Screen</span>      <span class="dt">1</span>  <span class="dt">&quot;Acer1&quot;</span> <span class="dt">1680</span> <span class="dt">0</span>
+    <span class="dt">Option</span>         <span class="dt">&quot;Xinerama&quot;</span> <span class="dt">&quot;1&quot;</span> <span class="co"># XMonad: dual-head won&#39;t work properly without this!</span>
+<span class="dt">EndSection</span>
+
+<span class="dt">Section</span> <span class="dt">&quot;Monitor&quot;</span>
+    <span class="dt">Identifier</span>     <span class="dt">&quot;Monitor0&quot;</span>
+    <span class="dt">VendorName</span>     <span class="dt">&quot;Unknown&quot;</span>
+    <span class="dt">ModelName</span>      <span class="dt">&quot;Acer X222W&quot;</span>
+    <span class="dt">HorizSync</span>       <span class="dt">31.0</span> <span class="dt">-</span> <span class="dt">81.0</span>
+    <span class="dt">VertRefresh</span>     <span class="dt">56.0</span> <span class="dt">-</span> <span class="dt">75.0</span>
+    <span class="dt">Option</span>         <span class="dt">&quot;DPMS&quot;</span>
+    <span class="dt">Option</span>         <span class="dt">&quot;Enable&quot;</span> <span class="dt">&quot;true&quot;</span>
+<span class="dt">EndSection</span>
+
+<span class="dt">Section</span> <span class="dt">&quot;Monitor&quot;</span>
+    <span class="dt">Identifier</span>     <span class="dt">&quot;Monitor1&quot;</span>
+    <span class="dt">VendorName</span>     <span class="dt">&quot;Unknown&quot;</span>
+    <span class="dt">ModelName</span>      <span class="dt">&quot;Acer X222W&quot;</span>
+    <span class="dt">HorizSync</span>       <span class="dt">31.0</span> <span class="dt">-</span> <span class="dt">81.0</span>
+    <span class="dt">VertRefresh</span>     <span class="dt">56.0</span> <span class="dt">-</span> <span class="dt">75.0</span>
+    <span class="dt">Option</span>         <span class="dt">&quot;DPMS&quot;</span>
+    <span class="dt">Option</span>         <span class="dt">&quot;Enable&quot;</span> <span class="dt">&quot;true&quot;</span>
+<span class="dt">EndSection</span>
+
+<span class="dt">Section</span> <span class="dt">&quot;Device&quot;</span>
+    <span class="dt">Identifier</span>     <span class="dt">&quot;Device0&quot;</span>
+    <span class="dt">Driver</span>         <span class="dt">&quot;nvidia&quot;</span>
+    <span class="dt">VendorName</span>     <span class="dt">&quot;NVIDIA Corporation&quot;</span>
+    <span class="dt">BoardName</span>      <span class="dt">&quot;GeForce 8800 GTS&quot;</span>
+    <span class="dt">BusID</span>          <span class="dt">&quot;PCI:1:0:0&quot;</span>
+    <span class="dt">Screen</span>          <span class="dt">0</span>
+    <span class="dt">Option</span> <span class="dt">&quot;NoLogo&quot;</span> <span class="dt">&quot;1&quot;</span>
+    <span class="dt">Option</span>          <span class="dt">&quot;UseEdidDpi&quot;</span> <span class="dt">&quot;False&quot;</span>
+    <span class="dt">Option</span>          <span class="dt">&quot;DPI&quot;</span> <span class="dt">&quot;90 x 90&quot;</span> <span class="co"># 22 inch monitor, 1680x1050</span>
+<span class="dt">EndSection</span>
+
+<span class="dt">Section</span> <span class="dt">&quot;Device&quot;</span>
+    <span class="dt">Identifier</span>     <span class="dt">&quot;Device1&quot;</span>
+    <span class="dt">Driver</span>         <span class="dt">&quot;nvidia&quot;</span>
+    <span class="dt">VendorName</span>     <span class="dt">&quot;NVIDIA Corporation&quot;</span>
+    <span class="dt">BoardName</span>      <span class="dt">&quot;GeForce 8800 GTS&quot;</span>
+    <span class="dt">BusID</span>          <span class="dt">&quot;PCI:1:0:0&quot;</span>
+    <span class="dt">BusID</span>          <span class="dt">&quot;PCI:1:0:0&quot;</span>
+    <span class="dt">Screen</span>          <span class="dt">1</span>
+    <span class="dt">Option</span> <span class="dt">&quot;NoLogo&quot;</span> <span class="dt">&quot;1&quot;</span>
+    <span class="dt">Option</span>          <span class="dt">&quot;UseEdidDpi&quot;</span> <span class="dt">&quot;False&quot;</span>
+    <span class="dt">Option</span>          <span class="dt">&quot;DPI&quot;</span> <span class="dt">&quot;90 x 90&quot;</span>
+<span class="dt">EndSection</span>
+
+<span class="dt">Section</span> <span class="dt">&quot;Screen&quot;</span>
+    <span class="dt">Identifier</span>     <span class="dt">&quot;Acer0&quot;</span>
+    <span class="dt">Device</span>         <span class="dt">&quot;Device0&quot;</span>
+    <span class="dt">Monitor</span>        <span class="dt">&quot;Monitor0&quot;</span>
+    <span class="dt">DefaultDepth</span>    <span class="dt">24</span>
+    <span class="dt">Option</span>         <span class="dt">&quot;metamodes&quot;</span> <span class="dt">&quot;DFP-1: 1680x1050 +0+0&quot;</span>
+    <span class="dt">SubSection</span>     <span class="dt">&quot;Display&quot;</span>
+        <span class="dt">Depth</span>       <span class="dt">24</span>
+    <span class="dt">EndSubSection</span>
+<span class="dt">EndSection</span>
+
+<span class="dt">Section</span> <span class="dt">&quot;Screen&quot;</span>
+    <span class="dt">Identifier</span>     <span class="dt">&quot;Acer1&quot;</span>
+    <span class="dt">Device</span>         <span class="dt">&quot;Device1&quot;</span>
+    <span class="dt">Monitor</span>        <span class="dt">&quot;Monitor1&quot;</span>
+    <span class="dt">DefaultDepth</span>    <span class="dt">24</span>
+    <span class="dt">Option</span>         <span class="dt">&quot;metamodes&quot;</span> <span class="dt">&quot;DFP-0: 1680x1050 +0+0 { Rotation=right }&quot;</span>
+    <span class="dt">SubSection</span>     <span class="dt">&quot;Display&quot;</span>
+        <span class="dt">Depth</span>       <span class="dt">24</span>
+    <span class="dt">EndSubSection</span>
+<span class="dt">EndSection</span></code></pre></div></div><div id="c-4" class="cell-idx"><div class="block-container src" id="b-dual-monitor-portrait"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-dual-monitor-portrait">&#x1F517;</a></div><div class="block-meta"><code>dual-monitor-portrait</code><br><code><span class="bold">&#x1F3AF; xorg/10-dual-monitor-portrait.conf</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">conf</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="dt">Section</span> <span class="dt">&quot;ServerLayout&quot;</span>
+    <span class="dt">Identifier</span>     <span class="dt">&quot;Layout0&quot;</span>
+    <span class="dt">Screen</span>      <span class="dt">0</span>  <span class="dt">&quot;Screen0&quot;</span> <span class="dt">0</span> <span class="dt">0</span> <span class="co"># </span><span class="al">NOTE</span><span class="co">: Screen 0 MUST be defined BEFORE Screen 1!!!</span>
+    <span class="dt">Screen</span>      <span class="dt">1</span>  <span class="dt">&quot;Screen1&quot;</span> <span class="dt">1050</span> <span class="dt">0</span> <span class="co"># push this screen down (vertically) 295 pixels from the top to match the portrait monitor on the left</span>
+    <span class="dt">Option</span>         <span class="dt">&quot;Xinerama&quot;</span> <span class="dt">&quot;1&quot;</span> <span class="co"># XMonad: dual-head won&#39;t work properly without this!</span>
+<span class="dt">EndSection</span>
+
+<span class="dt">Section</span> <span class="dt">&quot;Extensions&quot;</span>
+    <span class="dt">Option</span> <span class="dt">&quot;Composite&quot;</span> <span class="dt">&quot;Disable&quot;</span>
+<span class="dt">EndSection</span>
+
+<span class="dt">Section</span> <span class="dt">&quot;Monitor&quot;</span>
+    <span class="dt">Identifier</span>     <span class="dt">&quot;Monitor0&quot;</span>
+    <span class="dt">VendorName</span>     <span class="dt">&quot;Unknown&quot;</span>
+    <span class="dt">ModelName</span>      <span class="dt">&quot;Acer X222W&quot;</span>
+    <span class="dt">HorizSync</span>       <span class="dt">31.0</span> <span class="dt">-</span> <span class="dt">81.0</span>
+    <span class="dt">VertRefresh</span>     <span class="dt">56.0</span> <span class="dt">-</span> <span class="dt">75.0</span>
+    <span class="dt">Option</span>         <span class="dt">&quot;DPMS&quot;</span>
+<span class="dt">EndSection</span>
+
+<span class="dt">Section</span> <span class="dt">&quot;Monitor&quot;</span>
+    <span class="dt">Identifier</span>     <span class="dt">&quot;Monitor1&quot;</span>
+    <span class="dt">VendorName</span>     <span class="dt">&quot;Unknown&quot;</span>
+    <span class="dt">ModelName</span>      <span class="dt">&quot;Acer X222W&quot;</span>
+    <span class="dt">HorizSync</span>       <span class="dt">31.0</span> <span class="dt">-</span> <span class="dt">81.0</span>
+    <span class="dt">VertRefresh</span>     <span class="dt">56.0</span> <span class="dt">-</span> <span class="dt">75.0</span>
+    <span class="dt">Option</span>         <span class="dt">&quot;DPMS&quot;</span>
+<span class="dt">EndSection</span>
+
+<span class="dt">Section</span> <span class="dt">&quot;Device&quot;</span>
+    <span class="dt">Identifier</span>     <span class="dt">&quot;Device0&quot;</span>
+    <span class="dt">Driver</span>         <span class="dt">&quot;nvidia&quot;</span>
+    <span class="dt">VendorName</span>     <span class="dt">&quot;NVIDIA Corporation&quot;</span>
+    <span class="dt">BoardName</span>      <span class="dt">&quot;GeForce 8800 GTS&quot;</span>
+    <span class="dt">BusID</span>          <span class="dt">&quot;PCI:2:0:0&quot;</span>
+    <span class="dt">Screen</span>          <span class="dt">0</span> <span class="co"># i.e., the monitor on the LEFT (physically)</span>
+    <span class="dt">Option</span> <span class="dt">&quot;NoLogo&quot;</span> <span class="dt">&quot;1&quot;</span>
+    <span class="dt">Option</span>          <span class="dt">&quot;UseEdidDpi&quot;</span> <span class="dt">&quot;False&quot;</span>
+    <span class="dt">Option</span>          <span class="dt">&quot;DPI&quot;</span> <span class="dt">&quot;90 x 90&quot;</span> <span class="co"># 22 inch monitor, 1680x1050</span>
+<span class="dt">EndSection</span>
+
+<span class="dt">Section</span> <span class="dt">&quot;Device&quot;</span>
+    <span class="dt">Identifier</span>     <span class="dt">&quot;Device1&quot;</span>
+    <span class="dt">Driver</span>         <span class="dt">&quot;nvidia&quot;</span>
+    <span class="dt">VendorName</span>     <span class="dt">&quot;NVIDIA Corporation&quot;</span>
+    <span class="dt">BoardName</span>      <span class="dt">&quot;GeForce 8800 GTS&quot;</span>
+    <span class="dt">BusID</span>          <span class="dt">&quot;PCI:2:0:0&quot;</span>
+    <span class="dt">Screen</span>          <span class="dt">1</span> <span class="co"># the monitor on the RIGHT (physically)</span>
+    <span class="dt">Option</span> <span class="dt">&quot;NoLogo&quot;</span> <span class="dt">&quot;1&quot;</span>
+    <span class="dt">Option</span>          <span class="dt">&quot;UseEdidDpi&quot;</span> <span class="dt">&quot;False&quot;</span>
+    <span class="dt">Option</span>          <span class="dt">&quot;DPI&quot;</span> <span class="dt">&quot;90 x 90&quot;</span>
+<span class="dt">EndSection</span>
+
+<span class="dt">Section</span> <span class="dt">&quot;Screen&quot;</span>
+
+    <span class="dt">Identifier</span>     <span class="dt">&quot;Screen0&quot;</span>
+    <span class="dt">Device</span>         <span class="dt">&quot;Device0&quot;</span>
+    <span class="dt">Monitor</span>        <span class="dt">&quot;Monitor0&quot;</span>
+    <span class="dt">DefaultDepth</span>    <span class="dt">24</span>
+    <span class="dt">Option</span>         <span class="dt">&quot;Stereo&quot;</span> <span class="dt">&quot;0&quot;</span>
+    <span class="dt">Option</span>         <span class="dt">&quot;metamodes&quot;</span> <span class="dt">&quot;DVI-I-2: 1680x1050 +0+0 { rotation=left }&quot;</span>
+    <span class="dt">Option</span>         <span class="dt">&quot;SLI&quot;</span> <span class="dt">&quot;Off&quot;</span>
+    <span class="dt">Option</span>         <span class="dt">&quot;MultiGPU&quot;</span> <span class="dt">&quot;Off&quot;</span>
+    <span class="dt">Option</span>         <span class="dt">&quot;BaseMosaic&quot;</span> <span class="dt">&quot;off&quot;</span>
+    <span class="dt">SubSection</span>     <span class="dt">&quot;Display&quot;</span>
+        <span class="dt">Depth</span>       <span class="dt">24</span>
+    <span class="dt">EndSubSection</span>
+<span class="dt">EndSection</span>
+
+<span class="dt">Section</span> <span class="dt">&quot;Screen&quot;</span>
+    <span class="dt">Identifier</span>     <span class="dt">&quot;Screen1&quot;</span>
+    <span class="dt">Device</span>         <span class="dt">&quot;Device1&quot;</span>
+    <span class="dt">Monitor</span>        <span class="dt">&quot;Monitor1&quot;</span>
+    <span class="dt">DefaultDepth</span>    <span class="dt">24</span>
+    <span class="dt">Option</span>         <span class="dt">&quot;Stereo&quot;</span> <span class="dt">&quot;0&quot;</span>
+    <span class="dt">Option</span>         <span class="dt">&quot;metamodes&quot;</span> <span class="dt">&quot;DVI-I-3: 1680x1050 +0+0 { rotation=right }&quot;</span>
+    <span class="dt">Option</span>         <span class="dt">&quot;SLI&quot;</span> <span class="dt">&quot;Off&quot;</span>
+    <span class="dt">Option</span>         <span class="dt">&quot;MultiGPU&quot;</span> <span class="dt">&quot;Off&quot;</span>
+    <span class="dt">Option</span>         <span class="dt">&quot;BaseMosaic&quot;</span> <span class="dt">&quot;off&quot;</span>
+    <span class="dt">SubSection</span>     <span class="dt">&quot;Display&quot;</span>
+        <span class="dt">Depth</span>       <span class="dt">24</span>
+    <span class="dt">EndSubSection</span>
+<span class="dt">EndSection</span></code></pre></div></div><div id="c-5" class="cell-idx"><div class="block-container src" id="b-quad-monitor-portrait"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-quad-monitor-portrait">&#x1F517;</a></div><div class="block-meta"><code>quad-monitor-portrait</code><br><code><span class="bold">&#x1F3AF; xorg/10-quad-monitor-portrait.conf</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">conf</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="co"># nvidia-settings: X configuration file generated by nvidia-settings</span>
+<span class="co"># nvidia-settings:  version 337.12  (buildmeister@swio-display-x64-rhel04-11)  Fri Apr  4 15:17:43 PDT 2014</span>
+
+<span class="dt">Section</span> <span class="dt">&quot;ServerLayout&quot;</span>
+    <span class="dt">Identifier</span>     <span class="dt">&quot;Layout0&quot;</span>
+    <span class="dt">Screen</span>      <span class="dt">0</span>  <span class="dt">&quot;Qnix1&quot;</span> <span class="dt">2490</span> <span class="dt">0</span>
+    <span class="dt">Screen</span>      <span class="dt">1</span>  <span class="dt">&quot;Acer1&quot;</span> <span class="dt">3930</span> <span class="dt">300</span>
+    <span class="dt">Screen</span>      <span class="dt">2</span>  <span class="dt">&quot;Acer2&quot;</span> <span class="dt">0</span> <span class="dt">300</span>
+    <span class="dt">Screen</span>      <span class="dt">3</span>  <span class="dt">&quot;Qnix2&quot;</span> <span class="dt">1050</span> <span class="dt">0</span>
+    <span class="dt">Option</span>         <span class="dt">&quot;Xinerama&quot;</span> <span class="dt">&quot;1&quot;</span>
+<span class="dt">EndSection</span>
+
+<span class="dt">Section</span> <span class="dt">&quot;Extensions&quot;</span>
+    <span class="dt">Option</span> <span class="dt">&quot;Composite&quot;</span> <span class="dt">&quot;Disable&quot;</span>
+<span class="dt">EndSection</span>
+
+<span class="dt">Section</span> <span class="dt">&quot;Monitor&quot;</span>
+    <span class="dt">Identifier</span>     <span class="dt">&quot;Monitor0&quot;</span>
+    <span class="dt">VendorName</span>     <span class="dt">&quot;QNIX&quot;</span>
+    <span class="dt">ModelName</span>      <span class="dt">&quot;QX2710&quot;</span>
+    <span class="dt">DisplaySize</span>     <span class="dt">597</span>    <span class="dt">336</span>
+    <span class="dt">HorizSync</span>       <span class="dt">88.8</span> <span class="dt">-</span> <span class="dt">160.0</span>
+    <span class="dt">VertRefresh</span>     <span class="dt">59.5</span> <span class="dt">-</span> <span class="dt">120.0</span>
+    <span class="dt">ModeLine</span>       <span class="dt">&quot;2560x1440&quot;</span>          <span class="dt">241.50</span> <span class="dt">2560</span> <span class="dt">2608</span> <span class="dt">2640</span> <span class="dt">2720</span> <span class="dt">1440</span> <span class="dt">1443</span> <span class="dt">1448</span> <span class="dt">1481</span> <span class="er">+</span><span class="dt">hsync</span> <span class="dt">-vsync</span>
+    <span class="dt">ModeLine</span>       <span class="dt">&quot;2560x1440_60&quot;</span>       <span class="dt">312.25</span> <span class="dt">2560</span> <span class="dt">2752</span> <span class="dt">3024</span> <span class="dt">3488</span> <span class="dt">1440</span> <span class="dt">1443</span> <span class="dt">1448</span> <span class="dt">1493</span> <span class="dt">-hsync</span> <span class="er">+</span><span class="dt">vsync</span>
+    <span class="dt">ModeLine</span>       <span class="dt">&quot;2560x1440_75&quot;</span>       <span class="dt">397.25</span> <span class="dt">2560</span> <span class="dt">2760</span> <span class="dt">3040</span> <span class="dt">3520</span> <span class="dt">1440</span> <span class="dt">1443</span> <span class="dt">1448</span> <span class="dt">1506</span> <span class="dt">-hsync</span> <span class="er">+</span><span class="dt">vsync</span>
+    <span class="dt">ModeLine</span>       <span class="dt">&quot;2560x1440_85&quot;</span>       <span class="dt">454.75</span> <span class="dt">2560</span> <span class="dt">2768</span> <span class="dt">3048</span> <span class="dt">3536</span> <span class="dt">1440</span> <span class="dt">1443</span> <span class="dt">1448</span> <span class="dt">1514</span> <span class="dt">-hsync</span> <span class="er">+</span><span class="dt">vsync</span>
+    <span class="dt">ModeLine</span>       <span class="dt">&quot;2560x1440_96&quot;</span>       <span class="dt">400.00</span> <span class="dt">2560</span> <span class="dt">2608</span> <span class="dt">2640</span> <span class="dt">2744</span> <span class="dt">1440</span> <span class="dt">1443</span> <span class="dt">1448</span> <span class="dt">1512</span> <span class="er">+</span><span class="dt">hsync</span> <span class="er">+</span><span class="dt">vsync</span>
+    <span class="dt">Option</span>         <span class="dt">&quot;DPMS&quot;</span>
+<span class="dt">EndSection</span>
+
+<span class="dt">Section</span> <span class="dt">&quot;Monitor&quot;</span>
+    <span class="dt">Identifier</span>     <span class="dt">&quot;Monitor1&quot;</span>
+    <span class="dt">VendorName</span>     <span class="dt">&quot;Unknown&quot;</span>
+    <span class="dt">ModelName</span>      <span class="dt">&quot;Acer X222W&quot;</span>
+    <span class="dt">HorizSync</span>       <span class="dt">31.0</span> <span class="dt">-</span> <span class="dt">81.0</span>
+    <span class="dt">VertRefresh</span>     <span class="dt">56.0</span> <span class="dt">-</span> <span class="dt">75.0</span>
+    <span class="co"># Generated via &quot;cvt 1680 1050&quot; with the Acer monitor plugged in; `cvt` is</span>
+    <span class="co"># part of xorg-server 1.15.1-1 package on Arch Linux</span>
+    <span class="dt">ModeLine</span> <span class="dt">&quot;1680x1050_60.00&quot;</span>  <span class="dt">146.25</span>  <span class="dt">1680</span> <span class="dt">1784</span> <span class="dt">1960</span> <span class="dt">2240</span>  <span class="dt">1050</span> <span class="dt">1053</span> <span class="dt">1059</span> <span class="dt">1089</span> <span class="dt">-hsync</span> <span class="er">+</span><span class="dt">vsync</span>
+    <span class="dt">Option</span>         <span class="dt">&quot;DPMS&quot;</span>
+<span class="dt">EndSection</span>
+
+<span class="dt">Section</span> <span class="dt">&quot;Monitor&quot;</span>
+    <span class="dt">Identifier</span>     <span class="dt">&quot;Monitor2&quot;</span>
+    <span class="dt">VendorName</span>     <span class="dt">&quot;Unknown&quot;</span>
+    <span class="dt">ModelName</span>      <span class="dt">&quot;Acer X222W&quot;</span>
+    <span class="dt">HorizSync</span>       <span class="dt">31.0</span> <span class="dt">-</span> <span class="dt">81.0</span>
+    <span class="dt">VertRefresh</span>     <span class="dt">56.0</span> <span class="dt">-</span> <span class="dt">75.0</span>
+    <span class="dt">ModeLine</span> <span class="dt">&quot;1680x1050_60.00&quot;</span>  <span class="dt">146.25</span>  <span class="dt">1680</span> <span class="dt">1784</span> <span class="dt">1960</span> <span class="dt">2240</span>  <span class="dt">1050</span> <span class="dt">1053</span> <span class="dt">1059</span> <span class="dt">1089</span> <span class="dt">-hsync</span> <span class="er">+</span><span class="dt">vsync</span>
+    <span class="dt">Option</span>         <span class="dt">&quot;DPMS&quot;</span>
+<span class="dt">EndSection</span>
+
+<span class="dt">Section</span> <span class="dt">&quot;Monitor&quot;</span>
+    <span class="dt">Identifier</span>     <span class="dt">&quot;Monitor3&quot;</span>
+    <span class="dt">VendorName</span>     <span class="dt">&quot;QNIX&quot;</span>
+    <span class="dt">ModelName</span>      <span class="dt">&quot;QX2710&quot;</span>
+    <span class="dt">DisplaySize</span>     <span class="dt">597</span>    <span class="dt">336</span>
+    <span class="dt">HorizSync</span>       <span class="dt">88.8</span> <span class="dt">-</span> <span class="dt">160.0</span>
+    <span class="dt">VertRefresh</span>     <span class="dt">59.5</span> <span class="dt">-</span> <span class="dt">120.0</span>
+    <span class="dt">ModeLine</span>       <span class="dt">&quot;2560x1440&quot;</span>          <span class="dt">241.50</span> <span class="dt">2560</span> <span class="dt">2608</span> <span class="dt">2640</span> <span class="dt">2720</span> <span class="dt">1440</span> <span class="dt">1443</span> <span class="dt">1448</span> <span class="dt">1481</span> <span class="er">+</span><span class="dt">hsync</span> <span class="dt">-vsync</span>
+    <span class="dt">ModeLine</span>       <span class="dt">&quot;2560x1440_60&quot;</span>       <span class="dt">312.25</span> <span class="dt">2560</span> <span class="dt">2752</span> <span class="dt">3024</span> <span class="dt">3488</span> <span class="dt">1440</span> <span class="dt">1443</span> <span class="dt">1448</span> <span class="dt">1493</span> <span class="dt">-hsync</span> <span class="er">+</span><span class="dt">vsync</span>
+    <span class="dt">ModeLine</span>       <span class="dt">&quot;2560x1440_75&quot;</span>       <span class="dt">397.25</span> <span class="dt">2560</span> <span class="dt">2760</span> <span class="dt">3040</span> <span class="dt">3520</span> <span class="dt">1440</span> <span class="dt">1443</span> <span class="dt">1448</span> <span class="dt">1506</span> <span class="dt">-hsync</span> <span class="er">+</span><span class="dt">vsync</span>
+    <span class="dt">ModeLine</span>       <span class="dt">&quot;2560x1440_85&quot;</span>       <span class="dt">454.75</span> <span class="dt">2560</span> <span class="dt">2768</span> <span class="dt">3048</span> <span class="dt">3536</span> <span class="dt">1440</span> <span class="dt">1443</span> <span class="dt">1448</span> <span class="dt">1514</span> <span class="dt">-hsync</span> <span class="er">+</span><span class="dt">vsync</span>
+    <span class="dt">ModeLine</span>       <span class="dt">&quot;2560x1440_96&quot;</span>       <span class="dt">400.00</span> <span class="dt">2560</span> <span class="dt">2608</span> <span class="dt">2640</span> <span class="dt">2744</span> <span class="dt">1440</span> <span class="dt">1443</span> <span class="dt">1448</span> <span class="dt">1512</span> <span class="er">+</span><span class="dt">hsync</span> <span class="er">+</span><span class="dt">vsync</span>
+    <span class="dt">Option</span>         <span class="dt">&quot;DPMS&quot;</span>
+<span class="dt">EndSection</span>
+
+<span class="dt">Section</span> <span class="dt">&quot;Device&quot;</span>
+    <span class="dt">Identifier</span>     <span class="dt">&quot;DVI-port-top&quot;</span>
+    <span class="dt">Driver</span>         <span class="dt">&quot;nvidia&quot;</span>
+    <span class="dt">VendorName</span>     <span class="dt">&quot;NVIDIA Corporation&quot;</span>
+    <span class="dt">BoardName</span>      <span class="dt">&quot;GeForce GTX 750 Ti&quot;</span>
+    <span class="dt">BusID</span>          <span class="dt">&quot;PCI:2:0:0&quot;</span>
+    <span class="dt">Screen</span>          <span class="dt">0</span>
+    <span class="dt">Option</span>         <span class="dt">&quot;UseEdidDpi&quot;</span> <span class="dt">&quot;False&quot;</span>
+    <span class="dt">Option</span>         <span class="dt">&quot;DPI&quot;</span> <span class="dt">&quot;108 x 108&quot;</span>
+    <span class="dt">Option</span>         <span class="dt">&quot;NoLogo&quot;</span> <span class="dt">&quot;1&quot;</span>
+<span class="dt">EndSection</span>
+
+<span class="dt">Section</span> <span class="dt">&quot;Device&quot;</span>
+    <span class="dt">Identifier</span>     <span class="dt">&quot;HDMI-port-right&quot;</span>
+    <span class="dt">Driver</span>         <span class="dt">&quot;nvidia&quot;</span>
+    <span class="dt">VendorName</span>     <span class="dt">&quot;NVIDIA Corporation&quot;</span>
+    <span class="dt">BoardName</span>      <span class="dt">&quot;GeForce GTX 750 Ti&quot;</span>
+    <span class="dt">BusID</span>          <span class="dt">&quot;PCI:2:0:0&quot;</span>
+    <span class="dt">Option</span>         <span class="dt">&quot;UseEdidDpi&quot;</span> <span class="dt">&quot;False&quot;</span>
+    <span class="dt">Option</span>         <span class="dt">&quot;DPI&quot;</span> <span class="dt">&quot;90 x 90&quot;</span>
+    <span class="dt">Option</span>         <span class="dt">&quot;NoLogo&quot;</span> <span class="dt">&quot;1&quot;</span>
+    <span class="dt">Screen</span>          <span class="dt">1</span>
+<span class="dt">EndSection</span>
+
+<span class="dt">Section</span> <span class="dt">&quot;Device&quot;</span>
+    <span class="dt">Identifier</span>     <span class="dt">&quot;HDMI-port-left&quot;</span>
+    <span class="dt">Driver</span>         <span class="dt">&quot;nvidia&quot;</span>
+    <span class="dt">VendorName</span>     <span class="dt">&quot;NVIDIA Corporation&quot;</span>
+    <span class="dt">BoardName</span>      <span class="dt">&quot;GeForce GTX 750 Ti&quot;</span>
+    <span class="dt">BusID</span>          <span class="dt">&quot;PCI:2:0:0&quot;</span>
+    <span class="dt">Option</span>         <span class="dt">&quot;UseEdidDpi&quot;</span> <span class="dt">&quot;False&quot;</span>
+    <span class="dt">Option</span>         <span class="dt">&quot;DPI&quot;</span> <span class="dt">&quot;90 x 90&quot;</span>
+    <span class="dt">Option</span>         <span class="dt">&quot;NoLogo&quot;</span> <span class="dt">&quot;1&quot;</span>
+    <span class="dt">Screen</span>          <span class="dt">2</span>
+<span class="dt">EndSection</span>
+
+<span class="dt">Section</span> <span class="dt">&quot;Device&quot;</span>
+    <span class="dt">Identifier</span>     <span class="dt">&quot;DVI-port-bottom&quot;</span>
+    <span class="dt">Driver</span>         <span class="dt">&quot;nvidia&quot;</span>
+    <span class="dt">VendorName</span>     <span class="dt">&quot;NVIDIA Corporation&quot;</span>
+    <span class="dt">BoardName</span>      <span class="dt">&quot;GeForce GTX 750 Ti&quot;</span>
+    <span class="dt">BusID</span>          <span class="dt">&quot;PCI:2:0:0&quot;</span>
+    <span class="dt">Option</span>         <span class="dt">&quot;UseEdidDpi&quot;</span> <span class="dt">&quot;False&quot;</span>
+    <span class="dt">Option</span>         <span class="dt">&quot;DPI&quot;</span> <span class="dt">&quot;108 x 108&quot;</span>
+    <span class="dt">Option</span>         <span class="dt">&quot;NoLogo&quot;</span> <span class="dt">&quot;1&quot;</span>
+    <span class="dt">Screen</span>          <span class="dt">3</span>
+<span class="dt">EndSection</span>
+
+<span class="dt">Section</span> <span class="dt">&quot;Screen&quot;</span>
+    <span class="dt">Identifier</span>     <span class="dt">&quot;Qnix1&quot;</span>
+    <span class="dt">Device</span>         <span class="dt">&quot;DVI-port-top&quot;</span>
+    <span class="dt">Monitor</span>        <span class="dt">&quot;Monitor0&quot;</span>
+    <span class="dt">DefaultDepth</span>    <span class="dt">24</span>
+    <span class="dt">Option</span>         <span class="dt">&quot;UseEDID&quot;</span> <span class="dt">&quot;False&quot;</span>
+    <span class="dt">Option</span>         <span class="dt">&quot;UseEDIDDPI&quot;</span> <span class="dt">&quot;False&quot;</span>
+    <span class="dt">Option</span>         <span class="dt">&quot;UseEDIDFreqs&quot;</span> <span class="dt">&quot;False&quot;</span>
+    <span class="dt">Option</span>         <span class="dt">&quot;ExactModeTimingsDVI&quot;</span> <span class="dt">&quot;True&quot;</span>
+    <span class="dt">Option</span>         <span class="dt">&quot;ModeValidation&quot;</span> <span class="dt">&quot;AllowNonEdidModes, NoVertRefreshCheck, NoHorizSyncCheck, NoMaxSizeCheck, NoMaxPClkCheck, NoEDIDModes&quot;</span>
+    <span class="dt">Option</span>         <span class="dt">&quot;NoBandWidthTest&quot;</span> <span class="dt">&quot;true&quot;</span>
+    <span class="dt">Option</span>         <span class="dt">&quot;metamodes&quot;</span> <span class="dt">&quot;DVI-I-1: 2560x1440_96 +0+0 {rotation=left}&quot;</span>
+    <span class="dt">SubSection</span>     <span class="dt">&quot;Display&quot;</span>
+        <span class="dt">Depth</span>       <span class="dt">24</span>
+    <span class="dt">EndSubSection</span>
+<span class="dt">EndSection</span>
+
+<span class="dt">Section</span> <span class="dt">&quot;Screen&quot;</span>
+    <span class="dt">Identifier</span>     <span class="dt">&quot;Acer1&quot;</span>
+    <span class="dt">Device</span>         <span class="dt">&quot;HDMI-port-right&quot;</span>
+    <span class="dt">Monitor</span>        <span class="dt">&quot;Monitor1&quot;</span>
+    <span class="dt">DefaultDepth</span>    <span class="dt">24</span>
+    <span class="dt">Option</span>         <span class="dt">&quot;UseEDID&quot;</span> <span class="dt">&quot;False&quot;</span>
+    <span class="dt">Option</span>         <span class="dt">&quot;UseEDIDDPI&quot;</span> <span class="dt">&quot;False&quot;</span>
+    <span class="dt">Option</span>         <span class="dt">&quot;UseEDIDFreqs&quot;</span> <span class="dt">&quot;False&quot;</span>
+    <span class="dt">Option</span>         <span class="dt">&quot;ExactModeTimingsDVI&quot;</span> <span class="dt">&quot;True&quot;</span>
+    <span class="dt">Option</span>         <span class="dt">&quot;ModeValidation&quot;</span> <span class="dt">&quot;AllowNonEdidModes, NoVertRefreshCheck, NoHorizSyncCheck, NoMaxSizeCheck, NoMaxPClkCheck, NoEDIDModes&quot;</span>
+    <span class="dt">Option</span>         <span class="dt">&quot;NoBandWidthTest&quot;</span> <span class="dt">&quot;true&quot;</span>
+    <span class="dt">Option</span>         <span class="dt">&quot;metamodes&quot;</span> <span class="dt">&quot;HDMI-0: 1680x1050_60.00 +0+0 {rotation=left}&quot;</span>
+    <span class="dt">SubSection</span>     <span class="dt">&quot;Display&quot;</span>
+        <span class="dt">Depth</span>       <span class="dt">24</span>
+    <span class="dt">EndSubSection</span>
+<span class="dt">EndSection</span>
+
+<span class="dt">Section</span> <span class="dt">&quot;Screen&quot;</span>
+    <span class="dt">Identifier</span>     <span class="dt">&quot;Acer2&quot;</span>
+    <span class="dt">Device</span>         <span class="dt">&quot;HDMI-port-left&quot;</span>
+    <span class="dt">Monitor</span>        <span class="dt">&quot;Monitor2&quot;</span>
+    <span class="dt">DefaultDepth</span>    <span class="dt">24</span>
+    <span class="dt">Option</span>         <span class="dt">&quot;UseEDID&quot;</span> <span class="dt">&quot;False&quot;</span>
+    <span class="dt">Option</span>         <span class="dt">&quot;UseEDIDDPI&quot;</span> <span class="dt">&quot;False&quot;</span>
+    <span class="dt">Option</span>         <span class="dt">&quot;UseEDIDFreqs&quot;</span> <span class="dt">&quot;False&quot;</span>
+    <span class="dt">Option</span>         <span class="dt">&quot;ExactModeTimingsDVI&quot;</span> <span class="dt">&quot;True&quot;</span>
+    <span class="dt">Option</span>         <span class="dt">&quot;ModeValidation&quot;</span> <span class="dt">&quot;AllowNonEdidModes, NoVertRefreshCheck, NoHorizSyncCheck, NoMaxSizeCheck, NoMaxPClkCheck, NoEDIDModes&quot;</span>
+    <span class="dt">Option</span>         <span class="dt">&quot;NoBandWidthTest&quot;</span> <span class="dt">&quot;true&quot;</span>
+    <span class="dt">Option</span>         <span class="dt">&quot;metamodes&quot;</span> <span class="dt">&quot;HDMI-1: 1680x1050_60.00 +0+0 {rotation=right}&quot;</span>
+    <span class="dt">SubSection</span>     <span class="dt">&quot;Display&quot;</span>
+        <span class="dt">Depth</span>       <span class="dt">24</span>
+    <span class="dt">EndSubSection</span>
+<span class="dt">EndSection</span>
+
+<span class="dt">Section</span> <span class="dt">&quot;Screen&quot;</span>
+    <span class="dt">Identifier</span>     <span class="dt">&quot;Qnix2&quot;</span>
+    <span class="dt">Device</span>         <span class="dt">&quot;DVI-port-bottom&quot;</span>
+    <span class="dt">Monitor</span>        <span class="dt">&quot;Monitor3&quot;</span>
+    <span class="dt">DefaultDepth</span>    <span class="dt">24</span>
+    <span class="dt">Option</span>         <span class="dt">&quot;UseEDID&quot;</span> <span class="dt">&quot;False&quot;</span>
+    <span class="dt">Option</span>         <span class="dt">&quot;UseEDIDDPI&quot;</span> <span class="dt">&quot;False&quot;</span>
+    <span class="dt">Option</span>         <span class="dt">&quot;UseEDIDFreqs&quot;</span> <span class="dt">&quot;False&quot;</span>
+    <span class="dt">Option</span>         <span class="dt">&quot;ExactModeTimingsDVI&quot;</span> <span class="dt">&quot;True&quot;</span>
+    <span class="dt">Option</span>         <span class="dt">&quot;ModeValidation&quot;</span> <span class="dt">&quot;AllowNonEdidModes, NoVertRefreshCheck, NoHorizSyncCheck, NoMaxSizeCheck, NoMaxPClkCheck, NoEDIDModes&quot;</span>
+    <span class="dt">Option</span>         <span class="dt">&quot;NoBandWidthTest&quot;</span> <span class="dt">&quot;true&quot;</span>
+    <span class="dt">Option</span>         <span class="dt">&quot;metamodes&quot;</span> <span class="dt">&quot;DVI-D-0: 2560x1440_96 +0+0 {rotation=left}&quot;</span>
+    <span class="dt">SubSection</span>     <span class="dt">&quot;Display&quot;</span>
+        <span class="dt">Depth</span>       <span class="dt">24</span>
+    <span class="dt">EndSubSection</span>
+<span class="dt">EndSection</span></code></pre></div></div><p><span id="c-6" class="cell-idx">This one is for a single HDTV, and was generated by <span class="code">nvidia-settings</span>.</span></p><div id="c-7" class="cell-idx"><div class="block-container src" id="b-hdtv"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-hdtv">&#x1F517;</a></div><div class="block-meta"><code>hdtv</code><br><code><span class="bold">&#x1F3AF; xorg/10-hdtv.conf</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">conf</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="co"># nvidia-settings: X configuration file generated by nvidia-settings</span>
+<span class="co"># nvidia-settings:  version 304.117  (buildmeister@swio-display-x86-rhel47-01)  Tue Nov 26 22:29:30 PST 2013</span>
+
+<span class="dt">Section</span> <span class="dt">&quot;ServerLayout&quot;</span>
+    <span class="dt">Identifier</span>     <span class="dt">&quot;Layout0&quot;</span>
+    <span class="dt">Screen</span>      <span class="dt">0</span>  <span class="dt">&quot;Screen0&quot;</span> <span class="dt">0</span> <span class="dt">0</span>
+    <span class="dt">Option</span>         <span class="dt">&quot;Xinerama&quot;</span> <span class="dt">&quot;0&quot;</span>
+<span class="dt">EndSection</span>
+
+<span class="dt">Section</span> <span class="dt">&quot;Monitor&quot;</span>
+    <span class="co"># HorizSync source: edid, VertRefresh source: edid</span>
+    <span class="dt">Identifier</span>     <span class="dt">&quot;Monitor0&quot;</span>
+    <span class="dt">VendorName</span>     <span class="dt">&quot;Unknown&quot;</span>
+    <span class="dt">ModelName</span>      <span class="dt">&quot;SAMSUNG&quot;</span>
+    <span class="dt">HorizSync</span>       <span class="dt">30.0</span> <span class="dt">-</span> <span class="dt">70.0</span>
+    <span class="dt">VertRefresh</span>     <span class="dt">59.0</span> <span class="dt">-</span> <span class="dt">71.0</span>
+    <span class="dt">Option</span>         <span class="dt">&quot;DPMS&quot;</span>
+<span class="dt">EndSection</span>
+
+<span class="dt">Section</span> <span class="dt">&quot;Device&quot;</span>
+    <span class="dt">Identifier</span>     <span class="dt">&quot;Device0&quot;</span>
+    <span class="dt">Driver</span>         <span class="dt">&quot;nvidia&quot;</span>
+    <span class="dt">VendorName</span>     <span class="dt">&quot;NVIDIA Corporation&quot;</span>
+    <span class="dt">BoardName</span>      <span class="dt">&quot;GeForce 8600 GT&quot;</span>
+    <span class="dt">Option</span> <span class="dt">&quot;NoLogo&quot;</span> <span class="dt">&quot;1&quot;</span>
+<span class="dt">EndSection</span>
+
+<span class="dt">Section</span> <span class="dt">&quot;Screen&quot;</span>
+    <span class="dt">Identifier</span>     <span class="dt">&quot;Screen0&quot;</span>
+    <span class="dt">Device</span>         <span class="dt">&quot;Device0&quot;</span>
+    <span class="dt">Monitor</span>        <span class="dt">&quot;Monitor0&quot;</span>
+    <span class="dt">DefaultDepth</span>    <span class="dt">24</span>
+    <span class="dt">Option</span>         <span class="dt">&quot;Stereo&quot;</span> <span class="dt">&quot;0&quot;</span>
+    <span class="dt">Option</span>         <span class="dt">&quot;nvidiaXineramaInfoOrder&quot;</span> <span class="dt">&quot;DFP-1&quot;</span>
+    <span class="dt">Option</span>         <span class="dt">&quot;metamodes&quot;</span> <span class="dt">&quot;nvidia-auto-select +0+0&quot;</span>
+    <span class="dt">SubSection</span>     <span class="dt">&quot;Display&quot;</span>
+        <span class="dt">Depth</span>       <span class="dt">24</span>
+    <span class="dt">EndSubSection</span>
+<span class="dt">EndSection</span></code></pre></div></div></div><div id="heading-container-h-2-Server-flags" class="heading-container"><h2 id="h-2-Server-flags"><span id="c-8" class="cell-idx"><a href="#h-2-Server-flags">2&ensp;Server flags</a></span></h2><p><span id="c-9" class="cell-idx">These set the timeouts for blanking the screen and for turning it off.</span></p><div id="c-10" class="cell-idx"><div class="block-container src" id="b-server-flags"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-server-flags">&#x1F517;</a></div><div class="block-meta"><code>server-flags</code><br><code><span class="bold">&#x1F3AF; xorg/10-server-flags.conf</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">conf</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="dt">Section</span> <span class="dt">&quot;ServerFlags&quot;</span>
+    <span class="dt">Option</span> <span class="dt">&quot;BlankTime&quot;</span> <span class="dt">&quot;50&quot;</span>
+    <span class="dt">Option</span> <span class="dt">&quot;StandbyTime&quot;</span> <span class="dt">&quot;60&quot;</span>
+    <span class="dt">Option</span> <span class="dt">&quot;SuspendTime&quot;</span> <span class="dt">&quot;70&quot;</span>
+    <span class="dt">Option</span> <span class="dt">&quot;OffTime&quot;</span> <span class="dt">&quot;80&quot;</span>
+<span class="dt">EndSection</span></code></pre></div></div></div><div id="heading-container-h-3-Video-drivers" class="heading-container"><h2 id="h-3-Video-drivers"><span id="c-11" class="cell-idx"><a href="#h-3-Video-drivers">3&ensp;Video drivers</a></span></h2><p><span id="c-12" class="cell-idx">These two select the acceleration method for the Intel driver. They differ only in which method is active.</span></p><div id="c-13" class="cell-idx"><div class="block-container src" id="b-intel-video"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-intel-video">&#x1F517;</a></div><div class="block-meta"><code>intel-video</code><br><code><span class="bold">&#x1F3AF; xorg/20-intel-video.conf</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">conf</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="dt">Section</span> <span class="dt">&quot;Device&quot;</span>
+   <span class="dt">Identifier</span>  <span class="dt">&quot;Intel Graphics&quot;</span>
+   <span class="dt">Driver</span>      <span class="dt">&quot;intel&quot;</span>
+   <span class="dt">Option</span>      <span class="dt">&quot;AccelMethod&quot;</span>  <span class="dt">&quot;sna&quot;</span>
+   <span class="co">#Option      &quot;AccelMethod&quot;  &quot;uxa&quot;</span>
+   <span class="co">#Option      &quot;AccelMethod&quot;  &quot;xaa&quot;</span>
+<span class="dt">EndSection</span></code></pre></div></div><div id="c-14" class="cell-idx"><div class="block-container src" id="b-intel-video-k2"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-intel-video-k2">&#x1F517;</a></div><div class="block-meta"><code>intel-video-k2</code><br><code><span class="bold">&#x1F3AF; xorg/20-intel-video-k2.conf</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">conf</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="dt">Section</span> <span class="dt">&quot;Device&quot;</span>
+   <span class="dt">Identifier</span>  <span class="dt">&quot;Intel Graphics&quot;</span>
+   <span class="dt">Driver</span>      <span class="dt">&quot;intel&quot;</span>
+   <span class="co">#Option      &quot;AccelMethod&quot;  &quot;sna&quot;</span>
+   <span class="dt">Option</span>      <span class="dt">&quot;AccelMethod&quot;</span>  <span class="dt">&quot;uxa&quot;</span>
+   <span class="co">#Option      &quot;AccelMethod&quot;  &quot;xaa&quot;</span>
+<span class="dt">EndSection</span></code></pre></div></div></div><div id="heading-container-h-4-Input-devices" class="heading-container"><h2 id="h-4-Input-devices"><span id="c-15" class="cell-idx"><a href="#h-4-Input-devices">4&ensp;Input devices</a></span></h2><p><span id="c-16" class="cell-idx">These set the keyboard layout, disable mouse acceleration, and disable tapping on touchpads.</span></p><div id="c-17" class="cell-idx"><div class="block-container src" id="b-keyboard"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-keyboard">&#x1F517;</a></div><div class="block-meta"><code>keyboard</code><br><code><span class="bold">&#x1F3AF; xorg/10-keyboard.conf</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">conf</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="dt">Section</span> <span class="dt">&quot;InputClass&quot;</span>
+    <span class="dt">Identifier</span> <span class="dt">&quot;Keyboard Defaults&quot;</span>
+    <span class="dt">MatchIsKeyboard</span> <span class="dt">&quot;yes&quot;</span>
+    <span class="dt">Option</span>  <span class="dt">&quot;XkbLayout&quot;</span> <span class="dt">&quot;us&quot;</span>
+<span class="dt">EndSection</span></code></pre></div></div><div id="c-18" class="cell-idx"><div class="block-container src" id="b-mouse"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-mouse">&#x1F517;</a></div><div class="block-meta"><code>mouse</code><br><code><span class="bold">&#x1F3AF; xorg/50-mouse.conf</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">conf</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="dt">Section</span> <span class="dt">&quot;InputClass&quot;</span>
+	<span class="dt">Identifier</span> <span class="dt">&quot;My Mouse&quot;</span>
+	<span class="dt">MatchIsPointer</span> <span class="dt">&quot;yes&quot;</span>
+	<span class="co"># Disable all acceleration/deceleration</span>
+	<span class="dt">Option</span> <span class="dt">&quot;AccelerationProfile&quot;</span> <span class="dt">&quot;-1&quot;</span>
+	<span class="dt">Option</span> <span class="dt">&quot;AccelerationScheme&quot;</span> <span class="dt">&quot;none&quot;</span>
+<span class="dt">EndSection</span></code></pre></div></div><div id="c-19" class="cell-idx"><div class="block-container src" id="b-synaptics"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-synaptics">&#x1F517;</a></div><div class="block-meta"><code>synaptics</code><br><code><span class="bold">&#x1F3AF; xorg/50-synaptics.conf</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">conf</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="dt">Section</span> <span class="dt">&quot;InputClass&quot;</span>
+        <span class="dt">Identifier</span> <span class="dt">&quot;touchpad catchall&quot;</span>
+        <span class="dt">Driver</span> <span class="dt">&quot;synaptics&quot;</span>
+        <span class="dt">MatchIsTouchpad</span> <span class="dt">&quot;on&quot;</span>
+        <span class="dt">MatchDevicePath</span> <span class="dt">&quot;/dev/input/event*&quot;</span>
+        <span class="dt">Option</span> <span class="dt">&quot;TapButton1&quot;</span> <span class="dt">&quot;0&quot;</span>
+        <span class="dt">Option</span> <span class="dt">&quot;TapButton2&quot;</span> <span class="dt">&quot;0&quot;</span>
+        <span class="dt">Option</span> <span class="dt">&quot;TapButton3&quot;</span> <span class="dt">&quot;0&quot;</span>
+<span class="dt">EndSection</span></code></pre></div></div></div><div id="heading-container-h--Page-metrics" class="heading-container page-metrics"><h2 id="h--Page-metrics"><a href="#h--Page-metrics">Page metrics</a></h2></div><div id="heading-container-h--Backlinks" class="heading-container backlinks"><h3 id="h--Backlinks"><a href="#h--Backlinks">Backlinks (0)</a></h3></div><div id="heading-container-h--Tangled-files" class="heading-container tangled-blocks"><h3 id="h--Tangled-files"><a href="#h--Tangled-files">Tangled files (11)</a></h3><ol><li><a href="#b-dual-monitor-hybrid-forest" class="verbatim">xorg/10-dual-monitor-hybrid-forest.conf</a></li><li><a href="#b-dual-monitor-hybrid" class="verbatim">xorg/10-dual-monitor-hybrid.conf</a></li><li><a href="#b-dual-monitor-portrait" class="verbatim">xorg/10-dual-monitor-portrait.conf</a></li><li><a href="#b-hdtv" class="verbatim">xorg/10-hdtv.conf</a></li><li><a href="#b-keyboard" class="verbatim">xorg/10-keyboard.conf</a></li><li><a href="#b-quad-monitor-portrait" class="verbatim">xorg/10-quad-monitor-portrait.conf</a></li><li><a href="#b-server-flags" class="verbatim">xorg/10-server-flags.conf</a></li><li><a href="#b-intel-video-k2" class="verbatim">xorg/20-intel-video-k2.conf</a></li><li><a href="#b-intel-video" class="verbatim">xorg/20-intel-video.conf</a></li><li><a href="#b-mouse" class="verbatim">xorg/50-mouse.conf</a></li><li><a href="#b-synaptics" class="verbatim">xorg/50-synaptics.conf</a></li></ol></div><div id="heading-container-h--Named-cells" class="heading-container named-cells"><h3 id="h--Named-cells"><a href="#h--Named-cells">Named cells (11)</a></h3><ol><li><a href="#b-dual-monitor-hybrid"><span class="verbatim">dual-monitor-hybrid</span></a></li><li><a href="#b-dual-monitor-hybrid-forest"><span class="verbatim">dual-monitor-hybrid-forest</span></a></li><li><a href="#b-dual-monitor-portrait"><span class="verbatim">dual-monitor-portrait</span></a></li><li><a href="#b-hdtv"><span class="verbatim">hdtv</span></a></li><li><a href="#b-intel-video"><span class="verbatim">intel-video</span></a></li><li><a href="#b-intel-video-k2"><span class="verbatim">intel-video-k2</span></a></li><li><a href="#b-keyboard"><span class="verbatim">keyboard</span></a></li><li><a href="#b-mouse"><span class="verbatim">mouse</span></a></li><li><a href="#b-quad-monitor-portrait"><span class="verbatim">quad-monitor-portrait</span></a></li><li><a href="#b-server-flags"><span class="verbatim">server-flags</span></a></li><li><a href="#b-synaptics"><span class="verbatim">synaptics</span></a></li></ol></div><footer><div class="lilac-stamp">Generated by <a href="https://lilac.funloop.org" class="external-link" target="_blank" rel="noopener noreferrer">Lilac</a></div></footer></main><script id="heading-ancestry" type="application/json">{"h--Backlinks":["h--Page-metrics"],"h--Named-cells":["h--Page-metrics"],"h--Page-metrics":[],"h--Tangled-files":["h--Page-metrics"],"h-1-Monitor-layouts":[],"h-2-Server-flags":[],"h-3-Video-drivers":[],"h-4-Input-devices":[]}</script><script id="lilac-fe-script" src="/js/lilac.js"></script></body></html>

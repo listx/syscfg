@@ -1,0 +1,141 @@
+<!DOCTYPE HTML><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>qutebrowser</title><link rel="stylesheet" href="/css/default.css"><link rel="shortcut icon" type="image/png" href="/favicon.png"><link rel="stylesheet" href="/vendor/source-fonts/source-fonts.css">
+<script>
+  window.MathJax = {
+      loader: { paths: { "mathjax-newcm": "/vendor/mathjax-newcm-font" } },
+      output: { font: "mathjax-newcm" },
+  tex: {
+      tags: 'ams'
+  },
+  options: {
+      ignoreHtmlClass: 'verbatim|code'
+  }
+};
+</script>
+<script id="MathJax-script" async="" src="/vendor/mathjax/tex-mml-chtml.js"></script>
+</head><body><div class="navbar"><button id="hamburger" class="tocs-toggle-button" aria-label="Toggle table of contents sidebar">&#x2630;</button><div class="breadcrumbs"><a href="https://syscfg.funloop.org"><span class="breadcrumb">Linus Arver&#39;s Dotfiles</span></a> <a href="https://github.com/listx/syscfg" class="repo-link" title="Source repository" aria-label="Source repository"><svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 16 16"
+     aria-hidden="true">
+<g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+<circle cx="4" cy="3" r="1.75"></circle>
+<circle cx="4" cy="13" r="1.75"></circle>
+<circle cx="12" cy="3" r="1.75"></circle>
+<path d="M4 4.75v6.5"></path>
+<path d="M12 4.75c0 4-8 3-8 6.5"></path>
+</g>
+</svg>
+</a> <span class="breadcrumb-separator">/</span> <a href="#top"><span class="breadcrumb">qutebrowser.org</span></a></div></div><nav id="tocs"><p class="widget-title gtoc-title">Site contents</p><nav class="gtoc"><ul><li><a href="/index.html">Introduction</a></li><li><a href="/bash.html">Bash</a></li><li><a href="/claude.html">Claude</a></li><li><a href="/clojure.html">Clojure</a></li><li><a href="/emacs.html">Emacs</a></li><li><a href="/git.html">Git</a></li><li><a href="/gpg.html">GnuPG</a></li><li><a href="/jj.html">Jujutsu</a></li><li><a href="/keybindings.html">Keybindings (WIP)</a></li><li><a href="/misc.html">Miscellaneous</a></li><li><a href="/mpv.html">mpv</a></li><li><a href="/nix.html">Nix</a></li><li><a href="/notmuch.html">Notmuch</a></li><li><a href="/qutebrowser.html" class="bold">qutebrowser</a></li><li><a href="/rtorrent.html">rTorrent</a></li><li><a href="/script/index.html">System scripts</a></li><li><a href="/tmux.html">tmux</a></li><li><a href="/vim.html">Vim</a></li><li><a href="/wezterm.html">Wezterm</a></li><li><a href="/xmonad.html">xmonad</a></li><li><a href="/xorg.html">X.Org</a></li><li><a href="/zsh/index.html">Zsh</a></li></ul></nav><p class="widget-title toc-title">Page contents</p><nav class="toc"><div class="toc-entries"><ol><li class="toc-level-1"><div class="toc-entry"><span class="toc-counter">1</span><a href="#h-1-config.py"><span class="code">config.py</span></a></div></li><li class="toc-level-1"><div class="toc-entry"><a href="#h--Page-metrics">Page metrics</a></div><ol><li class="toc-level-2"><div class="toc-entry"><a href="#h--Backlinks">Backlinks</a></div></li><li class="toc-level-2"><div class="toc-entry"><a href="#h--Tangled-files">Tangled files</a></div></li><li class="toc-level-2"><div class="toc-entry"><a href="#h--Named-cells">Named cells</a></div></li></ol></li></ol></div></nav></nav><main><h1 id="top">qutebrowser</h1><hr class="title-underline"><div id="heading-container-h-1-config.py" class="heading-container"><h2 id="h-1-config.py"><span id="c-0" class="cell-idx"><a href="#h-1-config.py">1&ensp;<span class="code">config.py</span></a></span></h2><p><span id="c-1" class="cell-idx">This is our Qutebrowser configuration. It loads any settings made through the GUI, and then sets our preferences for sessions, the editor, fonts, and hint characters (the home row of our ZQ keyboard layout), among other things.</span></p><div id="c-2" class="cell-idx"><div class="block-container src" id="b-qutebrowser-config"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-qutebrowser-config">&#x1F517;</a></div><div class="block-meta"><code>qutebrowser-config</code><br><code><span class="bold">&#x1F3AF; qutebrowser/config.py</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">python</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="co"># pylint: disable=undefined-variable,missing-docstring</span>
+<span class="co"># flake8: noqa</span>
+
+<span class="co"># </span><span class="al">FIXME</span><span class="co">: Add host-specific variable. Then we can have conditional configuration</span>
+<span class="co"># based on the host (e.g., different font sizes for different displays).</span>
+
+<span class="co"># Load settings configured via the GUI (autoconfig.yml).</span>
+config.load_autoconfig()
+
+<span class="co"># Remember closed tabs from previous session.</span>
+c.auto_save.session <span class="op">=</span> <span class="va">True</span>
+
+<span class="co"># Use the exported org agenda view as the default page.</span>
+c.url.start_pages <span class="op">=</span> [<span class="st">&quot;https://www.google.com&quot;</span>]
+c.url.default_page <span class="op">=</span> <span class="st">&quot;https://www.google.com&quot;</span>
+
+<span class="co"># Use emacs to edit text; use &lt;ctrl-e&gt; to invoke.</span>
+c.editor.command <span class="op">=</span> [<span class="st">&quot;emacs&quot;</span>, <span class="st">&quot;</span><span class="sc">{}</span><span class="st">&quot;</span>]
+
+<span class="co"># Prefer UTF-8 for all content.</span>
+c.content.default_encoding <span class="op">=</span> <span class="st">&quot;utf-8&quot;</span>
+
+<span class="co"># Only autocomplete the most recent 1000 items.</span>
+c.completion.web_history.max_items <span class="op">=</span> <span class="dv">1000</span>
+
+<span class="co"># Allow partial-completion binding menu to display indefinitely (press &lt;escape&gt;</span>
+<span class="co"># to exit).</span>
+c.<span class="bu">input</span>.partial_timeout <span class="op">=</span> <span class="dv">0</span>
+
+<span class="co"># Default back to about:blank when closing the last tab.</span>
+c.tabs.last_close <span class="op">=</span> <span class="st">&quot;blank&quot;</span>
+
+<span class="co"># Use 50 MiB for caching.</span>
+c.content.cache.size <span class="op">=</span> <span class="dv">52428800</span>
+
+<span class="co"># Clear downloads after 10 seconds.</span>
+c.downloads.remove_finished <span class="op">=</span> <span class="dv">10</span> <span class="op">*</span> <span class="dv">1000</span>
+
+<span class="co"># Hint chars when pressing `f&#39; or `F&#39;; use home row of ZQ layout (my custom layout).</span>
+c.hints.chars <span class="op">=</span> <span class="st">&quot;aieuwhjkln&quot;</span>
+
+<span class="co"># Fonts; prefer 10pt monospace everywhere; the &quot;default_family&quot; here is defined</span>
+<span class="co"># by `c.fonts.default_family&#39;.</span>
+font_size <span class="op">=</span> <span class="st">&quot;14pt &quot;</span>
+c.fonts.tabs.selected <span class="op">=</span> font_size <span class="op">+</span> <span class="st">&quot;default_family&quot;</span>
+c.fonts.tabs.unselected <span class="op">=</span> font_size <span class="op">+</span> <span class="st">&quot;default_family&quot;</span>
+c.fonts.completion.category <span class="op">=</span> font_size <span class="op">+</span> <span class="st">&quot;default_family&quot;</span>
+c.fonts.completion.entry <span class="op">=</span>  font_size <span class="op">+</span> <span class="st">&quot;default_family&quot;</span>
+c.fonts.debug_console <span class="op">=</span>  font_size <span class="op">+</span> <span class="st">&quot;default_family&quot;</span>
+c.fonts.default_family <span class="op">=</span> [
+    <span class="st">&quot;CommitMono&quot;</span>,
+    <span class="st">&quot;Terminus&quot;</span>,
+    <span class="st">&quot;Input Mono&quot;</span>,
+    <span class="st">&quot;Monospace&quot;</span>,
+    <span class="st">&quot;DejaVu Sans Mono&quot;</span>,
+    <span class="st">&quot;Liberation Mono&quot;</span>]
+c.fonts.downloads <span class="op">=</span>  font_size <span class="op">+</span> <span class="st">&quot;default_family&quot;</span>
+c.fonts.hints <span class="op">=</span> font_size <span class="op">+</span> <span class="st">&quot;bold default_family&quot;</span>
+c.fonts.keyhint <span class="op">=</span> font_size <span class="op">+</span> <span class="st">&quot;default_family&quot;</span>
+c.fonts.messages.error <span class="op">=</span> font_size <span class="op">+</span> <span class="st">&quot;default_family&quot;</span>
+c.fonts.messages.info <span class="op">=</span> font_size <span class="op">+</span> <span class="st">&quot;default_family&quot;</span>
+c.fonts.messages.warning <span class="op">=</span> font_size <span class="op">+</span> <span class="st">&quot;default_family&quot;</span>
+c.fonts.prompts <span class="op">=</span> font_size <span class="op">+</span> <span class="st">&quot;default_family&quot;</span>
+c.fonts.statusbar <span class="op">=</span> font_size <span class="op">+</span> <span class="st">&quot;default_family&quot;</span>
+c.fonts.web.family.fixed <span class="op">=</span> <span class="st">&quot;CommitMono&quot;</span>
+c.fonts.web.family.serif <span class="op">=</span> <span class="st">&quot;Source Serif 4 Variable&quot;</span>
+c.fonts.web.family.standard <span class="op">=</span> <span class="st">&quot;Source Serif 4 Variable&quot;</span>
+
+<span class="co"># Filter out low-quality search results.</span>
+search_filter <span class="op">=</span> <span class="st">&quot;+-site:geeksforgeeks.org+-site:baeldung.com&quot;</span>
+c.url.searchengines <span class="op">=</span> {
+    <span class="st">&quot;DEFAULT&quot;</span>: <span class="st">&quot;https://www.google.com/search?hl=en&amp;q=</span><span class="sc">{}</span><span class="st">&quot;</span> <span class="op">+</span> search_filter,
+    <span class="st">&quot;w&quot;</span>: <span class="st">&quot;https://en.wikipedia.org/w/index.php?search=</span><span class="sc">{}</span><span class="st">&quot;</span>,
+    <span class="st">&quot;d&quot;</span>: <span class="st">&quot;https://duckduckgo.com/?q=</span><span class="sc">{}</span><span class="st">&quot;</span> <span class="op">+</span> search_filter,
+    <span class="st">&quot;h&quot;</span>: <span class="st">&quot;http://hackage.haskell.org/packages/search?terms=</span><span class="sc">{}</span><span class="st">&quot;</span>,
+    <span class="st">&quot;hh&quot;</span>: <span class="st">&quot;https://hoogle.haskell.org/?hoogle=</span><span class="sc">{}</span><span class="st">&quot;</span>,
+    <span class="st">&quot;de&quot;</span>: <span class="st">&quot;http://www.dictionary.com/browse/</span><span class="sc">{}</span><span class="st">&quot;</span>}
+
+<span class="co"># GUI - Tab navigation.</span>
+config.bind(<span class="st">&quot;&lt;ctrl-h&gt;&quot;</span>, <span class="st">&quot;tab-move -&quot;</span>)
+config.bind(<span class="st">&quot;&lt;ctrl-l&gt;&quot;</span>, <span class="st">&quot;tab-move +&quot;</span>)
+config.bind(<span class="st">&quot;h&quot;</span>, <span class="st">&quot;tab-prev&quot;</span>)
+config.bind(<span class="st">&quot;l&quot;</span>, <span class="st">&quot;tab-next&quot;</span>)
+config.unbind(<span class="st">&quot;J&quot;</span>)
+config.unbind(<span class="st">&quot;K&quot;</span>)
+config.bind(<span class="st">&quot;,N&quot;</span>, <span class="st">&quot;tab-clone&quot;</span>)
+
+<span class="co"># GUI - Page navigation.</span>
+config.bind(<span class="st">&quot;&lt;space&gt;&quot;</span>, <span class="st">&quot;scroll-page 0 0.5&quot;</span>)
+config.bind(<span class="st">&quot;&lt;backspace&gt;&quot;</span>, <span class="st">&quot;scroll-page 0 -0.5&quot;</span>)
+
+<span class="co"># URL navigation.</span>
+config.bind(<span class="st">&quot;O&quot;</span>, <span class="st">&quot;cmd-set-text :open </span><span class="sc">{url}</span><span class="st">&quot;</span>)
+config.bind(<span class="st">&quot;t&quot;</span>, <span class="st">&quot;cmd-set-text -s :open -rt&quot;</span>)
+config.bind(<span class="st">&quot;T&quot;</span>, <span class="st">&quot;cmd-set-text :open -rt </span><span class="sc">{url}</span><span class="st">&quot;</span>)
+config.bind(<span class="st">&quot;f&quot;</span>, <span class="st">&quot;hint all tab-bg&quot;</span>)
+config.bind(<span class="st">&quot;F&quot;</span>, <span class="st">&quot;hint&quot;</span>)
+config.bind(<span class="st">&quot;&lt;ctrl-p&gt;&quot;</span>, <span class="st">&quot;open -rt -- </span><span class="sc">{clipboard}</span><span class="st">&quot;</span>)
+config.bind(<span class="st">&quot;&lt;ctrl-shift-p&gt;&quot;</span>, <span class="st">&quot;open -- </span><span class="sc">{clipboard}</span><span class="st">&quot;</span>)
+config.bind(<span class="st">&quot;p&quot;</span>, <span class="st">&quot;open -rt -- </span><span class="sc">{primary}</span><span class="st">&quot;</span>)
+config.bind(<span class="st">&quot;P&quot;</span>, <span class="st">&quot;open -- </span><span class="sc">{primary}</span><span class="st">&quot;</span>)
+
+<span class="co"># Autocomplete navigation.</span>
+config.bind(<span class="st">&quot;&lt;ctrl-j&gt;&quot;</span>, <span class="st">&quot;completion-item-focus next&quot;</span>, mode<span class="op">=</span><span class="st">&quot;command&quot;</span>)
+config.bind(<span class="st">&quot;&lt;ctrl-k&gt;&quot;</span>, <span class="st">&quot;completion-item-focus prev&quot;</span>, mode<span class="op">=</span><span class="st">&quot;command&quot;</span>)
+
+<span class="co"># Other.</span>
+config.bind(<span class="st">&quot;yy&quot;</span>, <span class="st">&quot;yank -s&quot;</span>)
+config.bind(<span class="st">&quot;yY&quot;</span>, <span class="st">&quot;yank&quot;</span>)
+config.bind(<span class="st">&quot;=&quot;</span>, <span class="st">&quot;zoom-in&quot;</span>)
+config.bind(<span class="st">&quot;+&quot;</span>, <span class="st">&quot;zoom&quot;</span>)
+config.bind(<span class="st">&quot;,Q&quot;</span>, <span class="st">&quot;quit&quot;</span>)
+config.bind(<span class="st">&quot;,x&quot;</span>, <span class="st">&quot;wq&quot;</span>)
+config.unbind(<span class="st">&quot;th&quot;</span>, mode<span class="op">=</span><span class="st">&quot;normal&quot;</span>)
+config.unbind(<span class="st">&quot;tl&quot;</span>, mode<span class="op">=</span><span class="st">&quot;normal&quot;</span>)
+c.scrolling.smooth <span class="op">=</span> <span class="va">True</span></code></pre></div></div></div><div id="heading-container-h--Page-metrics" class="heading-container page-metrics"><h2 id="h--Page-metrics"><a href="#h--Page-metrics">Page metrics</a></h2></div><div id="heading-container-h--Backlinks" class="heading-container backlinks"><h3 id="h--Backlinks"><a href="#h--Backlinks">Backlinks (0)</a></h3></div><div id="heading-container-h--Tangled-files" class="heading-container tangled-blocks"><h3 id="h--Tangled-files"><a href="#h--Tangled-files">Tangled files (1)</a></h3><ol><li><a href="#b-qutebrowser-config" class="verbatim">qutebrowser/config.py</a></li></ol></div><div id="heading-container-h--Named-cells" class="heading-container named-cells"><h3 id="h--Named-cells"><a href="#h--Named-cells">Named cells (1)</a></h3><ol><li><a href="#b-qutebrowser-config"><span class="verbatim">qutebrowser-config</span></a></li></ol></div><footer><div class="lilac-stamp">Generated by <a href="https://lilac.funloop.org" class="external-link" target="_blank" rel="noopener noreferrer">Lilac</a></div></footer></main><script id="heading-ancestry" type="application/json">{"h--Backlinks":["h--Page-metrics"],"h--Named-cells":["h--Page-metrics"],"h--Page-metrics":[],"h--Tangled-files":["h--Page-metrics"],"h-1-config.py":[]}</script><script id="lilac-fe-script" src="/js/lilac.js"></script></body></html>

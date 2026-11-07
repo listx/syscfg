@@ -1,0 +1,273 @@
+<!DOCTYPE HTML><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>mpv</title><link rel="stylesheet" href="/css/default.css"><link rel="shortcut icon" type="image/png" href="/favicon.png"><link rel="stylesheet" href="/vendor/source-fonts/source-fonts.css">
+<script>
+  window.MathJax = {
+      loader: { paths: { "mathjax-newcm": "/vendor/mathjax-newcm-font" } },
+      output: { font: "mathjax-newcm" },
+  tex: {
+      tags: 'ams'
+  },
+  options: {
+      ignoreHtmlClass: 'verbatim|code'
+  }
+};
+</script>
+<script id="MathJax-script" async="" src="/vendor/mathjax/tex-mml-chtml.js"></script>
+</head><body><div class="navbar"><button id="hamburger" class="tocs-toggle-button" aria-label="Toggle table of contents sidebar">&#x2630;</button><div class="breadcrumbs"><a href="https://syscfg.funloop.org"><span class="breadcrumb">Linus Arver&#39;s Dotfiles</span></a> <a href="https://github.com/listx/syscfg" class="repo-link" title="Source repository" aria-label="Source repository"><svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 16 16"
+     aria-hidden="true">
+<g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+<circle cx="4" cy="3" r="1.75"></circle>
+<circle cx="4" cy="13" r="1.75"></circle>
+<circle cx="12" cy="3" r="1.75"></circle>
+<path d="M4 4.75v6.5"></path>
+<path d="M12 4.75c0 4-8 3-8 6.5"></path>
+</g>
+</svg>
+</a> <span class="breadcrumb-separator">/</span> <a href="#top"><span class="breadcrumb">mpv.org</span></a></div></div><nav id="tocs"><p class="widget-title gtoc-title">Site contents</p><nav class="gtoc"><ul><li><a href="/index.html">Introduction</a></li><li><a href="/bash.html">Bash</a></li><li><a href="/claude.html">Claude</a></li><li><a href="/clojure.html">Clojure</a></li><li><a href="/emacs.html">Emacs</a></li><li><a href="/git.html">Git</a></li><li><a href="/gpg.html">GnuPG</a></li><li><a href="/jj.html">Jujutsu</a></li><li><a href="/keybindings.html">Keybindings (WIP)</a></li><li><a href="/misc.html">Miscellaneous</a></li><li><a href="/mpv.html" class="bold">mpv</a></li><li><a href="/nix.html">Nix</a></li><li><a href="/notmuch.html">Notmuch</a></li><li><a href="/qutebrowser.html">qutebrowser</a></li><li><a href="/rtorrent.html">rTorrent</a></li><li><a href="/script/index.html">System scripts</a></li><li><a href="/tmux.html">tmux</a></li><li><a href="/vim.html">Vim</a></li><li><a href="/wezterm.html">Wezterm</a></li><li><a href="/xmonad.html">xmonad</a></li><li><a href="/xorg.html">X.Org</a></li><li><a href="/zsh/index.html">Zsh</a></li></ul></nav><p class="widget-title toc-title">Page contents</p><nav class="toc"><div class="toc-entries"><ol><li class="toc-level-1"><div class="toc-entry"><span class="toc-counter">1</span><a href="#h-1-Settings">Settings</a></div></li><li class="toc-level-1"><div class="toc-entry"><span class="toc-counter">2</span><a href="#h-2-Key-bindings">Key bindings</a></div></li><li class="toc-level-1"><div class="toc-entry"><a href="#h--Page-metrics">Page metrics</a></div><ol><li class="toc-level-2"><div class="toc-entry"><a href="#h--Backlinks">Backlinks</a></div></li><li class="toc-level-2"><div class="toc-entry"><a href="#h--Tangled-files">Tangled files</a></div></li><li class="toc-level-2"><div class="toc-entry"><a href="#h--Named-cells">Named cells</a></div></li></ol></li></ol></div></nav></nav><main><h1 id="top">mpv</h1><hr class="title-underline"><div id="heading-container-h-1-Settings" class="heading-container"><h2 id="h-1-Settings"><span id="c-0" class="cell-idx"><a href="#h-1-Settings">1&ensp;Settings</a></span></h2><p><span id="c-1" class="cell-idx">The <span class="code">mpv</span> <a href="#b-Makefile-mpv" class="internal-link" id="linkNumber-1">Makefile rule</a> links one of these to <span class="code">mpv/mpv.conf</span>, depending on the host and operating system. They all loop playlists and prefer English subtitles.</span></p><div id="c-2" class="cell-idx"><div class="block-container src" id="b-Makefile-mpv"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-Makefile-mpv">&#x1F517;</a></div><div class="block-meta"><code>Makefile-mpv</code></div><div class="block-meta-other hidden"><p>Used by index.org→<a href="/index.html#b-Makefile-b-Makefile-mpv" class="internal-link"><span class="verbatim">Makefile</span></a>.</p><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">makefile</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="dv">mpv:</span>
+	ln -fns <span class="ch">${</span><span class="dt">C</span><span class="ch">}</span>/mpv <span class="ch">${</span><span class="dt">H</span><span class="ch">}</span>/.config/mpv
+<span class="cf">ifeq</span> (<span class="st">&#39;</span><span class="ch">${</span><span class="dt">T</span><span class="ch">}</span><span class="st">&#39;</span>,<span class="st">&#39;k0&#39;</span>)
+	ln -fs mpv.<span class="ch">${</span><span class="dt">T</span><span class="ch">}</span>.conf mpv/mpv.conf
+<span class="cf">else</span> <span class="cf">ifeq</span> (<span class="st">&#39;</span><span class="ch">${</span><span class="dt">P</span><span class="ch">}</span><span class="st">&#39;</span>,<span class="st">&#39;Darwin&#39;</span>)
+	ln -fs mpv.osx.conf mpv/mpv.conf
+<span class="cf">else</span>
+	ln -fs mpv.linux.conf mpv/mpv.conf
+<span class="cf">endif</span></code></pre></div></div><p><span id="c-3" class="cell-idx">On <span class="code">k0</span>, we also ask for hardware decoding and the <span class="code">gpu</span> video output.</span></p><div id="c-4" class="cell-idx"><div class="block-container src" id="b-mpv.k0.conf"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-mpv.k0.conf">&#x1F517;</a></div><div class="block-meta"><code>mpv.k0.conf</code><br><code><span class="bold">&#x1F3AF; mpv/mpv.k0.conf</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">conf</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="dt">ao</span><span class="op">=</span><span class="dt">pulse</span>
+<span class="dt">loop-playlist</span><span class="op">=</span><span class="fl">inf</span>
+<span class="dt">hwdec</span><span class="op">=</span><span class="dt">auto</span>
+<span class="dt">vo</span><span class="op">=</span><span class="dt">gpu</span>
+<span class="dt">audio-display</span><span class="op">=</span><span class="dt">no</span>
+<span class="dt">slang</span><span class="op">=</span><span class="dt">en</span><span class="er">,</span><span class="dt">eng</span></code></pre></div></div><p><span id="c-5" class="cell-idx">On other Linux machines, we also loop individual files.</span></p><div id="c-6" class="cell-idx"><div class="block-container src" id="b-mpv.linux.conf"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-mpv.linux.conf">&#x1F517;</a></div><div class="block-meta"><code>mpv.linux.conf</code><br><code><span class="bold">&#x1F3AF; mpv/mpv.linux.conf</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">conf</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="dt">ao</span><span class="op">=</span><span class="dt">pulse</span>
+<span class="dt">loop-file</span><span class="op">=</span><span class="fl">inf</span>
+<span class="dt">loop-playlist</span><span class="op">=</span><span class="fl">inf</span>
+<span class="dt">audio-display</span><span class="op">=</span><span class="dt">no</span>
+<span class="dt">slang</span><span class="op">=</span><span class="dt">en</span><span class="er">,</span><span class="dt">eng</span></code></pre></div></div><p><span id="c-7" class="cell-idx">On macOS, we only need the common settings.</span></p><div id="c-8" class="cell-idx"><div class="block-container src" id="b-mpv.osx.conf"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-mpv.osx.conf">&#x1F517;</a></div><div class="block-meta"><code>mpv.osx.conf</code><br><code><span class="bold">&#x1F3AF; mpv/mpv.osx.conf</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">conf</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="dt">loop-playlist</span><span class="op">=</span><span class="fl">inf</span>
+<span class="dt">audio-display</span><span class="op">=</span><span class="dt">no</span>
+<span class="dt">slang</span><span class="op">=</span><span class="dt">en</span><span class="er">,</span><span class="dt">eng</span></code></pre></div></div></div><div id="heading-container-h-2-Key-bindings" class="heading-container"><h2 id="h-2-Key-bindings"><span id="c-9" class="cell-idx"><a href="#h-2-Key-bindings">2&ensp;Key bindings</a></span></h2><p><span id="c-10" class="cell-idx">This is based on mpv&#39;s sample bindings file, most of which is commented out. Our active bindings mostly change how far the mouse and arrow keys seek.</span></p><div id="c-11" class="cell-idx"><div class="block-container src" id="b-input.conf"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-input.conf">&#x1F517;</a></div><div class="block-meta"><code>input.conf</code><br><code><span class="bold">&#x1F3AF; mpv/input.conf</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">conf</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="co"># mpv keybindings</span>
+<span class="co">#</span>
+<span class="co"># Location of user-defined bindings: ~/.config/mpv/input.conf</span>
+<span class="co">#</span>
+<span class="co"># Lines starting with # are comments. Use SHARP to assign the # key.</span>
+<span class="co"># Copy this file and uncomment and edit the bindings you want to change.</span>
+<span class="co">#</span>
+<span class="co"># List of commands and further details: DOCS/man/input.rst</span>
+<span class="co"># List of special keys: --input-keylist</span>
+<span class="co"># Keybindings testing mode: mpv --input-test --force-window --idle</span>
+<span class="co">#</span>
+<span class="co"># Use &#39;ignore&#39; to unbind a key fully (e.g. &#39;ctrl+a ignore&#39;).</span>
+<span class="co">#</span>
+<span class="co"># Strings need to be quoted and escaped:</span>
+<span class="co">#   KEY show_text &quot;This is a single backslash: \\ and a quote: \&quot; !&quot;</span>
+<span class="co">#</span>
+<span class="co"># You can use modifier-key combinations like Shift+Left or Ctrl+Alt+x with</span>
+<span class="co"># the modifiers Shift, Ctrl, Alt and Meta (may not work on the terminal).</span>
+<span class="co">#</span>
+<span class="co"># The default keybindings are hardcoded into the mpv binary.</span>
+<span class="co"># You can disable them completely with: --no-input-default-bindings</span>
+
+<span class="co"># Developer note:</span>
+<span class="co"># On compilation, this file is baked into the mpv binary, and all lines are</span>
+<span class="co"># uncommented (unless &#39;#&#39; is followed by a space) - thus this file defines the</span>
+<span class="co"># default key bindings.</span>
+
+<span class="co"># If this is enabled, treat all the following bindings as default.</span>
+<span class="co">#default-bindings start</span>
+
+<span class="co">#MOUSE_BTN0 ignore                      # don&#39;t do anything</span>
+<span class="co">#MOUSE_BTN0_DBL cycle fullscreen        # toggle fullscreen on/off</span>
+<span class="co">#MOUSE_BTN2 cycle pause                 # toggle pause on/off</span>
+<span class="dt">MOUSE_BTN3</span> <span class="dt">seek</span> <span class="dt">-10</span>
+<span class="dt">MOUSE_BTN4</span> <span class="dt">seek</span> <span class="dt">10</span>
+<span class="co">#MOUSE_BTN5 add volume 2</span>
+<span class="co">#MOUSE_BTN6 add volume -2</span>
+<span class="dt">MOUSE_BTN7</span> <span class="dt">seek</span> <span class="dt">120</span>
+<span class="dt">MOUSE_BTN8</span> <span class="dt">seek</span> <span class="dt">-120</span>
+
+<span class="co"># Mouse wheels, touchpad or other input devices that have axes</span>
+<span class="co"># if the input devices supports precise scrolling it will also scale the</span>
+<span class="co"># numeric value accordingly</span>
+<span class="co">#AXIS_UP    seek 10</span>
+<span class="co">#AXIS_DOWN  seek -10</span>
+<span class="dt">AXIS_UP</span>    <span class="dt">seek</span> <span class="dt">-10</span>
+<span class="dt">AXIS_DOWN</span>  <span class="dt">seek</span>  <span class="dt">10</span>
+<span class="co">#AXIS_LEFT  seek 5</span>
+<span class="co">#AXIS_RIGHT seek -5</span>
+
+<span class="co">## Seek units are in seconds, but note that these are limited by keyframes</span>
+<span class="co">#RIGHT seek  5</span>
+<span class="co">#LEFT  seek -5</span>
+<span class="co">#UP    seek  60</span>
+<span class="co">#DOWN  seek -60</span>
+<span class="dt">UP</span>    <span class="dt">seek</span> <span class="dt">-60</span>
+<span class="dt">DOWN</span>  <span class="dt">seek</span>  <span class="dt">60</span>
+<span class="co"># Do smaller, always exact (non-keyframe-limited), seeks with shift.</span>
+<span class="co"># Don&#39;t show them on the OSD (no-osd).</span>
+<span class="co">#Shift+RIGHT no-osd seek  1 - exact</span>
+<span class="co">#Shift+LEFT  no-osd seek -1 - exact</span>
+<span class="co">#Shift+UP    no-osd seek  5 - exact</span>
+<span class="co">#Shift+DOWN  no-osd seek -5 - exact</span>
+<span class="dt">Shift</span><span class="er">+</span><span class="dt">UP</span>    <span class="dt">no-osd</span> <span class="dt">seek</span> <span class="dt">-5</span> <span class="dt">-</span> <span class="dt">exact</span>
+<span class="dt">Shift</span><span class="er">+</span><span class="dt">DOWN</span>  <span class="dt">no-osd</span> <span class="dt">seek</span>  <span class="dt">5</span> <span class="dt">-</span> <span class="dt">exact</span>
+<span class="co"># Skip to previous/next subtitle (subject to some restrictions; see manpage)</span>
+<span class="co">#Ctrl+LEFT   no-osd sub_seek -1</span>
+<span class="co">#Ctrl+RIGHT  no-osd sub_seek  1</span>
+<span class="dt">PGDWN</span> <span class="dt">add</span> <span class="dt">chapter</span> <span class="dt">1</span>                    <span class="co"># skip to next chapter</span>
+<span class="dt">PGUP</span> <span class="dt">add</span> <span class="dt">chapter</span> <span class="dt">-1</span>                     <span class="co"># skip to previous chapter</span>
+<span class="co">#PGUP playlist_prev                     # skip to next chapter</span>
+<span class="co">#PGDWN playlist_next                   # skip to previous chapter</span>
+<span class="co">#Shift+PGUP seek 600</span>
+<span class="co">#Shift+PGDWN seek -600</span>
+<span class="dt">Shift</span><span class="er">+</span><span class="dt">PGUP</span> <span class="dt">seek</span> <span class="dt">-600</span>
+<span class="dt">Shift</span><span class="er">+</span><span class="dt">PGDWN</span> <span class="dt">seek</span>  <span class="dt">600</span>
+<span class="co">#[ multiply speed 0.9091                # scale playback speed</span>
+<span class="co">#] multiply speed 1.1</span>
+<span class="co">#{ multiply speed 0.5</span>
+<span class="co">#} multiply speed 2.0</span>
+<span class="co">#BS set speed 1.0                       # reset speed to normal</span>
+<span class="co">#q quit</span>
+<span class="co">#Q quit_watch_later</span>
+<span class="co">#q {encode} quit</span>
+<span class="co">#ESC set fullscreen no</span>
+<span class="co">#ESC {encode} quit</span>
+<span class="co">#p cycle pause                          # toggle pause/playback mode</span>
+<span class="co">#. frame_step                           # advance one frame and pause</span>
+<span class="co">#, frame_back_step                      # go back by one frame and pause</span>
+<span class="co">#SPACE cycle pause</span>
+<span class="co">#&gt; playlist_next                        # skip to next file</span>
+<span class="co">#ENTER playlist_next                    # skip to next file</span>
+<span class="co">#&lt; playlist_prev                        # skip to previous file</span>
+<span class="co">#O osd                                  # cycle through OSD mode</span>
+<span class="co">#o show_progress</span>
+<span class="co">#P show_progress</span>
+<span class="co">#I show_text &quot;${filename}&quot;              # display filename in osd</span>
+<span class="co">#z add sub-delay -0.1                   # subtract 100 ms delay from subs</span>
+<span class="co">#x add sub-delay +0.1                   # add</span>
+<span class="co">#ctrl++ add audio-delay 0.100           # this changes audio/video sync</span>
+<span class="co">#ctrl+- add audio-delay -0.100</span>
+<span class="co">#9 add volume -2</span>
+<span class="co">#/ add volume -2</span>
+<span class="co">#0 add volume 2</span>
+<span class="co">#* add volume 2</span>
+<span class="co">#m cycle mute</span>
+<span class="co">#1 add contrast -1</span>
+<span class="co">#2 add contrast 1</span>
+<span class="co">#3 add brightness -1</span>
+<span class="co">#4 add brightness 1</span>
+<span class="co">#5 add gamma -1</span>
+<span class="co">#6 add gamma 1</span>
+<span class="co">#7 add saturation -1</span>
+<span class="co">#8 add saturation 1</span>
+<span class="co">#d cycle framedrop                      # cycle through framedrop modes</span>
+<span class="co"># toggle deinterlacer (automatically inserts or removes required filter)</span>
+<span class="co">#D cycle deinterlace</span>
+<span class="co">#r add sub-pos -1                       # move subtitles up</span>
+<span class="co">#t add sub-pos +1                       #                down</span>
+<span class="co">#v cycle sub-visibility</span>
+<span class="co"># stretch SSA/ASS subtitles with anamorphic videos to match historical</span>
+<span class="co">#V cycle ass-vsfilter-aspect-compat</span>
+<span class="co">#j cycle sub                            # cycle through subtitles</span>
+<span class="co">#J cycle sub down                       # ...backwards</span>
+<span class="co">#SHARP cycle audio                      # switch audio streams</span>
+<span class="co">#_ cycle video</span>
+<span class="co">#T cycle ontop                          # toggle video window ontop of other windows</span>
+<span class="co">#f cycle fullscreen                     # toggle fullscreen</span>
+<span class="co">#s screenshot                           # take a screenshot</span>
+<span class="co">#S screenshot video                     # ...without subtitles</span>
+<span class="co">#Alt+s screenshot - each-frame          # automatically screenshot every frame</span>
+<span class="co">#w add panscan -0.1                     # zoom out with -panscan 0 -fs</span>
+<span class="co">#e add panscan +0.1                     #      in</span>
+<span class="co"># cycle video aspect ratios; &quot;-1&quot; is the container aspect</span>
+<span class="dt">a</span> <span class="dt">cycle_values</span> <span class="dt">video-aspect</span> <span class="dt">&quot;16:9&quot;</span> <span class="dt">&quot;4:3&quot;</span> <span class="dt">&quot;2.35:1&quot;</span> <span class="dt">&quot;-1&quot;</span>
+<span class="co">#POWER quit</span>
+<span class="co">#MENU cycle osd</span>
+<span class="co">#PLAY cycle pause</span>
+<span class="co">#PAUSE cycle pause</span>
+<span class="co">#PLAYPAUSE cycle pause</span>
+<span class="co">#STOP quit</span>
+<span class="co">#FORWARD seek 60</span>
+<span class="co">#REWIND seek -60</span>
+<span class="co">#NEXT playlist_next</span>
+<span class="co">#PREV playlist_prev</span>
+<span class="co">#VOLUME_UP add volume 2</span>
+<span class="co">#VOLUME_DOWN add volume -2</span>
+<span class="co">#MUTE cycle mute</span>
+<span class="co">#CLOSE_WIN quit</span>
+<span class="co">#CLOSE_WIN {encode} quit</span>
+<span class="co">#E cycle edition                        # next edition</span>
+<span class="co">#l ab_loop                              # Set/clear A-B loop points</span>
+<span class="co">#ctrl+c quit</span>
+
+<span class="co"># Apple Remote section</span>
+<span class="co">#AR_PLAY cycle pause</span>
+<span class="co">#AR_PLAY_HOLD quit</span>
+<span class="co">#AR_CENTER cycle pause</span>
+<span class="co">#AR_CENTER_HOLD quit</span>
+<span class="co">#AR_NEXT seek 10</span>
+<span class="co">#AR_NEXT_HOLD seek 120</span>
+<span class="co">#AR_PREV seek -10</span>
+<span class="co">#AR_PREV_HOLD seek -120</span>
+<span class="co">#AR_MENU show_progress</span>
+<span class="co">#AR_MENU_HOLD cycle mute</span>
+<span class="co">#AR_VUP add volume 2</span>
+<span class="co">#AR_VUP_HOLD add chapter 1</span>
+<span class="co">#AR_VDOWN add volume -2</span>
+<span class="co">#AR_VDOWN_HOLD add chapter -1</span>
+
+<span class="co"># Joystick section</span>
+<span class="co"># </span><span class="al">WARNING</span><span class="co">: joystick support has to be explicitly enabled at</span>
+<span class="co">#          compiletime with --enable-joystick</span>
+<span class="co">#</span>
+
+<span class="co">#JOY_AXIS0_PLUS seek 10</span>
+<span class="co">#JOY_AXIS0_MINUS seek -10</span>
+<span class="co">#JOY_AXIS1_MINUS seek 60</span>
+<span class="co">#JOY_AXIS1_PLUS seek -60</span>
+<span class="co">#JOY_BTN0 cycle pause</span>
+<span class="co">#JOY_BTN1 cycle osd</span>
+<span class="co">#JOY_BTN2 add volume 2</span>
+<span class="co">#JOY_BTN3 add volume -2</span>
+
+<span class="co"># For dvdnav:// and bdnav://</span>
+
+<span class="co"># navigation controls during playback</span>
+<span class="co">#ENTER  {discnav} discnav menu        # DISCNAV MENU</span>
+<span class="co"># BS    {discnav} discnav prev        # DISCNAV PREVIOUS menu (in the order chapter-&gt;title-&gt;root)</span>
+<span class="co"># navigation controls when showing menu (additionally to the controls above)</span>
+<span class="co">#UP    {discnav-menu} discnav up          # DISCNAV UP</span>
+<span class="co">#DOWN  {discnav-menu} discnav down        # DISCNAV DOWN</span>
+<span class="co">#LEFT  {discnav-menu} discnav left        # DISCNAV LEFT</span>
+<span class="co">#RIGHT {discnav-menu} discnav right       # DISCNAV RIGHT</span>
+<span class="co">#ENTER {discnav-menu} discnav select      # DISCNAV SELECT (ok)</span>
+<span class="co">#MOUSE_BTN0 {discnav-menu} discnav mouse</span>
+<span class="co">#MOUSE_MOVE {discnav-menu} discnav mouse_move</span>
+
+<span class="co"># For tv://</span>
+<span class="co">#h cycle tv-channel -1                  # previous channel</span>
+<span class="co">#k cycle tv-channel +1                  # next channel</span>
+
+<span class="co">#</span>
+<span class="co"># Legacy bindings (may or may not be removed in the future)</span>
+<span class="co">#</span>
+<span class="co">#! add chapter -1                       # skip to previous chapter</span>
+<span class="co">#@ add chapter 1                        #         next</span>
+
+<span class="co">#</span>
+<span class="co"># Not assigned by default</span>
+<span class="co"># (not an exhaustive list of unbound commands)</span>
+<span class="co">#</span>
+
+<span class="er">)</span> <span class="dt">add</span> <span class="dt">sub-scale</span> <span class="er">+</span><span class="dt">0.1</span>                  <span class="co"># increase subtitle font size</span>
+<span class="er">(</span> <span class="dt">add</span> <span class="dt">sub-scale</span> <span class="dt">-0.1</span>                  <span class="co"># decrease subtitle font size</span>
+<span class="co"># ? sub_step -1                         # immediately display next subtitle</span>
+<span class="co"># ? sub_step +1                         #                     previous</span>
+<span class="co"># ? cycle_values window-scale 0.5 2 1   # switch between 1/2, 2x, unresized window size</span>
+<span class="co"># ? cycle colormatrix</span>
+<span class="co"># ? add audio-delay 0.100               # this changes audio/video sync</span>
+<span class="co"># ? add audio-delay -0.100</span>
+<span class="co"># ? cycle angle                         # switch DVD/Bluray angle</span>
+<span class="co"># ? add balance -0.1                    # adjust audio balance in favor of left</span>
+<span class="co"># ? add balance 0.1                     #                                  right</span>
+<span class="co"># ? cycle sub-forced-only               # toggle DVD forced subs</span>
+<span class="co"># ? cycle program                       # cycle transport stream programs</span>
+<span class="co"># ? stop                                # stop playback (quit or enter idle mode)</span>
+<span class="co"># Cycle aspect ratio:</span>
+<span class="co"># ? cycle_values video-aspect &quot;16:9&quot; &quot;16:10&quot; &quot;4:3&quot; &quot;2.35:1&quot; &quot;-1&quot;</span></code></pre></div></div></div><div id="heading-container-h--Page-metrics" class="heading-container page-metrics"><h2 id="h--Page-metrics"><a href="#h--Page-metrics">Page metrics</a></h2></div><div id="heading-container-h--Backlinks" class="heading-container backlinks"><h3 id="h--Backlinks"><a href="#h--Backlinks">Backlinks (0)</a></h3></div><div id="heading-container-h--Tangled-files" class="heading-container tangled-blocks"><h3 id="h--Tangled-files"><a href="#h--Tangled-files">Tangled files (4)</a></h3><ol><li><a href="#b-input.conf" class="verbatim">mpv/input.conf</a></li><li><a href="#b-mpv.k0.conf" class="verbatim">mpv/mpv.k0.conf</a></li><li><a href="#b-mpv.linux.conf" class="verbatim">mpv/mpv.linux.conf</a></li><li><a href="#b-mpv.osx.conf" class="verbatim">mpv/mpv.osx.conf</a></li></ol></div><div id="heading-container-h--Named-cells" class="heading-container named-cells"><h3 id="h--Named-cells"><a href="#h--Named-cells">Named cells (5)</a></h3><ol><li><a href="#b-Makefile-mpv"><span class="verbatim">Makefile-mpv</span></a></li><li><a href="#b-input.conf"><span class="verbatim">input.conf</span></a></li><li><a href="#b-mpv.k0.conf"><span class="verbatim">mpv.k0.conf</span></a></li><li><a href="#b-mpv.linux.conf"><span class="verbatim">mpv.linux.conf</span></a></li><li><a href="#b-mpv.osx.conf"><span class="verbatim">mpv.osx.conf</span></a></li></ol></div><footer><div class="lilac-stamp">Generated by <a href="https://lilac.funloop.org" class="external-link" target="_blank" rel="noopener noreferrer">Lilac</a></div></footer></main><script id="heading-ancestry" type="application/json">{"h--Backlinks":["h--Page-metrics"],"h--Named-cells":["h--Page-metrics"],"h--Page-metrics":[],"h--Tangled-files":["h--Page-metrics"],"h-1-Settings":[],"h-2-Key-bindings":[]}</script><script id="lilac-fe-script" src="/js/lilac.js"></script></body></html>
