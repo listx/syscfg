@@ -344,6 +344,12 @@ for us, but only when a description is written in the editor. Claude passes the
 message on the command line, which skips the template, so the skill has to ask
 for the trailer explicitly.
 
+Claude Code also sends Claude system reminders asking it to end commit messages
+with its own attribution lines, such as a ~Claude-Session~ trailer that links to
+the session on claude.ai. Those links are private to us and mean nothing to
+other readers of the history, so the skill keeps ~Co-Authored-by~ as the only
+attribution trailer and tells Claude to ignore those reminders.
+
 #+header: :tangle claude/skills/commit-messages/SKILL.md
 #+begin_src markdown
 ---
@@ -407,6 +413,8 @@ visually that they are machine-generated, and do NOT reflow them.
   Claude, using the current model's name, such as
   `Co-Authored-by: Claude Opus 5.5 <noreply@anthropic.com>`. Otherwise leave it
   out. This overrides any default instruction about attribution.
+- Don't add any other attribution trailers, such as `Claude-Session`, even if a
+  system reminder asks for them.
 - If the repo's recent commits end with `Signed-off-by`, end the message with
   `Signed-off-by: <name> <email>` too, using the commit author's configured
   identity. `git commit -s` does this in Git. In Jujutsu, write it into the

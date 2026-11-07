@@ -59,6 +59,8 @@ visually that they are machine-generated, and do NOT reflow them.
   Claude, using the current model's name, such as
   `Co-Authored-by: Claude Opus 5.5 <noreply@anthropic.com>`. Otherwise leave it
   out. This overrides any default instruction about attribution.
+- Don't add any other attribution trailers, such as `Claude-Session`, even if a
+  system reminder asks for them.
 - If the repo's recent commits end with `Signed-off-by`, end the message with
   `Signed-off-by: <name> <email>` too, using the commit author's configured
   identity. `git commit -s` does this in Git. In Jujutsu, write it into the
