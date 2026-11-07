@@ -173,6 +173,24 @@ in
   # Enable X screen saver (xscreensaver).
   services.xscreensaver.enable = true;
 
+  systemd.user.services.melby = {
+    description = "melby service";
+    after = [ "network.target" ];
+    wantedBy = [ "default.target" ];
+    startLimitIntervalSec = 0;
+    serviceConfig = {
+      ExecStart = "${melby-release.melby-daemon}/bin/melbyd start";
+      Environment = [
+        "RELEASE_COOKIE=%h/.melby/cookie"
+        "LUA_PATH=%h/.melby/?.lua"
+      ];
+      EnvironmentFile = "%h/.melby/systemd/env";
+      Restart = "always";
+      RestartSec = 1;
+      Type = "simple";
+    };
+  };
+
   virtualisation.virtualbox.host.enable = true;
 
   virtualisation.docker.enable = true;

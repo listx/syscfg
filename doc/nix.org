@@ -323,6 +323,8 @@ in
   # Enable X screen saver (xscreensaver).
   services.xscreensaver.enable = true;
 
+  <<nix:melby-service>>
+
   virtualisation.virtualbox.host.enable = true;
 
   virtualisation.docker.enable = true;
@@ -337,6 +339,48 @@ in
     "vboxusers"
   ];
 }
+#+end_src
+
+*** Melby daemon
+
+Melby's own install instructions use ~nix-env -if ./release.nix~, which puts
+the client and daemon in the user profile, and then has us symlink the
+~melby.service~ unit that ships with the daemon into
+~\~/.config/systemd/user~ by hand. Doing that on top of
+[[nixos/extra.nix]] leaves two copies of Melby installed, and the copy in
+~\~/.nix-profile~ wins because it comes first in ~PATH~. So NixOS owns Melby
+instead: the system packages provide ~melbyc~ and ~melbyd~, and this user
+service runs the same daemon build, just as the ~launchd~ agent does for
+[[nixpkgs/darwin-configuration.nix][nix-darwin]].
+
+The unit mirrors the one in Melby's daemon package. The daemon finds its
+cookie and Lua config under ~\~/.melby~, and gets the rest of its environment
+(notably a ~PATH~ that can find ~git~) from the
+[[id:adcc2f40-1a86-47f4-a22b-73968a118745::melby-systemd-env][environment file]].
+Settings from ~EnvironmentFile~ override ~Environment~, so that file's ~PATH~
+also replaces the minimal one NixOS gives every service. ~StartLimitIntervalSec
+= 0~ and ~Restart = "always"~ keep restarting the daemon no matter how often it
+crashes, because the shell prompt depends on it.
+
+#+name: nix:melby-service
+#+begin_src nix
+systemd.user.services.melby = {
+  description = "melby service";
+  after = [ "network.target" ];
+  wantedBy = [ "default.target" ];
+  startLimitIntervalSec = 0;
+  serviceConfig = {
+    ExecStart = "${melby-release.melby-daemon}/bin/melbyd start";
+    Environment = [
+      "RELEASE_COOKIE=%h/.melby/cookie"
+      "LUA_PATH=%h/.melby/?.lua"
+    ];
+    EnvironmentFile = "%h/.melby/systemd/env";
+    Restart = "always";
+    RestartSec = 1;
+    Type = "simple";
+  };
+};
 #+end_src
 
 *** Essentials
