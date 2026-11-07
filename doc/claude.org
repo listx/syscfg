@@ -46,6 +46,76 @@ tangled file (for example "fix this rule in `Makefile`").
 2. Check `git status` to see that only the expected tangled files changed.
 #+end_src
 
+* User instructions
+:PROPERTIES:
+:ID:       d49a474c-567d-4118-92f6-0d3e4db96426
+:END:
+
+Claude loads ~\~/.claude/CLAUDE.md~ in every session, whatever the repo, so it
+holds the rules that are about how sessions work together rather than about any
+one repo.
+
+We often run several Claude sessions at once, one per repo. If two of them edit
+the same repo, they trip over each other's uncommitted changes, and neither one
+knows the whole state of the work. So each repo gets one owning session, and
+every other session sends that owner its change requests instead of editing the
+files itself. The owner still answers to the user, so a request from another
+session never counts as the user's approval for anything hard to undo.
+
+Sessions find each other with ~ListAgents~, which shows each session's name,
+status, and tmux pane, but not its working directory. The name is therefore the
+only way to tell which session owns a repo, and the rule has to say how names
+are chosen. Claude Code (2.1.312 at time of writing) already names a new session
+after the basename of its working directory plus a short suffix, such as
+~syscfg-d1~ or ~lilac-f3~, so we adopt that form as the convention. A name can
+be set at startup with ~claude -n <name>~ (~--name~) and changed later with
+~/rename <name>~ (alias ~/name~), which is also how a session ends up with a
+task-style name like ~remove-lilac-legacy-leftovers~ that breaks the convention.
+
+Matching on the directory name alone would be ambiguous, because the owner of
+~lilac-legacy~ would be named ~lilac-legacy-…~, which also starts with ~lilac-~.
+So the convention requires the suffix to contain no hyphens, and a session
+compares everything before the last hyphen against the directory name.
+
+#+header: :tangle claude/CLAUDE.md
+#+begin_src markdown
+# One Claude session per repo
+
+Each repo has at most one Claude Code session that owns it. Other sessions send
+the owner their change requests instead of editing the repo themselves.
+
+## Session names
+
+`ListAgents` shows session names but not working directories, so names are how
+sessions find the owner of a repo.
+
+- The session that owns a repo is named `<dir>-<suffix>`, where `<dir>` is the
+  basename of the repo's directory and `<suffix>` is short and has no hyphens.
+  For example, the owner of `~/syscfg` is named like `syscfg-d1`.
+- To find a repo's owner, compare everything before the last hyphen of each
+  session's name against the repo's directory name. `lilac-legacy-a2` owns
+  `lilac-legacy`, not `lilac`.
+- Claude Code names a new session this way by default (after its working
+  directory, plus a short suffix). Keep that name. Don't rename the session
+  after its task.
+- If your session's name doesn't follow the convention, ask the user to rename
+  it with `/rename <dir>-<suffix>` (alias `/name`). A new session can be started
+  with a chosen name using `claude -n <name>`.
+
+## Changing files in another repo
+
+Before changing files in a repo other than your own working directory, run
+`ListAgents`. If a session owns that repo, send it the request with
+`SendMessage` and don't edit the files yourself. If no session owns it, ask the
+user.
+
+## Requests from other sessions
+
+When you own a repo and get a request from another session, handle it under
+this repo's own rules (CLAUDE.md, tests, and so on). Check with the user before
+anything hard to undo, such as commits, pushes, deletions, or history rewrites.
+#+end_src
+
 * Skills
 
 ** Literate programming with Lilac
@@ -243,7 +313,8 @@ initial setup".
 
 Claude Code keeps its own state (credentials, history, sessions, and so on) in
 =~/.claude=, so we only symlink the parts we manage here instead of the whole
-directory.
+directory. Those are the [[id:d49a474c-567d-4118-92f6-0d3e4db96426][user instructions]] in ~claude/CLAUDE.md~ and the
+skills.
 
 We link =skills= as a whole directory, so anything Claude Code writes to
 =~/.claude/skills= lands in this repo. That includes its own =synced= folder, so
@@ -253,6 +324,7 @@ we ignore it.
 #+begin_src makefile
 claude:
 	mkdir -p ${H}/.claude
+	ln -fns ${C}/claude/CLAUDE.md ${H}/.claude/CLAUDE.md
 	ln -fns ${C}/claude/skills ${H}/.claude/skills
 #+end_src
 

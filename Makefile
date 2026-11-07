@@ -20,6 +20,7 @@ clojure:
 
 claude:
 	mkdir -p ${H}/.claude
+	ln -fns ${C}/claude/CLAUDE.md ${H}/.claude/CLAUDE.md
 	ln -fns ${C}/claude/skills ${H}/.claude/skills
 
 emacs:
