@@ -31,7 +31,7 @@ in
     jq
     jujutsu
     lsof
-    melby-release.melby-client-rust
+    melby-release.melby-client
     melby-release.melby-daemon
     meld
     ncdu

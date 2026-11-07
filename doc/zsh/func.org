@@ -1364,7 +1364,7 @@ get_melby_info()
 		 MELBY_LAST_CMD_EXIT_STATUS="${global_exit_status}" \
 		 MELBY_PATH_ALIASES_FILE="${HOME}/.zsh/path-aliases" \
 		 MELBY_DIR="${HOME}/.melby" \
-		 melbyc-rust --config ~/.melby/melby.lua view --shell-pid "$$" 2>/dev/null; then
+		 melbyc --config ~/.melby/melby.lua view --shell-pid "$$" 2>/dev/null; then
 		cat <<EOF
 global_prompt_path_short="%B%F{cyan}$(~/syscfg/script/simplify_path.sh ${PWD})%f%b"
 global_prompt_git="$(gsts for_prompt)"
