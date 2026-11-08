@@ -18,7 +18,6 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                         .value_name("NUM")
                         .default_value("80")
                         .help("With of the terminal screen; used for coloring in missing trailing whitespace for better legibility. Default 80.")
-                        .takes_value(true)
                         .required(false),
                 )
                 .arg(

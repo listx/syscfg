@@ -114,7 +114,6 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                         .value_name("NUM")
                         .default_value("80")
                         .help("With of the terminal screen; used for coloring in missing trailing whitespace for better legibility. Default 80.")
-                        .takes_value(true)
                         .required(false),
                 )
                 .arg(
@@ -323,6 +322,10 @@ test:
 	cargo test
 #+end_src
 
+We use ~clap~ 4. ~clap~ 3 depends on the unmaintained ~atty~ crate, which has an
+unpatched soundness bug (GHSA-g98v-hv3f-hcfr) that GitHub's Dependabot keeps
+flagging. ~clap~ 4 detects terminals with the standard library instead.
+
 #+header: :tangle gd/Cargo.toml
 #+begin_src toml
 [package]
@@ -333,7 +336,7 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-clap = { version = "3.1.0", features = ["cargo"]}
+clap = { version = "4", features = ["cargo"]}
 colored = "2"
 #+end_src
 
