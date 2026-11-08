@@ -4,6 +4,12 @@ cursor-style-blink = false
 
 font-family = "CommitMono"
 font-size = 17
+font-feature = cv06
+
+window-width = 163
+window-height = 102
+window-padding-x = 4,0
+window-padding-y = 0
 
 background = #343c48
 foreground = #e5e7ea

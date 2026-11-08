@@ -13,6 +13,7 @@
 <<option-as-alt>>
 <<cursor>>
 <<font>>
+<<window>>
 <<colors>>
 #+end_src
 
@@ -57,10 +58,29 @@ cursor-style-blink = false
 
 ** Font
 
+As in [[id:1d490bfa-6d4a-4b0e-beac-d3e37fbb21a5::font][WezTerm]], turn on Commit Mono's ~cv06~ feature, which gives the 6 and 9
+numerals a straight tail instead of a curved one.
+
 #+name: font
 #+begin_src conf
 font-family = "CommitMono"
 font-size = 17
+font-feature = cv06
+#+end_src
+
+** Window
+
+Open windows at the same size as [[id:1d490bfa-6d4a-4b0e-beac-d3e37fbb21a5::window-size][WezTerm's]], in cells, and with the same
+[[id:1d490bfa-6d4a-4b0e-beac-d3e37fbb21a5::window-padding][padding]]: a little on the left, so that text doesn't touch the window's edge,
+and none elsewhere. ~window-padding-x~ takes the left and right padding as a
+pair.
+
+#+name: window
+#+begin_src conf
+window-width = 163
+window-height = 102
+window-padding-x = 4,0
+window-padding-y = 0
 #+end_src
 
 ** Colors
