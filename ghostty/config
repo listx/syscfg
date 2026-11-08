@@ -11,6 +11,8 @@ window-height = 102
 window-padding-x = 4,0
 window-padding-y = 0
 
+gtk-titlebar = false
+
 background = #343c48
 foreground = #e5e7ea
 cursor-color = #ffffff

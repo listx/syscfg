@@ -15,6 +15,7 @@ list of ~key = value~ lines.
 <<cursor>>
 <<font>>
 <<window>>
+<<gtk-titlebar>>
 <<colors>>
 <<confirm-close>>
 #+end_src
@@ -83,6 +84,19 @@ window-width = 163
 window-height = 102
 window-padding-x = 4,0
 window-padding-y = 0
+#+end_src
+
+On Linux, Ghostty draws its own GTK title bar, with a menu and tab buttons,
+across the top of every window. Under [[id:68954bd6-189f-48ab-9ded-8b6cbe3a0952][xmonad]] this is just wasted space, because
+xmonad manages the windows and we keep tabs in tmux, which is also why we
+[[id:1d490bfa-6d4a-4b0e-beac-d3e37fbb21a5::disable-tab-bar][disable WezTerm's tab bar]]. So turn it off. We use ~gtk-titlebar~ rather than
+~window-decoration = none~, because ~gtk-titlebar~ does nothing on Mac, where
+~window-decoration = none~ would also remove the window's native border and
+rounded corners.
+
+#+name: gtk-titlebar
+#+begin_src conf
+gtk-titlebar = false
 #+end_src
 
 ** Colors
