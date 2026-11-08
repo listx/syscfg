@@ -16,6 +16,7 @@
 *.zwc
 cache
 claude/skills/synced/
+.claude/settings.local.json
 cmus/*
 emacs/doom-cfg/custom.el
 emacs/spell-fu/*.data

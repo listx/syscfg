@@ -320,6 +320,11 @@ We link =skills= as a whole directory, so anything Claude Code writes to
 =~/.claude/skills= lands in this repo. That includes its own =synced= folder, so
 we ignore it.
 
+We also ignore ~.claude/settings.local.json~ in this repo. Claude Code writes
+the permissions we approve to it as we work, so it differs from machine to
+machine. Settings that should be the same everywhere belong in
+~.claude/settings.json~ instead.
+
 #+name: Makefile-claude
 #+begin_src makefile
 claude:
@@ -331,6 +336,7 @@ claude:
 #+name: gitignore-claude
 #+begin_src gitignore
 claude/skills/synced/
+.claude/settings.local.json
 #+end_src
 
 ** Commit messages
