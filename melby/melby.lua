@@ -242,9 +242,13 @@ function Config.view (env, shell_pid)
     table.insert(widgets_ps1_line2, w)
   end
 
-  -- Render widgets. Some go into line 1, others into line 2.
-  local ps1_line1 = melbyd.render(widgets_ps1_line1, {str=" "})
-  local ps1_line2 = melbyd.render(widgets_ps1_line2, {str=" "})
+  -- Render widgets. Some go into line 1, others into line 2. Wrap each escape
+  -- sequence in "%{...%}" so that Zsh doesn't count it toward the prompt's
+  -- width.
+  local ps1_line1 = melbyd.zsh_prompt_escape(
+    melbyd.render(widgets_ps1_line1, {str=" "}))
+  local ps1_line2 = melbyd.zsh_prompt_escape(
+    melbyd.render(widgets_ps1_line2, {str=" "}))
 
   -- We need to get messages first because we need to subscribe first. Otherwise
   -- Git SRS will start first and we'll miss its first broadcast (how long the

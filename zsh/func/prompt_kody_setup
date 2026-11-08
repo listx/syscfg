@@ -162,13 +162,15 @@ construct_prompt()
 
 	if [[ -n "${MELBY_PS1_LINE1:-}" ]]; then
 		if [[ -n "${MELBY_PS1_LINE2:-}" ]]; then
-			# We have to put the MELBY_PS1 value inside "%{..%}" because this
-			# tells Zsh to interpret the ANSI escape sequences inside the
-			# MELBY_PS1 variable. See
+			# Melby already wraps each escape sequence in these lines in
+			# "%{..%}" (with melbyd.zsh_prompt_escape), so that Zsh doesn't
+			# count it toward the prompt's width. Wrapping whole lines here
+			# would hide the visible text from Zsh too, and break redrawing
+			# when the prompt wraps. See
 			# https://stackoverflow.com/a/30581694/437583.
-			PS1="%{${MELBY_PS1_LINE1}%}${prompt_newline}%{${MELBY_PS1_LINE2}%}${prompt_newline} \$ "
+			PS1="${MELBY_PS1_LINE1}${prompt_newline}${MELBY_PS1_LINE2}${prompt_newline} \$ "
 		else
-			PS1="%{${MELBY_PS1_LINE1}%}${prompt_newline} \$ "
+			PS1="${MELBY_PS1_LINE1}${prompt_newline} \$ "
 		fi
 		local prompt_line_2=" "
 	else

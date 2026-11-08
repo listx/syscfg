@@ -251,6 +251,14 @@ current Kubernetes context and its health, followed by Git information for the
 current directory. It returns a shell script that sets ~MELBY_PS1_LINE1~,
 ~MELBY_PS1_LINE2~, and ~MELBY_SHELL_MESSAGES~, which our Zsh prompt evaluates.
 
+The two prompt lines go through ~melbyd.zsh_prompt_escape~, which wraps each
+ANSI escape sequence in ~%{...%}~ so that Zsh knows the sequence takes up no
+columns. Only the escape sequences may go inside ~%{...%}~. If visible text goes
+in too, Zsh undercounts the prompt's width, and when the prompt wraps in a
+narrow pane, every redraw (such as each clock tick) prints a new copy of the
+prompt below the old one. The shell messages are printed with ~echo~, not as
+part of the prompt, so they stay unescaped.
+
 #+name: melby-view
 #+begin_src lua
 function Config.view (env, shell_pid)
@@ -388,9 +396,13 @@ function Config.view (env, shell_pid)
     table.insert(widgets_ps1_line2, w)
   end
 
-  -- Render widgets. Some go into line 1, others into line 2.
-  local ps1_line1 = melbyd.render(widgets_ps1_line1, {str=" "})
-  local ps1_line2 = melbyd.render(widgets_ps1_line2, {str=" "})
+  -- Render widgets. Some go into line 1, others into line 2. Wrap each escape
+  -- sequence in "%{...%}" so that Zsh doesn't count it toward the prompt's
+  -- width.
+  local ps1_line1 = melbyd.zsh_prompt_escape(
+    melbyd.render(widgets_ps1_line1, {str=" "}))
+  local ps1_line2 = melbyd.zsh_prompt_escape(
+    melbyd.render(widgets_ps1_line2, {str=" "}))
 
   -- We need to get messages first because we need to subscribe first. Otherwise
   -- Git SRS will start first and we'll miss its first broadcast (how long the
