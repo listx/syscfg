@@ -16,6 +16,7 @@ list of ~key = value~ lines.
 <<font>>
 <<window>>
 <<colors>>
+<<confirm-close>>
 #+end_src
 
 The ~ghostty~ [[Makefile-ghostty][Makefile rule]] links only the ~config~ file, not the whole
@@ -122,4 +123,17 @@ palette = 12=#95add1
 palette = 13=#f2b0b0
 palette = 14=#b4f0f0
 palette = 15=#ffffff
+#+end_src
+
+** Closing windows
+
+By default, Ghostty asks for confirmation before closing a window (or tab or
+split) whose shell is running another program. Our shell [[id:9b76d360-8483-4449-b3a5-6c3678defc58][replaces itself with
+tmux]], so every window counts as busy and Ghostty asks every time. But closing
+the window only detaches from tmux, and the session lives on, so nothing is lost
+and the question is just noise. So close without asking.
+
+#+name: confirm-close
+#+begin_src conf
+confirm-close-surface = false
 #+end_src
