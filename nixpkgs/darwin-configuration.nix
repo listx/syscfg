@@ -106,6 +106,15 @@ in {
   # Enable melbyd with launchd.
   launchd.user.agents.melbyd = {
     script = "${melby-release.melby-daemon}/bin/melbyd start";
+    # Find Nix's git before Apple's /usr/bin/git.
+    path = [
+      "/run/current-system/sw/bin"
+      "/nix/var/nix/profiles/default/bin"
+      "/usr/bin"
+      "/bin"
+      "/usr/sbin"
+      "/sbin"
+    ];
     environment = {
       RELEASE_COOKIE = "${HOME}/.melby/cookie";
       LUA_PATH = "${HOME}/.melby/?.lua";

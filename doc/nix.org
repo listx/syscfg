@@ -969,6 +969,17 @@ nameserver 192.168.0.1
 
 [[https://github.com/nix-darwin/nix-darwin][nix-darwin]] is useful for making Mac laptops behave similar to NixOS.
 
+The ~melbyd~ agent needs its own [[(melbyd-path)][~PATH~]]. The daemon builds the prompt by
+running ~git~ (and a few scripts) in the current directory, but ~launchd~ only
+gives agents ~/usr/bin:/bin:/usr/sbin:/sbin~. There ~git~ is Apple's
+~/usr/bin/git~, a stub that runs Xcode's copy and refuses to run at all until
+the Xcode license has been accepted again, which every Xcode update requires.
+Then every Git query fails and the prompt silently loses its Git part. Putting
+the system profile first makes the daemon use the same Nix ~git~ as our shell,
+like the ~PATH~ in the [[id:adcc2f40-1a86-47f4-a22b-73968a118745::melby-systemd-env][environment file]] that the NixOS service reads. We list
+the directories ourselves instead of reusing ~environment.systemPath~, because
+that one contains a literal ~$HOME~ that ~launchd~ would not expand.
+
 #+name: nixpkgs/darwin-configuration.nix
 #+header: :tangle nixpkgs/darwin-configuration.nix
 #+begin_src nix
@@ -1006,6 +1017,15 @@ in {
   # Enable melbyd with launchd.
   launchd.user.agents.melbyd = {
     script = "${melby-release.melby-daemon}/bin/melbyd start";
+    # Find Nix's git before Apple's /usr/bin/git. (ref:melbyd-path)
+    path = [
+      "/run/current-system/sw/bin"
+      "/nix/var/nix/profiles/default/bin"
+      "/usr/bin"
+      "/bin"
+      "/usr/sbin"
+      "/sbin"
+    ];
     environment = {
       RELEASE_COOKIE = "${HOME}/.melby/cookie";
       LUA_PATH = "${HOME}/.melby/?.lua";
