@@ -503,14 +503,15 @@ byte 9, and ~C-S-o~ is the same as ~C-o~ (see the ASCII table in the reference
 information above). The "CSI u" scheme [fn:csi-u] fixes this by sending
 ~\e[<codepoint>;<modifiers>u~ instead, such as ~\e[111;6u~ for ~C-S-o~, and
 terminal Emacs [[id:100011e3-ba36-4078-975e-6136d25e60cc::CSI-u-mode-support][understands it]]. WezTerm sends these sequences for us (see its
-[[id:1d490bfa-6d4a-4b0e-beac-d3e37fbb21a5][configuration]]), but tmux sits between WezTerm and Emacs, and it has to pass
-them on.
+[[id:1d490bfa-6d4a-4b0e-beac-d3e37fbb21a5][configuration]]), and [[id:9c459df2-d228-40cb-a5d9-16c6d7b473c3][Ghostty]] does too once tmux asks for extended keys. But tmux sits
+between the terminal and Emacs, and it has to pass them on.
 
 tmux calls these "extended keys". We make tmux
 
   1) understand them from the terminal: tmux only parses extended keys from
      terminals with the ~extkeys~ feature, and it doesn't detect that feature
-     for WezTerm by itself, so we add it;
+     for WezTerm or Ghostty (whose ~TERM~ is ~xterm-ghostty~) by itself, so we
+     add it;
 
   2) always send them to the program in a pane, without waiting for the
      program to ask (~always~); and
@@ -522,6 +523,7 @@ tmux calls these "extended keys". We make tmux
 #+name: extended-keys
 #+begin_src conf
 set -as terminal-features 'wezterm*:extkeys'
+set -as terminal-features 'xterm-ghostty:extkeys'
 set -s extended-keys always
 set -s extended-keys-format csi-u
 #+end_src
