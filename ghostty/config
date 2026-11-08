@@ -38,4 +38,29 @@ palette = 15=#ffffff
 
 confirm-close-surface = false
 
+keybind = ctrl+shift+a=unbind
+keybind = ctrl+shift+c=unbind
+keybind = ctrl+shift+e=unbind
+keybind = ctrl+shift+f=unbind
+keybind = ctrl+shift+i=unbind
 keybind = ctrl+shift+j=unbind
+keybind = ctrl+shift+n=unbind
+keybind = ctrl+shift+o=unbind
+keybind = ctrl+shift+p=unbind
+keybind = ctrl+shift+q=unbind
+keybind = ctrl+shift+t=unbind
+keybind = ctrl+shift+v=unbind
+keybind = ctrl+shift+w=unbind
+keybind = super+a=select_all
+keybind = super+c=copy_to_clipboard:mixed
+keybind = super+e=new_split:down
+keybind = super+f=start_search
+keybind = super+i=inspector:toggle
+keybind = super+j=write_screen_file:paste,plain
+keybind = super+n=new_window
+keybind = super+o=new_split:right
+keybind = super+p=toggle_command_palette
+keybind = super+q=quit
+keybind = super+t=new_tab
+keybind = super+v=paste_from_clipboard
+keybind = super+w=close_tab:this

@@ -18,7 +18,7 @@ list of ~key = value~ lines.
 <<gtk-titlebar>>
 <<colors>>
 <<confirm-close>>
-<<unbind-ctrl-shift-j>>
+<<keybindings>>
 #+end_src
 
 The ~ghostty~ [[Makefile-ghostty][Makefile rule]] links only the ~config~ file, not the whole
@@ -160,10 +160,44 @@ contents to a file and paste the file's path. Ghostty handles the key itself, so
 programs in the terminal never see it, and Emacs's binding of ~C-S-j~ to
 [[id:100011e3-ba36-4078-975e-6136d25e60cc::window-navigation][swap windows]] silently does nothing. ~C-S-k~, which swaps in the other
 direction, still works because Ghostty doesn't bind ~ctrl+shift+k~. WezTerm has
-no such binding, so this only came up when we switched terminals. We never use
-the screen-file action, so unbind the key and let it through.
+no such binding, so this only came up when we switched terminals.
 
-#+name: unbind-ctrl-shift-j
+~ctrl+shift+j~ isn't the only such key. On Linux, Ghostty binds 12 other
+~ctrl+shift+<letter>~ chords by default, for copying and pasting, splits, tabs,
+search, and so on, and each one hides that chord from Emacs and tmux in the same
+way. So move all of them to Super, with the same letters and the same actions.
+Super is free for this on Linux because [[id:68954bd6-189f-48ab-9ded-8b6cbe3a0952][xmonad]] uses Hyper as its modifier. On
+the Mac, Ghostty doesn't bind these ~ctrl+shift~ chords, so unbinding them does
+nothing there. Ghostty calls the Mac's Command key ~super~, so on the Mac these
+bindings are on Command, where most of them already are by default, such as
+~cmd+c~ for copying.
+
+#+name: keybindings
 #+begin_src conf
+keybind = ctrl+shift+a=unbind
+keybind = ctrl+shift+c=unbind
+keybind = ctrl+shift+e=unbind
+keybind = ctrl+shift+f=unbind
+keybind = ctrl+shift+i=unbind
 keybind = ctrl+shift+j=unbind
+keybind = ctrl+shift+n=unbind
+keybind = ctrl+shift+o=unbind
+keybind = ctrl+shift+p=unbind
+keybind = ctrl+shift+q=unbind
+keybind = ctrl+shift+t=unbind
+keybind = ctrl+shift+v=unbind
+keybind = ctrl+shift+w=unbind
+keybind = super+a=select_all
+keybind = super+c=copy_to_clipboard:mixed
+keybind = super+e=new_split:down
+keybind = super+f=start_search
+keybind = super+i=inspector:toggle
+keybind = super+j=write_screen_file:paste,plain
+keybind = super+n=new_window
+keybind = super+o=new_split:right
+keybind = super+p=toggle_command_palette
+keybind = super+q=quit
+keybind = super+t=new_tab
+keybind = super+v=paste_from_clipboard
+keybind = super+w=close_tab:this
 #+end_src
