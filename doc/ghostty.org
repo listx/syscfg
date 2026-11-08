@@ -46,7 +46,9 @@ macos-option-as-alt = left
 
 ** Cursor
 
-Don't blink the cursor, just as in [[id:1d490bfa-6d4a-4b0e-beac-d3e37fbb21a5::cursor][WezTerm]].
+Don't blink the cursor, just as in [[id:1d490bfa-6d4a-4b0e-beac-d3e37fbb21a5::cursor][WezTerm]]. Unlike WezTerm's setting, this is only the
+default: programs can still turn blinking on with escape sequences. Terminal
+Emacs does that unless we [[id:100011e3-ba36-4078-975e-6136d25e60cc::tty-cursor-blink][tell it not to]].
 
 #+name: cursor
 #+begin_src conf

@@ -1778,6 +1778,8 @@ Also add the number of windows in the window configuration."
 (setq evil-insert-state-cursor 'box)
 (setq evil-emacs-state-cursor  'box)
 
+(setq visible-cursor nil)
+
 ;; Broken. See README.org for discussion.
 ;; (tty--set-output-buffer-size (* 128 1024))
 

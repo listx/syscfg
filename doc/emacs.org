@@ -343,6 +343,7 @@ other configurations that are pulled in. And so we define it first here.
 <<colors>>
 <<theme>>
 <<misc-ui>>
+<<tty-cursor-blink>>
 <<known-emacs-bugs>>
 <<spelling>>
 
@@ -3097,6 +3098,21 @@ the simpler modes that do not have a formatter, but for now we don't bother.
 (setq evil-normal-state-cursor 'box)
 (setq evil-insert-state-cursor 'box)
 (setq evil-emacs-state-cursor  'box)
+#+end_src
+
+*** Don't make the terminal blink the cursor
+
+When ~visible-cursor~ is non-nil (the default), terminal Emacs sends the
+terminfo ~cvvis~ ("very visible cursor") sequence every time it shows the
+cursor. Under tmux, ~cvvis~ is ~\E[34l~, which tmux takes as a request to blink
+the cursor and passes on to the outer terminal. WezTerm never blinks because its
+[[id:1d490bfa-6d4a-4b0e-beac-d3e37fbb21a5::cursor][~cursor_blink_rate~]] is 0, but [[id:9c459df2-d228-40cb-a5d9-16c6d7b473c3::cursor][Ghostty's ~cursor-style-blink~]] only sets the
+default, and programs may override it. So stop asking for a very visible cursor.
+GUI Emacs ignores this variable.
+
+#+name: tty-cursor-blink
+#+begin_src elisp
+(setq visible-cursor nil)
 #+end_src
 
 *** TTY buffers and flickering
