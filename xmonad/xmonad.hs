@@ -1112,13 +1112,15 @@ l_workspaceIsEmpty xzy = do
     , isNothing $ W.stack ww
     ]
 
--- Terminals.
+-- Terminals. Ghostty's config sets a font size that suits the Mac, so k0 (whose
+-- WezTerm font size was 12) overrides it here.
 l_term :: String -> String
 l_term hostname = case hostname of
+  "k0" -> invocation <> " --font-size=12"
   "k1" -> "LIBGL_ALWAYS_SOFTWARE=1 " <> invocation
   _ -> invocation
   where
-  invocation = "wezterm"
+  invocation = "ghostty"
 
 l_isPortraitMonitorLayout :: String -> Bool
 l_isPortraitMonitorLayout givenHost = any (`isPrefixOf` givenHost) portraitHosts
@@ -1458,9 +1460,15 @@ l_startupHook hostname = do
   -- order to spawn terminals in a single ZCoord.
   --
   -- Each of these terminals also spawn a tmux client instance.
+  --
+  -- Ghostty's --class sets the GTK application ID, which must look like
+  -- "com.example.foo", so we name the X11 instance (the "resource" that
+  -- l_manageHook matches) instead. Because we pass an argument, each of these
+  -- is its own Ghostty process (not a window of a single shared instance), so
+  -- each one keeps its own instance name.
   mapM_
     (\xzy -> whenX (l_workspaceIsEmpty xzy)
-      (spawn $ l_term hostname ++ " --class atWorkspace_" ++ show xzy))
+      (spawn $ l_term hostname ++ " --x11-instance-name=atWorkspace_" ++ show xzy))
     $ l_XZYsFrom numScreens ZGWork (take 1) y
   -- The emacs daemon also starts up org-roam-server-mode, which turns on an
   -- HTTP server to serve org-roam files over port 8010.
@@ -1528,7 +1536,7 @@ l_resetMouse alwaysReset = do
       then return (w, destNew)
       else return s
   windowPropToDest =
-    [ (ClassName "org.wezfurlong.wezterm", LowerLeft)
+    [ (ClassName "com.mitchellh.ghostty", LowerLeft)
     , (ClassName "Emacs", LowerLeft)
     , (ClassName "qutebrowser", UpperRight)
     , (ClassName "Chromium-browser", UpperRight)
@@ -1557,7 +1565,7 @@ main = do
     else xmonad $ myconf hostname numScreens
   where
   myconf hostname numScreens = def
-    { terminal           = "wezterm"
+    { terminal           = l_term hostname
     , focusFollowsMouse  = True
     , clickJustFocuses   = True
     , borderWidth        = 2
