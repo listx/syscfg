@@ -568,7 +568,7 @@ configuration and does not materially affect us).
 #+name: keybindings-meta-shift-letters
 #+begin_src conf
 bind-key -T root         M-S-a      send-keys Escape  "[97;4u"
-bind-key -T root         M-S-b      send-keys Escape  "[97;4u"
+bind-key -T root         M-S-b      send-keys Escape  "[98;4u"
 bind-key -T root         M-S-c      send-keys Escape  "[99;4u"
 bind-key -T root         M-S-d      send-keys Escape  "[100;4u"
 bind-key -T root         M-S-e      send-keys Escape  "[101;4u"
@@ -600,7 +600,7 @@ bind-key -T root         M-S-z      send-keys Escape  "[122;4u"
 #+name: keybindings-ctrl-shift-letters
 #+begin_src conf
 bind-key -T root         C-S-a      send-keys Escape  "[97;6u"
-bind-key -T root         C-S-b      send-keys Escape  "[97;6u"
+bind-key -T root         C-S-b      send-keys Escape  "[98;6u"
 bind-key -T root         C-S-c      send-keys Escape  "[99;6u"
 bind-key -T root         C-S-d      send-keys Escape  "[100;6u"
 bind-key -T root         C-S-e      send-keys Escape  "[101;6u"
