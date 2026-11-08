@@ -25,6 +25,7 @@ karabiner/assets
 karabiner/automatic_backups
 lh/target
 melby/*
+!melby/melby.lua
 mpv/mpv.conf
 nvim/.netrwhist
 openvpn/*.ovpn

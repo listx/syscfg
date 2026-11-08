@@ -193,11 +193,7 @@ karabiner:
 	mkdir -p ${H}/.config/karabiner
 	ln -fns ${C}/karabiner/karabiner.json ${H}/.config/karabiner
 <<id:adcc2f40-1a86-47f4-a22b-73968a118745::Makefile-lesskey>>
-melby:
-	ln -fns ${C}/melby ${H}/.melby
-	set -e && \
-		melby_location=$$(readlink $$(which melbyd)) && \
-		cp -f $${melby_location%/bin/melbyd}/share/melby/sample/* ${H}/.melby
+<<id:adcc2f40-1a86-47f4-a22b-73968a118745::Makefile-melby>>
 mpd:
 	ln -fns ${C}/mpd ${H}/.config/mpd
 <<id:fc99f714-9086-48fe-826b-24a27e996713::Makefile-mpv>>
@@ -692,7 +688,7 @@ gpg
 karabiner/assets
 karabiner/automatic_backups
 lh/target
-melby/*
+<<id:adcc2f40-1a86-47f4-a22b-73968a118745::gitignore-melby>>
 mpv/mpv.conf
 nvim/.netrwhist
 openvpn/*.ovpn

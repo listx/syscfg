@@ -54,11 +54,14 @@ karabiner:
 lesskey:
 	ln -fs ${C}/lesskey/cfg ${H}/.lesskey
 	lesskey
+
 melby:
 	ln -fns ${C}/melby ${H}/.melby
 	set -e && \
 		melby_location=$$(readlink $$(which melbyd)) && \
-		cp -f $${melby_location%/bin/melbyd}/share/melby/sample/* ${H}/.melby
+		for f in $${melby_location%/bin/melbyd}/share/melby/sample/*; do \
+			[ "$${f##*/}" = melby.lua ] || cp -f "$$f" ${H}/.melby; \
+		done
 mpd:
 	ln -fns ${C}/mpd ${H}/.config/mpd
 mpv:
