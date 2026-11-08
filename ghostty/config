@@ -37,3 +37,5 @@ palette = 14=#b4f0f0
 palette = 15=#ffffff
 
 confirm-close-surface = false
+
+keybind = ctrl+shift+j=unbind

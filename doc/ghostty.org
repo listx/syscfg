@@ -18,6 +18,7 @@ list of ~key = value~ lines.
 <<gtk-titlebar>>
 <<colors>>
 <<confirm-close>>
+<<unbind-ctrl-shift-j>>
 #+end_src
 
 The ~ghostty~ [[Makefile-ghostty][Makefile rule]] links only the ~config~ file, not the whole
@@ -150,4 +151,19 @@ and the question is just noise. So close without asking.
 #+name: confirm-close
 #+begin_src conf
 confirm-close-surface = false
+#+end_src
+
+** Keybindings
+
+On Linux, Ghostty binds ~ctrl+shift+j~ by default to write the screen's
+contents to a file and paste the file's path. Ghostty handles the key itself, so
+programs in the terminal never see it, and Emacs's binding of ~C-S-j~ to
+[[id:100011e3-ba36-4078-975e-6136d25e60cc::window-navigation][swap windows]] silently does nothing. ~C-S-k~, which swaps in the other
+direction, still works because Ghostty doesn't bind ~ctrl+shift+k~. WezTerm has
+no such binding, so this only came up when we switched terminals. We never use
+the screen-file action, so unbind the key and let it through.
+
+#+name: unbind-ctrl-shift-j
+#+begin_src conf
+keybind = ctrl+shift+j=unbind
 #+end_src
