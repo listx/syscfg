@@ -97,6 +97,13 @@ script which knows what to do depending on the environment."
        (setq special-keys (cdr special-keys))))))
 
 (eval-after-load "xterm" '(l/csi-u-support))
+(defun l/init-modify-other-keys-mode-2 ()
+  "Ask the terminal to send all modified keys as `CSI u' sequences."
+  (send-string-to-terminal "\e[>4;2m")
+  (push "\e[>4m" (terminal-parameter nil 'tty-mode-reset-strings))
+  (push "\e[>4;2m" (terminal-parameter nil 'tty-mode-set-strings)))
+(add-hook 'terminal-init-xterm-hook #'l/init-modify-other-keys-mode-2)
+
 (defun l/disambiguate-problematic-keys ()
   "This doesn't really do anything special other than just create placeholder
 bindings for as-yet-unbound keys (determined manually). If we don't do this then

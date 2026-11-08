@@ -469,10 +469,38 @@ https://invisible-island.net/xterm/ctlseqs/ctlseqs.html and search for
        (setq special-keys (cdr special-keys))))))
 
 (eval-after-load "xterm" '(l/csi-u-support))
+<<modify-other-keys-mode-2>>
 <<disambiguate-problematic-keys>>
 
 ;; Load xterm-specific settings for TERM=wezterm.
 (add-to-list 'term-file-aliases '("wezterm" . "xterm-256color"))
+#+end_src
+
+*** Ask for modifyOtherKeys mode 2
+
+The decoding above only helps if the terminal sends ~CSI u~ sequences at all.
+Inside tmux, tmux decides that per pane, from the ~modifyOtherKeys~ mode that the
+program in the pane asks for with ~\e[>4;Nm~. In mode 1, tmux still sends the
+traditional encoding for any key that has one, so ~C-i~ arrives as ~TAB~, ~C-m~
+as ~RET~, and ~C-S-o~ as plain ~C-o~ (the Shift is lost). In mode 2, tmux sends
+~CSI u~ for all of these, and Emacs can tell them apart.
+
+Emacs's own ~xterm.el~ only ever asks for mode 1, and only if the terminal says
+it is a recent xterm. tmux doesn't say that, so Emacs asks for nothing. So ask
+for mode 2 ourselves whenever Emacs sets up an xterm-like terminal. Like
+~xterm--init-modify-other-keys~ in ~xterm.el~, also register the sequences in
+the terminal's ~tty-mode-reset-strings~ and ~tty-mode-set-strings~, which Emacs
+sends when it suspends or exits and when it resumes. Then the shell in the pane
+doesn't get ~CSI u~ sequences after we leave Emacs (with ~C-z~, for example).
+
+#+name: modify-other-keys-mode-2
+#+begin_src elisp
+(defun l/init-modify-other-keys-mode-2 ()
+  "Ask the terminal to send all modified keys as `CSI u' sequences."
+  (send-string-to-terminal "\e[>4;2m")
+  (push "\e[>4m" (terminal-parameter nil 'tty-mode-reset-strings))
+  (push "\e[>4;2m" (terminal-parameter nil 'tty-mode-set-strings)))
+(add-hook 'terminal-init-xterm-hook #'l/init-modify-other-keys-mode-2)
 #+end_src
 
 *** Disambiguate typically-problematic keys
