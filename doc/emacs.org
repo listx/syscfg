@@ -2971,7 +2971,7 @@ all about the commit message.
 
 * Copilot
 
-You need to also install ~copilot-language-server~ (NixOS package).
+You need to also install ~copilot-language-server~, which our [[id:82cbef73-61b9-43e7-9df6-7b2771000733::pkgs:misc-common][Nix config]] does.
 
 #+name: pkg:copilot
 #+begin_src elisp

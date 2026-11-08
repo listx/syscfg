@@ -465,11 +465,16 @@ inkscape
 
 *** Miscellaneous common packages
 
-These are common to both [[nixos/minimal.nix]] and [[nixpkgs/darwin-configuration.nix]],
+These are common to both [[nixos/extra.nix]] and [[nixpkgs/darwin-configuration.nix]],
 and are captured here for convenience.
+
+~copilot-language-server~ is the server that the [[id:100011e3-ba36-4078-975e-6136d25e60cc::cfg:copilot][Copilot package]] in Emacs talks to.
+Our Emacs config turns on ~copilot-mode~ in every programming buffer, and
+without the server, Emacs fails to start as a daemon.
 
 #+name: pkgs:misc-common
 #+begin_src nix
+copilot-language-server
 ffmpeg
 gnupg
 graphviz
