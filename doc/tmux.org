@@ -9,53 +9,16 @@
 
 #+header: :tangle tmux/.tmux.conf
 #+begin_src conf
-<<global-variables>>
 <<keybindings>>
 <<appearance>>
 <<misc>>
-#+end_src
-
-* Global variables
-
-Tmux supports rudimentary templating, somewhat akin to the C preprocessor. We
-call them "global variables" here for simplicity. But basically you can do
-
-#+begin_src conf
-FOO="bar"
-#+end_src
-
-and then you can use =$FOO= elsewhere in the configuration to substitute in the
-value of ="bar"=.
-
-#+name: global-variables
-#+begin_src conf
-<<global-variable-emacslike>>
-#+end_src
-
-** =EMACSLIKE=
-
-The =EMACSLIKE= variable is a tmux predicate to check if the current ~window_name~
-is running either =emacs=, =emacsclient=, or =git=. We include =git= because
-=automatic-rename= sets the name to "git" if we run =git commit --amend= from the
-terminal. We also include =tig= because we can invoke Git interactive rebases
-(which invokes our emacs editor) from =tig=.
-
-IOW, if =EMACSLIKE= returns a truthy value, we are most likely looking at Emacs.
-We use this predicate in a few places to determine if we should send CSI-u
-encoded keys (because Emacs understands CSI-u keys but other terminal
-applications may not). So in a sense the variable could have been named
-=UNDERSTANDS_CSIU= or similar but because we are almost always only concerned with
-terminal emacs, we've named it =EMACSLIKE=.
-
-#+name: global-variable-emacslike
-#+begin_src conf
-EMACSLIKE="#{m/r:emacs.*|git|tig,#{window_name}}"
 #+end_src
 
 * Keybindings
 
 #+name: keybindings
 #+begin_src conf
+<<extended-keys>>
 <<keybindings-insert-mode>>
 <<keybindings-passthrough-mode>>
 <<keybindings-copy-mode>>
@@ -66,14 +29,10 @@ EMACSLIKE="#{m/r:emacs.*|git|tig,#{window_name}}"
 
 ** Reference information
 
-Note that the following bindings are equivalent:
-
-#+begin_src conf
-bind-key -T root         C-S-l      send-keys -H 1b 5b 37 36 3b 36 75
-bind-key -T root         C-S-l      send-keys Escape "[76;6u"
-#+end_src
-
-Using the raw hex version may be easier to debug.
+To see what a key sends to the program in a pane, run ~cat -v~ in the pane and
+press the key. For example, with [[id:9170fae9-85de-4fd8-96fb-f3d3d2215f94::extended-keys][extended keys]], ~C-,~ shows up as ~^[[44;5u~.
+~send-keys -H~ sends raw bytes the other way, which helps when testing: ~tmux
+send-keys -H 1b 5b 34 34 3b 35 75~ is the same ~C-,~ sequence.
 
 Another thing worth mentioning is the following ASCII manpage (see =man ascii=)
 portion (converted to Org table format):
@@ -206,17 +165,6 @@ session.
 <<keybindings-pane-move-across-windows>>
 <<keybindings-pane-move-across-windows-new-window>>
 <<keybindings-pane-next-layout>>
-
-<<keybindings-meta-shift-letters>>
-<<keybindings-ctrl-shift-letters>>
-<<keybindings-ctrl-punc>>
-<<keybindings-meta-punc>>
-<<keybindings-ctrl-meta-punc>>
-<<keybindings-special-tab>>
-<<keybindings-special-enter>>
-<<keybindings-special-m>>
-<<keybindings-special-backspace>>
-<<keybindings-special-space>>
 #+end_src
 
 *** Navigation and layout
@@ -547,291 +495,49 @@ altogether.
 set -s escape-time 0
 #+end_src
 
-** CSI-u bindings
+** Extended keys
 
-Make tmux encode ~C-S-{a-z}~ sequences (and others) with the "CSI u"
-scheme. [fn:csi-u] Otherwise, applications that do support it like terminal emacs
-don't even get these events (probably because tmux swallows those keys and does
-not send them).
+Traditionally, a terminal sends a modified key as a single byte or an escape
+sequence that can't tell some keys apart. For example, ~C-i~ and ~TAB~ are both
+byte 9, and ~C-S-o~ is the same as ~C-o~ (see the ASCII table in the reference
+information above). The "CSI u" scheme [fn:csi-u] fixes this by sending
+~\e[<codepoint>;<modifiers>u~ instead, such as ~\e[111;6u~ for ~C-S-o~, and
+terminal Emacs [[id:100011e3-ba36-4078-975e-6136d25e60cc::CSI-u-mode-support][understands it]]. WezTerm sends these sequences for us (see its
+[[id:1d490bfa-6d4a-4b0e-beac-d3e37fbb21a5][configuration]]), but tmux sits between WezTerm and Emacs, and it has to pass
+them on.
 
-Note that there are some regressions and funny behaviors from tmux. For
-example, ~C-[~ cannot be bound (it is indistinguishable from ~ESC~). The same goes
-for ~C-j~ / ~RET~ and ~C-i~ / ~TAB~. For a discussion about this regression, see
-https://github.com/tmux/tmux/issues/2705.
+tmux calls these "extended keys". We make tmux
 
-Also, ~C-#~ is allowed (notice that it is not defined as ~C-S-3~), but ~C-$~ is not
-allowed and we have to use ~C-S-4~ (this is a cosmetic oddity for our
-configuration and does not materially affect us).
+  1) understand them from the terminal: tmux only parses extended keys from
+     terminals with the ~extkeys~ feature, and it doesn't detect that feature
+     for WezTerm by itself, so we add it;
 
-*** Meta+Shift and letters
+  2) always send them to the program in a pane, without waiting for the
+     program to ask (~always~); and
 
-#+name: keybindings-meta-shift-letters
+  3) send them in the CSI u format rather than xterm's default format
+     (~\e[27;<modifiers>;<codepoint>\~~), because the CSI u format is what
+     our Emacs configuration decodes.
+
+#+name: extended-keys
 #+begin_src conf
-bind-key -T root         M-S-a      send-keys Escape  "[97;4u"
-bind-key -T root         M-S-b      send-keys Escape  "[98;4u"
-bind-key -T root         M-S-c      send-keys Escape  "[99;4u"
-bind-key -T root         M-S-d      send-keys Escape  "[100;4u"
-bind-key -T root         M-S-e      send-keys Escape  "[101;4u"
-bind-key -T root         M-S-f      send-keys Escape  "[102;4u"
-bind-key -T root         M-S-g      send-keys Escape  "[103;4u"
-bind-key -T root         M-S-h      send-keys Escape  "[104;4u"
-bind-key -T root         M-S-i      send-keys Escape  "[105;4u"
-bind-key -T root         M-S-j      send-keys Escape  "[106;4u"
-bind-key -T root         M-S-k      send-keys Escape  "[107;4u"
-bind-key -T root         M-S-l      send-keys Escape  "[108;4u"
-bind-key -T root         M-S-m      send-keys Escape  "[109;4u"
-bind-key -T root         M-S-n      send-keys Escape  "[110;4u"
-bind-key -T root         M-S-o      send-keys Escape  "[111;4u"
-bind-key -T root         M-S-p      send-keys Escape  "[112;4u"
-bind-key -T root         M-S-q      send-keys Escape  "[113;4u"
-bind-key -T root         M-S-r      send-keys Escape  "[114;4u"
-bind-key -T root         M-S-s      send-keys Escape  "[115;4u"
-bind-key -T root         M-S-t      send-keys Escape  "[116;4u"
-bind-key -T root         M-S-u      send-keys Escape  "[117;4u"
-bind-key -T root         M-S-v      send-keys Escape  "[118;4u"
-bind-key -T root         M-S-w      send-keys Escape  "[119;4u"
-bind-key -T root         M-S-x      send-keys Escape  "[120;4u"
-bind-key -T root         M-S-y      send-keys Escape  "[121;4u"
-bind-key -T root         M-S-z      send-keys Escape  "[122;4u"
+set -as terminal-features 'wezterm*:extkeys'
+set -s extended-keys always
+set -s extended-keys-format csi-u
 #+end_src
 
-*** Control+Shift and letters
+How much tmux sends to a pane depends on the ~modifyOtherKeys~ mode that the
+pane's program asks for. With ~always~, every pane gets at least mode 1, where a
+key that has a traditional encoding still uses it. So the shell still gets plain
+~TAB~ for ~C-i~ and ~RET~ for ~C-m~, as it expects. Emacs [[id:100011e3-ba36-4078-975e-6136d25e60cc::modify-other-keys-mode-2][asks for mode 2]], where
+tmux sends every modified key as CSI u, so Emacs can bind ~C-i~ apart from
+~TAB~, ~C-m~ apart from ~RET~, and ~C-S-o~ apart from ~C-o~. You can see a pane's
+mode with ~tmux display -p '#{pane_key_mode}'~ (~Ext 1~ or ~Ext 2~).
 
-#+name: keybindings-ctrl-shift-letters
-#+begin_src conf
-bind-key -T root         C-S-a      send-keys Escape  "[97;6u"
-bind-key -T root         C-S-b      send-keys Escape  "[98;6u"
-bind-key -T root         C-S-c      send-keys Escape  "[99;6u"
-bind-key -T root         C-S-d      send-keys Escape  "[100;6u"
-bind-key -T root         C-S-e      send-keys Escape  "[101;6u"
-bind-key -T root         C-S-f      send-keys Escape  "[102;6u"
-bind-key -T root         C-S-g      send-keys Escape  "[103;6u"
-bind-key -T root         C-S-h      send-keys Escape  "[104;6u"
-bind-key -T root         C-S-i      send-keys Escape  "[105;6u"
-bind-key -T root         C-S-j      send-keys Escape  "[106;6u"
-bind-key -T root         C-S-k      send-keys Escape  "[107;6u"
-bind-key -T root         C-S-l      send-keys Escape  "[108;6u"
-bind-key -T root         C-S-m      send-keys Escape  "[109;6u"
-bind-key -T root         C-S-n      send-keys Escape  "[110;6u"
-bind-key -T root         C-S-o      send-keys Escape  "[111;6u"
-bind-key -T root         C-S-p      send-keys Escape  "[112;6u"
-bind-key -T root         C-S-q      send-keys Escape  "[113;6u"
-bind-key -T root         C-S-r      send-keys Escape  "[114;6u"
-bind-key -T root         C-S-s      send-keys Escape  "[115;6u"
-bind-key -T root         C-S-t      send-keys Escape  "[116;6u"
-bind-key -T root         C-S-u      send-keys Escape  "[117;6u"
-bind-key -T root         C-S-v      send-keys Escape  "[118;6u"
-bind-key -T root         C-S-w      send-keys Escape  "[119;6u"
-bind-key -T root         C-S-x      send-keys Escape  "[120;6u"
-bind-key -T root         C-S-y      send-keys Escape  "[121;6u"
-bind-key -T root         C-S-z      send-keys Escape  "[122;6u"
-#+end_src
-
-*** Control and punctuation
-
-#+name: keybindings-ctrl-punc
-#+begin_src conf
-bind-key -T root         C-!        send-keys Escape "[33;5u"
-# tmux cannot parse C-", so we send C-S-' from wezterm.
-bind-key -T root         C-S-\'     send-keys Escape "[39;6u"
-bind-key -T root         C-\#       send-keys Escape "[35;5u"
-bind-key -T root         C-S-4      send-keys Escape "[52;6u"
-bind-key -T root         C-S-5      send-keys Escape "[53;6u"
-bind-key -T root         C-S-7      send-keys Escape "[55;6u"
-bind-key -T root         C-\'       send-keys Escape "[39;5u"
-bind-key -T root         C-(        send-keys Escape "[40;5u"
-bind-key -T root         C-)        send-keys Escape "[41;5u"
-bind-key -T root         C-S-8      send-keys Escape "[56;6u"
-bind-key -T root         C-+        send-keys Escape "[43;5u"
-bind-key -T root         C-,        send-keys Escape "[44;5u"
-bind-key -T root         C--        send-keys Escape "[45;5u"
-bind-key -T root         C-.        send-keys Escape "[46;5u"
-bind-key -T root         C-/        send-keys Escape "[47;5u"
-bind-key -T root         C-0        send-keys Escape "[48;5u"
-bind-key -T root         C-1        send-keys Escape "[49;5u"
-bind-key -T root         C-2        send-keys Escape "[50;5u"
-bind-key -T root         C-3        send-keys Escape "[51;5u"
-bind-key -T root         C-4        send-keys Escape "[52;5u"
-bind-key -T root         C-5        send-keys Escape "[53;5u"
-bind-key -T root         C-6        send-keys Escape "[54;5u"
-bind-key -T root         C-7        send-keys Escape "[55;5u"
-bind-key -T root         C-8        send-keys Escape "[56;5u"
-bind-key -T root         C-9        send-keys Escape "[57;5u"
-bind-key -T root         C-:        send-keys Escape "[58;5u"
-bind-key -T root         C-\;       send-keys Escape "[59;5u"
-bind-key -T root         C-<        send-keys Escape "[60;5u"
-bind-key -T root         C-=        send-keys Escape "[61;5u"
-bind-key -T root         C->        send-keys Escape "[62;5u"
-bind-key -T root         C-S-/      send-keys Escape "[47;6u"
-bind-key -T root         C-@        send-keys Escape "[64;5u"
-bind-key -T root         C-\\       send-keys Escape "[92;5u"
-bind-key -T root         C-]        send-keys Escape "[93;5u"
-bind-key -T root         C-^        send-keys Escape "[94;5u"
-bind-key -T root         C-_        send-keys Escape "[95;5u"
-bind-key -T root         C-`        send-keys Escape "[96;5u"
-bind-key -T root         C-S-[      send-keys Escape "[91;6u"
-bind-key -T root         C-S-\\     send-keys Escape "[92;6u"
-bind-key -T root         C-S-]      send-keys Escape "[93;6u"
-bind-key -T root         C-S-`      send-keys Escape "[96;6u"
-#+end_src
-
-*** Meta and punctuation
-
-#+name: keybindings-meta-punc
-#+begin_src conf
-bind-key -T root         M-!        send-keys Escape "[33;3u"
-bind-key -T root         M-S-\'     send-keys Escape "[39;4u"
-bind-key -T root         M-\#       send-keys Escape "[35;3u"
-bind-key -T root         M-S-4      send-keys Escape "[52;4u"
-bind-key -T root         M-S-5      send-keys Escape "[53;4u"
-bind-key -T root         M-S-7      send-keys Escape "[55;4u"
-bind-key -T root         M-\'       send-keys Escape "[39;3u"
-bind-key -T root         M-(        send-keys Escape "[40;3u"
-bind-key -T root         M-)        send-keys Escape "[41;3u"
-bind-key -T root         M-S-8      send-keys Escape "[56;4u"
-bind-key -T root         M-+        send-keys Escape "[43;3u"
-bind-key -T root         M-,        send-keys Escape "[44;3u"
-bind-key -T root         M--        send-keys Escape "[45;3u"
-bind-key -T root         M-.        send-keys Escape "[46;3u"
-bind-key -T root         M-/        send-keys Escape "[47;3u"
-bind-key -T root         M-0        send-keys Escape "[48;3u"
-bind-key -T root         M-1        send-keys Escape "[49;3u"
-bind-key -T root         M-2        send-keys Escape "[50;3u"
-bind-key -T root         M-3        send-keys Escape "[51;3u"
-bind-key -T root         M-4        send-keys Escape "[52;3u"
-bind-key -T root         M-5        send-keys Escape "[53;3u"
-bind-key -T root         M-6        send-keys Escape "[54;3u"
-bind-key -T root         M-7        send-keys Escape "[55;3u"
-bind-key -T root         M-8        send-keys Escape "[56;3u"
-bind-key -T root         M-9        send-keys Escape "[57;3u"
-bind-key -T root         M-:        send-keys Escape "[58;3u"
-bind-key -T root         M-\;       send-keys Escape "[59;3u"
-bind-key -T root         M-<        send-keys Escape "[60;3u"
-bind-key -T root         M-=        send-keys Escape "[61;3u"
-bind-key -T root         M->        send-keys Escape "[62;3u"
-bind-key -T root         M-S-/      send-keys Escape "[47;4u"
-bind-key -T root         M-@        send-keys Escape "[64;3u"
-bind-key -T root         M-[        send-keys Escape "[91;3u"
-bind-key -T root         M-\\       send-keys Escape "[92;3u"
-bind-key -T root         M-]        send-keys Escape "[93;3u"
-bind-key -T root         M-^        send-keys Escape "[94;3u"
-bind-key -T root         M-_        send-keys Escape "[95;3u"
-bind-key -T root         M-`        send-keys Escape "[96;3u"
-bind-key -T root         M-S-\\     send-keys Escape "[92;4u"
-bind-key -T root         M-S-]      send-keys Escape "[93;4u"
-bind-key -T root         M-S-`      send-keys Escape "[96;4u"
-#+end_src
-
-*** Control+Meta and punctuation
-
-#+name: keybindings-ctrl-meta-punc
-#+begin_src conf
-bind-key -T root         C-M-!      send-keys Escape "[33;7u"
-bind-key -T root         C-M-S-\'   send-keys Escape "[39;8u"
-bind-key -T root         C-M-\#     send-keys Escape "[35;7u"
-bind-key -T root         C-M-S-4    send-keys Escape "[52;8u"
-bind-key -T root         C-M-S-5    send-keys Escape "[53;8u"
-bind-key -T root         C-M-S-7    send-keys Escape "[55;8u"
-bind-key -T root         C-M-\'     send-keys Escape "[39;7u"
-bind-key -T root         C-M-(      send-keys Escape "[40;7u"
-bind-key -T root         C-M-)      send-keys Escape "[41;7u"
-bind-key -T root         C-M-S-8    send-keys Escape "[56;8u"
-bind-key -T root         C-M-+      send-keys Escape "[43;7u"
-bind-key -T root         C-M-,      send-keys Escape "[44;7u"
-bind-key -T root         C-M--      send-keys Escape "[45;7u"
-bind-key -T root         C-M-.      send-keys Escape "[46;7u"
-bind-key -T root         C-M-/      send-keys Escape "[47;7u"
-bind-key -T root         C-M-0      send-keys Escape "[48;7u"
-bind-key -T root         C-M-1      send-keys Escape "[49;7u"
-bind-key -T root         C-M-2      send-keys Escape "[50;7u"
-bind-key -T root         C-M-3      send-keys Escape "[51;7u"
-bind-key -T root         C-M-4      send-keys Escape "[52;7u"
-bind-key -T root         C-M-5      send-keys Escape "[53;7u"
-bind-key -T root         C-M-6      send-keys Escape "[54;7u"
-bind-key -T root         C-M-7      send-keys Escape "[55;7u"
-bind-key -T root         C-M-8      send-keys Escape "[56;7u"
-bind-key -T root         C-M-9      send-keys Escape "[57;7u"
-bind-key -T root         C-M-:      send-keys Escape "[58;7u"
-bind-key -T root         C-M-\;     send-keys Escape "[59;7u"
-bind-key -T root         C-M-<      send-keys Escape "[60;7u"
-bind-key -T root         C-M-=      send-keys Escape "[61;7u"
-bind-key -T root         C-M->      send-keys Escape "[62;7u"
-bind-key -T root         C-M-S-/    send-keys Escape "[47;8u"
-bind-key -T root         C-M-@      send-keys Escape "[64;7u"
-bind-key -T root         C-M-\\     send-keys Escape "[92;7u"
-bind-key -T root         C-M-]      send-keys Escape "[93;7u"
-bind-key -T root         C-M-^      send-keys Escape "[94;7u"
-bind-key -T root         C-M-_      send-keys Escape "[95;7u"
-bind-key -T root         C-M-`      send-keys Escape "[96;7u"
-bind-key -T root         C-M-S-\\   send-keys Escape "[92;8u"
-bind-key -T root         C-M-S-]    send-keys Escape "[93;8u"
-bind-key -T root         C-M-S-`    send-keys Escape "[96;8u"
-#+end_src
-
-*** Special keys
-
-**** Tab
-
-#+name: keybindings-special-tab
-#+begin_src conf
-bind-key -T root         M-Tab      send-keys Escape "[9;3u"
-bind-key -T root         M-S-Tab    send-keys Escape "[9;4u"
-bind-key -T root         C-Tab      send-keys Escape "[9;5u"
-bind-key -T root         C-S-Tab    send-keys Escape "[9;6u"
-bind-key -T root         C-M-Tab    send-keys Escape "[9;7u"
-bind-key -T root         C-M-S-Tab  send-keys Escape "[9;8u"
-#+end_src
-
-**** Enter (RET)
-
-#+name: keybindings-special-enter
-#+begin_src conf
-bind-key -T root         S-Enter     send-keys Escape "[13;2u"
-bind-key -T root         M-Enter     send-keys Escape "[13;3u"
-bind-key -T root         M-S-Enter   send-keys Escape "[13;4u"
-bind-key -T root         C-Enter     send-keys Escape "[13;5u"
-bind-key -T root         C-S-Enter   send-keys Escape "[13;6u"
-bind-key -T root         C-M-Enter   send-keys Escape "[13;7u"
-bind-key -T root         C-M-S-Enter send-keys Escape "[13;8u"
-#+end_src
-
-Special handling of "m" to avoid conflicting with Enter key. Only let Emacs
-handle the CSI-u binding of "C-m". For other applications, just send the usual
-"ENTER" key because they might not know how to deal with this.
-
-#+name: keybindings-special-m
-#+begin_src conf
-bind-key -T root         C-m        if-shell -F $EMACSLIKE "send-keys Escape '[109;5u'" "send-keys -H 0d"
-#+end_src
-
-**** Backspace
-
-#+name: keybindings-special-backspace
-#+begin_src conf
-bind-key -T root         S-BSpace     send-keys Escape "[127;2u"
-bind-key -T root         M-BSpace     send-keys Escape "[127;3u"
-bind-key -T root         M-S-BSpace   send-keys Escape "[127;4u"
-bind-key -T root         C-BSpace     send-keys Escape "[127;5u"
-bind-key -T root         C-S-BSpace   send-keys Escape "[127;6u"
-bind-key -T root         C-M-BSpace   send-keys Escape "[127;7u"
-bind-key -T root         C-M-S-BSpace send-keys Escape "[127;8u"
-#+end_src
-
-**** Space
-
-Note how we don't encode ~S-SPC~. This is because when we type in capital letters
-without CAPSLOCK, we want to be able to hold down the Shift key while typing out
-the words (with spaces in between them).
-
-#+name: keybindings-special-space
-#+begin_src conf
-bind-key -T root         M-Space     send-keys Escape "[32;3u"
-bind-key -T root         M-S-Space   send-keys Escape "[32;4u"
-bind-key -T root         C-Space     send-keys Escape "[32;5u"
-bind-key -T root         C-S-Space   send-keys Escape "[32;6u"
-bind-key -T root         C-M-Space   send-keys Escape "[32;7u"
-bind-key -T root         C-M-S-Space send-keys Escape "[32;8u"
-#+end_src
+We used to do this by hand instead, with a =root= key-table binding for each of
+about 250 keys, each of which used ~send-keys~ to re-send the key as a CSI u
+sequence. That sent CSI u to every program, including the shell, so ~C-m~ needed
+a special case that checked whether the window's name looked like Emacs.
 
 ** Passthrough mode
 :PROPERTIES:
@@ -848,18 +554,23 @@ press another key combination to manipulate the inner =tmux= instance. Needless 
 say, this "press ~C-b~ twice" ceremony is too unwieldy.
 
 Passthrough mode (for the outer =tmux= instance) allows us to send more keys
-directly to the inner =tmux= instance, by making the outer instance relay those
-keys (using =send-keys=) that it would have normally intercepted and acted upon.
-Tmux by default relays "regular" keys like letters (without modifiers) to the
-underlying terminal application, so we don't have to define those bindings here.
-But tmux does not always relay keys for certain key combinations, notably those
-keys pressed with Control or Control+Shift modifiers. This is why we have to
-explicitly tell tmux to relay those troublesome keys while passthrough mode is
-active.
+directly to the inner =tmux= instance, by making the outer instance relay keys
+that it would have normally intercepted and acted upon. Entering passthrough
+mode sets the ~key-table~ option to =passthrough=, which makes it the default
+key-table. tmux sends any key that the default key-table doesn't bind straight
+to the pane, without falling back to the =root= key-table. So the only binding
+in =passthrough= is the one to leave it, and every other key goes to the inner
+tmux, including our "insert" mode bindings like ~C-M-S-e~.
 
-We want this mode to be sticky. Entering and leaving this
-mode can be done with ~C-M-b~. Once passthrough mode is active, we can freely use
-our existing "insert" mode bindings directly on the nested tmux session.
+The inner tmux understands those keys because of [[id:9170fae9-85de-4fd8-96fb-f3d3d2215f94::extended-keys][extended keys]]. Its terminal is
+the outer tmux's pane, with ~TERM=wezterm~, so the inner tmux asks the outer
+one for ~modifyOtherKeys~ mode 2, and the outer tmux then sends it every
+modified key as CSI u. (We used to need a ~send-keys~ binding in =passthrough=
+for each ~C-S-~ and ~C-M-S-~ key, because the outer tmux didn't pass on the
+Shift.)
+
+We want this mode to be sticky. Entering and leaving this mode can be done with
+~C-M-b~.
 
 #+name: keybindings-passthrough-mode
 #+begin_src conf
@@ -873,84 +584,6 @@ bind-key -T passthrough  C-M-b      {
   set prefix C-b
   set -F status-style "bg=#{L_TMUX_COLOR_TEXT} fg=#{L_TMUX_COLOR_CURSOR} none"
 }
-
-<<keybindings-passthrough-mode-ctrl-shift-letters>>
-<<keybindings-passthrough-mode-ctrl-meta-shift-letters>>
-<<keybindings-passthrough-mode-other>>
-#+end_src
-
-*** Control+Shift and letters
-
-#+name: keybindings-passthrough-mode-ctrl-shift-letters
-#+begin_src conf
-bind-key -T passthrough  C-S-a      send-keys Escape "[97;6u"
-bind-key -T passthrough  C-S-b      send-keys Escape "[98;6u"
-bind-key -T passthrough  C-S-c      send-keys Escape "[99;6u"
-bind-key -T passthrough  C-S-d      send-keys Escape "[100;6u"
-bind-key -T passthrough  C-S-e      send-keys Escape "[101;6u"
-bind-key -T passthrough  C-S-f      send-keys Escape "[102;6u"
-bind-key -T passthrough  C-S-g      send-keys Escape "[103;6u"
-bind-key -T passthrough  C-S-h      send-keys Escape "[104;6u"
-bind-key -T passthrough  C-S-i      send-keys Escape "[105;6u"
-bind-key -T passthrough  C-S-j      send-keys Escape "[106;6u"
-bind-key -T passthrough  C-S-k      send-keys Escape "[107;6u"
-bind-key -T passthrough  C-S-l      send-keys Escape "[108;6u"
-bind-key -T passthrough  C-S-m      send-keys Escape "[109;6u"
-bind-key -T passthrough  C-S-n      send-keys Escape "[110;6u"
-bind-key -T passthrough  C-S-o      send-keys Escape "[111;6u"
-bind-key -T passthrough  C-S-p      send-keys Escape "[112;6u"
-bind-key -T passthrough  C-S-q      send-keys Escape "[113;6u"
-bind-key -T passthrough  C-S-r      send-keys Escape "[114;6u"
-bind-key -T passthrough  C-S-s      send-keys Escape "[115;6u"
-bind-key -T passthrough  C-S-t      send-keys Escape "[116;6u"
-bind-key -T passthrough  C-S-u      send-keys Escape "[117;6u"
-bind-key -T passthrough  C-S-v      send-keys Escape "[118;6u"
-bind-key -T passthrough  C-S-w      send-keys Escape "[119;6u"
-bind-key -T passthrough  C-S-x      send-keys Escape "[120;6u"
-bind-key -T passthrough  C-S-y      send-keys Escape "[121;6u"
-bind-key -T passthrough  C-S-z      send-keys Escape "[122;6u"
-#+end_src
-
-*** Control+Meta+Shift and letters
-
-#+name: keybindings-passthrough-mode-ctrl-meta-shift-letters
-#+begin_src conf
-bind-key -T passthrough  C-M-S-a    send-keys Escape "[97;8u"
-bind-key -T passthrough  C-M-S-b    send-keys Escape "[98;8u"
-bind-key -T passthrough  C-M-S-c    send-keys Escape "[99;8u"
-bind-key -T passthrough  C-M-S-d    send-keys Escape "[100;8u"
-bind-key -T passthrough  C-M-S-e    send-keys Escape "[101;8u"
-bind-key -T passthrough  C-M-S-f    send-keys Escape "[102;8u"
-bind-key -T passthrough  C-M-S-g    send-keys Escape "[103;8u"
-bind-key -T passthrough  C-M-S-h    send-keys Escape "[104;8u"
-bind-key -T passthrough  C-M-S-i    send-keys Escape "[105;8u"
-bind-key -T passthrough  C-M-S-j    send-keys Escape "[106;8u"
-bind-key -T passthrough  C-M-S-k    send-keys Escape "[107;8u"
-bind-key -T passthrough  C-M-S-l    send-keys Escape "[108;8u"
-bind-key -T passthrough  C-M-S-m    send-keys Escape "[109;8u"
-bind-key -T passthrough  C-M-S-n    send-keys Escape "[110;8u"
-bind-key -T passthrough  C-M-S-o    send-keys Escape "[111;8u"
-bind-key -T passthrough  C-M-S-p    send-keys Escape "[112;8u"
-bind-key -T passthrough  C-M-S-q    send-keys Escape "[113;8u"
-bind-key -T passthrough  C-M-S-r    send-keys Escape "[114;8u"
-bind-key -T passthrough  C-M-S-s    send-keys Escape "[115;8u"
-bind-key -T passthrough  C-M-S-t    send-keys Escape "[116;8u"
-bind-key -T passthrough  C-M-S-u    send-keys Escape "[117;8u"
-bind-key -T passthrough  C-M-S-v    send-keys Escape "[118;8u"
-bind-key -T passthrough  C-M-S-w    send-keys Escape "[119;8u"
-bind-key -T passthrough  C-M-S-x    send-keys Escape "[120;8u"
-bind-key -T passthrough  C-M-S-y    send-keys Escape "[121;8u"
-bind-key -T passthrough  C-M-S-z    send-keys Escape "[122;8u"
-#+end_src
-
-*** Others
-
-#+name: keybindings-passthrough-mode-other
-#+begin_src conf
-bind-key -T passthrough  C-,        send-keys Escape "[44;5u"
-bind-key -T passthrough  C-.        send-keys Escape "[46;5u"
-bind-key -T passthrough  C-\;       send-keys Escape "[59;5u"
-bind-key -T passthrough  C-Enter    send-keys Escape "[13;5u"
 #+end_src
 
 * Appearance
