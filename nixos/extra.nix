@@ -181,6 +181,18 @@ in
     startLimitIntervalSec = 0;
     serviceConfig = {
       ExecStart = "${melby-release.melby-daemon}/bin/melbyd start";
+      ExecStartPost = "${pkgs.writeShellScript "melbyd-wait-for-port" ''
+        port=''${MELBYD_PORT:-50051}
+        while (( SECONDS < 30 )); do
+          if (exec 3<>/dev/tcp/127.0.0.1/"$port") 2>/dev/null; then
+            exit 0
+          fi
+          ${pkgs.coreutils}/bin/sleep 0.1
+        done
+        echo "melbyd did not accept connections on port $port within 30s" >&2
+        exit 1
+      ''}";
+      TimeoutStartSec = 45;
       Environment = [
         "RELEASE_COOKIE=%h/.melby/cookie"
         "LUA_PATH=%h/.melby/?.lua"

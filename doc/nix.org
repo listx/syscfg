@@ -362,6 +362,18 @@ also replaces the minimal one NixOS gives every service. ~StartLimitIntervalSec
 = 0~ and ~Restart = "always"~ keep restarting the daemon no matter how often it
 crashes, because the shell prompt depends on it.
 
+With ~Type = "simple"~, systemd would count the daemon as started as soon as
+it forks, but the Erlang VM needs a couple more seconds before ~melbyd~ listens
+on its port. Until then ~melbyc~ fails with "Connection refused", for example
+right after ~nixos-rebuild switch~ finishes. So ~ExecStartPost~ polls until
+the port accepts a TCP connection, and systemd only marks the unit active after
+that. The check uses Bash's ~/dev/tcp~, so it needs nothing beyond Bash and
+~sleep~. It reads ~MELBYD_PORT~ if the environment file sets it, and otherwise
+uses 50051, the daemon's default port for release builds. If the port is still
+closed after 30 seconds, the check fails, the start counts as failed, and
+~Restart~ tries again. ~TimeoutStartSec~ leaves room for the full 30 seconds
+of polling.
+
 #+name: nix:melby-service
 #+begin_src nix
 systemd.user.services.melby = {
@@ -371,6 +383,18 @@ systemd.user.services.melby = {
   startLimitIntervalSec = 0;
   serviceConfig = {
     ExecStart = "${melby-release.melby-daemon}/bin/melbyd start";
+    ExecStartPost = "${pkgs.writeShellScript "melbyd-wait-for-port" ''
+      port=''${MELBYD_PORT:-50051}
+      while (( SECONDS < 30 )); do
+        if (exec 3<>/dev/tcp/127.0.0.1/"$port") 2>/dev/null; then
+          exit 0
+        fi
+        ${pkgs.coreutils}/bin/sleep 0.1
+      done
+      echo "melbyd did not accept connections on port $port within 30s" >&2
+      exit 1
+    ''}";
+    TimeoutStartSec = 45;
     Environment = [
       "RELEASE_COOKIE=%h/.melby/cookie"
       "LUA_PATH=%h/.melby/?.lua"
