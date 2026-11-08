@@ -63,6 +63,7 @@ keybind = ctrl+==unbind
 keybind = ctrl++=unbind
 keybind = ctrl+-=unbind
 keybind = ctrl+0=unbind
+keybind = ctrl+,=unbind
 keybind = super+a=select_all
 keybind = super+c=copy_to_clipboard:mixed
 keybind = super+e=new_split:down

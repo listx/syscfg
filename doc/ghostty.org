@@ -192,6 +192,12 @@ The keys that change the font size don't use ~shift~, but on Linux they still
 take ~ctrl~ chords (~ctrl+=~, ~ctrl++~, ~ctrl+-~, and ~ctrl+0~) away from Emacs.
 Move them to Super as well, which makes them the same as the Mac's defaults.
 
+On Linux, ~ctrl+,~ opens Ghostty's config file in the default app for text
+files, which for us is a whole new Emacs window, so Emacs inside the terminal
+never gets ~C-,~. Its natural Super key, ~super+,~, now reloads the config, and
+~super+shift+,~ is the Mac's default for reloading. So just unbind ~ctrl+,~ and
+leave opening the config to the command palette or to our editor.
+
 #+name: keybindings
 #+begin_src conf
 keybind = ctrl+shift+a=unbind
@@ -219,6 +225,7 @@ keybind = ctrl+==unbind
 keybind = ctrl++=unbind
 keybind = ctrl+-=unbind
 keybind = ctrl+0=unbind
+keybind = ctrl+,=unbind
 keybind = super+a=select_all
 keybind = super+c=copy_to_clipboard:mixed
 keybind = super+e=new_split:down
