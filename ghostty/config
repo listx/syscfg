@@ -51,6 +51,14 @@ keybind = ctrl+shift+q=unbind
 keybind = ctrl+shift+t=unbind
 keybind = ctrl+shift+v=unbind
 keybind = ctrl+shift+w=unbind
+keybind = ctrl+shift+,=unbind
+keybind = ctrl+shift+enter=unbind
+keybind = ctrl+shift+tab=unbind
+keybind = ctrl+shift+arrow_left=unbind
+keybind = ctrl+shift+arrow_right=unbind
+keybind = ctrl+shift+page_up=unbind
+keybind = ctrl+shift+page_down=unbind
+keybind = ctrl+alt+shift+j=unbind
 keybind = super+a=select_all
 keybind = super+c=copy_to_clipboard:mixed
 keybind = super+e=new_split:down
@@ -64,3 +72,11 @@ keybind = super+q=quit
 keybind = super+t=new_tab
 keybind = super+v=paste_from_clipboard
 keybind = super+w=close_tab:this
+keybind = super+,=reload_config
+keybind = super+shift+enter=toggle_split_zoom
+keybind = super+shift+tab=previous_tab
+keybind = super+shift+arrow_left=previous_tab
+keybind = super+shift+arrow_right=next_tab
+keybind = super+shift+page_up=jump_to_prompt:-1
+keybind = super+shift+page_down=jump_to_prompt:1
+keybind = super+alt+shift+j=write_screen_file:open,plain

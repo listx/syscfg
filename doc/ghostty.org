@@ -172,6 +172,22 @@ nothing there. Ghostty calls the Mac's Command key ~super~, so on the Mac these
 bindings are on Command, where most of them already are by default, such as
 ~cmd+c~ for copying.
 
+Reloading the config gets the same treatment, moving from ~ctrl+shift+,~ to
+~super+,~. On the Mac, this replaces Ghostty's default ~cmd+,~, which opens the
+config file. Reloading is the one we use, and the Mac's default reload key,
+~cmd+shift+,~, still works.
+
+The rest of Ghostty's ~ctrl+shift~ chords use keys other than letters: Enter to
+zoom a split, Tab and the left and right arrows to switch tabs, and Page Up and
+Page Down to jump between shell prompts. There is also ~ctrl+alt+shift+j~, which
+writes the screen to a file and opens it. That one shadows a ~C-M-S-~ chord, the
+same kind of chord as our tmux bindings. For these, replace only ~ctrl~ with
+~super~ and keep ~shift~. Without ~shift~, they would take over Mac defaults that
+we want to keep: ~cmd+left~ and ~cmd+right~ move to the start and end of the
+line, and ~cmd+page_up~ and ~cmd+page_down~ scroll. Ghostty's ~super+ctrl+shift~
+chords (resizing splits, and ~super+ctrl+shift+j~ for copying the screen file's
+path) already use Super, so they stay as they are.
+
 #+name: keybindings
 #+begin_src conf
 keybind = ctrl+shift+a=unbind
@@ -187,6 +203,14 @@ keybind = ctrl+shift+q=unbind
 keybind = ctrl+shift+t=unbind
 keybind = ctrl+shift+v=unbind
 keybind = ctrl+shift+w=unbind
+keybind = ctrl+shift+,=unbind
+keybind = ctrl+shift+enter=unbind
+keybind = ctrl+shift+tab=unbind
+keybind = ctrl+shift+arrow_left=unbind
+keybind = ctrl+shift+arrow_right=unbind
+keybind = ctrl+shift+page_up=unbind
+keybind = ctrl+shift+page_down=unbind
+keybind = ctrl+alt+shift+j=unbind
 keybind = super+a=select_all
 keybind = super+c=copy_to_clipboard:mixed
 keybind = super+e=new_split:down
@@ -200,4 +224,12 @@ keybind = super+q=quit
 keybind = super+t=new_tab
 keybind = super+v=paste_from_clipboard
 keybind = super+w=close_tab:this
+keybind = super+,=reload_config
+keybind = super+shift+enter=toggle_split_zoom
+keybind = super+shift+tab=previous_tab
+keybind = super+shift+arrow_left=previous_tab
+keybind = super+shift+arrow_right=next_tab
+keybind = super+shift+page_up=jump_to_prompt:-1
+keybind = super+shift+page_down=jump_to_prompt:1
+keybind = super+alt+shift+j=write_screen_file:open,plain
 #+end_src
