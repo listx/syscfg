@@ -220,6 +220,7 @@ in
     <<pkgs:email>>
     <<pkgs:image>>
     <<pkgs:misc-common>>
+    <<pkgs:ghostty-nixos>>
 
     # Web
     firefox
@@ -504,6 +505,24 @@ gnupg
 graphviz
 pass
 zathura
+#+end_src
+
+*** Ghostty
+
+We want [[id:9c459df2-d228-40cb-a5d9-16c6d7b473c3][Ghostty]] on both NixOS and Mac, but it can't go in [[pkgs:misc-common]],
+because nixpkgs has a different package for each. ~ghostty~ builds Ghostty
+from source, but only for Linux. ~ghostty-bin~ repackages upstream's signed Mac
+app, and only for Apple Silicon (~aarch64-darwin~). So [[nixos/extra.nix]] uses
+the first and [[nixpkgs/darwin-configuration.nix]] the second.
+
+#+name: pkgs:ghostty-nixos
+#+begin_src nix
+ghostty
+#+end_src
+
+#+name: pkgs:ghostty-darwin
+#+begin_src nix
+ghostty-bin
 #+end_src
 
 ** Haskell
@@ -1025,6 +1044,7 @@ in {
     <<pkgs:email>>
     <<pkgs:image>>
     <<pkgs:misc-common>>
+    <<pkgs:ghostty-darwin>>
     bashInteractive
     coreutils
     findutils

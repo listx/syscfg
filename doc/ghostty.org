@@ -3,8 +3,9 @@
 :END:
 #+title: Ghostty
 
-[[https://ghostty.org][Ghostty]] is the terminal we're trying out on Mac as a replacement for
-[[id:1d490bfa-6d4a-4b0e-beac-d3e37fbb21a5][WezTerm]]. Its configuration is a flat list of ~key = value~ lines.
+[[https://ghostty.org][Ghostty]] is the terminal we're trying out as a replacement for [[id:1d490bfa-6d4a-4b0e-beac-d3e37fbb21a5][WezTerm]]. We
+install it with Nix on both [[id:82cbef73-61b9-43e7-9df6-7b2771000733::pkgs:ghostty-nixos][NixOS]] and [[id:82cbef73-61b9-43e7-9df6-7b2771000733::pkgs:ghostty-darwin][Mac]]. Its configuration is a flat
+list of ~key = value~ lines.
 
 * Configuration
 

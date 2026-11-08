@@ -90,6 +90,8 @@ in {
     graphviz
     pass
     zathura
+
+    ghostty-bin
     bashInteractive
     coreutils
     findutils

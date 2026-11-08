@@ -72,6 +72,8 @@ in
     pass
     zathura
 
+    ghostty
+
     # Web
     firefox
     qutebrowser
