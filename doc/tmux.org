@@ -19,6 +19,7 @@
 #+name: keybindings
 #+begin_src conf
 <<extended-keys>>
+<<extended-keys-shifted-letters>>
 <<keybindings-insert-mode>>
 <<keybindings-passthrough-mode>>
 <<keybindings-copy-mode>>
@@ -535,6 +536,40 @@ key that has a traditional encoding still uses it. So the shell still gets plain
 tmux sends every modified key as CSI u, so Emacs can bind ~C-i~ apart from
 ~TAB~, ~C-m~ apart from ~RET~, and ~C-S-o~ apart from ~C-o~. You can see a pane's
 mode with ~tmux display -p '#{pane_key_mode}'~ (~Ext 1~ or ~Ext 2~).
+
+*** Shifted letters
+
+A terminal can report a shifted letter in two ways. WezTerm sends the letter
+as it is without Shift, plus the Shift modifier: ~\e[101;8u~ for ~C-M-S-e~.
+Ghostty sends the uppercase letter plus the Shift modifier, as xterm's
+~modifyOtherKeys~ does: ~\e[27;8;69\~~ (69 is ~E~). tmux reads the first as
+~C-M-S-e~ but the second as ~C-M-S-E~, a different key. So under Ghostty
+our ~C-M-S-e~ [[keybindings-pane-create][split]] and the other ~C-M-S-~
+bindings never fire. And because tmux passes the key to Emacs as it read it
+(~\e[79;6u~ for ~C-S-O~ instead of ~\e[111;6u~), Emacs doesn't see ~C-S-o~
+either.
+
+So for every letter, we bind the uppercase forms ~C-S-E~, ~M-S-E~ and
+~C-M-S-E~ to re-send the lowercase form. ~send-keys -K~ sends the key to the
+client instead of the pane, so it goes through the key tables again as if we
+had typed it. A key we bind, like ~C-M-S-e~, then runs its binding, and a key
+we don't, like ~C-S-o~, goes on to the pane as ~\e[111;6u~. These bindings do
+nothing under WezTerm, which never sends the uppercase forms.
+
+tmux has no loops, so a shell loop makes the 78 bindings when the
+configuration loads.
+
+#+name: extended-keys-shifted-letters
+#+begin_src conf
+run-shell 'for c in a b c d e f g h i j k l m n o p q r s t u v w x y z; do \
+	u=$(printf %s "$c" | tr a-z A-Z); \
+	for m in C-S- M-S- C-M-S-; do \
+		tmux bind-key -T root "$m$u" send-keys -K "$m$c"; \
+	done; \
+done'
+#+end_src
+
+*** Historical note
 
 We used to do this by hand instead, with a =root= key-table binding for each of
 about 250 keys, each of which used ~send-keys~ to re-send the key as a CSI u
