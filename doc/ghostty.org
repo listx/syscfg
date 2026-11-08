@@ -188,6 +188,10 @@ line, and ~cmd+page_up~ and ~cmd+page_down~ scroll. Ghostty's ~super+ctrl+shift~
 chords (resizing splits, and ~super+ctrl+shift+j~ for copying the screen file's
 path) already use Super, so they stay as they are.
 
+The keys that change the font size don't use ~shift~, but on Linux they still
+take ~ctrl~ chords (~ctrl+=~, ~ctrl++~, ~ctrl+-~, and ~ctrl+0~) away from Emacs.
+Move them to Super as well, which makes them the same as the Mac's defaults.
+
 #+name: keybindings
 #+begin_src conf
 keybind = ctrl+shift+a=unbind
@@ -211,6 +215,10 @@ keybind = ctrl+shift+arrow_right=unbind
 keybind = ctrl+shift+page_up=unbind
 keybind = ctrl+shift+page_down=unbind
 keybind = ctrl+alt+shift+j=unbind
+keybind = ctrl+==unbind
+keybind = ctrl++=unbind
+keybind = ctrl+-=unbind
+keybind = ctrl+0=unbind
 keybind = super+a=select_all
 keybind = super+c=copy_to_clipboard:mixed
 keybind = super+e=new_split:down
@@ -232,4 +240,8 @@ keybind = super+shift+arrow_right=next_tab
 keybind = super+shift+page_up=jump_to_prompt:-1
 keybind = super+shift+page_down=jump_to_prompt:1
 keybind = super+alt+shift+j=write_screen_file:open,plain
+keybind = super+==increase_font_size:1
+keybind = super++=increase_font_size:1
+keybind = super+-=decrease_font_size:1
+keybind = super+0=reset_font_size
 #+end_src
