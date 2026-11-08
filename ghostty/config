@@ -4,3 +4,26 @@ cursor-style-blink = false
 
 font-family = "CommitMono"
 font-size = 17
+
+background = #343c48
+foreground = #e5e7ea
+cursor-color = #ffffff
+cursor-text = #000000
+selection-background = #fffacd
+selection-foreground = #000000
+palette = 0=#22222f
+palette = 1=#e49f9f
+palette = 2=#91e380
+palette = 3=#eae47c
+palette = 4=#7cacd3
+palette = 5=#df9494
+palette = 6=#8cdbd8
+palette = 7=#e5e7ea
+palette = 8=#99999f
+palette = 9=#e5bfbf
+palette = 10=#afe0a1
+palette = 11=#f2fb9e
+palette = 12=#95add1
+palette = 13=#f2b0b0
+palette = 14=#b4f0f0
+palette = 15=#ffffff

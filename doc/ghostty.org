@@ -13,6 +13,7 @@
 <<option-as-alt>>
 <<cursor>>
 <<font>>
+<<colors>>
 #+end_src
 
 The ~ghostty~ [[Makefile-ghostty][Makefile rule]] links only the ~config~ file, not the whole
@@ -58,4 +59,44 @@ cursor-style-blink = false
 #+begin_src conf
 font-family = "CommitMono"
 font-size = 17
+#+end_src
+
+** Colors
+
+Use our [[id:205ec9d4-2e2f-46f7-a1aa-c3105e1ba491::theme-pasteldark][PastelDark]] theme, the same colors as in [[id:1d490bfa-6d4a-4b0e-beac-d3e37fbb21a5::colors][WezTerm]]. The theme has to be
+in the config, not just applied by the shell, because Zsh assumes that the
+terminal starts out with PastelDark (it sets ~TERM_COLOR_THEME~ to it without
+sending any colors), so that [[id:fd0afd0c-d608-4ad5-83ff-6a080a62bc66::func-color-cycle][~color_cycle~]] knows where to start.
+
+As in WezTerm, bright black (palette entry 8) is ~#99999f~ instead of the
+theme's ~#343c48~. The theme's value is the background color, so programs that
+draw text in bright black (such as ~jj~) would leave what look like empty spots.
+
+The selection colors also come from WezTerm, because the theme doesn't define
+any.
+
+#+name: colors
+#+begin_src conf
+background = #343c48
+foreground = #e5e7ea
+cursor-color = #ffffff
+cursor-text = #000000
+selection-background = #fffacd
+selection-foreground = #000000
+palette = 0=#22222f
+palette = 1=#e49f9f
+palette = 2=#91e380
+palette = 3=#eae47c
+palette = 4=#7cacd3
+palette = 5=#df9494
+palette = 6=#8cdbd8
+palette = 7=#e5e7ea
+palette = 8=#99999f
+palette = 9=#e5bfbf
+palette = 10=#afe0a1
+palette = 11=#f2fb9e
+palette = 12=#95add1
+palette = 13=#f2b0b0
+palette = 14=#b4f0f0
+palette = 15=#ffffff
 #+end_src
