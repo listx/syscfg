@@ -9,6 +9,7 @@ bash.org
 claude.org
 clojure.org
 emacs.org
+ghostty.org
 git.org
 gpg.org
 jj.org
@@ -181,6 +182,7 @@ S := $(shell cat ${H}/.hostname-short)
 <<id:6bbe2554-13c3-43c7-b7b5-f3d7ab09562a::Makefile-clojure>>
 <<id:00a0db98-5605-4c05-886f-e85d3b2f2d65::Makefile-claude>>
 <<id:1a89ad75-4234-4fa9-93d0-27c62d220502::Makefile-emacs>>
+<<id:9c459df2-d228-40cb-a5d9-16c6d7b473c3::Makefile-ghostty>>
 <<id:5a8a24bf-db01-4cf7-8985-e34f86f58ce3::Makefile-git>>
 <<id:19751576-5ebe-4f2b-bcea-22d6054f6f99::Makefile-gpg>>
 jj:
@@ -252,6 +254,7 @@ zathura:
 	claude \
 	clojure \
 	emacs \
+	ghostty \
 	git \
 	gpg \
 	jj \

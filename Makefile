@@ -33,6 +33,10 @@ emacs:
 	cd ${C}/script && ln -fs ../emacs/doom-upstream/bin/doom
 	ln -sf ${H}/lo/custom-dict.txt ${C}/emacs/spell-fu
 
+ghostty:
+	mkdir -p ${H}/.config/ghostty
+	ln -fs ${C}/ghostty/config ${H}/.config/ghostty/config
+
 git:
 	ln -fs ${C}/git/cfg.personal.conf ${H}/.gitconfig
 	ln -fs ${C}/git/sendemail-aliases ${H}/.git-sendemail-aliases
@@ -160,6 +164,7 @@ zsh:
 	claude \
 	clojure \
 	emacs \
+	ghostty \
 	git \
 	gpg \
 	jj \

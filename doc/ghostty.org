@@ -1,0 +1,61 @@
+:PROPERTIES:
+:ID:       9c459df2-d228-40cb-a5d9-16c6d7b473c3
+:END:
+#+title: Ghostty
+
+[[https://ghostty.org][Ghostty]] is the terminal we're trying out on Mac as a replacement for
+[[id:1d490bfa-6d4a-4b0e-beac-d3e37fbb21a5][WezTerm]]. Its configuration is a flat list of ~key = value~ lines.
+
+* Configuration
+
+#+header: :tangle ghostty/config
+#+begin_src conf
+<<option-as-alt>>
+<<cursor>>
+<<font>>
+#+end_src
+
+The ~ghostty~ [[Makefile-ghostty][Makefile rule]] links only the ~config~ file, not the whole
+directory, because Ghostty is free to write other files into
+~\~/.config/ghostty~.
+
+#+name: Makefile-ghostty
+#+begin_src makefile
+ghostty:
+	mkdir -p ${H}/.config/ghostty
+	ln -fs ${C}/ghostty/config ${H}/.config/ghostty/config
+#+end_src
+
+** Option as Alt
+
+By default, Ghostty on Mac treats Option the way macOS does: as a key for
+typing accented and other special characters. Then a chord like ~C-M-S-e~ (our
+tmux binding to [[id:9170fae9-85de-4fd8-96fb-f3d3d2215f94::keybindings-pane-create][split a pane]]) reaches tmux as some special character instead of
+a Meta chord, and none of our ~C-M-~ tmux bindings, or ~M-~ bindings anywhere
+else, work. WezTerm doesn't have this problem because it treats the left Option
+key as Alt by default.
+
+So treat the left Option key as Alt too. The right Option key still types
+special characters, for the rare times we want them.
+
+#+name: option-as-alt
+#+begin_src conf
+macos-option-as-alt = left
+#+end_src
+
+** Cursor
+
+Don't blink the cursor, just as in [[id:1d490bfa-6d4a-4b0e-beac-d3e37fbb21a5::cursor][WezTerm]].
+
+#+name: cursor
+#+begin_src conf
+cursor-style-blink = false
+#+end_src
+
+** Font
+
+#+name: font
+#+begin_src conf
+font-family = "CommitMono"
+font-size = 17
+#+end_src
