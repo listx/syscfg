@@ -1381,15 +1381,10 @@ otherwise, close current tab."
 (map! :after evil-org
       :map evil-org-mode-map
       :imnv "C-j" (cmd!! #'other-window 1)
-      :imnv "C-k" (cmd!! #'other-window -1)
-      ;; The org lang module (doom's module) has some arcane bindings which we
-      ;; have to undo by pulling some teeth out. This includes undoing the
-      ;; CSdown and CSup bindings which silently map to C-S-j and C-S-k,
-      ;; respectively.
-      :ni "C-S-k" nil
-      :ni "C-S-j" nil)
+      :imnv "C-k" (cmd!! #'other-window -1))
 (map! :imnv "C-j" (cmd!! #'other-window 1)
-      :imnv "C-k" (cmd!! #'other-window -1)
+      :imnv "C-k" (cmd!! #'other-window -1))
+(map! :map general-override-mode-map
       :imnv "C-S-j" #'window-swap-states
       :imnv "C-S-k" #'l/swap-window-states)
 
@@ -1442,14 +1437,12 @@ Also add the number of windows in the window configuration."
          ((= day-diff -1) (concat date-str " [YESTERDAY]"))
          (t (concat date-str suffix)))))
 
-(map! :after evil-org
-      :map evil-org-mode-map
-      :ni "C-S-h" nil
-      :ni "C-S-l" nil)
 (map! :mi "C-l" #'tab-next
-      :mi "C-h" #'tab-previous
-      :mi "C-S-l" (cmd!! #'tab-bar-move-tab 1)
-      :mi "C-S-h" (cmd!! #'tab-bar-move-tab -1))
+      :mi "C-h" #'tab-previous)
+;; See window-navigation for why these go in general-override-mode-map.
+(map! :map general-override-mode-map
+      :imnv "C-S-l" (cmd!! #'tab-bar-move-tab 1)
+      :imnv "C-S-h" (cmd!! #'tab-bar-move-tab -1))
 
 (map! :leader :desc "tab-new" "n" (cmd!! #'tab-bar-new-tab 1))
 
