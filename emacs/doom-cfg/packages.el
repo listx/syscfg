@@ -51,6 +51,11 @@
 (package! citeproc)
 (package! copilot
   :recipe (:host github :repo "copilot-emacs/copilot.el" :files ("*.el")))
+;; Doom's own pin predates the fix for [1], a face inheritance cycle that Emacs
+;; 31 rejects, which makes `load-theme' fail. Pin to a newer upstream commit
+;; until we update Doom itself.
+;; [1] https://github.com/doomemacs/themes/issues/875
+(package! doom-themes :pin "a59202912ad55014e53a685eee6cd94130bdd4fd")
 (package! hyperbole)
 (package! git-gutter)
 (package! org-appear)
