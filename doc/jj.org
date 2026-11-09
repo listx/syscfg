@@ -177,3 +177,22 @@ concat(
 conflict-marker-style = "git"
 merge-editor = "meld"
 #+end_src
+
+* Ignored files
+
+We symlink ~\~/.config/jj~ to the ~jj~ directory of this repo, so that our
+~config.toml~ lives here. But newer versions of Jujutsu also use
+~\~/.config/jj~ for their own state: ~repos/~ and ~workspaces/~ hold per-repo
+and per-workspace data, kept outside each repo's ~.jj~ directory so that a
+cloned repo can't bring along config that we never approved. These directories
+then show up in this repo as untracked files. They describe the repos on one
+machine, so they don't belong in version control.
+
+Instead of listing those directories, ignore everything in ~jj/~ except
+~config.toml~, so that any other state Jujutsu adds there later stays out too.
+
+#+name: gitignore-jj
+#+begin_src gitignore
+jj/*
+!jj/config.toml
+#+end_src
