@@ -3,10 +3,21 @@
 "email" = "linus@ucla.edu"
 
 [aliases]
-sync = ["rebase", "-b", 'all:trunk()..(visible_heads() ~ (immutable_heads() | remote_bookmarks()) | branches())', "-d", "main"]
+sync = ["util", "exec", "--", "bash", "-euc", '''
+if (( $# > 1 )); then
+  echo "usage: jj sync [REVSET]" >&2
+  exit 1
+fi
+dest="upstream_trunk()"
+if (( $# == 1 )); then
+  dest="($1)"
+fi
+exec jj rebase -b "$dest..((visible_heads() ~ remote_bookmarks()) | bookmarks())" -d "$dest"
+''', "jj-sync"]
 
 [revset-aliases]
 "immutable_heads()" = "none()"
+"upstream_trunk()" = 'coalesce(latest(remote_bookmarks(exact:"main")), latest(remote_bookmarks(exact:"master")))'
 
 [lazyjj]
 layout = "vertical"
