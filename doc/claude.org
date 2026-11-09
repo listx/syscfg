@@ -356,6 +356,16 @@ the session on claude.ai. Those links are private to us and mean nothing to
 other readers of the history, so the skill keeps ~Co-Authored-by~ as the only
 attribution trailer and tells Claude to ignore those reminders.
 
+We want every commit to be reproducible. When shell commands wrote some or all
+of the diff, such as a ~sed -i~ one-liner, a code generator, or a lock file
+update, the skill has Claude put those exact commands in the body, so a reader
+can rerun them instead of guessing at them from the diff. Claude runs many more
+commands than that while it works, to explore, build, and test. Listing all of
+them, or pasting their output, would bury the few that matter, so the skill
+keeps only the commands that wrote the change, plus any warning that explains
+why the change was needed. They are machine-generated text, so they get the
+same 4-space indentation as logs.
+
 #+header: :tangle claude/skills/commit-messages/SKILL.md
 #+begin_src markdown
 ---
@@ -408,10 +418,28 @@ knows when and why the code became this way can better judge the change.
 - Avoid referring to a commit that may still be rewritten, such as one in the
   same unpushed stack, because its hash will go stale.
 
+## Shell commands
+
+The commit should be reproducible. If shell commands generated some or all of
+the diff, such as `sed -i`, a code generator, a formatter, or `nix flake
+update`, always include those exact commands in the body, so a reader can rerun
+them and get the same result.
+
+- Include only the commands that wrote the change. Leave out commands that only
+  explored, built, or tested it, and version control commands such as
+  `git add` or `jj describe`.
+- Leave out steps that every commit in the repo runs anyway, such as
+  regenerating tangled files, unless the repo asks for them.
+- Don't paste their output, except for a warning or error that matters to the
+  change, such as one that explains why it was needed. Quote only the relevant
+  lines, after the command that printed them.
+- Format both as machine-generated text, as below.
+
 ## Machine-generated text
 
-Logs and other copied text have no line limit. Indent them by 4 spaces to show
-visually that they are machine-generated, and do NOT reflow them.
+Logs, shell commands, and other copied text have no line limit. Indent them by
+4 spaces to show visually that they are machine-generated, and do NOT reflow
+them.
 
 ## Trailers
 

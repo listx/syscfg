@@ -48,10 +48,28 @@ knows when and why the code became this way can better judge the change.
 - Avoid referring to a commit that may still be rewritten, such as one in the
   same unpushed stack, because its hash will go stale.
 
+## Shell commands
+
+The commit should be reproducible. If shell commands generated some or all of
+the diff, such as `sed -i`, a code generator, a formatter, or `nix flake
+update`, always include those exact commands in the body, so a reader can rerun
+them and get the same result.
+
+- Include only the commands that wrote the change. Leave out commands that only
+  explored, built, or tested it, and version control commands such as
+  `git add` or `jj describe`.
+- Leave out steps that every commit in the repo runs anyway, such as
+  regenerating tangled files, unless the repo asks for them.
+- Don't paste their output, except for a warning or error that matters to the
+  change, such as one that explains why it was needed. Quote only the relevant
+  lines, after the command that printed them.
+- Format both as machine-generated text, as below.
+
 ## Machine-generated text
 
-Logs and other copied text have no line limit. Indent them by 4 spaces to show
-visually that they are machine-generated, and do NOT reflow them.
+Logs, shell commands, and other copied text have no line limit. Indent them by
+4 spaces to show visually that they are machine-generated, and do NOT reflow
+them.
 
 ## Trailers
 
