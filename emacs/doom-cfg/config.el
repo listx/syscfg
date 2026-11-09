@@ -1170,8 +1170,18 @@ details."
       :desc "notes"
       "N" doom-leader-notes-map)
 
-(map! :m "SPC" (cmd!! #'l/scroll-jump 10)
-      :mn "DEL" (cmd!! #'l/scroll-jump -10))
+(map! :m "SPC" #'l/scroll-jump-down
+      :mn "DEL" #'l/scroll-jump-up)
+
+(evil-define-motion l/scroll-jump-down (count)
+  "Scroll down by COUNT lines (default 10), moving the cursor with it."
+  :type line
+  (l/scroll-jump (or count 10)))
+
+(evil-define-motion l/scroll-jump-up (count)
+  "Scroll up by COUNT lines (default 10), moving the cursor with it."
+  :type line
+  (l/scroll-jump (- (or count 10))))
 
 (defun l/scroll-jump (cnt)
   "Scroll by CNT lines."

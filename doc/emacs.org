@@ -662,10 +662,30 @@ Make =kj= behave as ESC key.
 We remap Backspace and Space keys because they are by default aliases to =h= and
 =l= keys, respectively, making them redundant.
 
+The bindings must be real Evil motions, defined with ~evil-define-motion~, not
+anonymous commands. In Visual state, Evil treats any command that isn't marked
+as a motion (with the ~:keep-visual~ property) as one that acts on the
+selection. Before such a command it expands the selection, and afterwards it
+contracts it again, which puts the cursor back where it was. In linewise
+Visual state (~V~) this undid the cursor movement on every press: the window
+still scrolled, but the cursor stayed put until the window caught up with it,
+so holding Space down got stuck. A count overrides the default of 10 lines, so
+~3 SPC~ scrolls by 3.
+
 #+name: navigation-buffer-intra
 #+begin_src elisp
-(map! :m "SPC" (cmd!! #'l/scroll-jump 10)
-      :mn "DEL" (cmd!! #'l/scroll-jump -10))
+(map! :m "SPC" #'l/scroll-jump-down
+      :mn "DEL" #'l/scroll-jump-up)
+
+(evil-define-motion l/scroll-jump-down (count)
+  "Scroll down by COUNT lines (default 10), moving the cursor with it."
+  :type line
+  (l/scroll-jump (or count 10)))
+
+(evil-define-motion l/scroll-jump-up (count)
+  "Scroll up by COUNT lines (default 10), moving the cursor with it."
+  :type line
+  (l/scroll-jump (- (or count 10))))
 
 (defun l/scroll-jump (cnt)
   "Scroll by CNT lines."
