@@ -50,7 +50,8 @@ heads, drops the ones that are only there because of a remote bookmark (those
 are other people's branches, not ours), and adds back our own bookmarks. The
 ~upstream_trunk()..~ prefix limits this to commits not already on the trunk, and
 ~-b~ rebases each whole branch, not just the selected heads. The revset doesn't
-need to exclude ~immutable_heads()~, because we [[revset-aliases][make nothing immutable]].
+try to leave out [[revset-aliases][immutable commits]]: if a branch would drag
+one along, ~jj rebase~ stops with an error, which is what we want.
 
 ~jj sync~ with no arguments rebases onto ~upstream_trunk()~. An argument names
 a different destination, as any revset: ~jj sync next~ rebases onto the local
@@ -66,6 +67,20 @@ that a compound revset like ~a | b~ stays one unit when it's spliced in front of
 ~..~. A name that doesn't resolve makes ~jj rebase~ fail with an error, so
 nothing moves.
 
+Before rebasing, the script makes Jujutsu track the remote copies of our own
+branches, so that they become [[revset-aliases][mutable]] and the rebase can
+rewrite them. It counts a branch as ours if we have a local bookmark with the
+same name, which is what tracking means in Jujutsu anyway. We need this step
+because we create branches and push them with Git, and Jujutsu doesn't track
+bookmarks that it only imports from Git. The script reads the bookmark list
+with tab-separated fields, because the remote is an empty string for local
+bookmarks and would disappear between spaces. It skips the ~git~ pseudo-remote,
+which is Jujutsu's view of the colocated Git repo, not a real remote. It also
+skips the shared branches, whose remote copies stay immutable anyway. Leaving
+them untracked keeps a fetch from moving our local ~develop~ (or ~main~) on its
+own. The list of shared branch names appears again in
+[[revset-aliases][~shared_remote_bookmarks()~]], and the two must agree.
+
 #+name: aliases
 #+begin_src toml
 [aliases]
@@ -78,18 +93,44 @@ dest="upstream_trunk()"
 if (( $# == 1 )); then
   dest="($1)"
 fi
+jj bookmark list --all-remotes -T 'name ++ "\t" ++ remote ++ "\t" ++ tracked ++ "\n"' |
+  awk -F'\t' '
+    $2 == "" { local[$1] = 1 }
+    $2 != "" && $2 != "git" && $3 == "false" { untracked[$1] = 1 }
+    END {
+      for (n in untracked)
+        if (n in local && n !~ /^(main|master|develop)$/) print n
+    }' |
+  while read -r name; do
+    jj bookmark track "exact:$name"
+  done
 exec jj rebase -b "$dest..((visible_heads() ~ remote_bookmarks()) | bookmarks())" -d "$dest"
 ''', "jj-sync"]
 #+end_src
 
 ** Revset aliases
 
-Jujutsu always complains when you try to modify commits that have already been
-pushed up, requiring us to provide the rather long ~--ignore-immutable~ flag. This
-is super annoying (especially on branches where it's expected to be overwritten
-frequently), so disable it completely. We already use Git to push branches up
-anyway (Git will block overwriting already-pushed commits by requiring a force
-push with ~-f~), so this is safe enough.
+Jujutsu refuses to rewrite immutable commits unless we pass
+~--ignore-immutable~. Its default set of immutable commits covers the trunk,
+tags, and remote bookmarks that we don't track. A tracked remote bookmark is one
+linked to a local bookmark of the same name, so in practice that's our own
+branch, which we want to keep rewriting and force-pushing. [[aliases][~jj sync~]]
+makes sure our branches are tracked.
+
+On top of the default set, we add the branches that everyone shares:
+~main~, ~master~, and ~develop~ on any remote. We usually have a local bookmark
+for these too (~git clone~ creates one), so tracking alone doesn't tell them
+apart from our own branches, but other people push to them, and rewriting their
+commits is never what we want.
+
+We used to turn immutability off by setting ~immutable_heads()~ to ~none()~, because the
+flag was annoying and Git already requires a force push before rewritten history
+leaves this machine. But that only protects the remote, not our local copy. In a
+repo whose shared branch is ~develop~, running ~git fetch~ and then
+[[aliases][~jj sync~]] produced lots of divergent commits: with nothing
+immutable, the rebase was free to rewrite commits that other people had already
+pushed, and the next fetch brought back the originals alongside our rewritten
+copies.
 
 ~upstream_trunk()~ is the trunk that the [[aliases][~sync~ alias]] rebases onto. We
 don't use Jujutsu's built-in ~trunk()~ for this, because ~trunk()~ only looks at
@@ -110,7 +151,8 @@ of guessing.
 #+name: revset-aliases
 #+begin_src toml
 [revset-aliases]
-"immutable_heads()" = "none()"
+"immutable_heads()" = "builtin_immutable_heads() | shared_remote_bookmarks()"
+"shared_remote_bookmarks()" = 'remote_bookmarks(exact:"main") | remote_bookmarks(exact:"master") | remote_bookmarks(exact:"develop")'
 "upstream_trunk()" = 'coalesce(latest(remote_bookmarks(exact:"main")), latest(remote_bookmarks(exact:"master")))'
 #+end_src
 

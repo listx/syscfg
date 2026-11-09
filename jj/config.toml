@@ -12,11 +12,23 @@ dest="upstream_trunk()"
 if (( $# == 1 )); then
   dest="($1)"
 fi
+jj bookmark list --all-remotes -T 'name ++ "\t" ++ remote ++ "\t" ++ tracked ++ "\n"' |
+  awk -F'\t' '
+    $2 == "" { local[$1] = 1 }
+    $2 != "" && $2 != "git" && $3 == "false" { untracked[$1] = 1 }
+    END {
+      for (n in untracked)
+        if (n in local && n !~ /^(main|master|develop)$/) print n
+    }' |
+  while read -r name; do
+    jj bookmark track "exact:$name"
+  done
 exec jj rebase -b "$dest..((visible_heads() ~ remote_bookmarks()) | bookmarks())" -d "$dest"
 ''', "jj-sync"]
 
 [revset-aliases]
-"immutable_heads()" = "none()"
+"immutable_heads()" = "builtin_immutable_heads() | shared_remote_bookmarks()"
+"shared_remote_bookmarks()" = 'remote_bookmarks(exact:"main") | remote_bookmarks(exact:"master") | remote_bookmarks(exact:"develop")'
 "upstream_trunk()" = 'coalesce(latest(remote_bookmarks(exact:"main")), latest(remote_bookmarks(exact:"master")))'
 
 [lazyjj]

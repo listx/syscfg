@@ -222,8 +222,8 @@ The Jujutsu bookmark aliases ~jbm~ and ~jbs~ pass ~-B~ (~--allow-backwards~), so
 that moving a bookmark backwards or sideways doesn't need an extra flag. Jujutsu
 has no config option for this, and it won't let an alias override a built-in
 command like ~bookmark~, so the shell alias is where the default has to live.
-This is safe for the same reason as our [[id:c0a01531-c270-4f21-8762-9b29583b205f::revset-aliases][empty set of immutable commits]]: Git
-still requires a force push before any rewritten history leaves this machine.
+This is safe because a bookmark only moves locally: Git still requires a force
+push before a bookmark that moved backwards or sideways can update the remote.
 
 #+name: zshrc-aliases
 #+begin_src zsh
