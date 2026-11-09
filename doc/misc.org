@@ -586,7 +586,8 @@ Host *.builds.sr.ht
 
 This defines the ~xterm-24bit~ terminal type, for 24-bit color and italics. The
 ~terminfo~ [[Makefile-terminfo][Makefile rule]] compiles it with ~tic~, and [[id:4ef05c5a-117f-4b9c-8bee-dc1eaae8efc7::zshenv][~.zshenv~]] sets this as our ~TERM~
-on ~w0~.
+on ~w0~. The rule also compiles WezTerm's own terminfo, for the ~wezterm~ name
+that [[id:1d490bfa-6d4a-4b0e-beac-d3e37fbb21a5::term][WezTerm sets]].
 
 #+name: Makefile-terminfo
 #+begin_src makefile

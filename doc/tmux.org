@@ -511,8 +511,9 @@ tmux calls these "extended keys". We make tmux
 
   1) understand them from the terminal: tmux only parses extended keys from
      terminals with the ~extkeys~ feature, and it doesn't detect that feature
-     for WezTerm or Ghostty (whose ~TERM~ is ~xterm-ghostty~) by itself, so we
-     add it;
+     for WezTerm, Ghostty (whose ~TERM~ is ~xterm-ghostty~), or an outer tmux
+     (whose panes have ~TERM=tmux-256color~, see [[id:99539137-2fb7-4ab9-9f9f-5bbc2d91ea2b][passthrough mode]]) by itself,
+     so we add it;
 
   2) always send them to the program in a pane, without waiting for the
      program to ask (~always~); and
@@ -525,6 +526,7 @@ tmux calls these "extended keys". We make tmux
 #+begin_src conf
 set -as terminal-features 'wezterm*:extkeys'
 set -as terminal-features 'xterm-ghostty:extkeys'
+set -as terminal-features 'tmux*:extkeys'
 set -s extended-keys always
 set -s extended-keys-format csi-u
 #+end_src
@@ -600,8 +602,8 @@ in =passthrough= is the one to leave it, and every other key goes to the inner
 tmux, including our "insert" mode bindings like ~C-M-S-e~.
 
 The inner tmux understands those keys because of [[id:9170fae9-85de-4fd8-96fb-f3d3d2215f94::extended-keys][extended keys]]. Its terminal is
-the outer tmux's pane, with ~TERM=wezterm~, so the inner tmux asks the outer
-one for ~modifyOtherKeys~ mode 2, and the outer tmux then sends it every
+the outer tmux's pane, with ~TERM=tmux-256color~, which we give the ~extkeys~
+feature, so the inner tmux asks the outer one for ~modifyOtherKeys~ mode 2, and the outer tmux then sends it every
 modified key as CSI u. (We used to need a ~send-keys~ binding in =passthrough=
 for each ~C-S-~ and ~C-M-S-~ key, because the outer tmux didn't pass on the
 Shift.)
@@ -625,12 +627,24 @@ bind-key -T passthrough  C-M-b      {
 
 * Appearance
 
-Use 24-bit colors by setting the =TERM= environment variable for newly spawned
-shells to =wezterm=.
+Programs in a pane talk to tmux, not to the terminal, so set ~TERM~ for newly
+spawned shells to ~tmux-256color~, which comes with ncurses. ([[id:4ef05c5a-117f-4b9c-8bee-dc1eaae8efc7::zshenv][~.zshenv~]]
+leaves it alone except on ~w0~.) We used to set it to ~wezterm~ instead, which
+claimed WezTerm even when tmux ran in Ghostty and needed WezTerm's terminfo
+installed on every host.
+
+~tmux-256color~ doesn't advertise 24-bit color, though. Programs that check
+~COLORTERM~, which [[id:4ef05c5a-117f-4b9c-8bee-dc1eaae8efc7::zshenv][~.zshenv~]] sets to ~truecolor~, use it anyway, and tmux passes
+the colors on as long as the outer terminal supports them: tmux reads that from
+the outer terminal's terminfo, and both ~xterm-ghostty~ and ~wezterm~ have the
+~Tc~ capability. But for a nested tmux, the outer terminal is another tmux, so
+give ~tmux*~ terminals the ~RGB~ feature explicitly. Otherwise the inner tmux
+would round every color down to the 256-color palette.
 
 #+name: appearance
 #+begin_src conf
-set -g default-terminal "wezterm"
+set -g default-terminal "tmux-256color"
+set -as terminal-features 'tmux*:RGB'
 
 <<appearance-messages>>
 <<appearance-status-bar>>

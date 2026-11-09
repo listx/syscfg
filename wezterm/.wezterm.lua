@@ -18,6 +18,8 @@ local bind = function(key, mods, sequence)
   }
 end
 local cfg = {
+  term = "wezterm",
+
   enable_tab_bar = false,
 
   check_for_updates = false,

@@ -589,9 +589,12 @@ eval "$(direnv hook zsh)"
 # than a raw shell instance.
 #
 #   - The "$PS1" check sees if this is a login shell.
-#   - The "$TERM" and $TMUX" checks are for avoiding running tmux within tmux
-#     (without this, if we launch a new shell from inside tmux, we would get
-#     tmux-within-tmux).
+#   - The $TMUX check is for avoiding running tmux within tmux (without this,
+#     if we launch a new shell from inside tmux, we would get tmux-within-tmux).
+#     We don't also check for "tmux" in $TERM: ssh forwards TERM=tmux-256color
+#     from a local tmux pane, and we do want a tmux on the remote host, for
+#     tmux's passthrough mode. (This used to be harmless only because
+#     ~/.zshenv overwrote TERM with "wezterm".)
 #   - The L_WANT_RAW_SHELL check is to see if this environment variable is set
 #     (to avoid automatically executing tmux).
 #
@@ -602,7 +605,6 @@ eval "$(direnv hook zsh)"
 # layer is unnecessary).
 if command -v tmux &> /dev/null \
   && [[ -n "${PS1}" ]] \
-  && [[ ! "${TERM}" =~ tmux ]] \
   && [[ -z "${TMUX}" ]] \
   && [[ -z "${L_WANT_RAW_SHELL:-}" ]]; then
   exec $(__l_tmux_command)

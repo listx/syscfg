@@ -61,28 +61,38 @@ still stand in the way of removing WezTerm.
 
 *** Stop identifying as WezTerm
 
-This is the main blocker. Even inside Ghostty, our shells and tmux claim to be
-WezTerm:
+This was the main blocker: even inside Ghostty, our shells and tmux claimed to be
+WezTerm, because [[id:4ef05c5a-117f-4b9c-8bee-dc1eaae8efc7::zshenv][~.zshenv~]] exported ~TERM=wezterm~ and [[id:9170fae9-85de-4fd8-96fb-f3d3d2215f94::appearance][tmux]] set
+~default-terminal~ to ~wezterm~.
 
-  - [[id:4ef05c5a-117f-4b9c-8bee-dc1eaae8efc7::zshenv][~.zshenv~]] exports ~TERM=wezterm~ on every host except ~w0~, which
-    overrides Ghostty's own ~xterm-ghostty~.
+On 2026-11-09 we moved ~TERM~ off ~wezterm~:
 
-  - [[id:9170fae9-85de-4fd8-96fb-f3d3d2215f94::appearance][tmux]] sets ~default-terminal~ to ~wezterm~.
+  - [[id:4ef05c5a-117f-4b9c-8bee-dc1eaae8efc7::zshenv][~.zshenv~]] no longer sets ~TERM~ (except to ~xterm-24bit~ on ~w0~), so it's
+    ~xterm-ghostty~ directly in Ghostty and ~tmux-256color~ inside tmux.
 
-  - That ~TERM~ needs WezTerm's terminfo, which the [[id:adcc2f40-1a86-47f4-a22b-73968a118745::Makefile-terminfo][~terminfo~ Makefile rule]]
-    compiles from the ~wezterm/upstream~ submodule. Removing WezTerm as it's set
-    up now would remove that too.
+  - tmux gives ~tmux*~ terminals the [[id:9170fae9-85de-4fd8-96fb-f3d3d2215f94::extended-keys][~extkeys~]] and [[id:9170fae9-85de-4fd8-96fb-f3d3d2215f94::appearance][~RGB~]] features, so that a
+    nested tmux in passthrough mode still gets extended keys and 24-bit color.
 
-  - Some settings are keyed on the name: tmux's
-    [[id:9170fae9-85de-4fd8-96fb-f3d3d2215f94::extended-keys][~wezterm*:extkeys~]] feature, and the ~term-file-aliases~ entry for ~wezterm~ in
-    the [[id:100011e3-ba36-4078-975e-6136d25e60cc][Emacs]] config. The tmux one matters most, because the passthrough mode
-    for nested tmux relies on the inner tmux seeing ~TERM=wezterm~ to get
-    extended keys.
+  - The [[id:9b76d360-8483-4449-b3a5-6c3678defc58::zshrc-bindings-and-plugins][~.zshrc~]] check that starts tmux no longer looks at ~TERM~, which would
+    otherwise stop tmux from starting on a remote host reached from a tmux pane.
 
-So move ~TERM~ to something like ~tmux-256color~ inside tmux and Ghostty's
-~xterm-ghostty~ outside it, while keeping extended keys and 24-bit color
-working, including for nested tmux. This is the riskiest step, so do it while
-WezTerm is still around to fall back on.
+  - [[id:1d490bfa-6d4a-4b0e-beac-d3e37fbb21a5::term][WezTerm sets ~TERM=wezterm~ itself]], so it keeps working as a fallback,
+    including tmux's ~wezterm*:extkeys~ feature and the ~term-file-aliases~
+    entry for ~wezterm~ in the [[id:100011e3-ba36-4078-975e-6136d25e60cc][Emacs]] config. Emacs needs no alias for the new
+    names, because it falls back from ~xterm-ghostty~ to its ~xterm~ support
+    and has its own ~tmux~ support, which runs the ~xterm~ initialization
+    (and so our ~modifyOtherKeys~ hook) too.
+
+What's left is to test it in Ghostty after running ~make tmux zsh~ and starting
+a new tmux server: extended keys (such as ~C-S-o~ and ~C-i~ in Emacs) and 24-bit
+color in tmux, in nested tmux over ssh with passthrough mode, and in Emacs. Also
+check:
+
+  - the Mac, whose system terminfo might lack ~tmux-256color~; and
+
+  - ssh straight from Ghostty, outside tmux, which sends ~TERM=xterm-ghostty~ to
+    hosts that may not have its terminfo. Ghostty's ~ssh-terminfo~ and ~ssh-env~
+    shell integration features can fix that if it's a problem.
 
 *** Check the features that Ghostty doesn't replace one for one
 
@@ -98,19 +108,22 @@ WezTerm is still around to fall back on.
     chords are already sorted out, but the exotic keys (such as ~C-M-Tab~ or
     ~S-Space~) haven't been checked.
 
-  - The bell: WezTerm [[id:1d490bfa-6d4a-4b0e-beac-d3e37fbb21a5::disable-BEL-sound][disables the audible bell]], but our Ghostty config doesn't
-    touch it. Check that Ghostty doesn't beep.
+  - The bell: WezTerm [[id:1d490bfa-6d4a-4b0e-beac-d3e37fbb21a5::disable-BEL-sound][disables the audible bell]]. Our Ghostty config doesn't
+    touch it, but Ghostty 1.3.1's default ~bell-features~ already includes
+    ~no-audio~ and ~no-system~, so it shouldn't beep. Confirm by ear.
 
 *** Steps
 
-  1) Move ~TERM~ off ~wezterm~, then test tmux, nested tmux, and Emacs keys in
-     Ghostty.
+  1) Move ~TERM~ off ~wezterm~ (done), then test tmux, nested tmux, and Emacs
+     keys in Ghostty.
 
   2) Decide what to do about opening URLs from the keyboard.
 
   3) After a few more days of using Ghostty day to day, remove [[id:1d490bfa-6d4a-4b0e-beac-d3e37fbb21a5][wezterm.org]], its
-     Makefile and Nix entries, and the ~wezterm/upstream~ submodule, and reword
-     the prose that compares Ghostty with WezTerm.
+     Makefile and Nix entries, the ~wezterm/upstream~ submodule and its line in
+     the ~terminfo~ Makefile rule, tmux's ~wezterm*:extkeys~ feature, and the
+     Emacs ~term-file-aliases~ entry for ~wezterm~, and reword the prose that
+     compares Ghostty with WezTerm.
 
 * Icebox
 :PROPERTIES:

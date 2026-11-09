@@ -11,6 +11,7 @@
 #+begin_src lua
 <<boilerplate>>
 local cfg = {
+  <<term>>
   <<appearance>>
   <<keybindings>>
 }
@@ -18,6 +19,19 @@ local cfg = {
 <<font-by-host>>
 
 return cfg
+#+end_src
+
+* ~TERM~
+
+Our shells no longer set ~TERM~ themselves (see [[id:4ef05c5a-117f-4b9c-8bee-dc1eaae8efc7::zshenv][~.zshenv~]]), so WezTerm has to
+say who it is. Its default is ~xterm-256color~, but [[id:9170fae9-85de-4fd8-96fb-f3d3d2215f94::extended-keys][tmux]] only reads extended keys
+from terminals whose name matches ~wezterm*~, and the name ~wezterm~ also brings
+24-bit color through WezTerm's own terminfo, which the [[id:adcc2f40-1a86-47f4-a22b-73968a118745::Makefile-terminfo][~terminfo~ Makefile rule]]
+installs.
+
+#+name: term
+#+begin_src lua
+term = "wezterm",
 #+end_src
 
 * Appearance

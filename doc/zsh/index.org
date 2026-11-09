@@ -38,9 +38,14 @@ The smaller files that we manage are below.
 * ~.zshenv~
 
 Every Zsh instance reads this file, so it sets the baseline environment: our Org
-agenda directories, the Nix profile on the ~PATH~, ~TERM~ for each host, and
+agenda directories, the Nix profile on the ~PATH~, ~TERM~ on ~w0~, and
 ~XDG_CONFIG_HOME~. Individual machines can adjust these values further in
 [[id:385b8ce5-c7d4-46d1-ad13-1d78005507dd][~\~/.zprofile~]].
+
+Everywhere else we leave ~TERM~ alone, so that it names the terminal the shell
+actually runs in: ~xterm-ghostty~ directly in [[id:9c459df2-d228-40cb-a5d9-16c6d7b473c3][Ghostty]], and ~tmux-256color~ in a
+[[id:9170fae9-85de-4fd8-96fb-f3d3d2215f94::appearance][tmux]] pane. We used to export ~TERM=wezterm~ on every other host, which made our
+shells claim to be [[id:1d490bfa-6d4a-4b0e-beac-d3e37fbb21a5][WezTerm]] even inside Ghostty.
 
 #+name: zshenv
 #+header: :tangle zsh/.zshenv
@@ -67,7 +72,6 @@ __l_prepend_path ~/.nix-profile/bin
 
 case "$(hostname)" in
 	w0) export TERM=xterm-24bit  ;;
-	*) export TERM=wezterm ;;
 esac
 
 # Let emacs and other applications know that our terminal supports 24-bit colors.
