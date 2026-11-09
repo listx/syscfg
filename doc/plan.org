@@ -105,8 +105,12 @@ check:
     ~M-~, ~C-~, ~C-S-~, ~C-M-~, and ~C-M-S-~ letters, and for the "exotic" keys
     (Tab, Backspace, Enter, Space, Escape, and ~[~ with modifiers). Ghostty sends
     these only when the program asks, which tmux and our Emacs do. The letter
-    chords are already sorted out, but the exotic keys (such as ~C-M-Tab~ or
-    ~S-Space~) haven't been checked.
+    chords are already sorted out. For the exotic keys, Ghostty used to keep
+    ~ctrl+tab~ for itself, and [[id:100011e3-ba36-4078-975e-6136d25e60cc::CSI-u-mode-support][Emacs]] decoded Tab, Enter, and Escape with
+    modifiers to control characters, so ~C-M-Tab~ looked like ~C-M-i~. Both are
+    fixed, and tmux's ~send-keys~ shows terminal Emacs reading them as named keys
+    (~C-M-<tab>~, ~C-<return>~, ~<backtab>~). What's left is to try them, and
+    Backspace, Space, and ~[~ with modifiers, by hand in Ghostty.
 
   - The bell: WezTerm [[id:1d490bfa-6d4a-4b0e-beac-d3e37fbb21a5::disable-BEL-sound][disables the audible bell]]. Our Ghostty config doesn't
     touch it, but Ghostty 1.3.1's default ~bell-features~ already includes

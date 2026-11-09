@@ -80,13 +80,17 @@ script which knows what to do depending on the environment."
       ;;
       ;; We don't bother with codes 32 64 91 127 because they're already taken
       ;; care of in the first loop above for the range 32-127.
-      (setq special-keys '(9 13 27))
+      ;;
+      ;; Decode TAB, RET, and ESC to the named keys <tab>, <return>, and
+      ;; <escape>, such as C-M-<tab>, and not to control characters with
+      ;; modifier bits.
+      (setq special-keys '((9 . tab) (13 . return) (27 . escape)))
       (while special-keys
        (setq c (car special-keys))
        (mapc (lambda (x)
               (define-key xterm-function-map
-                (format (car x) c)
-                (apply 'l/char-mods c (cdr x))))
+                (format (car x) (car c))
+                (l/key-mods (cdr c) (cdr x))))
         '(("\x1b[%d;2u" S)
           ("\x1b[%d;3u" M)
           ("\x1b[%d;4u" M S)
@@ -111,29 +115,9 @@ running `describe-keys' on these bindings sometimes gives the wrong answer
 because Emacs will equate these keys with other keys (e.g., C-i with C-S-i)."
   (interactive)
 
-  ;; ASCII 9 (<TAB>)
-  (l/bind-placeholder '(9 C))      ; C-TAB
-  (l/bind-placeholder '(9 C S))    ; C-S-TAB
-  (l/bind-placeholder '(9 C M))    ; C-M-TAB
-  (l/bind-placeholder '(9 C M S))  ; C-M-S-TAB
-
-  ;; Similar to TAB, don't mess with RET key for now.
-  ;; ASCII 13 (Enter, aka <RET>)
-  (l/bind-placeholder '(13 S))         ; S-RET
-  (l/bind-placeholder '(13 M))         ; M-RET
-  (l/bind-placeholder '(13 M S))       ; M-S-RET
-  (l/bind-placeholder '(13 C))         ; C-RET
-  (l/bind-placeholder '(13 C S))       ; C-S-RET
-  (l/bind-placeholder '(13 C M))       ; C-M-RET
-  (l/bind-placeholder '(13 C M S))     ; C-M-S-RET
-
-  ;; ASCII 27 (0x1b, <ESC>)
-  (l/bind-placeholder '(#x1b S))      ; S-ESC
-  (l/bind-placeholder '(#x1b M S))    ; M-S-ESC
-  (l/bind-placeholder '(#x1b C))      ; C-ESC
-  (l/bind-placeholder '(#x1b C S))    ; C-S-ESC
-  (l/bind-placeholder '(#x1b C M))    ; C-M-ESC
-  (l/bind-placeholder '(#x1b C M S))  ; C-M-S-ESC
+  ;; TAB, RET, and ESC with modifiers need no placeholders, because they decode
+  ;; to named keys such as C-M-<tab>, which Emacs doesn't equate with any other
+  ;; key.
 
   ;; ASCII 64 ('@')
   (l/bind-placeholder '(64 C))
@@ -211,6 +195,16 @@ Return an event vector."
   (if (memq 'M modifiers) (setq c (logior (lsh 1 27) c)))
   (if (memq 'S modifiers) (setq c (logior (lsh 1 25) c)))
   (vector c))
+
+(defun l/key-mods (key modifiers)
+  "Apply MODIFIERS to the named key KEY, a symbol such as `tab'.
+MODIFIERS must be a list of symbols amongst (C M S).
+Return an event vector, such as [C-M-tab]."
+  (vector (event-convert-list
+           (append (mapcar (lambda (m)
+                             (alist-get m '((C . control) (M . meta) (S . shift))))
+                           modifiers)
+                   (list key)))))
 
 (defvar l-disambiguation-mode-map (make-keymap)
   "Keymap for disambiguating keys in terminal Emacs.")
@@ -401,7 +395,7 @@ the object exists locally)."
       :mnv "M-S-h" #'org-shiftmetaleft
       :mnv "M-S-l" #'org-shiftmetaright
       :mnv "(" #'org-mark-ring-goto
-      :i "C-RET" #'l/org-insert-thing)
+      :i "C-<return>" #'l/org-insert-thing)
 
 (defun l/org-insert-thing ()
   "Insert the next thing, depending on context."
@@ -1545,7 +1539,6 @@ Also add the number of windows in the window configuration."
   :bind (:map copilot-completion-map
               ("<tab>" . 'copilot-accept-completion)
               ("TAB" . 'copilot-accept-completion)
-              ("C-TAB" . 'copilot-accept-completion-by-word)
               ("C-<tab>" . 'copilot-accept-completion-by-word)))
 
 (map! :mi "C-o" #'l/insert-newline-below
