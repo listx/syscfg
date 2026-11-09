@@ -26,6 +26,11 @@ additions and deletions which begin with =+= and =-=, create plain list items).
 The solution is to just wrap the diff text inside a source code block, so that
 it gets ignored (for purposes of list parsing) by Org mode.
 
+Even inside a source block, a very large diff still slows Emacs to a crawl when
+it creates the commit message buffer, so we also [[truncate-diff][truncate]] the diff. The diff is
+only there for us to read; Git ignores everything below the scissors line, so
+cutting it down never changes what gets committed.
+
 * Implementation
 
 ** Clojure (Babashka)
@@ -38,9 +43,62 @@ new file contents in memory, then write it back out.
 #+header: :tangle script/git/hooks/prepare_commit_msg.bb
 #+begin_src clojure
 <<imports>>
+<<truncate-diff>>
 <<wrap-diff-portion>>
 <<main>>
 #+end_src
+
+*** Truncate large diffs
+
+Two things make a diff slow for Emacs: sheer volume, and very long lines (which
+are hard on redisplay and font-locking). So we limit both. A file whose diff is
+longer than ~max-file-lines~ keeps only its first ~head-lines~ and last
+~tail-lines~ lines, with a marker line in between saying how many were left
+out. Keeping both ends shows where the changes start and how they end, which is
+usually enough to jog our memory when writing the message. A line longer than
+~max-line-chars~ is cut off with a note of how many characters were dropped.
+The thresholds are rough guesses at where things start to feel slow, so they
+are named here to make them easy to tune.
+
+#+name: truncate-diff
+#+begin_src clojure
+(def max-file-lines 300)
+(def head-lines 100)
+(def tail-lines 50)
+(def max-line-chars 500)
+
+(defn truncate-line
+  [line]
+  (if (> (count line) max-line-chars)
+    (str (subs line 0 max-line-chars)
+         " [... " (- (count line) max-line-chars) " more characters]")
+    line))
+
+(defn truncate-file-diff
+  [s]
+  (let [lines (str/split s #"\n" -1)
+        n (count lines)]
+    (->> (if (> n max-file-lines)
+           (concat (take head-lines lines)
+                   [(str "[... " (- n head-lines tail-lines) " lines omitted ...]")]
+                   (take-last tail-lines lines))
+           lines)
+         (map truncate-line)
+         (str/join "\n"))))
+
+(defn truncate-diff
+  [s]
+  (->> (str/split s #"(?m)^(?=diff --git )")
+       (map truncate-file-diff)
+       str/join))
+#+end_src
+
+~truncate-diff~ splits the diff into one piece per file, right before each
+~diff --git~ line. The split is zero-width (a lookahead), so no text is lost
+and joining the pieces back together restores the original. Within a piece we
+split on newlines with a limit of ~-1~, which keeps the trailing empty string
+after the final newline, so that a diff we don't truncate comes back exactly
+as it was.
 
 *** Wrap diff portion
 
@@ -76,7 +134,7 @@ substrings before and after this bit.
                              (some (fn [[idx _ :as tup]]
                                      (when (some? idx) tup))))]
     (let [before (subs s 0 (+ offset idx))
-          after (subs s (+ offset idx))
+          after (truncate-diff (subs s (+ offset idx)))
           new-parts [before
                      "#+begin_src diff\n"
                      after
@@ -92,6 +150,9 @@ different patterns (see =pats=) and use whichever one works.
 We use =if-let= in case the input string doesn't have the ="\ndiff "= substring in
 it, in which case we abort doing any mutations to it and return the original
 string unmodified.
+
+Only the diff part (=after=) goes through [[truncate-diff][~truncate-diff~]], so the commit
+message itself and Git's comments above the diff are never touched.
 
 Now we can read the file, invoke our wrapper, and then write back out the
 result. We use =slurp= and =spit= for this.
@@ -116,6 +177,37 @@ result. We use =slurp= and =spit= for this.
   (is (= "foo" (sut/wrap-diff "foo")))
   (is (= commit-msg-text-wrapped (sut/wrap-diff commit-msg-text)))
   (is (= commit-msg-text-wrapped-2 (sut/wrap-diff commit-msg-text-2))))
+#+end_src
+
+The tests for [[truncate-diff][~truncate-diff~]] build their inputs from the thresholds, so they
+keep working if we tune them. A small diff must come back unchanged. A long
+line keeps exactly ~max-line-chars~ characters. A long file keeps its head and
+tail around the marker, while a small file after it in the same diff is left
+alone.
+
+#+name: tests-truncate
+#+begin_src clojure
+(deftest truncate-diff
+  (is (= "" (sut/truncate-diff "")))
+  (is (= commit-msg-text (sut/truncate-diff commit-msg-text)))
+  (let [extra 7
+        line (str/join (repeat (+ sut/max-line-chars extra) "x"))]
+    (is (= (str (subs line 0 sut/max-line-chars)
+                " [... " extra " more characters]\n")
+           (sut/truncate-diff (str line "\n")))))
+  (let [n (* 2 sut/max-file-lines)
+        big (str "diff --git a/big b/big\n"
+                 (str/join "\n" (map #(str "+" %) (range n)))
+                 "\n")
+        small "diff --git a/small b/small\n+x\n"
+        out (str/split-lines (sut/truncate-diff (str big small)))
+        omitted (- (+ n 2) sut/head-lines sut/tail-lines)]
+    (is (= "diff --git a/big b/big" (first out)))
+    (is (= (str "[... " omitted " lines omitted ...]")
+           (nth out sut/head-lines)))
+    (is (= (str "+" (dec n)) (nth out (+ sut/head-lines sut/tail-lines -1))))
+    (is (= ["diff --git a/small b/small" "+x"]
+           (take-last 2 out)))))
 #+end_src
 
 The =commit-msg-text= is somewhat realistic input, defined below. Note that
@@ -378,9 +470,12 @@ We only test the Clojure implementation, because it's so much easier.
 #+header: :tangle script/git/hooks/prepare_commit_msg_test.clj
 #+begin_src clojure
 (ns prepare-commit-msg-test
-  (:require [clojure.test :refer [deftest is]]
+  (:require [clojure.string :as str]
+            [clojure.test :refer [deftest is]]
             [prepare-commit-msg :as sut]))
 <<tests>>
+
+<<tests-truncate>>
 #+end_src
 
 * Footnotes

@@ -1,5 +1,6 @@
 (ns prepare-commit-msg-test
-  (:require [clojure.test :refer [deftest is]]
+  (:require [clojure.string :as str]
+            [clojure.test :refer [deftest is]]
             [prepare-commit-msg :as sut]))
 (def commit-msg-text "
 
@@ -150,3 +151,25 @@ index c862589b..0f2cc942 100644
   (is (= "foo" (sut/wrap-diff "foo")))
   (is (= commit-msg-text-wrapped (sut/wrap-diff commit-msg-text)))
   (is (= commit-msg-text-wrapped-2 (sut/wrap-diff commit-msg-text-2))))
+
+(deftest truncate-diff
+  (is (= "" (sut/truncate-diff "")))
+  (is (= commit-msg-text (sut/truncate-diff commit-msg-text)))
+  (let [extra 7
+        line (str/join (repeat (+ sut/max-line-chars extra) "x"))]
+    (is (= (str (subs line 0 sut/max-line-chars)
+                " [... " extra " more characters]\n")
+           (sut/truncate-diff (str line "\n")))))
+  (let [n (* 2 sut/max-file-lines)
+        big (str "diff --git a/big b/big\n"
+                 (str/join "\n" (map #(str "+" %) (range n)))
+                 "\n")
+        small "diff --git a/small b/small\n+x\n"
+        out (str/split-lines (sut/truncate-diff (str big small)))
+        omitted (- (+ n 2) sut/head-lines sut/tail-lines)]
+    (is (= "diff --git a/big b/big" (first out)))
+    (is (= (str "[... " omitted " lines omitted ...]")
+           (nth out sut/head-lines)))
+    (is (= (str "+" (dec n)) (nth out (+ sut/head-lines sut/tail-lines -1))))
+    (is (= ["diff --git a/small b/small" "+x"]
+           (take-last 2 out)))))
