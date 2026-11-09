@@ -78,13 +78,15 @@ script which knows what to do depending on the environment."
       ;; 91     [
       ;; 127    DEL (Backspace)
       ;;
-      ;; We don't bother with codes 32 64 91 127 because they're already taken
-      ;; care of in the first loop above for the range 32-127.
+      ;; We don't bother with codes 32 64 91 because they're already taken care
+      ;; of in the first loop above for the range 32-127.
       ;;
-      ;; Decode TAB, RET, and ESC to the named keys <tab>, <return>, and
-      ;; <escape>, such as C-M-<tab>, and not to control characters with
-      ;; modifier bits.
-      (setq special-keys '((9 . tab) (13 . return) (27 . escape)))
+      ;; Decode TAB, RET, ESC, and DEL to the named keys <tab>, <return>,
+      ;; <escape>, and <backspace>, such as C-M-<tab>, and not to control
+      ;; characters with modifier bits. For DEL, this replaces what the first
+      ;; loop above defined.
+      (setq special-keys
+            '((9 . tab) (13 . return) (27 . escape) (127 . backspace)))
       (while special-keys
        (setq c (car special-keys))
        (mapc (lambda (x)
@@ -101,6 +103,14 @@ script which knows what to do depending on the environment."
        (setq special-keys (cdr special-keys))))))
 
 (eval-after-load "xterm" '(l/csi-u-support))
+(defun l/init-tty-key-alternatives ()
+  "Translate Meta with named keys to Meta with characters, as on GUI frames."
+  (define-key local-function-key-map [M-backspace] [?\M-\d])
+  (define-key local-function-key-map [M-tab] [?\M-\t])
+  (define-key local-function-key-map [M-return] [?\M-\C-m])
+  (define-key local-function-key-map [M-escape] [?\M-\e]))
+(add-hook 'terminal-init-xterm-hook #'l/init-tty-key-alternatives)
+
 (defun l/init-modify-other-keys-mode-2 ()
   "Ask the terminal to send all modified keys as `CSI u' sequences."
   (send-string-to-terminal "\e[>4;2m")
@@ -115,9 +125,9 @@ running `describe-keys' on these bindings sometimes gives the wrong answer
 because Emacs will equate these keys with other keys (e.g., C-i with C-S-i)."
   (interactive)
 
-  ;; TAB, RET, and ESC with modifiers need no placeholders, because they decode
-  ;; to named keys such as C-M-<tab>, which Emacs doesn't equate with any other
-  ;; key.
+  ;; TAB, RET, ESC, and DEL with modifiers need no placeholders, because they
+  ;; decode to named keys such as C-M-<tab>, which Emacs doesn't equate with any
+  ;; other key.
 
   ;; ASCII 64 ('@')
   (l/bind-placeholder '(64 C))
@@ -147,15 +157,7 @@ because Emacs will equate these keys with other keys (e.g., C-i with C-S-i)."
   (l/bind-placeholder '(109 C))     ; C-m
   (l/bind-placeholder '(109 C S))   ; C-S-m
   (l/bind-placeholder '(109 C M))   ; C-M-m
-  (l/bind-placeholder '(109 C M S)) ; C-M-S-m
-
-  ;; ASCII 127 (Backspace, aka <DEL>)
-  (l/bind-placeholder '(127 M))      ; M-DEL
-  (l/bind-placeholder '(127 M S))    ; M-S-DEL
-  (l/bind-placeholder '(127 C))      ; C-DEL
-  (l/bind-placeholder '(127 C S))    ; C-S-DEL
-  (l/bind-placeholder '(127 C M))    ; C-M-DEL
-  (l/bind-placeholder '(127 C M S)))  ; C-M-S-DEL
+  (l/bind-placeholder '(109 C M S))) ; C-M-S-m
 
 (defmacro l/bind-placeholder (binding)
   ; Note: The following are all basically equivalent:

@@ -391,8 +391,9 @@ https://invisible-island.net/xterm/ctlseqs/ctlseqs.html and search for
 ~modifyOtherKeys~.
 
 Most keys decode to a character with modifier bits, such as ~C-S-o~. But Tab,
-Enter, and Escape with modifiers decode to Emacs's named keys ~<tab>~,
-~<return>~, and ~<escape>~, such as ~C-M-<tab>~, using ~l/key-mods~. These are
+Enter, Escape, and Backspace with modifiers decode to Emacs's named keys
+~<tab>~, ~<return>~, ~<escape>~, and ~<backspace>~, such as ~C-M-<tab>~, using
+~l/key-mods~. These are
 the same events that GUI Emacs produces, and that Emacs's own ~xterm.el~
 produces for the ~modifyOtherKeys~ forms of these keys (~\e[27;7;9\~~ is
 ~C-M-<tab>~). We used to decode them to the control characters ~TAB~, ~RET~, and
@@ -400,10 +401,18 @@ produces for the ~modifyOtherKeys~ forms of these keys (~\e[27;7;9\~~ is
 named ones. So a binding written as ~"C-M-<tab>"~, as Doom and other packages
 write them for GUI Emacs, never matched in the terminal, and Emacs describes the
 character ~TAB~ with Control and Meta as ~C-M-i~, which made ~C-h k~ name the
-wrong key. Emacs doesn't fall back from a named key to its control character, so
-our own bindings use the named keys too, such as ~"C-<return>"~ for
-[[l/org-insert-thing][~l/org-insert-thing~]]. Shift with Tab decodes to ~S-<tab>~, which Emacs translates
-to ~<backtab>~ as it does in the GUI.
+wrong key. Likewise, ~C-<backspace>~ runs ~backward-kill-word~, but the
+character ~DEL~ with Control doesn't run anything.
+
+Emacs mostly doesn't fall back from a named key to its control character, so our
+own bindings use the named keys too, such as ~"C-<return>"~ for
+[[l/org-insert-thing][~l/org-insert-thing~]]. The exception is Meta: on GUI frames, Emacs's
+~x-alternatives-map~ (in ~term/common-win.el~) translates ~M-<tab>~,
+~M-<return>~, ~M-<escape>~, and ~M-<backspace>~ to ~M-TAB~, ~M-RET~, ~M-ESC~, and
+~M-DEL~ when they have no binding of their own, because many packages bind only
+the latter. Terminal frames don't get that map, so [[tty-key-alternatives][add the same translations]]
+for them. Shift with Tab decodes to ~S-<tab>~, which Emacs already translates to
+~<backtab>~ on any frame.
 
 #+name: CSI-u-mode-support
 #+begin_src elisp
@@ -471,13 +480,15 @@ to ~<backtab>~ as it does in the GUI.
       ;; 91     [
       ;; 127    DEL (Backspace)
       ;;
-      ;; We don't bother with codes 32 64 91 127 because they're already taken
-      ;; care of in the first loop above for the range 32-127.
+      ;; We don't bother with codes 32 64 91 because they're already taken care
+      ;; of in the first loop above for the range 32-127.
       ;;
-      ;; Decode TAB, RET, and ESC to the named keys <tab>, <return>, and
-      ;; <escape>, such as C-M-<tab>, and not to control characters with
-      ;; modifier bits.
-      (setq special-keys '((9 . tab) (13 . return) (27 . escape)))
+      ;; Decode TAB, RET, ESC, and DEL to the named keys <tab>, <return>,
+      ;; <escape>, and <backspace>, such as C-M-<tab>, and not to control
+      ;; characters with modifier bits. For DEL, this replaces what the first
+      ;; loop above defined.
+      (setq special-keys
+            '((9 . tab) (13 . return) (27 . escape) (127 . backspace)))
       (while special-keys
        (setq c (car special-keys))
        (mapc (lambda (x)
@@ -494,11 +505,29 @@ to ~<backtab>~ as it does in the GUI.
        (setq special-keys (cdr special-keys))))))
 
 (eval-after-load "xterm" '(l/csi-u-support))
+<<tty-key-alternatives>>
 <<modify-other-keys-mode-2>>
 <<disambiguate-problematic-keys>>
 
 ;; Load xterm-specific settings for TERM=wezterm.
 (add-to-list 'term-file-aliases '("wezterm" . "xterm-256color"))
+#+end_src
+
+*** Translate Meta with named keys, as on GUI frames
+
+~local-function-key-map~ belongs to each terminal, so set it up whenever Emacs
+initializes an xterm-like terminal, as for [[modify-other-keys-mode-2][~modifyOtherKeys~]] below. These are
+the same four entries as in ~x-alternatives-map~.
+
+#+name: tty-key-alternatives
+#+begin_src elisp
+(defun l/init-tty-key-alternatives ()
+  "Translate Meta with named keys to Meta with characters, as on GUI frames."
+  (define-key local-function-key-map [M-backspace] [?\M-\d])
+  (define-key local-function-key-map [M-tab] [?\M-\t])
+  (define-key local-function-key-map [M-return] [?\M-\C-m])
+  (define-key local-function-key-map [M-escape] [?\M-\e]))
+(add-hook 'terminal-init-xterm-hook #'l/init-tty-key-alternatives)
 #+end_src
 
 *** Ask for modifyOtherKeys mode 2
@@ -539,9 +568,9 @@ running `describe-keys' on these bindings sometimes gives the wrong answer
 because Emacs will equate these keys with other keys (e.g., C-i with C-S-i)."
   (interactive)
 
-  ;; TAB, RET, and ESC with modifiers need no placeholders, because they decode
-  ;; to named keys such as C-M-<tab>, which Emacs doesn't equate with any other
-  ;; key.
+  ;; TAB, RET, ESC, and DEL with modifiers need no placeholders, because they
+  ;; decode to named keys such as C-M-<tab>, which Emacs doesn't equate with any
+  ;; other key.
 
   ;; ASCII 64 ('@')
   (l/bind-placeholder '(64 C))
@@ -571,15 +600,7 @@ because Emacs will equate these keys with other keys (e.g., C-i with C-S-i)."
   (l/bind-placeholder '(109 C))     ; C-m
   (l/bind-placeholder '(109 C S))   ; C-S-m
   (l/bind-placeholder '(109 C M))   ; C-M-m
-  (l/bind-placeholder '(109 C M S)) ; C-M-S-m
-
-  ;; ASCII 127 (Backspace, aka <DEL>)
-  (l/bind-placeholder '(127 M))      ; M-DEL
-  (l/bind-placeholder '(127 M S))    ; M-S-DEL
-  (l/bind-placeholder '(127 C))      ; C-DEL
-  (l/bind-placeholder '(127 C S))    ; C-S-DEL
-  (l/bind-placeholder '(127 C M))    ; C-M-DEL
-  (l/bind-placeholder '(127 C M S)))  ; C-M-S-DEL
+  (l/bind-placeholder '(109 C M S))) ; C-M-S-m
 
 (defmacro l/bind-placeholder (binding)
   ; Note: The following are all basically equivalent:
