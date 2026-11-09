@@ -47,6 +47,71 @@ Doom's own ~doom-themes~ pin includes commit =d114523= (which fixes the
 ~(package! doom-themes :pin ...)~ line and its comment from =emacs.org=, run
 ~doom sync~, and remove this entry.
 
+** TODO Replace WezTerm with Ghostty
+:PROPERTIES:
+:ID:       d8af6c79-eb1e-4704-9ae2-9b0db337c75f
+:END:
+
+We started trying out [[id:9c459df2-d228-40cb-a5d9-16c6d7b473c3][Ghostty]] as a replacement for [[id:1d490bfa-6d4a-4b0e-beac-d3e37fbb21a5][WezTerm]] on 2026-11-08.
+Ghostty already covers the font and its ~cv06~ feature, the window size and
+padding, the colors, the cursor, hiding the title bar and tab bar, Option as Alt
+on the Mac, the per-host font size (which [[id:68954bd6-189f-48ab-9ded-8b6cbe3a0952][xmonad]] passes on ~k0~), and Nix
+packages for both NixOS and the Mac. xmonad already launches Ghostty. Two things
+still stand in the way of removing WezTerm.
+
+*** Stop identifying as WezTerm
+
+This is the main blocker. Even inside Ghostty, our shells and tmux claim to be
+WezTerm:
+
+  - [[id:4ef05c5a-117f-4b9c-8bee-dc1eaae8efc7::zshenv][~.zshenv~]] exports ~TERM=wezterm~ on every host except ~w0~, which
+    overrides Ghostty's own ~xterm-ghostty~.
+
+  - [[id:9170fae9-85de-4fd8-96fb-f3d3d2215f94::appearance][tmux]] sets ~default-terminal~ to ~wezterm~.
+
+  - That ~TERM~ needs WezTerm's terminfo, which the [[id:adcc2f40-1a86-47f4-a22b-73968a118745::Makefile-terminfo][~terminfo~ Makefile rule]]
+    compiles from the ~wezterm/upstream~ submodule. Removing WezTerm as it's set
+    up now would remove that too.
+
+  - Some settings are keyed on the name: tmux's
+    [[id:9170fae9-85de-4fd8-96fb-f3d3d2215f94::extended-keys][~wezterm*:extkeys~]] feature, and the ~term-file-aliases~ entry for ~wezterm~ in
+    the [[id:100011e3-ba36-4078-975e-6136d25e60cc][Emacs]] config. The tmux one matters most, because the passthrough mode
+    for nested tmux relies on the inner tmux seeing ~TERM=wezterm~ to get
+    extended keys.
+
+So move ~TERM~ to something like ~tmux-256color~ inside tmux and Ghostty's
+~xterm-ghostty~ outside it, while keeping extended keys and 24-bit color
+working, including for nested tmux. This is the riskiest step, so do it while
+WezTerm is still around to fall back on.
+
+*** Check the features that Ghostty doesn't replace one for one
+
+  - Opening URLs from the keyboard: WezTerm's [[id:1d490bfa-6d4a-4b0e-beac-d3e37fbb21a5::open-url][Open URL]] binding picks a URL on
+    screen with QuickSelect and opens it. As far as we know, Ghostty only opens
+    links by mouse click. Either drop this or find a replacement, such as a tmux
+    URL plugin.
+
+  - Modified keys: WezTerm's config writes out [[id:1d490bfa-6d4a-4b0e-beac-d3e37fbb21a5::csi-u-mode][CSI u sequences]] for the
+    ~M-~, ~C-~, ~C-S-~, ~C-M-~, and ~C-M-S-~ letters, and for the "exotic" keys
+    (Tab, Backspace, Enter, Space, Escape, and ~[~ with modifiers). Ghostty sends
+    these only when the program asks, which tmux and our Emacs do. The letter
+    chords are already sorted out, but the exotic keys (such as ~C-M-Tab~ or
+    ~S-Space~) haven't been checked.
+
+  - The bell: WezTerm [[id:1d490bfa-6d4a-4b0e-beac-d3e37fbb21a5::disable-BEL-sound][disables the audible bell]], but our Ghostty config doesn't
+    touch it. Check that Ghostty doesn't beep.
+
+*** Steps
+
+  1) Move ~TERM~ off ~wezterm~, then test tmux, nested tmux, and Emacs keys in
+     Ghostty.
+
+  2) Decide what to do about opening URLs from the keyboard.
+
+  3) After a few more days of using Ghostty day to day, remove [[id:1d490bfa-6d4a-4b0e-beac-d3e37fbb21a5][wezterm.org]], its
+     Makefile and Nix entries, and the ~wezterm/upstream~ submodule, and reword
+     the prose that compares Ghostty with WezTerm.
+
 * Icebox
 :PROPERTIES:
 :ID:       9da63346-ea7c-4f0b-82fe-1a9f1e9ac52d
