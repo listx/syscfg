@@ -670,19 +670,25 @@ the outer terminal's terminfo, and both ~xterm-ghostty~ and ~wezterm~ have the
 give ~tmux*~ terminals the ~RGB~ feature explicitly. Otherwise the inner tmux
 would round every color down to the 256-color palette.
 
-For the same reason, give ~tmux*~ terminals the ~sync~ feature. With it, the
-inner tmux wraps each redraw in synchronized output (~\e[?2026h~ and
-~\e[?2026l~), so the outer tmux and the terminal show the redraw all at once.
-Without it, the cursor visibly jumps around the screen whenever the inner tmux
-redraws, such as on every new shell prompt. ~xterm-ghostty~ and ~wezterm~ have
-the ~Sync~ capability, so a tmux running directly in those already gets this,
-but ~tmux-256color~ doesn't.
+A nested tmux also needs to know that the outer tmux erases with the current
+background color, which terminfo calls ~bce~. tmux does, as ~xterm-ghostty~ and
+~wezterm~ do, but ~tmux-256color~ doesn't claim it. Without ~bce~, the inner
+tmux can't scroll or clear a pane with a background color, as our
+[[appearance-panes-borders-active][~window-active-style~]] gives the active pane, so it repaints the pane cell by
+cell instead. The outer tmux passes that on as it arrives, so on every new shell
+prompt, the cursor visibly sweeps across the screen. So override ~bce~ for
+~tmux*~ terminals.
+
+We first tried the ~sync~ feature for this, which makes the inner tmux wrap each
+redraw in synchronized output (~\e[?2026h~ and ~\e[?2026l~). But tmux 3.6
+doesn't hold back a pane's output during synchronized output, so the outer tmux
+drew the repainting as it arrived anyway.
 
 #+name: appearance
 #+begin_src conf
 set -g default-terminal "tmux-256color"
 set -as terminal-features 'tmux*:RGB'
-set -as terminal-features 'tmux*:sync'
+set -as terminal-overrides 'tmux*:bce'
 
 <<appearance-messages>>
 <<appearance-status-bar>>
