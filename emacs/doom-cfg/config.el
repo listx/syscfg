@@ -129,6 +129,14 @@ because Emacs will equate these keys with other keys (e.g., C-i with C-S-i)."
   ;; decode to named keys such as C-M-<tab>, which Emacs doesn't equate with any
   ;; other key.
 
+  ;; ASCII 32 (SPC)
+  ;; Without these, describe-key reports an unbound C-S-SPC as C-SPC, because
+  ;; Emacs drops Shift from unbound keys. We leave out S-SPC, so that Shift
+  ;; with Space still types a space.
+  (l/bind-placeholder '(32 C S))    ; C-S-SPC
+  (l/bind-placeholder '(32 M S))    ; M-S-SPC
+  (l/bind-placeholder '(32 C M S))  ; C-M-S-SPC
+
   ;; ASCII 64 ('@')
   (l/bind-placeholder '(64 C))
 
