@@ -19,6 +19,7 @@ list of ~key = value~ lines.
 <<colors>>
 <<confirm-close>>
 <<keybindings>>
+<<csi-u-keys>>
 #+end_src
 
 The ~ghostty~ [[Makefile-ghostty][Makefile rule]] links only the ~config~ file, not the whole
@@ -305,4 +306,37 @@ keybind = super+alt+arrow_up=goto_split:up
 keybind = super+alt+arrow_down=goto_split:down
 keybind = super+alt+arrow_left=goto_split:left
 keybind = super+alt+arrow_right=goto_split:right
+#+end_src
+
+** Keys that Ghostty can't encode unambiguously
+
+tmux asks Ghostty for ~modifyOtherKeys~ mode 2, so that [[id:9170fae9-85de-4fd8-96fb-f3d3d2215f94::extended-keys][extended keys]] reach
+Emacs. But even in that mode, Ghostty 1.3.1 sends a few chords as the same bytes
+as other keys:
+
+  - ~ctrl+backspace~ is ~^H~, which tmux and Emacs read as ~C-h~. Its key table
+    has an extended encoding for every Backspace chord except Ctrl alone.
+
+  - ~ctrl+shift+space~ is NUL, the same as ~ctrl+space~, and
+    ~ctrl+alt+shift+space~ is ~ESC~ NUL, the same as ~ctrl+alt+space~. Before
+    Ghostty looks at ~modifyOtherKeys~, it turns any Ctrl chord whose key isn't
+    a letter into a control character, and it drops Shift to do so.
+
+So send the CSI u sequences for these chords ourselves, as [[id:1d490bfa-6d4a-4b0e-beac-d3e37fbb21a5::csi-u-mode][WezTerm's config]]
+does. tmux reads them and passes them on to Emacs as they are. To a shell, which
+doesn't ask for ~modifyOtherKeys~ mode 2, tmux sends the two Space chords as NUL
+and ~ESC~ NUL again, but it sends ~ctrl+backspace~ on as ~\e[127;5u~, so [[id:9b76d360-8483-4449-b3a5-6c3678defc58::zshrc-bindings-and-plugins][zsh]]
+binds that sequence.
+
+Without this, ~ctrl+backspace~ in zsh was worse than useless: zsh binds ~^h~ to
+go back to the previous directory.
+
+We don't do the same for ~ctrl+[~, which Ghostty sends as ~ESC~. That's the
+traditional meaning of ~C-[~, and Evil relies on it to leave insert state.
+
+#+name: csi-u-keys
+#+begin_src conf
+keybind = ctrl+backspace=csi:127;5u
+keybind = ctrl+shift+space=csi:32;6u
+keybind = ctrl+alt+shift+space=csi:32;8u
 #+end_src

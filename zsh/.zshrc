@@ -352,6 +352,9 @@ export KEYTIMEOUT=10
 
 # Make Backspace delete past the point of the last point of viins insertion.
 bindkey "^?" backward-delete-char
+# Make Ctrl+Backspace delete a word. Ghostty sends it as CSI u, because its own
+# encoding (^H) is the same as Ctrl+h, which we bind below.
+bindkey '^[[127;5u' backward-kill-word
 
 # Map DELETE key.
 bindkey '^[[3~' delete-char

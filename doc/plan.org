@@ -109,8 +109,10 @@ check:
     ~ctrl+tab~ for itself, and [[id:100011e3-ba36-4078-975e-6136d25e60cc::CSI-u-mode-support][Emacs]] decoded Tab, Enter, and Escape with
     modifiers to control characters, so ~C-M-Tab~ looked like ~C-M-i~. Both are
     fixed, and tmux's ~send-keys~ shows terminal Emacs reading them as named keys
-    (~C-M-<tab>~, ~C-<return>~, ~<backtab>~). What's left is to try them, and
-    Backspace, Space, and ~[~ with modifiers, by hand in Ghostty.
+    (~C-M-<tab>~, ~C-<return>~, ~<backtab>~). Ghostty also sent ~ctrl+backspace~
+    as ~^H~ and dropped Shift from ~ctrl+shift+space~, so [[id:9c459df2-d228-40cb-a5d9-16c6d7b473c3::csi-u-keys][our Ghostty config]]
+    sends CSI u for those. Ghostty still sends ~ctrl+[~ as ~ESC~, unlike WezTerm,
+    on purpose. What's left is to try them all by hand in Ghostty.
 
   - The bell: WezTerm [[id:1d490bfa-6d4a-4b0e-beac-d3e37fbb21a5::disable-BEL-sound][disables the audible bell]]. Our Ghostty config doesn't
     touch it, but Ghostty 1.3.1's default ~bell-features~ already includes
