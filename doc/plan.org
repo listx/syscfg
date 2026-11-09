@@ -83,10 +83,11 @@ On 2026-11-09 we moved ~TERM~ off ~wezterm~:
     and has its own ~tmux~ support, which runs the ~xterm~ initialization
     (and so our ~modifyOtherKeys~ hook) too.
 
-What's left is to test it in Ghostty after running ~make tmux zsh~ and starting
-a new tmux server: extended keys (such as ~C-S-o~ and ~C-i~ in Emacs) and 24-bit
-color in tmux, in nested tmux over ssh with passthrough mode, and in Emacs. Also
-check:
+We tried it in Ghostty by hand on 2026-11-09 and it was good enough, though we
+didn't check every case. If something comes up later, these are the likeliest
+suspects:
+
+  - nested tmux over ssh with passthrough mode;
 
   - the Mac, whose system terminfo might lack ~tmux-256color~; and
 
@@ -112,16 +113,19 @@ check:
     (~C-M-<tab>~, ~C-<return>~, ~<backtab>~). Ghostty also sent ~ctrl+backspace~
     as ~^H~ and dropped Shift from ~ctrl+shift+space~, so [[id:9c459df2-d228-40cb-a5d9-16c6d7b473c3::csi-u-keys][our Ghostty config]]
     sends CSI u for those. Ghostty still sends ~ctrl+[~ as ~ESC~, unlike WezTerm,
-    on purpose. What's left is to try them all by hand in Ghostty.
+    on purpose. We checked the keys by hand on 2026-11-09, though not every
+    combination. Some keys that used to do nothing in terminal Emacs now run
+    Doom's bindings, as in GUI Emacs, such as ~aya-create~ on ~C-<tab>~ and
+    ~tab-previous~ on ~C-S-<tab>~. We keep those.
 
   - The bell: WezTerm [[id:1d490bfa-6d4a-4b0e-beac-d3e37fbb21a5::disable-BEL-sound][disables the audible bell]]. Our Ghostty config doesn't
-    touch it, but Ghostty 1.3.1's default ~bell-features~ already includes
-    ~no-audio~ and ~no-system~, so it shouldn't beep. Confirm by ear.
+    touch it, because Ghostty 1.3.1's default ~bell-features~ already includes
+    ~no-audio~ and ~no-system~.
 
 *** Steps
 
-  1) Move ~TERM~ off ~wezterm~ (done), then test tmux, nested tmux, and Emacs
-     keys in Ghostty.
+  1) Move ~TERM~ off ~wezterm~, then test tmux, nested tmux, and Emacs keys in
+     Ghostty (done).
 
   2) Decide what to do about opening URLs from the keyboard.
 
