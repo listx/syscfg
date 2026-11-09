@@ -1,0 +1,53 @@
+:PROPERTIES:
+:ID:       36e58bc5-93ad-4d36-a1ce-000cc22ef28c
+:END:
+#+title: Plan
+
+#+lilac_maxHeadingLevel: 5
+
+This document explains planned work, including changes that have to wait for
+something upstream.
+
+  - The [[id:b8fb8d19-4dfa-4018-8eb8-1cb045e1aa53][Prioritized TODOs]] section lists all TODOs that have currently been
+    prioritized. This is essentially the short-term roadmap.
+
+  - The [[id:968c9179-b363-4b02-9562-490e1f186167][Backlog]] section lists medium-term TODO items, or ideas that seem
+    interesting.
+
+  - The [[id:9da63346-ea7c-4f0b-82fe-1a9f1e9ac52d][Icebox]] section lists TODO items that are much more difficult to do, but
+    are still interesting. It also has items which have a low priority.
+
+New TODOs start out in the [[id:968c9179-b363-4b02-9562-490e1f186167][Backlog]] and over time they are then moved around to
+other sections as needed.
+
+* Prioritized TODOs
+:PROPERTIES:
+:ID:       b8fb8d19-4dfa-4018-8eb8-1cb045e1aa53
+:END:
+
+* Backlog
+:PROPERTIES:
+:ID:       968c9179-b363-4b02-9562-490e1f186167
+:END:
+
+** TODO Remove the doom-themes pin from =packages.el=
+:PROPERTIES:
+:ID:       d971e461-4cca-4997-8c33-2f81526f3d27
+:END:
+
+The [[id:100011e3-ba36-4078-975e-6136d25e60cc][Emacs]] config pins ~doom-themes~ to upstream commit =a592029= in
+=$DOOMDIR/packages.el=. Doom's own pin (in =modules/ui/doom/packages.el= of the
+=emacs/doom-upstream= submodule) predates the fix for
+[[https://github.com/doomemacs/themes/issues/875][doom-themes issue 875]], a face inheritance cycle with
+~gnus-group-news-low-empty~ that Emacs 31 rejects, so ~load-theme~ fails.
+
+When to do it: after updating the =emacs/doom-upstream= submodule, check whether
+Doom's own ~doom-themes~ pin includes commit =d114523= (which fixes the
+~gnus-group-news-low-empty~ cycle). If it does, delete our
+~(package! doom-themes :pin ...)~ line and its comment from =emacs.org=, run
+~doom sync~, and remove this entry.
+
+* Icebox
+:PROPERTIES:
+:ID:       9da63346-ea7c-4f0b-82fe-1a9f1e9ac52d
+:END:

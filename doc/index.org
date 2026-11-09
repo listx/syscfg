@@ -18,6 +18,7 @@ misc.org
 mpv.org
 nix.org
 notmuch.org
+plan.org
 qutebrowser.org
 rtorrent.org
 script
