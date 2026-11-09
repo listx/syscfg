@@ -670,10 +670,19 @@ the outer terminal's terminfo, and both ~xterm-ghostty~ and ~wezterm~ have the
 give ~tmux*~ terminals the ~RGB~ feature explicitly. Otherwise the inner tmux
 would round every color down to the 256-color palette.
 
+For the same reason, give ~tmux*~ terminals the ~sync~ feature. With it, the
+inner tmux wraps each redraw in synchronized output (~\e[?2026h~ and
+~\e[?2026l~), so the outer tmux and the terminal show the redraw all at once.
+Without it, the cursor visibly jumps around the screen whenever the inner tmux
+redraws, such as on every new shell prompt. ~xterm-ghostty~ and ~wezterm~ have
+the ~Sync~ capability, so a tmux running directly in those already gets this,
+but ~tmux-256color~ doesn't.
+
 #+name: appearance
 #+begin_src conf
 set -g default-terminal "tmux-256color"
 set -as terminal-features 'tmux*:RGB'
+set -as terminal-features 'tmux*:sync'
 
 <<appearance-messages>>
 <<appearance-status-bar>>
