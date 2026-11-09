@@ -20,7 +20,6 @@ nonTangledPathspecs = [ #
    ":(exclude,top)nvim",
    ":(exclude,top)openvpn",
    ":(exclude,top)qutebrowser/blocked-hosts",
-   ":(exclude,top)wezterm/upstream",
    ":(exclude,top)script/doom",
    ":(exclude,top)script/git/hooks/prepare-commit-msg",
    ":(exclude,top)uim/customs",

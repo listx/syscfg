@@ -50,7 +50,6 @@ in
     tree
     unixtools.xxd
     util-linux
-    wezterm
     zsh
 
     p7zip

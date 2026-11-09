@@ -457,7 +457,6 @@ tokei
 tree
 unixtools.xxd
 util-linux
-wezterm
 zsh
 #+end_src
 

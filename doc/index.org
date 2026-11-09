@@ -24,7 +24,6 @@ rtorrent.org
 script
 tmux.org
 vim.org
-wezterm.org
 xmonad.org
 xorg.org
 zsh
@@ -87,7 +86,6 @@ nonTangledPathspecs = [ # (ref:nonTangledPathspecs)
    ":(exclude,top)nvim",
    ":(exclude,top)openvpn",
    ":(exclude,top)qutebrowser/blocked-hosts",
-   ":(exclude,top)wezterm/upstream",
    ":(exclude,top)script/doom",
    ":(exclude,top)script/git/hooks/prepare-commit-msg",
    ":(exclude,top)uim/customs",
@@ -235,8 +233,6 @@ tmux:
 <<id:adcc2f40-1a86-47f4-a22b-73968a118745::Makefile-uim>>
 vimpc:
 	ln -fs ${C}/vimpc/.vimpcrc ${H}
-wezterm:
-	ln -fs ${C}/wezterm/.wezterm.lua ${H}
 xmonad:
 	ln -fns ${C}/xmonad ${H}/.xmonad
 	# xsession is relied on by NixOS hosts that use xmonad (basically the
@@ -276,7 +272,6 @@ zathura:
 	uim \
 	vim \
 	vimpc \
-	wezterm \
 	xmonad \
 	xorg \
 	zathura \
@@ -709,7 +704,6 @@ vim/.VimballRecord
 vim/.netrwhist
 vim/colors
 vim/sessions
-wezterm/upstream
 xmonad/.cabal-sandbox
 xmonad/cabal.sandbox.config
 xmonad/dist

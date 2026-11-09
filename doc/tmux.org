@@ -478,7 +478,7 @@ unbind-key -T root WheelDownStatus
 ** Open URLs
 
 ~Super+Shift+y~ picks a URL on the screen and opens it in the browser, as
-[[id:1d490bfa-6d4a-4b0e-beac-d3e37fbb21a5::open-url][WezTerm's Open URL]] did. [[id:9c459df2-d228-40cb-a5d9-16c6d7b473c3][Ghostty]] has no such feature, so tmux does it, which
+WezTerm's Open URL did when it was our terminal. [[id:9c459df2-d228-40cb-a5d9-16c6d7b473c3][Ghostty]] has no such feature, so tmux does it, which
 also makes it work in any terminal.
 
 Super chords stop at the terminal, so tmux never sees ~Super+Shift+y~ itself.
@@ -516,7 +516,7 @@ By default tmux waits a little bit after the ESC key is pressed, presumably to
 wait for events that trickle in from terminals that might send the ESC key a bit
 prematurely.
 
-However on WezTerm (and probably other modern terminals), there has been no
+However on modern terminals such as Ghostty, there has been no
 noticeable usability issues when we disable this delay. So disable it
 altogether.
 
@@ -532,15 +532,15 @@ sequence that can't tell some keys apart. For example, ~C-i~ and ~TAB~ are both
 byte 9, and ~C-S-o~ is the same as ~C-o~ (see the ASCII table in the reference
 information above). The "CSI u" scheme [fn:csi-u] fixes this by sending
 ~\e[<codepoint>;<modifiers>u~ instead, such as ~\e[111;6u~ for ~C-S-o~, and
-terminal Emacs [[id:100011e3-ba36-4078-975e-6136d25e60cc::CSI-u-mode-support][understands it]]. WezTerm sends these sequences for us (see its
-[[id:1d490bfa-6d4a-4b0e-beac-d3e37fbb21a5][configuration]]), and [[id:9c459df2-d228-40cb-a5d9-16c6d7b473c3][Ghostty]] does too once tmux asks for extended keys. But tmux sits
+terminal Emacs [[id:100011e3-ba36-4078-975e-6136d25e60cc::CSI-u-mode-support][understands it]]. [[id:9c459df2-d228-40cb-a5d9-16c6d7b473c3][Ghostty]] sends these
+sequences once tmux asks for extended keys. But tmux sits
 between the terminal and Emacs, and it has to pass them on.
 
 tmux calls these "extended keys". We make tmux
 
   1) understand them from the terminal: tmux only parses extended keys from
      terminals with the ~extkeys~ feature, and it doesn't detect that feature
-     for WezTerm, Ghostty (whose ~TERM~ is ~xterm-ghostty~), or an outer tmux
+     for Ghostty (whose ~TERM~ is ~xterm-ghostty~) or an outer tmux
      (whose panes have ~TERM=tmux-256color~, see [[id:99539137-2fb7-4ab9-9f9f-5bbc2d91ea2b][passthrough mode]]) by itself,
      so we add it;
 
@@ -553,7 +553,6 @@ tmux calls these "extended keys". We make tmux
 
 #+name: extended-keys
 #+begin_src conf
-set -as terminal-features 'wezterm*:extkeys'
 set -as terminal-features 'xterm-ghostty:extkeys'
 set -as terminal-features 'tmux*:extkeys'
 set -s extended-keys always
@@ -570,8 +569,8 @@ mode with ~tmux display -p '#{pane_key_mode}'~ (~Ext 1~ or ~Ext 2~).
 
 *** Shifted letters
 
-A terminal can report a shifted letter in two ways. WezTerm sends the letter
-as it is without Shift, plus the Shift modifier: ~\e[101;8u~ for ~C-M-S-e~.
+A terminal can report a shifted letter in two ways. WezTerm, our terminal before
+Ghostty, sent the letter as it is without Shift, plus the Shift modifier: ~\e[101;8u~ for ~C-M-S-e~.
 Ghostty sends the uppercase letter plus the Shift modifier, as xterm's
 ~modifyOtherKeys~ does: ~\e[27;8;69\~~ (69 is ~E~). tmux reads the first as
 ~C-M-S-e~ but the second as ~C-M-S-E~, a different key. So under Ghostty
@@ -585,7 +584,7 @@ So for every letter, we bind the uppercase forms ~C-S-E~, ~M-S-E~ and
 client instead of the pane, so it goes through the key tables again as if we
 had typed it. A key we bind, like ~C-M-S-e~, then runs its binding, and a key
 we don't, like ~C-S-o~, goes on to the pane as ~\e[111;6u~. These bindings do
-nothing under WezTerm, which never sends the uppercase forms.
+nothing under a terminal that never sends the uppercase forms.
 
 tmux has no loops, so a shell loop makes the 78 bindings when the
 configuration loads.
@@ -665,14 +664,13 @@ installed on every host.
 ~tmux-256color~ doesn't advertise 24-bit color, though. Programs that check
 ~COLORTERM~, which [[id:4ef05c5a-117f-4b9c-8bee-dc1eaae8efc7::zshenv][~.zshenv~]] sets to ~truecolor~, use it anyway, and tmux passes
 the colors on as long as the outer terminal supports them: tmux reads that from
-the outer terminal's terminfo, and both ~xterm-ghostty~ and ~wezterm~ have the
-~Tc~ capability. But for a nested tmux, the outer terminal is another tmux, so
+the outer terminal's terminfo, and ~xterm-ghostty~ has the ~Tc~ capability. But for a nested tmux, the outer terminal is another tmux, so
 give ~tmux*~ terminals the ~RGB~ feature explicitly. Otherwise the inner tmux
 would round every color down to the 256-color palette.
 
 A nested tmux also needs to know that the outer tmux erases with the current
-background color, which terminfo calls ~bce~. tmux does, as ~xterm-ghostty~ and
-~wezterm~ do, but ~tmux-256color~ doesn't claim it. Without ~bce~, the inner
+background color, which terminfo calls ~bce~. tmux does, as ~xterm-ghostty~
+does, but ~tmux-256color~ doesn't claim it. Without ~bce~, the inner
 tmux can't scroll or clear a pane with a background color, as our
 [[appearance-panes-borders-active][~window-active-style~]] gives the active pane, so it repaints the pane cell by
 cell instead. The outer tmux passes that on as it arrives, so on every new shell

@@ -3,9 +3,10 @@
 :END:
 #+title: Ghostty
 
-[[https://ghostty.org][Ghostty]] is the terminal we're trying out as a replacement for [[id:1d490bfa-6d4a-4b0e-beac-d3e37fbb21a5][WezTerm]]. We
-install it with Nix on both [[id:82cbef73-61b9-43e7-9df6-7b2771000733::pkgs:ghostty-nixos][NixOS]] and [[id:82cbef73-61b9-43e7-9df6-7b2771000733::pkgs:ghostty-darwin][Mac]]. Its configuration is a flat
-list of ~key = value~ lines.
+[[https://ghostty.org][Ghostty]] is our terminal. It replaced WezTerm in November 2026, and much of
+this configuration carries settings over from our WezTerm configuration, which
+is in the Git history. We install it with Nix on both [[id:82cbef73-61b9-43e7-9df6-7b2771000733::pkgs:ghostty-nixos][NixOS]] and [[id:82cbef73-61b9-43e7-9df6-7b2771000733::pkgs:ghostty-darwin][Mac]]. Its
+configuration is a flat list of ~key = value~ lines.
 
 * Configuration
 
@@ -41,7 +42,7 @@ By default, Ghostty on Mac treats Option the way macOS does: as a key for
 typing accented and other special characters. Then a chord like ~C-M-S-e~ (our
 tmux binding to [[id:9170fae9-85de-4fd8-96fb-f3d3d2215f94::keybindings-pane-create][split a pane]]) reaches tmux as some special character instead of
 a Meta chord, and none of our ~C-M-~ tmux bindings, or ~M-~ bindings anywhere
-else, work. WezTerm doesn't have this problem because it treats the left Option
+else, work. WezTerm didn't have this problem because it treats the left Option
 key as Alt by default.
 
 So treat the left Option key as Alt too. The right Option key still types
@@ -54,7 +55,7 @@ macos-option-as-alt = left
 
 ** Cursor
 
-Don't blink the cursor, just as in [[id:1d490bfa-6d4a-4b0e-beac-d3e37fbb21a5::cursor][WezTerm]]. Unlike WezTerm's setting, this is only the
+Don't blink the cursor, just as in WezTerm. Unlike WezTerm's setting, this is only the
 default: programs can still turn blinking on with escape sequences. Terminal
 Emacs does that unless we [[id:100011e3-ba36-4078-975e-6136d25e60cc::tty-cursor-blink][tell it not to]].
 
@@ -65,7 +66,7 @@ cursor-style-blink = false
 
 ** Font
 
-As in [[id:1d490bfa-6d4a-4b0e-beac-d3e37fbb21a5::font][WezTerm]], turn on Commit Mono's ~cv06~ feature, which gives the 6 and 9
+As in WezTerm, turn on Commit Mono's ~cv06~ feature, which gives the 6 and 9
 numerals a straight tail instead of a curved one.
 
 #+name: font
@@ -77,8 +78,8 @@ font-feature = cv06
 
 ** Window
 
-Open windows at the same size as [[id:1d490bfa-6d4a-4b0e-beac-d3e37fbb21a5::window-size][WezTerm's]], in cells, and with the same
-[[id:1d490bfa-6d4a-4b0e-beac-d3e37fbb21a5::window-padding][padding]]: a little on the left, so that text doesn't touch the window's edge,
+Open windows at the same size as WezTerm's, in cells, and with the same
+padding: a little on the left, so that text doesn't touch the window's edge,
 and none elsewhere. ~window-padding-x~ takes the left and right padding as a
 pair.
 
@@ -93,7 +94,7 @@ window-padding-y = 0
 On Linux, Ghostty draws its own GTK title bar, with a menu and tab buttons,
 across the top of every window. Under [[id:68954bd6-189f-48ab-9ded-8b6cbe3a0952][xmonad]] this is just wasted space, because
 xmonad manages the windows and we keep tabs in tmux, which is also why we
-[[id:1d490bfa-6d4a-4b0e-beac-d3e37fbb21a5::disable-tab-bar][disable WezTerm's tab bar]]. So turn it off. We use ~gtk-titlebar~ rather than
+disabled WezTerm's tab bar. So turn it off. We use ~gtk-titlebar~ rather than
 ~window-decoration = none~, because ~gtk-titlebar~ does nothing on Mac, where
 ~window-decoration = none~ would also remove the window's native border and
 rounded corners.
@@ -105,7 +106,7 @@ gtk-titlebar = false
 
 ** Colors
 
-Use our [[id:205ec9d4-2e2f-46f7-a1aa-c3105e1ba491::theme-pasteldark][PastelDark]] theme, the same colors as in [[id:1d490bfa-6d4a-4b0e-beac-d3e37fbb21a5::colors][WezTerm]]. The theme has to be
+Use our [[id:205ec9d4-2e2f-46f7-a1aa-c3105e1ba491::theme-pasteldark][PastelDark]] theme, the same colors as in WezTerm. The theme has to be
 in the config, not just applied by the shell, because Zsh assumes that the
 terminal starts out with PastelDark (it sets ~TERM_COLOR_THEME~ to it without
 sending any colors), so that [[id:fd0afd0c-d608-4ad5-83ff-6a080a62bc66::func-color-cycle][~color_cycle~]] knows where to start.
@@ -161,7 +162,7 @@ confirm-close-surface = false
 By default, Ghostty shows a "Copied to clipboard" notification whenever a
 program sets the clipboard, including through tmux with OSC 52. Emacs does that
 for every kill, and with Evil every ~y~, ~d~, ~x~, and ~c~ is a kill, so the
-notifications pile up. WezTerm copies silently, so turn off just this
+notifications pile up. WezTerm copied silently, so turn off just this
 notification and keep the one for reloading the config.
 
 #+name: app-notifications
@@ -175,7 +176,7 @@ On Linux, Ghostty binds ~ctrl+shift+j~ by default to write the screen's
 contents to a file and paste the file's path. Ghostty handles the key itself, so
 programs in the terminal never see it, and Emacs's binding of ~C-S-j~ to
 [[id:100011e3-ba36-4078-975e-6136d25e60cc::window-navigation][swap windows]] silently does nothing. ~C-S-k~, which swaps in the other
-direction, still works because Ghostty doesn't bind ~ctrl+shift+k~. WezTerm has
+direction, still works because Ghostty doesn't bind ~ctrl+shift+k~. WezTerm had
 no such binding, so this only came up when we switched terminals.
 
 ~ctrl+shift+j~ isn't the only such key. On Linux, Ghostty binds 12 other
@@ -337,8 +338,8 @@ as other keys:
     Ghostty looks at ~modifyOtherKeys~, it turns any Ctrl chord whose key isn't
     a letter into a control character, and it drops Shift to do so.
 
-So send the CSI u sequences for these chords ourselves, as [[id:1d490bfa-6d4a-4b0e-beac-d3e37fbb21a5::csi-u-mode][WezTerm's config]]
-does. tmux reads them and passes them on to Emacs as they are. To a shell, which
+So send the CSI u sequences for these chords ourselves, as our WezTerm configuration
+did. tmux reads them and passes them on to Emacs as they are. To a shell, which
 doesn't ask for ~modifyOtherKeys~ mode 2, tmux sends the two Space chords as NUL
 and ~ESC~ NUL again, but it sends ~ctrl+backspace~ on as ~\e[127;5u~, so [[id:9b76d360-8483-4449-b3a5-6c3678defc58::zshrc-bindings-and-plugins][zsh]]
 binds that sequence.

@@ -184,7 +184,7 @@ minibuffer will tell you what keys are available. So you can explore what
 options are available interactively!
 
 In order to use ~C-,~ from terminal Emacs, you have to make your terminal (e.g.,
-WezTerm) send a special sequence (such as the =CSI u= scheme) and also make
+Ghostty) send a special sequence (such as the =CSI u= scheme) and also make
 Emacs understand that sequence.
 
 #+name: leader-key
@@ -508,9 +508,6 @@ for them. Shift with Tab decodes to ~S-<tab>~, which Emacs already translates to
 <<tty-key-alternatives>>
 <<modify-other-keys-mode-2>>
 <<disambiguate-problematic-keys>>
-
-;; Load xterm-specific settings for TERM=wezterm.
-(add-to-list 'term-file-aliases '("wezterm" . "xterm-256color"))
 #+end_src
 
 *** Translate Meta with named keys, as on GUI frames
@@ -3231,8 +3228,8 @@ It doesn't check focus, so skip it while the frame is unfocused, as for
 When ~visible-cursor~ is non-nil (the default), terminal Emacs sends the
 terminfo ~cvvis~ ("very visible cursor") sequence every time it shows the
 cursor. Under tmux, ~cvvis~ is ~\E[34l~, which tmux takes as a request to blink
-the cursor and passes on to the outer terminal. WezTerm never blinks because its
-[[id:1d490bfa-6d4a-4b0e-beac-d3e37fbb21a5::cursor][~cursor_blink_rate~]] is 0, but [[id:9c459df2-d228-40cb-a5d9-16c6d7b473c3::cursor][Ghostty's ~cursor-style-blink~]] only sets the
+the cursor and passes on to the outer terminal. WezTerm, our old terminal, never
+blinked because we set its ~cursor_blink_rate~ to 0, but [[id:9c459df2-d228-40cb-a5d9-16c6d7b473c3::cursor][Ghostty's ~cursor-style-blink~]] only sets the
 default, and programs may override it. So stop asking for a very visible cursor.
 GUI Emacs ignores this variable.
 

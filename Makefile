@@ -121,8 +121,6 @@ endif
 	ln -fs ${C}/ssh/config.home.conf ${H}/.ssh/config
 
 terminfo:
-	git -C ${C} submodule update --init ${C}/wezterm/upstream
-	tic -x -o ~/.terminfo ${C}/wezterm/upstream/termwiz/data/wezterm.terminfo
 	tic -x -o ~/.terminfo ${C}/terminfo/xterm-24bit.terminfo
 tig:
 	ln -fs ${C}/tig/.tigrc ${H}
@@ -138,8 +136,6 @@ vim:
 	ln -fs ${C}/vim/cfg ${H}/.gvimrc
 vimpc:
 	ln -fs ${C}/vimpc/.vimpcrc ${H}
-wezterm:
-	ln -fs ${C}/wezterm/.wezterm.lua ${H}
 xmonad:
 	ln -fns ${C}/xmonad ${H}/.xmonad
 	# xsession is relied on by NixOS hosts that use xmonad (basically the
@@ -192,7 +188,6 @@ zsh:
 	uim \
 	vim \
 	vimpc \
-	wezterm \
 	xmonad \
 	xorg \
 	zathura \

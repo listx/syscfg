@@ -228,9 +228,6 @@ Return an event vector, such as [C-M-tab]."
   :keymap l-disambiguation-mode-map)
 (add-hook 'l-disambiguation-mode-on-hook 'l/disambiguate-problematic-keys)
 
-;; Load xterm-specific settings for TERM=wezterm.
-(add-to-list 'term-file-aliases '("wezterm" . "xterm-256color"))
-
 (setq user-full-name "Linus Arver"
       user-mail-address "linus@ucla.edu")
 

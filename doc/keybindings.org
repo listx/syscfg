@@ -48,7 +48,7 @@ through this stack.
      and ALT. On Mac I just plug in a regular QWERTY keyboard and it's useful to
      remap some of these modifiers so that they are more comfortable to press.
 
-  5) WezTerm (or [[id:9c459df2-d228-40cb-a5d9-16c6d7b473c3][Ghostty]], which we're trying out as its replacement)
+  5) [[id:9c459df2-d228-40cb-a5d9-16c6d7b473c3][Ghostty]]
 
   6) tmux
 
