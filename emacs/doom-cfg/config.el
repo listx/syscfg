@@ -1449,7 +1449,7 @@ Also add the number of windows in the window configuration."
   (interactive)
   (if (bound-and-true-p with-editor-mode)
     (with-editor-cancel t)
-    (kill-this-buffer)))
+    (kill-current-buffer)))
 
 (defun l/kill-this-buffer! ()
   "Kill current buffer even if it is modified."

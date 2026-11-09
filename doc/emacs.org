@@ -1133,6 +1133,11 @@ be laborious to reconstruct.
 
 *** Kill buffers
 
+The killing itself is done by ~kill-current-buffer~, not ~kill-this-buffer~.
+Despite the similar name, ~kill-this-buffer~ is meant only for the menu bar: its
+docstring warns that it may do nothing or signal an error when invoked any other
+way, and Emacs 31 refuses to run it from a key binding at all.
+
 #+name: kill-buffer
 #+begin_src elisp
 (map! :leader :desc "kill-buffer" "d" #'l/kill-this-buffer)
@@ -1142,7 +1147,7 @@ be laborious to reconstruct.
   (interactive)
   (if (bound-and-true-p with-editor-mode)
     (with-editor-cancel t)
-    (kill-this-buffer)))
+    (kill-current-buffer)))
 
 (defun l/kill-this-buffer! ()
   "Kill current buffer even if it is modified."

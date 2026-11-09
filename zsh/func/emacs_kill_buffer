@@ -20,10 +20,11 @@ emacs_kill_buffer()
 		(switch-to-buffer kill-me)
 
 		; (with-editor-cancel) is dangerous because it also silently deletes the
-		; file on disk! Only invoke it if (kill-this-buffer) fails (typically
+		; file on disk! Only invoke it if (kill-current-buffer) fails (typically
 		; due to the function having been made useless by magit's with-editor
-		; mode).
-		(or (kill-this-buffer) (with-editor-cancel t))
+		; mode). Don't use (kill-this-buffer), which is only for the menu bar
+		; and signals an error here in Emacs 31.
+		(or (kill-current-buffer) (with-editor-cancel t))
 	)
 EOF
 	)
