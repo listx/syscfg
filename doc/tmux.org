@@ -25,6 +25,7 @@
 <<keybindings-copy-mode>>
 <<keybindings-normal-mode>>
 <<keybindings-mouse>>
+<<keybindings-open-url>>
 <<keybindings-misc>>
 #+end_src
 
@@ -472,6 +473,34 @@ See https://superuser.com/a/1492302.
 #+begin_src conf
 unbind-key -T root WheelUpStatus
 unbind-key -T root WheelDownStatus
+#+end_src
+
+** Open URLs
+
+~Super+Shift+y~ picks a URL on the screen and opens it in the browser, as
+[[id:1d490bfa-6d4a-4b0e-beac-d3e37fbb21a5::open-url][WezTerm's Open URL]] did. [[id:9c459df2-d228-40cb-a5d9-16c6d7b473c3][Ghostty]] has no such feature, so tmux does it, which
+also makes it work in any terminal.
+
+Super chords stop at the terminal, so tmux never sees ~Super+Shift+y~ itself.
+Instead, Ghostty [[id:9c459df2-d228-40cb-a5d9-16c6d7b473c3::open-url][sends]] ~\e[9001\~~ for it. That has the form of a function key,
+but no real key sends it. tmux's ~user-keys~ option turns it into the key
+~User0~, which we bind. The binding is in both the =root= and =passthrough= key
+tables, so that the outer tmux picks the URL even in [[id:99539137-2fb7-4ab9-9f9f-5bbc2d91ea2b][passthrough mode]]: the URL
+should open on this machine, where the browser is, and the outer pane shows the
+inner tmux's screen anyway.
+
+The binding opens a popup that runs [[open_url.bb][~open_url.bb~]]. ~display-popup~ doesn't
+expand formats such as ~#{pane_id}~ in its command, so the script doesn't take
+the pane as an argument. Inside the popup, ~tmux capture-pane~ without ~-t~
+captures the active pane, which is the one under the popup.
+
+#+name: keybindings-open-url
+#+begin_src conf
+set -s user-keys[0] "\e[9001~"
+bind-key -T root        User0 display-popup -E -w 80% -h 50% \
+  "~/syscfg/script/tmux/open_url.bb"
+bind-key -T passthrough User0 display-popup -E -w 80% -h 50% \
+  "~/syscfg/script/tmux/open_url.bb"
 #+end_src
 
 ** Miscellaneous
@@ -1281,6 +1310,146 @@ main "$@"
 #+end_src
 
 * Scripts
+
+** Open URL
+
+This lists the URLs on the visible screen of the active pane, lets us pick one
+with ~fzf~, and opens it. It runs in the popup from the [[keybindings-open-url][Open URLs]] binding. It's
+a Babashka script rather than a shell script because the parts that are easy to
+get wrong, picking out the URLs and quoting one for a shell, are plain functions
+here, so the [[t:open-url][tests]] can check them.
+
+#+name: open_url.bb
+#+header: :tangle script/tmux/open_url.bb
+#+header: :shebang #!/usr/bin/env bb
+#+begin_src clojure
+(ns open-url
+  (:require [babashka.fs :as fs]
+            [babashka.process :refer [shell]]
+            [clojure.string :as str]))
+<<f:extract-urls>>
+<<f:run-shell-arg>>
+<<f:pick-url>>
+<<f:open-url>>
+<<f:open-url-main>>
+#+end_src
+
+*** Finding URLs
+
+~capture-pane -J~ (in [[f:open-url-main][~-main~]]) joins wrapped lines, so that a long URL isn't
+cut in two. We drop any trailing ~)~, ~]~, ~}~, ~,~, ~.~, ~:~, and ~;~ from each
+URL, because they almost always belong to the surrounding text. WezTerm's Open
+URL dropped only one, which turned ~(see https://example.com.)~ into
+~https://example.com.~ The cost is a URL that really ends in one of these, such
+as a Wikipedia page with a parenthesized title, which we have to fix by hand.
+
+The URLs nearest the bottom of the screen come first, because those are usually
+the ones we just saw, and ~fzf~ shows the first line next to its prompt.
+
+#+name: f:extract-urls
+#+begin_src clojure
+(defn extract-urls
+  "Return the URLs in TEXT, the last one first, without duplicates."
+  [text]
+  (->> (re-seq #"https?://\S+" text)
+       (map #(str/replace % #"[\])},.:;]+$" ""))
+       reverse
+       distinct))
+#+end_src
+
+*** Opening a URL
+
+The popup closes as soon as the script exits, and tmux then kills everything the
+script started, even with ~nohup~, often before the opener gets anywhere. So ask
+the tmux server to start the opener with ~run-shell -b~ instead. ~run-shell~
+hands its command to a shell after expanding tmux formats in it, so quote the URL
+for the shell, and double every ~#~ so that tmux reads a URL fragment such as
+~#section~ as text.
+
+#+name: f:run-shell-arg
+#+begin_src clojure
+(defn run-shell-arg
+  "Quote S as one argument in a command for tmux's run-shell."
+  [s]
+  (str "'"
+       (-> s
+           (str/replace "'" "'\\''")
+           (str/replace "#" "##"))
+       "'"))
+#+end_src
+
+~fzf~ draws on the terminal and prints the chosen line, and exits with 130 if we
+cancel with ~ESC~, so don't treat that as an error.
+
+#+name: f:pick-url
+#+begin_src clojure
+(defn pick-url
+  "Let the user pick one of URLS with fzf. Return nil if they cancel."
+  [urls]
+  (let [{:keys [exit out]} (shell {:in (str/join "\n" urls)
+                                   :out :string
+                                   :continue true}
+                                  "fzf" "--no-sort" "--prompt=open url> ")]
+    (when (zero? exit)
+      (str/trim out))))
+#+end_src
+
+~xdg-open~ is the opener on Linux, and ~open~ on the Mac.
+
+#+name: f:open-url
+#+begin_src clojure
+(defn open-url
+  [url]
+  (let [opener (if (fs/which "xdg-open") "xdg-open" "open")]
+    (shell "tmux" "run-shell" "-b"
+           (str opener " " (run-shell-arg url) " >/dev/null 2>&1"))))
+#+end_src
+
+*** Main
+
+#+name: f:open-url-main
+#+begin_src clojure
+(defn -main [& _args]
+  (let [urls (extract-urls (:out (shell {:out :string}
+                                        "tmux" "capture-pane" "-p" "-J")))]
+    (if (empty? urls)
+      (shell "tmux" "display-message" "No URLs on screen")
+      (when-let [url (pick-url urls)]
+        (open-url url)))))
+(when (= *file* (System/getProperty "babashka.file"))
+  (apply -main *command-line-args*))
+#+end_src
+
+*** Tests
+
+Run these with ~bb test~ in ~script/~, as for [[get_window_format.bb][~get_window_format.bb~]].
+
+#+name: t:open-url
+#+header: :tangle script/tmux/open_url_test.clj
+#+begin_src clojure
+(ns open-url-test
+  (:require [clojure.test :refer [deftest is]]
+            [open-url :as sut]))
+
+(deftest extract-urls
+  (is (= [] (sut/extract-urls "no links here")))
+  (is (= ["https://b.example" "http://a.example/x"]
+         (sut/extract-urls "see http://a.example/x and https://b.example")))
+  (is (= ["https://example.com/docs/config"]
+         (sut/extract-urls "(docs at https://example.com/docs/config.)")))
+  (is (= ["https://example.com/b" "https://example.com/a#sec-2"]
+         (sut/extract-urls
+          "https://example.com/b, https://example.com/a#sec-2; https://example.com/b"))))
+
+(deftest run-shell-arg
+  (is (= "'https://example.com/a'" (sut/run-shell-arg "https://example.com/a")))
+  (is (= "'https://example.com/it'\\''s'"
+         (sut/run-shell-arg "https://example.com/it's")))
+  (is (= "'https://example.com/a##sec'"
+         (sut/run-shell-arg "https://example.com/a#sec")))
+  (is (= "'https://example.com/##{pane_id}'"
+         (sut/run-shell-arg "https://example.com/#{pane_id}"))))
+#+end_src
 
 ** Status bar (key table)
 

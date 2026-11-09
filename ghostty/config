@@ -136,3 +136,5 @@ keybind = super+alt+arrow_right=goto_split:right
 keybind = ctrl+backspace=csi:127;5u
 keybind = ctrl+shift+space=csi:32;6u
 keybind = ctrl+alt+shift+space=csi:32;8u
+
+keybind = super+shift+y=text:\x1b[9001~

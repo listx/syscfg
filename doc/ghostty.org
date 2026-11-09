@@ -21,6 +21,7 @@ list of ~key = value~ lines.
 <<app-notifications>>
 <<keybindings>>
 <<csi-u-keys>>
+<<open-url>>
 #+end_src
 
 The ~ghostty~ [[Makefile-ghostty][Makefile rule]] links only the ~config~ file, not the whole
@@ -353,4 +354,15 @@ traditional meaning of ~C-[~, and Evil relies on it to leave insert state.
 keybind = ctrl+backspace=csi:127;5u
 keybind = ctrl+shift+space=csi:32;6u
 keybind = ctrl+alt+shift+space=csi:32;8u
+#+end_src
+
+** Open URL
+
+~super+shift+y~ opens a URL on the screen, as in WezTerm. [[id:9170fae9-85de-4fd8-96fb-f3d3d2215f94::keybindings-open-url][tmux does the work]],
+but tmux can't see Super, so send it ~\e[9001\~~, which tmux binds through its
+~user-keys~ option. No real key sends that sequence.
+
+#+name: open-url
+#+begin_src conf
+keybind = super+shift+y=text:\x1b[9001~
 #+end_src

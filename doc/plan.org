@@ -99,8 +99,8 @@ suspects:
 
   - Opening URLs from the keyboard: WezTerm's [[id:1d490bfa-6d4a-4b0e-beac-d3e37fbb21a5::open-url][Open URL]] binding picks a URL on
     screen with QuickSelect and opens it. As far as we know, Ghostty only opens
-    links by mouse click. Either drop this or find a replacement, such as a tmux
-    URL plugin.
+    links by mouse click. So [[id:9170fae9-85de-4fd8-96fb-f3d3d2215f94::keybindings-open-url][tmux now does it]] with an ~fzf~ popup, and
+    [[id:9c459df2-d228-40cb-a5d9-16c6d7b473c3::open-url][Ghostty]] sends tmux a key for ~super+shift+y~, the same key as in WezTerm.
 
   - Modified keys: WezTerm's config writes out [[id:1d490bfa-6d4a-4b0e-beac-d3e37fbb21a5::csi-u-mode][CSI u sequences]] for the
     ~M-~, ~C-~, ~C-S-~, ~C-M-~, and ~C-M-S-~ letters, and for the "exotic" keys
@@ -127,7 +127,7 @@ suspects:
   1) Move ~TERM~ off ~wezterm~, then test tmux, nested tmux, and Emacs keys in
      Ghostty (done).
 
-  2) Decide what to do about opening URLs from the keyboard.
+  2) Decide what to do about opening URLs from the keyboard (done).
 
   3) After a few more days of using Ghostty day to day, remove [[id:1d490bfa-6d4a-4b0e-beac-d3e37fbb21a5][wezterm.org]], its
      Makefile and Nix entries, the ~wezterm/upstream~ submodule and its line in
