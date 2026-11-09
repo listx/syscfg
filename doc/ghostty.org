@@ -18,6 +18,7 @@ list of ~key = value~ lines.
 <<gtk-titlebar>>
 <<colors>>
 <<confirm-close>>
+<<app-notifications>>
 <<keybindings>>
 <<csi-u-keys>>
 #+end_src
@@ -152,6 +153,19 @@ and the question is just noise. So close without asking.
 #+name: confirm-close
 #+begin_src conf
 confirm-close-surface = false
+#+end_src
+
+** Clipboard notifications
+
+By default, Ghostty shows a "Copied to clipboard" notification whenever a
+program sets the clipboard, including through tmux with OSC 52. Emacs does that
+for every kill, and with Evil every ~y~, ~d~, ~x~, and ~c~ is a kill, so the
+notifications pile up. WezTerm copies silently, so turn off just this
+notification and keep the one for reloading the config.
+
+#+name: app-notifications
+#+begin_src conf
+app-notifications = no-clipboard-copy,config-reload
 #+end_src
 
 ** Keybindings

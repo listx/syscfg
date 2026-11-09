@@ -38,6 +38,8 @@ palette = 15=#ffffff
 
 confirm-close-surface = false
 
+app-notifications = no-clipboard-copy,config-reload
+
 keybind = ctrl+shift+a=unbind
 keybind = ctrl+shift+c=unbind
 keybind = ctrl+shift+e=unbind
