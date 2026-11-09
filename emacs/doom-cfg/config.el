@@ -1769,9 +1769,12 @@ Also add the number of windows in the window configuration."
   ;; overly long file path names for Java/Clojure codebases).
   (setq doom-modeline-window-width-limit 100))
 
-; Dim buffers in inactive windows to make the current one "pop".
 (use-package! auto-dim-other-buffers
  :config
+ (defun l/adob-skip-when-unfocused (&rest _)
+   "Return nil, so `adob--update' is skipped, when the frame has no focus."
+   (not (eq (frame-focus-state) nil)))
+ (advice-add 'adob--update :before-while #'l/adob-skip-when-unfocused)
  (auto-dim-other-buffers-mode))
 
 ; Always enable the tab bar, even if there is just one buffer showing (such as

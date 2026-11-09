@@ -3110,10 +3110,7 @@ the simpler modes that do not have a formatter, but for now we don't bother.
   ;; overly long file path names for Java/Clojure codebases).
   (setq doom-modeline-window-width-limit 100))
 
-; Dim buffers in inactive windows to make the current one "pop".
-(use-package! auto-dim-other-buffers
- :config
- (auto-dim-other-buffers-mode))
+<<auto-dim-other-buffers>>
 
 ; Always enable the tab bar, even if there is just one buffer showing (such as
 ; when we open a single buffer).
@@ -3128,6 +3125,37 @@ the simpler modes that do not have a formatter, but for now we don't bother.
 (setq evil-normal-state-cursor 'box)
 (setq evil-insert-state-cursor 'box)
 (setq evil-emacs-state-cursor  'box)
+#+end_src
+
+*** Dim unfocused windows
+
+~auto-dim-other-buffers~ dims every window except the selected one, to make the
+current one "pop". It also dims the selected window when Emacs loses focus.
+Terminal Emacs learns about focus changes because tmux
+[[id:9170fae9-85de-4fd8-96fb-f3d3d2215f94::appearance-panes-borders-focus][passes focus events]]
+along, so moving to another tmux pane dims Emacs too.
+
+But the package undims the selected window again whenever
+~buffer-list-update-hook~ runs, without checking whether the frame still has
+focus. Anything that creates or kills a buffer while we're away triggers this.
+The usual culprit is ~git-gutter~, whose live-update idle timer creates
+temporary buffers for its diff about a second after Emacs goes idle, so the dim
+lasted only a second or two. Upstream hasn't fixed this as of commit ~640a32f~
+(July 2026), so we skip ~adob--update~ while the frame is known to be
+unfocused. ~frame-focus-state~ can also return ~unknown~, and in that case we
+let the update run as before. When focus comes back, the package's own
+focus-change handler calls ~adob--update~, so the window is still undimmed on
+return.
+
+#+name: auto-dim-other-buffers
+#+begin_src elisp
+(use-package! auto-dim-other-buffers
+ :config
+ (defun l/adob-skip-when-unfocused (&rest _)
+   "Return nil, so `adob--update' is skipped, when the frame has no focus."
+   (not (eq (frame-focus-state) nil)))
+ (advice-add 'adob--update :before-while #'l/adob-skip-when-unfocused)
+ (auto-dim-other-buffers-mode))
 #+end_src
 
 *** Don't make the terminal blink the cursor
