@@ -1771,6 +1771,14 @@ Also add the number of windows in the window configuration."
    "Return nil, so `adob--update' is skipped, when the frame has no focus."
    (not (eq (frame-focus-state) nil)))
  (advice-add 'adob--update :before-while #'l/adob-skip-when-unfocused)
+ (defun l/adob-update-on-selection-change (frame)
+   "Update dimming after the selected window of FRAME changes, even silently."
+   (when (and auto-dim-other-buffers-mode
+              (eq frame (selected-frame))
+              (l/adob-skip-when-unfocused))
+     (adob--rescan-windows)))
+ (add-hook 'window-selection-change-functions
+           #'l/adob-update-on-selection-change)
  (auto-dim-other-buffers-mode))
 
 ; Always enable the tab bar, even if there is just one buffer showing (such as

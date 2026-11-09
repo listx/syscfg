@@ -3191,6 +3191,22 @@ let the update run as before. When focus comes back, the package's own
 focus-change handler calls ~adob--update~, so the window is still undimmed on
 return.
 
+The package also misses some changes of the selected window. It notices them
+through ~buffer-list-update-hook~, which ~select-window~ runs only when it
+records the selection, and through ~window-configuration-change-hook~, which
+runs only when a window's buffer or size changes. ~window-swap-states~ (our
+[[window-navigation][~C-S-j~]]) moves the selection along with the buffer, without recording it, so
+when both windows show the same buffer, neither hook runs. The window we left
+then stays undimmed, and after a few swaps every window is. So also update the
+dimming from ~window-selection-change-functions~, which Emacs runs after any
+change of a frame's selected window. Calling ~adob--update~ there isn't enough,
+because by then the package has already recorded the new window as the last
+selected one, without dimming the one we left. Instead call
+~adob--rescan-windows~, which the package runs after window configuration
+changes: it dims every window of the selected frame except the selected one.
+It doesn't check focus, so skip it while the frame is unfocused, as for
+~adob--update~ above.
+
 #+name: auto-dim-other-buffers
 #+begin_src elisp
 (use-package! auto-dim-other-buffers
@@ -3199,6 +3215,14 @@ return.
    "Return nil, so `adob--update' is skipped, when the frame has no focus."
    (not (eq (frame-focus-state) nil)))
  (advice-add 'adob--update :before-while #'l/adob-skip-when-unfocused)
+ (defun l/adob-update-on-selection-change (frame)
+   "Update dimming after the selected window of FRAME changes, even silently."
+   (when (and auto-dim-other-buffers-mode
+              (eq frame (selected-frame))
+              (l/adob-skip-when-unfocused))
+     (adob--rescan-windows)))
+ (add-hook 'window-selection-change-functions
+           #'l/adob-update-on-selection-change)
  (auto-dim-other-buffers-mode))
 #+end_src
 
