@@ -31,6 +31,20 @@ under "Trailers".
   marking an item `DONE`. These are obvious from the diff.
 - Omit the body only when the title alone makes the reason obvious.
 
+## Literate programs
+
+In a literate program, such as a Lilac project where Org documents produce the
+code, the prose in the documents already explains how the code works and why it
+is shaped that way. The commit message and that prose should not cover the same
+ground, so keep the body shorter than usual.
+
+- Leave the design and how the code works to the prose. Summarize the action in
+  a sentence or two, without restating what the changed prose says.
+- Use the body for what doesn't belong in the document: what prompted the change
+  (such as the symptom of a bug), the history around it (such as earlier commits
+  on the same theme), and other details that only matter at the time of the
+  change.
+
 ## Prior commits
 
 When establishing context, refer to the previous commits that led to the
