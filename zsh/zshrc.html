@@ -1,0 +1,583 @@
+<!DOCTYPE HTML><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>.zshrc</title><link rel="stylesheet" href="/css/default.css"><link rel="shortcut icon" type="image/png" href="/favicon.png"><link rel="stylesheet" href="/vendor/source-fonts/source-fonts.css">
+<script>
+  window.MathJax = {
+      loader: { paths: { "mathjax-newcm": "/vendor/mathjax-newcm-font" } },
+      output: { font: "mathjax-newcm" },
+  tex: {
+      tags: 'ams'
+  },
+  options: {
+      ignoreHtmlClass: 'verbatim|code'
+  }
+};
+</script>
+<script id="MathJax-script" async="" src="/vendor/mathjax/tex-mml-chtml.js"></script>
+</head><body><div class="navbar"><button id="hamburger" class="tocs-toggle-button" aria-label="Toggle table of contents sidebar">&#x2630;</button><div class="breadcrumbs"><a href="https://syscfg.funloop.org"><span class="breadcrumb">Linus Arver&#39;s Dotfiles</span></a> <a href="https://github.com/listx/syscfg" class="repo-link" title="Source repository" aria-label="Source repository"><svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 16 16"
+     aria-hidden="true">
+<g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+<circle cx="4" cy="3" r="1.75"></circle>
+<circle cx="4" cy="13" r="1.75"></circle>
+<circle cx="12" cy="3" r="1.75"></circle>
+<path d="M4 4.75v6.5"></path>
+<path d="M12 4.75c0 4-8 3-8 6.5"></path>
+</g>
+</svg>
+</a> <span class="breadcrumb-separator">/</span> <a href="/zsh/index.html"><span class="breadcrumb">zsh</span></a> <span class="breadcrumb-separator">/</span> <a href="#top"><span class="breadcrumb">zshrc.org</span></a></div></div><nav id="tocs"><p class="widget-title gtoc-title">Site contents</p><nav class="gtoc"><ul><li><a href="/index.html">Introduction</a></li><li><a href="/bash.html">Bash</a></li><li><a href="/claude.html">Claude</a></li><li><a href="/clojure.html">Clojure</a></li><li><a href="/emacs.html">Emacs</a></li><li><a href="/ghostty.html">Ghostty</a></li><li><a href="/git.html">Git</a></li><li><a href="/gpg.html">GnuPG</a></li><li><a href="/jj.html">Jujutsu</a></li><li><a href="/keybindings.html">Keybindings (WIP)</a></li><li><a href="/misc.html">Miscellaneous</a></li><li><a href="/mpv.html">mpv</a></li><li><a href="/nix.html">Nix</a></li><li><a href="/notmuch.html">Notmuch</a></li><li><a href="/plan.html">Plan</a></li><li><a href="/qutebrowser.html">qutebrowser</a></li><li><a href="/rtorrent.html">rTorrent</a></li><li><a href="/script/index.html">System scripts</a></li><li><a href="/tmux.html">tmux</a></li><li><a href="/vim.html">Vim</a></li><li><a href="/xmonad.html">xmonad</a></li><li><a href="/xorg.html">X.Org</a></li><li><a href="/zsh/index.html">Zsh</a><ul><li><a href="/zsh/zshrc.html" class="bold">.zshrc</a></li><li><a href="/zsh/lib.html">lib.sh</a></li><li><a href="/zsh/func.html">Zsh functions</a></li></ul></li></ul></nav><p class="widget-title toc-title">Page contents</p><nav class="toc"><div class="toc-entries"><ol><li class="toc-level-1"><div class="toc-entry"><span class="toc-counter">1</span><a href="#h-1-Environment-and-shell-options">Environment and shell options</a></div></li><li class="toc-level-1"><div class="toc-entry"><span class="toc-counter">2</span><a href="#h-2-Aliases">Aliases</a></div></li><li class="toc-level-1"><div class="toc-entry"><span class="toc-counter">3</span><a href="#h-3-Key-bindings--prompt--and-plugins">Key bindings, prompt, and plugins</a></div></li><li class="toc-level-1"><div class="toc-entry"><a href="#h--Page-metrics">Page metrics</a></div><ol><li class="toc-level-2"><div class="toc-entry"><a href="#h--Backlinks">Backlinks</a></div></li><li class="toc-level-2"><div class="toc-entry"><a href="#h--Tangled-files">Tangled files</a></div></li><li class="toc-level-2"><div class="toc-entry"><a href="#h--Named-cells">Named cells</a></div></li></ol></li></ol></div></nav></nav><main><h1 id="top">.zshrc</h1><hr class="title-underline"><p><span id="c-0" class="cell-idx">Zsh reads this file for every interactive shell. From top to bottom, it</span></p><ul><li><p><span id="c-2" class="cell-idx">loads our helpers from <a href="/zsh/lib.html" class="internal-link" id="linkNumber-1"><span class="code">lib.sh</span></a> and sets up colors, environment variables, and the <span class="code">PATH</span>,</span></p></li><li><p><span id="c-4" class="cell-idx">autoloads our <a href="/zsh/func.html" class="internal-link" id="linkNumber-2"><span class="code">func/</span></a> functions and sets history, completion, and globbing options,</span></p></li><li><p><span id="c-6" class="cell-idx">defines our <a href="#b-zshrc-aliases" class="internal-link" id="linkNumber-3">aliases</a>,</span></p></li><li><p><span id="c-8" class="cell-idx">sets up Vim-style key bindings and the <a href="/zsh/func.html#b-func-prompt-kody-setup" class="internal-link" id="linkNumber-4">&quot;kody&quot; prompt</a>,</span></p></li><li><p><span id="c-10" class="cell-idx">loads <span class="code">fzf</span>, <span class="code">zcomet</span> plugins, and completions, and</span></p></li><li><p><span id="c-12" class="cell-idx">finally replaces the shell with <span class="code">tmux</span>, unless we&#39;re already inside it or have asked for a raw shell with <span class="code">L_WANT_RAW_SHELL</span>.</span></p></li></ul><p><span id="c-14" class="cell-idx">A few of the <span class="code">bindkey</span> lines and their comments contain raw <span class="code">ESC</span> and carriage return bytes, which means that this Org file has them too. So both this file and <a href="#b-zshrc" class="internal-link" id="linkNumber-5"><span class="code">zsh/.zshrc</span></a> have an <span class="code">end_of_line</span> exception in <a href="/index.html#b-editorconfig" class="internal-link" id="linkNumber-6"><span class="code">.editorconfig</span></a>.</span></p><div id="c-15" class="cell-idx"><div class="block-container src" id="b-zshrc"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-zshrc">&#x1F517;</a></div><div class="block-meta"><code>zshrc</code><br><code><span class="bold">&#x1F3AF; zsh/.zshrc</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">zsh</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="ex"><a href="#b-zshrc-setup" class="internal-link" id="b-zshrc-b-zshrc-setup">zshrc-setup</a></span>
+<span class="ex"><a href="#b-zshrc-aliases" class="internal-link" id="b-zshrc-b-zshrc-aliases">zshrc-aliases</a></span>
+<span class="ex"><a href="#b-zshrc-bindings-and-plugins" class="internal-link" id="b-zshrc-b-zshrc-bindings-and-plugins">zshrc-bindings-and-plugins</a></span></code></pre></div></div><div id="heading-container-h-1-Environment-and-shell-options" class="heading-container"><h2 id="h-1-Environment-and-shell-options"><span id="c-16" class="cell-idx"><a href="#h-1-Environment-and-shell-options">1&ensp;Environment and shell options</a></span></h2><div id="c-17" class="cell-idx"><div class="block-container src" id="b-zshrc-setup"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-zshrc-setup">&#x1F517;</a></div><div class="block-meta"><code>zshrc-setup</code></div><div class="block-meta-other hidden"><p>Used by <a href="#b-zshrc-b-zshrc-setup" class="internal-link"><span class="verbatim">zshrc</span></a>.</p><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">zsh</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="co"># ZSH configuration.</span>
+<span class="co">#</span>
+<span class="co"># To profile Zsh startup time, uncomment this and also call `zprof&#39; at the end</span>
+<span class="co"># of this file.</span>
+<span class="co">#zmodload zsh/zprof</span>
+<span class="co">#</span>
+<span class="co"># For reference, ZSH configuration load order is:</span>
+<span class="co">#</span>
+<span class="co"># 1. /etc/zshenv.</span>
+<span class="co"># 2.   ~/.zshenv</span>
+<span class="co"># 3. (if login shell) /etc/zprofile</span>
+<span class="co"># 4. (if login shell)   ~/.zprofile</span>
+<span class="co"># 5. (if interactive) /etc/zshrc</span>
+<span class="co"># 6. (if interactive)   ~/.zshrc</span>
+<span class="co"># 7. (if login shell) /etc/zlogin</span>
+<span class="co"># 8. (if login shell)   ~/.zlogin</span>
+<span class="co">#</span>
+<span class="co"># /etc/zlogout and ~/.zlogout are also read, but only if the shell is a login</span>
+<span class="co"># shell and also only after the shell exits. As such they are not that useful</span>
+<span class="co"># in practice.</span>
+
+<span class="co"># Set &#39;ls&#39; command&#39;s color theme</span>
+<span class="co"># See &quot;dircolors -p&quot; for more info</span>
+<span class="co">#</span>
+<span class="co"># Below are the color init strings for the basic file types. A color init</span>
+<span class="co"># string consists of one or more of the following numeric codes:</span>
+<span class="co"># Attribute codes:</span>
+<span class="co"># 00=none 01=bold 04=underscore 05=blink 07=reverse 08=concealed</span>
+<span class="co"># Text color codes:</span>
+<span class="co"># 30=black 31=red 32=green 33=yellow 34=blue 35=magenta 36=cyan 37=white</span>
+<span class="co"># Background color codes:</span>
+<span class="co"># 40=black 41=red 42=green 43=yellow 44=blue 45=magenta 46=cyan 47=white</span>
+
+<span class="co"># rs=RESET (reset to normal color)</span>
+<span class="co"># di=DIR</span>
+<span class="co"># ln=LINK (symlink)</span>
+<span class="co"># mh=MULTIHARDLINK</span>
+<span class="co"># pi=FIFO (pipe)</span>
+<span class="co"># so=SOCK</span>
+<span class="co"># do=DOOR</span>
+<span class="co"># bd=BLK (block device driver)</span>
+<span class="co"># cd=CHR</span>
+<span class="co"># or=ORPHAN (symlink to nonexistent file)</span>
+<span class="co"># su=SETUID (file that is setuid (u+s))</span>
+<span class="co"># sg=SETGID (file that is setgid (g+s))</span>
+<span class="co"># ca=CAPABILITY (file with capability)</span>
+<span class="co"># tw=STICKY_OTHER_WRITABLE (dir that is sticky and other-writable (+t,o+w))</span>
+<span class="co"># ow=OTHER_WRITABLE (dir that is other-writable (o+w) and not sticky</span>
+<span class="co"># st=STICKY (dir with the sticky bit set (+t) and not other-writable)</span>
+<span class="co"># ex=EXEC (files with +x execute permission)</span>
+
+<span class="co"># Load custom functions.</span>
+<span class="bu">.</span> ~/syscfg/zsh/lib.sh
+
+<span class="co"># special file types (compare with &#39;dircolors -b&#39;)</span>
+<span class="va">LS_COLORS</span><span class="op">=</span><span class="st">&#39;rs=0:di=01;33:mh=00:pi=01;32:so=01;34:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:su=37;41:sg=30;43:ca=30;41:st=37;44:&#39;</span>
+<span class="co"># special file types (different than the ones from &#39;dircolors -b&#39;)</span>
+<span class="va">LS_COLORS</span><span class="op">+=</span><span class="st">&#39;ln=36:ex=31:tw=1;34;42:ow=1;7;34:&#39;</span>
+<span class="co"># various common file types (archives, pictures, movies, and sounds)</span>
+<span class="va">ft_ark</span><span class="op">=</span><span class="va">(</span>tar tgz arj taz lzh lzma tlz txz zip z Z dz gz lz xz bz2 bz tbz tbz2 tz deb rpm jar rar ace zoo cpio 7z rz<span class="va">)</span>
+<span class="va">ft_pic</span><span class="op">=</span><span class="va">(</span>jpg jpeg gif bmp pbm pgm ppm tga xbm xpm tif tiff png svg svgz mng pcx xcf<span class="va">)</span>
+<span class="va">ft_mov</span><span class="op">=</span><span class="va">(</span>mov mpg mpeg m2v mkv ogm mp4 m4v mp4v vob qt nuv wmv asf rm rmvb flc avi fli flv gl dl xwd yuv cgm emf axv anx ogv ogx webm<span class="va">)</span>
+<span class="va">ft_snd</span><span class="op">=</span><span class="va">(</span>aac au flac m4a mid midi mka mp3 mpc ogg opus ra wav axa oga spx xspf<span class="va">)</span>
+<span class="cf">for</span> t <span class="kw">in</span> <span class="va">$ft_ark</span><span class="kw">;</span> <span class="cf">do</span> <span class="va">LS_COLORS</span><span class="op">+=</span><span class="st">&quot;*.</span><span class="va">$t</span><span class="st">=32:&quot;</span><span class="kw">;</span> <span class="cf">done</span>
+<span class="cf">for</span> t <span class="kw">in</span> <span class="va">$ft_pic</span><span class="kw">;</span> <span class="cf">do</span> <span class="va">LS_COLORS</span><span class="op">+=</span><span class="st">&quot;*.</span><span class="va">$t</span><span class="st">=35:&quot;</span><span class="kw">;</span> <span class="cf">done</span>
+<span class="cf">for</span> t <span class="kw">in</span> <span class="va">$ft_mov</span><span class="kw">;</span> <span class="cf">do</span> <span class="va">LS_COLORS</span><span class="op">+=</span><span class="st">&quot;*.</span><span class="va">$t</span><span class="st">=1;35:&quot;</span><span class="kw">;</span> <span class="cf">done</span>
+<span class="cf">for</span> t <span class="kw">in</span> <span class="va">$ft_snd</span><span class="kw">;</span> <span class="cf">do</span> <span class="va">LS_COLORS</span><span class="op">+=</span><span class="st">&quot;*.</span><span class="va">$t</span><span class="st">=34:&quot;</span><span class="kw">;</span> <span class="cf">done</span>
+<span class="bu">export</span> <span class="va">LS_COLORS</span>
+<span class="co"># Make &quot;ls&quot; show dotfiles first.</span>
+<span class="co"># E.g., show &quot;.a .b .c A B C&quot; instead of &quot;.a A .b B .c C&quot;.</span>
+<span class="bu">export</span> <span class="va">LC_COLLATE</span><span class="op">=</span>C
+
+<span class="co"># colors for the &#39;less&#39; pager</span>
+<span class="bu">export</span> <span class="va">LESS_TERMCAP_md</span><span class="op">=</span><span class="st">$&#39;</span><span class="dt">\x1b</span><span class="st">[1;34m&#39;</span>      <span class="co"># begin bold</span>
+<span class="bu">export</span> <span class="va">LESS_TERMCAP_mb</span><span class="op">=</span><span class="st">$&#39;</span><span class="dt">\x1b</span><span class="st">[1;31m&#39;</span>      <span class="co"># begin blinking</span>
+<span class="bu">export</span> <span class="va">LESS_TERMCAP_me</span><span class="op">=</span><span class="st">$&#39;</span><span class="dt">\x1b</span><span class="st">[0m&#39;</span>         <span class="co"># end bold/blinking</span>
+
+<span class="bu">export</span> <span class="va">LESS_TERMCAP_us</span><span class="op">=</span><span class="st">$&#39;</span><span class="dt">\x1b</span><span class="st">[1;35m&#39;</span>      <span class="co"># begin underline</span>
+<span class="bu">export</span> <span class="va">LESS_TERMCAP_ue</span><span class="op">=</span><span class="st">$&#39;</span><span class="dt">\x1b</span><span class="st">[0m&#39;</span>         <span class="co"># end underline</span>
+
+<span class="bu">export</span> <span class="va">LESS_TERMCAP_so</span><span class="op">=</span><span class="st">$&#39;</span><span class="dt">\x1b</span><span class="st">[1;38;5;16;42m&#39;</span>   <span class="co"># begin standout-mode - (interactive search highlight)</span>
+<span class="bu">export</span> <span class="va">LESS_TERMCAP_se</span><span class="op">=</span><span class="st">$&#39;</span><span class="dt">\x1b</span><span class="st">[0m&#39;</span>         <span class="co"># end standout-mode</span>
+
+<span class="co"># Set PAGER. This is not set on Mac, which results in /usr/bin/less (hardcoded</span>
+<span class="co"># path) being executed. This hardcoded behavior appears to be by design, as it</span>
+<span class="co"># is stated as such in the manpage.</span>
+<span class="bu">export</span> <span class="va">PAGER</span><span class="op">=</span>less
+
+<span class="co"># Default text editor--set it to emacsclient.</span>
+<span class="bu">export</span> <span class="va">VISUAL</span><span class="op">=</span>~/syscfg/script/emacsclient-tty.sh
+<span class="bu">export</span> <span class="va">EDITOR</span><span class="op">=</span>~/syscfg/script/emacsclient-tty.sh
+
+<span class="co"># default ledger file (to avoid using -f option every time)</span>
+<span class="bu">export</span> <span class="va">LEDGER_FILE</span><span class="op">=</span>~/lo/finance/index.ledger
+
+<span class="co"># make GCC print errors in color</span>
+<span class="bu">export</span> <span class="va">GCC_COLORS</span><span class="op">=</span>1
+
+<span class="co"># path to local nixpkgs git repo</span>
+<span class="bu">export</span> <span class="va">NIXPKGS</span><span class="op">=</span>~/prog/nixpkgs
+
+<span class="bu">export</span> <span class="va">KUBECONFIG</span><span class="op">=</span>~/.kube/config
+
+<span class="co"># Add Golang binaries to the PATH.</span>
+<span class="ex">__l_prepend_path</span> ~/go/bin
+
+<span class="co"># Add Rust binaries (installed with &quot;cargo install&quot; to the PATH.</span>
+<span class="ex">__l_prepend_path</span> ~/.cargo/bin
+
+<span class="co"># Stack (https://www.haskellstack.org/) needs this.</span>
+<span class="ex">__l_prepend_path</span> ~/.local/bin
+
+<span class="co"># Load executables for &quot;cabal v2-install&quot;.</span>
+<span class="ex">__l_prepend_path</span> ~/.cabal/bin
+
+<span class="co"># Load Elixir escripts.</span>
+<span class="ex">__l_prepend_path</span> ~/.mix/escripts
+
+<span class="co"># Add system scripts to the PATH.</span>
+<span class="ex">__l_prepend_path</span> ~/syscfg/script
+
+<span class="co"># stop zsh from eating space before pipe symbol</span>
+<span class="bu">export</span> <span class="va">ZLE_REMOVE_SUFFIX_CHARS</span><span class="op">=</span><span class="st">&quot;&quot;</span>
+
+<span class="va">fpath</span><span class="op">=</span><span class="va">(</span>~/.zsh/func <span class="va">$fpath)</span> <span class="co"># add ~/.zsh/func to $fpath</span>
+<span class="bu">autoload</span> <span class="at">-U</span> ~/.zsh/func/<span class="pp">*</span><span class="op">(:</span><span class="va">t</span><span class="op">)</span> <span class="co"># load all functions in ~/.zsh/func</span>
+
+<span class="bu">autoload</span> <span class="at">-U</span> zmv
+
+<span class="co"># Make the prompt re-evaluate itself every second. Among other things, this</span>
+<span class="co"># makes the clock tick every second. See https://askubuntu.com/a/360172.</span>
+<span class="va">TMOUT</span><span class="op">=</span>1
+<span class="fu">TRAPALRM()</span> <span class="kw">{</span>
+  <span class="ex">__l_prompt_tick</span>
+<span class="kw">}</span>
+
+<span class="co"># history settings</span>
+<span class="va">HISTSIZE</span><span class="op">=</span>50000
+<span class="va">SAVEHIST</span><span class="op">=</span>40000
+<span class="va">HISTFILE</span><span class="op">=</span>~/.zsh-untracked/history
+
+<span class="co"># Directory stack size</span>
+<span class="va">DIRSTACKSIZE</span><span class="op">=</span>20
+
+<span class="bu">setopt</span> SHARE_HISTORY
+<span class="bu">setopt</span> EXTENDED_HISTORY <span class="co"># puts timestamps in the history</span>
+<span class="bu">setopt</span> HIST_IGNORE_ALL_DUPS
+<span class="bu">setopt</span> HIST_IGNORE_SPACE <span class="co"># if a command or alias begins with a space, do not store into history</span>
+<span class="bu">setopt</span> HIST_SAVE_NO_DUPS
+
+<span class="co"># bring up the completion menu with &lt;tab&gt;&lt;tab&gt;, but with just &lt;tab&gt;, behave like the default</span>
+<span class="bu">setopt</span> auto_menu
+<span class="co"># automatically complete an ambiguous word to the nearest, partial-word match</span>
+<span class="co"># (combined with auto_menu, this makes it so that you only have to type &lt;tab&gt;</span>
+<span class="co"># once, and only once, in all situations)</span>
+<span class="bu">unsetopt</span> listambiguous
+
+<span class="co"># Make cd push the old directory onto the directory stack.</span>
+<span class="bu">setopt</span> auto_pushd
+<span class="co"># don&#39;t list dir stack each time we use cd</span>
+<span class="bu">setopt</span> pushdsilent
+<span class="co"># don&#39;t push in duplicate dirs into the dir stack</span>
+<span class="bu">setopt</span> pushdignoredups
+
+<span class="bu">zstyle</span> <span class="st">&#39;:completion:*&#39;</span> menu select=1 _complete _ignored _approximate
+<span class="bu">zstyle</span> <span class="st">&#39;:completion:*&#39;</span> list-colors <span class="st">&quot;</span><span class="va">${(</span><span class="op">s.</span><span class="st">:</span><span class="op">.</span><span class="va">)LS_COLORS}</span><span class="st">&quot;</span> <span class="co"># use the LS_COLORS variable to colorize the completion list</span>
+<span class="va">LISTMAX</span><span class="op">=</span>9999 <span class="co"># don&#39;t ask &#39;do you wish to see all N possibilities&#39; unless N &gt; 9999</span>
+
+<span class="co"># make &#39;*&#39; expand to catch dotfiles as well</span>
+<span class="bu">setopt</span> GLOB_DOTS
+<span class="co"># Among other things, allow use of things like &quot;ls ^(foo)*&quot; to match all files</span>
+<span class="co"># that do not start with &quot;foo&quot;.</span>
+<span class="bu">setopt</span> extendedglob
+
+<span class="co"># Reclaim &quot;^s&quot; (C-s) from terminal to Zsh. Traditionally, terminals pause</span>
+<span class="co"># output with C-s and resume output with C-q, but these hotkeys are rarely</span>
+<span class="co"># used.</span>
+<span class="fu">stty</span> stop undef
+<span class="fu">stty</span> start undef</code></pre></div></div></div><div id="heading-container-h-2-Aliases" class="heading-container"><h2 id="h-2-Aliases"><span id="c-18" class="cell-idx"><a href="#h-2-Aliases">2&ensp;Aliases</a></span></h2><p><span id="c-19" class="cell-idx">The Jujutsu bookmark aliases <span class="code">jbm</span> and <span class="code">jbs</span> pass <span class="code">-B</span> (<span class="code">--allow-backwards</span>), so that moving a bookmark backwards or sideways doesn&#39;t need an extra flag. Jujutsu has no config option for this, and it won&#39;t let an alias override a built-in command like <span class="code">bookmark</span>, so the shell alias is where the default has to live. This is safe because a bookmark only moves locally: Git still requires a force push before a bookmark that moved backwards or sideways can update the remote.</span></p><div id="c-20" class="cell-idx"><div class="block-container src" id="b-zshrc-aliases"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-zshrc-aliases">&#x1F517;</a></div><div class="block-meta"><code>zshrc-aliases</code></div><div class="block-meta-other hidden"><p>Used by <a href="#b-zshrc-b-zshrc-aliases" class="internal-link"><span class="verbatim">zshrc</span></a>.</p><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">zsh</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="co"># make &#39;ds&#39; prompt the user to select a dir from the dir stack, instead of just listing the dir stick</span>
+<span class="co"># with a plain &#39;dirs -v&#39;</span>
+<span class="co"># </span><span class="al">NOTE</span><span class="co">: &#39;cd +$n&#39; makes it go to the number listed, whereas &#39;cd -$n&#39; reverses it... don&#39;t know why</span>
+<span class="co"># you&#39;d ever want to use &#39;cd -$n&#39;</span>
+<span class="bu">alias</span> ds=<span class="st">&#39; dirs -v ; echo -n &quot;\nSelect directory: &quot; ; read n ; cd +$n &amp;&amp; ll&#39;</span>
+
+<span class="bu">alias</span> c=<span class="st">&quot;clojure&quot;</span>
+<span class="co"># Clear the screen buffer (don&#39;t just hide it like CTRL-L), and also clear the</span>
+<span class="co"># TMUX buffer history if (if TMUX is running).</span>
+<span class="bu">alias</span> cls=<span class="st">&quot;echo -ne &#39;\x1bc&#39;; tmux clear-history || true&quot;</span>
+<span class="bu">alias</span> fiv=<span class="st">&#39;~/syscfg/script/fiv.sh&#39;</span>
+<span class="bu">alias</span> aex=<span class="st">&#39;~/syscfg/script/aex.sh&#39;</span>
+<span class="bu">alias</span> cascade=<span class="st">&#39;~/syscfg/script/cascade.sh&#39;</span>
+<span class="bu">alias</span> private=<span class="st">&#39; HISTFILE=/tmp/zsh-history&#39;</span>
+<span class="bu">alias</span> unprivate=<span class="st">&#39; HISTFILE=~/.zsh-untracked/history&#39;</span>
+
+<span class="bu">alias</span> d=<span class="st">&#39;univ_open&#39;</span>
+<span class="bu">alias</span> df=<span class="st">&#39; df -h&#39;</span>
+<span class="bu">alias</span> dmesg=<span class="st">&#39;dmesg --color=always L&#39;</span>
+<span class="bu">alias</span> du=<span class="st">&#39;du -h&#39;</span>
+
+<span class="bu">alias</span> enc=<span class="st">&#39;gpg2 -e -r linusarver&#39;</span>
+<span class="bu">alias</span> dec=<span class="st">&#39;~/syscfg/script/decrypt.sh outfile&#39;</span>
+
+<span class="bu">alias</span> rot13=<span class="st">&#39;tr &#39;</span>A-Za-z<span class="st">&#39; &#39;</span>N-ZA-Mn-za-m<span class="st">&#39;&#39;</span>
+
+<span class="bu">alias</span>  ll=<span class="st">&#39; dir_info brief&#39;</span>
+<span class="bu">alias</span>   l=<span class="st">&#39; dir_info verbose-by-name&#39;</span>
+<span class="bu">alias</span>  lj=<span class="st">&#39; dir_info verbose-by-size&#39;</span>
+<span class="bu">alias</span>  lk=<span class="st">&#39; dir_info verbose-by-date&#39;</span>
+
+<span class="bu">alias</span> n=<span class="st">&#39; alacritty-raw-shell.sh &amp; disown&#39;</span>
+<span class="bu">alias</span> q=<span class="st">&#39; exit&#39;</span>
+
+<span class="bu">alias</span> j=<span class="st">&#39;jj&#39;</span>
+<span class="bu">alias</span> jd=<span class="st">&#39;jj diff&#39;</span>
+<span class="bu">alias</span> jc=<span class="st">&#39;jj commit&#39;</span>
+<span class="bu">alias</span> jca=<span class="st">&#39;jj desc&#39;</span>
+<span class="bu">alias</span> jb=<span class="st">&#39;jj bookmark&#39;</span>
+<span class="bu">alias</span> jbl=<span class="st">&#39;jj bookmark list&#39;</span>
+<span class="bu">alias</span> jbm=<span class="st">&#39;jj bookmark move -B&#39;</span>
+<span class="bu">alias</span> jbs=<span class="st">&#39;jj bookmark set -B&#39;</span>
+<span class="bu">alias</span> jsq=<span class="st">&#39;jj squash&#39;</span>
+<span class="bu">alias</span> jst=<span class="st">&#39;jj status&#39;</span>
+<span class="bu">alias</span> jll=<span class="st">&#39;jj log&#39;</span>
+<span class="bu">alias</span> jr=<span class="st">&#39;jj rebase&#39;</span>
+<span class="bu">alias</span> jig=<span class="st">&#39;jjui&#39;</span>
+
+<span class="bu">alias</span> g=<span class="st">&#39;git&#39;</span>
+<span class="bu">alias</span> gbr=<span class="st">&#39;git branch --sort=committerdate&#39;</span>
+<span class="bu">alias</span> gc=<span class="st">&#39;git commit --verbose&#39;</span>
+<span class="bu">alias</span> gca=<span class="st">&#39;git commit --verbose --amend&#39;</span>
+<span class="bu">alias</span> gcan=<span class="st">&#39;git commit --verbose --amend --no-edit&#39;</span>
+<span class="bu">alias</span> gcm=<span class="st">&#39;git commit --verbose --message&#39;</span>
+<span class="bu">alias</span> gcu=<span class="st">&#39;git commit --verbose --message update&#39;</span>
+<span class="bu">alias</span> gco=<span class="st">&#39;git checkout&#39;</span>
+<span class="bu">alias</span> gcop=<span class="st">&#39;git checkout --patch&#39;</span>
+<span class="bu">alias</span> gdf=<span class="st">&#39;git difftool&#39;</span>
+<span class="bu">alias</span> gft=<span class="st">&#39;git fetch --prune&#39;</span>
+<span class="bu">alias</span> gl=<span class="st">&#39;git log&#39;</span>
+<span class="bu">alias</span> gpl=<span class="st">&#39;git pull --ff-only&#39;</span>
+<span class="bu">alias</span> ga=<span class="st">&#39;git add --patch&#39;</span>
+<span class="bu">alias</span> gau=<span class="st">&#39;git add --update&#39;</span>
+<span class="bu">alias</span> gu=<span class="st">&#39;gau &amp;&amp; gcu &amp;&amp; gp&#39;</span> <span class="co"># Useful for saving work immediately in note-taking repos.</span>
+<span class="bu">alias</span> gr=<span class="st">&#39;git rebase&#39;</span>
+<span class="bu">alias</span> grc=<span class="st">&#39;git rebase --continue&#39;</span>
+<span class="bu">alias</span> gp=<span class="st">&#39;git push&#39;</span>
+<span class="bu">alias</span> grv=<span class="st">&#39;git remote --verbose&#39;</span>
+<span class="bu">alias</span> gtag=<span class="st">&#39;~/syscfg/script/gtag.sh&#39;</span>
+
+<span class="bu">alias</span> ekb=<span class="st">&#39;emacs_kill_buffer&#39;</span>
+<span class="bu">alias</span> elb=<span class="st">&#39;emacs_list_buffers&#39;</span>
+<span class="bu">alias</span> v=<span class="st">&#39;nvim -p&#39;</span>
+
+<span class="co"># Find stuff.</span>
+<span class="bu">alias</span> fl=<span class="st">&#39;find_long_lines &#39;</span>
+<span class="bu">alias</span> ff=<span class="st">&#39;f files&#39;</span>
+<span class="bu">alias</span> ffa=<span class="st">&#39;f all_files&#39;</span>
+<span class="bu">alias</span> fp=<span class="st">&#39;f procs&#39;</span>
+<span class="bu">alias</span> ft=<span class="st">&#39;f text&#39;</span>
+<span class="co"># Search all text files, including normally hidden/ignored ones.</span>
+<span class="bu">alias</span> fta=<span class="st">&#39;f all_text&#39;</span>
+<span class="co"># Search even inside binary files.</span>
+<span class="bu">alias</span> ftab=<span class="st">&#39;f all_text_binary&#39;</span>
+
+<span class="co"># These hostnames depend on either /etc/hosts or ~/.ssh/config.</span>
+<span class="bu">alias</span> sk0=<span class="st">&#39;s k0&#39;</span>
+<span class="bu">alias</span> sk1=<span class="st">&#39;s k1&#39;</span>
+<span class="bu">alias</span> sm0=<span class="st">&#39;s m0&#39;</span>
+<span class="bu">alias</span> sw0=<span class="st">&#39;s w0&#39;</span>
+<span class="bu">alias</span> smacp=<span class="st">&#39;s macp&#39;</span>
+
+<span class="co"># GLOBAL, position-independent aliases for detaching a process from the shell</span>
+<span class="co"># (useful for starting GUI apps as standalones, without arguments).</span>
+<span class="bu">alias</span> <span class="at">-g</span> D=<span class="st">&#39;&amp; disown&#39;</span>
+<span class="bu">alias</span> <span class="at">-g</span> L=<span class="st">&#39;| less&#39;</span>
+<span class="bu">alias</span> <span class="at">-g</span> C=<span class="st">&#39;| copy-clipboard.sh&#39;</span>
+
+<span class="co"># scp alternative, with a progress bar</span>
+<span class="bu">alias</span> rsy=<span class="st">&#39;rsync -ahP --no-whole-file --inplace&#39;</span>
+<span class="co"># The &#39;-a&#39; (archive) option ensures that all file properties (date,</span>
+<span class="co"># permissions, owner, etc.) are copied, too, recursively.  &#39;-P&#39; enables the</span>
+<span class="co"># progress bar. The next two options are a matter of taste but are useful if</span>
+<span class="co"># you copy files to a USB stick: &#39;--inplace&#39; writes updated data directly into</span>
+<span class="co"># the target file if it exists (instead of creating a temp copy, deleting the</span>
+<span class="co"># target, and renaming the temp into the target). &#39;--no-whole-file&#39; forces</span>
+<span class="co"># rsync to always use the incremental rsync algorithm.</span>
+
+<span class="co"># Warn before overwrites, display verbose output, and also enable recursive</span>
+<span class="co"># option by default (useful when using only directory names).</span>
+<span class="bu">alias</span> cp=<span class="st">&#39;cp -ivr&#39;</span>
+<span class="bu">alias</span> mv=<span class="st">&#39;mv -iv&#39;</span>
+<span class="bu">alias</span> rm=<span class="st">&#39;rm -Iv&#39;</span>
+
+<span class="co"># Clean up botched permissions.</span>
+<span class="bu">alias</span> clean_dirs=<span class="st">&#39;find -type d -exec chmod 755 {} \;&#39;</span>
+<span class="bu">alias</span> clean_files=<span class="st">&#39;find -type f -exec chmod 644 {} \;&#39;</span>
+<span class="bu">alias</span> clean_tree=<span class="st">&#39;clean_dirs; clean_files&#39;</span>
+
+<span class="co"># Turn off power or reboot gracefully.</span>
+<span class="bu">alias</span> of=<span class="st">&#39; poweroff &amp; disown; exit&#39;</span>
+<span class="bu">alias</span> ofo=<span class="st">&#39; reboot &amp; disown; exit&#39;</span>
+
+<span class="bu">alias</span> nl=<span class="st">&#39;nix-env --list-generations&#39;</span>
+<span class="bu">alias</span> nls=<span class="st">&#39;sudo nix-env -p /nix/var/nix/profiles/system --list-generations&#39;</span>
+<span class="bu">alias</span> nq=<span class="st">&#39;nix-env -qaP&#39;</span>
+
+<span class="bu">alias</span> agi=<span class="st">&quot;sudo apt-get install&quot;</span>
+<span class="bu">alias</span> agr=<span class="st">&quot;sudo apt-get remove&quot;</span>
+<span class="bu">alias</span> acs=<span class="st">&quot;apt_cache_search&quot;</span>
+
+<span class="bu">alias</span> cal=<span class="st">&#39;gcal --starting-day=1 --with-week-number --iso-week-number=yes .&#39;</span>
+
+<span class="co"># Use python3 by default (python2 is EOL as of 2020)</span>
+<span class="bu">alias</span> python=python3
+
+<span class="co"># Manual memory management.</span>
+<span class="bu">alias</span> reset_cache=<span class="st">&#39;free &amp;&amp; sync &amp;&amp; sudo echo 3 &gt;/proc/sys/vm/drop_caches &amp;&amp; free&#39;</span>
+<span class="bu">alias</span> reset_swap=<span class="st">&#39;free &amp;&amp; sudo swapoff -a &amp;&amp; sudo swapon -a &amp;&amp; free&#39;</span>
+
+<span class="co"># CUSTOM SCRIPTS</span>
+<span class="co">#</span>
+<span class="co"># encoding/decoding</span>
+<span class="bu">alias</span> rgmp3=<span class="st">&#39;~/syscfg/script/audio/replaygain/mp3/tmwrg.sh&#39;</span>
+<span class="bu">alias</span> rgflac=<span class="st">&#39;~/syscfg/script/audio/replaygain/flac/tfwrg.sh&#39;</span></code></pre></div></div></div><div id="heading-container-h-3-Key-bindings--prompt--and-plugins" class="heading-container"><h2 id="h-3-Key-bindings--prompt--and-plugins"><span id="c-21" class="cell-idx"><a href="#h-3-Key-bindings--prompt--and-plugins">3&ensp;Key bindings, prompt, and plugins</a></span></h2><div id="c-22" class="cell-idx"><div class="block-container src" id="b-zshrc-bindings-and-plugins"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-zshrc-bindings-and-plugins">&#x1F517;</a></div><div class="block-meta"><code>zshrc-bindings-and-plugins</code></div><div class="block-meta-other hidden"><p>Used by <a href="#b-zshrc-b-zshrc-bindings-and-plugins" class="internal-link"><span class="verbatim">zshrc</span></a>.</p><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">zsh</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="co"># Add commonly-used paths into the named directory hash table.</span>
+<span class="bu">.</span> ~/.zsh/path-aliases
+<span class="bu">zle</span> <span class="at">-N</span> accept-line __l_accept_line
+
+<span class="co"># Get rid of odd ^[[2004h characters from Emacs&#39; `M-x shell&#39;. The problem has to</span>
+<span class="co"># do with ZSH trying to set bracketed paste mode which came out in ZSH 5.1.1,</span>
+<span class="co"># even though the &quot;dumb&quot; terminal that `M-x shell&#39; sets is unable to handle it.</span>
+<span class="co"># See https://github.com/syl20bnr/spacemacs/issues/3035.</span>
+<span class="cf">if</span> <span class="kw">[[</span> <span class="va">$TERM</span> <span class="ot">==</span> <span class="st">&quot;dumb&quot;</span> <span class="kw">]];</span> <span class="cf">then</span>
+  <span class="bu">unset</span> <span class="va">zle_bracketed_paste</span>
+<span class="cf">fi</span>
+
+<span class="co"># Use Vim bindings! (Note: this command must come first before the other bindkey</span>
+<span class="co"># invocations).</span>
+<span class="bu">bindkey</span> <span class="at">-v</span>
+
+<span class="co"># Yank to the system clipboard inside vi-cmd-mode.</span>
+<span class="bu">zle</span> <span class="at">-N</span> __l_vi_yank_system_clipboard
+<span class="bu">bindkey</span> <span class="at">-M</span> vicmd <span class="st">&#39;y&#39;</span> __l_vi_yank_system_clipboard
+
+<span class="co"># Make &quot;kj&quot; in viins mode enter vi-cmd-mode (same as pressing ESC).</span>
+<span class="bu">bindkey</span> <span class="at">-M</span> viins <span class="st">&quot;kj&quot;</span> vi-cmd-mode
+<span class="co"># 0.1s for ESC key vs ALT+... disambiguation. This is required for the &quot;kj&quot;</span>
+<span class="co"># binding above to work.</span>
+<span class="bu">export</span> <span class="va">KEYTIMEOUT</span><span class="op">=</span>10
+
+<span class="co"># Make Backspace delete past the point of the last point of viins insertion.</span>
+<span class="bu">bindkey</span> <span class="st">&quot;^?&quot;</span> backward-delete-char
+<span class="co"># Make Ctrl+Backspace delete a word. Ghostty sends it as CSI u, because its own</span>
+<span class="co"># encoding (^H) is the same as Ctrl+h, which we bind below.</span>
+<span class="bu">bindkey</span> <span class="st">&#39;^[[127;5u&#39;</span> backward-kill-word
+
+<span class="co"># Map DELETE key.</span>
+<span class="bu">bindkey</span> <span class="st">&#39;^[[3~&#39;</span> delete-char
+<span class="co"># Map HOME key. Natively in NixOS, we get the OH key sequence. If we don&#39;t</span>
+<span class="co"># bind this, this sequence gets interpreted as &quot;ESC, O, H&quot;, where the O is the</span>
+<span class="co"># &quot;open line above&quot; keybinding under the Vim bindings --- so it is useless</span>
+<span class="co"># anyway. Over SSH, we get the ^[[1~ sequence.</span>
+<span class="bu">bindkey</span> <span class="st">&#39;OH&#39;</span>  beginning-of-line
+<span class="bu">bindkey</span> <span class="st">&#39;^[[1~&#39;</span> beginning-of-line
+<span class="co"># Map </span><span class="re">END</span><span class="co"> key. Natively in NixOS, we get the OF key, and over SSH we get</span>
+<span class="co"># ^[[4~.</span>
+<span class="bu">bindkey</span> <span class="st">&quot;OF&quot;</span> end-of-line
+<span class="bu">bindkey</span> <span class="st">&#39;^[[4~&#39;</span> end-of-line
+
+<span class="co"># Some directory history navigation. &#39;h&#39; goes backward in history, and &#39;l&#39; goes</span>
+<span class="co"># &quot;forward&quot;. Essentially this amounts to simulating a doubly-linked-list</span>
+<span class="co"># traversal, forwards and backwards.</span>
+<span class="co">#</span>
+<span class="co"># We prepend these commands with a space to block them from being saved into</span>
+<span class="co"># the shell history (because of HIST_IGNORE_SPACE).</span>
+<span class="bu">bindkey</span> <span class="at">-s</span> <span class="st">&#39;^h&#39;</span> <span class="st">&quot; dirs_navigate prev\n&quot;</span>
+<span class="bu">bindkey</span> <span class="at">-s</span> <span class="st">&#39;^l&#39;</span> <span class="st">&#39; dirs_navigate next\n&#39;</span>
+<span class="co"># Move up a directory. This is slightly faster than typing &#39;k&#39; then &#39;Enter&#39;. We</span>
+<span class="co"># can&#39;t bind C-j, because it is interpreted by Zsh to be the same thing as a</span>
+<span class="co"># newline. So binding it is the same thing as rebinding the newline character.</span>
+<span class="bu">bindkey</span> <span class="at">-s</span> <span class="st">&#39;^K&#39;</span> <span class="st">&#39; d ..\n&#39;</span>
+
+<span class="bu">zmodload</span> zsh/complist <span class="co"># for the &#39;menuselect&#39; keymap</span>
+<span class="co"># Just execute the command when selecting from a menu and pressing &lt;enter&gt;.</span>
+<span class="co"># Regarding the `.&#39; in front of &#39;accept-line&#39;, the manpage for zshcompsys(1) has</span>
+<span class="co"># this to say:</span>
+<span class="co">#</span>
+<span class="co">#   Should you need to use the original completion commands, you can still bind</span>
+<span class="co">#   keys to the old widgets by putting a `.&#39; in front of the widget name, e.g.</span>
+<span class="co">#   `.expand-or-complete&#39;.</span>
+<span class="bu">bindkey</span> <span class="at">-M</span> menuselect <span class="st">&#39;&#39;</span> .accept-line
+
+<span class="co"># Use the kody theme.</span>
+<span class="bu">autoload</span> <span class="at">-Uz</span> add-zsh-hook
+<span class="ex">prompt_kody_setup</span>
+
+<span class="co"># Set theme name. This should match the colors used by Alacritty on startup. We</span>
+<span class="co"># need to set the theme name because otherwise when we invoke &#39;c&#39; and &#39;C&#39;</span>
+<span class="co"># (aliases for color_cycle()), we don&#39;t cycle through properly on the first</span>
+<span class="co"># invocation.</span>
+<span class="bu">export</span> <span class="va">TERM_COLOR_THEME</span><span class="op">=</span>PastelDark.dhall
+<span class="bu">export</span> <span class="va">L_TMUX_STATUS_BG</span><span class="op">=</span><span class="st">&quot;#000000&quot;</span>
+<span class="bu">export</span> <span class="va">L_TMUX_STATUS_FG</span><span class="op">=</span><span class="st">&quot;#ffffff&quot;</span>
+<span class="bu">export</span> <span class="va">L_TMUX_COLOR_TEXT</span><span class="op">=</span><span class="st">&quot;#000000&quot;</span>
+<span class="bu">export</span> <span class="va">L_TMUX_COLOR_CURSOR</span><span class="op">=</span><span class="st">&quot;#ffffff&quot;</span>
+
+<span class="co"># Make C-e go to the end of the line. This also makes it accept the</span>
+<span class="co"># autosuggested completion, if there is any.</span>
+<span class="bu">bindkey</span> <span class="st">&#39;^e&#39;</span> end-of-line
+<span class="co"># For completeness, map C-a to go to the beginning of the line. This is like the</span>
+<span class="co"># default emacs bindings.</span>
+<span class="bu">bindkey</span> <span class="st">&#39;^a&#39;</span> beginning-of-line
+<span class="bu">bindkey</span> <span class="st">&#39;^x&#39;</span> autosuggest-execute
+
+<span class="co"># Prevent command typos from cluttering up history.</span>
+<span class="co"># See https://stackoverflow.com/a/66060510/437583.</span>
+<span class="ex">add-zsh-hook</span> precmd __l_command_not_found
+
+<span class="co"># Load fzf bindings (upstream) to ZSH.</span>
+<span class="cf">if</span> <span class="kw">[[</span> <span class="ot">-n</span> <span class="st">&quot;</span><span class="va">${commands</span><span class="op">[</span>fzf<span class="op">-</span>share<span class="op">]</span><span class="va">}</span><span class="st">&quot;</span> <span class="kw">]];</span> <span class="cf">then</span>
+  <span class="co"># Use a tmux popup instead of a pane.</span>
+  <span class="va">FZF_TMUX_OPTS</span><span class="op">=</span><span class="st">&quot; -p 90%,90% &quot;</span>
+  <span class="bu">export</span> <span class="va">FZF_TMUX_OPTS</span>
+
+  <span class="bu">source</span> <span class="st">&quot;</span><span class="va">$(</span><span class="ex">fzf-share</span><span class="va">)</span><span class="st">/completion.zsh&quot;</span>
+  <span class="bu">source</span> <span class="st">&quot;</span><span class="va">$(</span><span class="ex">fzf-share</span><span class="va">)</span><span class="st">/key-bindings.zsh&quot;</span>
+
+  <span class="co"># Use exact matches (except for space characters; i.e., you can type &quot;world</span>
+  <span class="co"># hello&quot; and it will match a &quot;hello world&quot; string).</span>
+  <span class="va">FZF_CTRL_R_OPTS</span><span class="op">=</span><span class="st">&quot; --exact&quot;</span>
+  <span class="co"># Sort entries. This essentially just groups together similarly-named</span>
+  <span class="co"># commands to be together (that is, search hits that share the same prefix</span>
+  <span class="co"># will be shown together, instead of being shown separately if they were not</span>
+  <span class="co"># executed one after the other chronologically).</span>
+  <span class="va">FZF_CTRL_R_OPTS</span><span class="op">+=</span><span class="st">&quot; --sort&quot;</span>
+  <span class="co"># `--select-1&#39; automatically selects the item if there&#39;s only one so that you</span>
+  <span class="co"># don&#39;t have to press enter key. Likewise, `--exit-0&#39; automatically exits</span>
+  <span class="co"># when the list is empty.</span>
+  <span class="va">FZF_CTRL_R_OPTS</span><span class="op">+=</span><span class="st">&quot; --select-1 --exit-0&quot;</span>
+  <span class="co"># Enable preview window. This makes it so that we can see the full command</span>
+  <span class="co"># if it is too long to be displayed in a single line. We hide this preview</span>
+  <span class="co"># window by default, and bind the `?&#39; key to display it if we want to.</span>
+  <span class="va">FZF_CTRL_R_OPTS</span><span class="op">+=</span><span class="st">&quot; --preview &#39;echo {}&#39; --preview-window down:3:hidden:wrap --bind &#39;?:toggle-preview&#39;&quot;</span>
+  <span class="bu">export</span> <span class="va">FZF_CTRL_R_OPTS</span>
+
+  <span class="bu">export</span> <span class="va">FZF_DEFAULT_COMMAND</span><span class="op">=</span><span class="st">&#39;rg --files --hidden --glob &quot;!.git&quot;&#39;</span>
+
+  <span class="co"># C-t fuzzy searches a file argument to the current command we&#39;re trying to build up.</span>
+  <span class="bu">export</span> <span class="va">FZF_CTRL_T_COMMAND</span><span class="op">=</span><span class="st">&quot;</span><span class="va">$FZF_DEFAULT_COMMAND</span><span class="st">&quot;</span>
+
+  <span class="co"># Enable preview window for files.</span>
+  <span class="va">FZF_CTRL_T_OPTS</span><span class="op">=</span><span class="st">&quot; --preview &#39;(cat {} || tree -C {}) 2&gt; /dev/null | head -1000&#39;&quot;</span>
+  <span class="va">FZF_CTRL_T_OPTS</span><span class="op">+=</span><span class="st">&quot; --select-1 --exit-0&quot;</span>
+  <span class="co"># Faster preview navigation.</span>
+  <span class="va">FZF_CTRL_T_OPTS</span><span class="op">+=</span><span class="st">&quot; --bind=page-up:preview-half-page-up,page-down:preview-half-page-down&quot;</span>
+  <span class="bu">export</span> <span class="va">FZF_CTRL_T_OPTS</span>
+  <span class="co"># Use ALT-F binding instead of CTRL-T, because it&#39;s easier to reach. Also</span>
+  <span class="co"># press ENTER to execute the command immediately after selecting the entry</span>
+  <span class="co"># from fzf, because typically we never need to select more than 1 file at a</span>
+  <span class="co"># time on the command line.</span>
+  <span class="fu">fzf-file-and-enter-widget()</span> <span class="kw">{</span>
+    <span class="bu">local</span> <span class="va">buf</span><span class="op">=</span><span class="va">${</span><span class="op">#</span><span class="va">BUFFER}</span>
+    <span class="ex">fzf-file-widget</span>
+    <span class="cf">if</span> <span class="kw">((</span> <span class="va">${</span><span class="op">#</span><span class="va">BUFFER}</span> <span class="op">&gt;</span> <span class="va">buf</span> <span class="kw">));</span> <span class="cf">then</span>
+      <span class="bu">zle</span> accept-line
+    <span class="cf">fi</span>
+  <span class="kw">}</span>
+  <span class="bu">zle</span>     <span class="at">-N</span>    fzf-file-and-enter-widget
+  <span class="bu">bindkey</span> <span class="st">&#39;\ef&#39;</span> fzf-file-and-enter-widget
+
+  <span class="co"># Use ALT-D binding instead of the default ALT-C.</span>
+  <span class="bu">bindkey</span> <span class="st">&#39;\ed&#39;</span> fzf-cd-widget
+  <span class="bu">export</span> <span class="va">FZF_ALT_C_COMMAND</span><span class="op">=</span><span class="st">&#39;rg --files --hidden --glob &quot;!.git&quot; --null | xargs -0 dirname | sort -u&#39;</span>
+
+  <span class="co"># Preview directory entries.</span>
+  <span class="va">FZF_ALT_C_OPTS</span><span class="op">=</span><span class="st">&quot;--preview &#39;tree -C {} | head -200&#39;&quot;</span>
+  <span class="va">FZF_ALT_C_OPTS</span><span class="op">+=</span><span class="st">&quot; --select-1 --exit-0&quot;</span>
+  <span class="bu">export</span> <span class="va">FZF_ALT_C_OPTS</span>
+<span class="cf">fi</span>
+
+<span class="co"># Use zcomet.</span>
+<span class="va">__l_zcomet_path</span><span class="op">=</span><span class="st">&quot;</span><span class="va">${HOME}</span><span class="st">/.zsh/zcomet-upstream/zcomet.zsh&quot;</span>
+<span class="cf">if</span> <span class="kw">[[</span> <span class="ot">!</span> <span class="ot">-f</span> <span class="st">&quot;</span><span class="va">${__l_zcomet_path}</span><span class="st">&quot;</span> <span class="kw">]];</span> <span class="cf">then</span>
+  <span class="bu">echo</span> <span class="op">&gt;&amp;</span><span class="dv">2</span> <span class="st">&quot;error: missing </span><span class="va">${__l_zcomet_path}</span><span class="st">&quot;</span>
+<span class="cf">fi</span>
+<span class="bu">source</span> <span class="st">&quot;</span><span class="va">${__l_zcomet_path}</span><span class="st">&quot;</span>
+
+<span class="co"># Print warning if we don&#39;t use an existing alias for a command.</span>
+<span class="ex">zcomet</span> load <span class="st">&quot;MichaelAquilina/zsh-you-should-use&quot;</span>
+
+<span class="co"># History editing. This brings in the `hist&#39; command .</span>
+<span class="ex">zcomet</span> load <span class="st">&quot;marlonrichert/zsh-hist&quot;</span>
+
+<span class="co"># Fish-shell-like automatically-suggested completions.</span>
+<span class="ex">zcomet</span> load <span class="st">&quot;zsh-users/zsh-autosuggestions&quot;</span>
+<span class="va">ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE</span><span class="op">=</span><span class="st">&quot;fg=2,bold&quot;</span>
+
+<span class="co"># Pass utility completions. This brings in the &quot;fzp&quot; shell alias.</span>
+<span class="ex">zcomet</span> load <span class="st">&quot;smeagol74/zsh-fzf-pass&quot;</span>
+
+<span class="co"># On slow systems, checking the cached .zcompdump file to see if it must be</span>
+<span class="co"># regenerated adds a noticeable delay to zsh startup.  This little hack restricts</span>
+<span class="co"># it to once a day.  It should be pasted into your own completion file.</span>
+<span class="co">#</span>
+<span class="co"># The globbing is a little complicated here:</span>
+<span class="co"># - &#39;#q&#39; is an explicit glob qualifier that makes globbing work within zsh&#39;s [[ ]] construct.</span>
+<span class="co"># - &#39;N&#39; makes the glob pattern evaluate to nothing when it doesn&#39;t match (rather than throw a globbing error)</span>
+<span class="co"># - &#39;.&#39; matches &quot;regular files&quot;</span>
+<span class="co"># - &#39;mh+24&#39; matches files (or directories or whatever) that are older than 24 hours.</span>
+<span class="bu">autoload</span> <span class="at">-Uz</span> compinit
+<span class="cf">if</span> <span class="kw">[[</span> <span class="ot">-n</span> <span class="va">${ZDOTDIR}</span>/.zcompdump<span class="op">(#qN.m</span>h<span class="dv">+24</span><span class="op">)</span> <span class="kw">]];</span> <span class="cf">then</span>
+  <span class="ex">compinit</span>
+<span class="cf">else</span>
+  <span class="ex">compinit</span> <span class="at">-C</span>
+<span class="cf">fi</span>
+
+<span class="bu">source</span> <span class="op">&lt;(</span><span class="va">COMPLETE</span><span class="op">=</span>zsh <span class="ex">jj</span><span class="op">)</span>
+
+<span class="co"># Instead of using &quot;qoomon/zsh-lazyload&quot;, we simply examine the letters that are</span>
+<span class="co"># already inserted into the zle buffer. If it is &quot;kl&quot; and we press either the</span>
+<span class="co"># Space or Tab key, we invoke our custom widget which loads completions for</span>
+<span class="co"># kubectl, but only if it is both installed and if the completions have not been</span>
+<span class="co"># sourced already. This is an improvement over</span>
+<span class="co"># https://github.com/kubernetes/kubernetes/issues/59078#issuecomment-363384825</span>
+<span class="co"># because even the initially-attempted invocation will get completions.</span>
+<span class="bu">bindkey</span> <span class="at">-M</span> viins <span class="st">&quot; &quot;</span> __l_lazy_load_completions
+<span class="bu">bindkey</span> <span class="at">-M</span> viins <span class="st">&quot;^I&quot;</span> __l_lazy_load_completions <span class="co"># ^I is the TAB key</span>
+<span class="bu">zle</span> <span class="at">-N</span> __l_lazy_load_completions
+
+<span class="co"># Uncomment to profile.</span>
+<span class="co">#zprof</span>
+
+<span class="bu">eval</span> <span class="st">&quot;</span><span class="va">$(</span><span class="ex">direnv</span> hook zsh<span class="va">)</span><span class="st">&quot;</span>
+
+<span class="co"># Replace current shell process with tmux, because it&#39;s much nicer to use tmux</span>
+<span class="co"># than a raw shell instance.</span>
+<span class="co">#</span>
+<span class="co">#   - The &quot;$PS1&quot; check sees if this is a login shell.</span>
+<span class="co">#   - The $TMUX check is for avoiding running tmux within tmux (without this,</span>
+<span class="co">#     if we launch a new shell from inside tmux, we would get tmux-within-tmux).</span>
+<span class="co">#     We don&#39;t also check for &quot;tmux&quot; in $TERM: ssh forwards TERM=tmux-256color</span>
+<span class="co">#     from a local tmux pane, and we do want a tmux on the remote host, for</span>
+<span class="co">#     tmux&#39;s passthrough mode. (This used to be harmless only because</span>
+<span class="co">#     ~/.zshenv overwrote TERM with &quot;wezterm&quot;.)</span>
+<span class="co">#   - The L_WANT_RAW_SHELL check is to see if this environment variable is set</span>
+<span class="co">#     (to avoid automatically executing tmux).</span>
+<span class="co">#</span>
+<span class="co"># If we do want to launch a raw shell instance, then we have to invoke our</span>
+<span class="co"># terminal emulator (Alacritty) with a non-zero value environment variable value</span>
+<span class="co"># for L_WANT_RAW_SHELL. Using a raw shell instance is useful if we want to</span>
+<span class="co"># connect to a remote tmux session (to remove the outer tmux layer as this outer</span>
+<span class="co"># layer is unnecessary).</span>
+<span class="cf">if</span> <span class="bu">command</span> <span class="at">-v</span> tmux <span class="op">&amp;&gt;</span> /dev/null <span class="dt">\</span>
+  <span class="kw">&amp;&amp;</span> <span class="kw">[[</span> <span class="ot">-n</span> <span class="st">&quot;</span><span class="va">${PS1}</span><span class="st">&quot;</span> <span class="kw">]]</span> <span class="dt">\</span>
+  <span class="kw">&amp;&amp;</span> <span class="kw">[[</span> <span class="ot">-z</span> <span class="st">&quot;</span><span class="va">${TMUX}</span><span class="st">&quot;</span> <span class="kw">]]</span> <span class="dt">\</span>
+  <span class="kw">&amp;&amp;</span> <span class="kw">[[</span> <span class="ot">-z</span> <span class="st">&quot;</span><span class="va">${L_WANT_RAW_SHELL</span><span class="op">:-</span><span class="va">}</span><span class="st">&quot;</span> <span class="kw">]];</span> <span class="cf">then</span>
+  <span class="bu">exec</span> <span class="va">$(</span><span class="ex">__l_tmux_command</span><span class="va">)</span>
+<span class="cf">fi</span></code></pre></div></div></div><div id="heading-container-h--Page-metrics" class="heading-container page-metrics"><h2 id="h--Page-metrics"><a href="#h--Page-metrics">Page metrics</a></h2></div><div id="heading-container-h--Backlinks" class="heading-container backlinks"><h3 id="h--Backlinks"><a href="#h--Backlinks">Backlinks (14)</a></h3><ol><li><a href="/zsh/func.html">zsh/func.org (6)</a><ol><li><a href="#top">^ Top (3)</a><ol><li><a href="/zsh/func.html#c-0">¶ (<span class="verbatim">Cell 0</span>)</a></li><li><a href="/zsh/func.html#c-25">¶ (<span class="verbatim">Cell 25</span>)</a></li><li><a href="/zsh/func.html#c-78">¶ (<span class="verbatim">Cell 78</span>)</a></li></ol></li><li><a href="#b-zshrc-aliases"><span class="verbatim">zshrc-aliases</span> (3)</a><ol><li><a href="/zsh/func.html#c-3">¶ (<span class="verbatim">Cell 3</span>)</a></li><li><a href="/zsh/func.html#c-19">¶ (<span class="verbatim">Cell 19</span>)</a></li><li><a href="/zsh/func.html#c-22">¶ (<span class="verbatim">Cell 22</span>)</a></li></ol></li></ol></li><li><a href="/zsh/index.html">zsh/index.org (3)</a><ol><li><a href="#top">^ Top (3)</a><ol><li><a href="/zsh/index.html#c-2">¶ (<span class="verbatim">Cell 2</span>)</a></li><li><a href="/zsh/index.html#c-15">¶ (<span class="verbatim">Cell 15</span>)</a></li><li><a href="/zsh/index.html#c-34">¶ (<span class="verbatim">Cell 34</span>)</a></li></ol></li></ol></li><li><a href="/ghostty.html">ghostty.org (2)</a><ol><li><a href="#top">^ Top</a><span class="verbatim"> &#x2190; </span><a href="/ghostty.html#c-26">¶ (<span class="verbatim">Cell 26</span>)</a></li><li><a href="#b-zshrc-bindings-and-plugins"><span class="verbatim">zshrc-bindings-and-plugins</span></a><span class="verbatim"> &#x2190; </span><a href="/ghostty.html#c-48">¶ (<span class="verbatim">Cell 48</span>)</a></li></ol></li><li><a href="/plan.html">plan.org (1)</a><ol><li><a href="#b-zshrc-bindings-and-plugins"><span class="verbatim">zshrc-bindings-and-plugins</span></a><span class="verbatim"> &#x2190; </span><a href="/plan.html#c-24">¶ (<span class="verbatim">Cell 24</span>)</a></li></ol></li><li><a href="/script/utilities.html">script/utilities.org (1)</a><ol><li><a href="#b-zshrc-aliases"><span class="verbatim">zshrc-aliases</span></a><span class="verbatim"> &#x2190; </span><a href="/script/utilities.html#c-5">¶ (<span class="verbatim">Cell 5</span>)</a></li></ol></li><li><a href="/zsh/lib.html">zsh/lib.org (1)</a><ol><li><a href="#top">^ Top</a><span class="verbatim"> &#x2190; </span><a href="/zsh/lib.html#c-0">¶ (<span class="verbatim">Cell 0</span>)</a></li></ol></li></ol></div><div id="heading-container-h--Tangled-files" class="heading-container tangled-blocks"><h3 id="h--Tangled-files"><a href="#h--Tangled-files">Tangled files (1)</a></h3><ol><li><a href="#b-zshrc" class="verbatim">zsh/.zshrc</a></li></ol></div><div id="heading-container-h--Named-cells" class="heading-container named-cells"><h3 id="h--Named-cells"><a href="#h--Named-cells">Named cells (4)</a></h3><ol><li><a href="#b-zshrc"><span class="verbatim">zshrc</span></a></li><li><a href="#b-zshrc-aliases"><span class="verbatim">zshrc-aliases</span></a></li><li><a href="#b-zshrc-bindings-and-plugins"><span class="verbatim">zshrc-bindings-and-plugins</span></a></li><li><a href="#b-zshrc-setup"><span class="verbatim">zshrc-setup</span></a></li></ol></div><footer><div class="lilac-stamp">Generated by <a href="https://lilac.funloop.org" class="external-link" target="_blank" rel="noopener noreferrer">Lilac</a></div></footer></main><script id="heading-ancestry" type="application/json">{"h--Backlinks":["h--Page-metrics"],"h--Named-cells":["h--Page-metrics"],"h--Page-metrics":[],"h--Tangled-files":["h--Page-metrics"],"h-1-Environment-and-shell-options":[],"h-2-Aliases":[],"h-3-Key-bindings--prompt--and-plugins":[]}</script><script id="lilac-fe-script" src="/js/lilac.js"></script></body></html>

@@ -1,0 +1,1265 @@
+<!DOCTYPE HTML><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Zsh functions</title><link rel="stylesheet" href="/css/default.css"><link rel="shortcut icon" type="image/png" href="/favicon.png"><link rel="stylesheet" href="/vendor/source-fonts/source-fonts.css">
+<script>
+  window.MathJax = {
+      loader: { paths: { "mathjax-newcm": "/vendor/mathjax-newcm-font" } },
+      output: { font: "mathjax-newcm" },
+  tex: {
+      tags: 'ams'
+  },
+  options: {
+      ignoreHtmlClass: 'verbatim|code'
+  }
+};
+</script>
+<script id="MathJax-script" async="" src="/vendor/mathjax/tex-mml-chtml.js"></script>
+</head><body><div class="navbar"><button id="hamburger" class="tocs-toggle-button" aria-label="Toggle table of contents sidebar">&#x2630;</button><div class="breadcrumbs"><a href="https://syscfg.funloop.org"><span class="breadcrumb">Linus Arver&#39;s Dotfiles</span></a> <a href="https://github.com/listx/syscfg" class="repo-link" title="Source repository" aria-label="Source repository"><svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 16 16"
+     aria-hidden="true">
+<g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+<circle cx="4" cy="3" r="1.75"></circle>
+<circle cx="4" cy="13" r="1.75"></circle>
+<circle cx="12" cy="3" r="1.75"></circle>
+<path d="M4 4.75v6.5"></path>
+<path d="M12 4.75c0 4-8 3-8 6.5"></path>
+</g>
+</svg>
+</a> <span class="breadcrumb-separator">/</span> <a href="/zsh/index.html"><span class="breadcrumb">zsh</span></a> <span class="breadcrumb-separator">/</span> <a href="#top"><span class="breadcrumb">func.org</span></a></div></div><nav id="tocs"><p class="widget-title gtoc-title">Site contents</p><nav class="gtoc"><ul><li><a href="/index.html">Introduction</a></li><li><a href="/bash.html">Bash</a></li><li><a href="/claude.html">Claude</a></li><li><a href="/clojure.html">Clojure</a></li><li><a href="/emacs.html">Emacs</a></li><li><a href="/ghostty.html">Ghostty</a></li><li><a href="/git.html">Git</a></li><li><a href="/gpg.html">GnuPG</a></li><li><a href="/jj.html">Jujutsu</a></li><li><a href="/keybindings.html">Keybindings (WIP)</a></li><li><a href="/misc.html">Miscellaneous</a></li><li><a href="/mpv.html">mpv</a></li><li><a href="/nix.html">Nix</a></li><li><a href="/notmuch.html">Notmuch</a></li><li><a href="/plan.html">Plan</a></li><li><a href="/qutebrowser.html">qutebrowser</a></li><li><a href="/rtorrent.html">rTorrent</a></li><li><a href="/script/index.html">System scripts</a></li><li><a href="/tmux.html">tmux</a></li><li><a href="/vim.html">Vim</a></li><li><a href="/xmonad.html">xmonad</a></li><li><a href="/xorg.html">X.Org</a></li><li><a href="/zsh/index.html">Zsh</a><ul><li><a href="/zsh/zshrc.html">.zshrc</a></li><li><a href="/zsh/lib.html">lib.sh</a></li><li><a href="/zsh/func.html" class="bold">Zsh functions</a></li></ul></li></ul></nav><p class="widget-title toc-title">Page contents</p><nav class="toc"><div class="toc-entries"><ol><li class="toc-level-1"><div class="toc-entry"><span class="toc-counter">1</span><a href="#h-1-Finding-things">Finding things</a></div><ol><li class="toc-level-2"><div class="toc-entry"><span class="toc-counter">1.1</span><a href="#h-1.1-f"><span class="code">f</span></a></div></li><li class="toc-level-2"><div class="toc-entry"><span class="toc-counter">1.2</span><a href="#h-1.2-f_files"><span class="code">f_files</span></a></div></li><li class="toc-level-2"><div class="toc-entry"><span class="toc-counter">1.3</span><a href="#h-1.3-f_text"><span class="code">f_text</span></a></div></li><li class="toc-level-2"><div class="toc-entry"><span class="toc-counter">1.4</span><a href="#h-1.4-f_procs"><span class="code">f_procs</span></a></div></li><li class="toc-level-2"><div class="toc-entry"><span class="toc-counter">1.5</span><a href="#h-1.5-find_long_lines"><span class="code">find_long_lines</span></a></div></li></ol></li><li class="toc-level-1"><div class="toc-entry"><span class="toc-counter">2</span><a href="#h-2-Files-and-directories">Files and directories</a></div><ol><li class="toc-level-2"><div class="toc-entry"><span class="toc-counter">2.1</span><a href="#h-2.1-univ_open"><span class="code">univ_open</span></a></div></li><li class="toc-level-2"><div class="toc-entry"><span class="toc-counter">2.2</span><a href="#h-2.2-dir_info"><span class="code">dir_info</span></a></div></li><li class="toc-level-2"><div class="toc-entry"><span class="toc-counter">2.3</span><a href="#h-2.3-dirs_navigate"><span class="code">dirs_navigate</span></a></div></li><li class="toc-level-2"><div class="toc-entry"><span class="toc-counter">2.4</span><a href="#h-2.4-rand_open"><span class="code">rand_open</span></a></div></li></ol></li><li class="toc-level-1"><div class="toc-entry"><span class="toc-counter">3</span><a href="#h-3-Git">Git</a></div><ol><li class="toc-level-2"><div class="toc-entry"><span class="toc-counter">3.1</span><a href="#h-3.1-git_contents"><span class="code">git_contents</span></a></div></li><li class="toc-level-2"><div class="toc-entry"><span class="toc-counter">3.2</span><a href="#h-3.2-gst"><span class="code">gst</span></a></div></li><li class="toc-level-2"><div class="toc-entry"><span class="toc-counter">3.3</span><a href="#h-3.3-gsts"><span class="code">gsts</span></a></div></li><li class="toc-level-2"><div class="toc-entry"><span class="toc-counter">3.4</span><a href="#h-3.4-gd"><span class="code">gd</span></a></div></li><li class="toc-level-2"><div class="toc-entry"><span class="toc-counter">3.5</span><a href="#h-3.5-gflat"><span class="code">gflat</span></a></div></li><li class="toc-level-2"><div class="toc-entry"><span class="toc-counter">3.6</span><a href="#h-3.6-git_check_linearity"><span class="code">git_check_linearity</span></a></div></li><li class="toc-level-2"><div class="toc-entry"><span class="toc-counter">3.7</span><a href="#h-3.7-git_copy_sha"><span class="code">git_copy_sha</span></a></div></li></ol></li><li class="toc-level-1"><div class="toc-entry"><span class="toc-counter">4</span><a href="#h-4-Jujutsu">Jujutsu</a></div><ol><li class="toc-level-2"><div class="toc-entry"><span class="toc-counter">4.1</span><a href="#h-4.1-jl"><span class="code">jl</span></a></div></li></ol></li><li class="toc-level-1"><div class="toc-entry"><span class="toc-counter">5</span><a href="#h-5-Emacs">Emacs</a></div><ol><li class="toc-level-2"><div class="toc-entry"><span class="toc-counter">5.1</span><a href="#h-5.1-emacs_list_buffers"><span class="code">emacs_list_buffers</span></a></div></li><li class="toc-level-2"><div class="toc-entry"><span class="toc-counter">5.2</span><a href="#h-5.2-emacs_kill_buffer"><span class="code">emacs_kill_buffer</span></a></div></li><li class="toc-level-2"><div class="toc-entry"><span class="toc-counter">5.3</span><a href="#h-5.3-_emacs_kill_buffer"><span class="code">_emacs_kill_buffer</span></a></div></li></ol></li><li class="toc-level-1"><div class="toc-entry"><span class="toc-counter">6</span><a href="#h-6-Remote-machines">Remote machines</a></div><ol><li class="toc-level-2"><div class="toc-entry"><span class="toc-counter">6.1</span><a href="#h-6.1-s"><span class="code">s</span></a></div></li><li class="toc-level-2"><div class="toc-entry"><span class="toc-counter">6.2</span><a href="#h-6.2-_s"><span class="code">_s</span></a></div></li><li class="toc-level-2"><div class="toc-entry"><span class="toc-counter">6.3</span><a href="#h-6.3-tmux_list_sessions"><span class="code">tmux_list_sessions</span></a></div></li></ol></li><li class="toc-level-1"><div class="toc-entry"><span class="toc-counter">7</span><a href="#h-7-Prompt">Prompt</a></div><ol><li class="toc-level-2"><div class="toc-entry"><span class="toc-counter">7.1</span><a href="#h-7.1-prompt_kody_setup"><span class="code">prompt_kody_setup</span></a></div></li></ol></li><li class="toc-level-1"><div class="toc-entry"><span class="toc-counter">8</span><a href="#h-8-Miscellaneous">Miscellaneous</a></div><ol><li class="toc-level-2"><div class="toc-entry"><span class="toc-counter">8.1</span><a href="#h-8.1-vertical_label"><span class="code">vertical_label</span></a></div></li><li class="toc-level-2"><div class="toc-entry"><span class="toc-counter">8.2</span><a href="#h-8.2-color_cycle"><span class="code">color_cycle</span></a></div></li><li class="toc-level-2"><div class="toc-entry"><span class="toc-counter">8.3</span><a href="#h-8.3-susp"><span class="code">susp</span></a></div></li><li class="toc-level-2"><div class="toc-entry"><span class="toc-counter">8.4</span><a href="#h-8.4-apt_cache_search"><span class="code">apt_cache_search</span></a></div></li></ol></li><li class="toc-level-1"><div class="toc-entry"><a href="#h--Page-metrics">Page metrics</a></div><ol><li class="toc-level-2"><div class="toc-entry"><a href="#h--Backlinks">Backlinks</a></div></li><li class="toc-level-2"><div class="toc-entry"><a href="#h--Tangled-files">Tangled files</a></div></li><li class="toc-level-2"><div class="toc-entry"><a href="#h--Named-cells">Named cells</a></div></li></ol></li></ol></div></nav></nav><main><h1 id="top">Zsh functions</h1><hr class="title-underline"><p><span id="c-0" class="cell-idx"><a href="/zsh/zshrc.html" class="internal-link" id="linkNumber-1"><span class="code">.zshrc</span></a> adds this directory to <span class="code">fpath</span> and marks every file in it for autoloading, so each file defines a function of the same name which only gets loaded when we first use it. Files that start with an underscore are completion functions.</span></p><div id="heading-container-h-1-Finding-things" class="heading-container"><h2 id="h-1-Finding-things"><span id="c-1" class="cell-idx"><a href="#h-1-Finding-things">1&ensp;Finding things</a></span></h2></div><div id="heading-container-h-1.1-f" class="heading-container"><h3 id="h-1.1-f"><span id="c-2" class="cell-idx"><a href="#h-1.1-f">1.1&ensp;<span class="code">f</span></a></span></h3><p><span id="c-3" class="cell-idx">A front end to the search functions below. The <span class="code">ff</span>, <span class="code">ft</span>, and <span class="code">fp</span> family of <a href="/zsh/zshrc.html#b-zshrc-aliases" class="internal-link" id="linkNumber-2">aliases</a> in <span class="code">.zshrc</span> call it.</span></p><div id="c-4" class="cell-idx"><div class="block-container src" id="b-func-f"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-func-f">&#x1F517;</a></div><div class="block-meta"><code>func-f</code><br><code><span class="bold">&#x1F3AF; zsh/func/f</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">zsh</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="co">#!/usr/bin/env zsh</span>
+
+<span class="co"># Find all files and directories using rg.. Does not traverse git folders by</span>
+<span class="co"># default, but this can be &quot;overridden&quot; by simply cd-ing into the .git folder</span>
+<span class="co"># first.</span>
+<span class="fu">f()</span>
+<span class="kw">{</span>
+	<span class="cf">if</span> <span class="kw">((</span> <span class="va">$</span><span class="op">#</span> <span class="op">&lt;</span> <span class="dv">2</span> <span class="kw">));</span> <span class="cf">then</span>
+		<span class="bu">echo</span> <span class="op">&gt;&amp;</span><span class="dv">2</span> <span class="st">&quot;usage: </span><span class="va">$0</span><span class="st"> &lt;TYPE&gt; [OTHER_RIPGREP_ARGS..] &lt;PATTERN&gt;&quot;</span>
+		<span class="bu">echo</span> <span class="op">&gt;&amp;</span><span class="dv">2</span> <span class="st">&quot;args:&quot;</span>
+		<span class="bu">printf</span> <span class="op">&gt;&amp;</span><span class="dv">2</span> <span class="st">&#39;%s\n&#39;</span> <span class="st">&quot;</span><span class="va">$@</span><span class="st">&quot;</span>
+		<span class="cf">return</span> <span class="dv">1</span>
+	<span class="cf">fi</span>
+
+	<span class="bu">local</span> <span class="va">subcommand</span>
+	<span class="bu">local</span> <span class="va">pattern</span>
+	<span class="bu">local</span> <span class="va">args</span>
+	<span class="va">subcommand</span><span class="op">=</span><span class="st">&quot;</span><span class="va">${1}</span><span class="st">&quot;</span>
+	<span class="bu">shift</span> 1
+
+	<span class="co"># PATTERN is in the last element of &quot;$@&quot;. Assign all other elements to</span>
+	<span class="co"># $args array.</span>
+	<span class="va">args</span><span class="op">=</span><span class="va">(</span><span class="st">&quot;</span><span class="va">$@</span><span class="st">&quot;</span><span class="va">)</span>
+	<span class="va">pattern</span><span class="op">=</span><span class="va">${args</span><span class="op">[</span><span class="dv">-1</span><span class="op">]</span><span class="va">}</span>
+	<span class="bu">unset</span> <span class="st">&#39;args[-1]&#39;</span>
+
+	<span class="co"># Imply &#39;--&#39; if the pattern starts with a dash. Otherwise the pattern</span>
+	<span class="co"># becomes a flag for rg.</span>
+	<span class="cf">if</span> <span class="kw">[[</span> <span class="st">&quot;</span><span class="va">${pattern}</span><span class="st">&quot;</span> <span class="ot">=~</span> <span class="pp">^</span><span class="ss">-</span> <span class="kw">]];</span> <span class="cf">then</span>
+		<span class="va">args</span><span class="op">+=</span><span class="va">(</span>--<span class="va">)</span>
+	<span class="cf">fi</span>
+
+	<span class="co"># Determine type of search. Search files and directories for &#39;f&#39; and text</span>
+	<span class="co"># for &#39;t&#39;.</span>
+	<span class="cf">case</span> <span class="st">&quot;</span><span class="va">${subcommand}</span><span class="st">&quot;</span> <span class="kw">in</span>
+		<span class="ss">files</span><span class="kw">|</span><span class="ss">procs</span><span class="kw">|</span><span class="ss">text</span><span class="kw">)</span>
+			<span class="ex">f_</span><span class="va">${subcommand}</span> <span class="st">&quot;</span><span class="va">${pattern}</span><span class="st">&quot;</span> <span class="st">&quot;</span><span class="va">${args</span><span class="op">[@]</span><span class="va">}</span><span class="st">&quot;</span>
+			<span class="cf">;;</span>
+		<span class="ss">all_files</span><span class="kw">)</span>
+			<span class="ex">f_files</span> <span class="st">&quot;</span><span class="va">${pattern}</span><span class="st">&quot;</span> SEARCH_ALL_FILES <span class="st">&quot;</span><span class="va">${args</span><span class="op">[@]</span><span class="va">}</span><span class="st">&quot;</span>
+			<span class="cf">;;</span>
+		<span class="ss">all_text</span><span class="kw">)</span>
+			<span class="ex">f_text</span> <span class="st">&quot;</span><span class="va">${pattern}</span><span class="st">&quot;</span> SEARCH_ALL_FILES <span class="st">&quot;</span><span class="va">${args</span><span class="op">[@]</span><span class="va">}</span><span class="st">&quot;</span>
+			<span class="cf">;;</span>
+		<span class="ss">all_text_binary</span><span class="kw">)</span>
+			<span class="ex">f_text</span> <span class="st">&quot;</span><span class="va">${pattern}</span><span class="st">&quot;</span> SEARCH_ALL_FILES_BINARY <span class="st">&quot;</span><span class="va">${args</span><span class="op">[@]</span><span class="va">}</span><span class="st">&quot;</span>
+			<span class="cf">;;</span>
+		<span class="pp">*</span><span class="kw">)</span>
+			<span class="bu">echo</span> <span class="op">&gt;&amp;</span><span class="dv">2</span> <span class="st">&quot;</span><span class="va">$0</span><span class="st">: unknown search type </span><span class="dt">\`</span><span class="va">${_type}</span><span class="st">&#39;&quot;</span>
+			<span class="cf">return</span> <span class="dv">1</span>
+			<span class="cf">;;</span>
+	<span class="cf">esac</span>
+<span class="kw">}</span></code></pre></div></div></div><div id="heading-container-h-1.2-f_files" class="heading-container"><h3 id="h-1.2-f_files"><span id="c-5" class="cell-idx"><a href="#h-1.2-f_files">1.2&ensp;<span class="code">f_files</span></a></span></h3><p><span id="c-6" class="cell-idx">Search filenames and directory names.</span></p><div id="c-7" class="cell-idx"><div class="block-container src" id="b-func-f-files"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-func-f-files">&#x1F517;</a></div><div class="block-meta"><code>func-f-files</code><br><code><span class="bold">&#x1F3AF; zsh/func/f_files</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">zsh</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="co">#!/usr/bin/env zsh</span>
+
+<span class="co"># Search filenames and directory names.</span>
+<span class="fu">f_files()</span>
+<span class="kw">{</span>
+	<span class="bu">local</span> <span class="va">pattern</span><span class="op">=</span><span class="st">&quot;</span><span class="va">${1}</span><span class="st">&quot;</span>
+	<span class="bu">local</span> <span class="va">pattern_orig</span><span class="op">=</span><span class="st">&quot;</span><span class="va">${pattern}</span><span class="st">&quot;</span>
+	<span class="bu">shift</span>
+	<span class="bu">local</span> <span class="va">args</span><span class="op">=</span><span class="va">()</span>
+
+	<span class="co"># By default, ignore all hidden files.</span>
+	<span class="bu">local</span> <span class="va">find_args</span><span class="op">=</span><span class="va">(</span>-not -path <span class="st">&#39;*/\.*&#39;</span><span class="va">)</span>
+	<span class="co"># Filter out arguments meant for f_files(), not rg.</span>
+	<span class="cf">for</span> arg <span class="kw">in</span> <span class="st">&quot;</span><span class="va">${@}</span><span class="st">&quot;</span><span class="kw">;</span> <span class="cf">do</span>
+		<span class="cf">case</span> <span class="st">&quot;</span><span class="va">${arg}</span><span class="st">&quot;</span> <span class="kw">in</span>
+			<span class="ss">SEARCH_ALL_FILES</span><span class="kw">)</span>
+				<span class="va">find_args</span><span class="op">=</span><span class="va">()</span>
+				<span class="cf">;;</span>
+			<span class="co"># Save anything else we don&#39;t recognize (to pass along to rg).</span>
+			<span class="pp">*</span><span class="kw">)</span> <span class="va">args</span><span class="op">+=</span><span class="va">(</span><span class="st">&quot;</span><span class="va">${arg}</span><span class="st">&quot;</span><span class="va">)</span> <span class="cf">;;</span>
+		<span class="cf">esac</span>
+	<span class="cf">done</span>
+
+	<span class="co"># Patterns without a &quot;/&quot; are restricted to the *last part* of the path. This</span>
+	<span class="co"># is to weed out false hits where the pattern only matches the parent folder</span>
+	<span class="co"># name. E.g., if there is a directory structure like this:</span>
+	<span class="co">#</span>
+	<span class="co">#   emacs/</span>
+	<span class="co">#   emacs/a</span>
+	<span class="co">#   emacs/b</span>
+	<span class="co">#   emacs/c</span>
+	<span class="co">#   emacs/d</span>
+	<span class="co">#   emacs/e</span>
+	<span class="co">#   emacs/f</span>
+	<span class="co">#</span>
+	<span class="co"># and we search for the pattern &quot;e&quot; we only want to show &quot;emacs/&quot; and</span>
+	<span class="co"># &quot;emacs/e&quot;, not the other folders like &quot;emacs/a&quot; or &quot;emacs/b&quot;.</span>
+	<span class="cf">if</span> <span class="kw">[[</span> <span class="ot">!</span> <span class="va">$pattern</span> <span class="ot">==</span> <span class="pp">*</span>/<span class="pp">*</span> <span class="kw">]];</span> <span class="cf">then</span>
+		<span class="co"># Add negative lookahead if there is no &quot;/&quot; in the original search</span>
+		<span class="co"># pattern. The negative lookahead makes sure that no other slashes</span>
+		<span class="co"># following the original pattern, effectively limiting the pattern to</span>
+		<span class="co"># the last &quot;dirname&quot; or &quot;basename&quot; part of a path.</span>
+		<span class="va">pattern</span><span class="op">=</span><span class="st">&quot;</span><span class="va">${pattern}</span><span class="st">(?![^/]*/)&quot;</span>
+	<span class="cf">fi</span>
+
+	<span class="co"># We skip the leading first character of each line `^.&#39;, which is the</span>
+	<span class="co"># filetype output classified by the `find&#39; command below. The remaining &#39;.*?&#39;</span>
+	<span class="co"># part and the &#39;\K&#39; is to remove from the match any characters that do not</span>
+	<span class="co"># match the given pattern, which are in-between the pattern and the very</span>
+	<span class="co"># beginning of the line. If we don&#39;t have this &quot;buffer&quot; zone, then the</span>
+	<span class="co"># pattern is expected to immediately follow the initial `^.&#39; only, which</span>
+	<span class="co"># makes the search very inflexible (and which would force the user to type</span>
+	<span class="co"># in something like `.*PATTERN&#39; to search for `PATTERN&#39;, not to mention that</span>
+	<span class="co"># the leading &quot;buffer&quot; zone will get highlighted as a positive match by `rg&#39;</span>
+	<span class="co"># as well).</span>
+	<span class="va">pattern</span><span class="op">=</span><span class="st">&quot;(^..*?)\K</span><span class="va">${pattern}</span><span class="st">&quot;</span>
+
+	<span class="co"># If we see a line depicting a symlink, search both the link name and the</span>
+	<span class="co"># target name (we make no distinctions around the &quot; -&gt; &quot; delimiter that</span>
+	<span class="co"># denotes the source and target). For symlinks we also ignore the condition</span>
+	<span class="co"># of trying to only search the trailing &quot;basename&quot; of a path.</span>
+	<span class="va">pattern</span><span class="op">=</span><span class="st">&quot;(?(?=^l)(^l.*?)\K</span><span class="va">${pattern_orig}</span><span class="st">|</span><span class="va">${pattern}</span><span class="st">)&quot;</span>
+
+	<span class="bu">local</span> <span class="va">c_pipe</span><span class="op">=</span><span class="st">&quot;\x1b[1;32m&quot;</span> <span class="co"># bright green</span>
+	<span class="bu">local</span> <span class="va">c_sock</span><span class="op">=</span><span class="st">&quot;\x1b[1;34m&quot;</span> <span class="co"># bright blue</span>
+	<span class="bu">local</span> <span class="va">c_dir</span><span class="op">=</span><span class="st">&quot;\x1b[1;33m&quot;</span> <span class="co"># bright yellow</span>
+	<span class="bu">local</span> <span class="va">c_link</span><span class="op">=</span><span class="st">&quot;\x1b[36m&quot;</span> <span class="co"># cyan</span>
+	<span class="bu">local</span> <span class="va">c_end</span><span class="op">=</span><span class="st">&quot;\x1b[0m&quot;</span>
+
+	<span class="bu">local</span> <span class="va">colorizer</span><span class="op">=</span><span class="st">&quot;&quot;</span>
+
+	<span class="co"># Colorize the different file types recognized by the `%y&#39; printf option for</span>
+	<span class="co"># `find(1)&#39;. We support 5 of the most common file types: files, directories,</span>
+	<span class="co"># symlinks, named pipes, and sockets.</span>
+	<span class="va">colorizer</span><span class="op">=</span><span class="st">&quot;s|^d|</span><span class="va">${c_dir}</span><span class="st">|;&quot;</span>
+	<span class="co"># Regular files aren&#39;t colored. However we still inject a color escape</span>
+	<span class="co"># sequence so that the rest of the expressions below don&#39;t match against it.</span>
+	<span class="co"># For example, if we have &#39;fpar&#39; to denote a regular file &#39;par&#39; and we just</span>
+	<span class="co"># erase the leading &#39;f&#39;, we get &#39;par&#39;, and this will match against the</span>
+	<span class="co"># ${c_pipe} colorizer pattern below (bad!).</span>
+	<span class="va">colorizer</span><span class="op">+=</span><span class="st">&quot;s|^f|</span><span class="va">${c_end}</span><span class="st">|;&quot;</span>
+	<span class="va">colorizer</span><span class="op">+=</span><span class="st">&quot;s|^l|</span><span class="va">${c_link}</span><span class="st">|;&quot;</span>
+	<span class="va">colorizer</span><span class="op">+=</span><span class="st">&quot;s|^s|</span><span class="va">${c_sock}</span><span class="st">|;&quot;</span>
+	<span class="va">colorizer</span><span class="op">+=</span><span class="st">&quot;s|^p|</span><span class="va">${c_pipe}</span><span class="st">|;&quot;</span>
+	<span class="co"># Match the last &quot;turn off color&quot; code injected by `rg&#39;. Use this point to</span>
+	<span class="co"># reinstate the color injected from above. This way the entire line is</span>
+	<span class="co"># colorized a certain way except for the portion matched by rg.</span>
+	<span class="va">colorizer</span><span class="op">+=</span><span class="st">&quot;s|^\(\(\x1b\[\(1;\)\?3.m\).*\x1b\[0m\)|\1\2|;&quot;</span>
+	<span class="co"># Turn off colors at the end of the line.</span>
+	<span class="va">colorizer</span><span class="op">+=</span><span class="st">&quot;s|$|</span><span class="va">${c_end}</span><span class="st">|&quot;</span>
+
+	<span class="co"># The &quot;-k1.2&quot; sorts by the 1st word&#39;s 2nd character on each line. We have to</span>
+	<span class="co"># skip the 1st character because it is the filetype &quot;%y&quot; character.</span>
+
+	<span class="fu">find</span> <span class="va">${find_args</span><span class="op">[@]</span><span class="va">}</span> <span class="at">-printf</span> <span class="st">&#39;%y%P\0&#39;</span> <span class="dt">\</span>
+		<span class="kw">|</span> <span class="cf">while</span> <span class="va">IFS</span><span class="op">=</span><span class="st">&quot;&quot;</span> <span class="bu">read</span> <span class="at">-r</span> <span class="at">-d</span> <span class="st">&quot;&quot;</span> <span class="va">find_output</span><span class="kw">;</span> <span class="cf">do</span> <span class="dt">\</span>
+				<span class="cf">if</span> <span class="kw">[[</span> <span class="st">&quot;</span><span class="va">${find_output</span><span class="op">:</span><span class="dv">0</span><span class="op">:</span><span class="dv">1</span><span class="va">}</span><span class="st">&quot;</span> <span class="ot">==</span> l <span class="kw">]];</span> <span class="cf">then</span> <span class="dt">\</span>
+					<span class="bu">printf</span> <span class="st">&quot;%s -&gt; %s\0&quot;</span> <span class="st">&quot;</span><span class="va">${find_output}</span><span class="st">&quot;</span> <span class="st">&quot;</span><span class="va">$(</span><span class="fu">readlink</span> <span class="at">-m</span> <span class="va">${find_output</span><span class="op">:</span><span class="dv">1</span><span class="va">})</span><span class="st">&quot;</span><span class="kw">;</span> <span class="dt">\</span>
+				<span class="cf">else</span> <span class="dt">\</span>
+					<span class="bu">printf</span> <span class="st">&quot;%s\0&quot;</span> <span class="st">&quot;</span><span class="va">${find_output}</span><span class="st">&quot;</span><span class="kw">;</span> <span class="dt">\</span>
+				<span class="cf">fi</span><span class="kw">;</span> <span class="dt">\</span>
+			<span class="cf">done</span> <span class="dt">\</span>
+		<span class="kw">|</span> <span class="ex">rg</span> <span class="at">--null-data</span> <span class="at">--smart-case</span> <span class="at">--pcre2</span> <span class="at">--color</span> always <span class="va">${args</span><span class="op">[@]</span><span class="va">}</span> <span class="st">&quot;</span><span class="va">${pattern}</span><span class="st">&quot;</span> <span class="dt">\</span>
+		<span class="kw">|</span> <span class="fu">sort</span> <span class="at">--zero-terminated</span> <span class="at">-k1.2</span> <span class="dt">\</span>
+		<span class="kw">|</span> <span class="fu">sed</span> <span class="at">--null-data</span> <span class="st">&quot;</span><span class="va">${colorizer}</span><span class="st">&quot;</span> <span class="dt">\</span>
+		<span class="kw">|</span> <span class="fu">sed</span> <span class="st">&#39;s|\x00|\n|g&#39;</span>
+<span class="kw">}</span></code></pre></div></div></div><div id="heading-container-h-1.3-f_text" class="heading-container"><h3 id="h-1.3-f_text"><span id="c-8" class="cell-idx"><a href="#h-1.3-f_text">1.3&ensp;<span class="code">f_text</span></a></span></h3><p><span id="c-9" class="cell-idx">Search plain text with <span class="code">rg</span>, ignoring the <span class="code">.git</span> folder.</span></p><div id="c-10" class="cell-idx"><div class="block-container src" id="b-func-f-text"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-func-f-text">&#x1F517;</a></div><div class="block-meta"><code>func-f-text</code><br><code><span class="bold">&#x1F3AF; zsh/func/f_text</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">zsh</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="co">#!/usr/bin/env zsh</span>
+
+<span class="co"># Search plaintext. This is the typical use case for ripgrep and is pretty</span>
+<span class="co"># straightforward.</span>
+<span class="fu">f_text()</span>
+<span class="kw">{</span>
+	<span class="bu">local</span> <span class="va">pattern</span><span class="op">=</span><span class="st">&quot;</span><span class="va">${1}</span><span class="st">&quot;</span>
+	<span class="bu">shift</span>
+	<span class="bu">local</span> <span class="va">args</span><span class="op">=</span><span class="va">()</span>
+
+	<span class="co"># Explicitly ignore the .git folder because rg by default ignores the paths</span>
+	<span class="co"># inside .gitignore files, but still searches inside the .git folder itself.</span>
+	<span class="bu">local</span> <span class="va">rg_args</span><span class="op">=</span><span class="va">(</span>--glob <span class="st">&#39;!.git&#39;</span><span class="va">)</span>
+
+	<span class="co"># Filter out arguments meant for f_text(), not rg.</span>
+	<span class="cf">for</span> arg <span class="kw">in</span> <span class="st">&quot;</span><span class="va">${@}</span><span class="st">&quot;</span><span class="kw">;</span> <span class="cf">do</span>
+		<span class="cf">case</span> <span class="st">&quot;</span><span class="va">${arg}</span><span class="st">&quot;</span> <span class="kw">in</span>
+			<span class="ss">SEARCH_ALL_FILES</span><span class="kw">)</span>
+				<span class="co"># Providing 2 -u flags (--unrestricted) makes rg ignore</span>
+				<span class="co"># .gitignore files and also search hidden files and directories.</span>
+				<span class="va">rg_args</span><span class="op">=</span><span class="va">(</span>-uu<span class="va">)</span>
+				<span class="cf">;;</span>
+			<span class="ss">SEARCH_ALL_FILES_BINARY</span><span class="kw">)</span>
+				<span class="co"># Providing three -u flags (--unrestricted) makes rg search even</span>
+				<span class="co"># binary files.</span>
+				<span class="va">rg_args</span><span class="op">=</span><span class="va">(</span>-uuu<span class="va">)</span>
+				<span class="cf">;;</span>
+			<span class="co"># Save anything else we don&#39;t recognize (to pass along to rg).</span>
+			<span class="pp">*</span><span class="kw">)</span> <span class="va">args</span><span class="op">+=</span><span class="va">(</span><span class="st">&quot;</span><span class="va">${arg}</span><span class="st">&quot;</span><span class="va">)</span> <span class="cf">;;</span>
+		<span class="cf">esac</span>
+	<span class="cf">done</span>
+
+	<span class="ex">rg</span> <span class="at">--color</span> always <span class="at">--smart-case</span> <span class="at">--pcre2</span> <span class="at">--hidden</span> <span class="dt">\</span>
+		<span class="va">${rg_args</span><span class="op">[@]</span><span class="va">}</span> <span class="va">${args</span><span class="op">[@]</span><span class="va">}</span> <span class="st">&quot;</span><span class="va">${pattern}</span><span class="st">&quot;</span>
+<span class="kw">}</span></code></pre></div></div></div><div id="heading-container-h-1.4-f_procs" class="heading-container"><h3 id="h-1.4-f_procs"><span id="c-11" class="cell-idx"><a href="#h-1.4-f_procs">1.4&ensp;<span class="code">f_procs</span></a></span></h3><p><span id="c-12" class="cell-idx">Search running processes, keeping the <span class="code">ps</span> column headers.</span></p><div id="c-13" class="cell-idx"><div class="block-container src" id="b-func-f-procs"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-func-f-procs">&#x1F517;</a></div><div class="block-meta"><code>func-f-procs</code><br><code><span class="bold">&#x1F3AF; zsh/func/f_procs</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">zsh</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="co">#!/usr/bin/env zsh</span>
+
+<span class="co"># Search processes.</span>
+<span class="fu">f_procs()</span>
+<span class="kw">{</span>
+	<span class="bu">local</span> <span class="va">pattern</span><span class="op">=</span><span class="st">&quot;</span><span class="va">${1}</span><span class="st">&quot;</span>
+	<span class="bu">shift</span>
+	<span class="bu">local</span> <span class="va">args</span><span class="op">=</span><span class="va">(</span><span class="st">&quot;</span><span class="va">$@</span><span class="st">&quot;</span><span class="va">)</span>
+	<span class="co"># Print out the first line of ps output, because it gives us the column</span>
+	<span class="co"># headers. Otherwise, we get a bunch of results without any indication of</span>
+	<span class="co"># what each column actually means.</span>
+	<span class="fu">ps</span> aux <span class="kw">|</span> <span class="fu">head</span> <span class="at">-n1</span>
+	<span class="co"># The process substitution with the `=(...)&#39; syntax prevents the `rg&#39;</span>
+	<span class="co"># process itself from showing up in the results.</span>
+	<span class="ex">rg</span> <span class="at">--color</span> always <span class="at">--smart-case</span> <span class="at">--pcre2</span> <span class="at">-i</span> <span class="at">--no-line-number</span> <span class="dt">\</span>
+		<span class="va">${args</span><span class="op">[@]</span><span class="va">}</span> <span class="st">&quot;</span><span class="va">${pattern}</span><span class="st">&quot;</span> <span class="op">=(</span><span class="fu">ps</span> aux<span class="op">)</span>
+<span class="kw">}</span></code></pre></div></div></div><div id="heading-container-h-1.5-find_long_lines" class="heading-container"><h3 id="h-1.5-find_long_lines"><span id="c-14" class="cell-idx"><a href="#h-1.5-find_long_lines">1.5&ensp;<span class="code">find_long_lines</span></a></span></h3><p><span id="c-15" class="cell-idx">Find files with lines that are too long (80 columns by default).</span></p><div id="c-16" class="cell-idx"><div class="block-container src" id="b-func-find-long-lines"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-func-find-long-lines">&#x1F517;</a></div><div class="block-meta"><code>func-find-long-lines</code><br><code><span class="bold">&#x1F3AF; zsh/func/find_long_lines</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">zsh</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="co">#!/usr/bin/env zsh</span>
+
+<span class="co"># Find files with lines that have 80+ columns.</span>
+<span class="co"># Usage: find_long_lines TABWIDTH [DIRECTORY] [COLUMNS]</span>
+
+<span class="fu">find_long_lines()</span> <span class="kw">{</span>
+	<span class="co"># Search current directory by default.</span>
+	<span class="va">tabwidth</span><span class="op">=</span><span class="st">&quot;</span><span class="va">${1}</span><span class="st">&quot;</span>
+	<span class="va">dir</span><span class="op">=</span><span class="st">&quot;</span><span class="va">${2</span><span class="op">:-</span><span class="st">.</span><span class="va">}</span><span class="st">&quot;</span>
+
+	<span class="co"># Search lines longer than 80 columns by default.</span>
+	<span class="va">columns</span><span class="op">=</span><span class="st">&quot;</span><span class="va">${3</span><span class="op">:-</span><span class="st">80</span><span class="va">}</span><span class="st">&quot;</span>
+	<span class="kw">((</span><span class="va">columns</span><span class="op">++</span><span class="kw">))</span>
+
+	<span class="cf">if</span> <span class="kw">((</span> <span class="va">$</span><span class="op">#</span> <span class="op">&lt;</span> <span class="dv">1</span> <span class="kw">))</span> <span class="kw">||</span> <span class="kw">((</span> <span class="va">$</span><span class="op">#</span> <span class="op">&gt;</span> <span class="dv">3</span> <span class="kw">));</span> <span class="cf">then</span>
+		<span class="bu">echo</span> <span class="st">&quot;usage: </span><span class="va">$0</span><span class="st"> TABWIDTH [DIRECTORY] [COLUMNS]&quot;</span>
+		<span class="cf">return</span> <span class="dv">1</span>
+	<span class="cf">fi</span>
+
+	<span class="cf">if</span> <span class="kw">[[</span> <span class="ot">!</span> <span class="ot">-d</span> <span class="st">&quot;</span><span class="va">$dir</span><span class="st">&quot;</span> <span class="kw">]];</span> <span class="cf">then</span>
+		<span class="bu">echo</span> <span class="st">&quot;directory </span><span class="dt">\`</span><span class="va">$dir</span><span class="st">&#39; does not exist&quot;</span>
+		<span class="cf">return</span> <span class="dv">1</span>
+	<span class="cf">elif</span> <span class="kw">[[</span> <span class="ot">-z</span> <span class="va">$tabwidth</span> <span class="kw">]];</span> <span class="cf">then</span>
+		<span class="bu">echo</span> <span class="st">&quot;second argument must contain a number&quot;</span>
+		<span class="cf">return</span> <span class="dv">1</span>
+	<span class="cf">fi</span>
+
+	<span class="fu">find</span> <span class="st">&quot;</span><span class="va">$dir</span><span class="st">&quot;</span> <span class="at">-type</span> f <span class="at">-not</span> <span class="at">-path</span> <span class="st">&quot;</span><span class="va">$dir</span><span class="st">/.git&quot;</span><span class="dt">\</span>
+		<span class="at">-exec</span> sh <span class="at">-c</span> <span class="st">&quot;expand -t </span><span class="va">$tabwidth</span><span class="st"> {} | grep -n </span><span class="dt">\&quot;</span><span class="st">.\{</span><span class="va">${columns}</span><span class="st">\}</span><span class="dt">\&quot;</span><span class="st">&quot;</span> <span class="dt">\;</span> <span class="at">-print</span>
+<span class="kw">}</span></code></pre></div></div></div><div id="heading-container-h-2-Files-and-directories" class="heading-container"><h2 id="h-2-Files-and-directories"><span id="c-17" class="cell-idx"><a href="#h-2-Files-and-directories">2&ensp;Files and directories</a></span></h2></div><div id="heading-container-h-2.1-univ_open" class="heading-container"><h3 id="h-2.1-univ_open"><span id="c-18" class="cell-idx"><a href="#h-2.1-univ_open">2.1&ensp;<span class="code">univ_open</span></a></span></h3><p><span id="c-19" class="cell-idx">Open a file with a suitable program, or list a directory if given one. The <span class="code">d</span> <a href="/zsh/zshrc.html#b-zshrc-aliases" class="internal-link" id="linkNumber-3">alias</a> calls this.</span></p><div id="c-20" class="cell-idx"><div class="block-container src" id="b-func-univ-open"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-func-univ-open">&#x1F517;</a></div><div class="block-meta"><code>func-univ-open</code><br><code><span class="bold">&#x1F3AF; zsh/func/univ_open</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">zsh</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="co">#!/usr/bin/env zsh</span>
+
+<span class="co"># univ_open() is intended to be used to pass either a SINGLE valid FILE or</span>
+<span class="co"># DIRECTORY. For illustrative purposes, we assume &quot;d&quot; to be aliased to</span>
+<span class="co"># univ_open() in ~/.zshrc. If optional flags are desired, then either prepend</span>
+<span class="co"># or append them appropriately. E.g., if you have jpg&#39;s to be opened by eog,</span>
+<span class="co"># then doing &quot;d -f file.jpg&quot; or &quot;d file.jpg -f&quot; will be the same as &quot;eog -f</span>
+<span class="co"># file.jpg&quot; or &quot;eog file.jpg -f&quot;, respectively. The only requirement when</span>
+<span class="co"># passing flags is that the either the first word or last word must be a valid</span>
+<span class="co"># filename.</span>
+
+<span class="co"># univ_open requires the custom shell function dir_info() (`ls` with saner</span>
+<span class="co"># default args) to work properly</span>
+
+<span class="fu">univ_open()</span> <span class="kw">{</span>
+	<span class="cf">if</span> <span class="kw">[[</span> <span class="ot">-z</span> <span class="va">$@</span> <span class="kw">]];</span> <span class="cf">then</span>
+		<span class="bu">cd</span> <span class="kw">&amp;&amp;</span> <span class="ex">dir_info</span> brief <span class="co"># (&quot;cd&quot; w/o any arguments goes to the home directory)</span>
+	<span class="cf">elif</span> <span class="kw">[[</span> <span class="ot">-f</span> <span class="va">$1</span> <span class="kw">||</span> <span class="ot">-f</span> <span class="va">${</span><span class="op">=</span><span class="va">@</span><span class="op">[</span><span class="dv">-1</span><span class="op">]</span><span class="va">}</span> <span class="kw">]];</span> <span class="cf">then</span>
+		<span class="co"># if we&#39;re here, it means that the user either (1) provided a single valid file name, or (2) a number of</span>
+		<span class="co"># commandline arguments PLUS a single valid file name; use of the $@ variable ensures that we preserve all the</span>
+		<span class="co"># arguments the user passed to us</span>
+
+		<span class="co"># $1 is the first arg; ${=@[-1]} is the last arg (i.e., if user passes &quot;-o -m FILE&quot; to us, then obviously the</span>
+		<span class="co"># last arg is the filename</span>
+		<span class="co">#</span>
+		<span class="co"># we use &amp;&amp; and || for simple ternary operation (like ? and : in C)</span>
+		<span class="kw">[[</span> <span class="ot">-f</span> <span class="va">$1</span> <span class="kw">]]</span> <span class="kw">&amp;&amp;</span> <span class="va">file</span><span class="op">=</span><span class="va">$1</span> <span class="kw">||</span> <span class="va">file</span><span class="op">=</span><span class="va">${</span><span class="op">=</span><span class="va">@</span><span class="op">[</span><span class="dv">-1</span><span class="op">]</span><span class="va">}</span>
+		<span class="cf">case</span> <span class="va">$file:e:l</span> <span class="kw">in</span>
+			<span class="kw">(</span><span class="ss">doc</span><span class="kw">|</span><span class="ss">docx</span><span class="kw">|</span><span class="ss">odf</span><span class="kw">|</span><span class="ss">odt</span><span class="kw">|</span><span class="ss">rtf</span><span class="kw">)</span>
+				<span class="ex">soffice</span> <span class="at">-writer</span> <span class="va">$@</span> <span class="op">&amp;&gt;</span>/dev/null <span class="kw">&amp;</span> <span class="bu">disown</span>
+			<span class="cf">;;</span>
+			<span class="kw">(</span><span class="ss">pps</span><span class="kw">|</span><span class="ss">ppt</span><span class="kw">)</span>
+				<span class="ex">soffice</span> <span class="at">-impress</span> <span class="va">$@</span> <span class="op">&amp;&gt;</span>/dev/null <span class="kw">&amp;</span> <span class="bu">disown</span>
+			<span class="cf">;;</span>
+			<span class="kw">(</span><span class="ss">djvu</span><span class="kw">|</span><span class="ss">dvi</span><span class="kw">|</span><span class="ss">eps</span><span class="kw">|</span><span class="ss">pdf</span><span class="kw">|</span><span class="ss">ps</span><span class="kw">)</span>
+				<span class="ex">zathura</span> <span class="va">$@</span> <span class="op">&amp;&gt;</span>/dev/null <span class="kw">&amp;</span> <span class="bu">disown</span>
+			<span class="cf">;;</span>
+			<span class="kw">(</span><span class="ss">bmp</span><span class="kw">|</span><span class="ss">gif</span><span class="kw">|</span><span class="ss">jpg</span><span class="kw">|</span><span class="ss">jpeg</span><span class="kw">|</span><span class="ss">pcx</span><span class="kw">|</span><span class="ss">png</span><span class="kw">|</span><span class="ss">raf</span><span class="kw">|</span><span class="ss">svg</span><span class="kw">|</span><span class="ss">tga</span><span class="kw">|</span><span class="ss">tif</span><span class="kw">|</span><span class="ss">tiff</span><span class="kw">)</span>
+				<span class="ex">geeqie</span> <span class="at">-f</span> <span class="va">$@</span> <span class="op">&amp;&gt;</span>/dev/null <span class="kw">&amp;</span> <span class="bu">disown</span>
+			<span class="cf">;;</span>
+			<span class="kw">(</span><span class="ss">psd</span><span class="kw">|</span><span class="ss">xcf</span><span class="kw">)</span>
+				<span class="fu">gimp</span> <span class="va">$@</span> <span class="op">&amp;&gt;</span>/dev/null <span class="kw">&amp;</span> <span class="bu">disown</span>
+			<span class="cf">;;</span>
+			<span class="kw">(</span><span class="ss">aac</span><span class="kw">|</span><span class="ss">flac</span><span class="kw">|</span><span class="ss">m4a</span><span class="kw">|</span><span class="ss">mp3</span><span class="kw">|</span><span class="ss">ogg</span><span class="kw">|</span><span class="ss">opus</span><span class="kw">|</span><span class="ss">wav</span><span class="kw">|</span><span class="ss">wma</span><span class="kw">)</span>
+				<span class="ex">mpv</span> <span class="at">--vo</span><span class="op">=</span>null <span class="va">$@</span>
+			<span class="cf">;;</span>
+			<span class="kw">(</span><span class="ss">mid</span><span class="kw">|</span><span class="ss">midi</span><span class="kw">)</span>
+				<span class="ex">timidity</span> <span class="va">$@</span>
+			<span class="cf">;;</span>
+			<span class="kw">(</span><span class="ss">asf</span><span class="kw">|</span><span class="ss">avi</span><span class="kw">|</span><span class="ss">divx</span><span class="kw">|</span><span class="ss">flv</span><span class="kw">|</span><span class="ss">ogm</span><span class="kw">|</span><span class="ss">ogv</span><span class="kw">|</span><span class="ss">m4v</span><span class="kw">|</span><span class="ss">mkv</span><span class="kw">|</span><span class="ss">mov</span><span class="kw">|</span><span class="ss">mp4</span><span class="kw">|</span><span class="ss">mpg</span><span class="kw">|</span><span class="ss">mpeg</span><span class="kw">|</span><span class="ss">rm</span><span class="kw">|</span><span class="ss">rmvb</span><span class="kw">|</span><span class="ss">webm</span><span class="kw">|</span><span class="ss">wmv</span><span class="kw">)</span>
+				<span class="ex">mpv</span> <span class="va">$@</span> <span class="op">&amp;&gt;</span>/dev/null <span class="kw">&amp;</span> <span class="bu">disown</span>
+			<span class="cf">;;</span>
+			<span class="kw">(</span><span class="ss">mts</span><span class="kw">)</span>
+				<span class="ex">vlc</span> <span class="va">$@</span> <span class="op">&amp;&gt;</span>/dev/null <span class="kw">&amp;</span> <span class="bu">disown</span>
+			<span class="cf">;;</span>
+			<span class="kw">(</span><span class="ss">exe</span><span class="kw">)</span>
+				<span class="ex">wine</span> <span class="va">$@</span> <span class="op">&amp;&gt;</span>/dev/null <span class="kw">&amp;</span> <span class="bu">disown</span>
+			<span class="cf">;;</span>
+			<span class="kw">(</span><span class="ss">otf</span><span class="kw">|</span><span class="ss">ttf</span><span class="kw">)</span>
+				<span class="ex">fontforge</span> <span class="va">$@</span> <span class="op">&amp;&gt;</span>/dev/null <span class="kw">&amp;</span> <span class="bu">disown</span>
+			<span class="cf">;;</span>
+			<span class="kw">(</span><span class="ss">chm</span><span class="kw">)</span>
+				<span class="ex">xchm</span> <span class="va">$@</span> <span class="op">&amp;&gt;</span>/dev/null <span class="kw">&amp;</span> <span class="bu">disown</span>
+			<span class="cf">;;</span>
+			<span class="pp">*</span><span class="kw">)</span>
+				<span class="ex">~/syscfg/script/emacsclient-tty.sh</span> <span class="st">&quot;</span><span class="va">$@</span><span class="st">&quot;</span>
+			<span class="cf">;;</span>
+		<span class="cf">esac</span>
+	<span class="cf">elif</span> <span class="kw">[[</span> <span class="ot">-d</span> <span class="va">$1</span> <span class="kw">]];</span> <span class="cf">then</span>
+		<span class="co"># if the first argument is a valid directory, just cd into it -- ignore</span>
+		<span class="co"># any trailing arguments (in zsh, &#39;#&#39; is the same as ARGC, and denotes the number of arguments passed to the</span>
+		<span class="co"># script (so &#39;$#&#39; is the same as $ARGC)</span>
+		<span class="cf">if</span> <span class="kw">[[</span> <span class="va">$</span><span class="op">#</span> <span class="ot">-eq</span> 1 <span class="kw">]];</span> <span class="cf">then</span>
+			<span class="bu">cd</span> <span class="va">$@</span> <span class="kw">&amp;&amp;</span> <span class="ex">dir_info</span> brief
+		<span class="cf">else</span>
+			<span class="co"># if the first argument was a valid directory, but there was more than 1 argument, then we ignore these</span>
+			<span class="co"># trailing args but still cd into the first given directory</span>
+			<span class="bu">cd</span> <span class="va">$1</span> <span class="kw">&amp;&amp;</span> <span class="ex">dir_info</span> brief
+			<span class="co"># i.e., show arguments 2 ... all the way to the last one (last one has an index of -1 argument array)</span>
+			<span class="bu">echo</span> <span class="st">&quot;\nuniv_open: argument(s) ignored: </span><span class="dt">\`</span><span class="va">${</span><span class="op">=</span><span class="va">@</span><span class="op">[</span><span class="dv">2</span><span class="op">,</span><span class="dv">-1</span><span class="op">]</span><span class="va">}</span><span class="dt">\`</span><span class="st">&quot;</span>
+			<span class="bu">echo</span> <span class="st">&quot;univ_open: went to </span><span class="dt">\`</span><span class="va">$1</span><span class="st">&#39;\n&quot;</span>
+		<span class="cf">fi</span>
+	<span class="cf">elif</span> <span class="kw">[[</span> <span class="ot">!</span> <span class="ot">-e</span> <span class="va">$@</span> <span class="kw">]];</span> <span class="cf">then</span>
+		<span class="kw">[[</span> <span class="va">$</span><span class="op">#</span> <span class="ot">-gt</span> 1 <span class="kw">]]</span> <span class="kw">&amp;&amp;</span> <span class="va">head</span><span class="op">=</span><span class="va">$1:h</span> <span class="kw">||</span> <span class="va">head</span><span class="op">=</span><span class="va">$@:h</span>
+		<span class="co"># if we&#39;re given just 1 argument, and that argument does not exist,</span>
+		<span class="co"># then go to the nearest valid parent directory; we use a while loop to</span>
+		<span class="co"># find the closest valid directory, just in case the user gave a</span>
+		<span class="co"># butchered-up path</span>
+		<span class="cf">while</span> <span class="kw">[[</span> <span class="ot">!</span> <span class="ot">-d</span> <span class="va">$head</span> <span class="kw">]];</span> <span class="cf">do</span> <span class="va">head</span><span class="op">=</span><span class="va">$head:h</span><span class="kw">;</span> <span class="cf">done</span>
+		<span class="bu">cd</span> <span class="va">$head</span> <span class="kw">&amp;&amp;</span> <span class="ex">dir_info</span> brief
+		<span class="bu">echo</span> <span class="st">&quot;\nuniv_open: path </span><span class="dt">\`</span><span class="va">$@</span><span class="st">&#39; does not exist&quot;</span>
+		<span class="kw">[[</span> <span class="va">$head</span> <span class="ot">==</span> <span class="st">&quot;.&quot;</span> <span class="kw">]]</span> <span class="kw">&amp;&amp;</span> <span class="bu">echo</span> <span class="st">&quot;univ_open: stayed in same directory\n&quot;</span> <span class="kw">||</span> <span class="bu">echo</span> <span class="st">&quot;univ_open: relocated to nearest parent directory </span><span class="dt">\`</span><span class="va">$head</span><span class="st">&#39;\n&quot;</span>
+	<span class="cf">else</span>
+		<span class="co"># possible error -- should re-program the above if this ever happens,</span>
+		<span class="co"># but, it seems unlikely</span>
+		<span class="bu">echo</span> <span class="st">&quot;\nuniv_open: error -- exiting peacefully&quot;</span>
+	<span class="cf">fi</span>
+<span class="kw">}</span></code></pre></div></div></div><div id="heading-container-h-2.2-dir_info" class="heading-container"><h3 id="h-2.2-dir_info"><span id="c-21" class="cell-idx"><a href="#h-2.2-dir_info">2.2&ensp;<span class="code">dir_info</span></a></span></h3><p><span id="c-22" class="cell-idx">An intelligent <span class="code">ls</span>, used by <a href="#b-func-univ-open" class="internal-link" id="linkNumber-4"><span class="code">univ_open</span></a> and by the <span class="code">ll</span>, <span class="code">l</span>, <span class="code">lj</span>, and <span class="code">lk</span> <a href="/zsh/zshrc.html#b-zshrc-aliases" class="internal-link" id="linkNumber-5">aliases</a>.</span></p><div id="c-23" class="cell-idx"><div class="block-container src" id="b-func-dir-info"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-func-dir-info">&#x1F517;</a></div><div class="block-meta"><code>func-dir-info</code><br><code><span class="bold">&#x1F3AF; zsh/func/dir_info</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">zsh</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="co">#!/usr/bin/env zsh</span>
+
+<span class="co"># dir_info(), a function that acts as an intelligent &quot;ls&quot;. This function is</span>
+<span class="co"># used by univ_open() to display directory contents, but can be used independently.</span>
+
+<span class="fu">dir_info()</span>
+<span class="kw">{</span>
+	<span class="bu">local</span> <span class="va">file_count</span>
+	<span class="bu">local</span> <span class="va">mode</span>
+	<span class="bu">local</span> <span class="va">deref</span>
+	<span class="bu">local</span> <span class="va">thing</span>
+
+	<span class="va">mode</span><span class="op">=</span><span class="st">&quot;</span><span class="va">${1</span><span class="op">:-</span><span class="va">}</span><span class="st">&quot;</span>
+
+	<span class="co"># Add a blank line for legibility.</span>
+	<span class="bu">echo</span>
+
+	<span class="co"># List the contents of the given argument, but use &quot;.&quot; (current directory)</span>
+	<span class="co"># if this argument is blank. If we are given a specific thing to list, make</span>
+	<span class="co"># sure to dereference any symlinks.</span>
+	<span class="va">thing</span><span class="op">=</span><span class="st">&quot;</span><span class="va">${2</span><span class="op">:-</span><span class="st">.</span><span class="va">}</span><span class="st">&quot;</span>
+	<span class="cf">if</span> <span class="kw">[[</span> <span class="ot">-n</span> <span class="st">&quot;</span><span class="va">${thing}</span><span class="st">&quot;</span> <span class="kw">]];</span> <span class="cf">then</span>
+		<span class="co"># Resolve symlinks.</span>
+		<span class="cf">if</span> <span class="kw">[[</span> <span class="ot">-L</span> <span class="st">&quot;</span><span class="va">${thing}</span><span class="st">&quot;</span> <span class="kw">]];</span> <span class="cf">then</span>
+			<span class="bu">echo</span> <span class="st">&quot;  </span><span class="va">${thing}</span><span class="st"> -&gt; </span><span class="va">$(</span><span class="fu">readlink</span> <span class="at">-f</span> <span class="st">&quot;</span><span class="va">${thing}</span><span class="st">&quot;</span><span class="va">)</span><span class="st">&quot;</span>
+			<span class="bu">echo</span> <span class="st">&quot;  ---&quot;</span>
+			<span class="va">thing</span><span class="op">=</span><span class="st">&quot;</span><span class="va">$(</span><span class="fu">readlink</span> <span class="at">-f</span> <span class="st">&quot;</span><span class="va">${thing}</span><span class="st">&quot;</span><span class="va">)</span><span class="st">&quot;</span>
+		<span class="cf">fi</span>
+	<span class="cf">fi</span>
+
+	<span class="co"># NOP if there is nothing to show.</span>
+	<span class="va">file_count</span><span class="op">=</span><span class="va">$(</span><span class="fu">ls</span> <span class="at">-A1</span> <span class="st">&quot;</span><span class="va">${thing}</span><span class="st">&quot;</span> <span class="kw">|</span> <span class="fu">wc</span> <span class="at">-l</span><span class="va">)</span>
+	<span class="cf">if</span> <span class="kw">((</span> <span class="va">file_count</span> <span class="op">==</span> <span class="dv">0</span> <span class="kw">));</span> <span class="cf">then</span>
+		<span class="bu">echo</span> <span class="st">&quot;(</span><span class="va">$PWD</span><span class="st"> is empty)&quot;</span>
+		<span class="bu">echo</span>
+		<span class="cf">return</span>
+	<span class="cf">fi</span>
+
+	<span class="cf">case</span> <span class="st">&quot;</span><span class="va">${mode}</span><span class="st">&quot;</span> <span class="kw">in</span>
+	<span class="ss">verbose-by-name</span><span class="kw">)</span>
+		<span class="fu">ls</span> <span class="at">-Aho</span> <span class="at">--time-style</span><span class="op">=</span>long-iso <span class="at">--color</span> <span class="va">${thing}</span> <span class="dt">\</span>
+			<span class="kw">|</span> <span class="fu">sed</span> <span class="at">-e</span> <span class="st">&#39;s|^|  |&#39;</span>
+		<span class="cf">;;</span>
+	<span class="ss">verbose-by-size</span><span class="kw">)</span>
+		<span class="fu">ls</span> <span class="at">-AhoSr</span> <span class="at">--time-style</span><span class="op">=</span>long-iso <span class="at">--color</span> <span class="va">${thing}</span> <span class="dt">\</span>
+			<span class="kw">|</span> <span class="fu">sed</span> <span class="at">-e</span> <span class="st">&#39;s|^|  |&#39;</span>
+		<span class="cf">;;</span>
+	<span class="ss">verbose-by-date</span><span class="kw">)</span>
+		<span class="fu">ls</span> <span class="at">-Ahotr</span> <span class="at">--time-style</span><span class="op">=</span>long-iso <span class="at">--color</span> <span class="va">${thing}</span> <span class="dt">\</span>
+			<span class="kw">|</span> <span class="fu">sed</span> <span class="at">-e</span> <span class="st">&#39;s|^|  |&#39;</span>
+		<span class="cf">;;</span>
+	<span class="ss">brief</span><span class="kw">)</span>
+		<span class="fu">ls</span> <span class="at">-AC</span> <span class="at">-w</span> <span class="va">$((COLUMNS</span> <span class="op">-</span> <span class="dv">2</span><span class="va">))</span> <span class="at">--color</span> <span class="va">${thing}</span> <span class="dt">\</span>
+			<span class="kw">|</span> <span class="fu">sed</span> <span class="st">&#39;s|^|  |&#39;</span>
+		<span class="cf">;;</span>
+	<span class="pp">*</span><span class="kw">)</span>
+		<span class="bu">echo</span> <span class="op">&gt;&amp;</span><span class="dv">2</span> <span class="st">&quot;unrecognized mode </span><span class="dt">\`</span><span class="va">${mode}</span><span class="st">&#39;&quot;</span>
+		<span class="cf">return</span> <span class="dv">1</span>
+		<span class="cf">;;</span>
+	<span class="cf">esac</span>
+
+	<span class="co"># If this is a git root directory, then show a list of all remotes.</span>
+	<span class="cf">if</span> <span class="kw">[[</span> <span class="ot">-d</span> .git <span class="kw">]];</span> <span class="cf">then</span>
+		<span class="bu">echo</span>
+		<span class="fu">git</span> remote <span class="at">-v</span>
+	<span class="cf">fi</span>
+
+	<span class="co"># Add a blank line between us and the shell prompt for legibility.</span>
+	<span class="bu">echo</span>
+<span class="kw">}</span></code></pre></div></div></div><div id="heading-container-h-2.3-dirs_navigate" class="heading-container"><h3 id="h-2.3-dirs_navigate"><span id="c-24" class="cell-idx"><a href="#h-2.3-dirs_navigate">2.3&ensp;<span class="code">dirs_navigate</span></a></span></h3><p><span id="c-25" class="cell-idx">Move backward and forward through the directory stack. <a href="/zsh/zshrc.html" class="internal-link" id="linkNumber-6"><span class="code">.zshrc</span></a> binds this to <span class="code">C-h</span> and <span class="code">C-l</span>.</span></p><div id="c-26" class="cell-idx"><div class="block-container src" id="b-func-dirs-navigate"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-func-dirs-navigate">&#x1F517;</a></div><div class="block-meta"><code>func-dirs-navigate</code><br><code><span class="bold">&#x1F3AF; zsh/func/dirs_navigate</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">zsh</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="co">#!/usr/bin/env zsh</span>
+
+<span class="co"># Usage: `_l_dirs_navigate &lt;next|prev&gt;&#39; to go forward/backwards in directory</span>
+<span class="co"># (PWD) history. Use &#39;dirs -v&#39; to see the directory history stack.</span>
+
+<span class="fu">dirs_navigate()</span>
+<span class="kw">{</span>
+	<span class="bu">local</span> <span class="va">direction</span><span class="op">=</span><span class="st">&quot;</span><span class="va">${1}</span><span class="st">&quot;</span>
+	<span class="cf">if</span> <span class="kw">[[</span> <span class="st">&quot;</span><span class="va">${direction}</span><span class="st">&quot;</span> <span class="ot">==</span> prev <span class="kw">]];</span> <span class="cf">then</span>
+		<span class="bu">dirs</span> <span class="va">$(</span><span class="bu">dirs</span> <span class="at">-lp</span> <span class="kw">|</span> <span class="fu">awk</span> <span class="st">&#39;NR==1{store=$0;next}1;END{print store}&#39;</span><span class="va">)</span> <span class="kw">&amp;&amp;</span> <span class="bu">popd</span> <span class="kw">&amp;&amp;</span> <span class="ex">dir_info</span> brief
+	<span class="cf">else</span>
+		<span class="bu">cd</span> <span class="at">-0</span> <span class="kw">&amp;&amp;</span> <span class="ex">dir_info</span> brief
+	<span class="cf">fi</span>
+<span class="kw">}</span></code></pre></div></div></div><div id="heading-container-h-2.4-rand_open" class="heading-container"><h3 id="h-2.4-rand_open"><span id="c-27" class="cell-idx"><a href="#h-2.4-rand_open">2.4&ensp;<span class="code">rand_open</span></a></span></h3><p><span id="c-28" class="cell-idx">Shuffle the files with the given extensions into a list, and open that list with the given command.</span></p><div id="c-29" class="cell-idx"><div class="block-container src" id="b-func-rand-open"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-func-rand-open">&#x1F517;</a></div><div class="block-meta"><code>func-rand-open</code><br><code><span class="bold">&#x1F3AF; zsh/func/rand_open</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">zsh</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="co">#!/usr/bin/env zsh</span>
+
+<span class="co"># rand_open() [recurse/norecurse] [&#39;command string&#39;] [extensions...]</span>
+
+<span class="co"># Find all files matching the extension (recursively or not), and store the</span>
+<span class="co"># filenames as a list in `/tmp/rand_open_files`. Then, use the given command</span>
+<span class="co"># string to open this list of files.</span>
+
+<span class="fu">rand_open()</span>
+<span class="kw">{</span>
+	<span class="bu">:</span><span class="op">&gt;</span>/tmp/rand_open_files
+	<span class="va">recurse_flag</span><span class="op">=</span><span class="va">$1</span>
+	<span class="va">command</span><span class="op">=</span><span class="va">$2</span>
+	<span class="cf">if</span> <span class="kw">[[</span> <span class="ot">-n</span> <span class="va">$3</span> <span class="kw">]];</span> <span class="cf">then</span>
+		<span class="va">output_ext</span><span class="op">=</span><span class="st">&quot;.</span><span class="va">$3</span><span class="st">&quot;</span>
+	<span class="cf">else</span>
+		<span class="va">output_ext</span><span class="op">=</span><span class="st">&quot;&quot;</span>
+	<span class="cf">fi</span>
+	<span class="va">output_file</span><span class="op">=</span>/tmp/rand_open_files<span class="va">${output_ext}</span>
+	<span class="va">regex_str</span><span class="op">=</span><span class="st">&quot;.*</span><span class="dt">\\</span><span class="st">.</span><span class="dt">\\</span><span class="st">(&quot;</span>
+	<span class="va">find_recurse</span><span class="op">=</span><span class="st">&quot;&quot;</span>
+	<span class="bu">shift</span> 3
+
+	<span class="cf">for</span> ext <span class="kw">in</span> <span class="va">$*</span><span class="kw">;</span> <span class="cf">do</span>
+		<span class="va">regex_str</span><span class="op">+=</span><span class="st">&quot;</span><span class="va">$ext</span><span class="dt">\\</span><span class="st">|&quot;</span>
+	<span class="cf">done</span>
+
+	<span class="va">regex_str</span><span class="op">+=</span><span class="st">&quot;</span><span class="dt">\\</span><span class="st">)$&quot;</span>
+
+	<span class="cf">if</span> <span class="kw">[[</span> <span class="va">$recurse_flag</span> <span class="ot">==</span> <span class="st">&quot;norecurse&quot;</span> <span class="kw">]];</span> <span class="cf">then</span>
+		<span class="va">find_recurse</span><span class="op">=</span><span class="st">&quot;-maxdepth 1&quot;</span>
+	<span class="cf">fi</span>
+
+	<span class="fu">find</span> <span class="at">-L</span> <span class="va">$PWD</span> <span class="va">${(</span><span class="op">z</span><span class="va">)find_recurse}</span> <span class="at">-type</span> f <span class="at">-iregex</span> <span class="va">$regex_str</span> <span class="dt">\</span>
+		<span class="kw">|</span> <span class="fu">shuf</span> <span class="at">--random-source</span> /dev/urandom <span class="dt">\</span>
+		<span class="op">&gt;</span> <span class="va">$output_file</span>
+
+	<span class="cf">if</span> <span class="kw">[[</span> <span class="va">$(</span><span class="fu">wc</span> <span class="at">-l</span> <span class="va">$output_file</span> <span class="kw">|</span> <span class="fu">cut</span> <span class="at">-d</span> <span class="st">&#39; &#39;</span> <span class="at">-f</span> 1<span class="va">)</span> <span class="ot">-gt</span> 0 <span class="kw">]];</span> <span class="cf">then</span>
+		<span class="va">${(</span><span class="op">z</span><span class="va">)command}</span> <span class="va">$output_file</span>
+		<span class="bu">echo</span> <span class="st">&quot;Chose file </span><span class="dt">\`</span><span class="va">$chosen</span><span class="st">&#39;&quot;</span>
+	<span class="cf">else</span>
+		<span class="bu">echo</span> <span class="st">&quot;No files to choose.&quot;</span>
+	<span class="cf">fi</span>
+<span class="kw">}</span></code></pre></div></div></div><div id="heading-container-h-3-Git" class="heading-container"><h2 id="h-3-Git"><span id="c-30" class="cell-idx"><a href="#h-3-Git">3&ensp;Git</a></span></h2></div><div id="heading-container-h-3.1-git_contents" class="heading-container"><h3 id="h-3.1-git_contents"><span id="c-31" class="cell-idx"><a href="#h-3.1-git_contents">3.1&ensp;<span class="code">git_contents</span></a></span></h3><p><span id="c-32" class="cell-idx">Check that we&#39;re in a Git repo with at least one commit. Several of the functions below use this as a guard.</span></p><div id="c-33" class="cell-idx"><div class="block-container src" id="b-func-git-contents"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-func-git-contents">&#x1F517;</a></div><div class="block-meta"><code>func-git-contents</code><br><code><span class="bold">&#x1F3AF; zsh/func/git_contents</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">zsh</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="co">#!/usr/bin/env zsh</span>
+
+<span class="fu">git_contents()</span>
+<span class="kw">{</span>
+	<span class="co"># git-status: Is this a git repo?</span>
+	<span class="co"># git-log: If so, does it actually have any commits? (I.e., it may be the case</span>
+	<span class="co"># that this is a fresh repo without any commits yet, but where there are</span>
+	<span class="co"># still staged files such that git-ls-files is non-empty.</span>
+	<span class="fu">git</span> status <span class="op">&amp;&gt;</span> /dev/null <span class="kw">&amp;&amp;</span> <span class="co"># (1)</span>
+		<span class="fu">git</span> log <span class="at">--max-count</span> 1 <span class="op">&amp;&gt;</span> /dev/null <span class="co"># (2)</span>
+<span class="kw">}</span></code></pre></div></div></div><div id="heading-container-h-3.2-gst" class="heading-container"><h3 id="h-3.2-gst"><span id="c-34" class="cell-idx"><a href="#h-3.2-gst">3.2&ensp;<span class="code">gst</span></a></span></h3><p><span id="c-35" class="cell-idx">Run <span class="code">git status</span>, and also show any stashes and assume-unchanged files.</span></p><div id="c-36" class="cell-idx"><div class="block-container src" id="b-func-gst"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-func-gst">&#x1F517;</a></div><div class="block-meta"><code>func-gst</code><br><code><span class="bold">&#x1F3AF; zsh/func/gst</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">zsh</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="co">#!/usr/bin/env zsh</span>
+
+<span class="fu">gst()</span>
+<span class="kw">{</span>
+	<span class="ot">! </span><span class="ex">git_contents</span> <span class="kw">&amp;&amp;</span> <span class="cf">return</span>
+
+	<span class="bu">local</span> <span class="va">ce</span><span class="op">=</span><span class="st">&quot;\x1b[0m&quot;</span>
+
+	<span class="fu">git</span> <span class="at">-c</span> color.status=always status
+	<span class="bu">local</span> <span class="va">gstash</span><span class="op">=</span><span class="va">$(</span><span class="fu">git</span> stash list<span class="va">)</span>
+	<span class="cf">if</span> <span class="kw">[[</span> <span class="ot">-n</span> <span class="st">&quot;</span><span class="va">$gstash</span><span class="st">&quot;</span> <span class="kw">]];</span> <span class="cf">then</span>
+		<span class="bu">printf</span> <span class="st">&quot;\n\x1b[1;38;5;196m-- STASH --</span><span class="va">${ce}</span><span class="st">\n</span><span class="va">$gstash</span><span class="st">\n&quot;</span>
+	<span class="cf">fi</span>
+	<span class="bu">local</span> <span class="va">groot</span><span class="op">=</span><span class="va">$(</span><span class="fu">git</span> rev-parse <span class="at">--show-toplevel</span><span class="va">)</span>
+	<span class="bu">local</span> <span class="va">gau</span><span class="op">=</span><span class="va">$(</span><span class="fu">git</span> <span class="at">-C</span> <span class="st">&quot;</span><span class="va">$groot</span><span class="st">&quot;</span> ls-files <span class="at">-v</span> <span class="kw">|</span> <span class="fu">grep</span> <span class="st">&quot;^[[:lower:]]&quot;</span><span class="va">)</span>
+	<span class="cf">if</span> <span class="kw">[[</span> <span class="ot">-n</span> <span class="st">&quot;</span><span class="va">$gau</span><span class="st">&quot;</span> <span class="kw">]];</span> <span class="cf">then</span>
+		<span class="bu">printf</span> <span class="st">&quot;\n\x1b[1;38;5;201m-- ASSUME UNCHANGED --</span><span class="va">${ce}</span><span class="st">\n</span><span class="va">$gau</span><span class="st">\n&quot;</span>
+	<span class="cf">fi</span>
+<span class="kw">}</span></code></pre></div></div></div><div id="heading-container-h-3.3-gsts" class="heading-container"><h3 id="h-3.3-gsts"><span id="c-37" class="cell-idx"><a href="#h-3.3-gsts">3.3&ensp;<span class="code">gsts</span></a></span></h3><p><span id="c-38" class="cell-idx">Summarize a repo&#39;s state compactly: its ref and hash, markers for changed, untracked, and stashed files, and its divergence from upstream.</span></p><div id="c-39" class="cell-idx"><div class="block-container src" id="b-func-gsts"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-func-gsts">&#x1F517;</a></div><div class="block-meta"><code>func-gsts</code><br><code><span class="bold">&#x1F3AF; zsh/func/gsts</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">zsh</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="co">#!/usr/bin/env zsh</span>
+
+<span class="fu">gsts_print()</span>
+<span class="kw">{</span>
+	<span class="cf">if</span> <span class="kw">[[</span> <span class="va">$for_prompt</span> <span class="ot">==</span> for_prompt <span class="kw">]];</span> <span class="cf">then</span>
+		<span class="bu">print</span> <span class="at">-n</span> <span class="va">$1</span>
+	<span class="cf">else</span>
+		<span class="bu">print</span> <span class="at">-nP</span> <span class="va">$1</span>
+	<span class="cf">fi</span>
+<span class="kw">}</span>
+
+<span class="fu">gsts_hash()</span>
+<span class="kw">{</span>
+	<span class="bu">local</span> <span class="va">g_hash</span><span class="op">=</span><span class="va">$(</span><span class="fu">git</span> rev-parse <span class="at">--short</span> HEAD<span class="va">)</span>
+	<span class="ex">gsts_print</span> <span class="st">&quot;</span><span class="va">$g_hash</span><span class="st">&quot;</span>
+<span class="kw">}</span>
+
+<span class="fu">gsts_ref()</span>
+<span class="kw">{</span>
+	<span class="bu">local</span> <span class="va">g_ref</span><span class="op">=</span><span class="va">$(</span><span class="fu">git</span> rev-parse <span class="at">--abbrev-ref</span> HEAD<span class="va">)</span>
+	<span class="cf">if</span> <span class="kw">[[</span> <span class="va">$g_ref</span> <span class="ot">==</span> HEAD <span class="kw">]];</span> <span class="cf">then</span>
+		<span class="va">g_ref</span><span class="op">=</span><span class="st">&quot; </span><span class="va">$(</span><span class="fu">git</span> rev-parse HEAD<span class="va">)</span><span class="st">&quot;</span>
+	<span class="cf">fi</span>
+	<span class="ex">gsts_print</span> <span class="st">&quot;</span><span class="va">$g_ref</span><span class="st">&quot;</span>
+<span class="kw">}</span>
+
+<span class="co"># Adapted from http://www.zsh.org/mla/users/2016/msg00664.html.</span>
+<span class="fu">gsts_upstream_divergence()</span> <span class="kw">{</span>
+	<span class="fu">git</span> rev-parse @{upstream} <span class="op">&gt;</span>/dev/null <span class="dv">2</span><span class="op">&gt;&amp;</span><span class="dv">1</span> <span class="kw">||</span> <span class="cf">return</span>
+	<span class="bu">local</span> <span class="at">-a</span> <span class="va">x</span>
+	<span class="va">x</span><span class="op">=</span><span class="va">(</span> <span class="va">$(</span><span class="fu">git</span> rev-list <span class="at">--left-right</span> <span class="at">--count</span> HEAD...@{upstream}<span class="va">)</span> <span class="va">)</span>
+	<span class="cf">if</span> <span class="kw">((</span> <span class="va">x</span><span class="op">[</span><span class="dv">1</span><span class="op">]</span> <span class="kw">))</span> <span class="kw">||</span> <span class="kw">((</span> <span class="va">x</span><span class="op">[</span><span class="dv">2</span><span class="op">]</span> <span class="kw">));</span> <span class="cf">then</span>
+		<span class="cf">if</span> <span class="kw">((</span> <span class="va">x</span><span class="op">[</span><span class="dv">1</span><span class="op">]</span> <span class="kw">));</span> <span class="cf">then</span>
+			<span class="ex">gsts_print</span> <span class="st">&quot;%B%F{green}\u25b2%b%f&quot;</span>
+		<span class="cf">fi</span>
+		<span class="cf">if</span> <span class="kw">((</span> <span class="va">x</span><span class="op">[</span><span class="dv">2</span><span class="op">]</span> <span class="kw">));</span> <span class="cf">then</span>
+			<span class="ex">gsts_print</span> <span class="st">&quot;%B%F{red}\u25bc%b%f&quot;</span>
+		<span class="cf">fi</span>
+	<span class="cf">else</span>
+		<span class="ex">gsts_print</span> <span class="st">&quot;%B%F{default}\u25cf%b%f&quot;</span>
+	<span class="cf">fi</span>
+<span class="kw">}</span>
+
+<span class="fu">gsts_bare()</span>
+<span class="kw">{</span>
+	<span class="bu">local</span> <span class="va">g_ref</span><span class="op">=</span><span class="va">$(</span><span class="ex">gsts_ref</span><span class="va">)</span>
+	<span class="bu">local</span> <span class="va">g_hash</span><span class="op">=</span><span class="va">$(</span><span class="ex">gsts_hash</span><span class="va">)</span>
+	<span class="ex">gsts_print</span> <span class="st">&quot;&lt;bare&gt;:</span><span class="va">$g_hash</span><span class="st">:</span><span class="va">$g_ref</span><span class="st">&quot;</span>
+<span class="kw">}</span>
+
+<span class="fu">gsts_nonbare()</span>
+<span class="kw">{</span>
+	<span class="bu">local</span> <span class="va">g_path</span><span class="op">=</span><span class="va">$(</span><span class="fu">git</span> rev-parse <span class="at">--show-toplevel</span><span class="va">)</span>
+
+	<span class="bu">local</span> <span class="va">g_ref</span><span class="op">=</span><span class="va">$(</span><span class="ex">gsts_ref</span><span class="va">)</span>
+	<span class="bu">local</span> <span class="va">g_hash</span><span class="op">=</span><span class="va">$(</span><span class="ex">gsts_hash</span><span class="va">)</span>
+
+	<span class="bu">local</span> <span class="va">g_diff</span><span class="op">=</span><span class="va">$(</span><span class="fu">git</span> diff<span class="va">)</span>
+	<span class="bu">local</span> <span class="va">g_diffc</span><span class="op">=</span><span class="va">$(</span><span class="fu">git</span> diff <span class="at">--cached</span><span class="va">)</span>
+	<span class="bu">local</span> <span class="va">g_changed</span><span class="op">=</span><span class="st">&quot;-&quot;</span>
+	<span class="cf">if</span> <span class="kw">[[</span> <span class="ot">-n</span> <span class="va">$g_diff</span> <span class="kw">&amp;&amp;</span> <span class="ot">-n</span> <span class="va">$g_diffc</span> <span class="kw">]];</span> <span class="cf">then</span>
+		<span class="va">g_changed</span><span class="op">=</span><span class="st">&quot;%B%F{208}X%b%f&quot;</span>
+	<span class="cf">elif</span> <span class="kw">[[</span> <span class="ot">-n</span> <span class="va">$g_diff</span> <span class="kw">]];</span> <span class="cf">then</span>
+		<span class="va">g_changed</span><span class="op">=</span><span class="st">&quot;%B%F{green}C%b%f&quot;</span>
+	<span class="cf">elif</span> <span class="kw">[[</span> <span class="ot">-n</span> <span class="va">$g_diffc</span> <span class="kw">]];</span> <span class="cf">then</span>
+		<span class="va">g_changed</span><span class="op">=</span><span class="st">&quot;%B%F{magenta}S%b%f&quot;</span>
+	<span class="cf">fi</span>
+
+	<span class="bu">local</span> <span class="va">g_untracked</span><span class="op">=</span><span class="va">$(</span><span class="fu">git</span> <span class="at">-C</span> <span class="st">&quot;</span><span class="va">$g_path</span><span class="st">&quot;</span> ls-files <span class="at">--other</span> <span class="at">--exclude-standard</span> <span class="dt">\</span>
+		<span class="kw">|</span> <span class="fu">wc</span> <span class="at">-l</span><span class="va">)</span>
+	<span class="cf">if</span> <span class="kw">((</span> <span class="va">$g_untracked</span> <span class="op">==</span> <span class="dv">0</span> <span class="kw">));</span> <span class="cf">then</span>
+		<span class="va">g_untracked</span><span class="op">=</span><span class="st">&quot;-&quot;</span>
+	<span class="cf">else</span>
+		<span class="cf">if</span> <span class="kw">((</span> <span class="va">$g_untracked</span> <span class="op">&gt;</span> <span class="dv">9</span> <span class="kw">));</span> <span class="cf">then</span>
+			<span class="va">g_untracked</span><span class="op">=</span><span class="st">&quot;!&quot;</span>
+		<span class="cf">fi</span>
+		<span class="va">g_untracked</span><span class="op">=</span><span class="st">&quot;%B%F{yellow}</span><span class="va">${g_untracked}</span><span class="st">%b%f&quot;</span>
+	<span class="cf">fi</span>
+
+	<span class="bu">local</span> <span class="va">g_stashed</span><span class="op">=</span><span class="va">$(</span><span class="fu">git</span> stash list <span class="kw">|</span> <span class="fu">wc</span> <span class="at">-l</span><span class="va">)</span>
+	<span class="cf">if</span> <span class="kw">((</span> <span class="va">$g_stashed</span> <span class="op">==</span> <span class="dv">0</span> <span class="kw">));</span> <span class="cf">then</span>
+		<span class="va">g_stashed</span><span class="op">=</span><span class="st">&quot;-&quot;</span>
+	<span class="cf">else</span>
+		<span class="cf">if</span> <span class="kw">((</span> <span class="va">$g_stashed</span> <span class="op">&gt;</span> <span class="dv">9</span> <span class="kw">));</span> <span class="cf">then</span>
+			<span class="va">g_stashed</span><span class="op">=</span><span class="st">&quot;!&quot;</span>
+		<span class="cf">fi</span>
+		<span class="va">g_stashed</span><span class="op">=</span><span class="st">&quot;%B%F{196}</span><span class="va">${g_stashed}</span><span class="st">%b%f&quot;</span>
+	<span class="cf">fi</span>
+
+	<span class="bu">local</span> <span class="va">g_assume_unchanged</span><span class="op">=</span><span class="va">$(</span><span class="fu">git</span> <span class="at">-C</span> <span class="st">&quot;</span><span class="va">$g_path</span><span class="st">&quot;</span> ls-files <span class="at">-v</span> <span class="kw">|</span> <span class="fu">grep</span> <span class="st">&quot;^[[:lower:]]&quot;</span> <span class="kw">|</span> <span class="fu">wc</span> <span class="at">-l</span><span class="va">)</span>
+	<span class="cf">if</span> <span class="kw">((</span> <span class="va">$g_assume_unchanged</span> <span class="op">==</span> <span class="dv">0</span> <span class="kw">));</span> <span class="cf">then</span>
+		<span class="va">g_assume_unchanged</span><span class="op">=</span><span class="st">&quot;-&quot;</span>
+	<span class="cf">else</span>
+		<span class="cf">if</span> <span class="kw">((</span> <span class="va">$g_assume_unchanged</span> <span class="op">&gt;</span> <span class="dv">9</span> <span class="kw">));</span> <span class="cf">then</span>
+			<span class="va">g_assume_unchanged</span><span class="op">=</span><span class="st">&quot;!&quot;</span>
+		<span class="cf">fi</span>
+		<span class="va">g_assume_unchanged</span><span class="op">=</span><span class="st">&quot;%B%F{201}</span><span class="va">$g_assume_unchanged</span><span class="st">%b%f&quot;</span>
+	<span class="cf">fi</span>
+
+	<span class="ex">gsts_print</span> <span class="st">&quot;</span><span class="va">$g_hash</span><span class="st">:</span><span class="va">$g_changed$g_untracked$g_stashed$g_assume_unchanged</span><span class="st">&quot;</span>
+	<span class="cf">if</span> <span class="kw">[[</span> <span class="va">$g_ref</span><span class="op">[</span><span class="dv">1</span><span class="op">]</span> <span class="ot">!=</span> <span class="st">&#39; &#39;</span> <span class="kw">]];</span> <span class="cf">then</span>
+		<span class="ex">gsts_print</span> <span class="st">&quot;:</span><span class="va">$g_ref</span><span class="st">&quot;</span>
+	<span class="cf">fi</span>
+	<span class="ex">gsts_upstream_divergence</span>
+<span class="kw">}</span>
+
+<span class="bu">local</span> <span class="va">for_prompt</span><span class="op">=</span><span class="va">$1</span>
+<span class="bu">local</span> <span class="va">l_status</span>
+
+<span class="ot">! </span><span class="ex">git_contents</span> <span class="kw">&amp;&amp;</span> <span class="cf">return</span>
+
+<span class="cf">if</span> <span class="kw">[[</span> <span class="va">$(</span><span class="fu">git</span> rev-parse <span class="at">--is-bare-repository</span><span class="va">)</span> <span class="ot">==</span> true <span class="kw">]];</span> <span class="cf">then</span>
+	<span class="ex">gsts_bare</span>
+<span class="cf">else</span>
+	<span class="va">l_status</span><span class="op">=</span><span class="st">&quot;</span><span class="va">$(</span><span class="ex">gsts_nonbare</span><span class="va">)</span><span class="st">&quot;</span>
+	<span class="cf">if</span> <span class="kw">[[</span> <span class="ot">-n</span> <span class="st">&quot;</span><span class="va">${l_status}</span><span class="st">&quot;</span> <span class="kw">]];</span> <span class="cf">then</span>
+		<span class="bu">echo</span> <span class="st">&quot;</span><span class="va">${l_status}</span><span class="st"> &quot;</span>
+	<span class="cf">fi</span>
+<span class="cf">fi</span></code></pre></div></div></div><div id="heading-container-h-3.4-gd" class="heading-container"><h3 id="h-3.4-gd"><span id="c-40" class="cell-idx"><a href="#h-3.4-gd">3.4&ensp;<span class="code">gd</span></a></span></h3><p><span id="c-41" class="cell-idx">Show the worktree and index diffs in a pager. This uses the <a href="/git.html" class="internal-link" id="linkNumber-7"><span class="code">gd</span> program</a> from this repo if it&#39;s installed, and otherwise falls back to labeling the diffs with <a href="#b-func-vertical-label" class="internal-link" id="linkNumber-8"><span class="code">vertical_label</span></a>.</span></p><div id="c-42" class="cell-idx"><div class="block-container src" id="b-func-gd"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-func-gd">&#x1F517;</a></div><div class="block-meta"><code>func-gd</code><br><code><span class="bold">&#x1F3AF; zsh/func/gd</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">zsh</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="co">#!/usr/bin/env zsh</span>
+
+<span class="fu">_gd()</span>
+<span class="kw">{</span>
+	<span class="ot">! </span><span class="ex">git_contents</span> <span class="kw">&amp;&amp;</span> <span class="cf">return</span>
+
+	<span class="bu">local</span> <span class="va">c_green</span><span class="op">=</span><span class="st">&quot;\x1b[1;32m&quot;</span>
+	<span class="bu">local</span> <span class="va">c_magenta</span><span class="op">=</span><span class="st">&quot;\x1b[1;35m&quot;</span>
+	<span class="bu">local</span> <span class="va">ce</span><span class="op">=</span><span class="st">&quot;\x1b[0m&quot;</span>
+
+	<span class="bu">local</span> <span class="va">git_diff</span><span class="op">=</span><span class="va">$(</span><span class="fu">git</span> diff <span class="at">--color</span><span class="op">=</span>always<span class="va">)</span>
+	<span class="bu">local</span> <span class="va">git_diff_c</span><span class="op">=</span><span class="va">$(</span><span class="fu">git</span> diff <span class="at">--cached</span> <span class="at">--color</span><span class="op">=</span>always<span class="va">)</span>
+
+	<span class="cf">if</span> <span class="kw">[[</span> <span class="ot">-z</span> <span class="st">&quot;</span><span class="va">$git_diff</span><span class="st">&quot;</span> <span class="kw">&amp;&amp;</span> <span class="ot">-z</span> <span class="st">&quot;</span><span class="va">$git_diff_c</span><span class="st">&quot;</span> <span class="kw">]];</span> <span class="cf">then</span>
+		<span class="cf">return</span> <span class="dv">0</span>
+	<span class="cf">fi</span>
+
+	<span class="bu">local</span> <span class="va">msg_diff</span><span class="op">=</span><span class="st">&quot;&quot;</span>
+	<span class="bu">local</span> <span class="va">msg_diff_c</span><span class="op">=</span><span class="st">&quot;&quot;</span>
+	<span class="cf">if</span> <span class="kw">[[</span> <span class="ot">-n</span> <span class="st">&quot;</span><span class="va">$git_diff</span><span class="st">&quot;</span> <span class="kw">]];</span> <span class="cf">then</span>
+		<span class="co"># The sed &#39;/^$/d&#39; below is to remove the extra trailing whitespace</span>
+		<span class="co"># line that seems to get added into `git diff&#39; but not `git diff</span>
+		<span class="co"># --cached&#39;.</span>
+		<span class="va">msg_diff</span><span class="op">=</span><span class="va">$(</span><span class="ex">vertical_label</span> <span class="dt">\</span>
+			<span class="st">&quot;git diff --color=always | sed &#39;/^$/d&#39;&quot;</span> <span class="dt">\</span>
+			<span class="st">&quot;TREE ------------------------ &quot;</span> <span class="dt">\</span>
+			<span class="st">&quot;</span><span class="va">$c_green</span><span class="st">&quot;</span><span class="va">)</span>
+	<span class="cf">fi</span>
+
+	<span class="cf">if</span> <span class="kw">[[</span> <span class="ot">-n</span> <span class="st">&quot;</span><span class="va">$git_diff_c</span><span class="st">&quot;</span> <span class="kw">]];</span> <span class="cf">then</span>
+		<span class="va">msg_diff_c</span><span class="op">=</span><span class="va">$(</span><span class="ex">vertical_label</span> <span class="dt">\</span>
+			<span class="st">&quot;git diff --cached --color=always&quot;</span> <span class="dt">\</span>
+			<span class="st">&quot;INDEX ------------------------ &quot;</span> <span class="dt">\</span>
+			<span class="st">&quot;</span><span class="va">$c_magenta</span><span class="st">&quot;</span><span class="va">)</span>
+	<span class="cf">fi</span>
+
+	<span class="cf">if</span> <span class="kw">[[</span> <span class="ot">-n</span> <span class="st">&quot;</span><span class="va">$git_diff</span><span class="st">&quot;</span> <span class="kw">]]</span> <span class="kw">&amp;&amp;</span> <span class="kw">[[</span> <span class="ot">-n</span> <span class="st">&quot;</span><span class="va">$git_diff_c</span><span class="st">&quot;</span> <span class="kw">]];</span> <span class="cf">then</span>
+		<span class="co"># If we have two buffers to show, force less to pause before</span>
+		<span class="co"># showing the next one. We do this by unsetting the -F flag set in</span>
+		<span class="co"># ~/.lesskey.</span>
+		<span class="bu">printf</span> <span class="st">&quot;</span><span class="va">$msg_diff</span><span class="st">&quot;</span> <span class="kw">|</span> <span class="fu">less</span> <span class="at">-+F</span>
+		<span class="bu">printf</span> <span class="st">&quot;</span><span class="va">$msg_diff_c</span><span class="st">&quot;</span> <span class="kw">|</span> <span class="fu">less</span>
+	<span class="cf">elif</span> <span class="kw">[[</span> <span class="ot">-n</span> <span class="st">&quot;</span><span class="va">$git_diff</span><span class="st">&quot;</span> <span class="kw">]];</span> <span class="cf">then</span>
+		<span class="bu">printf</span> <span class="st">&quot;</span><span class="va">$msg_diff</span><span class="st">&quot;</span> <span class="kw">|</span> <span class="fu">less</span>
+	<span class="cf">elif</span> <span class="kw">[[</span> <span class="ot">-n</span> <span class="st">&quot;</span><span class="va">$git_diff_c</span><span class="st">&quot;</span> <span class="kw">]];</span> <span class="cf">then</span>
+		<span class="bu">printf</span> <span class="st">&quot;</span><span class="va">$msg_diff_c</span><span class="st">&quot;</span> <span class="kw">|</span> <span class="fu">less</span>
+	<span class="cf">fi</span>
+<span class="kw">}</span>
+
+<span class="fu">_gd_rs()</span>
+<span class="kw">{</span>
+	<span class="bu">local</span> <span class="va">git_diff</span><span class="op">=</span><span class="st">&quot;</span><span class="va">$(</span><span class="bu">command</span> gd diff <span class="at">--width</span><span class="op">=</span><span class="va">${COLUMNS})</span><span class="st">&quot;</span>
+	<span class="bu">local</span> <span class="va">git_diff_c</span><span class="op">=</span><span class="st">&quot;</span><span class="va">$(</span><span class="bu">command</span> gd diff <span class="at">--width</span><span class="op">=</span><span class="va">${COLUMNS}</span> <span class="at">--staged</span><span class="va">)</span><span class="st">&quot;</span>
+
+	<span class="cf">if</span> <span class="kw">[[</span> <span class="ot">-z</span> <span class="st">&quot;</span><span class="va">$git_diff</span><span class="st">&quot;</span> <span class="kw">&amp;&amp;</span> <span class="ot">-z</span> <span class="st">&quot;</span><span class="va">$git_diff_c</span><span class="st">&quot;</span> <span class="kw">]];</span> <span class="cf">then</span>
+		<span class="cf">return</span> <span class="dv">0</span>
+	<span class="cf">fi</span>
+
+	<span class="cf">if</span> <span class="kw">[[</span> <span class="ot">-n</span> <span class="st">&quot;</span><span class="va">$git_diff</span><span class="st">&quot;</span> <span class="kw">]]</span> <span class="kw">&amp;&amp;</span> <span class="kw">[[</span> <span class="ot">-n</span> <span class="st">&quot;</span><span class="va">$git_diff_c</span><span class="st">&quot;</span> <span class="kw">]];</span> <span class="cf">then</span>
+		<span class="co"># If we have two buffers to show, force less to pause before</span>
+		<span class="co"># showing the next one. We do this by unsetting the -F flag set in</span>
+		<span class="co"># ~/.lesskey.</span>
+		<span class="bu">printf</span> <span class="st">&quot;</span><span class="va">$git_diff</span><span class="st">&quot;</span> <span class="kw">|</span> <span class="fu">less</span> <span class="at">-+F</span>
+		<span class="bu">printf</span> <span class="st">&quot;</span><span class="va">$git_diff_c</span><span class="st">&quot;</span> <span class="kw">|</span> <span class="fu">less</span>
+	<span class="cf">elif</span> <span class="kw">[[</span> <span class="ot">-n</span> <span class="st">&quot;</span><span class="va">$git_diff</span><span class="st">&quot;</span> <span class="kw">]];</span> <span class="cf">then</span>
+		<span class="bu">printf</span> <span class="st">&quot;</span><span class="va">$git_diff</span><span class="st">&quot;</span> <span class="kw">|</span> <span class="fu">less</span>
+	<span class="cf">elif</span> <span class="kw">[[</span> <span class="ot">-n</span> <span class="st">&quot;</span><span class="va">$git_diff_c</span><span class="st">&quot;</span> <span class="kw">]];</span> <span class="cf">then</span>
+		<span class="bu">printf</span> <span class="st">&quot;</span><span class="va">$git_diff_c</span><span class="st">&quot;</span> <span class="kw">|</span> <span class="fu">less</span>
+	<span class="cf">fi</span>
+<span class="kw">}</span>
+
+<span class="fu">gd()</span>
+<span class="kw">{</span>
+	<span class="cf">if</span> <span class="bu">whence</span> <span class="at">-cp</span> <span class="st">&quot;gd&quot;</span> <span class="op">&gt;</span> /dev/null<span class="kw">;</span> <span class="cf">then</span>
+		<span class="ex">_gd_rs</span>
+	<span class="cf">else</span>
+		<span class="ex">_gd</span>
+	<span class="cf">fi</span>
+<span class="kw">}</span>
+
+
+<span class="ex">gd</span></code></pre></div></div></div><div id="heading-container-h-3.5-gflat" class="heading-container"><h3 id="h-3.5-gflat"><span id="c-43" class="cell-idx"><a href="#h-3.5-gflat">3.5&ensp;<span class="code">gflat</span></a></span></h3><p><span id="c-44" class="cell-idx">Flatten the last N commits with an interactive rebase.</span></p><div id="c-45" class="cell-idx"><div class="block-container src" id="b-func-gflat"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-func-gflat">&#x1F517;</a></div><div class="block-meta"><code>func-gflat</code><br><code><span class="bold">&#x1F3AF; zsh/func/gflat</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">zsh</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="co">#!/usr/bin/env zsh</span>
+
+<span class="co"># Shortcut for &quot;git rebase -i HEAD~&lt;N&gt;&quot; where &lt;N&gt; is a positive integer, and</span>
+<span class="co"># where &quot;f&quot; is used to flatten all commits up to the oldest (topmost in rebase</span>
+<span class="co"># buffer) commit.</span>
+<span class="fu">gflat()</span>
+<span class="kw">{</span>
+	<span class="cf">if</span> <span class="kw">((</span> <span class="va">$</span><span class="op">#</span> <span class="op">!=</span> <span class="dv">1</span> <span class="kw">));</span> <span class="cf">then</span>
+		<span class="bu">printf</span> <span class="st">&quot;gflat: Need exactly 1 argument.\n&quot;</span>
+		<span class="cf">return</span> <span class="dv">1</span>
+	<span class="co"># The odd-looking &quot;&lt;-&gt;&quot; pattern is a zsh-ism tht checks to see that the</span>
+	<span class="co"># string only has digits [1].</span>
+	<span class="co"># [1]: https://www.zsh.org/mla/users/2007/msg00084.html</span>
+	<span class="cf">elif</span> <span class="kw">[[</span> <span class="st">&quot;</span><span class="va">$1</span><span class="st">&quot;</span> <span class="ot">==</span> <span class="pp">&lt;-&gt;</span> <span class="kw">]];</span> <span class="cf">then</span>
+		<span class="co"># Strip any leading zeroes [1].</span>
+		<span class="co"># [1]: https://groups.google.com/d/msg/comp.unix.shell/VI8nIp1plWc/WOhfzd16ug8J</span>
+		<span class="va">n</span><span class="op">=</span><span class="st">&quot;</span><span class="va">${1</span><span class="op">#</span><span class="va">${1</span><span class="op">%%</span><span class="pp">[</span><span class="st">!0</span><span class="pp">]*</span><span class="va">}}</span><span class="st">&quot;</span>
+
+		<span class="cf">if</span> <span class="kw">((</span> <span class="va">n</span> <span class="op">&lt;</span> <span class="dv">2</span> <span class="kw">));</span> <span class="cf">then</span>
+			<span class="bu">printf</span> <span class="st">&quot;gflat: Numerical argument must be at least 2.\n&quot;</span>
+			<span class="cf">return</span> <span class="dv">1</span>
+		<span class="cf">fi</span>
+
+		<span class="va">arg</span><span class="op">=</span>HEAD<span class="pp">~</span><span class="st">&quot;</span><span class="va">${n}</span><span class="st">&quot;</span>
+	<span class="co"># The argument may be a commit-ish.</span>
+	<span class="cf">else</span>
+		<span class="va">arg</span><span class="op">=</span><span class="st">&quot;</span><span class="va">$1</span><span class="st">&quot;</span>
+	<span class="cf">fi</span>
+
+	<span class="va">GIT_SEQUENCE_EDITOR</span><span class="op">=</span><span class="st">&quot;sed -i -e &#39;2,</span><span class="dt">\$</span><span class="st">s/^pick/f/&#39;&quot;</span> <span class="fu">git</span> rebase <span class="at">-i</span> <span class="st">&quot;</span><span class="va">${arg}</span><span class="st">&quot;</span>
+<span class="kw">}</span></code></pre></div></div></div><div id="heading-container-h-3.6-git_check_linearity" class="heading-container"><h3 id="h-3.6-git_check_linearity"><span id="c-46" class="cell-idx"><a href="#h-3.6-git_check_linearity">3.6&ensp;<span class="code">git_check_linearity</span></a></span></h3><p><span id="c-47" class="cell-idx">Check that every commit in a range has one parent and at most one child.</span></p><div id="c-48" class="cell-idx"><div class="block-container src" id="b-func-git-check-linearity"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-func-git-check-linearity">&#x1F517;</a></div><div class="block-meta"><code>func-git-check-linearity</code><br><code><span class="bold">&#x1F3AF; zsh/func/git_check_linearity</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">zsh</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="co">#!/usr/bin/env zsh</span>
+
+<span class="co"># Check if given range of commits all have just 1 parent and at most 1 child (0</span>
+<span class="co"># children if commit is at HEAD).</span>
+
+<span class="fu">git_check_linearity_usage()</span>
+<span class="kw">{</span>
+	<span class="fu">cat</span> <span class="op">&lt;&lt;EOF</span>
+<span class="st">usage: git_check_linearity COMMIT_RANGE_START [COMMIT_RANGE_END]</span>
+<span class="op">EOF</span>
+<span class="kw">}</span>
+
+<span class="fu">git_check_linearity()</span>
+<span class="kw">{</span>
+	<span class="cf">if</span> <span class="ot">! </span><span class="ex">git_contents</span><span class="kw">;</span> <span class="cf">then</span>
+		<span class="bu">echo</span> <span class="st">&quot;Not a git repo; aborting.&quot;</span>
+		<span class="cf">return</span> <span class="dv">1</span>
+	<span class="cf">fi</span>
+
+	<span class="cf">case</span> <span class="va">$</span><span class="op">#</span> <span class="kw">in</span>
+		<span class="ss">1</span><span class="kw">)</span>
+			<span class="cf">if</span> <span class="kw">[[</span> <span class="ot">-z</span> <span class="va">${1</span><span class="op">:-</span><span class="va">}</span> <span class="kw">]];</span> <span class="cf">then</span>
+				<span class="ex">git_check_linearity_usage</span>
+				<span class="cf">return</span> <span class="dv">1</span>
+			<span class="cf">fi</span>
+			<span class="bu">typeset</span> <span class="at">-r</span> <span class="va">commit_range_start</span><span class="op">=</span><span class="va">$1</span>
+			<span class="bu">typeset</span> <span class="at">-r</span> <span class="va">commit_range_end</span><span class="op">=</span><span class="va">$1</span>
+			<span class="cf">;;</span>
+		<span class="ss">2</span><span class="kw">)</span>
+			<span class="cf">if</span> <span class="kw">[[</span> <span class="ot">-z</span> <span class="va">${1</span><span class="op">:-</span><span class="va">}</span> <span class="kw">]]</span> <span class="kw">||</span>
+				<span class="kw">[[</span> <span class="ot">-z</span> <span class="va">${2</span><span class="op">:-</span><span class="va">}</span> <span class="kw">]];</span> <span class="cf">then</span>
+				<span class="ex">git_check_linearity_usage</span>
+				<span class="cf">return</span> <span class="dv">1</span>
+			<span class="cf">fi</span>
+			<span class="bu">typeset</span> <span class="at">-r</span> <span class="va">commit_range_start</span><span class="op">=</span><span class="va">$1</span>
+			<span class="bu">typeset</span> <span class="at">-r</span> <span class="va">commit_range_end</span><span class="op">=</span><span class="va">$2</span>
+			<span class="cf">;;</span>
+		<span class="pp">*</span><span class="kw">)</span>
+			<span class="ex">git_check_linearity_usage</span>
+			<span class="cf">return</span> <span class="dv">1</span>
+			<span class="cf">;;</span>
+	<span class="cf">esac</span>
+
+	<span class="bu">typeset</span> <span class="at">-r</span> <span class="va">commit_range</span><span class="op">=</span><span class="va">$commit_range_start</span><span class="pp">^</span>..<span class="va">$commit_range_end</span>
+
+	<span class="co"># Convert commit range into a list of commits, from newest to oldest.</span>
+	<span class="bu">typeset</span> <span class="at">-r</span> <span class="va">commits</span><span class="op">=</span><span class="va">($(</span><span class="fu">git</span> rev-list <span class="va">$commit_range))</span>
+	<span class="cf">if</span> <span class="ot">! </span><span class="kw">((</span> <span class="va">$</span><span class="op">#</span><span class="va">commits</span> <span class="kw">));</span> <span class="cf">then</span>
+		<span class="bu">echo</span> <span class="st">&quot;Invalid commit range; aborting.&quot;</span>
+		<span class="cf">return</span> <span class="dv">1</span>
+	<span class="cf">fi</span>
+
+	<span class="co"># Check that all commits in COMMIT_RANGE have only 1 parent, and at most 1</span>
+	<span class="co"># child (there will be no children if COMMIT_RANGE ends at a branch tip).</span>
+	<span class="co"># Just check if each line exceeds 81 characters (excluding newline). There</span>
+	<span class="co"># will be 81 characters if there is just 1 parent (current commit&#39;s 40-char</span>
+	<span class="co"># hash, space character, and 40-char hash of parent). We do the same thing</span>
+	<span class="co"># for checking the number of children.</span>
+	<span class="fu">git</span> rev-list <span class="at">--parents</span> <span class="va">$commit_range</span> <span class="dt">\</span>
+		<span class="kw">|</span> <span class="cf">while</span> <span class="bu">read</span> <span class="at">-Ar</span> <span class="va">hashes</span><span class="kw">;</span> <span class="cf">do</span>
+		<span class="cf">if</span> <span class="kw">((</span> <span class="va">$</span><span class="op">#</span><span class="va">hashes</span> <span class="op">&gt;</span> <span class="dv">2</span> <span class="kw">));</span> <span class="cf">then</span>
+			<span class="bu">echo</span> <span class="st">&quot;More than 1 parent detected for </span><span class="va">$hashes</span><span class="op">[</span><span class="dv">1</span><span class="op">]</span><span class="st">:&quot;</span>
+			<span class="bu">echo</span> <span class="st">&quot;</span><span class="va">$(</span><span class="fu">git</span> log <span class="at">--oneline</span> <span class="at">--no-walk</span> <span class="va">$hashes</span><span class="op">[</span><span class="dv">1</span><span class="op">]</span><span class="va">)</span><span class="st">&quot;</span>
+			<span class="cf">for</span> hash <span class="kw">in</span> <span class="va">${hashes</span><span class="op">[@]:</span><span class="dv">1</span><span class="va">}</span><span class="kw">;</span> <span class="cf">do</span>
+				<span class="bu">echo</span> <span class="st">&quot;  </span><span class="va">$(</span><span class="fu">git</span> log <span class="at">--oneline</span> <span class="at">--no-walk</span> <span class="va">$hash)</span><span class="st">&quot;</span>
+			<span class="cf">done</span>
+			<span class="cf">return</span> <span class="dv">1</span>
+		<span class="cf">fi</span>
+	<span class="cf">done</span>
+
+	<span class="fu">git</span> rev-list <span class="at">--children</span> <span class="va">$commit_range</span> <span class="dt">\</span>
+		<span class="kw">|</span> <span class="cf">while</span> <span class="bu">read</span> <span class="at">-Ar</span> <span class="va">hashes</span><span class="kw">;</span> <span class="cf">do</span>
+		<span class="cf">if</span> <span class="kw">((</span> <span class="va">$</span><span class="op">#</span><span class="va">hashes</span> <span class="op">&gt;</span> <span class="dv">2</span> <span class="kw">));</span> <span class="cf">then</span>
+			<span class="bu">echo</span> <span class="st">&quot;More than 1 child detected for </span><span class="va">$hashes</span><span class="op">[</span><span class="dv">1</span><span class="op">]</span><span class="st">:&quot;</span>
+			<span class="bu">echo</span> <span class="st">&quot;</span><span class="va">$(</span><span class="fu">git</span> log <span class="at">--oneline</span> <span class="at">--no-walk</span> <span class="va">$hashes</span><span class="op">[</span><span class="dv">1</span><span class="op">]</span><span class="va">)</span><span class="st">&quot;</span>
+			<span class="cf">for</span> hash <span class="kw">in</span> <span class="va">${hashes</span><span class="op">[@]:</span><span class="dv">1</span><span class="va">}</span><span class="kw">;</span> <span class="cf">do</span>
+				<span class="bu">echo</span> <span class="st">&quot;  </span><span class="va">$(</span><span class="fu">git</span> log <span class="at">--oneline</span> <span class="at">--no-walk</span> <span class="va">$hash)</span><span class="st">&quot;</span>
+			<span class="cf">done</span>
+			<span class="cf">return</span> <span class="dv">1</span>
+		<span class="cf">fi</span>
+	<span class="cf">done</span>
+	<span class="co"># For children, we have to check the newest and oldest commit&#39;s children.</span>
+	<span class="co"># This is because the newest commit in the commit range is not covered by</span>
+	<span class="co"># `git rev-list --children $commit_range&#39;. For the oldest commit, consider</span>
+	<span class="co"># the following case:</span>
+	<span class="co">#</span>
+	<span class="co">#     B</span>
+	<span class="co">#    /</span>
+	<span class="co">#   A-C</span>
+	<span class="co">#</span>
+	<span class="co"># where A is the oldest and B and C are child commits. If we specify a range</span>
+	<span class="co"># A^..B, then C is *not* shown by `git rev-list --children A^..B&#39;, because</span>
+	<span class="co"># the &quot;..B&quot; acts as a short-circuit, preventing C from being shown. For</span>
+	<span class="co"># these reasons, we have to use the trick with `--all&#39; and `grep&#39; below.</span>
+	<span class="fu">git</span> rev-list <span class="at">--all</span> <span class="at">--children</span> <span class="dt">\</span>
+		<span class="kw">|</span> <span class="fu">grep</span> <span class="st">&quot;^</span><span class="va">${commits</span><span class="op">[</span><span class="dv">1</span><span class="op">]</span><span class="va">}</span><span class="st">\|^</span><span class="va">${commits</span><span class="op">[</span><span class="dv">-1</span><span class="op">]</span><span class="va">}</span><span class="st">&quot;</span> <span class="dt">\</span>
+		<span class="kw">|</span> <span class="cf">while</span> <span class="bu">read</span> <span class="at">-Ar</span> <span class="va">hashes</span><span class="kw">;</span> <span class="cf">do</span>
+		<span class="cf">if</span> <span class="kw">((</span> <span class="va">$</span><span class="op">#</span><span class="va">hashes</span> <span class="op">&gt;</span> <span class="dv">2</span> <span class="kw">));</span> <span class="cf">then</span>
+			<span class="bu">echo</span> <span class="st">&quot;More than 1 child detected for </span><span class="va">$hashes</span><span class="op">[</span><span class="dv">1</span><span class="op">]</span><span class="st">:&quot;</span>
+			<span class="bu">echo</span> <span class="st">&quot;</span><span class="va">$(</span><span class="fu">git</span> log <span class="at">--oneline</span> <span class="at">--no-walk</span> <span class="va">$hashes</span><span class="op">[</span><span class="dv">1</span><span class="op">]</span><span class="va">)</span><span class="st">&quot;</span>
+			<span class="cf">for</span> hash <span class="kw">in</span> <span class="va">${hashes</span><span class="op">[@]:</span><span class="dv">1</span><span class="va">}</span><span class="kw">;</span> <span class="cf">do</span>
+				<span class="bu">echo</span> <span class="st">&quot;  </span><span class="va">$(</span><span class="fu">git</span> log <span class="at">--oneline</span> <span class="at">--no-walk</span> <span class="va">$hash)</span><span class="st">&quot;</span>
+			<span class="cf">done</span>
+			<span class="cf">return</span> <span class="dv">1</span>
+		<span class="cf">fi</span>
+	<span class="cf">done</span>
+
+	<span class="cf">return</span> <span class="dv">0</span>
+<span class="kw">}</span>
+
+<span class="ex">git_check_linearity</span> <span class="va">$@</span></code></pre></div></div></div><div id="heading-container-h-3.7-git_copy_sha" class="heading-container"><h3 id="h-3.7-git_copy_sha"><span id="c-49" class="cell-idx"><a href="#h-3.7-git_copy_sha">3.7&ensp;<span class="code">git_copy_sha</span></a></span></h3><p><span id="c-50" class="cell-idx">Copy the <span class="code">HEAD</span> commit&#39;s SHA to the X primary buffer and clipboard.</span></p><div id="c-51" class="cell-idx"><div class="block-container src" id="b-func-git-copy-sha"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-func-git-copy-sha">&#x1F517;</a></div><div class="block-meta"><code>func-git-copy-sha</code><br><code><span class="bold">&#x1F3AF; zsh/func/git_copy_sha</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">zsh</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="co">#!/usr/bin/env zsh</span>
+
+<span class="fu">git_copy_sha()</span>
+<span class="kw">{</span>
+	<span class="ot">! </span><span class="ex">git_contents</span> <span class="kw">&amp;&amp;</span> <span class="cf">return</span>
+    <span class="co"># Copy to both X primary buffer and clipboard. We copy the SHA without a</span>
+    <span class="co"># trailing newline, but display it to STDOUT with a newline in order to</span>
+    <span class="co"># avoid printing the &quot;%&quot; symbol at the end.</span>
+    <span class="fu">git</span> rev-parse HEAD <span class="dt">\</span>
+        <span class="kw">|</span> <span class="fu">tr</span> <span class="at">-d</span> <span class="st">&#39;\n&#39;</span> <span class="dt">\</span>
+        <span class="kw">|</span> <span class="fu">tee</span> <span class="op">&gt;(</span><span class="ex">xsel</span> <span class="at">-ip</span><span class="op">)</span> <span class="op">&gt;(</span><span class="ex">xsel</span> <span class="at">-ib</span><span class="op">)</span> <span class="dt">\</span>
+        <span class="kw">&amp;&amp;</span> <span class="bu">printf</span> <span class="st">&#39;\n&#39;</span>
+<span class="kw">}</span></code></pre></div></div></div><div id="heading-container-h-4-Jujutsu" class="heading-container"><h2 id="h-4-Jujutsu"><span id="c-52" class="cell-idx"><a href="#h-4-Jujutsu">4&ensp;Jujutsu</a></span></h2></div><div id="heading-container-h-4.1-jl" class="heading-container"><h3 id="h-4.1-jl"><span id="c-53" class="cell-idx"><a href="#h-4.1-jl">4.1&ensp;<span class="code">jl</span></a></span></h3><p><span id="c-54" class="cell-idx">Run <span class="code">jj log</span>, showing only as many commits as fit in the terminal.</span></p><div id="c-55" class="cell-idx"><div class="block-container src" id="b-func-jl"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-func-jl">&#x1F517;</a></div><div class="block-meta"><code>func-jl</code><br><code><span class="bold">&#x1F3AF; zsh/func/jl</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">zsh</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="co">#!/usr/bin/env zsh</span>
+
+<span class="co"># Determine how many $LINES there are available in the current terminal and use</span>
+<span class="co"># that to commits. Use a buffer of 4 lines to account for showing the prompt, as</span>
+<span class="co"># well as any messages we might get from jj. Divide by 2 because in jj, each</span>
+<span class="co"># commit takes up 2 lines (one for the commit title and another for the commit</span>
+<span class="co"># id)..</span>
+<span class="fu">jl()</span>
+<span class="kw">{</span>
+	<span class="bu">local</span> <span class="va">commits_to_show</span>
+	<span class="va">commits_to_show</span><span class="op">=</span><span class="va">$((</span>(<span class="va">LINES</span> <span class="op">-</span> <span class="dv">4</span>) <span class="op">/</span> <span class="dv">2</span><span class="va">))</span>
+	<span class="ex">jj</span> log <span class="at">--limit</span> <span class="st">&quot;</span><span class="va">${commits_to_show}</span><span class="st">&quot;</span> <span class="st">&quot;</span><span class="va">${@}</span><span class="st">&quot;</span>
+<span class="kw">}</span></code></pre></div></div></div><div id="heading-container-h-5-Emacs" class="heading-container"><h2 id="h-5-Emacs"><span id="c-56" class="cell-idx"><a href="#h-5-Emacs">5&ensp;Emacs</a></span></h2></div><div id="heading-container-h-5.1-emacs_list_buffers" class="heading-container"><h3 id="h-5.1-emacs_list_buffers"><span id="c-57" class="cell-idx"><a href="#h-5.1-emacs_list_buffers">5.1&ensp;<span class="code">emacs_list_buffers</span></a></span></h3><p><span id="c-58" class="cell-idx">List the buffers of a running Emacs server.</span></p><div id="c-59" class="cell-idx"><div class="block-container src" id="b-func-emacs-list-buffers"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-func-emacs-list-buffers">&#x1F517;</a></div><div class="block-meta"><code>func-emacs-list-buffers</code><br><code><span class="bold">&#x1F3AF; zsh/func/emacs_list_buffers</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">zsh</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="co">#!/usr/bin/env zsh</span>
+
+<span class="fu">emacs_list_buffers()</span>
+<span class="kw">{</span>
+	<span class="bu">local</span> <span class="va">buffers</span>
+	<span class="bu">local</span> <span class="va">socket</span><span class="op">=</span><span class="st">&quot;</span><span class="va">${1</span><span class="op">:-</span><span class="st">default</span><span class="va">}</span><span class="st">&quot;</span>
+	<span class="va">elisp</span><span class="op">=</span><span class="va">$(</span><span class="fu">cat</span> <span class="op">&lt;&lt; EOF</span>
+<span class="st">	(let*</span>
+<span class="st">		(</span>
+<span class="st">			(buffers (mapcar &#39;buffer-name (buffer-list)))</span>
+<span class="st">			(sorted-buffers (cl-sort buffers &#39;string-lessp :key &#39;downcase))</span>
+<span class="st">			(output (mapconcat (function identity) sorted-buffers &quot;</span><span class="dt">\n</span><span class="st">&quot;)))</span>
+<span class="st">		output</span>
+<span class="st">	)</span>
+<span class="op">EOF</span>
+	<span class="va">)</span>
+
+	<span class="co"># Get list of all buffers.</span>
+	<span class="va">buffers</span><span class="op">=</span><span class="st">&quot;</span><span class="va">$(</span><span class="ex">emacsclient</span> <span class="at">--socket</span> <span class="st">&quot;</span><span class="va">${socket}</span><span class="st">&quot;</span> <span class="at">-e</span> <span class="st">&quot;</span><span class="va">${elisp}</span><span class="st">&quot;</span><span class="va">)</span><span class="st">&quot;</span>
+	<span class="co"># Remove leading and trailing quotations.</span>
+	<span class="va">buffers</span><span class="op">=</span><span class="st">&quot;</span><span class="va">${buffers</span><span class="op">:</span><span class="dv">1</span><span class="op">:-</span><span class="dv">1</span><span class="va">}</span><span class="st">&quot;</span>
+	<span class="co"># Change into an array.</span>
+	<span class="va">buffers</span><span class="op">=</span><span class="va">(${(</span><span class="op">f</span><span class="va">)</span><span class="st">&quot;</span><span class="va">$(</span><span class="bu">echo</span> <span class="va">$buffers)</span><span class="st">&quot;</span><span class="va">})</span>
+
+	<span class="cf">for</span> buffer <span class="kw">in</span> <span class="st">&quot;</span><span class="va">${buffers</span><span class="op">[@]</span><span class="va">}</span><span class="st">&quot;</span><span class="kw">;</span> <span class="cf">do</span>
+		<span class="bu">echo</span> <span class="st">&quot;</span><span class="va">$buffer</span><span class="st">&quot;</span>
+	<span class="cf">done</span>
+<span class="kw">}</span></code></pre></div></div></div><div id="heading-container-h-5.2-emacs_kill_buffer" class="heading-container"><h3 id="h-5.2-emacs_kill_buffer"><span id="c-60" class="cell-idx"><a href="#h-5.2-emacs_kill_buffer">5.2&ensp;<span class="code">emacs_kill_buffer</span></a></span></h3><p><span id="c-61" class="cell-idx">Kill a buffer in a running Emacs server. This revives <span class="code">emacsclient</span> when it hangs on a buffer waiting for input.</span></p><div id="c-62" class="cell-idx"><div class="block-container src" id="b-func-emacs-kill-buffer"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-func-emacs-kill-buffer">&#x1F517;</a></div><div class="block-meta"><code>func-emacs-kill-buffer</code><br><code><span class="bold">&#x1F3AF; zsh/func/emacs_kill_buffer</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">zsh</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="co">#!/usr/bin/env zsh</span>
+
+<span class="co"># Used to revive emacsclient whenever it starts hanging due to some buffer</span>
+<span class="co"># waiting on input (which will never come, because it is hanging).</span>
+<span class="fu">emacs_kill_buffer()</span>
+<span class="kw">{</span>
+	<span class="cf">if</span> <span class="kw">((</span> <span class="va">$</span><span class="op">#</span> <span class="op">!=</span> <span class="dv">2</span> <span class="kw">));</span> <span class="cf">then</span>
+		<span class="op">&gt;&amp;</span><span class="dv">2</span> <span class="bu">echo</span> <span class="st">&quot;usage: </span><span class="va">$0</span><span class="st"> &lt;SOCKET&gt; &lt;EMACS_BUFFER&gt;&quot;</span>
+		<span class="cf">return</span> <span class="dv">1</span>
+	<span class="cf">fi</span>
+
+	<span class="bu">local</span> <span class="va">socket</span><span class="op">=</span><span class="st">&quot;</span><span class="va">${1}</span><span class="st">&quot;</span>
+	<span class="bu">local</span> <span class="va">buffer</span>
+	<span class="bu">local</span> <span class="va">elisp</span>
+	<span class="va">buffer</span><span class="op">=</span><span class="st">&quot;</span><span class="va">${2}</span><span class="st">&quot;</span>
+	<span class="va">elisp</span><span class="op">=</span><span class="va">$(</span><span class="fu">cat</span> <span class="op">&lt;&lt; EOF</span>
+<span class="st">	(let*</span>
+<span class="st">		(</span>
+<span class="st">			(kill-me &quot;</span><span class="va">${buffer}</span><span class="st">&quot;))</span>
+<span class="st">		(switch-to-buffer kill-me)</span>
+
+<span class="st">		; (with-editor-cancel) is dangerous because it also silently deletes the</span>
+<span class="st">		; file on disk! Only invoke it if (kill-current-buffer) fails (typically</span>
+<span class="st">		; due to the function having been made useless by magit&#39;s with-editor</span>
+<span class="st">		; mode). Don&#39;t use (kill-this-buffer), which is only for the menu bar</span>
+<span class="st">		; and signals an error here in Emacs 31.</span>
+<span class="st">		(or (kill-current-buffer) (with-editor-cancel t))</span>
+<span class="st">	)</span>
+<span class="op">EOF</span>
+	<span class="va">)</span>
+
+	<span class="ex">emacsclient</span> <span class="at">--socket</span> <span class="st">&quot;</span><span class="va">${socket}</span><span class="st">&quot;</span> <span class="at">-e</span> <span class="st">&quot;</span><span class="va">${elisp}</span><span class="st">&quot;</span>
+<span class="kw">}</span></code></pre></div></div></div><div id="heading-container-h-5.3-_emacs_kill_buffer" class="heading-container"><h3 id="h-5.3-_emacs_kill_buffer"><span id="c-63" class="cell-idx"><a href="#h-5.3-_emacs_kill_buffer">5.3&ensp;<span class="code">_emacs_kill_buffer</span></a></span></h3><p><span id="c-64" class="cell-idx">Completion for <a href="#b-func-emacs-kill-buffer" class="internal-link" id="linkNumber-9"><span class="code">emacs_kill_buffer</span></a>, offering the buffers from <a href="#b-func-emacs-list-buffers" class="internal-link" id="linkNumber-10"><span class="code">emacs_list_buffers</span></a>.</span></p><div id="c-65" class="cell-idx"><div class="block-container src" id="b-func--emacs-kill-buffer"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-func--emacs-kill-buffer">&#x1F517;</a></div><div class="block-meta"><code>func--emacs-kill-buffer</code><br><code><span class="bold">&#x1F3AF; zsh/func/_emacs_kill_buffer</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">zsh</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="co">#compdef emacs_kill_buffer</span>
+
+<span class="co"># Adapted from https://unix.stackexchange.com/questions/239528/dynamic-zsh-autocomplete-for-custom-commands.</span>
+<span class="fu">_emacs_kill_buffer()</span> <span class="kw">{</span>
+	<span class="bu">local</span> <span class="va">state</span>
+
+	<span class="ex">_arguments</span> <span class="st">&#39;1: :-&gt;buffer&#39;</span>
+	<span class="cf">case</span> <span class="va">$state</span> <span class="kw">in</span>
+		<span class="kw">(</span><span class="ss">buffer</span><span class="kw">)</span> <span class="ex">_arguments</span> <span class="st">&#39;1:buffers:(${(f)&quot;$(emacs_list_buffers)&quot;})&#39;</span> <span class="cf">;;</span>
+        <span class="pp">*</span><span class="kw">)</span> <span class="cf">;;</span>
+	<span class="cf">esac</span>
+<span class="kw">}</span>
+
+<span class="ex">_emacs_kill_buffer</span> <span class="st">&quot;</span><span class="va">$@</span><span class="st">&quot;</span></code></pre></div></div></div><div id="heading-container-h-6-Remote-machines" class="heading-container"><h2 id="h-6-Remote-machines"><span id="c-66" class="cell-idx"><a href="#h-6-Remote-machines">6&ensp;Remote machines</a></span></h2></div><div id="heading-container-h-6.1-s" class="heading-container"><h3 id="h-6.1-s"><span id="c-67" class="cell-idx"><a href="#h-6.1-s">6.1&ensp;<span class="code">s</span></a></span></h3><p><span id="c-68" class="cell-idx">SSH to one of our known machines.</span></p><div id="c-69" class="cell-idx"><div class="block-container src" id="b-func-s"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-func-s">&#x1F517;</a></div><div class="block-meta"><code>func-s</code><br><code><span class="bold">&#x1F3AF; zsh/func/s</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">zsh</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="co">#!/usr/bin/env zsh</span>
+
+<span class="co"># SSH to known machines.</span>
+
+<span class="fu">s()</span>
+<span class="kw">{</span>
+	<span class="cf">if</span> <span class="kw">((</span> <span class="va">$</span><span class="op">#</span><span class="va">@</span> <span class="op">==</span> <span class="dv">0</span> <span class="kw">));</span> <span class="cf">then</span>
+		<span class="bu">echo</span> <span class="op">&gt;&amp;</span><span class="dv">2</span> <span class="st">&quot;Usage: &lt;HOST&gt;&quot;</span>
+		<span class="cf">return</span> <span class="dv">1</span>
+	<span class="cf">fi</span>
+
+	<span class="bu">local</span> <span class="va">user</span>
+	<span class="bu">local</span> <span class="va">host</span><span class="op">=</span><span class="st">&quot;</span><span class="va">${1}</span><span class="st">&quot;</span>
+
+	<span class="cf">case</span> <span class="st">&quot;</span><span class="va">${host}</span><span class="st">&quot;</span> <span class="kw">in</span>
+	<span class="ss">w0</span><span class="kw">)</span> <span class="va">user</span><span class="op">=</span><span class="st">&quot;ingra&quot;</span> <span class="cf">;;</span>
+	<span class="pp">*</span><span class="kw">)</span>  <span class="va">user</span><span class="op">=</span><span class="st">&quot;l&quot;</span> <span class="cf">;;</span>
+	<span class="cf">esac</span>
+
+	<span class="ex">tmux</span> rename-window <span class="st">&quot;ssh-&gt;</span><span class="va">${user}</span><span class="st">@</span><span class="va">${host}</span><span class="st">&quot;</span>
+
+	<span class="cf">case</span> <span class="st">&quot;</span><span class="va">${host}</span><span class="st">&quot;</span> <span class="kw">in</span>
+	<span class="ss">w0</span><span class="kw">)</span>
+		<span class="fu">ssh</span> <span class="at">-t</span> <span class="st">&quot;</span><span class="va">${user}</span><span class="st">@</span><span class="va">${host}</span><span class="st">&quot;</span> <span class="dt">\&quot;</span>wsl.exe <span class="at">-d</span> NixOS<span class="dt">\&quot;</span>
+		<span class="cf">;;</span>
+	<span class="pp">*</span><span class="kw">)</span>
+		<span class="fu">ssh</span> <span class="at">-t</span> <span class="st">&quot;</span><span class="va">${user}</span><span class="st">@</span><span class="va">${host}</span><span class="st">&quot;</span>
+		<span class="cf">;;</span>
+	<span class="cf">esac</span>
+
+	<span class="ex">tmux</span> set <span class="at">-w</span> automatic-rename on
+<span class="kw">}</span></code></pre></div></div></div><div id="heading-container-h-6.2-_s" class="heading-container"><h3 id="h-6.2-_s"><span id="c-70" class="cell-idx"><a href="#h-6.2-_s">6.2&ensp;<span class="code">_s</span></a></span></h3><p><span id="c-71" class="cell-idx">Completion for <a href="#b-func-s" class="internal-link" id="linkNumber-11"><span class="code">s</span></a>.</span></p><div id="c-72" class="cell-idx"><div class="block-container src" id="b-func--s"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-func--s">&#x1F517;</a></div><div class="block-meta"><code>func--s</code><br><code><span class="bold">&#x1F3AF; zsh/func/_s</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">zsh</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="co">#compdef s</span>
+
+<span class="co"># Adapted from https://unix.stackexchange.com/questions/239528/dynamic-zsh-autocomplete-for-custom-commands.</span>
+<span class="fu">_s()</span> <span class="kw">{</span>
+	<span class="bu">local</span> <span class="va">state</span>
+
+	<span class="ex">_arguments</span> <span class="dt">\</span>
+		<span class="st">&#39;1: :-&gt;host&#39;</span>
+
+	<span class="bu">local</span> <span class="va">user</span>
+	<span class="cf">case</span> <span class="st">&quot;</span><span class="va">${words</span><span class="op">[</span><span class="dv">2</span><span class="op">]</span><span class="va">}</span><span class="st">&quot;</span> <span class="kw">in</span>
+	<span class="ss">w0</span><span class="kw">)</span> <span class="va">user</span><span class="op">=</span><span class="st">&quot;ingra&quot;</span> <span class="cf">;;</span>
+	<span class="pp">*</span><span class="kw">)</span>  <span class="va">user</span><span class="op">=</span><span class="st">&quot;l&quot;</span> <span class="cf">;;</span>
+	<span class="cf">esac</span>
+
+	<span class="cf">case</span> <span class="va">$state</span> <span class="kw">in</span>
+		<span class="kw">(</span><span class="ss">host</span><span class="kw">)</span> <span class="ex">_arguments</span> <span class="st">&#39;1:hosts:(k0 k1 m0 w0 macp)&#39;</span> <span class="cf">;;</span>
+	<span class="cf">esac</span>
+<span class="kw">}</span>
+
+<span class="ex">_s</span> <span class="st">&quot;</span><span class="va">$@</span><span class="st">&quot;</span></code></pre></div></div></div><div id="heading-container-h-6.3-tmux_list_sessions" class="heading-container"><h3 id="h-6.3-tmux_list_sessions"><span id="c-73" class="cell-idx"><a href="#h-6.3-tmux_list_sessions">6.3&ensp;<span class="code">tmux_list_sessions</span></a></span></h3><p><span id="c-74" class="cell-idx">List the <span class="code">tmux</span> sessions on a remote machine.</span></p><div id="c-75" class="cell-idx"><div class="block-container src" id="b-func-tmux-list-sessions"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-func-tmux-list-sessions">&#x1F517;</a></div><div class="block-meta"><code>func-tmux-list-sessions</code><br><code><span class="bold">&#x1F3AF; zsh/func/tmux_list_sessions</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">zsh</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="co">#!/usr/bin/env zsh</span>
+
+<span class="fu">tmux_list_sessions()</span>
+<span class="kw">{</span>
+	<span class="cf">if</span> <span class="kw">((</span> <span class="va">$</span><span class="op">#</span><span class="va">@</span> <span class="op">!=</span> <span class="dv">2</span> <span class="kw">));</span> <span class="cf">then</span>
+		<span class="bu">echo</span> <span class="op">&gt;&amp;</span><span class="dv">2</span> <span class="st">&quot;Usage: </span><span class="va">$0</span><span class="st"> &lt;USER&gt; &lt;HOST&gt;&quot;</span>
+		<span class="cf">return</span> <span class="dv">1</span>
+	<span class="cf">fi</span>
+	<span class="bu">local</span> <span class="va">user</span><span class="op">=</span><span class="st">&quot;</span><span class="va">${1}</span><span class="st">&quot;</span>
+	<span class="bu">local</span> <span class="va">host</span><span class="op">=</span><span class="st">&quot;</span><span class="va">${2}</span><span class="st">&quot;</span>
+
+	<span class="dv">2</span><span class="op">&gt;</span>/dev/null <span class="fu">ssh</span> <span class="st">&quot;</span><span class="va">${user}</span><span class="st">@</span><span class="va">${host}</span><span class="st">&quot;</span> tmux list-sessions <span class="kw">|</span> <span class="fu">cut</span> <span class="at">-d:</span> <span class="at">-f1</span>
+<span class="kw">}</span></code></pre></div></div></div><div id="heading-container-h-7-Prompt" class="heading-container"><h2 id="h-7-Prompt"><span id="c-76" class="cell-idx"><a href="#h-7-Prompt">7&ensp;Prompt</a></span></h2></div><div id="heading-container-h-7.1-prompt_kody_setup" class="heading-container"><h3 id="h-7.1-prompt_kody_setup"><span id="c-77" class="cell-idx"><a href="#h-7.1-prompt_kody_setup">7.1&ensp;<span class="code">prompt_kody_setup</span></a></span></h3><p><span id="c-78" class="cell-idx">The &quot;kody&quot; prompt theme. <a href="/zsh/zshrc.html" class="internal-link" id="linkNumber-12"><span class="code">.zshrc</span></a> calls this at startup, and <a href="/zsh/lib.html#b-lib-prompt-tick" class="internal-link" id="linkNumber-13"><span class="code">__l_prompt_tick</span></a> rebuilds the prompt every second using <a href="#b-kody-construct-prompt" class="internal-link" id="linkNumber-14"><span class="code">construct_prompt</span></a>.</span></p><div id="c-79" class="cell-idx"><div class="block-container src" id="b-func-prompt-kody-setup"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-func-prompt-kody-setup">&#x1F517;</a></div><div class="block-meta"><code>func-prompt-kody-setup</code><br><code><span class="bold">&#x1F3AF; zsh/func/prompt_kody_setup</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">zsh</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="ex"><a href="#b-kody-setup" class="internal-link" id="b-func-prompt-kody-setup-b-kody-setup">kody-setup</a></span>
+<span class="ex"><a href="#b-kody-construct-prompt" class="internal-link" id="b-func-prompt-kody-setup-b-kody-construct-prompt">kody-construct-prompt</a></span>
+<span class="ex"><a href="#b-kody-invoke" class="internal-link" id="b-func-prompt-kody-setup-b-kody-invoke">kody-invoke</a></span></code></pre></div></div><div id="c-80" class="cell-idx"><div class="block-container src" id="b-kody-setup"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-kody-setup">&#x1F517;</a></div><div class="block-meta"><code>kody-setup</code></div><div class="block-meta-other hidden"><p>Used by <a href="#b-func-prompt-kody-setup-b-kody-setup" class="internal-link"><span class="verbatim">func-prompt-kody-setup</span></a>.</p><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">zsh</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="co">#!/usr/bin/env zsh</span>
+<span class="co"># &quot;kody&quot; prompt theme.</span>
+
+<span class="co"># The zle-keymap-select and zle-line-finish functions are special widgets that</span>
+<span class="co"># are empty by default. We use it to set the Vim-style &quot;&lt;I&gt;&quot; or &quot;&lt;N&gt;&quot; mode</span>
+<span class="co"># indicators in the prompt. See &quot;Special Widgets&quot; in zshzle(1).</span>
+<span class="ex">zle-line-init</span> zle-keymap-select<span class="op">()</span> {
+	<span class="co"># After recalculating the indicator, rebuild the prompt before resetting it.</span>
+	<span class="co"># Otherwise the prompt itself does not get re-built (it only gets re-printed</span>
+	<span class="co"># using the old state).</span>
+	<span class="ex">set_zsh_keymap_indicator</span>
+	<span class="ex">construct_prompt</span>
+	<span class="bu">zle</span> reset-prompt
+<span class="er">}</span>
+<span class="co"># Create user-defined widgets.</span>
+<span class="bu">zle</span> <span class="at">-N</span> zle-line-init
+<span class="bu">zle</span> <span class="at">-N</span> zle-keymap-select
+
+<span class="fu">prompt_kody_setup()</span>
+<span class="kw">{</span>
+	<span class="bu">typeset</span> <span class="at">-g</span> <span class="va">prompt_newline</span>
+	<span class="va">prompt_newline</span><span class="op">=</span><span class="st">$&#39;</span><span class="dt">\n</span><span class="st">%{</span><span class="dt">\r</span><span class="st">%}&#39;</span>
+
+	<span class="co"># Run construct_prompt() after executing precmd().</span>
+	<span class="ex">add-zsh-hook</span> precmd construct_prompt
+
+	<span class="co"># Make text typed in by the user be displayed as bold text.</span>
+	<span class="va">zle_highlight</span><span class="op">[</span><span class="pp">(</span><span class="ss">r</span><span class="pp">)</span>default<span class="op">:*]=</span><span class="st">&quot;default:fg=default,bold&quot;</span>
+<span class="kw">}</span>
+
+<span class="co"># The chpwd(), preexec() and precmd() functions are specially recognized by Zsh.</span>
+<span class="co"># Normally they are not defined and hence nothing happens.</span>
+
+<span class="co"># preexec() is a hook function under &quot;SPECIAL FUNCTIONS&quot;; it is executed just</span>
+<span class="co"># after a command has been read, but before it is executed.</span>
+<span class="fu">preexec()</span> <span class="kw">{</span>
+	<span class="co"># We set the ran_something variable to TRUE to indicate that the user typed</span>
+	<span class="co"># in a command to be executed.</span>
+	<span class="va">global_ran_something</span><span class="op">=</span>1
+<span class="kw">}</span>
+
+<span class="co"># precmd() is executed before each prompt.</span>
+<span class="fu">precmd()</span>
+<span class="kw">{</span>
+	<span class="co"># Catch cases where we press C-c to stop execution (or if we just pressed</span>
+	<span class="co"># ENTER after deleting the entire BUFFER); we want to treat such cases as</span>
+	<span class="co"># non-error exits. So, if we did not run anything (preexec() did not get</span>
+	<span class="co"># executed due to C-c), then assign global_exit_status as 0.</span>
+	<span class="va">global_exit_status</span><span class="op">=</span><span class="va">$?</span>
+	<span class="cf">if</span> <span class="ot">! </span><span class="kw">((</span> <span class="va">$global_ran_something</span> <span class="kw">));</span> <span class="cf">then</span>
+		<span class="va">global_exit_status</span><span class="op">=</span>0
+	<span class="cf">fi</span>
+	<span class="va">global_ran_something</span><span class="op">=</span>0
+<span class="kw">}</span>
+
+<span class="fu">set_zsh_keymap_indicator()</span>
+<span class="kw">{</span>
+
+	<span class="cf">case</span> <span class="st">&quot;</span><span class="va">${KEYMAP}</span><span class="st">&quot;</span> <span class="kw">in</span>
+	<span class="ss">vicmd</span><span class="kw">)</span>
+		<span class="va">global_keymap_indicator</span><span class="op">=</span><span class="st">&quot;N&quot;</span>
+	<span class="cf">;;</span>
+	<span class="ss">main</span><span class="kw">|</span><span class="ss">viins</span><span class="kw">)</span>
+		<span class="va">global_keymap_indicator</span><span class="op">=</span><span class="st">&quot;I&quot;</span>
+	<span class="cf">;;</span>
+	<span class="cf">esac</span>
+<span class="kw">}</span>
+
+<span class="co"># Python VirtualEnv info.</span>
+<span class="fu">get_venv_info()</span>
+<span class="kw">{</span>
+	<span class="cf">if</span> <span class="kw">[[</span> <span class="ot">-n</span> <span class="st">&quot;</span><span class="va">${VIRTUAL_ENV}</span><span class="st">&quot;</span> <span class="kw">]];</span> <span class="cf">then</span>
+		<span class="bu">echo</span> <span class="st">&quot;(</span><span class="va">$(</span><span class="fu">basename</span> <span class="st">&quot;</span><span class="va">${VIRTUAL_ENV}</span><span class="st">&quot;</span><span class="va">)</span><span class="st">) &quot;</span>
+	<span class="cf">fi</span>
+<span class="kw">}</span>
+
+<span class="fu">get_day()</span>
+<span class="kw">{</span>
+	<span class="bu">local</span> <span class="va">day</span><span class="op">=</span><span class="st">&quot;&quot;</span>
+	<span class="cf">case</span> <span class="va">$(</span><span class="fu">date</span> +%a<span class="va">)</span> <span class="kw">in</span>
+		<span class="ss">Mon</span><span class="kw">)</span> <span class="va">day</span><span class="op">+=</span><span class="st">&quot;月&quot;</span> <span class="cf">;;</span>
+		<span class="ss">Tue</span><span class="kw">)</span> <span class="va">day</span><span class="op">+=</span><span class="st">&quot;火&quot;</span> <span class="cf">;;</span>
+		<span class="ss">Wed</span><span class="kw">)</span> <span class="va">day</span><span class="op">+=</span><span class="st">&quot;水&quot;</span> <span class="cf">;;</span>
+		<span class="ss">Thu</span><span class="kw">)</span> <span class="va">day</span><span class="op">+=</span><span class="st">&quot;木&quot;</span> <span class="cf">;;</span>
+		<span class="ss">Fri</span><span class="kw">)</span> <span class="va">day</span><span class="op">+=</span><span class="st">&quot;金&quot;</span> <span class="cf">;;</span>
+		<span class="ss">Sat</span><span class="kw">)</span> <span class="va">day</span><span class="op">+=</span><span class="st">&quot;土&quot;</span> <span class="cf">;;</span>
+		<span class="ss">Sun</span><span class="kw">)</span> <span class="va">day</span><span class="op">+=</span><span class="st">&quot;日&quot;</span> <span class="cf">;;</span>
+	<span class="cf">esac</span>
+	<span class="bu">echo</span> <span class="st">&quot;</span><span class="va">${day}</span><span class="st">&quot;</span>
+<span class="kw">}</span>
+
+<span class="fu">get_user_host()</span>
+<span class="kw">{</span>
+	<span class="bu">local</span> <span class="va">prompt_hostname</span><span class="op">=</span><span class="st">&quot;%m&quot;</span>
+	<span class="bu">local</span> <span class="va">prompt_hostname_short</span><span class="op">=</span><span class="st">&quot;</span><span class="va">$(</span><span class="kw">[[</span> <span class="ot">-f</span> ~/.hostname-short <span class="kw">]]</span> <span class="kw">&amp;&amp;</span> <span class="fu">cat</span> ~/.hostname-short <span class="kw">||</span> <span class="fu">hostname</span><span class="va">)</span><span class="st">&quot;</span>
+	<span class="cf">if</span> <span class="kw">[[</span> <span class="ot">-n</span> <span class="st">&quot;</span><span class="va">${prompt_hostname_short}</span><span class="st">&quot;</span> <span class="kw">]];</span> <span class="cf">then</span>
+		<span class="va">prompt_hostname</span><span class="op">=</span><span class="st">&quot;</span><span class="va">${prompt_hostname_short}</span><span class="st">&quot;</span>
+	<span class="cf">fi</span>
+	<span class="bu">echo</span> <span class="st">&quot;%n@</span><span class="va">${prompt_hostname}</span><span class="st"> &quot;</span>
+<span class="kw">}</span>
+
+<span class="fu">get_exit_status()</span>
+<span class="kw">{</span>
+	<span class="cf">if</span> <span class="kw">((</span> <span class="va">$global_exit_status</span> <span class="kw">));</span> <span class="cf">then</span>
+		<span class="bu">echo</span> <span class="st">&quot;%B%F{red}</span><span class="va">${global_exit_status}</span><span class="st">%f%b &quot;</span>
+	<span class="cf">fi</span>
+<span class="kw">}</span>
+
+<span class="fu">get_melby_info()</span>
+<span class="kw">{</span>
+	<span class="cf">if</span> <span class="ot">! </span><span class="va">HOST</span><span class="op">=</span><span class="st">&quot;</span><span class="va">$(</span><span class="fu">cat</span> ~/.hostname-short <span class="kw">||</span> <span class="fu">hostname</span><span class="va">)</span><span class="st">&quot;</span> <span class="dt">\</span>
+		 <span class="va">MELBY_ZSH_KEYMAP_INDICATOR</span><span class="op">=</span><span class="st">&quot;</span><span class="va">${global_keymap_indicator}</span><span class="st">&quot;</span> <span class="dt">\</span>
+		 <span class="va">MELBY_LAST_CMD_EXIT_STATUS</span><span class="op">=</span><span class="st">&quot;</span><span class="va">${global_exit_status}</span><span class="st">&quot;</span> <span class="dt">\</span>
+		 <span class="va">MELBY_PATH_ALIASES_FILE</span><span class="op">=</span><span class="st">&quot;</span><span class="va">${HOME}</span><span class="st">/.zsh/path-aliases&quot;</span> <span class="dt">\</span>
+		 <span class="va">MELBY_DIR</span><span class="op">=</span><span class="st">&quot;</span><span class="va">${HOME}</span><span class="st">/.melby&quot;</span> <span class="dt">\</span>
+		 <span class="ex">melbyc</span> <span class="at">--config</span> ~/.melby/melby.lua view <span class="at">--shell-pid</span> <span class="st">&quot;</span><span class="va">$$</span><span class="st">&quot;</span> <span class="dv">2</span><span class="op">&gt;</span>/dev/null<span class="kw">;</span> <span class="cf">then</span>
+		<span class="fu">cat</span> <span class="op">&lt;&lt;EOF</span>
+<span class="st">global_prompt_path_short=&quot;%B%F{cyan}</span><span class="va">$(</span><span class="ex">~/syscfg/script/simplify_path.sh</span> <span class="va">${PWD})</span><span class="st">%f%b&quot;</span>
+<span class="st">global_prompt_git=&quot;</span><span class="va">$(</span><span class="ex">gsts</span> for_prompt<span class="va">)</span><span class="st">&quot;</span>
+<span class="st">MELBY_PS1=</span>
+<span class="op">EOF</span>
+	<span class="cf">fi</span>
+<span class="kw">}</span>
+
+<span class="co"># Set global variables used for prompt generation. This function is only</span>
+<span class="co"># executed once. That is, even in cases where we press ESC to enter &quot;Normal&quot;</span>
+<span class="co"># mode, we do _not_ call this function.</span>
+<span class="fu">set_globals()</span>
+<span class="kw">{</span>
+	<span class="bu">source</span> <span class="op">&lt;(</span><span class="ex">get_melby_info</span><span class="op">)</span>
+
+	<span class="co"># Arrays cannot be exported (this is true at least for Bash and Zsh). So we</span>
+	<span class="co"># must consume it here.</span>
+	<span class="bu">local</span> <span class="va">m</span>
+	<span class="cf">if</span> <span class="kw">((</span> <span class="va">$</span><span class="op">#</span><span class="va">MELBY_SHELL_MESSAGES</span> <span class="op">!=</span> <span class="dv">0</span> <span class="kw">));</span> <span class="cf">then</span>
+		<span class="co"># Pad some newlines to move past the &quot; $ &quot; PS1 substring.</span>
+		<span class="bu">echo</span>
+		<span class="bu">echo</span>
+		<span class="cf">for</span> m <span class="kw">in</span> <span class="st">&quot;</span><span class="va">${MELBY_SHELL_MESSAGES</span><span class="op">[@]</span><span class="va">}</span><span class="st">&quot;</span><span class="kw">;</span> <span class="cf">do</span>
+			<span class="bu">echo</span> <span class="st">&quot;</span><span class="va">${m}</span><span class="st">&quot;</span>
+		<span class="cf">done</span>
+		<span class="bu">echo</span>
+	<span class="cf">fi</span>
+
+	<span class="va">global_timestamp</span><span class="op">=</span><span class="st">&quot;%B%K{214}%F{16} %D{%d} </span><span class="va">$(</span><span class="ex">get_day</span><span class="va">)</span><span class="st"> %D{%H:%M:%S %Z} %f%k%b &quot;</span>
+	<span class="va">global_user_host</span><span class="op">=</span><span class="st">&quot;</span><span class="va">$(</span><span class="ex">get_user_host</span><span class="va">)</span><span class="st">&quot;</span>
+	<span class="va">global_cmd_exit_status</span><span class="op">=</span><span class="st">&quot;</span><span class="va">$(</span><span class="ex">get_exit_status</span><span class="va">)</span><span class="st">&quot;</span>
+	<span class="va">global_venv_info</span><span class="op">=</span><span class="st">&quot;</span><span class="va">$(</span><span class="ex">get_venv_info</span><span class="va">)</span><span class="st">&quot;</span>
+<span class="kw">}</span></code></pre></div></div><p><span id="c-81" class="cell-idx">This builds the actual prompt.</span></p><div id="c-82" class="cell-idx"><div class="block-container src" id="b-kody-construct-prompt"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-kody-construct-prompt">&#x1F517;</a></div><div class="block-meta"><code>kody-construct-prompt</code></div><div class="block-meta-other hidden"><p>Used by <a href="#b-func-prompt-kody-setup-b-kody-construct-prompt" class="internal-link"><span class="verbatim">func-prompt-kody-setup</span></a>.</p><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">zsh</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="co"># The actual prompt. This does mostly pure string manipulation as all of the</span>
+<span class="co"># data that we want to display has been calculated elsewhere (and set as global</span>
+<span class="co"># variables).</span>
+<span class="co">#</span>
+<span class="co"># The use of global variables here is important because it allows us to avoid</span>
+<span class="co"># recalculating costly bits. Practically speaking, we recalculate the keymap</span>
+<span class="co"># indicator whenever the user enters or leaves vi mode (&quot;Normal&quot; mode), but we</span>
+<span class="co"># do not recalculate the other globals.</span>
+<span class="fu">construct_prompt()</span>
+<span class="kw">{</span>
+	<span class="ex">set_globals</span>
+
+	<span class="cf">if</span> <span class="kw">[[</span> <span class="ot">-n</span> <span class="st">&quot;</span><span class="va">${MELBY_PS1_LINE1</span><span class="op">:-</span><span class="va">}</span><span class="st">&quot;</span> <span class="kw">]];</span> <span class="cf">then</span>
+		<span class="cf">if</span> <span class="kw">[[</span> <span class="ot">-n</span> <span class="st">&quot;</span><span class="va">${MELBY_PS1_LINE2</span><span class="op">:-</span><span class="va">}</span><span class="st">&quot;</span> <span class="kw">]];</span> <span class="cf">then</span>
+			<span class="co"># Melby already wraps each escape sequence in these lines in</span>
+			<span class="co"># &quot;%{..%}&quot; (with melbyd.zsh_prompt_escape), so that Zsh doesn&#39;t</span>
+			<span class="co"># count it toward the prompt&#39;s width. Wrapping whole lines here</span>
+			<span class="co"># would hide the visible text from Zsh too, and break redrawing</span>
+			<span class="co"># when the prompt wraps. See</span>
+			<span class="co"># https://stackoverflow.com/a/30581694/437583.</span>
+			<span class="va">PS1</span><span class="op">=</span><span class="st">&quot;</span><span class="va">${MELBY_PS1_LINE1}${prompt_newline}${MELBY_PS1_LINE2}${prompt_newline}</span><span class="st"> </span><span class="dt">\$</span><span class="st"> &quot;</span>
+		<span class="cf">else</span>
+			<span class="va">PS1</span><span class="op">=</span><span class="st">&quot;</span><span class="va">${MELBY_PS1_LINE1}${prompt_newline}</span><span class="st"> </span><span class="dt">\$</span><span class="st"> &quot;</span>
+		<span class="cf">fi</span>
+		<span class="bu">local</span> <span class="va">prompt_line_2</span><span class="op">=</span><span class="st">&quot; &quot;</span>
+	<span class="cf">else</span>
+		<span class="co"># Date, time, Zsh keymap indicator, exit code, Git, and VirtualEnv.</span>
+		<span class="bu">local</span> <span class="va">prompt_line_1</span><span class="op">=</span><span class="st">&quot;</span><span class="va">${global_timestamp}</span><span class="st">&lt;</span><span class="va">${global_keymap_indicator}</span><span class="st">&gt; </span><span class="va">${global_venv_info}${global_cmd_exit_status}${global_prompt_git}${global_user_host}${global_prompt_path_short}</span><span class="st">&quot;</span>
+
+		<span class="bu">local</span> <span class="va">prompt_line_2</span><span class="op">=</span><span class="st">&quot; &quot;</span>
+
+		<span class="co"># PS1 -&gt; what you see by default.</span>
+		<span class="va">PS1</span><span class="op">=</span><span class="st">&quot;</span><span class="va">${prompt_line_1}${prompt_newline}${prompt_line_2}</span><span class="dt">\$</span><span class="st"> &quot;</span>
+	<span class="cf">fi</span>
+
+	<span class="co"># PS2 -&gt; what you see when you enter a multi-line shell command.</span>
+	<span class="va">PS2</span><span class="op">=</span><span class="st">&quot;</span><span class="va">${prompt_line_2}</span><span class="st">..%_ &gt; &quot;</span>
+	<span class="co"># PS3 -&gt; what you see when you are given a selection option screen (e.g.,</span>
+	<span class="co"># selecting a directory in the directory stack).</span>
+	<span class="va">PS3</span><span class="op">=</span><span class="st">&quot;</span><span class="va">${prompt_line_2}</span><span class="st">?# &quot;</span>
+<span class="kw">}</span></code></pre></div></div><div id="c-83" class="cell-idx"><div class="block-container src" id="b-kody-invoke"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-kody-invoke">&#x1F517;</a></div><div class="block-meta"><code>kody-invoke</code></div><div class="block-meta-other hidden"><p>Used by <a href="#b-func-prompt-kody-setup-b-kody-invoke" class="internal-link"><span class="verbatim">func-prompt-kody-setup</span></a>.</p><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">zsh</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="ex">prompt_kody_setup</span> <span class="st">&quot;</span><span class="va">$@</span><span class="st">&quot;</span></code></pre></div></div></div><div id="heading-container-h-8-Miscellaneous" class="heading-container"><h2 id="h-8-Miscellaneous"><span id="c-84" class="cell-idx"><a href="#h-8-Miscellaneous">8&ensp;Miscellaneous</a></span></h2></div><div id="heading-container-h-8.1-vertical_label" class="heading-container"><h3 id="h-8.1-vertical_label"><span id="c-85" class="cell-idx"><a href="#h-8.1-vertical_label">8.1&ensp;<span class="code">vertical_label</span></a></span></h3><p><span id="c-86" class="cell-idx">Print a command&#39;s output with a label running down its left edge. <a href="#b-func-gd" class="internal-link" id="linkNumber-15"><span class="code">gd</span></a> uses this.</span></p><div id="c-87" class="cell-idx"><div class="block-container src" id="b-func-vertical-label"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-func-vertical-label">&#x1F517;</a></div><div class="block-meta"><code>func-vertical-label</code><br><code><span class="bold">&#x1F3AF; zsh/func/vertical_label</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">zsh</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="co">#!/usr/bin/env zsh</span>
+
+<span class="fu">vertical_label()</span>
+<span class="kw">{</span>
+	<span class="va">c</span><span class="op">=</span><span class="va">$3</span>
+	<span class="va">ce</span><span class="op">=</span><span class="st">&quot;\x1b[0m&quot;</span>
+	<span class="va">label</span><span class="op">=</span><span class="va">$2</span>
+	<span class="va">i</span><span class="op">=</span>1
+	<span class="co"># The `s/^/x/&#39; marks each line&#39;s beginning with a non-whitespace character</span>
+	<span class="co"># `x&#39; so that when we pipe it to the `read&#39; zsh builtin, we read all leading</span>
+	<span class="co"># indentation as well (otherwise we lose it). The `s/\t/ /g&#39; standardizes</span>
+	<span class="co"># all tab characters to four spaces; this is purely for visual aesthetics.</span>
+	<span class="bu">eval</span> <span class="va">$1</span> <span class="kw">|</span> <span class="fu">sed</span>  <span class="st">&#39;s/^/x/ ; s/\t/    /g ; s/%/%%%%/g&#39;</span> <span class="kw">|</span> <span class="cf">while</span> <span class="bu">read</span> <span class="at">-r</span> <span class="va">line</span><span class="kw">;</span> <span class="cf">do</span>
+		<span class="cf">case</span> <span class="va">$label</span><span class="op">[</span><span class="va">$i</span><span class="op">]</span> <span class="kw">in</span>
+		<span class="st">&quot; &quot;</span><span class="kw">)</span> <span class="bu">printf</span> <span class="st">&quot;  &quot;</span> <span class="cf">;;</span>
+		<span class="st">&quot;-&quot;</span><span class="kw">)</span> <span class="bu">printf</span> <span class="st">&quot; </span><span class="va">$c</span><span class="st">\u2503</span><span class="va">$ce</span><span class="st">&quot;</span> <span class="cf">;;</span>
+		<span class="pp">*</span><span class="kw">)</span> <span class="bu">printf</span> <span class="st">&quot; </span><span class="va">$c$label</span><span class="op">[</span><span class="va">$i</span><span class="op">]</span><span class="va">$ce</span><span class="st">&quot;</span> <span class="cf">;;</span>
+		<span class="cf">esac</span>
+		<span class="va">line_without_x</span><span class="op">=</span><span class="va">$line</span><span class="op">[</span><span class="dv">2</span><span class="op">,</span><span class="dv">-1</span><span class="op">]</span>
+		<span class="bu">printf</span> <span class="st">&quot;  </span><span class="va">${line_without_x</span><span class="op">//</span><span class="dt">\\</span><span class="op">/</span><span class="dt">\\\\\\\\</span><span class="va">}</span><span class="st">\n&quot;</span>
+		<span class="kw">((</span><span class="va">i</span><span class="op">+=</span><span class="dv">1</span><span class="kw">))</span>
+		<span class="cf">if</span> <span class="kw">((</span> <span class="va">i</span> <span class="op">&gt;</span> <span class="va">$</span><span class="op">#</span><span class="va">label</span> <span class="kw">));</span> <span class="cf">then</span>
+			<span class="va">i</span><span class="op">=</span>1
+		<span class="cf">fi</span>
+	<span class="cf">done</span>
+<span class="kw">}</span></code></pre></div></div></div><div id="heading-container-h-8.2-color_cycle" class="heading-container"><h3 id="h-8.2-color_cycle"><span id="c-88" class="cell-idx"><a href="#h-8.2-color_cycle">8.2&ensp;<span class="code">color_cycle</span></a></span></h3><p><span id="c-89" class="cell-idx">Change the terminal&#39;s color theme, using <a href="/script/terminal-themes.html#b-change-theme" class="internal-link" id="linkNumber-16"><span class="code">script/terminal-themes</span></a>.</span></p><div id="c-90" class="cell-idx"><div class="block-container src" id="b-func-color-cycle"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-func-color-cycle">&#x1F517;</a></div><div class="block-meta"><code>func-color-cycle</code><br><code><span class="bold">&#x1F3AF; zsh/func/color_cycle</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">zsh</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="co">#!/usr/bin/env zsh</span>
+
+<span class="fu">color_cycle()</span>
+<span class="kw">{</span>
+	<span class="bu">local</span> <span class="va">root_dir</span>
+	<span class="bu">local</span> <span class="va">direction</span>
+	<span class="bu">local</span> <span class="va">res</span>
+
+	<span class="va">root_dir</span><span class="op">=</span><span class="st">&quot;</span><span class="va">$HOME</span><span class="st">/syscfg/script/terminal-themes&quot;</span>
+	<span class="va">direction</span><span class="op">=</span><span class="va">$1</span>
+
+	<span class="bu">source</span> <span class="op">&lt;(</span><span class="st">&quot;</span><span class="va">${root_dir}</span><span class="st">/change_theme.sh&quot;</span> <span class="st">&quot;</span><span class="va">${direction}</span><span class="st">&quot;</span><span class="op">)</span>
+<span class="kw">}</span></code></pre></div></div></div><div id="heading-container-h-8.3-susp" class="heading-container"><h3 id="h-8.3-susp"><span id="c-91" class="cell-idx"><a href="#h-8.3-susp">8.3&ensp;<span class="code">susp</span></a></span></h3><p><span id="c-92" class="cell-idx">Suspend the system, optionally after sleeping for some time.</span></p><div id="c-93" class="cell-idx"><div class="block-container src" id="b-func-susp"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-func-susp">&#x1F517;</a></div><div class="block-meta"><code>func-susp</code><br><code><span class="bold">&#x1F3AF; zsh/func/susp</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">zsh</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="co">#!/usr/bin/env zsh</span>
+
+<span class="co"># susp() optionally sleeps for the given time amount, then suspends the system</span>
+<span class="co"># using systemctl.</span>
+
+<span class="fu">susp()</span>
+<span class="kw">{</span>
+	<span class="va">amt</span><span class="op">=</span><span class="va">$1</span>
+	<span class="fu">date</span> <span class="co"># display system time before going into suspend</span>
+	<span class="cf">if</span> <span class="kw">[[</span> <span class="ot">-n</span> <span class="va">$amt</span> <span class="kw">]];</span> <span class="cf">then</span>
+		<span class="bu">echo</span> <span class="st">&quot;Sleeping for </span><span class="va">$amt</span><span class="st"> before suspending...&quot;</span>
+		<span class="fu">sleep</span> <span class="va">$amt</span> <span class="kw">&amp;&amp;</span> <span class="fu">sudo</span> systemctl suspend
+	<span class="cf">else</span>
+		<span class="fu">sudo</span> systemctl suspend
+	<span class="cf">fi</span>
+<span class="kw">}</span></code></pre></div></div></div><div id="heading-container-h-8.4-apt_cache_search" class="heading-container"><h3 id="h-8.4-apt_cache_search"><span id="c-94" class="cell-idx"><a href="#h-8.4-apt_cache_search">8.4&ensp;<span class="code">apt_cache_search</span></a></span></h3><p><span id="c-95" class="cell-idx">A shortcut for sorting and paging <span class="code">apt-cache search</span> results.</span></p><div id="c-96" class="cell-idx"><div class="block-container src" id="b-func-apt-cache-search"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-func-apt-cache-search">&#x1F517;</a></div><div class="block-meta"><code>func-apt-cache-search</code><br><code><span class="bold">&#x1F3AF; zsh/func/apt_cache_search</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">zsh</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="co">#!/usr/bin/env zsh</span>
+
+<span class="co"># apt_cache_search() is a shorcut for &quot;apt-cache search PATTERN | sort | less&quot;.</span>
+
+<span class="fu">apt_cache_search()</span>
+<span class="kw">{</span>
+	<span class="va">pattern</span><span class="op">=</span><span class="va">$1</span>
+	<span class="cf">if</span> <span class="kw">[[</span> <span class="ot">-z</span> <span class="st">&quot;</span><span class="va">$pattern</span><span class="st">&quot;</span> <span class="kw">]];</span> <span class="cf">then</span>
+		<span class="bu">echo</span> <span class="st">&quot;Need pattern argument&quot;</span>
+		<span class="cf">return</span> <span class="dv">1</span>
+	<span class="cf">fi</span>
+	<span class="ex">apt-cache</span> search <span class="va">$pattern</span> <span class="kw">|</span> <span class="fu">sort</span> <span class="kw">|</span> <span class="fu">less</span>
+<span class="kw">}</span></code></pre></div></div></div><div id="heading-container-h--Page-metrics" class="heading-container page-metrics"><h2 id="h--Page-metrics"><a href="#h--Page-metrics">Page metrics</a></h2></div><div id="heading-container-h--Backlinks" class="heading-container backlinks"><h3 id="h--Backlinks"><a href="#h--Backlinks">Backlinks (6)</a></h3><ol><li><a href="/zsh/zshrc.html">zsh/zshrc.org (2)</a><ol><li><a href="#top">^ Top</a><span class="verbatim"> &#x2190; </span><a href="/zsh/zshrc.html#c-4">¶ (<span class="verbatim">Cell 4</span>)</a></li><li><a href="#b-func-prompt-kody-setup"><span class="verbatim">func-prompt-kody-setup</span></a><span class="verbatim"> &#x2190; </span><a href="/zsh/zshrc.html#c-8">¶ (<span class="verbatim">Cell 8</span>)</a></li></ol></li><li><a href="/ghostty.html">ghostty.org (1)</a><ol><li><a href="#b-func-color-cycle"><span class="verbatim">func-color-cycle</span></a><span class="verbatim"> &#x2190; </span><a href="/ghostty.html#c-21">¶ (<span class="verbatim">Cell 21</span>)</a></li></ol></li><li><a href="/script/terminal-themes.html">script/terminal-themes.org (1)</a><ol><li><a href="#b-func-color-cycle"><span class="verbatim">func-color-cycle</span></a><span class="verbatim"> &#x2190; </span><a href="/script/terminal-themes.html#c-1">¶ (<span class="verbatim">Cell 1</span>)</a></li></ol></li><li><a href="/script/utilities.html">script/utilities.org (1)</a><ol><li><a href="#b-func-prompt-kody-setup"><span class="verbatim">func-prompt-kody-setup</span></a><span class="verbatim"> &#x2190; </span><a href="/script/utilities.html#c-15">¶ (<span class="verbatim">Cell 15</span>)</a></li></ol></li><li><a href="/zsh/index.html">zsh/index.org (1)</a><ol><li><a href="#top">^ Top</a><span class="verbatim"> &#x2190; </span><a href="/zsh/index.html#c-2">¶ (<span class="verbatim">Cell 2</span>)</a></li></ol></li></ol></div><div id="heading-container-h--Tangled-files" class="heading-container tangled-blocks"><h3 id="h--Tangled-files"><a href="#h--Tangled-files">Tangled files (28)</a></h3><ol><li><a href="#b-func--emacs-kill-buffer" class="verbatim">zsh/func/_emacs_kill_buffer</a></li><li><a href="#b-func--s" class="verbatim">zsh/func/_s</a></li><li><a href="#b-func-apt-cache-search" class="verbatim">zsh/func/apt_cache_search</a></li><li><a href="#b-func-color-cycle" class="verbatim">zsh/func/color_cycle</a></li><li><a href="#b-func-dir-info" class="verbatim">zsh/func/dir_info</a></li><li><a href="#b-func-dirs-navigate" class="verbatim">zsh/func/dirs_navigate</a></li><li><a href="#b-func-emacs-kill-buffer" class="verbatim">zsh/func/emacs_kill_buffer</a></li><li><a href="#b-func-emacs-list-buffers" class="verbatim">zsh/func/emacs_list_buffers</a></li><li><a href="#b-func-f" class="verbatim">zsh/func/f</a></li><li><a href="#b-func-f-files" class="verbatim">zsh/func/f_files</a></li><li><a href="#b-func-f-procs" class="verbatim">zsh/func/f_procs</a></li><li><a href="#b-func-f-text" class="verbatim">zsh/func/f_text</a></li><li><a href="#b-func-find-long-lines" class="verbatim">zsh/func/find_long_lines</a></li><li><a href="#b-func-gd" class="verbatim">zsh/func/gd</a></li><li><a href="#b-func-gflat" class="verbatim">zsh/func/gflat</a></li><li><a href="#b-func-git-check-linearity" class="verbatim">zsh/func/git_check_linearity</a></li><li><a href="#b-func-git-contents" class="verbatim">zsh/func/git_contents</a></li><li><a href="#b-func-git-copy-sha" class="verbatim">zsh/func/git_copy_sha</a></li><li><a href="#b-func-gst" class="verbatim">zsh/func/gst</a></li><li><a href="#b-func-gsts" class="verbatim">zsh/func/gsts</a></li><li><a href="#b-func-jl" class="verbatim">zsh/func/jl</a></li><li><a href="#b-func-prompt-kody-setup" class="verbatim">zsh/func/prompt_kody_setup</a></li><li><a href="#b-func-rand-open" class="verbatim">zsh/func/rand_open</a></li><li><a href="#b-func-s" class="verbatim">zsh/func/s</a></li><li><a href="#b-func-susp" class="verbatim">zsh/func/susp</a></li><li><a href="#b-func-tmux-list-sessions" class="verbatim">zsh/func/tmux_list_sessions</a></li><li><a href="#b-func-univ-open" class="verbatim">zsh/func/univ_open</a></li><li><a href="#b-func-vertical-label" class="verbatim">zsh/func/vertical_label</a></li></ol></div><div id="heading-container-h--Named-cells" class="heading-container named-cells"><h3 id="h--Named-cells"><a href="#h--Named-cells">Named cells (31)</a></h3><ol><li><a href="#b-func--emacs-kill-buffer"><span class="verbatim">func--emacs-kill-buffer</span></a></li><li><a href="#b-func--s"><span class="verbatim">func--s</span></a></li><li><a href="#b-func-apt-cache-search"><span class="verbatim">func-apt-cache-search</span></a></li><li><a href="#b-func-color-cycle"><span class="verbatim">func-color-cycle</span></a></li><li><a href="#b-func-dir-info"><span class="verbatim">func-dir-info</span></a></li><li><a href="#b-func-dirs-navigate"><span class="verbatim">func-dirs-navigate</span></a></li><li><a href="#b-func-emacs-kill-buffer"><span class="verbatim">func-emacs-kill-buffer</span></a></li><li><a href="#b-func-emacs-list-buffers"><span class="verbatim">func-emacs-list-buffers</span></a></li><li><a href="#b-func-f"><span class="verbatim">func-f</span></a></li><li><a href="#b-func-f-files"><span class="verbatim">func-f-files</span></a></li><li><a href="#b-func-f-procs"><span class="verbatim">func-f-procs</span></a></li><li><a href="#b-func-f-text"><span class="verbatim">func-f-text</span></a></li><li><a href="#b-func-find-long-lines"><span class="verbatim">func-find-long-lines</span></a></li><li><a href="#b-func-gd"><span class="verbatim">func-gd</span></a></li><li><a href="#b-func-gflat"><span class="verbatim">func-gflat</span></a></li><li><a href="#b-func-git-check-linearity"><span class="verbatim">func-git-check-linearity</span></a></li><li><a href="#b-func-git-contents"><span class="verbatim">func-git-contents</span></a></li><li><a href="#b-func-git-copy-sha"><span class="verbatim">func-git-copy-sha</span></a></li><li><a href="#b-func-gst"><span class="verbatim">func-gst</span></a></li><li><a href="#b-func-gsts"><span class="verbatim">func-gsts</span></a></li><li><a href="#b-func-jl"><span class="verbatim">func-jl</span></a></li><li><a href="#b-func-prompt-kody-setup"><span class="verbatim">func-prompt-kody-setup</span></a></li><li><a href="#b-func-rand-open"><span class="verbatim">func-rand-open</span></a></li><li><a href="#b-func-s"><span class="verbatim">func-s</span></a></li><li><a href="#b-func-susp"><span class="verbatim">func-susp</span></a></li><li><a href="#b-func-tmux-list-sessions"><span class="verbatim">func-tmux-list-sessions</span></a></li><li><a href="#b-func-univ-open"><span class="verbatim">func-univ-open</span></a></li><li><a href="#b-func-vertical-label"><span class="verbatim">func-vertical-label</span></a></li><li><a href="#b-kody-construct-prompt"><span class="verbatim">kody-construct-prompt</span></a></li><li><a href="#b-kody-invoke"><span class="verbatim">kody-invoke</span></a></li><li><a href="#b-kody-setup"><span class="verbatim">kody-setup</span></a></li></ol></div><footer><div class="lilac-stamp">Generated by <a href="https://lilac.funloop.org" class="external-link" target="_blank" rel="noopener noreferrer">Lilac</a></div></footer></main><script id="heading-ancestry" type="application/json">{"h--Backlinks":["h--Page-metrics"],"h--Named-cells":["h--Page-metrics"],"h--Page-metrics":[],"h--Tangled-files":["h--Page-metrics"],"h-1-Finding-things":[],"h-1.1-f":["h-1-Finding-things"],"h-1.2-f_files":["h-1-Finding-things"],"h-1.3-f_text":["h-1-Finding-things"],"h-1.4-f_procs":["h-1-Finding-things"],"h-1.5-find_long_lines":["h-1-Finding-things"],"h-2-Files-and-directories":[],"h-2.1-univ_open":["h-2-Files-and-directories"],"h-2.2-dir_info":["h-2-Files-and-directories"],"h-2.3-dirs_navigate":["h-2-Files-and-directories"],"h-2.4-rand_open":["h-2-Files-and-directories"],"h-3-Git":[],"h-3.1-git_contents":["h-3-Git"],"h-3.2-gst":["h-3-Git"],"h-3.3-gsts":["h-3-Git"],"h-3.4-gd":["h-3-Git"],"h-3.5-gflat":["h-3-Git"],"h-3.6-git_check_linearity":["h-3-Git"],"h-3.7-git_copy_sha":["h-3-Git"],"h-4-Jujutsu":[],"h-4.1-jl":["h-4-Jujutsu"],"h-5-Emacs":[],"h-5.1-emacs_list_buffers":["h-5-Emacs"],"h-5.2-emacs_kill_buffer":["h-5-Emacs"],"h-5.3-_emacs_kill_buffer":["h-5-Emacs"],"h-6-Remote-machines":[],"h-6.1-s":["h-6-Remote-machines"],"h-6.2-_s":["h-6-Remote-machines"],"h-6.3-tmux_list_sessions":["h-6-Remote-machines"],"h-7-Prompt":[],"h-7.1-prompt_kody_setup":["h-7-Prompt"],"h-8-Miscellaneous":[],"h-8.1-vertical_label":["h-8-Miscellaneous"],"h-8.2-color_cycle":["h-8-Miscellaneous"],"h-8.3-susp":["h-8-Miscellaneous"],"h-8.4-apt_cache_search":["h-8-Miscellaneous"]}</script><script id="lilac-fe-script" src="/js/lilac.js"></script></body></html>

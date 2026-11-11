@@ -1,0 +1,393 @@
+<!DOCTYPE HTML><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Claude</title><link rel="stylesheet" href="/css/default.css"><link rel="shortcut icon" type="image/png" href="/favicon.png"><link rel="stylesheet" href="/vendor/source-fonts/source-fonts.css">
+<script>
+  window.MathJax = {
+      loader: { paths: { "mathjax-newcm": "/vendor/mathjax-newcm-font" } },
+      output: { font: "mathjax-newcm" },
+  tex: {
+      tags: 'ams'
+  },
+  options: {
+      ignoreHtmlClass: 'verbatim|code'
+  }
+};
+</script>
+<script id="MathJax-script" async="" src="/vendor/mathjax/tex-mml-chtml.js"></script>
+</head><body><div class="navbar"><button id="hamburger" class="tocs-toggle-button" aria-label="Toggle table of contents sidebar">&#x2630;</button><div class="breadcrumbs"><a href="https://syscfg.funloop.org"><span class="breadcrumb">Linus Arver&#39;s Dotfiles</span></a> <a href="https://github.com/listx/syscfg" class="repo-link" title="Source repository" aria-label="Source repository"><svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 16 16"
+     aria-hidden="true">
+<g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+<circle cx="4" cy="3" r="1.75"></circle>
+<circle cx="4" cy="13" r="1.75"></circle>
+<circle cx="12" cy="3" r="1.75"></circle>
+<path d="M4 4.75v6.5"></path>
+<path d="M12 4.75c0 4-8 3-8 6.5"></path>
+</g>
+</svg>
+</a> <span class="breadcrumb-separator">/</span> <a href="#top"><span class="breadcrumb">claude.org</span></a></div></div><nav id="tocs"><p class="widget-title gtoc-title">Site contents</p><nav class="gtoc"><ul><li><a href="/index.html">Introduction</a></li><li><a href="/bash.html">Bash</a></li><li><a href="/claude.html" class="bold">Claude</a></li><li><a href="/clojure.html">Clojure</a></li><li><a href="/emacs.html">Emacs</a></li><li><a href="/ghostty.html">Ghostty</a></li><li><a href="/git.html">Git</a></li><li><a href="/gpg.html">GnuPG</a></li><li><a href="/jj.html">Jujutsu</a></li><li><a href="/keybindings.html">Keybindings (WIP)</a></li><li><a href="/misc.html">Miscellaneous</a></li><li><a href="/mpv.html">mpv</a></li><li><a href="/nix.html">Nix</a></li><li><a href="/notmuch.html">Notmuch</a></li><li><a href="/plan.html">Plan</a></li><li><a href="/qutebrowser.html">qutebrowser</a></li><li><a href="/rtorrent.html">rTorrent</a></li><li><a href="/script/index.html">System scripts</a></li><li><a href="/tmux.html">tmux</a></li><li><a href="/vim.html">Vim</a></li><li><a href="/xmonad.html">xmonad</a></li><li><a href="/xorg.html">X.Org</a></li><li><a href="/zsh/index.html">Zsh</a></li></ul></nav><p class="widget-title toc-title">Page contents</p><nav class="toc"><div class="toc-entries"><ol><li class="toc-level-1"><div class="toc-entry"><span class="toc-counter">1</span><a href="#h-1-Project-instructions">Project instructions</a></div></li><li class="toc-level-1"><div class="toc-entry"><span class="toc-counter">2</span><a href="#h-2-User-instructions">User instructions</a></div></li><li class="toc-level-1"><div class="toc-entry"><span class="toc-counter">3</span><a href="#h-3-Skills">Skills</a></div><ol><li class="toc-level-2"><div class="toc-entry"><span class="toc-counter">3.1</span><a href="#h-3.1-Literate-programming-with-Lilac">Literate programming with Lilac</a></div></li><li class="toc-level-2"><div class="toc-entry"><span class="toc-counter">3.2</span><a href="#h-3.2-Commit-messages">Commit messages</a></div></li></ol></li><li class="toc-level-1"><div class="toc-entry"><a href="#h--Page-metrics">Page metrics</a></div><ol><li class="toc-level-2"><div class="toc-entry"><a href="#h--Backlinks">Backlinks</a></div></li><li class="toc-level-2"><div class="toc-entry"><a href="#h--Tangled-files">Tangled files</a></div></li><li class="toc-level-2"><div class="toc-entry"><a href="#h--Named-cells">Named cells</a></div></li></ol></li></ol></div></nav></nav><main><h1 id="top">Claude</h1><hr class="title-underline"><p><span id="c-0" class="cell-idx">Settings for Claude Code.</span></p><div id="heading-container-h-1-Project-instructions" class="heading-container"><h2 id="h-1-Project-instructions"><span id="c-1" class="cell-idx"><a href="#h-1-Project-instructions">1&ensp;Project instructions</a></span></h2><p><span id="c-2" class="cell-idx">Claude loads <span class="code">CLAUDE.md</span> at the start of every session in this repo. Whether it uses the Lilac skill is otherwise up to its own judgment, so we state the rules it must not miss here.</span></p><div id="c-3" class="cell-idx"><div class="block-container src" id="b-1"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-1">&#x1F517;</a></div><div class="block-meta"><code><span class="bold">&#x1F3AF; CLAUDE.md</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__anon_block_number</span> = <span class="code">1</span></p></li><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">markdown</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="fu"># This repository must always use literate programming</span>
+
+These dotfiles are written in Lilac. The Org files (<span class="in">`doc/**/*.org`</span>) are the
+source of truth. Files such as <span class="in">`Makefile`</span>, <span class="in">`claude/skills/*/SKILL.md`</span>, and this
+<span class="in">`CLAUDE.md`</span> are tangled output, and running <span class="in">`make`</span> in <span class="in">`doc/`</span> overwrites them.
+This applies to every change, however small, and even if the request names a
+tangled file (for example &quot;fix this rule in <span class="in">`Makefile`</span>&quot;).
+
+<span class="fu">## Rules</span>
+
+<span class="ss">- </span>Never edit a tangled file directly, and never create a new tangled file by
+  hand. Change the Org block that produces it. To create a new file, add a root
+  block with a <span class="in">`:tangle`</span> header.
+<span class="ss">- </span>Before changing any file, find out where its contents come from: search the
+  Org files for its <span class="in">`:tangle`</span> path and for the code itself, because most code
+  reaches its file through Noweb references. Only the paths excluded by
+  <span class="in">`nonTangledPathspecs`</span> in <span class="in">`doc/Lilac.toml`</span> are not tangled.
+<span class="ss">- </span>The prose is part of the program. Explain why the code is shaped the way it
+  is, and update nearby prose so that it remains true.
+<span class="ss">- </span>Search the Org files, not tangled output. <span class="in">`rg`</span> still shows most tangled files,
+  so limit searches with <span class="in">`-g &#39;*.org&#39;`</span>.
+<span class="ss">- </span>Commit the Org change together with its regenerated tangled files.
+<span class="ss">- </span>If tangling does not work (for example <span class="in">`lilac`</span> is not on <span class="in">`PATH`</span>; the Nix shell
+  from <span class="in">`shell.nix`</span> provides it), fix that or report it. Do not hand-edit tangled
+  files to compensate.
+
+<span class="fu">## Checking a change</span>
+
+<span class="ss">1. </span>Run <span class="in">`make`</span> in <span class="in">`doc/`</span> to tangle, weave, and lint. <span class="in">`lilac lint`</span> reports tracked
+   files that no Org block produces.
+<span class="ss">2. </span>Check <span class="in">`git status`</span> to see that only the expected tangled files changed.</code></pre></div></div></div><div id="heading-container-h-2-User-instructions" class="heading-container"><h2 id="h-2-User-instructions"><span id="c-4" class="cell-idx"><a href="#h-2-User-instructions">2&ensp;User instructions</a></span></h2><p><span id="c-5" class="cell-idx">Claude loads <span class="code">~/.claude/CLAUDE.md</span> in every session, whatever the repo, so it holds the rules that are about how sessions work together rather than about any one repo.</span></p><p><span id="c-6" class="cell-idx">We often run several Claude sessions at once, one per repo. If two of them edit the same repo, they trip over each other&#39;s uncommitted changes, and neither one knows the whole state of the work. So each repo gets one owning session, and every other session sends that owner its change requests instead of editing the files itself. The owner still answers to the user, so a request from another session never counts as the user&#39;s approval for anything hard to undo.</span></p><p><span id="c-7" class="cell-idx">Sessions find each other with <span class="code">ListAgents</span>, which shows each session&#39;s name, status, and tmux pane, but not its working directory. The name is therefore the only way to tell which session owns a repo, and the rule has to say how names are chosen. Claude Code (2.1.312 at time of writing) already names a new session after the basename of its working directory plus a short suffix, such as <span class="code">syscfg-d1</span> or <span class="code">lilac-f3</span>, so we adopt that form as the convention. A name can be set at startup with <span class="code">claude -n &lt;name&gt;</span> (<span class="code">--name</span>) and changed later with <span class="code">/rename &lt;name&gt;</span> (alias <span class="code">/name</span>), which is also how a session ends up with a task-style name like <span class="code">remove-lilac-legacy-leftovers</span> that breaks the convention.</span></p><p><span id="c-8" class="cell-idx">Matching on the directory name alone would be ambiguous, because the owner of <span class="code">lilac-legacy</span> would be named <span class="code">lilac-legacy-…</span>, which also starts with <span class="code">lilac-</span>. So the convention requires the suffix to contain no hyphens, and a session compares everything before the last hyphen against the directory name.</span></p><div id="c-9" class="cell-idx"><div class="block-container src" id="b-2"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-2">&#x1F517;</a></div><div class="block-meta"><code><span class="bold">&#x1F3AF; claude/CLAUDE.md</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__anon_block_number</span> = <span class="code">2</span></p></li><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">markdown</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="fu"># One Claude session per repo</span>
+
+Each repo has at most one Claude Code session that owns it. Other sessions send
+the owner their change requests instead of editing the repo themselves.
+
+<span class="fu">## Session names</span>
+
+<span class="in">`ListAgents`</span> shows session names but not working directories, so names are how
+sessions find the owner of a repo.
+
+<span class="ss">- </span>The session that owns a repo is named <span class="in">`&lt;dir&gt;-&lt;suffix&gt;`</span>, where <span class="in">`&lt;dir&gt;`</span> is the
+  basename of the repo&#39;s directory and <span class="in">`&lt;suffix&gt;`</span> is short and has no hyphens.
+  For example, the owner of <span class="in">`~/syscfg`</span> is named like <span class="in">`syscfg-d1`</span>.
+<span class="ss">- </span>To find a repo&#39;s owner, compare everything before the last hyphen of each
+  session&#39;s name against the repo&#39;s directory name. <span class="in">`lilac-legacy-a2`</span> owns
+  <span class="in">`lilac-legacy`</span>, not <span class="in">`lilac`</span>.
+<span class="ss">- </span>Claude Code names a new session this way by default (after its working
+  directory, plus a short suffix). Keep that name. Don&#39;t rename the session
+  after its task.
+<span class="ss">- </span>If your session&#39;s name doesn&#39;t follow the convention, ask the user to rename
+  it with <span class="in">`/rename &lt;dir&gt;-&lt;suffix&gt;`</span> (alias <span class="in">`/name`</span>). A new session can be started
+  with a chosen name using <span class="in">`claude -n &lt;name&gt;`</span>.
+
+<span class="fu">## Changing files in another repo</span>
+
+Before changing files in a repo other than your own working directory, run
+<span class="in">`ListAgents`</span>. If a session owns that repo, send it the request with
+<span class="in">`SendMessage`</span> and don&#39;t edit the files yourself. If no session owns it, ask the
+user.
+
+<span class="fu">## Requests from other sessions</span>
+
+When you own a repo and get a request from another session, handle it under
+this repo&#39;s own rules (CLAUDE.md, tests, and so on). Check with the user before
+anything hard to undo, such as commits, pushes, deletions, or history rewrites.</code></pre></div></div></div><div id="heading-container-h-3-Skills" class="heading-container"><h2 id="h-3-Skills"><span id="c-10" class="cell-idx"><a href="#h-3-Skills">3&ensp;Skills</a></span></h2></div><div id="heading-container-h-3.1-Literate-programming-with-Lilac" class="heading-container"><h3 id="h-3.1-Literate-programming-with-Lilac"><span id="c-11" class="cell-idx"><a href="#h-3.1-Literate-programming-with-Lilac">3.1&ensp;Literate programming with Lilac</a></span></h3><div id="c-12" class="cell-idx"><div class="block-container src" id="b-3"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-3">&#x1F517;</a></div><div class="block-meta"><code><span class="bold">&#x1F3AF; claude/skills/lilac-literate-programming/SKILL.md</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__anon_block_number</span> = <span class="code">3</span></p></li><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">markdown</span></p></li><li><p><span class="code">noweb</span> = <span class="code">off</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="co">---</span>
+<span class="an">name:</span><span class="co"> lilac-literate-programming</span>
+<span class="an">description:</span><span class="co"> &gt;-</span>
+<span class="co">  Work on literate programs written with Lilac (lilac.funloop.org, the Haskell</span>
+<span class="co">  Org-mode literate programming tool, not the older Emacs &quot;lilac-legacy&quot;). Use</span>
+<span class="co">  this whenever a repo contains a Lilac.toml, *.larc or *.lobj files, or Org</span>
+<span class="co">  files with `#+header: :tangle` blocks and Noweb `&lt;&lt;name&gt;&gt;` references, or when</span>
+<span class="co">  the user mentions Lilac, tangling, weaving, or literate programming with Org.</span>
+<span class="co">  Make sure to use this skill before editing any source file that might be</span>
+<span class="co">  generated from an Org document, even if the user just says &quot;fix this bug in</span>
+<span class="co">  foo.hs&quot; and never mentions Lilac.</span>
+<span class="co">---</span>
+
+<span class="fu"># Lilac literate programming</span>
+
+In a Lilac project the <span class="in">`.org`</span> files are the source of truth. Source files like
+<span class="in">`src/Foo.hs`</span> are *tangled* (extracted) output, and the HTML site is *woven*
+output. Editing generated files is wasted work: the next tangle overwrites them.
+
+Lilac is pre-1.0 (0.2.x at time of writing) and changes. When unsure about
+syntax, read the live docs at https://lilac.funloop.org (each page is itself a
+Lilac document; <span class="in">`parse.org`</span> covers syntax, <span class="in">`cli.org`</span> the CLI, <span class="in">`user-manual.org`</span>
+the differences from vanilla Org).
+
+<span class="fu">## First: detect and orient</span>
+
+<span class="ss">1. </span>Look for <span class="in">`Lilac.toml`</span> at the project root (and a <span class="in">`Makefile`</span>, usually
+   generated by <span class="in">`lilac init`</span>). Read the Makefile to learn the project&#39;s real
+   build commands; do not assume.
+<span class="ss">2. </span>Before editing any code file, find out whether it is tangled: grep the <span class="in">`.org`</span>
+   files for <span class="in">`:tangle &lt;that/path&gt;`</span>. If found, edit the Org block, not the file.
+<span class="ss">3. </span>Read the surrounding prose and the block&#39;s <span class="in">`#+name:`</span> neighbors before
+   changing anything. The prose is part of the program.
+
+<span class="fu">## Pipeline</span>
+
+Org files go through <span class="in">`compile`</span> (each <span class="in">`.org`</span> to <span class="in">`.lobj`</span>), then <span class="in">`archive`</span> (all
+<span class="in">`.lobj`</span> into one <span class="in">`.larc`</span>), then <span class="in">`tangle`</span>, <span class="in">`weave`</span>, or <span class="in">`lint`</span> run off the
+archive. <span class="in">`serve`</span> hosts the woven site locally. A typical Makefile looks like:
+
+<span class="in">```</span>
+<span class="in">lilac compile $?</span>
+<span class="in">lilac archive $^ --out-file project.larc</span>
+<span class="in">lilac tangle project.larc --out-dir ..</span>
+<span class="in">lilac weave project.larc --out-dir site --write-css --write-js</span>
+<span class="in">lilac --project-conf doc/Lilac.toml lint doc/project.larc</span>
+<span class="in">```</span>
+
+Prefer the project&#39;s <span class="in">`make`</span> targets over hand-typed commands. The build catches
+broken links and cycles in Noweb references, so a failure usually means a real
+structural mistake; read the message instead of working around it. Broken links
+fail at <span class="in">`lilac archive`</span>, so <span class="in">`lilac compile`</span> passing on its own doesn&#39;t mean that
+the links are good.
+
+<span class="fu">## Writing blocks</span>
+
+A block is a named unit of code with prose around it:
+
+<span class="in">```org</span>
+<span class="in">#+name: f:parseConfig</span>
+<span class="in">#+begin_src haskell</span>
+<span class="in">parseConfig :: Text -&gt; Either Err Config</span>
+<span class="in">parseConfig = ...</span>
+<span class="in">#+end_src</span>
+<span class="in">```</span>
+
+Rules that differ from vanilla Org (this is where agents usually go wrong):
+
+<span class="ss">- </span>**Name every block** with <span class="in">`#+name: ...`</span>. Lilac does not support <span class="in">`:noweb-ref`</span>
+  style implicit concatenation of same-named blocks. To split something up, give
+  each piece its own name and reference them from a parent in the order the
+  explanation needs.
+<span class="ss">- </span>**Root blocks** (those that become files) carry
+  <span class="in">`#+header: :tangle path/to/file`</span>. Everything else reaches a file only by being
+  referenced via <span class="in">`&lt;&lt;name&gt;&gt;`</span> from a root block, directly or transitively.
+<span class="ss">- </span>**Noweb references** are <span class="in">`&lt;&lt;block name&gt;&gt;`</span>. Indentation before a reference is
+  inherited by every line of the expanded block, and any non-space prefix on
+  that line works the same way. Consecutive references on separate lines get a
+  blank line inserted between them; references embedded mid-line (like
+  <span class="in">`a1 &lt;&lt;b&gt;&gt;,`</span>) do not.
+<span class="ss">- </span>**Cross-file references** use <span class="in">`&lt;&lt;id:DOC-OR-HEADING-UUID::block-name&gt;&gt;`</span>. The
+  target file must also be compiled into the archive. Cycles are errors.
+<span class="ss">- </span>**Optional headers**: <span class="in">`#+header: :shebang #!/usr/bin/env bash`</span> prepends a
+  shebang when tangling; <span class="in">`#+header: :collapsed true`</span> makes the woven block
+  click-to-expand (good for figure-generating code that shouldn&#39;t dominate the
+  page). To show a literal <span class="in">`&lt;&lt;x&gt;&gt;`</span> in the woven output without expanding it,
+  turn Noweb off for that block (check <span class="in">`parse.org`</span> for the exact header).
+<span class="ss">- </span>Lilac does not set the executable bit, even with <span class="in">`:shebang`</span>: a newly tangled
+  file is created as <span class="in">`644`</span>. Run <span class="in">`chmod +x`</span> on a new script after the first tangle
+  and commit that mode. Rewriting a tangled file keeps its existing mode.
+<span class="ss">- </span>Tangled files only get rewritten when their contents change, so <span class="in">`make`</span>
+  timestamps stay meaningful. Trailing spaces are trimmed.
+
+Other syntax constraints:
+
+<span class="ss">- </span>Every document needs a <span class="in">`:PROPERTIES:`</span> drawer with an <span class="in">`:ID:`</span> UUID at the top.
+  Do not invent UUIDs by hand for real documents; generate a fresh one (e.g.
+  <span class="in">`uuidgen`</span>) for new files and headings.
+<span class="ss">- </span>A document only appears in the site&#39;s &quot;Site contents&quot; sidebar if it is listed
+  in a <span class="in">`txt`</span> block named <span class="in">`index`</span> (<span class="in">`#+name: index`</span>) in the <span class="in">`index.org`</span> of its
+  directory, with one path per line relative to that <span class="in">`index.org`</span>. The block is
+  not shown on the woven page. A subdirectory has its own <span class="in">`index.org`</span> listing
+  its documents, and the parent lists it by directory name (<span class="in">`script`</span>), because
+  an entry that doesn&#39;t end in <span class="in">`.org`</span> means <span class="in">`&lt;entry&gt;/index.org`</span>. Update the block
+  when adding, moving, or removing a document.
+<span class="ss">- </span>List items must be indented two spaces and separated by blank lines. Write
+  ordered lists with <span class="in">`1)`</span>, not <span class="in">`1.`</span>, which is a compile error.
+<span class="ss">- </span>In new Org prose, mark up code, paths, and commands with code emphasis
+  (<span class="in">`~foo~`</span>), not verbatim (<span class="in">`=foo=`</span>), even where the surrounding text uses
+  verbatim. Use verbatim only when asked. Don&#39;t rewrite existing verbatim markup
+  in text you aren&#39;t otherwise changing. To use a tilde inside code emphasis,
+  escape it with a backslash, as paths often need: <span class="in">`~\~/.claude~`</span>.
+<span class="ss">- </span>Not supported: <span class="in">`#+include`</span>, radio links, TeX export, <span class="in">`+strike-through+`</span>. Don&#39;t
+  use them.
+<span class="ss">- </span>Files may set <span class="in">`lilac_maxHeadingLevel`</span> / <span class="in">`lilac_maxListLevel`</span> limits; respect
+  whatever the file declares. To allow deeper headings than the default, put
+  <span class="in">`#+lilac_maxHeadingLevel: 5`</span> (with the level you need) just below the
+  document&#39;s title.
+
+<span class="fu">## Cross-linking</span>
+
+Use <span class="in">`[[...]]`</span> links generously in prose. Whenever you mention a block, a line of
+code, a heading, or another document, link to it instead of only naming it in
+<span class="in">`~code~`</span>. Links let readers navigate, and because Lilac checks them, renaming or
+removing a target breaks the build instead of silently leaving the prose stale.
+
+<span class="ss">- </span>Block in the same document: <span class="in">`[[block-name]]`</span> or <span class="in">`[[block-name][shown text]]`</span>.
+<span class="ss">- </span>Line in a block: put a <span class="in">`ref:`</span> label in parentheses in a comment on that line,
+  then link to it with <span class="in">`[[(label)]]`</span>. Tangling strips the label but keeps the
+  comment character.
+<span class="ss">- </span>Another document, or a heading with its own <span class="in">`:ID:`</span>: <span class="in">`[[id:UUID][shown text]]`</span>.
+<span class="ss">- </span>Block or line in another document: <span class="in">`[[id:DOC-UUID::block-name][shown text]]`</span> or
+  <span class="in">`[[id:DOC-UUID::(label)]]`</span>. A bare <span class="in">`[[block-name]]`</span> only resolves
+  within its own document.
+<span class="ss">- </span>File that isn&#39;t a Lilac document: <span class="in">`[[file:path][shown text]]`</span>. Lilac checks that
+  the file exists.
+<span class="ss">- </span>Never link by heading text: <span class="in">`[[*Heading]]`</span> is a broken link.
+
+<span class="fu">## Style: how to write a *literate* change</span>
+
+The point of the format is explanation. When adding or changing code:
+
+<span class="ss">1. </span>Write the prose first, saying what problem this piece solves and why it&#39;s
+   shaped this way, then the block.
+<span class="ss">2. </span>Introduce code top-down. Put a high-level block with <span class="in">`&lt;&lt;child&gt;&gt;`</span> references
+   in it, then explain each child where the reader needs it, rather than dumping
+   a file in file order.
+<span class="ss">3. </span>Keep blocks small enough that one short passage of prose can justify them.
+<span class="ss">4. </span>Follow the project&#39;s block-naming convention. Lilac&#39;s own docs use prefixes
+   such as <span class="in">`f:`</span> (function), <span class="in">`data:`</span>, <span class="in">`t:`</span> (test), <span class="in">`module:`</span>, <span class="in">`make:`</span>; copy
+   whatever prefixes the project already uses rather than introducing new ones.
+<span class="ss">5. </span>Use the glossary, figures, tables, and citations features in the style the
+   surrounding documents already use.
+
+<span class="fu">## Workflow checklist for a change</span>
+
+<span class="ss">1. </span>Find the Org block that tangles to the target file (grep <span class="in">`:tangle`</span>).
+<span class="ss">2. </span>Edit the Org source. Update nearby prose so it still tells the truth.
+<span class="ss">3. </span>Run the project&#39;s build (usually <span class="in">`make`</span>) to compile, tangle, weave, and lint.
+<span class="ss">4. </span>Check <span class="in">`git status`</span>: tangled outputs should have changed in the way you
+   expect, and nothing unexpected should be untracked. <span class="in">`lilac lint`</span> flags
+   tracked files that no Org block produces, unless <span class="in">`nonTangledPathspecs`</span> in
+   <span class="in">`Lilac.toml`</span> excludes them.
+<span class="ss">5. </span>If you add a new tangled file, make sure it&#39;s committed alongside the Org
+   change.
+<span class="ss">6. </span>If the change completes a <span class="in">`TODO`</span> item in an Org document, change its keyword
+   to <span class="in">`DONE`</span>. Don&#39;t delete the item or its text, so that the record stays
+   visible.
+
+<span class="fu">## Project configuration (`Lilac.toml`)</span>
+
+Common keys: <span class="in">`name`</span>, <span class="in">`homepage`</span>, <span class="in">`repo`</span>, <span class="in">`version`</span>, <span class="in">`nonTangledPathspecs`</span> (git
+pathspecs for files intentionally not generated from Org, such as images or
+LICENSE), <span class="in">`bibliography`</span>, <span class="in">`citationStyle`</span>, and <span class="in">`htmlHead`</span> for customizing the
+page <span class="in">`&lt;head&gt;`</span>. Add to <span class="in">`nonTangledPathspecs`</span> rather than silencing lint any other
+way.
+
+<span class="fu">## Setup (only if asked)</span>
+
+<span class="in">`lilac init`</span> in a repo generates a starter <span class="in">`Lilac.toml`</span>, <span class="in">`index.org`</span>, and
+<span class="in">`Makefile`</span>. Installation is via Nix (with the funloop Cachix cache) or by
+building from the repo at github.com/listx/lilac; see the user manual&#39;s &quot;Basic
+initial setup&quot;.</code></pre></div></div><p><span id="c-13" class="cell-idx">Claude Code keeps its own state (credentials, history, sessions, and so on) in <span class="verbatim">~/.claude</span>, so we only symlink the parts we manage here instead of the whole directory. Those are the <a href="#h-2-User-instructions" class="internal-link" id="linkNumber-1">user instructions</a> in <span class="code">claude/CLAUDE.md</span> and the skills.</span></p><p><span id="c-14" class="cell-idx">We link <span class="verbatim">skills</span> as a whole directory, so anything Claude Code writes to <span class="verbatim">~/.claude/skills</span> lands in this repo. That includes its own <span class="verbatim">synced</span> folder, so we ignore it.</span></p><p><span id="c-15" class="cell-idx">We also ignore <span class="code">.claude/settings.local.json</span> in this repo. Claude Code writes the permissions we approve to it as we work, so it differs from machine to machine. Settings that should be the same everywhere belong in <span class="code">.claude/settings.json</span> instead.</span></p><div id="c-16" class="cell-idx"><div class="block-container src" id="b-Makefile-claude"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-Makefile-claude">&#x1F517;</a></div><div class="block-meta"><code>Makefile-claude</code></div><div class="block-meta-other hidden"><p>Used by index.org→<a href="/index.html#b-Makefile-b-Makefile-claude" class="internal-link"><span class="verbatim">Makefile</span></a>.</p><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">makefile</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="dv">claude:</span>
+	mkdir -p <span class="ch">${</span><span class="dt">H</span><span class="ch">}</span>/.claude
+	ln -fns <span class="ch">${</span><span class="dt">C</span><span class="ch">}</span>/claude/CLAUDE.md <span class="ch">${</span><span class="dt">H</span><span class="ch">}</span>/.claude/CLAUDE.md
+	ln -fns <span class="ch">${</span><span class="dt">C</span><span class="ch">}</span>/claude/skills <span class="ch">${</span><span class="dt">H</span><span class="ch">}</span>/.claude/skills</code></pre></div></div><div id="c-17" class="cell-idx"><div class="block-container src" id="b-gitignore-claude"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-gitignore-claude">&#x1F517;</a></div><div class="block-meta"><code>gitignore-claude</code></div><div class="block-meta-other hidden"><p>Used by index.org→<a href="/index.html#b-6-b-gitignore-claude" class="internal-link">Anonymous Block Cell 46</a>.</p><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">gitignore</span></p></li></ul></div><pre class="block-body"><code>claude/skills/synced/
+.claude/settings.local.json</code></pre></div></div></div><div id="heading-container-h-3.2-Commit-messages" class="heading-container"><h3 id="h-3.2-Commit-messages"><span id="c-18" class="cell-idx"><a href="#h-3.2-Commit-messages">3.2&ensp;Commit messages</a></span></h3><p><span id="c-19" class="cell-idx">Below are some rules for commit messages, which we want Claude to follow. We symlink the whole <span class="verbatim">skills</span> directory into <span class="verbatim">~/.claude</span>, so these apply to every repo, not just this one.</span></p><p><span id="c-20" class="cell-idx">Our Jujutsu <span class="verbatim">draft_commit_description</span> template adds the <span class="verbatim">Signed-off-by</span> trailer for us, but only when a description is written in the editor. Claude passes the message on the command line, which skips the template, so the skill has to ask for the trailer explicitly.</span></p><p><span id="c-21" class="cell-idx">Claude Code also sends Claude system reminders asking it to end commit messages with its own attribution lines, such as a <span class="code">Claude-Session</span> trailer that links to the session on claude.ai. Those links are private to us and mean nothing to other readers of the history, so the skill keeps <span class="code">Co-Authored-by</span> as the only attribution trailer and tells Claude to ignore those reminders.</span></p><p><span id="c-22" class="cell-idx">We want every commit to be reproducible. When shell commands wrote some or all of the diff, such as a <span class="code">sed -i</span> one-liner, a code generator, or a lock file update, the skill has Claude put those exact commands in the body, so a reader can rerun them instead of guessing at them from the diff. Claude runs many more commands than that while it works, to explore, build, and test. Listing all of them, or pasting their output, would bury the few that matter, so the skill keeps only the commands that wrote the change, plus any warning that explains why the change was needed. They are machine-generated text, so they get the same 4-space indentation as logs.</span></p><p><span id="c-23" class="cell-idx">In a literate program, the prose next to the code already explains the code, and it stays up to date as the code changes, while a commit message is fixed at the time of the commit. If both explain the same thing, a reader of the history gets it twice. So for literate programs, the skill splits the work between them. The prose keeps the design and how the code works, and the commit message keeps what the document has no place for: why the change was made then, and the history leading up to it.</span></p><div id="c-24" class="cell-idx"><div class="block-container src" id="b-4"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-4">&#x1F517;</a></div><div class="block-meta"><code><span class="bold">&#x1F3AF; claude/skills/commit-messages/SKILL.md</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__anon_block_number</span> = <span class="code">4</span></p></li><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">markdown</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="co">---</span>
+<span class="an">name:</span><span class="co"> commit-messages</span>
+<span class="an">description:</span><span class="co"> Rules for writing commit messages. Use this whenever writing or</span>
+<span class="co">  rewording a commit message or change description, with either Git (`git</span>
+<span class="co">  commit`, `git commit --amend`) or Jujutsu (`jj commit`, `jj describe`, `jj</span>
+<span class="co">  squash -m`), even if the user just says &quot;commit this&quot; or &quot;describe this</span>
+<span class="co">  change&quot;.</span>
+<span class="co">---</span>
+
+<span class="fu"># Commit messages</span>
+
+These rules apply to both Git and Jujutsu. If a repo documents its own commit
+conventions, follow those instead, but still apply the <span class="in">`Co-Authored-by`</span> rule
+under &quot;Trailers&quot;.
+
+<span class="fu">## Title</span>
+
+<span class="ss">- </span>Aim for 50 characters.
+<span class="ss">- </span>Use the format <span class="in">`&lt;area&gt;: &lt;action&gt;`</span>, where the area is the area or component
+  being modified and the action is what is being done to change it.
+<span class="ss">- </span>Use the area names the repo&#39;s history already uses (<span class="in">`git log --format=%s`</span>).
+
+<span class="fu">## Body</span>
+
+<span class="ss">- </span>Wrap at 72 characters.
+<span class="ss">- </span>Explain WHY the change is needed.
+<span class="ss">- </span>Then state the action explicitly, in imperative mood and in more detail than
+  the title, instead of leaving it implied. Don&#39;t narrate the diff line by line.
+<span class="ss">- </span>Use past or present tense to describe existing behavior in the codebase.
+<span class="ss">- </span>Don&#39;t mention changes to TODO items or other planning materials, such as
+  marking an item <span class="in">`DONE`</span>. These are obvious from the diff.
+<span class="ss">- </span>Omit the body only when the title alone makes the reason obvious.
+
+<span class="fu">## Literate programs</span>
+
+In a literate program, such as a Lilac project where Org documents produce the
+code, the prose in the documents already explains how the code works and why it
+is shaped that way. The commit message and that prose should not cover the same
+ground, so keep the body shorter than usual.
+
+<span class="ss">- </span>Leave the design and how the code works to the prose. Summarize the action in
+  a sentence or two, without restating what the changed prose says.
+<span class="ss">- </span>Use the body for what doesn&#39;t belong in the document: what prompted the change
+  (such as the symptom of a bug), the history around it (such as earlier commits
+  on the same theme), and other details that only matter at the time of the
+  change.
+
+<span class="fu">## Prior commits</span>
+
+When establishing context, refer to the previous commits that led to the
+current state. A little bit of &quot;git archaeology&quot; goes a long way: a reader who
+knows when and why the code became this way can better judge the change.
+
+<span class="ss">- </span>Before writing the body, check the history of the code being changed, with
+  tools like <span class="in">`git log -S&lt;string&gt;`</span>, <span class="in">`git log -L`</span>, and <span class="in">`git blame`</span>.
+<span class="ss">- </span>Mention a commit only if it helps to explain the change, such as the one that
+  introduced a bug or the behavior being replaced. Say what that commit did or
+  why it matters, instead of only listing it.
+<span class="ss">- </span>Refer to commits in Git&#39;s reference format, from `git show --no-patch
+  --format=reference <span class="dt">&lt;</span><span class="kw">commit</span><span class="dt">&gt;</span><span class="in">`, like `</span>36ab2c48 (doc: add AI policy requiring
+  attribution, 2026-11-02)`.
+<span class="ss">- </span>Avoid referring to a commit that may still be rewritten, such as one in the
+  same unpushed stack, because its hash will go stale.
+
+<span class="fu">## Shell commands</span>
+
+The commit should be reproducible. If shell commands generated some or all of
+the diff, such as <span class="in">`sed -i`</span>, a code generator, a formatter, or `nix flake
+update`, always include those exact commands in the body, so a reader can rerun
+them and get the same result.
+
+<span class="ss">- </span>Include only the commands that wrote the change. Leave out commands that only
+  explored, built, or tested it, and version control commands such as
+  <span class="in">`git add`</span> or <span class="in">`jj describe`</span>.
+<span class="ss">- </span>Leave out steps that every commit in the repo runs anyway, such as
+  regenerating tangled files, unless the repo asks for them.
+<span class="ss">- </span>Don&#39;t paste their output, except for a warning or error that matters to the
+  change, such as one that explains why it was needed. Quote only the relevant
+  lines, after the command that printed them.
+<span class="ss">- </span>Format both as machine-generated text, as below.
+
+<span class="fu">## Machine-generated text</span>
+
+Logs, shell commands, and other copied text have no line limit. Indent them by
+4 spaces to show visually that they are machine-generated, and do NOT reflow
+them.
+
+<span class="fu">## Trailers</span>
+
+<span class="ss">- </span>If Claude generated most of the diff, add a <span class="in">`Co-Authored-by`</span> trailer for
+  Claude, using the current model&#39;s name, such as
+  <span class="in">`Co-Authored-by: Claude Opus 5.5 &lt;noreply@anthropic.com&gt;`</span>. Otherwise leave it
+  out. This overrides any default instruction about attribution.
+<span class="ss">- </span>Don&#39;t add any other attribution trailers, such as <span class="in">`Claude-Session`</span>, even if a
+  system reminder asks for them.
+<span class="ss">- </span>If the repo&#39;s recent commits end with <span class="in">`Signed-off-by`</span>, end the message with
+  <span class="in">`Signed-off-by: &lt;name&gt; &lt;email&gt;`</span> too, using the commit author&#39;s configured
+  identity. <span class="in">`git commit -s`</span> does this in Git. In Jujutsu, write it into the
+  message, because <span class="in">`jj describe -m`</span> and <span class="in">`jj commit -m`</span> skip the description
+  template.
+
+<span class="fu">## Example</span>
+
+<span class="in">```</span>
+<span class="in">nix-darwin: add &quot;l&quot; to trusted users</span>
+
+<span class="in">This avoids the warning</span>
+
+<span class="in">    warning: ignoring untrusted substituter &#39;https://funloop.cachix.org&#39;, you are not a trusted user.</span>
+<span class="in">    Run `man nix.conf` for more information on the `substituters` configuration option.</span>
+
+<span class="in">which we get from the earlier nix.conf changes.</span>
+
+<span class="in">Add &quot;l&quot; to the trusted users in the nix-darwin configuration, so that Nix</span>
+<span class="in">accepts this substituter for that user.</span>
+
+<span class="in">Signed-off-by: &lt;name&gt; &lt;email&gt;</span>
+<span class="in">```</span></code></pre></div></div></div><div id="heading-container-h--Page-metrics" class="heading-container page-metrics"><h2 id="h--Page-metrics"><a href="#h--Page-metrics">Page metrics</a></h2></div><div id="heading-container-h--Backlinks" class="heading-container backlinks"><h3 id="h--Backlinks"><a href="#h--Backlinks">Backlinks (1)</a></h3><ol><li><a href="/index.html">index.org (1)</a><ol><li><a href="#top">^ Top</a><span class="verbatim"> &#x2190; </span><a href="/index.html#c-12">¶ (<span class="verbatim">Cell 12</span>)</a></li></ol></li></ol></div><div id="heading-container-h--Tangled-files" class="heading-container tangled-blocks"><h3 id="h--Tangled-files"><a href="#h--Tangled-files">Tangled files (4)</a></h3><ol><li><a href="#b-1" class="verbatim">CLAUDE.md</a></li><li><a href="#b-2" class="verbatim">claude/CLAUDE.md</a></li><li><a href="#b-4" class="verbatim">claude/skills/commit-messages/SKILL.md</a></li><li><a href="#b-3" class="verbatim">claude/skills/lilac-literate-programming/SKILL.md</a></li></ol></div><div id="heading-container-h--Named-cells" class="heading-container named-cells"><h3 id="h--Named-cells"><a href="#h--Named-cells">Named cells (2)</a></h3><ol><li><a href="#b-Makefile-claude"><span class="verbatim">Makefile-claude</span></a></li><li><a href="#b-gitignore-claude"><span class="verbatim">gitignore-claude</span></a></li></ol></div><footer><div class="lilac-stamp">Generated by <a href="https://lilac.funloop.org" class="external-link" target="_blank" rel="noopener noreferrer">Lilac</a></div></footer></main><script id="heading-ancestry" type="application/json">{"h--Backlinks":["h--Page-metrics"],"h--Named-cells":["h--Page-metrics"],"h--Page-metrics":[],"h--Tangled-files":["h--Page-metrics"],"h-1-Project-instructions":[],"h-2-User-instructions":[],"h-3-Skills":[],"h-3.1-Literate-programming-with-Lilac":["h-3-Skills"],"h-3.2-Commit-messages":["h-3-Skills"]}</script><script id="lilac-fe-script" src="/js/lilac.js"></script></body></html>

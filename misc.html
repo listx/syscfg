@@ -1,0 +1,542 @@
+<!DOCTYPE HTML><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Miscellaneous</title><link rel="stylesheet" href="/css/default.css"><link rel="shortcut icon" type="image/png" href="/favicon.png"><link rel="stylesheet" href="/vendor/source-fonts/source-fonts.css">
+<script>
+  window.MathJax = {
+      loader: { paths: { "mathjax-newcm": "/vendor/mathjax-newcm-font" } },
+      output: { font: "mathjax-newcm" },
+  tex: {
+      tags: 'ams'
+  },
+  options: {
+      ignoreHtmlClass: 'verbatim|code'
+  }
+};
+</script>
+<script id="MathJax-script" async="" src="/vendor/mathjax/tex-mml-chtml.js"></script>
+</head><body><div class="navbar"><button id="hamburger" class="tocs-toggle-button" aria-label="Toggle table of contents sidebar">&#x2630;</button><div class="breadcrumbs"><a href="https://syscfg.funloop.org"><span class="breadcrumb">Linus Arver&#39;s Dotfiles</span></a> <a href="https://github.com/listx/syscfg" class="repo-link" title="Source repository" aria-label="Source repository"><svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 16 16"
+     aria-hidden="true">
+<g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+<circle cx="4" cy="3" r="1.75"></circle>
+<circle cx="4" cy="13" r="1.75"></circle>
+<circle cx="12" cy="3" r="1.75"></circle>
+<path d="M4 4.75v6.5"></path>
+<path d="M12 4.75c0 4-8 3-8 6.5"></path>
+</g>
+</svg>
+</a> <span class="breadcrumb-separator">/</span> <a href="#top"><span class="breadcrumb">misc.org</span></a></div></div><nav id="tocs"><p class="widget-title gtoc-title">Site contents</p><nav class="gtoc"><ul><li><a href="/index.html">Introduction</a></li><li><a href="/bash.html">Bash</a></li><li><a href="/claude.html">Claude</a></li><li><a href="/clojure.html">Clojure</a></li><li><a href="/emacs.html">Emacs</a></li><li><a href="/ghostty.html">Ghostty</a></li><li><a href="/git.html">Git</a></li><li><a href="/gpg.html">GnuPG</a></li><li><a href="/jj.html">Jujutsu</a></li><li><a href="/keybindings.html">Keybindings (WIP)</a></li><li><a href="/misc.html" class="bold">Miscellaneous</a></li><li><a href="/mpv.html">mpv</a></li><li><a href="/nix.html">Nix</a></li><li><a href="/notmuch.html">Notmuch</a></li><li><a href="/plan.html">Plan</a></li><li><a href="/qutebrowser.html">qutebrowser</a></li><li><a href="/rtorrent.html">rTorrent</a></li><li><a href="/script/index.html">System scripts</a></li><li><a href="/tmux.html">tmux</a></li><li><a href="/vim.html">Vim</a></li><li><a href="/xmonad.html">xmonad</a></li><li><a href="/xorg.html">X.Org</a></li><li><a href="/zsh/index.html">Zsh</a></li></ul></nav><p class="widget-title toc-title">Page contents</p><nav class="toc"><div class="toc-entries"><ol><li class="toc-level-1"><div class="toc-entry"><span class="toc-counter">1</span><a href="#h-1-jjui">jjui</a></div></li><li class="toc-level-1"><div class="toc-entry"><span class="toc-counter">2</span><a href="#h-2-less">less</a></div></li><li class="toc-level-1"><div class="toc-entry"><span class="toc-counter">3</span><a href="#h-3-Melby">Melby</a></div><ol><li class="toc-level-2"><div class="toc-entry"><span class="toc-counter">3.1</span><a href="#h-3.1-Installation">Installation</a></div></li><li class="toc-level-2"><div class="toc-entry"><span class="toc-counter">3.2</span><a href="#h-3.2-Configuration">Configuration</a></div></li><li class="toc-level-2"><div class="toc-entry"><span class="toc-counter">3.3</span><a href="#h-3.3-Running-the-daemon-under-systemd">Running the daemon under <span class="code">systemd</span></a></div></li></ol></li><li class="toc-level-1"><div class="toc-entry"><span class="toc-counter">4</span><a href="#h-4-MPD">MPD</a></div></li><li class="toc-level-1"><div class="toc-entry"><span class="toc-counter">5</span><a href="#h-5-PulseAudio">PulseAudio</a></div></li><li class="toc-level-1"><div class="toc-entry"><span class="toc-counter">6</span><a href="#h-6-SSH">SSH</a></div></li><li class="toc-level-1"><div class="toc-entry"><span class="toc-counter">7</span><a href="#h-7-terminfo">terminfo</a></div></li><li class="toc-level-1"><div class="toc-entry"><span class="toc-counter">8</span><a href="#h-8-vimpc">vimpc</a></div></li><li class="toc-level-1"><div class="toc-entry"><span class="toc-counter">9</span><a href="#h-9-zathura">zathura</a></div></li><li class="toc-level-1"><div class="toc-entry"><span class="toc-counter">10</span><a href="#h-10-uim">uim</a></div></li><li class="toc-level-1"><div class="toc-entry"><a href="#h--Page-metrics">Page metrics</a></div><ol><li class="toc-level-2"><div class="toc-entry"><a href="#h--Backlinks">Backlinks</a></div></li><li class="toc-level-2"><div class="toc-entry"><a href="#h--Tangled-files">Tangled files</a></div></li><li class="toc-level-2"><div class="toc-entry"><a href="#h--Named-cells">Named cells</a></div></li></ol></li></ol></div></nav></nav><main><h1 id="top">Miscellaneous</h1><hr class="title-underline"><p><span id="c-0" class="cell-idx">These are small configurations which don&#39;t need a whole page of their own.</span></p><div id="heading-container-h-1-jjui" class="heading-container"><h2 id="h-1-jjui"><span id="c-1" class="cell-idx"><a href="#h-1-jjui">1&ensp;jjui</a></span></h2><p><span id="c-2" class="cell-idx">The colors for <span class="code">jjui</span>, our terminal interface to Jujutsu.</span></p><div id="c-3" class="cell-idx"><div class="block-container src" id="b-jjui-config"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-jjui-config">&#x1F517;</a></div><div class="block-meta"><code>jjui-config</code><br><code><span class="bold">&#x1F3AF; jjui/config.toml</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">toml</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="kw">[ui.colors]</span>
+<span class="dt">&quot;selected&quot;</span> <span class="op">=</span> <span class="op">{</span><span class="dt">bg</span><span class="op"> =</span> <span class="st">&quot;#22222f&quot;</span><span class="op">, </span><span class="dt">bold</span><span class="op"> =</span> <span class="cn">true</span><span class="op"> }</span>
+<span class="dt">&quot;status title&quot;</span> <span class="op">=</span> <span class="op">{ </span><span class="dt">fg</span><span class="op"> =</span> <span class="st">&quot;#000000&quot;</span><span class="op">, </span><span class="dt">bg</span><span class="op"> =</span> <span class="st">&quot;red&quot;</span><span class="op">, </span><span class="dt">bold</span><span class="op"> =</span> <span class="cn">true</span><span class="op"> }</span></code></pre></div></div></div><div id="heading-container-h-2-less" class="heading-container"><h2 id="h-2-less"><span id="c-4" class="cell-idx"><a href="#h-2-less">2&ensp;less</a></span></h2><p><span id="c-5" class="cell-idx">The <span class="code">lesskey</span> <a href="#b-Makefile-lesskey" class="internal-link" id="linkNumber-1">Makefile rule</a> links this to <span class="code">~/.lesskey</span> and runs <span class="code">lesskey</span> on it. This sets up the backspace and delete keys, along with the default options in <span class="code">LESS</span>, which the comments below explain.</span></p><div id="c-6" class="cell-idx"><div class="block-container src" id="b-Makefile-lesskey"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-Makefile-lesskey">&#x1F517;</a></div><div class="block-meta"><code>Makefile-lesskey</code></div><div class="block-meta-other hidden"><p>Used by index.org→<a href="/index.html#b-Makefile-b-Makefile-lesskey" class="internal-link"><span class="verbatim">Makefile</span></a>.</p><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">makefile</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="dv">lesskey:</span>
+	ln -fs <span class="ch">${</span><span class="dt">C</span><span class="ch">}</span>/lesskey/cfg <span class="ch">${</span><span class="dt">H</span><span class="ch">}</span>/.lesskey
+	lesskey</code></pre></div></div><div id="c-7" class="cell-idx"><div class="block-container src" id="b-lesskey"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-lesskey">&#x1F517;</a></div><div class="block-meta"><code>lesskey</code><br><code><span class="bold">&#x1F3AF; lesskey/cfg</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">conf</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="co">#command</span>
+
+<span class="co"># map backspace to back-screen</span>
+<span class="er"></span>      <span class="dt">back-screen</span>
+
+<span class="co">#line-edit</span>
+<span class="er">\</span><span class="dt">e</span><span class="kw">[3</span><span class="er">~</span>          <span class="dt">delete</span>
+
+<span class="co">#env</span>
+
+<span class="co"># -F: exit less if everything can be displayed in one screen</span>
+<span class="co">#</span>
+<span class="co"># -i: make lower-case-only searches case insensitive (mixed-case searches are</span>
+<span class="co"># automatically case-sensitive!)</span>
+<span class="co">#</span>
+<span class="co"># -M: verbose status bar to show location information</span>
+<span class="co">#</span>
+<span class="co"># -R: make &#39;git diff&#39; more compliant with highly customized LESS_TERMCAP options</span>
+<span class="co">#</span>
+<span class="co"># -X: try not to clear the screen</span>
+<span class="co">#</span>
+<span class="co"># --tabs=4: set tab stop to 4 spaces (default 8)</span>
+<span class="dt">LESS</span> <span class="op">=</span> <span class="dt">-FiMRX</span> <span class="dt">--tabs</span><span class="op">=</span><span class="dv">4</span></code></pre></div></div></div><div id="heading-container-h-3-Melby" class="heading-container"><h2 id="h-3-Melby"><span id="c-8" class="cell-idx"><a href="#h-3-Melby">3&ensp;Melby</a></span></h2><p><span id="c-9" class="cell-idx"><a href="https://github.com/listx/melby" class="external-link" id="linkNumber-2">Melby</a> generates our shell prompt. Its daemon, <span class="code">melbyd</span>, runs the Lua configuration in <span class="code">melby/melby.lua</span>, and our Zsh prompt asks it for the prompt lines through <span class="code">melbyc</span>.</span></p></div><div id="heading-container-h-3.1-Installation" class="heading-container"><h3 id="h-3.1-Installation"><span id="c-10" class="cell-idx"><a href="#h-3.1-Installation">3.1&ensp;Installation</a></span></h3><p><span id="c-11" class="cell-idx"><span class="code">~/.melby</span> links to the <span class="code">melby</span> directory here. Melby ships sample Lua modules (<span class="code">Git.lua</span>, <span class="code">Kube.lua</span>, and so on) that our configuration <span class="code">require</span>s, so the <a href="#b-Makefile-melby" class="internal-link" id="linkNumber-3">Makefile rule</a> copies those in from the installed <span class="code">melbyd</span> package. We don&#39;t track the copies (the <span class="code">.gitignore</span> ignores <span class="code">melby/*</span>), because they belong to Melby and change whenever Melby does.</span></p><p><span id="c-12" class="cell-idx">The exception is <span class="code">melby.lua</span> itself. It started out as Melby&#39;s sample too, but we&#39;ve changed it enough that it is our own configuration now, so we track it below and the rule skips the sample&#39;s copy instead of overwriting ours.</span></p><div id="c-13" class="cell-idx"><div class="block-container src" id="b-Makefile-melby"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-Makefile-melby">&#x1F517;</a></div><div class="block-meta"><code>Makefile-melby</code></div><div class="block-meta-other hidden"><p>Used by index.org→<a href="/index.html#b-Makefile-b-Makefile-melby" class="internal-link"><span class="verbatim">Makefile</span></a>.</p><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">makefile</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="dv">melby:</span>
+	ln -fns <span class="ch">${</span><span class="dt">C</span><span class="ch">}</span>/melby <span class="ch">${</span><span class="dt">H</span><span class="ch">}</span>/.melby
+	set -e &amp;&amp; <span class="ch">\</span>
+		melby_location=<span class="ch">$$</span>(readlink <span class="ch">$$</span>(which melbyd)) &amp;&amp; <span class="ch">\</span>
+		for f in <span class="ch">$$</span>{melby_location%/bin/melbyd}/share/melby/sample/*; do <span class="ch">\</span>
+			[ <span class="st">&quot;</span><span class="ch">$$</span><span class="st">{f##*/}&quot;</span> = melby.lua ] || cp -f <span class="st">&quot;</span><span class="ch">$$</span><span class="st">f&quot;</span> <span class="ch">${</span><span class="dt">H</span><span class="ch">}</span>/.melby; <span class="ch">\</span>
+		done</code></pre></div></div><div id="c-14" class="cell-idx"><div class="block-container src" id="b-gitignore-melby"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-gitignore-melby">&#x1F517;</a></div><div class="block-meta"><code>gitignore-melby</code></div><div class="block-meta-other hidden"><p>Used by index.org→<a href="/index.html#b-6-b-gitignore-melby" class="internal-link">Anonymous Block Cell 46</a>.</p><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">gitignore</span></p></li></ul></div><pre class="block-body"><code>melby/*
+!melby/melby.lua</code></pre></div></div></div><div id="heading-container-h-3.2-Configuration" class="heading-container"><h3 id="h-3.2-Configuration"><span id="c-15" class="cell-idx"><a href="#h-3.2-Configuration">3.2&ensp;Configuration</a></span></h3><p><span id="c-16" class="cell-idx"><span class="code">melbyd</span> loads this file into a Lua VM, checks it by running <a href="#b-melby-view-tests" class="internal-link" id="linkNumber-4">its tests</a> against fake resources, and then calls <a href="#b-melby-view" class="internal-link" id="linkNumber-5"><span class="code">Config.view</span></a> each time a shell asks for its prompt. <span class="code">melbyd</span> reloads the file whenever it changes, so edits take effect without restarting the daemon.</span></p><div id="c-17" class="cell-idx"><div class="block-container src" id="b-1"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-1">&#x1F517;</a></div><div class="block-meta"><code><span class="bold">&#x1F3AF; melby/melby.lua</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__anon_block_number</span> = <span class="code">1</span></p></li><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">lua</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><a href="#b-melby-header" class="internal-link" id="b-1-b-melby-header">melby-header</a>
+<a href="#b-melby-render-options" class="internal-link" id="b-1-b-melby-render-options">melby-render-options</a>
+<a href="#b-melby-view-params-types" class="internal-link" id="b-1-b-melby-view-params-types">melby-view-params-types</a>
+<a href="#b-melby-view-tests" class="internal-link" id="b-1-b-melby-view-tests">melby-view-tests</a>
+<a href="#b-melby-view" class="internal-link" id="b-1-b-melby-view">melby-view</a>
+<a href="#b-melby-return" class="internal-link" id="b-1-b-melby-return">melby-return</a></code></pre></div></div><p><span id="c-18" class="cell-idx">The modules we load come from Melby&#39;s samples (see <a href="#b-Makefile-melby" class="internal-link" id="linkNumber-6">Installation</a>).</span></p><div id="c-19" class="cell-idx"><div class="block-container src" id="b-melby-header"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-melby-header">&#x1F517;</a></div><div class="block-meta"><code>melby-header</code></div><div class="block-meta-other hidden"><p>Used by <a href="#b-1-b-melby-header" class="internal-link">Anonymous Block Cell 17</a>.</p><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">lua</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="co">-- Copyright 2024 Linus Arver</span>
+<span class="co">--</span>
+<span class="co">-- Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
+<span class="co">-- you may not use this file except in compliance with the License.</span>
+<span class="co">-- You may obtain a copy of the License at</span>
+<span class="co">--</span>
+<span class="co">--      http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="co">--</span>
+<span class="co">-- Unless required by applicable law or agreed to in writing, software</span>
+<span class="co">-- distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
+<span class="co">-- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
+<span class="co">-- See the License for the specific language governing permissions and</span>
+<span class="co">-- limitations under the License.</span>
+
+<span class="co">-- </span><span class="al">FIXME</span><span class="co">: Make LUA_PATH also include $HOME/.melby/?.lua.</span>
+<span class="co">-- </span><span class="al">FIXME</span><span class="co">: Make melbyc use the above path as a default if it&#39;s there, and only</span>
+<span class="co">-- overwrite it with the FILEPATH argument (move this FILEPATH argument to an</span>
+<span class="co">-- optional, not required, flag).</span>
+<span class="kw">local</span> <span class="va">Git</span> <span class="op">=</span> <span class="fu">require</span> <span class="st">&quot;Git&quot;</span>
+<span class="kw">local</span> <span class="va">KubeCurrent</span> <span class="op">=</span> <span class="fu">require</span> <span class="st">&quot;KubeCurrent&quot;</span>
+<span class="kw">local</span> <span class="va">Kube</span> <span class="op">=</span> <span class="fu">require</span> <span class="st">&quot;Kube&quot;</span></code></pre></div></div><p><span id="c-20" class="cell-idx"><span class="code">render_options</span> controls how <span class="code">melbyd</span> turns widgets into text: here, ANSI escape sequences with 24-bit color.</span></p><div id="c-21" class="cell-idx"><div class="block-container src" id="b-melby-render-options"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-melby-render-options">&#x1F517;</a></div><div class="block-meta"><code>melby-render-options</code></div><div class="block-meta-other hidden"><p>Used by <a href="#b-1-b-melby-render-options" class="internal-link">Anonymous Block Cell 17</a>.</p><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">lua</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="va">Config</span> <span class="op">=</span> <span class="op">{}</span>
+<span class="va">Config</span><span class="op">[</span><span class="st">&quot;render_options&quot;</span><span class="op">]</span> <span class="op">=</span> <span class="op">{</span>
+  <span class="fu">format</span> <span class="op">=</span> <span class="st">&quot;RENDER_FORMAT_UNIX_TERMINAL&quot;</span><span class="op">,</span>
+  <span class="va">color_depth</span> <span class="op">=</span> <span class="st">&quot;RENDER_COLOR_DEPTH_24_BIT&quot;</span>
+<span class="op">}</span></code></pre></div></div><p><span id="c-22" class="cell-idx">These are the inputs that <span class="code">Config.view</span> accepts, with their types. <span class="code">melbyd</span> uses them to validate both real requests from <span class="code">melbyc</span> and the fake inputs in the <a href="#b-melby-view-tests" class="internal-link" id="linkNumber-7">tests</a>.</span></p><div id="c-23" class="cell-idx"><div class="block-container src" id="b-melby-view-params-types"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-melby-view-params-types">&#x1F517;</a></div><div class="block-meta"><code>melby-view-params-types</code></div><div class="block-meta-other hidden"><p>Used by <a href="#b-1-b-melby-view-params-types" class="internal-link">Anonymous Block Cell 17</a>.</p><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">lua</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="co">-- This is required for both verification and reducing the inputs (env vars) to</span>
+<span class="co">-- a known subset.</span>
+<span class="co">-- </span><span class="al">FIXME</span><span class="co">: Also, strip the given env vars coming from melbyc down to only these</span>
+<span class="co">-- env vars. This forces the user to be explicity up-front (at this level)</span>
+<span class="co">-- exactly which env vars they expect to use.</span>
+<span class="co">-- </span><span class="al">FIXME</span><span class="co">: Require that these env vars are specified as keys for each element in</span>
+<span class="co">-- Config.validation&#39;s env_vars</span>
+<span class="va">Config</span><span class="op">.</span><span class="va">view_params_types</span> <span class="op">=</span> <span class="op">{</span>
+  <span class="va">env</span><span class="op">={</span>
+    <span class="cn">HOME</span>                      <span class="op">=</span> <span class="op">{</span><span class="st">&quot;required&quot;</span><span class="op">,</span> <span class="st">&quot;path&quot;</span><span class="op">},</span>
+    <span class="cn">HOST</span>                      <span class="op">=</span> <span class="op">{</span><span class="st">&quot;required&quot;</span><span class="op">,</span> <span class="st">&quot;string&quot;</span><span class="op">},</span>
+    <span class="co">-- &quot;paths&quot; means 1 or more colon-separated paths (no colons if only 1 path).</span>
+    <span class="co">-- We don&#39;t need to bother with a real file on disk because we will never</span>
+    <span class="co">-- actually read this path; for validation</span>
+    <span class="cn">KUBECONFIG</span>                <span class="op">=</span> <span class="op">{</span><span class="st">&quot;required&quot;</span><span class="op">,</span> <span class="st">&quot;paths&quot;</span><span class="op">},</span>
+    <span class="cn">MELBY_DIR</span>                  <span class="op">=</span> <span class="op">{</span><span class="st">&quot;required&quot;</span><span class="op">,</span> <span class="st">&quot;path&quot;</span><span class="op">},</span>
+    <span class="cn">MELBY_LAST_CMD_EXIT_STATUS</span> <span class="op">=</span> <span class="op">{</span><span class="st">&quot;required&quot;</span><span class="op">,</span> <span class="st">&quot;int&quot;</span><span class="op">},</span>
+    <span class="co">-- &quot;pathblob&quot; is like &quot;path&quot;, except that it represents the *contents* of a</span>
+    <span class="co">-- path. The filename is generated automatically using a temp folder plus</span>
+    <span class="co">-- the name of the env var.</span>
+    <span class="cn">MELBY_PATH_ALIASES_FILE</span>    <span class="op">=</span> <span class="op">{</span><span class="st">&quot;required&quot;</span><span class="op">,</span> <span class="st">&quot;pathblob&quot;</span><span class="op">},</span>
+    <span class="cn">MELBY_TIME_ZONE</span>            <span class="op">=</span> <span class="op">{</span><span class="st">&quot;optional&quot;</span><span class="op">,</span> <span class="st">&quot;string&quot;</span><span class="op">},</span>
+    <span class="cn">MELBY_UNIX_SECONDS</span>         <span class="op">=</span> <span class="op">{</span><span class="st">&quot;optional&quot;</span><span class="op">,</span> <span class="st">&quot;uint&quot;</span><span class="op">},</span>
+    <span class="cn">MELBY_ZSH_KEYMAP_INDICATOR</span> <span class="op">=</span> <span class="op">{</span><span class="st">&quot;required&quot;</span><span class="op">,</span> <span class="st">&quot;string&quot;</span><span class="op">},</span>
+    <span class="cn">PWD</span>                       <span class="op">=</span> <span class="op">{</span><span class="st">&quot;required&quot;</span><span class="op">,</span> <span class="st">&quot;path&quot;</span><span class="op">},</span>
+    <span class="cn">USER</span>                      <span class="op">=</span> <span class="op">{</span><span class="st">&quot;required&quot;</span><span class="op">,</span> <span class="st">&quot;string&quot;</span><span class="op">},</span>
+  <span class="op">},</span>
+  <span class="va">shell_pid</span>                   <span class="op">=</span> <span class="op">{</span><span class="st">&quot;required&quot;</span><span class="op">,</span> <span class="st">&quot;uint&quot;</span><span class="op">}</span>
+<span class="op">}</span></code></pre></div></div><p><span id="c-24" class="cell-idx">Before <span class="code">melbyd</span> uses a new version of this file, it runs <span class="code">Config.view</span> with these fake inputs and checks that the output contains the expected substrings.</span></p><div id="c-25" class="cell-idx"><div class="block-container src" id="b-melby-view-tests"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-melby-view-tests">&#x1F517;</a></div><div class="block-meta"><code>melby-view-tests</code></div><div class="block-meta-other hidden"><p>Used by <a href="#b-1-b-melby-view-tests" class="internal-link">Anonymous Block Cell 17</a>.</p><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">lua</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="co">-- Return an array of array of env var overrides and substrings. For the</span>
+<span class="co">-- substrings, these are substrings that must be present in the output of the</span>
+<span class="co">-- Config.view() function.</span>
+<span class="co">--</span>
+<span class="co">-- We have to override some env vars because otherwise they become polluted with</span>
+<span class="co">-- real paths that are coming from the actual melbyc invocation. For the</span>
+<span class="co">-- &quot;preview&quot; (fake) environment we want to control, ideally, all the env vars in</span>
+<span class="co">-- allowed_env_vars...!</span>
+<span class="co">--</span>
+<span class="co">-- </span><span class="al">FIXME</span><span class="co">: Set all env vars in allowed_env_vars to make it deterministic. Also</span>
+<span class="co">-- probably set the shell_pid as well to make the function truly pure.</span>
+<span class="co">-- </span><span class="al">FIXME</span><span class="co">: rename env_var_overrides to something else because we&#39;re overriding</span>
+<span class="co">-- _every_ env var that matters to us.</span>
+<span class="va">Config</span><span class="op">.</span><span class="va">view_tests</span> <span class="op">=</span> <span class="op">{</span>
+  <span class="co">-- time_idx 0</span>
+  <span class="op">{</span><span class="va">env</span><span class="op">={</span>
+    <span class="cn">HOME</span>                      <span class="op">=</span> <span class="st">&quot;/home/alice&quot;</span><span class="op">,</span>
+    <span class="cn">HOST</span>                      <span class="op">=</span> <span class="st">&quot;laptop&quot;</span><span class="op">,</span>
+    <span class="cn">KUBECONFIG</span>                <span class="op">=</span> <span class="st">&quot;/home/alice/.kube/config&quot;</span><span class="op">,</span>
+    <span class="co">-- We don&#39;t actually need to have a real /home/alice/.melby folder with other</span>
+    <span class="co">-- Lua files in it, because by the time this entire config is read, we</span>
+    <span class="co">-- already parsed in all the Lua files we need. So this MELBY_DIR is really</span>
+    <span class="co">-- just a placeholder.</span>
+    <span class="cn">MELBY_DIR</span>                  <span class="op">=</span> <span class="st">&quot;/home/alice/.melby&quot;</span><span class="op">,</span>
+    <span class="cn">MELBY_LAST_CMD_EXIT_STATUS</span> <span class="op">=</span> <span class="st">&quot;0&quot;</span><span class="op">,</span>
+    <span class="co">-- this is a &quot;blobpath&quot;. the actual value here used in the env var will</span>
+    <span class="co">-- point to a temporary filename which has the contents here.</span>
+    <span class="cn">MELBY_PATH_ALIASES_FILE</span>    <span class="op">=</span>
+        <span class="vs">[[</span>
+<span class="vs">            # Kubernetes.</span>
+<span class="vs">            hash -d   ki=${HOME}/go/src/github.com/kubernetes/k8s.io</span>
+<span class="vs">            hash -d   kk=${HOME}/go/src/k8s.io/kubernetes</span>
+<span class="vs">            hash -d   kr=${HOME}/go/src/k8s.io/release</span>
+<span class="vs">            hash -d   kt=${HOME}/go/src/k8s.io/test-infra</span>
+<span class="vs">            hash -d  cip=${HOME}/go/src/sigs.k8s.io/k8s-container-image-promoter</span>
+
+<span class="vs">            # Notes and dotfiles.</span>
+<span class="vs">            hash -d    l=${HOME}/lo</span>
+<span class="vs">            hash -d    s=${HOME}/syscfg</span>
+<span class="vs">        ]]</span><span class="op">,</span>
+    <span class="cn">MELBY_TIME_ZONE</span>            <span class="op">=</span> <span class="st">&quot;America/Los_Angeles&quot;</span><span class="op">,</span>
+    <span class="cn">MELBY_UNIX_SECONDS</span>         <span class="op">=</span> <span class="st">&quot;1679032715&quot;</span><span class="op">,</span>
+    <span class="cn">MELBY_ZSH_KEYMAP_INDICATOR</span> <span class="op">=</span> <span class="st">&quot;I&quot;</span><span class="op">,</span>
+    <span class="cn">PWD</span>                       <span class="op">=</span> <span class="st">&quot;/repo/a&quot;</span><span class="op">,</span>
+    <span class="cn">USER</span>                      <span class="op">=</span> <span class="st">&quot;alice&quot;</span><span class="op">,</span>
+   <span class="op">},</span>
+  <span class="co">-- </span><span class="al">FIXME</span><span class="co">: move shell_pid to an env_var to unify all inputs into env_vars.</span>
+  <span class="va">shell_pid</span>                   <span class="op">=</span> <span class="st">&quot;54311&quot;</span><span class="op">,</span>
+  <span class="va">expected_substrings</span><span class="op">={</span><span class="st">&quot;K8s...&quot;</span><span class="op">,</span> <span class="st">&quot;Git...&quot;</span><span class="op">}},</span>
+<span class="op">}</span></code></pre></div></div><p><span id="c-26" class="cell-idx"><span class="code">Config.view</span> builds the prompt from two lines of widgets. The first line has the local time and UTC time (with the day of the week in kanji), the Zsh keymap indicator, the last command&#39;s exit status (only if it failed), <span class="code">user@host</span>, and the current directory, shortened with our path aliases. The second line has the current Kubernetes context and its health, followed by Git information for the current directory. It returns a shell script that sets <span class="code">MELBY_PS1_LINE1</span>, <span class="code">MELBY_PS1_LINE2</span>, and <span class="code">MELBY_SHELL_MESSAGES</span>, which our Zsh prompt evaluates.</span></p><p><span id="c-27" class="cell-idx">The two prompt lines go through <span class="code">melbyd.zsh_prompt_escape</span>, which wraps each ANSI escape sequence in <span class="code">%{...%}</span> so that Zsh knows the sequence takes up no columns. Only the escape sequences may go inside <span class="code">%{...%}</span>. If visible text goes in too, Zsh undercounts the prompt&#39;s width, and when the prompt wraps in a narrow pane, every redraw (such as each clock tick) prints a new copy of the prompt below the old one. The shell messages are printed with <span class="code">echo</span>, not as part of the prompt, so they stay unescaped.</span></p><div id="c-28" class="cell-idx"><div class="block-container src" id="b-melby-view"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-melby-view">&#x1F517;</a></div><div class="block-meta"><code>melby-view</code></div><div class="block-meta-other hidden"><p>Used by <a href="#b-1-b-melby-view" class="internal-link">Anonymous Block Cell 17</a>.</p><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">lua</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="kw">function</span> <span class="va">Config</span><span class="op">.</span>view <span class="op">(</span><span class="va">env</span><span class="op">,</span> <span class="va">shell_pid</span><span class="op">)</span>
+  <span class="kw">local</span> <span class="va">widgets_ps1_line1</span> <span class="op">=</span> <span class="op">{}</span>
+  <span class="kw">local</span> <span class="va">widgets_ps1_line2</span> <span class="op">=</span> <span class="op">{}</span>
+  <span class="co">-- </span><span class="al">FIXME</span><span class="co">: We need a fake version of get_path_aliases as well, because we don&#39;t</span>
+  <span class="co">-- want to actually read from disk, but let the user instead specify the</span>
+  <span class="co">-- *contents* of such a file.</span>
+  <span class="kw">local</span> <span class="va">path_aliases</span> <span class="op">=</span> <span class="va">melbyd</span><span class="op">.</span>get_path_aliases<span class="op">(</span><span class="va">env</span><span class="op">[</span><span class="st">&quot;MELBY_PATH_ALIASES_FILE&quot;</span><span class="op">])</span>
+
+  <span class="kw">local</span> <span class="va">pwd</span> <span class="op">=</span> <span class="va">env</span><span class="op">[</span><span class="st">&quot;PWD&quot;</span><span class="op">]</span>
+  <span class="kw">local</span> <span class="va">pwd_pretty_options</span> <span class="op">=</span> <span class="op">{}</span>
+  <span class="co">-- We try to fit under this length if possible.</span>
+  <span class="va">pwd_pretty_options</span><span class="op">[</span><span class="st">&quot;shorten_threshold&quot;</span><span class="op">]</span> <span class="op">=</span> <span class="dv">30</span>
+  <span class="va">pwd_pretty_options</span><span class="op">[</span><span class="st">&quot;aliases&quot;</span><span class="op">]</span> <span class="op">=</span> <span class="va">path_aliases</span>
+  <span class="va">pwd_pretty_options</span><span class="op">[</span><span class="st">&quot;env&quot;</span><span class="op">]</span> <span class="op">=</span> <span class="va">env</span>
+  <span class="co">-- </span><span class="al">FIXME</span><span class="co">: Make melbyd.get_path_pretty return a LIST of strings that should be</span>
+  <span class="co">-- joined with the path separator (&quot;/&quot;). Each element can have fields such as</span>
+  <span class="co">-- color and type (whether it&#39;s a regular folder or symlink) as well as the</span>
+  <span class="co">-- owner and permissions on it. For the first element (possibly an alias), we</span>
+  <span class="co">-- can have a field to denote whether it&#39;s an alias. All of these bits of</span>
+  <span class="co">-- information can be colorized a different way to give semantic coloring to</span>
+  <span class="co">-- the final colorized path.</span>
+  <span class="kw">local</span> <span class="va">pwd_pretty_str</span> <span class="op">=</span> <span class="va">melbyd</span><span class="op">.</span>get_path_pretty<span class="op">(</span><span class="va">pwd</span><span class="op">,</span> <span class="va">pwd_pretty_options</span><span class="op">)</span>
+
+  <span class="co">-- Get the current time. In non-test-code, we can just call melbyd.get_time(&quot;%d</span>
+  <span class="co">-- C %H:%M:%S %Z&quot;)</span>
+  <span class="kw">local</span> <span class="va">unix_seconds</span> <span class="op">=</span> <span class="va">env</span><span class="op">[</span><span class="st">&quot;MELBY_UNIX_SECONDS&quot;</span><span class="op">]</span> <span class="kw">or</span> <span class="va">melbyd</span><span class="op">.</span>get_unix_seconds<span class="op">()</span>
+  <span class="kw">local</span> <span class="va">tz</span> <span class="op">=</span> <span class="va">env</span><span class="op">[</span><span class="st">&quot;MELBY_TIME_ZONE&quot;</span><span class="op">]</span> <span class="kw">or</span> <span class="st">&quot;LOCAL&quot;</span>
+  <span class="kw">local</span> <span class="va">time_day_name</span> <span class="op">=</span> <span class="va">melbyd</span><span class="op">.</span>get_time<span class="op">(</span><span class="st">&quot;%a&quot;</span><span class="op">,</span> <span class="va">unix_seconds</span><span class="op">,</span> <span class="va">tz</span><span class="op">)</span>
+  <span class="kw">local</span> <span class="va">day_in_kanji</span> <span class="op">=</span> <span class="op">{}</span>
+  <span class="va">day_in_kanji</span><span class="op">[</span><span class="st">&quot;Mon&quot;</span><span class="op">]</span> <span class="op">=</span> <span class="fu">utf8.char</span><span class="op">(</span><span class="dv">0x6708</span><span class="op">)</span> <span class="co">-- &quot;月&quot;</span>
+  <span class="va">day_in_kanji</span><span class="op">[</span><span class="st">&quot;Tue&quot;</span><span class="op">]</span> <span class="op">=</span> <span class="fu">utf8.char</span><span class="op">(</span><span class="dv">0x706b</span><span class="op">)</span> <span class="co">-- &quot;火&quot;</span>
+  <span class="va">day_in_kanji</span><span class="op">[</span><span class="st">&quot;Wed&quot;</span><span class="op">]</span> <span class="op">=</span> <span class="fu">utf8.char</span><span class="op">(</span><span class="dv">0x6c34</span><span class="op">)</span> <span class="co">-- &quot;水&quot;</span>
+  <span class="va">day_in_kanji</span><span class="op">[</span><span class="st">&quot;Thu&quot;</span><span class="op">]</span> <span class="op">=</span> <span class="fu">utf8.char</span><span class="op">(</span><span class="dv">0x6728</span><span class="op">)</span> <span class="co">-- &quot;木&quot;</span>
+  <span class="va">day_in_kanji</span><span class="op">[</span><span class="st">&quot;Fri&quot;</span><span class="op">]</span> <span class="op">=</span> <span class="fu">utf8.char</span><span class="op">(</span><span class="dv">0x91d1</span><span class="op">)</span> <span class="co">-- &quot;金&quot;</span>
+  <span class="va">day_in_kanji</span><span class="op">[</span><span class="st">&quot;Sat&quot;</span><span class="op">]</span> <span class="op">=</span> <span class="fu">utf8.char</span><span class="op">(</span><span class="dv">0x571f</span><span class="op">)</span> <span class="co">-- &quot;土&quot;</span>
+  <span class="va">day_in_kanji</span><span class="op">[</span><span class="st">&quot;Sun&quot;</span><span class="op">]</span> <span class="op">=</span> <span class="fu">utf8.char</span><span class="op">(</span><span class="dv">0x65e5</span><span class="op">)</span> <span class="co">-- &quot;日&quot;</span>
+
+  <span class="kw">local</span> <span class="va">time_day_name_kanji</span> <span class="op">=</span> <span class="va">day_in_kanji</span><span class="op">[</span><span class="va">time_day_name</span><span class="op">]</span>
+  <span class="kw">local</span> <span class="va">time_str</span> <span class="op">=</span> <span class="va">melbyd</span><span class="op">.</span>get_time<span class="op">(</span><span class="st">&quot; %m-%d &quot;</span> <span class="op">..</span> <span class="va">time_day_name_kanji</span> <span class="op">..</span>
+                                   <span class="st">&quot; %H:%M:%S %Z &quot;</span><span class="op">,</span> <span class="va">unix_seconds</span><span class="op">,</span> <span class="va">tz</span><span class="op">)</span>
+  <span class="kw">local</span> <span class="va">time</span> <span class="op">=</span> <span class="op">{</span><span class="va">str</span><span class="op">=</span><span class="va">time_str</span><span class="op">,</span> <span class="va">fg</span><span class="op">=</span><span class="st">&quot;black&quot;</span><span class="op">,</span> <span class="va">bg</span><span class="op">=</span><span class="st">&quot;gold&quot;</span><span class="op">,</span> <span class="va">styles</span><span class="op">={</span><span class="st">&quot;bold&quot;</span><span class="op">}}</span>
+  <span class="fu">table.insert</span><span class="op">(</span><span class="va">widgets_ps1_line1</span><span class="op">,</span> <span class="va">time</span><span class="op">)</span>
+
+  <span class="kw">local</span> <span class="va">time_utc_day_name</span> <span class="op">=</span> <span class="va">melbyd</span><span class="op">.</span>get_time<span class="op">(</span><span class="st">&quot;%a&quot;</span><span class="op">,</span> <span class="va">env</span><span class="op">[</span><span class="st">&quot;MELBY_UNIX_SECONDS&quot;</span><span class="op">],</span>
+                                            <span class="st">&quot;Etc/UTC&quot;</span><span class="op">)</span>
+  <span class="kw">local</span> <span class="va">time_utc_day_name_kanji</span> <span class="op">=</span> <span class="va">day_in_kanji</span><span class="op">[</span><span class="va">time_utc_day_name</span><span class="op">]</span>
+  <span class="kw">local</span> <span class="va">time_utc_str</span> <span class="op">=</span> <span class="va">melbyd</span><span class="op">.</span>get_time<span class="op">(</span><span class="st">&quot; %m-%d &quot;</span> <span class="op">..</span> <span class="va">time_utc_day_name_kanji</span> <span class="op">..</span>
+                                       <span class="st">&quot; %H:%M:%S %Z &quot;</span><span class="op">,</span> <span class="va">unix_seconds</span><span class="op">,</span> <span class="st">&quot;Etc/UTC&quot;</span><span class="op">)</span>
+  <span class="kw">local</span> <span class="va">time_utc</span> <span class="op">=</span> <span class="op">{</span><span class="va">str</span><span class="op">=</span><span class="va">time_utc_str</span><span class="op">,</span> <span class="va">fg</span><span class="op">=</span><span class="st">&quot;black&quot;</span><span class="op">,</span> <span class="va">bg</span><span class="op">=</span><span class="st">&quot;pink&quot;</span><span class="op">,</span> <span class="va">styles</span><span class="op">={</span><span class="st">&quot;bold&quot;</span><span class="op">}}</span>
+  <span class="fu">table.insert</span><span class="op">(</span><span class="va">widgets_ps1_line1</span><span class="op">,</span> <span class="va">time_utc</span><span class="op">)</span>
+
+  <span class="kw">local</span> <span class="va">zki_str</span> <span class="op">=</span> <span class="va">env</span><span class="op">[</span><span class="st">&quot;MELBY_ZSH_KEYMAP_INDICATOR&quot;</span><span class="op">]</span> <span class="kw">or</span> <span class="st">&quot;I&quot;</span>
+  <span class="kw">local</span> <span class="va">zki</span> <span class="op">=</span> <span class="op">{</span><span class="va">str</span><span class="op">=</span><span class="st">&quot; &lt;&quot;</span> <span class="op">..</span> <span class="va">zki_str</span> <span class="op">..</span> <span class="st">&quot;&gt; &quot;</span><span class="op">,</span> <span class="va">fg</span><span class="op">=</span><span class="st">&quot;white&quot;</span><span class="op">,</span> <span class="va">styles</span><span class="op">={</span><span class="st">&quot;bold&quot;</span><span class="op">}}</span>
+  <span class="cf">if</span> <span class="va">zki_str</span> <span class="op">==</span> <span class="st">&quot;N&quot;</span> <span class="cf">then</span>
+    <span class="va">zki</span><span class="op">.</span><span class="va">fg</span> <span class="op">=</span> <span class="st">&quot;black&quot;</span>
+    <span class="va">zki</span><span class="op">.</span><span class="va">bg</span> <span class="op">=</span> <span class="st">&quot;lightskyblue&quot;</span>
+  <span class="cf">end</span>
+  <span class="fu">table.insert</span><span class="op">(</span><span class="va">widgets_ps1_line1</span><span class="op">,</span> <span class="va">zki</span><span class="op">)</span>
+
+  <span class="kw">local</span> <span class="va">last_command_exit_status_str</span> <span class="op">=</span> <span class="va">env</span><span class="op">[</span><span class="st">&quot;MELBY_LAST_CMD_EXIT_STATUS&quot;</span><span class="op">]</span> <span class="kw">or</span> <span class="st">&quot;&quot;</span>
+  <span class="kw">local</span> <span class="va">last_command_exit_status</span> <span class="op">=</span> <span class="op">{</span><span class="va">str</span><span class="op">=</span><span class="st">&quot; &quot;</span> <span class="op">..</span> <span class="va">last_command_exit_status_str</span> <span class="op">..</span> <span class="st">&quot; &quot;</span><span class="op">,</span>
+                                    <span class="va">fg</span><span class="op">=</span><span class="st">&quot;black&quot;</span><span class="op">,</span> <span class="va">bg</span><span class="op">=</span><span class="st">&quot;red&quot;</span><span class="op">,</span> <span class="va">styles</span><span class="op">={</span><span class="st">&quot;bold&quot;</span><span class="op">}}</span>
+  <span class="cf">if</span> <span class="op">#</span><span class="va">last_command_exit_status_str</span> <span class="op">&gt;</span> <span class="dv">0</span> <span class="kw">and</span> <span class="va">last_command_exit_status_str</span> <span class="op">~=</span> <span class="st">&quot;0&quot;</span> <span class="cf">then</span>
+    <span class="fu">table.insert</span><span class="op">(</span><span class="va">widgets_ps1_line1</span><span class="op">,</span> <span class="va">last_command_exit_status</span><span class="op">)</span>
+  <span class="cf">end</span>
+
+  <span class="co">-- Create a one-shot message for testing (when we want to publish an ad-hoc</span>
+  <span class="co">-- message).</span>
+  <span class="co">--</span>
+  <span class="co">--local message = {topic=&quot;srs_Git&quot;, from=&quot;/home/l/prog/melby&quot;, payload={level=&quot;info&quot;, text=&quot;Hello world&quot;}}</span>
+  <span class="co">--</span>
+  <span class="co">--melbyd.broadcast(&quot;srs_Git&quot;, message)</span>
+
+  <span class="va">user</span> <span class="op">=</span> <span class="va">env</span><span class="op">[</span><span class="st">&quot;USER&quot;</span><span class="op">]</span> <span class="kw">or</span> <span class="st">&quot;user&quot;</span>
+  <span class="va">host</span> <span class="op">=</span> <span class="va">env</span><span class="op">[</span><span class="st">&quot;HOST&quot;</span><span class="op">]</span> <span class="kw">or</span> <span class="st">&quot;host&quot;</span>
+  <span class="va">user_host</span> <span class="op">=</span> <span class="op">{</span><span class="va">str</span><span class="op">=(</span><span class="va">user</span> <span class="op">..</span> <span class="st">&quot;@&quot;</span> <span class="op">..</span> <span class="va">host</span><span class="op">)}</span>
+  <span class="fu">table.insert</span><span class="op">(</span><span class="va">widgets_ps1_line1</span><span class="op">,</span> <span class="va">user_host</span><span class="op">)</span>
+
+  <span class="va">pwd_pretty</span> <span class="op">=</span> <span class="op">{</span><span class="va">str</span><span class="op">=</span><span class="va">pwd_pretty_str</span><span class="op">,</span> <span class="va">fg</span><span class="op">=</span><span class="st">&quot;cyan&quot;</span><span class="op">,</span> <span class="va">styles</span><span class="op">={</span><span class="st">&quot;bold&quot;</span><span class="op">}}</span>
+  <span class="fu">table.insert</span><span class="op">(</span><span class="va">widgets_ps1_line1</span><span class="op">,</span> <span class="va">pwd_pretty</span><span class="op">)</span>
+
+  <span class="co">-- </span><span class="al">FIXME</span><span class="co">: Run Kube.read() for every Kubernetes context found in the set of</span>
+  <span class="co">-- MELBY_KUBE_CONTEXTS.</span>
+  <span class="co">--</span>
+  <span class="co">-- get_kube_contexts(env[&quot;MELBY_KUBE_CONTEXTS&quot;])</span>
+  <span class="co">-- example: &quot;ctx1,ctx2,ctx3&quot;</span>
+  <span class="co">--</span>
+  <span class="co">-- </span><span class="al">FIXME</span><span class="co">: Need to loop this around multiple context:namespace combos, probably</span>
+  <span class="co">-- encoded in MELBY_KUBE_CONTEXTS</span>
+  <span class="co">--</span>
+  <span class="co">--local kube_standard_resource = Kube:read(&quot;kind-kind-prow-integration&quot;,</span>
+  <span class="co">--&quot;default&quot;, env[&quot;MELBY_DIR&quot;])</span>
+  <span class="co">--</span>
+  <span class="co">--local kube_widgets = Kube.view(kube_standard_resource)</span>
+  <span class="co">--for _, w in ipairs(kube_widgets) do</span>
+  <span class="co">--  table.insert(widgets_ps1_line2, w)</span>
+  <span class="co">--end</span>
+
+  <span class="kw">local</span> <span class="va">kubecurrent_standard_resource</span> <span class="op">=</span> <span class="va">KubeCurrent</span><span class="op">:</span><span class="fu">read</span><span class="op">(</span><span class="va">env</span><span class="op">,</span>
+                                                         <span class="op">{</span><span class="st">&quot;KUBECONFIG&quot;</span><span class="op">,</span> <span class="st">&quot;HOME&quot;</span><span class="op">})</span>
+  <span class="kw">local</span> <span class="va">health_resource</span> <span class="op">=</span> <span class="op">{}</span>
+  <span class="kw">local</span> <span class="va">health_resource_status</span> <span class="op">=</span> <span class="st">&quot;&quot;</span>
+  <span class="kw">local</span> <span class="va">health_widgets</span> <span class="op">=</span> <span class="op">{}</span>
+  <span class="kw">local</span> <span class="va">health_str</span> <span class="op">=</span> <span class="st">&quot;&quot;</span>
+  <span class="cf">if</span> <span class="va">kubecurrent_standard_resource</span><span class="op">.</span><span class="va">status</span> <span class="op">==</span>
+       <span class="st">&quot;STANDARD_RESOURCE_STATUS_LOADED&quot;</span> <span class="cf">then</span>
+    <span class="va">health_resource</span> <span class="op">=</span> <span class="va">Kube</span><span class="op">:</span><span class="fu">read</span><span class="op">(</span><span class="va">kubecurrent_standard_resource</span><span class="op">.</span><span class="va">kvs</span><span class="op">.</span><span class="va">context</span><span class="op">,</span>
+                                <span class="va">kubecurrent_standard_resource</span><span class="op">.</span><span class="va">kvs</span><span class="op">.</span><span class="va">namespace</span><span class="op">,</span>
+                                <span class="va">env</span><span class="op">[</span><span class="st">&quot;MELBY_DIR&quot;</span><span class="op">])</span>
+    <span class="va">health_resource_status</span> <span class="op">=</span> <span class="va">health_resource</span><span class="op">.</span><span class="va">status</span>
+    <span class="va">health_widgets</span> <span class="op">=</span> <span class="va">Kube</span><span class="op">.</span>view<span class="op">(</span><span class="va">health_resource</span><span class="op">)</span>
+    <span class="va">health_str</span> <span class="op">=</span> <span class="va">melbyd</span><span class="op">.</span>render<span class="op">(</span><span class="va">health_widgets</span><span class="op">,</span> <span class="op">{</span><span class="va">str</span><span class="op">=</span><span class="st">&quot; &quot;</span><span class="op">})</span>
+  <span class="cf">end</span>
+
+  <span class="kw">local</span> <span class="va">kubecurrent_widgets</span> <span class="op">=</span> <span class="va">KubeCurrent</span><span class="op">.</span>view<span class="op">(</span><span class="va">kubecurrent_standard_resource</span><span class="op">,</span>
+                                               <span class="va">health_resource</span><span class="op">.</span><span class="va">status</span><span class="op">,</span>
+                                               <span class="va">health_str</span><span class="op">)</span>
+  <span class="cf">for</span> <span class="cn">_</span><span class="op">,</span> <span class="va">w</span> <span class="kw">in</span> <span class="fu">ipairs</span><span class="op">(</span><span class="va">kubecurrent_widgets</span><span class="op">)</span> <span class="cf">do</span>
+    <span class="fu">table.insert</span><span class="op">(</span><span class="va">widgets_ps1_line2</span><span class="op">,</span> <span class="va">w</span><span class="op">)</span>
+  <span class="cf">end</span>
+
+  <span class="co">-- Note that because Git:read() returns very quickly (we designed the backend</span>
+  <span class="co">-- to be asynchronous), we don&#39;t need to worry about parallelism at the Lua</span>
+  <span class="co">-- configuration level.</span>
+  <span class="co">--</span>
+  <span class="co">-- Get git information for PWD, if any. We use &quot;MELBY_DIR&quot; so that we can use</span>
+  <span class="co">-- it in the Git.readers() function for calling custom scripts at custom</span>
+  <span class="co">-- locations (wherever MELBY_DIR points to).</span>
+  <span class="kw">local</span> <span class="va">git_standard_resource</span> <span class="op">=</span> <span class="va">Git</span><span class="op">:</span><span class="fu">read</span><span class="op">(</span><span class="va">env</span><span class="op">,</span> <span class="op">{</span><span class="st">&quot;PWD&quot;</span><span class="op">,</span> <span class="st">&quot;MELBY_DIR&quot;</span><span class="op">})</span>
+  <span class="co">-- Use the standard widgets that come with the &quot;Git.lua&quot; module.</span>
+  <span class="kw">local</span> <span class="va">git_widgets</span> <span class="op">=</span> <span class="va">Git</span><span class="op">.</span>view<span class="op">(</span><span class="va">git_standard_resource</span><span class="op">)</span>
+  <span class="cf">for</span> <span class="cn">_</span><span class="op">,</span> <span class="va">w</span> <span class="kw">in</span> <span class="fu">ipairs</span><span class="op">(</span><span class="va">git_widgets</span><span class="op">)</span> <span class="cf">do</span>
+    <span class="fu">table.insert</span><span class="op">(</span><span class="va">widgets_ps1_line2</span><span class="op">,</span> <span class="va">w</span><span class="op">)</span>
+  <span class="cf">end</span>
+
+  <span class="co">-- Render widgets. Some go into line 1, others into line 2. Wrap each escape</span>
+  <span class="co">-- sequence in &quot;%{...%}&quot; so that Zsh doesn&#39;t count it toward the prompt&#39;s</span>
+  <span class="co">-- width.</span>
+  <span class="kw">local</span> <span class="va">ps1_line1</span> <span class="op">=</span> <span class="va">melbyd</span><span class="op">.</span>zsh_prompt_escape<span class="op">(</span>
+    <span class="va">melbyd</span><span class="op">.</span>render<span class="op">(</span><span class="va">widgets_ps1_line1</span><span class="op">,</span> <span class="op">{</span><span class="va">str</span><span class="op">=</span><span class="st">&quot; &quot;</span><span class="op">}))</span>
+  <span class="kw">local</span> <span class="va">ps1_line2</span> <span class="op">=</span> <span class="va">melbyd</span><span class="op">.</span>zsh_prompt_escape<span class="op">(</span>
+    <span class="va">melbyd</span><span class="op">.</span>render<span class="op">(</span><span class="va">widgets_ps1_line2</span><span class="op">,</span> <span class="op">{</span><span class="va">str</span><span class="op">=</span><span class="st">&quot; &quot;</span><span class="op">}))</span>
+
+  <span class="co">-- We need to get messages first because we need to subscribe first. Otherwise</span>
+  <span class="co">-- Git SRS will start first and we&#39;ll miss its first broadcast (how long the</span>
+  <span class="co">-- initial read took).</span>
+  <span class="kw">local</span> <span class="va">messages</span> <span class="op">=</span> <span class="va">melbyd</span><span class="op">.</span>get_shell_messages<span class="op">(</span><span class="va">shell_pid</span><span class="op">,</span>
+                                            <span class="op">{</span><span class="va">Git</span><span class="op">,</span> <span class="va">KubeCurrent</span><span class="op">},</span>
+                                            <span class="op">{</span><span class="cn">PWD</span><span class="op">=</span><span class="va">env</span><span class="op">[</span><span class="st">&quot;PWD&quot;</span><span class="op">],</span>
+                                             <span class="cn">KUBECONFIG</span><span class="op">=(</span><span class="va">env</span><span class="op">[</span><span class="st">&quot;KUBECONFIG&quot;</span><span class="op">]</span> <span class="kw">or</span> <span class="st">&quot;&quot;</span><span class="op">)})</span>
+  <span class="kw">local</span> <span class="va">message_strs</span> <span class="op">=</span> <span class="op">{}</span>
+  <span class="cf">for</span> <span class="cn">_</span><span class="op">,</span> <span class="va">message</span> <span class="kw">in</span> <span class="fu">ipairs</span><span class="op">(</span><span class="va">messages</span><span class="op">)</span> <span class="cf">do</span>
+    <span class="cf">if</span> <span class="va">message</span><span class="op">[</span><span class="st">&quot;topic&quot;</span><span class="op">]</span> <span class="op">==</span> <span class="st">&quot;srs_Git&quot;</span> <span class="cf">then</span>
+      <span class="va">message_str</span> <span class="op">=</span> <span class="va">Git</span><span class="op">.</span>message_to_string<span class="op">(</span><span class="va">message</span><span class="op">,</span> <span class="va">pwd_pretty_options</span><span class="op">)</span>
+    <span class="cf">elseif</span> <span class="va">message</span><span class="op">[</span><span class="st">&quot;topic&quot;</span><span class="op">]</span> <span class="op">==</span> <span class="st">&quot;srs_KubeCurrent&quot;</span> <span class="cf">then</span>
+      <span class="va">message_str</span> <span class="op">=</span> <span class="va">KubeCurrent</span><span class="op">.</span>message_to_string<span class="op">(</span><span class="va">message</span><span class="op">)</span>
+    <span class="cf">end</span>
+    <span class="fu">table.insert</span><span class="op">(</span><span class="va">message_strs</span><span class="op">,</span> <span class="va">message_str</span> <span class="op">..</span> <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">)</span>
+  <span class="cf">end</span>
+
+  <span class="co">-- Create a dictionary of shell variables to create.</span>
+  <span class="va">export</span> <span class="op">=</span> <span class="op">{}</span>
+  <span class="fu">table.insert</span><span class="op">(</span><span class="va">export</span><span class="op">,</span> <span class="op">{</span><span class="va">name</span><span class="op">=</span><span class="st">&quot;MELBY_PS1_LINE1&quot;</span><span class="op">,</span> <span class="va">val</span><span class="op">=</span><span class="va">ps1_line1</span><span class="op">,</span> <span class="fu">type</span><span class="op">=</span><span class="st">&quot;string&quot;</span><span class="op">})</span>
+  <span class="fu">table.insert</span><span class="op">(</span><span class="va">export</span><span class="op">,</span> <span class="op">{</span><span class="va">name</span><span class="op">=</span><span class="st">&quot;MELBY_PS1_LINE2&quot;</span><span class="op">,</span> <span class="va">val</span><span class="op">=</span><span class="va">ps1_line2</span><span class="op">,</span> <span class="fu">type</span><span class="op">=</span><span class="st">&quot;string&quot;</span><span class="op">})</span>
+  <span class="fu">table.insert</span><span class="op">(</span><span class="va">export</span><span class="op">,</span> <span class="op">{</span><span class="va">name</span><span class="op">=</span><span class="st">&quot;MELBY_SHELL_MESSAGES&quot;</span><span class="op">,</span> <span class="va">val</span><span class="op">=</span><span class="va">message_strs</span><span class="op">,</span>
+                        <span class="fu">type</span><span class="op">=</span><span class="st">&quot;array&quot;</span><span class="op">})</span>
+
+  <span class="co">-- Create a shell script that instantiates the exported variables.</span>
+  <span class="va">script</span> <span class="op">=</span> <span class="va">melbyd</span><span class="op">.</span>to_shell_script<span class="op">(</span><span class="va">export</span><span class="op">)</span>
+  <span class="cf">return</span> <span class="va">script</span>
+<span class="kw">end</span></code></pre></div></div><div id="c-29" class="cell-idx"><div class="block-container src" id="b-melby-return"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-melby-return">&#x1F517;</a></div><div class="block-meta"><code>melby-return</code></div><div class="block-meta-other hidden"><p>Used by <a href="#b-1-b-melby-return" class="internal-link">Anonymous Block Cell 17</a>.</p><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">lua</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="co">-- This line is to force evaluation of these loaded modules by Luerl, such that</span>
+<span class="co">-- they show up in the loaded vm state.</span>
+<span class="cf">return</span> <span class="op">{</span><span class="va">g</span> <span class="op">=</span> <span class="va">Git</span><span class="op">,</span> <span class="va">kc</span> <span class="op">=</span> <span class="va">KubeCurrent</span><span class="op">,</span> <span class="va">k</span> <span class="op">=</span> <span class="va">Kube</span><span class="op">}</span></code></pre></div></div></div><div id="heading-container-h-3.3-Running-the-daemon-under-systemd" class="heading-container"><h3 id="h-3.3-Running-the-daemon-under-systemd"><span id="c-30" class="cell-idx"><a href="#h-3.3-Running-the-daemon-under-systemd">3.3&ensp;Running the daemon under <span class="code">systemd</span></a></span></h3><p><span id="c-31" class="cell-idx">The environment for running Melby&#39;s daemon under <span class="code">systemd</span>.</span></p><div id="c-32" class="cell-idx"><div class="block-container src" id="b-melby-systemd-env"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-melby-systemd-env">&#x1F517;</a></div><div class="block-meta"><code>melby-systemd-env</code><br><code><span class="bold">&#x1F3AF; melby/systemd/env</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">conf</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="dt">PATH</span><span class="op">=</span><span class="er">/</span><span class="dt">home</span><span class="er">/</span><span class="dt">l</span><span class="er">/</span><span class="dt">.nix-profile</span><span class="er">/</span><span class="dt">bin</span><span class="er">:/</span><span class="dt">run</span><span class="er">/</span><span class="dt">wrappers</span><span class="er">/</span><span class="dt">bin</span><span class="er">:/</span><span class="dt">etc</span><span class="er">/</span><span class="dt">profiles</span><span class="er">/</span><span class="dt">per-user</span><span class="er">/</span><span class="dt">l</span><span class="er">/</span><span class="dt">bin</span><span class="er">:/</span><span class="dt">nix</span><span class="er">/</span><span class="dt">var</span><span class="er">/</span><span class="dt">nix</span><span class="er">/</span><span class="dt">profiles</span><span class="er">/</span><span class="dt">default</span><span class="er">/</span><span class="dt">bin</span><span class="er">:/</span><span class="dt">run</span><span class="er">/</span><span class="dt">current-system</span><span class="er">/</span><span class="dt">sw</span><span class="er">/</span><span class="dt">bin</span>
+<span class="co"># Disable debug logs. To enable them, use MIX_ENV=dev.</span>
+<span class="dt">MIX_ENV</span><span class="op">=</span><span class="dt">prod</span></code></pre></div></div></div><div id="heading-container-h-4-MPD" class="heading-container"><h2 id="h-4-MPD"><span id="c-33" class="cell-idx"><a href="#h-4-MPD">4&ensp;MPD</a></span></h2><p><span id="c-34" class="cell-idx">MPD plays our music both locally through PulseAudio and as an HTTP stream for other machines to listen to.</span></p><div id="c-35" class="cell-idx"><div class="block-container src" id="b-mpd-conf"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-mpd-conf">&#x1F517;</a></div><div class="block-meta"><code>mpd-conf</code><br><code><span class="bold">&#x1F3AF; mpd/mpd.conf</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">conf</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="co"># Adapted from</span>
+<span class="co"># https://raw.githubusercontent.com/MusicPlayerDaemon/MPD/master/doc/mpdconf.example.</span>
+
+<span class="dt">music_directory</span>     <span class="dt">&quot;~/Music&quot;</span>
+<span class="co"># Automatically prune new/deleted files in the music_directory.</span>
+<span class="dt">auto_update</span>         <span class="dt">&quot;yes&quot;</span>
+
+<span class="co"># Allow saving playlists from vimpc.</span>
+<span class="dt">playlist_directory</span>  <span class="dt">&quot;~/Music/playlists&quot;</span>
+
+<span class="co"># Local output.</span>
+<span class="dt">audio_output</span> <span class="er">{</span>
+    <span class="dt">type</span>            <span class="dt">&quot;pulse&quot;</span>
+    <span class="dt">name</span>            <span class="dt">&quot;pulseaudio-output&quot;</span>
+<span class="er">}</span>
+
+<span class="co"># Streaming output. You have to first control MPD via an SSH session. If you</span>
+<span class="co"># did a toplevel `bind_to_address` and `port` configuration, you could control</span>
+<span class="co"># MPD playback (think of it as a remote control) via the IP and port. However</span>
+<span class="co"># we already have SSH access to this machine so there is no point in</span>
+<span class="co"># configuring that. As soon as the playback *begins*, the IP and port here</span>
+<span class="co"># become active clients can then connect to it.</span>
+<span class="co">#</span>
+<span class="co"># So the process is:</span>
+<span class="co">#   (1) start MPD playback via SSH</span>
+<span class="co">#   (2) run `mpv http://192.168.1.4:8030` to start listening to it from the client</span>
+<span class="co">#</span>
+<span class="dt">audio_output</span> <span class="er">{</span>
+    <span class="dt">type</span>            <span class="dt">&quot;httpd&quot;</span>
+    <span class="dt">name</span>            <span class="dt">&quot;http-output&quot;</span>
+    <span class="dt">encoder</span>         <span class="dt">&quot;opus&quot;</span>
+    <span class="dt">port</span>            <span class="dt">&quot;8010&quot;</span>
+    <span class="dt">bind_to_address</span> <span class="dt">&quot;192.168.1.4&quot;</span>
+    <span class="dt">bitrate</span>         <span class="dt">&quot;96000&quot;</span>
+    <span class="dt">format</span>          <span class="dt">&quot;48000:16:2&quot;</span>
+    <span class="dt">always_on</span>       <span class="dt">&quot;yes&quot;</span>
+    <span class="dt">tags</span>            <span class="dt">&quot;yes&quot;</span>
+<span class="er">}</span>
+
+<span class="co"># Enable replay gain.</span>
+<span class="dt">replaygain</span>          <span class="dt">&quot;track&quot;</span></code></pre></div></div></div><div id="heading-container-h-5-PulseAudio" class="heading-container"><h2 id="h-5-PulseAudio"><span id="c-36" class="cell-idx"><a href="#h-5-PulseAudio">5&ensp;PulseAudio</a></span></h2><p><span id="c-37" class="cell-idx">The <span class="code">pulse</span> <a href="#b-Makefile-pulse" class="internal-link" id="linkNumber-8">Makefile rule</a> copies these into place. The <span class="code">k0</span> machine gets its own versions, with a higher quality sample format and rate, and a default sink.</span></p><div id="c-38" class="cell-idx"><div class="block-container src" id="b-Makefile-pulse"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-Makefile-pulse">&#x1F517;</a></div><div class="block-meta"><code>Makefile-pulse</code></div><div class="block-meta-other hidden"><p>Used by index.org→<a href="/index.html#b-Makefile-b-Makefile-pulse" class="internal-link"><span class="verbatim">Makefile</span></a>.</p><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">makefile</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="dv">pulse:</span>
+	rm -rf <span class="ch">${</span><span class="dt">H</span><span class="ch">}</span>/.config/pulse
+	rm -rf <span class="ch">${</span><span class="dt">H</span><span class="ch">}</span>/.pulse
+	mkdir -p <span class="ch">${</span><span class="dt">H</span><span class="ch">}</span>/.config/pulse
+	mkdir <span class="ch">${</span><span class="dt">H</span><span class="ch">}</span>/.pulse
+<span class="cf">ifeq</span> (<span class="st">&#39;</span><span class="ch">${</span><span class="dt">T</span><span class="ch">}</span><span class="st">&#39;</span>,<span class="st">&#39;k0&#39;</span>)
+	cp <span class="ch">${</span><span class="dt">C</span><span class="ch">}</span>/pulse/daemon.conf.k0 <span class="ch">${</span><span class="dt">H</span><span class="ch">}</span>/.config/pulse/daemon.conf
+	cp <span class="ch">${</span><span class="dt">C</span><span class="ch">}</span>/pulse/default.pa.k0 <span class="ch">${</span><span class="dt">H</span><span class="ch">}</span>/.pulse/default.pa
+<span class="cf">else</span>
+	cp <span class="ch">${</span><span class="dt">C</span><span class="ch">}</span>/pulse/default.pa <span class="ch">${</span><span class="dt">H</span><span class="ch">}</span>/.pulse/default.pa
+<span class="cf">endif</span></code></pre></div></div><div id="c-39" class="cell-idx"><div class="block-container src" id="b-pulse-default.pa"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-pulse-default.pa">&#x1F517;</a></div><div class="block-meta"><code>pulse-default.pa</code><br><code><span class="bold">&#x1F3AF; pulse/default.pa</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">conf</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="co"># Load in distro defaults.</span>
+<span class="dt">.include</span> <span class="er">/</span><span class="dt">etc</span><span class="er">/</span><span class="dt">pulse</span><span class="er">/</span><span class="dt">default.pa</span></code></pre></div></div><div id="c-40" class="cell-idx"><div class="block-container src" id="b-pulse-default.pa.k0"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-pulse-default.pa.k0">&#x1F517;</a></div><div class="block-meta"><code>pulse-default.pa.k0</code><br><code><span class="bold">&#x1F3AF; pulse/default.pa.k0</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">conf</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="co"># Load in distro defaults.</span>
+<span class="dt">.include</span> <span class="er">/</span><span class="dt">etc</span><span class="er">/</span><span class="dt">pulse</span><span class="er">/</span><span class="dt">default.pa</span>
+
+<span class="dt">set-default-sink</span> <span class="dt">0</span></code></pre></div></div><div id="c-41" class="cell-idx"><div class="block-container src" id="b-pulse-daemon.conf.k0"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-pulse-daemon.conf.k0">&#x1F517;</a></div><div class="block-meta"><code>pulse-daemon.conf.k0</code><br><code><span class="bold">&#x1F3AF; pulse/daemon.conf.k0</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">conf</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="dt">default-sample-format</span> <span class="op">=</span> <span class="dt">s32le</span>
+<span class="dt">default-sample-rate</span> <span class="op">=</span> <span class="dv">192000</span></code></pre></div></div></div><div id="heading-container-h-6-SSH" class="heading-container"><h2 id="h-6-SSH"><span id="c-42" class="cell-idx"><a href="#h-6-SSH">6&ensp;SSH</a></span></h2><p><span id="c-43" class="cell-idx">The <span class="code">ssh</span> <a href="#b-Makefile-ssh" class="internal-link" id="linkNumber-9">Makefile rule</a> links this to <span class="code">~/.ssh/config</span>. This keeps connections alive, forwards our agent to machines on the home network, and picks the key to use for GitHub and SourceHut.</span></p><div id="c-44" class="cell-idx"><div class="block-container src" id="b-Makefile-ssh"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-Makefile-ssh">&#x1F517;</a></div><div class="block-meta"><code>Makefile-ssh</code></div><div class="block-meta-other hidden"><p>Used by index.org→<a href="/index.html#b-Makefile-b-Makefile-ssh" class="internal-link"><span class="verbatim">Makefile</span></a>.</p><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">makefile</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="dv">ssh:</span>
+<span class="cf">ifeq</span> (<span class="ch">$(</span><span class="kw">wildcard</span><span class="st"> ~/.ssh/.</span><span class="ch">)</span>,)
+	ln -fns <span class="ch">${</span><span class="dt">C</span><span class="ch">}</span>/ssh <span class="ch">${</span><span class="dt">H</span><span class="ch">}</span>/.ssh
+<span class="cf">endif</span>
+	ln -fs <span class="ch">${</span><span class="dt">C</span><span class="ch">}</span>/ssh/config.home.conf <span class="ch">${</span><span class="dt">H</span><span class="ch">}</span>/.ssh/config</code></pre></div></div><div id="c-45" class="cell-idx"><div class="block-container src" id="b-ssh-config"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-ssh-config">&#x1F517;</a></div><div class="block-meta"><code>ssh-config</code><br><code><span class="bold">&#x1F3AF; ssh/config.home.conf</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">conf</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="dt">Host</span> <span class="er">*</span>
+    <span class="dt">ServerAliveInterval</span> <span class="dt">15</span>
+<span class="dt">Host</span> <span class="dt">192.168.1.</span><span class="er">*</span>
+    <span class="dt">ForwardAgent</span> <span class="dt">yes</span>
+<span class="dt">Host</span> <span class="dt">github.com</span>
+    <span class="dt">HostName</span> <span class="dt">github.com</span>
+    <span class="dt">User</span> <span class="dt">git</span>
+    <span class="dt">IdentityFile</span> <span class="er">~/</span><span class="dt">.ssh</span><span class="er">/</span><span class="dt">id_rsa_github</span>
+<span class="dt">Host</span> <span class="dt">git.sr.ht</span>
+    <span class="dt">HostName</span> <span class="dt">git.sr.ht</span>
+    <span class="dt">User</span> <span class="dt">git</span>
+    <span class="dt">IdentityFile</span> <span class="er">~/</span><span class="dt">.ssh</span><span class="er">/</span><span class="dt">id_rsa_github</span>
+<span class="dt">Host</span> <span class="er">*</span><span class="dt">.builds.sr.ht</span>
+    <span class="dt">User</span> <span class="dt">builds</span>
+    <span class="dt">IdentityFile</span> <span class="er">~/</span><span class="dt">.ssh</span><span class="er">/</span><span class="dt">id_rsa_github</span></code></pre></div></div></div><div id="heading-container-h-7-terminfo" class="heading-container"><h2 id="h-7-terminfo"><span id="c-46" class="cell-idx"><a href="#h-7-terminfo">7&ensp;terminfo</a></span></h2><p><span id="c-47" class="cell-idx">This defines the <span class="code">xterm-24bit</span> terminal type, for 24-bit color and italics. The <span class="code">terminfo</span> <a href="#b-Makefile-terminfo" class="internal-link" id="linkNumber-10">Makefile rule</a> compiles it with <span class="code">tic</span>, and <a href="/zsh/index.html#b-zshenv" class="internal-link" id="linkNumber-11"><span class="code">.zshenv</span></a> sets this as our <span class="code">TERM</span> on <span class="code">w0</span>. The rule used to compile WezTerm&#39;s terminfo too, from a submodule, for when WezTerm was our terminal.</span></p><div id="c-48" class="cell-idx"><div class="block-container src" id="b-Makefile-terminfo"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-Makefile-terminfo">&#x1F517;</a></div><div class="block-meta"><code>Makefile-terminfo</code></div><div class="block-meta-other hidden"><p>Used by index.org→<a href="/index.html#b-Makefile-b-Makefile-terminfo" class="internal-link"><span class="verbatim">Makefile</span></a>.</p><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">makefile</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="dv">terminfo:</span>
+	tic -x -o ~/.terminfo <span class="ch">${</span><span class="dt">C</span><span class="ch">}</span>/terminfo/xterm-24bit.terminfo</code></pre></div></div><div id="c-49" class="cell-idx"><div class="block-container src" id="b-xterm-24bit"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-xterm-24bit">&#x1F517;</a></div><div class="block-meta"><code>xterm-24bit</code><br><code><span class="bold">&#x1F3AF; terminfo/xterm-24bit.terminfo</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">conf</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="dt">xterm-24bit</span><span class="er">|</span><span class="dt">xterm</span> <span class="dt">with</span> <span class="dt">24-bit</span> <span class="dt">direct</span> <span class="dt">color</span> <span class="dt">mode</span><span class="er">,</span>
+   <span class="dt">use</span><span class="op">=</span><span class="dt">xterm-256color</span><span class="er">,</span>
+   <span class="dt">sitm</span><span class="op">=</span><span class="er">\</span><span class="dt">E</span><span class="kw">[3m</span><span class="er">,</span>
+   <span class="dt">ritm</span><span class="op">=</span><span class="er">\</span><span class="dt">E</span><span class="kw">[23m</span><span class="er">,</span>
+   <span class="dt">setb24</span><span class="op">=</span><span class="er">\</span><span class="dt">E</span><span class="kw">[48</span><span class="er">;</span><span class="dt">2</span><span class="er">;%</span><span class="dt">p1</span><span class="er">%{</span><span class="dt">65536</span><span class="er">}%/%</span><span class="dt">d</span><span class="er">;%</span><span class="dt">p1</span><span class="er">%{</span><span class="dt">256</span><span class="er">}%/%{</span><span class="dt">255</span><span class="er">}%&amp;%</span><span class="dt">d</span><span class="er">;%</span><span class="dt">p1</span><span class="er">%{</span><span class="dt">255</span><span class="er">}%&amp;%</span><span class="dt">dm</span><span class="er">,</span>
+   <span class="dt">setf24</span><span class="op">=</span><span class="er">\</span><span class="dt">E</span><span class="kw">[38</span><span class="er">;</span><span class="dt">2</span><span class="er">;%</span><span class="dt">p1</span><span class="er">%{</span><span class="dt">65536</span><span class="er">}%/%</span><span class="dt">d</span><span class="er">;%</span><span class="dt">p1</span><span class="er">%{</span><span class="dt">256</span><span class="er">}%/%{</span><span class="dt">255</span><span class="er">}%&amp;%</span><span class="dt">d</span><span class="er">;%</span><span class="dt">p1</span><span class="er">%{</span><span class="dt">255</span><span class="er">}%&amp;%</span><span class="dt">dm</span><span class="er">,</span></code></pre></div></div></div><div id="heading-container-h-8-vimpc" class="heading-container"><h2 id="h-8-vimpc"><span id="c-50" class="cell-idx"><a href="#h-8-vimpc">8&ensp;vimpc</a></span></h2><p><span id="c-51" class="cell-idx">Vim-like key bindings for <span class="code">vimpc</span>, the client that we use for <a href="#b-mpd-conf" class="internal-link" id="linkNumber-12">MPD</a>.</span></p><div id="c-52" class="cell-idx"><div class="block-container src" id="b-vimpcrc"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-vimpcrc">&#x1F517;</a></div><div class="block-meta"><code>vimpcrc</code><br><code><span class="bold">&#x1F3AF; vimpc/.vimpcrc</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">vim</span></p></li></ul></div><pre class="block-body"><code>set windows playlist,browse,library,lists
+set window playlist
+
+&quot; Navigate up/down any window quickly.
+map &lt;Space&gt; 10j
+map &lt;BS&gt; 10k
+
+&quot; Make tab navigation reasonable. Unfortunately &lt;C-h&gt; cannot be bound as it
+&quot; conflicts with &lt;BS&gt;. So we have to use the Alt key instead.
+map &lt;A-h&gt; :tabprevious&lt;Enter&gt;
+map &lt;A-l&gt; :tabnext&lt;Enter&gt;
+
+&quot; Skip forward/backward 5 seconds.
+map h :seek- 5&lt;Enter&gt;
+map l :seek+ 5&lt;Enter&gt;
+
+&quot; Change songs.
+map H :previous&lt;Enter&gt;
+map L :next&lt;Enter&gt;
+
+map p :pause&lt;Enter&gt;
+
+&quot; &lt;C-c&gt; already exits vimpc.
+map &lt;C-d&gt; :qa&lt;Enter&gt;
+
+&quot; Go to current song.
+map c f
+
+&quot; Go to random song.
+map r %
+
+&quot; Increase volume.
+map = +</code></pre></div></div></div><div id="heading-container-h-9-zathura" class="heading-container"><h2 id="h-9-zathura"><span id="c-53" class="cell-idx"><a href="#h-9-zathura">9&ensp;zathura</a></span></h2><p><span id="c-54" class="cell-idx">Key bindings and the font for the <span class="code">zathura</span> document viewer.</span></p><div id="c-55" class="cell-idx"><div class="block-container src" id="b-zathurarc"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-zathurarc">&#x1F517;</a></div><div class="block-meta"><code>zathurarc</code><br><code><span class="bold">&#x1F3AF; zathura/zathurarc</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">conf</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="dt">map</span> <span class="kw">[normal]</span> <span class="op">=</span> <span class="dt">zoom</span> <span class="dt">in</span>
+<span class="dt">map</span> <span class="kw">[normal]</span> <span class="er">+</span> <span class="dt">zoom</span> <span class="dt">default</span>
+<span class="dt">map</span> <span class="kw">[normal]</span> <span class="dt">r</span> <span class="dt">reload</span>
+<span class="dt">map</span> <span class="kw">[normal]</span> <span class="dt">R</span> <span class="dt">rotate</span>
+<span class="dt">map</span> <span class="kw">[normal]</span> <span class="dt">h</span> <span class="dt">navigate</span> <span class="dt">previous</span>
+<span class="dt">map</span> <span class="kw">[normal]</span> <span class="dt">l</span> <span class="dt">navigate</span> <span class="dt">next</span>
+<span class="dt">map</span> <span class="kw">[normal]</span> <span class="er">&lt;</span><span class="dt">BackSpace</span><span class="er">&gt;</span> <span class="dt">scroll</span> <span class="dt">full-up</span>
+
+<span class="dt">set</span> <span class="dt">font</span> <span class="dt">&quot;CommitMono 9&quot;</span></code></pre></div></div></div><div id="heading-container-h-10-uim" class="heading-container"><h2 id="h-10-uim"><span id="c-56" class="cell-idx"><a href="#h-10-uim">10&ensp;uim</a></span></h2><p><span id="c-57" class="cell-idx">The <span class="code">uim</span> <a href="#b-Makefile-uim" class="internal-link" id="linkNumber-13">Makefile rule</a> links this to <span class="code">~/.uim</span>. It defines a custom Hangul layout for the <span class="code">byeoru</span> input method. The settings that uim saves automatically are in <span class="code">uim/customs</span>, which we don&#39;t manage here.</span></p><div id="c-58" class="cell-idx"><div class="block-container src" id="b-Makefile-uim"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-Makefile-uim">&#x1F517;</a></div><div class="block-meta"><code>Makefile-uim</code></div><div class="block-meta-other hidden"><p>Used by index.org→<a href="/index.html#b-Makefile-b-Makefile-uim" class="internal-link"><span class="verbatim">Makefile</span></a>.</p><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">makefile</span></p></li></ul></div><pre class="block-body"><code class="sourceCode"><span class="dv">uim:</span>
+	ln -fns <span class="ch">${</span><span class="dt">C</span><span class="ch">}</span>/uim/.uim <span class="ch">${</span><span class="dt">H</span><span class="ch">}</span>/.uim
+	ln -fns <span class="ch">${</span><span class="dt">C</span><span class="ch">}</span>/uim <span class="ch">${</span><span class="dt">H</span><span class="ch">}</span>/.uim.d
+<a href="/vim.html#b-Makefile-vim" class="internal-link" id="b-Makefile-uim-b-Makefile-vim">Makefile-vim</a></code></pre></div></div><div id="c-59" class="cell-idx"><div class="block-container src" id="b-uim"><div class="block-controls"><button class="toggle-block-meta-other" data-action="toggle-block-meta-other"></button><a href="#b-uim">&#x1F517;</a></div><div class="block-meta"><code>uim</code><br><code><span class="bold">&#x1F3AF; uim/.uim</span></code></div><div class="block-meta-other hidden"><p>Other metadata key/value pairs:</p><ul><li><p><span class="code">__block_type</span> = <span class="code">src</span></p></li><li><p><span class="code">__src_language</span> = <span class="code">scheme</span></p></li></ul></div><pre class="block-body"><code class="sourceCode">(require-module <span class="st">&quot;byeoru&quot;</span>)
+(byeoru-define-layout byeoru-layout-hangul2
+
+(<span class="st">&quot;a&quot;</span> (jungseong-o <span class="op">.</span> <span class="dv">3</span>))
+(<span class="st">&quot;A&quot;</span> (jungseong-o <span class="op">.</span> <span class="dv">3</span>))
+
+(<span class="st">&quot;y&quot;</span> (jungseong-u <span class="op">.</span> <span class="dv">3</span>))
+(<span class="st">&quot;Y&quot;</span> (jungseong-u <span class="op">.</span> <span class="dv">3</span>))
+
+(<span class="st">&quot;i&quot;</span> (jungseong-eu <span class="op">.</span> <span class="dv">3</span>))
+(<span class="st">&quot;I&quot;</span> (jungseong-eu <span class="op">.</span> <span class="dv">3</span>))
+
+(<span class="st">&quot;x&quot;</span> (jungseong-yo <span class="op">.</span> <span class="dv">1</span>))
+(<span class="st">&quot;X&quot;</span> (jungseong-yo <span class="op">.</span> <span class="dv">1</span>))
+
+(<span class="st">&quot;o&quot;</span> (jungseong-eo <span class="op">.</span> <span class="dv">1</span>) (jungseong-eo <span class="op">.</span> <span class="dv">4</span>))
+(<span class="st">&quot;O&quot;</span> (jungseong-eo <span class="op">.</span> <span class="dv">1</span>) (jungseong-eo <span class="op">.</span> <span class="dv">4</span>))
+
+(<span class="st">&quot;e&quot;</span> (jungseong-a <span class="op">.</span> <span class="dv">1</span>) (jungseong-a <span class="op">.</span> <span class="dv">4</span>))
+(<span class="st">&quot;E&quot;</span> (jungseong-a <span class="op">.</span> <span class="dv">1</span>) (jungseong-a <span class="op">.</span> <span class="dv">4</span>))
+
+(<span class="st">&quot;q&quot;</span> (jungseong-yeo <span class="op">.</span> <span class="dv">1</span>))
+(<span class="st">&quot;Q&quot;</span> (jungseong-yeo <span class="op">.</span> <span class="dv">1</span>))
+
+(<span class="st">&quot;p&quot;</span> (jungseong-e <span class="op">.</span> <span class="dv">1</span>) (jungseong-e <span class="op">.</span> <span class="dv">4</span>))
+(<span class="st">&quot;P&quot;</span> (jungseong-ye <span class="op">.</span> <span class="dv">1</span>))
+
+(<span class="st">&quot;u&quot;</span> (jungseong-i <span class="op">.</span> <span class="dv">1</span>) (jungseong-i <span class="op">.</span> <span class="dv">4</span>))
+(<span class="st">&quot;U&quot;</span> (jungseong-i <span class="op">.</span> <span class="dv">1</span>) (jungseong-i <span class="op">.</span> <span class="dv">4</span>))
+
+(<span class="st">&quot;v&quot;</span> (jungseong-ya <span class="op">.</span> <span class="dv">1</span>))
+(<span class="st">&quot;V&quot;</span> (jungseong-ya <span class="op">.</span> <span class="dv">1</span>))
+
+(<span class="st">&quot;w&quot;</span> (jungseong-ae <span class="op">.</span> <span class="dv">1</span>) (jungseong-ae <span class="op">.</span> <span class="dv">4</span>))
+(<span class="st">&quot;W&quot;</span> (jungseong-yae <span class="op">.</span> <span class="dv">1</span>))
+
+(<span class="st">&quot;z&quot;</span> (jungseong-yu <span class="op">.</span> <span class="dv">1</span>))
+(<span class="st">&quot;Z&quot;</span> (jungseong-yu <span class="op">.</span> <span class="dv">1</span>))
+
+(<span class="st">&quot;f&quot;</span> (choseong-pieup <span class="op">.</span> <span class="dv">1</span>) (jongseong-pieup <span class="op">.</span> <span class="dv">1</span>) (jongseong-pieup <span class="op">.</span> <span class="dv">4</span>))
+(<span class="st">&quot;F&quot;</span> (choseong-pieup <span class="op">.</span> <span class="dv">1</span>) (jongseong-pieup <span class="op">.</span> <span class="dv">1</span>) (jongseong-pieup <span class="op">.</span> <span class="dv">4</span>))
+
+(<span class="st">&quot;h&quot;</span> (choseong-digeud <span class="op">.</span> <span class="dv">1</span>) (jongseong-digeud <span class="op">.</span> <span class="dv">1</span>))
+(<span class="st">&quot;H&quot;</span> (choseong-ssangdigeud <span class="op">.</span> <span class="dv">5</span>))
+
+(<span class="st">&quot;b&quot;</span> (choseong-kieuk <span class="op">.</span> <span class="dv">1</span>) (jongseong-kieuk <span class="op">.</span> <span class="dv">1</span>))
+(<span class="st">&quot;B&quot;</span> (choseong-kieuk <span class="op">.</span> <span class="dv">1</span>) (jongseong-kieuk <span class="op">.</span> <span class="dv">1</span>))
+
+(<span class="st">&quot;d&quot;</span> (choseong-mieum <span class="op">.</span> <span class="dv">1</span>) (jongseong-mieum <span class="op">.</span> <span class="dv">1</span>) (jongseong-mieum <span class="op">.</span> <span class="dv">4</span>))
+(<span class="st">&quot;D&quot;</span> (choseong-mieum <span class="op">.</span> <span class="dv">1</span>) (jongseong-mieum <span class="op">.</span> <span class="dv">1</span>) (jongseong-mieum <span class="op">.</span> <span class="dv">4</span>))
+
+(<span class="st">&quot;j&quot;</span> (choseong-nieun <span class="op">.</span> <span class="dv">1</span>) (jongseong-nieun <span class="op">.</span> <span class="dv">3</span>))
+(<span class="st">&quot;J&quot;</span> (choseong-nieun <span class="op">.</span> <span class="dv">1</span>) (jongseong-nieun <span class="op">.</span> <span class="dv">3</span>))
+
+(<span class="st">&quot;m&quot;</span> (choseong-tieut <span class="op">.</span> <span class="dv">1</span>) (jongseong-tieut <span class="op">.</span> <span class="dv">1</span>) (jongseong-tieut <span class="op">.</span> <span class="dv">4</span>))
+(<span class="st">&quot;M&quot;</span> (choseong-tieut <span class="op">.</span> <span class="dv">1</span>) (jongseong-tieut <span class="op">.</span> <span class="dv">1</span>) (jongseong-tieut <span class="op">.</span> <span class="dv">4</span>))
+
+(<span class="st">&quot;t&quot;</span> (choseong-sios <span class="op">.</span> <span class="dv">1</span>) (jongseong-sios <span class="op">.</span> <span class="dv">1</span>) (jongseong-sios <span class="op">.</span> <span class="dv">4</span>))
+(<span class="st">&quot;T&quot;</span> (choseong-ssangsios <span class="op">.</span> <span class="dv">5</span>) (jongseong-ssangsios <span class="op">.</span> <span class="dv">5</span>))
+
+(<span class="st">&quot;k&quot;</span> (choseong-ieung <span class="op">.</span> <span class="dv">1</span>) (jongseong-ieung <span class="op">.</span> <span class="dv">1</span>))
+(<span class="st">&quot;K&quot;</span> (choseong-ieung <span class="op">.</span> <span class="dv">1</span>) (jongseong-ieung <span class="op">.</span> <span class="dv">1</span>))
+
+(<span class="st">&quot;g&quot;</span> (choseong-jieuj <span class="op">.</span> <span class="dv">1</span>) (jongseong-jieuj <span class="op">.</span> <span class="dv">1</span>) (jongseong-jieuj <span class="op">.</span> <span class="dv">4</span>))
+(<span class="st">&quot;G&quot;</span> (choseong-ssangjieuj <span class="op">.</span> <span class="dv">5</span>))
+
+(<span class="st">&quot;r&quot;</span> (choseong-hieuh <span class="op">.</span> <span class="dv">1</span>) (jongseong-hieuh <span class="op">.</span> <span class="dv">1</span>) (jongseong-hieuh <span class="op">.</span> <span class="dv">4</span>))
+(<span class="st">&quot;R&quot;</span> (choseong-hieuh <span class="op">.</span> <span class="dv">1</span>) (jongseong-hieuh <span class="op">.</span> <span class="dv">1</span>) (jongseong-hieuh <span class="op">.</span> <span class="dv">4</span>))
+
+(<span class="st">&quot;l&quot;</span> (choseong-giyeog <span class="op">.</span> <span class="dv">1</span>) (jongseong-giyeog <span class="op">.</span> <span class="dv">3</span>) (jongseong-giyeog <span class="op">.</span> <span class="dv">4</span>))
+(<span class="st">&quot;L&quot;</span> (choseong-ssanggiyeog <span class="op">.</span> <span class="dv">5</span>) (jongseong-ssanggiyeog <span class="op">.</span> <span class="dv">5</span>))
+
+(<span class="st">&quot;c&quot;</span> (choseong-bieub <span class="op">.</span> <span class="dv">1</span>) (jongseong-bieub <span class="op">.</span> <span class="dv">3</span>) (jongseong-bieub <span class="op">.</span> <span class="dv">4</span>))
+(<span class="st">&quot;C&quot;</span> (choseong-ssangbieub <span class="op">.</span> <span class="dv">5</span>))
+
+(<span class="st">&quot;n&quot;</span> (choseong-rieul <span class="op">.</span> <span class="dv">1</span>) (jongseong-rieul <span class="op">.</span> <span class="dv">3</span>))
+(<span class="st">&quot;N&quot;</span> (choseong-rieul <span class="op">.</span> <span class="dv">1</span>) (jongseong-rieul <span class="op">.</span> <span class="dv">3</span>))
+
+(<span class="st">&quot;s&quot;</span> (choseong-chieuch <span class="op">.</span> <span class="dv">1</span>) (jongseong-chieuch <span class="op">.</span> <span class="dv">1</span>))
+(<span class="st">&quot;S&quot;</span> (choseong-chieuch <span class="op">.</span> <span class="dv">1</span>) (jongseong-chieuch <span class="op">.</span> <span class="dv">1</span>))
+
+)</code></pre></div></div></div><div id="heading-container-h--Page-metrics" class="heading-container page-metrics"><h2 id="h--Page-metrics"><a href="#h--Page-metrics">Page metrics</a></h2></div><div id="heading-container-h--Backlinks" class="heading-container backlinks"><h3 id="h--Backlinks"><a href="#h--Backlinks">Backlinks (2)</a></h3><ol><li><a href="/nix.html">nix.org (2)</a><ol><li><a href="#b-melby-systemd-env"><span class="verbatim">melby-systemd-env</span> (2)</a><ol><li><a href="/nix.html#c-23">¶ (<span class="verbatim">Cell 23</span>)</a></li><li><a href="/nix.html#c-68">¶ (<span class="verbatim">Cell 68</span>)</a></li></ol></li></ol></li></ol></div><div id="heading-container-h--Tangled-files" class="heading-container tangled-blocks"><h3 id="h--Tangled-files"><a href="#h--Tangled-files">Tangled files (13)</a></h3><ol><li><a href="#b-jjui-config" class="verbatim">jjui/config.toml</a></li><li><a href="#b-lesskey" class="verbatim">lesskey/cfg</a></li><li><a href="#b-1" class="verbatim">melby/melby.lua</a></li><li><a href="#b-melby-systemd-env" class="verbatim">melby/systemd/env</a></li><li><a href="#b-mpd-conf" class="verbatim">mpd/mpd.conf</a></li><li><a href="#b-pulse-daemon.conf.k0" class="verbatim">pulse/daemon.conf.k0</a></li><li><a href="#b-pulse-default.pa" class="verbatim">pulse/default.pa</a></li><li><a href="#b-pulse-default.pa.k0" class="verbatim">pulse/default.pa.k0</a></li><li><a href="#b-ssh-config" class="verbatim">ssh/config.home.conf</a></li><li><a href="#b-xterm-24bit" class="verbatim">terminfo/xterm-24bit.terminfo</a></li><li><a href="#b-uim" class="verbatim">uim/.uim</a></li><li><a href="#b-vimpcrc" class="verbatim">vimpc/.vimpcrc</a></li><li><a href="#b-zathurarc" class="verbatim">zathura/zathurarc</a></li></ol></div><div id="heading-container-h--Named-cells" class="heading-container named-cells"><h3 id="h--Named-cells"><a href="#h--Named-cells">Named cells (25)</a></h3><ol><li><a href="#b-Makefile-lesskey"><span class="verbatim">Makefile-lesskey</span></a></li><li><a href="#b-Makefile-melby"><span class="verbatim">Makefile-melby</span></a></li><li><a href="#b-Makefile-pulse"><span class="verbatim">Makefile-pulse</span></a></li><li><a href="#b-Makefile-ssh"><span class="verbatim">Makefile-ssh</span></a></li><li><a href="#b-Makefile-terminfo"><span class="verbatim">Makefile-terminfo</span></a></li><li><a href="#b-Makefile-uim"><span class="verbatim">Makefile-uim</span></a></li><li><a href="#b-gitignore-melby"><span class="verbatim">gitignore-melby</span></a></li><li><a href="#b-jjui-config"><span class="verbatim">jjui-config</span></a></li><li><a href="#b-lesskey"><span class="verbatim">lesskey</span></a></li><li><a href="#b-melby-header"><span class="verbatim">melby-header</span></a></li><li><a href="#b-melby-render-options"><span class="verbatim">melby-render-options</span></a></li><li><a href="#b-melby-return"><span class="verbatim">melby-return</span></a></li><li><a href="#b-melby-systemd-env"><span class="verbatim">melby-systemd-env</span></a></li><li><a href="#b-melby-view"><span class="verbatim">melby-view</span></a></li><li><a href="#b-melby-view-params-types"><span class="verbatim">melby-view-params-types</span></a></li><li><a href="#b-melby-view-tests"><span class="verbatim">melby-view-tests</span></a></li><li><a href="#b-mpd-conf"><span class="verbatim">mpd-conf</span></a></li><li><a href="#b-pulse-daemon.conf.k0"><span class="verbatim">pulse-daemon.conf.k0</span></a></li><li><a href="#b-pulse-default.pa"><span class="verbatim">pulse-default.pa</span></a></li><li><a href="#b-pulse-default.pa.k0"><span class="verbatim">pulse-default.pa.k0</span></a></li><li><a href="#b-ssh-config"><span class="verbatim">ssh-config</span></a></li><li><a href="#b-uim"><span class="verbatim">uim</span></a></li><li><a href="#b-vimpcrc"><span class="verbatim">vimpcrc</span></a></li><li><a href="#b-xterm-24bit"><span class="verbatim">xterm-24bit</span></a></li><li><a href="#b-zathurarc"><span class="verbatim">zathurarc</span></a></li></ol></div><footer><div class="lilac-stamp">Generated by <a href="https://lilac.funloop.org" class="external-link" target="_blank" rel="noopener noreferrer">Lilac</a></div></footer></main><script id="heading-ancestry" type="application/json">{"h--Backlinks":["h--Page-metrics"],"h--Named-cells":["h--Page-metrics"],"h--Page-metrics":[],"h--Tangled-files":["h--Page-metrics"],"h-1-jjui":[],"h-10-uim":[],"h-2-less":[],"h-3-Melby":[],"h-3.1-Installation":["h-3-Melby"],"h-3.2-Configuration":["h-3-Melby"],"h-3.3-Running-the-daemon-under-systemd":["h-3-Melby"],"h-4-MPD":[],"h-5-PulseAudio":[],"h-6-SSH":[],"h-7-terminfo":[],"h-8-vimpc":[],"h-9-zathura":[]}</script><script id="lilac-fe-script" src="/js/lilac.js"></script></body></html>
