@@ -41,32 +41,25 @@ script which knows what to do depending on the environment."
                 ("\x1b[%d;8u" C M S)))
         (setq c (1+ c)))
 
-      ;; For C-{j-k} (e.g., "\x1b[106;5u" for C-j) and C-S-{j-k} (e.g.,
-      ;; "\x1b[106;6u" for C-S-j), we have to bind things a bit differently
-      ;; because Emacs's key event recognizes the character "10" as C-j. So If
-      ;; we reference bindings with "C-j" elsewhere, such as using doom's `map!'
-      ;; macro, Emacs expect a key event with character value 10, and not 105
-      ;; ("j" character's ASCII value). We convert 105 to 10 by just masking the
-      ;; lower 5 bits. Likewise, because the value itself (10) is already a
-      ;; "control" character, there is no need to apply the control character
-      ;; modifier itself, which is why they are missing in the list of bindings
-      ;; below.
+      ;; Decode Control with a letter, such as "\x1b[118;5u" for C-v, to the
+      ;; letter's control character (22), because that's the event that
+      ;; bindings written as "C-v" expect. Masking the lower 5 bits turns 118
+      ;; into 22, and because 22 is already a control character, we don't apply
+      ;; the Control modifier. This replaces what the first loop above defined.
       ;;
-      ;; We only bind keys that we use here. The keys that are not bound are
-      ;; left alone, to leave them unmapped. This way, l-disambiguation-mode can
-      ;; recognize those unbound keys properly.
-      (setq special-keys '(?h ?j ?k ?l ?o))
-      (while special-keys
-        (setq c (car special-keys))
-        (mapc (lambda (x)
-                (define-key xterm-function-map
-                  (format (car x) c)
-                  (apply 'l/char-mods (logand c #b11111) (cdr x))))
-              '(("\x1b[%d;5u")
-                ("\x1b[%d;6u" S)
-                ("\x1b[%d;7u" M)
-                ("\x1b[%d;8u" M S)))
-        (setq special-keys (cdr special-keys)))
+      ;; Leave out C-i and C-m, which would become TAB and RET. They keep the
+      ;; Control bit from the first loop, and l-disambiguation-mode has
+      ;; placeholders for them.
+      (dolist (c (number-sequence ?a ?z))
+        (unless (memq c '(?i ?m))
+          (mapc (lambda (x)
+                  (define-key xterm-function-map
+                    (format (car x) c)
+                    (apply 'l/char-mods (logand c #b11111) (cdr x))))
+                '(("\x1b[%d;5u")
+                  ("\x1b[%d;6u" S)
+                  ("\x1b[%d;7u" M)
+                  ("\x1b[%d;8u" M S)))))
 
       ;; Take care of `CSI u` encoding of special keys. These are:
       ;;

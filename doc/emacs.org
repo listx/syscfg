@@ -390,7 +390,19 @@ For information on how xterm does it, see
 https://invisible-island.net/xterm/ctlseqs/ctlseqs.html and search for
 ~modifyOtherKeys~.
 
-Most keys decode to a character with modifier bits, such as ~C-S-o~. But Tab,
+Control with a letter decodes to the letter's control character, such as ~C-v~
+to the character 22 and ~C-S-v~ to 22 with the Shift bit. This is what Emacs
+itself does for these keys: ~(kbd "C-v")~ is ~[22]~, so ~C-v~ bindings live
+under 22. The character ~v~ with the Control bit is a different event that no
+binding matches. When we decoded ~\e[118;5u~ to that, ~C-v~ (Evil's Visual block
+state) and every other Control-letter binding did nothing, because asking for
+[[modify-other-keys-mode-2][~modifyOtherKeys~ mode 2]] makes tmux send all of them as ~CSI u~. The
+exceptions are ~C-i~ and ~C-m~, which would decode to ~TAB~ and ~RET~. Telling
+those apart is one reason to use ~CSI u~ at all, so they keep the letter with the
+Control bit, and [[disambiguate-problematic-keys][placeholders]] make ~C-h k~ report them correctly while they
+are unbound.
+
+Other keys decode to a character with modifier bits, such as ~C-S-1~. But Tab,
 Enter, Escape, and Backspace with modifiers decode to Emacs's named keys
 ~<tab>~, ~<return>~, ~<escape>~, and ~<backspace>~, such as ~C-M-<tab>~, using
 ~l/key-mods~. These are
@@ -443,32 +455,25 @@ for them. Shift with Tab decodes to ~S-<tab>~, which Emacs already translates to
                 ("\x1b[%d;8u" C M S)))
         (setq c (1+ c)))
 
-      ;; For C-{j-k} (e.g., "\x1b[106;5u" for C-j) and C-S-{j-k} (e.g.,
-      ;; "\x1b[106;6u" for C-S-j), we have to bind things a bit differently
-      ;; because Emacs's key event recognizes the character "10" as C-j. So If
-      ;; we reference bindings with "C-j" elsewhere, such as using doom's `map!'
-      ;; macro, Emacs expect a key event with character value 10, and not 105
-      ;; ("j" character's ASCII value). We convert 105 to 10 by just masking the
-      ;; lower 5 bits. Likewise, because the value itself (10) is already a
-      ;; "control" character, there is no need to apply the control character
-      ;; modifier itself, which is why they are missing in the list of bindings
-      ;; below.
+      ;; Decode Control with a letter, such as "\x1b[118;5u" for C-v, to the
+      ;; letter's control character (22), because that's the event that
+      ;; bindings written as "C-v" expect. Masking the lower 5 bits turns 118
+      ;; into 22, and because 22 is already a control character, we don't apply
+      ;; the Control modifier. This replaces what the first loop above defined.
       ;;
-      ;; We only bind keys that we use here. The keys that are not bound are
-      ;; left alone, to leave them unmapped. This way, l-disambiguation-mode can
-      ;; recognize those unbound keys properly.
-      (setq special-keys '(?h ?j ?k ?l ?o))
-      (while special-keys
-        (setq c (car special-keys))
-        (mapc (lambda (x)
-                (define-key xterm-function-map
-                  (format (car x) c)
-                  (apply 'l/char-mods (logand c #b11111) (cdr x))))
-              '(("\x1b[%d;5u")
-                ("\x1b[%d;6u" S)
-                ("\x1b[%d;7u" M)
-                ("\x1b[%d;8u" M S)))
-        (setq special-keys (cdr special-keys)))
+      ;; Leave out C-i and C-m, which would become TAB and RET. They keep the
+      ;; Control bit from the first loop, and l-disambiguation-mode has
+      ;; placeholders for them.
+      (dolist (c (number-sequence ?a ?z))
+        (unless (memq c '(?i ?m))
+          (mapc (lambda (x)
+                  (define-key xterm-function-map
+                    (format (car x) c)
+                    (apply 'l/char-mods (logand c #b11111) (cdr x))))
+                '(("\x1b[%d;5u")
+                  ("\x1b[%d;6u" S)
+                  ("\x1b[%d;7u" M)
+                  ("\x1b[%d;8u" M S)))))
 
       ;; Take care of `CSI u` encoding of special keys. These are:
       ;;
