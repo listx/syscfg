@@ -1143,7 +1143,13 @@ _emacs_kill_buffer "$@"
 
 ** ~s~
 
-SSH to one of our known machines.
+SSH to one of our known machines. On macOS, we run ~ssh~ under ~caffeinate -i~
+so that the Mac doesn't fall asleep while idle and drop the connection. Our tmux
+session on the remote end would survive the drop, but we'd still have to
+reconnect. We test for the ~caffeinate~ command rather than for macOS itself; our
+Linux machines don't have it, so there ~keep_awake~ stays empty. Because it's an
+array, ~"${keep_awake[@]}"~ then expands to no words at all (not to an empty
+string, as a quoted empty scalar would), and the command is just ~ssh~.
 
 #+name: func-s
 #+header: :tangle zsh/func/s
@@ -1161,20 +1167,25 @@ s()
 
 	local user
 	local host="${1}"
+	local -a keep_awake
 
 	case "${host}" in
 	w0) user="ingra" ;;
 	*)  user="l" ;;
 	esac
 
+	if (( $+commands[caffeinate] )); then
+		keep_awake=(caffeinate -i)
+	fi
+
 	tmux rename-window "ssh->${user}@${host}"
 
 	case "${host}" in
 	w0)
-		ssh -t "${user}@${host}" \"wsl.exe -d NixOS\"
+		"${keep_awake[@]}" ssh -t "${user}@${host}" \"wsl.exe -d NixOS\"
 		;;
 	*)
-		ssh -t "${user}@${host}"
+		"${keep_awake[@]}" ssh -t "${user}@${host}"
 		;;
 	esac
 

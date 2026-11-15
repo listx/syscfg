@@ -11,20 +11,25 @@ s()
 
 	local user
 	local host="${1}"
+	local -a keep_awake
 
 	case "${host}" in
 	w0) user="ingra" ;;
 	*)  user="l" ;;
 	esac
 
+	if (( $+commands[caffeinate] )); then
+		keep_awake=(caffeinate -i)
+	fi
+
 	tmux rename-window "ssh->${user}@${host}"
 
 	case "${host}" in
 	w0)
-		ssh -t "${user}@${host}" \"wsl.exe -d NixOS\"
+		"${keep_awake[@]}" ssh -t "${user}@${host}" \"wsl.exe -d NixOS\"
 		;;
 	*)
-		ssh -t "${user}@${host}"
+		"${keep_awake[@]}" ssh -t "${user}@${host}"
 		;;
 	esac
 
