@@ -21,6 +21,9 @@ prompt_kody_setup()
 	typeset -g prompt_newline
 	prompt_newline=$'\n%{\r%}'
 
+	# For $EPOCHREALTIME, which times each command.
+	zmodload zsh/datetime
+
 	# Run construct_prompt() after executing precmd().
 	add-zsh-hook precmd construct_prompt
 
@@ -37,6 +40,7 @@ preexec() {
 	# We set the ran_something variable to TRUE to indicate that the user typed
 	# in a command to be executed.
 	global_ran_something=1
+	global_cmd_start=$EPOCHREALTIME
 }
 
 # precmd() is executed before each prompt.
@@ -49,6 +53,15 @@ precmd()
 	global_exit_status=$?
 	if ! (( $global_ran_something )); then
 		global_exit_status=0
+	fi
+	# Likewise, only show a duration if we actually ran something, so that a
+	# stale value from an earlier command doesn't linger.
+	if (( $global_ran_something )); then
+		local -i ms
+		(( ms = (EPOCHREALTIME - global_cmd_start) * 1000 ))
+		global_cmd_duration_ms=$ms
+	else
+		global_cmd_duration_ms=
 	fi
 	global_ran_something=0
 }
@@ -106,11 +119,34 @@ get_exit_status()
 	fi
 }
 
+# Show the last command's duration if it took at least 2 seconds, as "3.0s",
+# "1m23s" or "1h02m". This matches the melby widget, and is only used when
+# melbyd is down.
+get_cmd_duration()
+{
+	local -i ms=${global_cmd_duration_ms:-0}
+	local str
+	if (( ms < 2000 )); then
+		return
+	elif (( ms < 60000 )); then
+		str="$(( ms / 1000 )).$(( ms % 1000 / 100 ))s"
+	elif (( ms < 3600000 )); then
+		printf -v str '%dm%02ds' $(( ms / 60000 )) $(( ms / 1000 % 60 ))
+	else
+		printf -v str '%dh%02dm' $(( ms / 3600000 )) $(( ms / 60000 % 60 ))
+	fi
+	echo "%B%F{yellow}${str}%f%b "
+}
+
+# melbyd rejects an empty MELBY_LAST_CMD_DURATION_MS as "not an integer", even
+# though it's optional, so we pass 0 if no command ran. Melby hides durations
+# that short anyway.
 get_melby_info()
 {
 	if ! HOST="$(cat ~/.hostname-short || hostname)" \
 		 MELBY_ZSH_KEYMAP_INDICATOR="${global_keymap_indicator}" \
 		 MELBY_LAST_CMD_EXIT_STATUS="${global_exit_status}" \
+		 MELBY_LAST_CMD_DURATION_MS="${global_cmd_duration_ms:-0}" \
 		 MELBY_PATH_ALIASES_FILE="${HOME}/.zsh/path-aliases" \
 		 MELBY_DIR="${HOME}/.melby" \
 		 melbyc --config ~/.melby/melby.lua view --shell-pid "$$" 2>/dev/null; then
@@ -145,6 +181,7 @@ set_globals()
 	global_timestamp="%B%K{214}%F{16} %D{%d} $(get_day) %D{%H:%M:%S %Z} %f%k%b "
 	global_user_host="$(get_user_host)"
 	global_cmd_exit_status="$(get_exit_status)"
+	global_cmd_duration="$(get_cmd_duration)"
 	global_venv_info="$(get_venv_info)"
 }
 
@@ -174,8 +211,9 @@ construct_prompt()
 		fi
 		local prompt_line_2=" "
 	else
-		# Date, time, Zsh keymap indicator, exit code, Git, and VirtualEnv.
-		local prompt_line_1="${global_timestamp}<${global_keymap_indicator}> ${global_venv_info}${global_cmd_exit_status}${global_prompt_git}${global_user_host}${global_prompt_path_short}"
+		# Date, time, Zsh keymap indicator, exit code, command duration, Git,
+		# and VirtualEnv.
+		local prompt_line_1="${global_timestamp}<${global_keymap_indicator}> ${global_venv_info}${global_cmd_exit_status}${global_cmd_duration}${global_prompt_git}${global_user_host}${global_prompt_path_short}"
 
 		local prompt_line_2=" "
 

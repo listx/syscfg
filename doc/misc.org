@@ -172,6 +172,8 @@ Config.view_params_types = {
     KUBECONFIG                = {"required", "paths"},
     MELBY_DIR                  = {"required", "path"},
     MELBY_LAST_CMD_EXIT_STATUS = {"required", "int"},
+    -- 0 if no command ran (C-c, or an empty Enter).
+    MELBY_LAST_CMD_DURATION_MS = {"optional", "uint"},
     -- "pathblob" is like "path", except that it represents the *contents* of a
     -- path. The filename is generated automatically using a temp folder plus
     -- the name of the env var.
@@ -216,6 +218,7 @@ Config.view_tests = {
     -- just a placeholder.
     MELBY_DIR                  = "/home/alice/.melby",
     MELBY_LAST_CMD_EXIT_STATUS = "0",
+    MELBY_LAST_CMD_DURATION_MS = "83500",
     -- this is a "blobpath". the actual value here used in the env var will
     -- point to a temporary filename which has the contents here.
     MELBY_PATH_ALIASES_FILE    =
@@ -239,13 +242,14 @@ Config.view_tests = {
    },
   -- FIXME: move shell_pid to an env_var to unify all inputs into env_vars.
   shell_pid                   = "54311",
-  expected_substrings={"K8s...", "Git..."}},
+  expected_substrings={"K8s...", "Git...", "1m23s"}},
 }
 #+end_src
 
 ~Config.view~ builds the prompt from two lines of widgets. The first line has
 the local time and UTC time (with the day of the week in kanji), the Zsh keymap
-indicator, the last command's exit status (only if it failed), ~user@host~, and
+indicator, the last command's exit status (only if it failed), how long the
+last command ran (only if it took at least 2 seconds), ~user@host~, and
 the current directory, shortened with our path aliases. The second line has the
 current Kubernetes context and its health, followed by Git information for the
 current directory. It returns a shell script that sets ~MELBY_PS1_LINE1~,
@@ -325,6 +329,30 @@ function Config.view (env, shell_pid)
                                     fg="black", bg="red", styles={"bold"}}
   if #last_command_exit_status_str > 0 and last_command_exit_status_str ~= "0" then
     table.insert(widgets_ps1_line1, last_command_exit_status)
+  end
+
+  -- Format a duration as "3.0s", "1m23s" or "1h02m". We truncate instead of
+  -- rounding, so that "59.99s" doesn't become "60.0s".
+  local function format_duration(ms)
+    if ms < 60000 then
+      return string.format("%d.%ds", math.floor(ms / 1000),
+                           math.floor(ms % 1000 / 100))
+    elseif ms < 3600000 then
+      return string.format("%dm%02ds", math.floor(ms / 60000),
+                           math.floor(ms / 1000) % 60)
+    else
+      return string.format("%dh%02dm", math.floor(ms / 3600000),
+                           math.floor(ms / 60000) % 60)
+    end
+  end
+
+  -- Hide durations of quick commands, which would only be noise.
+  local cmd_duration_threshold_ms = 2000
+  local cmd_duration_ms = tonumber(env["MELBY_LAST_CMD_DURATION_MS"] or "")
+  if cmd_duration_ms and cmd_duration_ms >= cmd_duration_threshold_ms then
+    local cmd_duration = {str=" " .. format_duration(cmd_duration_ms) .. " ",
+                          fg="black", bg="yellow", styles={"bold"}}
+    table.insert(widgets_ps1_line1, cmd_duration)
   end
 
   -- Create a one-shot message for testing (when we want to publish an ad-hoc
