@@ -1,6 +1,6 @@
 # Appearance.
 color cursor 16 green bold
-color cursor-blur 16 green
+color cursor-blur green 16 bold
 color title-blur 16 blue bold
 color title-focus 16 blue bold
 
