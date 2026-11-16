@@ -362,10 +362,17 @@ panic = 'abort'
 
 * ~tig~
 
+The selected line uses ~cursor~ while its view has focus and ~cursor-blur~
+while it doesn't, for example in the main view after pressing Enter opens the
+diff view beside it. ~cursor-blur~ defaults to white on green, which is hard to
+read, so give it the same black text as ~cursor~. Leaving out ~bold~ still sets
+it apart from the focused cursor.
+
 #+header: :tangle tig/.tigrc
 #+begin_src conf
 # Appearance.
 color cursor 16 green bold
+color cursor-blur 16 green
 color title-blur 16 blue bold
 color title-focus 16 blue bold
 
