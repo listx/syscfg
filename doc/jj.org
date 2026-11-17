@@ -45,13 +45,23 @@ Jujutsu has no built-in command to move that work forward. The ~sync~ alias
 fills that gap: it rebases every local line of work onto the upstream trunk in
 one step.
 
-The revset picks out what counts as local work. It starts from the visible
-heads, drops the ones that are only there because of a remote bookmark (those
-are other people's branches, not ours), and adds back our own bookmarks. The
-~upstream_trunk()..~ prefix limits this to commits not already on the trunk, and
-~-b~ rebases each whole branch, not just the selected heads. The revset doesn't
-try to leave out [[revset-aliases][immutable commits]]: if a branch would drag
-one along, ~jj rebase~ stops with an error, which is what we want.
+Our local work is exactly the [[revset-aliases][mutable]] commits: everything
+that came from upstream is immutable, either because it's on a shared branch
+(~main~, ~master~, or ~develop~) or because it's on someone else's branch, whose
+remote bookmark we don't track. So the alias takes the mutable commits that
+aren't already in the destination, and passes their roots to ~jj rebase -s~,
+which moves each root along with everything on top of it. Every descendant of a
+mutable commit is mutable too, so this moves our commits and nothing else.
+
+We used to select heads instead, and rebase with ~-b~, which moves a whole
+branch: every ancestor of the head that isn't in the destination. That pulls in
+upstream commits whenever the destination doesn't contain everything the branch
+sits on, and those commits are immutable, so the rebase failed. For example,
+~jj sync develop@u~ in a repo where ~main~ had a hotfix not yet merged into
+~develop~ picked up the local ~main~ bookmark as a branch to move, and stopped
+because the hotfix was immutable. With ~-s~, a branch that we started from
+~main~ moves onto ~develop~ without dragging the hotfix along, and the shared
+branches stay where they are, because only upstream can move them forward.
 
 ~jj sync~ with no arguments rebases onto ~upstream_trunk()~. An argument names
 a different destination, as any revset: ~jj sync next~ rebases onto the local
@@ -68,8 +78,8 @@ that a compound revset like ~a | b~ stays one unit when it's spliced in front of
 nothing moves.
 
 Before rebasing, the script makes Jujutsu track the remote copies of our own
-branches, so that they become [[revset-aliases][mutable]] and the rebase can
-rewrite them. It counts a branch as ours if we have a local bookmark with the
+branches, so that they become [[revset-aliases][mutable]]. Otherwise the rebase
+would skip them, as if they were someone else's. It counts a branch as ours if we have a local bookmark with the
 same name, which is what tracking means in Jujutsu anyway. We need this step
 because we create branches and push them with Git, and Jujutsu doesn't track
 bookmarks that it only imports from Git. The script reads the bookmark list
@@ -104,7 +114,7 @@ jj bookmark list --all-remotes -T 'name ++ "\t" ++ remote ++ "\t" ++ tracked ++ 
   while read -r name; do
     jj bookmark track "exact:$name"
   done
-exec jj rebase -b "$dest..((visible_heads() ~ remote_bookmarks()) | bookmarks())" -d "$dest"
+exec jj rebase -s "roots(mutable() ~ ::$dest)" -d "$dest"
 ''', "jj-sync"]
 #+end_src
 

@@ -23,7 +23,7 @@ jj bookmark list --all-remotes -T 'name ++ "\t" ++ remote ++ "\t" ++ tracked ++ 
   while read -r name; do
     jj bookmark track "exact:$name"
   done
-exec jj rebase -b "$dest..((visible_heads() ~ remote_bookmarks()) | bookmarks())" -d "$dest"
+exec jj rebase -s "roots(mutable() ~ ::$dest)" -d "$dest"
 ''', "jj-sync"]
 
 [revset-aliases]
