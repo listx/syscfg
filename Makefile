@@ -24,7 +24,7 @@ claude:
 	ln -fns ${C}/claude/skills ${H}/.claude/skills
 
 emacs:
-	git -C ${C} submodule update --init ${C}/emacs/doom-upstream
+	git -C ${C} submodule update --init --recursive ${C}/emacs/doom-upstream
 	# Point .emacs.d to upstream doom code.
 	ln -fns ${C}/emacs/doom-upstream ${H}/.emacs.d
 	# Make $$DOOMDIR point to our doom-cfg folder.

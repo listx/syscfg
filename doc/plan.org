@@ -30,7 +30,7 @@ other sections as needed.
 :ID:       968c9179-b363-4b02-9562-490e1f186167
 :END:
 
-** TODO Remove the doom-themes pin from =packages.el=
+** DONE Remove the doom-themes pin from =packages.el=
 :PROPERTIES:
 :ID:       d971e461-4cca-4997-8c33-2f81526f3d27
 :END:

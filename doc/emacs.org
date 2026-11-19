@@ -46,10 +46,13 @@ it here in literate form.
 :ID:       1a89ad75-4234-4fa9-93d0-27c62d220502
 :END:
 
+Doom keeps its modules in a submodule of its own, ~sources/doom+~, so we check
+out ~emacs/doom-upstream~ with ~--recursive~.
+
 #+name: Makefile-emacs
 #+begin_src makefile
 emacs:
-	git -C ${C} submodule update --init ${C}/emacs/doom-upstream
+	git -C ${C} submodule update --init --recursive ${C}/emacs/doom-upstream
 	# Point .emacs.d to upstream doom code.
 	ln -fns ${C}/emacs/doom-upstream ${H}/.emacs.d
 	# Make $$DOOMDIR point to our doom-cfg folder.
@@ -257,11 +260,6 @@ still type a ~,~ to access the leader key after typing ~, u~).
 ;(unpin! t)
 (package! auto-dim-other-buffers)
 (package! citeproc)
-;; Doom's own pin predates the fix for [1], a face inheritance cycle that Emacs
-;; 31 rejects, which makes `load-theme' fail. Pin to a newer upstream commit
-;; until we update Doom itself.
-;; [1] https://github.com/doomemacs/themes/issues/875
-(package! doom-themes :pin "a59202912ad55014e53a685eee6cd94130bdd4fd")
 (package! hyperbole)
 (package! git-gutter)
 (package! org-appear)
@@ -1793,6 +1791,14 @@ more intuitive to me, at least.
 Note that we have to use =M-J= to encode =M-S-j=. This appears to be Emacs
 convention.
 
+We also add a few keys under Doom's localleader prefixes. Most of these prefixes
+(~d~, ~g~, ~l~, and ~p~) already exist with Doom's own keys and which-key
+labels, so we name them without a label. Since Doom's commit =635bc939d=,
+giving ~:prefix~ a label in ~map!~ binds a fresh, empty keymap there, which
+would throw away Doom's keys under that prefix. The ~e~ prefix is the
+exception: Doom binds ~e~ itself to ~org-export-dispatch~, so we want a new
+keymap there, and we give it a label and put ~org-export-dispatch~ under ~e d~.
+
 #+name: org
 #+begin_src elisp
 (map! :after evil-org
@@ -1831,7 +1837,7 @@ convention.
 (map! :after org
       :map org-mode-map
       :localleader
-      (:prefix ("d" . "date/deadline")
+      (:prefix "d"
          "t" #'l/org-insert-timestamp-inactive)
       (:prefix ("e" . "export")
         :desc "subtree (children only)" "s"
@@ -1839,11 +1845,11 @@ convention.
         :desc "subtree (children + parent)" "S"
           (cmd! (l/org-export-as-markdown-to-clipboard 't))
         "d" #'org-export-dispatch)
-      (:prefix ("g" . "goto")
+      (:prefix "g"
          "b" #'org-babel-goto-named-src-block)
-      (:prefix ("l" . "goto")
+      (:prefix "l"
          "L" #'l/org-insert-line-label)
-      (:prefix ("p" . "priority")
+      (:prefix "p"
          :desc "Set priority to 0"
          "0" (cmd! (org-priority 0))
 
@@ -3080,12 +3086,16 @@ unbind the "y" key which is already bound to [[https://github.com/doomemacs/doom
 otherwise we get an error like "... starts with non-prefix key" when loading the
 config.
 
+We leave ~g~ itself without a label, because Doom already labels it "git".
+As with the [[org][Org mode localleader keys]], giving it a label of our own
+would replace Doom's whole ~SPC g~ keymap with an empty one.
+
 #+name: magit-enhanced-copy
 #+begin_src elisp
 (map! :after magit
       :map global-map
       :leader
-      :prefix ("g" . "git")
+      :prefix "g"
       <<git-gutter-bindings>>
       <<git-update-and-push>>
       ;; Unbind the existing key.
@@ -3335,8 +3345,11 @@ the simpler modes that do not have a formatter, but for now we don't bother.
 (set-fringe-mode '(10 . 0))
 
 ; Disable hl-line mode, because it can be surprisingly disorienting. Besides, we
-; can always use "v" or "V" to get a visual queue easily enough.
-(remove-hook 'doom-first-buffer-hook #'global-hl-line-mode)
+; can always use "v" or "V" to get a visual queue easily enough. We used to
+; remove `global-hl-line-mode' from the hook Doom turns it on with, but Doom has
+; since moved it to a different hook. An empty `global-hl-line-modes' tells
+; Doom's `global-hl-line-mode' to skip every buffer, whatever hook runs it.
+(setq global-hl-line-modes nil)
 
 (use-package! vim-empty-lines-mode
   :config

@@ -292,7 +292,7 @@ Return an event vector, such as [C-M-tab]."
 (map! :after magit
       :map global-map
       :leader
-      :prefix ("g" . "git")
+      :prefix "g"
       (:prefix
        ("h" . "hunk")
        (:desc "goto next hunk"     "n" #'l/git-gutter:next-hunk)
@@ -443,7 +443,7 @@ the object exists locally)."
 (map! :after org
       :map org-mode-map
       :localleader
-      (:prefix ("d" . "date/deadline")
+      (:prefix "d"
          "t" #'l/org-insert-timestamp-inactive)
       (:prefix ("e" . "export")
         :desc "subtree (children only)" "s"
@@ -451,11 +451,11 @@ the object exists locally)."
         :desc "subtree (children + parent)" "S"
           (cmd! (l/org-export-as-markdown-to-clipboard 't))
         "d" #'org-export-dispatch)
-      (:prefix ("g" . "goto")
+      (:prefix "g"
          "b" #'org-babel-goto-named-src-block)
-      (:prefix ("l" . "goto")
+      (:prefix "l"
          "L" #'l/org-insert-line-label)
-      (:prefix ("p" . "priority")
+      (:prefix "p"
          :desc "Set priority to 0"
          "0" (cmd! (org-priority 0))
 
@@ -1796,8 +1796,11 @@ Also add the number of windows in the window configuration."
 (set-fringe-mode '(10 . 0))
 
 ; Disable hl-line mode, because it can be surprisingly disorienting. Besides, we
-; can always use "v" or "V" to get a visual queue easily enough.
-(remove-hook 'doom-first-buffer-hook #'global-hl-line-mode)
+; can always use "v" or "V" to get a visual queue easily enough. We used to
+; remove `global-hl-line-mode' from the hook Doom turns it on with, but Doom has
+; since moved it to a different hook. An empty `global-hl-line-modes' tells
+; Doom's `global-hl-line-mode' to skip every buffer, whatever hook runs it.
+(setq global-hl-line-modes nil)
 
 (use-package! vim-empty-lines-mode
   :config
