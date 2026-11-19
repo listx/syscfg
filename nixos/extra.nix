@@ -41,6 +41,7 @@ in
     parallel
     pciutils # lspci
     protobuf
+    python3
     ripgrep
     shellcheck
     sqlite # emacs' org-roam needs it

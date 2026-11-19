@@ -412,6 +412,11 @@ systemd.user.services.melby = {
 
 These are mostly related to development.
 
+~python3~ is here mainly for coding agents such as Claude Code, which often
+reach for Python to inspect or transform files and get stuck when it isn't on
+~PATH~. Our zsh aliases ~python~ to ~python3~, so both names work in an
+interactive shell.
+
 #+name: pkgs:essentials
 #+begin_src nix
 (aspellWithDicts (dicts: with dicts; [ en en-computers en-science ]))
@@ -448,6 +453,7 @@ nix-diff
 parallel
 pciutils # lspci
 protobuf
+python3
 ripgrep
 shellcheck
 sqlite # emacs' org-roam needs it
