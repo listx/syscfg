@@ -1413,14 +1413,23 @@ second. That is why ~l/jj-description-mode~ does the escaping before it turns
 on ~org-mode~, while the buffer is still in ~fundamental-mode~ and edits are
 cheap.
 
+The escaping is our own bookkeeping, not an edit by the user, so we hide it
+from the buffer's modified flag and from undo. Otherwise every description of
+a change that touches an Org file opens as modified, and quitting without saving
+stops at a "Save file?" prompt. That prompt doesn't show up in the
+~emacsclient~ frame, so Emacs looks hung. Leaving the escaped lines unsaved is
+fine, because Jujutsu ignores everything below ~JJ: ignore-rest~ anyway.
+
 #+name: jujutsu-escape-keywords
 #+begin_src elisp
-(save-excursion
-  (goto-char (point-min))
-  (when (and (re-search-forward "^JJ: ignore-rest$" nil t)
-             (re-search-forward "^diff --git " nil t))
-    (while (re-search-forward "^\\([ ]+\\)#\\+" nil t)
-      (replace-match "\\1,#+" nil nil))))
+(let ((buffer-undo-list t))
+  (save-excursion
+    (goto-char (point-min))
+    (when (and (re-search-forward "^JJ: ignore-rest$" nil t)
+               (re-search-forward "^diff --git " nil t))
+      (while (re-search-forward "^\\([ ]+\\)#\\+" nil t)
+        (replace-match "\\1,#+" nil nil))))
+  (set-buffer-modified-p nil))
 #+end_src
 
 Since the diff is not in a source block, Org doesn't color it. So we color its

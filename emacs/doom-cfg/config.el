@@ -255,12 +255,14 @@ Return an event vector, such as [C-M-tab]."
   (string-suffix-p ".jjdescription" (or (buffer-file-name) "")))
 (defun l/jj-description-mode ()
   "Turn on `org-mode' for a Jujutsu description."
-  (save-excursion
-    (goto-char (point-min))
-    (when (and (re-search-forward "^JJ: ignore-rest$" nil t)
-               (re-search-forward "^diff --git " nil t))
-      (while (re-search-forward "^\\([ ]+\\)#\\+" nil t)
-        (replace-match "\\1,#+" nil nil))))
+  (let ((buffer-undo-list t))
+    (save-excursion
+      (goto-char (point-min))
+      (when (and (re-search-forward "^JJ: ignore-rest$" nil t)
+                 (re-search-forward "^diff --git " nil t))
+        (while (re-search-forward "^\\([ ]+\\)#\\+" nil t)
+          (replace-match "\\1,#+" nil nil))))
+    (set-buffer-modified-p nil))
   (org-mode))
 (add-to-list 'auto-mode-alist '("\\.jjdescription\\'" . l/jj-description-mode))
 (define-advice org-superstar-mode (:before-until (&rest _) l/skip-jj-description)
