@@ -1353,6 +1353,11 @@ otherwise, close current tab."
       ((not one-window) (delete-window) nil)
       ; If there are multiple tabs, close the current one.
       ((not one-tab) (tab-bar-close-tab) nil)
+      ; Closing the last tab deletes the frame, which kills the buffers of
+      ; its workspace. Settle any unsaved changes in them first.
+      ((not (l/settle-unsaved-workspace-buffers))
+       (message "l/gc-views: Aborting (doing nothing).")
+       nil)
       ; If there is only one tab, just try to quit (calling tab-bar-close-tab
       ; will not work, because if fails if there is only one tab).
       (one-tab
@@ -1391,13 +1396,33 @@ otherwise, close current tab."
                             ; Don't delete system buffers buffers.
                             "^\*Messages\*"))))
                   (mapcar 'buffer-name (buffer-list))))))
-          (evil-quit)) nil))))
+          (cl-letf (((symbol-function 'save-some-buffers) #'ignore))
+            (evil-quit))) nil))))
 
 (defun l/buffer-looks-like (bufname regexes)
   "Return t if the buffer name looks like any of the given regexes."
   (interactive)
   (eval (cons 'or (mapcar
                    (lambda (rgx) (string-match rgx bufname)) regexes))))
+(defun l/settle-unsaved-workspace-buffers ()
+  "Offer to save the modified buffers of the current workspace, and return
+non-nil if none of them is left with unsaved changes. Ask before discarding
+the changes in any buffer that we don't save."
+  (let ((buffers (if (bound-and-true-p persp-mode)
+                     (+workspace-buffer-list)
+                   (list (current-buffer)))))
+    (save-some-buffers nil (lambda () (memq (current-buffer) buffers)))
+    (let ((unsaved (seq-filter (lambda (buf)
+                                 (and (buffer-file-name buf)
+                                      (buffer-modified-p buf)))
+                               buffers)))
+      (or (null unsaved)
+          (when (y-or-n-p
+                 (format "Discard unsaved changes in %s?"
+                         (mapconcat #'buffer-name unsaved ", ")))
+            (dolist (buf unsaved)
+              (with-current-buffer buf (set-buffer-modified-p nil)))
+            t)))))
 
 (map! :after evil-org
       :map evil-org-mode-map

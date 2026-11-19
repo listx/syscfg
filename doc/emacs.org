@@ -1000,6 +1000,11 @@ otherwise, close current tab."
       ((not one-window) (delete-window) nil)
       ; If there are multiple tabs, close the current one.
       ((not one-tab) (tab-bar-close-tab) nil)
+      ; Closing the last tab deletes the frame, which kills the buffers of
+      ; its workspace. Settle any unsaved changes in them first.
+      ((not (l/settle-unsaved-workspace-buffers))
+       (message "l/gc-views: Aborting (doing nothing).")
+       nil)
       ; If there is only one tab, just try to quit (calling tab-bar-close-tab
       ; will not work, because if fails if there is only one tab).
       (one-tab
@@ -1038,13 +1043,58 @@ otherwise, close current tab."
                             ; Don't delete system buffers buffers.
                             "^\*Messages\*"))))
                   (mapcar 'buffer-name (buffer-list))))))
-          (evil-quit)) nil))))
+          (cl-letf (((symbol-function 'save-some-buffers) #'ignore))
+            (evil-quit))) nil))))
 
 (defun l/buffer-looks-like (bufname regexes)
   "Return t if the buffer name looks like any of the given regexes."
   (interactive)
   (eval (cons 'or (mapcar
                    (lambda (rgx) (string-match rgx bufname)) regexes))))
+<<window-deletion-unsaved>>
+#+end_src
+
+**** Unsaved buffers
+
+When we close the last tab of a frame, ~evil-quit~ deletes the frame. Doom's
+workspaces module then kills the frame's workspace, and that calls
+~save-some-buffers~ from inside ~delete-frame~. Its "Save file?" prompt never
+shows up in the frame being deleted, so if any buffer has unsaved changes,
+Emacs just seems to hang until we press ~C-g~ without knowing why. And because
+~save-some-buffers~ asks about every modified buffer, even one open in another
+client's frame can cause this.
+
+So before we delete the frame, ~l/settle-unsaved-workspace-buffers~ asks these
+questions itself, while the frame can still show them. It only asks about the
+buffers of the current workspace, because those are the ones about to be
+killed. A buffer we choose not to save then gets a second question, like Vim's
+"No write since last change": either we discard its changes, or we give up on
+quitting and keep the frame. [[window-deletion][~l/gc-views~]] then calls
+~evil-quit~ with ~save-some-buffers~ turned off, because by then every buffer
+that will be killed has been saved or discarded, and the prompt could only hang
+again for buffers that aren't being killed at all.
+
+#+name: window-deletion-unsaved
+#+begin_src elisp
+(defun l/settle-unsaved-workspace-buffers ()
+  "Offer to save the modified buffers of the current workspace, and return
+non-nil if none of them is left with unsaved changes. Ask before discarding
+the changes in any buffer that we don't save."
+  (let ((buffers (if (bound-and-true-p persp-mode)
+                     (+workspace-buffer-list)
+                   (list (current-buffer)))))
+    (save-some-buffers nil (lambda () (memq (current-buffer) buffers)))
+    (let ((unsaved (seq-filter (lambda (buf)
+                                 (and (buffer-file-name buf)
+                                      (buffer-modified-p buf)))
+                               buffers)))
+      (or (null unsaved)
+          (when (y-or-n-p
+                 (format "Discard unsaved changes in %s?"
+                         (mapconcat #'buffer-name unsaved ", ")))
+            (dolist (buf unsaved)
+              (with-current-buffer buf (set-buffer-modified-p nil)))
+            t)))))
 #+end_src
 
 *** Navigation
@@ -1416,9 +1466,9 @@ cheap.
 The escaping is our own bookkeeping, not an edit by the user, so we hide it
 from the buffer's modified flag and from undo. Otherwise every description of
 a change that touches an Org file opens as modified, and quitting without saving
-stops at a "Save file?" prompt. That prompt doesn't show up in the
-~emacsclient~ frame, so Emacs looks hung. Leaving the escaped lines unsaved is
-fine, because Jujutsu ignores everything below ~JJ: ignore-rest~ anyway.
+asks [[window-deletion-unsaved][whether to save or discard]] changes
+that we never made. Leaving the escaped lines unsaved is fine, because Jujutsu
+ignores everything below ~JJ: ignore-rest~ anyway.
 
 #+name: jujutsu-escape-keywords
 #+begin_src elisp
