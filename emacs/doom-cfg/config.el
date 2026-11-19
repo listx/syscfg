@@ -233,17 +233,45 @@ Return an event vector, such as [C-M-tab]."
       :mnv "h" #'dired-up-directory
       :mnv "l" #'dired-find-file)
 
-(add-to-list 'auto-mode-alist '("\\.jjdescription\\'" . org-mode))
+(defun l/jj-description-diff-matcher (regexp)
+  "Return a font-lock matcher for REGEXP that only matches below the
+\"JJ: ignore-rest\" line, where Jujutsu puts the diff."
+  (lambda (limit)
+    (let ((diff-start (save-excursion
+                        (goto-char (point-min))
+                        (re-search-forward "^JJ: ignore-rest$" limit t))))
+      (when diff-start
+        (goto-char (max (point) diff-start))
+        (re-search-forward regexp limit t)))))
+(defvar l/jj-description-diff-keywords
+  `((,(l/jj-description-diff-matcher "^\\+.*") 0 'diff-added t)
+    (,(l/jj-description-diff-matcher "^-.*") 0 'diff-removed t)
+    (,(l/jj-description-diff-matcher "^@@.*") 0 'diff-hunk-header t)
+    (,(l/jj-description-diff-matcher
+       "^\\(?:diff --git\\|\\+\\+\\+ \\|--- \\).*")
+     0 'diff-file-header t)))
+(defun l/jj-description-buffer-p ()
+  "Return non-nil if the current buffer visits a Jujutsu description."
+  (string-suffix-p ".jjdescription" (or (buffer-file-name) "")))
+(defun l/jj-description-mode ()
+  "Turn on `org-mode' for a Jujutsu description."
+  (save-excursion
+    (goto-char (point-min))
+    (when (re-search-forward "^JJ: ignore-rest$" nil t)
+      (while (re-search-forward "^\\([ ]*\\)#\\+" nil t)
+        (replace-match "\\1,#+" nil nil))))
+  (org-mode))
+(add-to-list 'auto-mode-alist '("\\.jjdescription\\'" . l/jj-description-mode))
+(define-advice org-superstar-mode (:before-until (&rest _) l/skip-jj-description)
+  (l/jj-description-buffer-p))
 (add-hook 'org-mode-hook 'l/jj-description-setup)
 (defun l/jj-description-setup ()
   "Setup commands for .jjdescription files."
-  (when (string-equal (file-name-extension (or (buffer-file-name) "")) "jjdescription")
-    (save-excursion
-      (while (re-search-forward "^\\([ ]+\\)#\\+" nil t)
-        (replace-match "\\1,#+" nil nil)))
-    (+org-pretty-mode -1)
-    ;; Add a buffer-local hook to re-enable the mode when the buffer is killed.
-    (add-hook 'kill-buffer-hook (lambda () (+org-pretty-mode 1)) nil t)
+  (when (l/jj-description-buffer-p)
+    ;; Show emphasis markers, because the commit message is plain text.
+    (setq-local org-hide-emphasis-markers nil)
+    (require 'diff-mode)
+    (font-lock-add-keywords nil l/jj-description-diff-keywords 'append)
     (auto-fill-mode 1)
     (setq fill-column 72)))
 
