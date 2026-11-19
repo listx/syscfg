@@ -257,8 +257,9 @@ Return an event vector, such as [C-M-tab]."
   "Turn on `org-mode' for a Jujutsu description."
   (save-excursion
     (goto-char (point-min))
-    (when (re-search-forward "^JJ: ignore-rest$" nil t)
-      (while (re-search-forward "^\\([ ]*\\)#\\+" nil t)
+    (when (and (re-search-forward "^JJ: ignore-rest$" nil t)
+               (re-search-forward "^diff --git " nil t))
+      (while (re-search-forward "^\\([ ]+\\)#\\+" nil t)
         (replace-match "\\1,#+" nil nil))))
   (org-mode))
 (add-to-list 'auto-mode-alist '("\\.jjdescription\\'" . l/jj-description-mode))

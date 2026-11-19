@@ -1370,8 +1370,8 @@ every table in the buffer, which for a large diff of Org files took seconds.
 ** Keep large diffs fast
 
 Our [[id:c0a01531-c270-4f21-8762-9b29583b205f::templates][~draft_commit_description~]] template puts the
-whole diff of the commit into a ~#+begin_src diff~ block below the
-~JJ: ignore-rest~ line, so this buffer is often thousands of lines long. Org
+whole diff of the commit below the ~JJ: ignore-rest~ line, so this buffer is
+often thousands of lines long. Org
 itself copes with that fine: for a 10,000-line buffer, opening it takes about a
 tenth of a second, and fontifying a screen of it or typing a character takes a
 few milliseconds. But three things on top of Org once made such a buffer take
@@ -1393,18 +1393,19 @@ advise ~org-superstar-mode~ to do nothing in these buffers instead.
 #+end_src
 
 Second, Org marks a whole source block as one multiline construct for
-font-lock. So once the block's ~#+begin_src diff~ line has been fontified,
-fontifying /any/ part of the block fontifies all of it again, which took almost
-a second per screen for a 10,000-line diff. (With ~org-src-fontify-natively~
-it was even worse, because Org then also copies the entire block into a hidden
-~diff-mode~ buffer each time.) So we don't let Org see the diff as a block at
-all: below the ~JJ: ignore-rest~ line, we escape every line whose first
-non-blank characters are ~#+~ with a comma, the way Org itself does inside
-source blocks. This turns the block's own delimiters into plain text, as well
-as lines like ~ #+end_src~ in the diff itself (such as the context lines of a
-diff of an Org file, like this one), which Org would otherwise read as
-keywords. The commit message above stays untouched, so we can still use blocks
-there.
+font-lock. So once the block's ~#+begin_src~ line has been fontified,
+fontifying /any/ part of the block fontifies all of it again. Our template used
+to wrap the diff in a ~#+begin_src diff~ block, which took almost a second per
+screen for a 10,000-line diff. (With ~org-src-fontify-natively~ it was even
+worse, because Org then also copies the entire block into a hidden ~diff-mode~
+buffer each time.) So the template no longer does that, but the diff can still
+make blocks of its own: Org reads a line that starts with whitespace and then
+~#+~ as a keyword, so the context lines of a diff of an Org file (like this one)
+can open and close blocks. So we escape such lines with a comma, the way Org
+itself does inside source blocks, but only from the first ~diff --git~ line
+below ~JJ: ignore-rest~ onward. That leaves alone both the commit message (so
+we can still use blocks there) and the small source block that the template
+wraps the diffstat in.
 
 Third, every edit of an Org buffer pays for keeping Org's folding and parser
 caches up to date, which for hundreds of escaped lines adds up to more than a
@@ -1416,13 +1417,14 @@ cheap.
 #+begin_src elisp
 (save-excursion
   (goto-char (point-min))
-  (when (re-search-forward "^JJ: ignore-rest$" nil t)
-    (while (re-search-forward "^\\([ ]*\\)#\\+" nil t)
+  (when (and (re-search-forward "^JJ: ignore-rest$" nil t)
+             (re-search-forward "^diff --git " nil t))
+    (while (re-search-forward "^\\([ ]+\\)#\\+" nil t)
       (replace-match "\\1,#+" nil nil))))
 #+end_src
 
-Since the diff is no longer in a source block, Org doesn't color it. So we
-color its lines ourselves with a few line-based font-lock rules, which only
+Since the diff is not in a source block, Org doesn't color it. So we color its
+lines ourselves with a few line-based font-lock rules, which only
 ever look at the lines being fontified. We lose the word-level highlighting of
 ~diff-mode~, but that is a small price for a buffer we only skim.
 

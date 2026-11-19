@@ -56,9 +56,7 @@ concat(
     "#+begin_src txt\n", "#+end_src\n",
     indent("    ", diff.stat(72)),
   ),
-  "#+begin_src diff\n",
   diff.git(),
-  "#+end_src\n",
 )
 '''
 

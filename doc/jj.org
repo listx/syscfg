@@ -200,12 +200,17 @@ concat(
     "#+begin_src txt\n", "#+end_src\n",
     indent("    ", diff.stat(72)),
   ),
-  "#+begin_src diff\n",
   diff.git(),
-  "#+end_src\n",
 )
 '''
 #+end_src
+
+Below the ~JJ: ignore-rest~ line, which Jujutsu leaves out of the description,
+we show the diffstat and the whole diff, so that we can see what we are
+describing. Emacs edits this buffer in ~org-mode~, so we wrap the diffstat in a
+source block, because otherwise Org reads the runs of ~+~ in it as markup for
+strike-through text. But we don't wrap the diff, because a block as long as a
+large diff makes Org slow to display it (see [[id:100011e3-ba36-4078-975e-6136d25e60cc::jujutsu-escape-keywords][Emacs]]).
 
 ** Colors
 
