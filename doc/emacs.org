@@ -2944,11 +2944,18 @@ The config was stolen from [[https://github.com/jokatzke/nixos-configuration/blo
 Hyperbole is a minor mode that can add implicit buttons (links) to existing text
 by recognizing special patterns. Turn it on globally.
 
+Loading Hyperbole takes about two seconds, mostly because it also loads HyWiki,
+which in turn loads Org and its exporters. So instead of turning it on while our
+config loads, we wait until Emacs has been idle for a second. In a daemon this
+happens right after the daemon is ready for clients, so startup does not have
+to wait for Hyperbole.
+
 #+name: hyperbole
 #+begin_src elisp
 (use-package! hyperbole
+  :defer t
   :init
-  (hyperbole-mode 1)
+  (run-with-idle-timer 1 nil #'hyperbole-mode 1)
   :config
   <<jira-ticket>>
   )

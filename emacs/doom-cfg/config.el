@@ -1068,8 +1068,9 @@ details."
          :desc "Text-Input"    "t" #'org-fc-type-text-input-init))))
 
 (use-package! hyperbole
+  :defer t
   :init
-  (hyperbole-mode 1)
+  (run-with-idle-timer 1 nil #'hyperbole-mode 1)
   :config
   (let ((l/jira-base-url (getenv "L_JIRA_BASE_URL")))
     (when l/jira-base-url
