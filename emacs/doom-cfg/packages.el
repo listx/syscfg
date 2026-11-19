@@ -49,8 +49,6 @@
 ;(unpin! t)
 (package! auto-dim-other-buffers)
 (package! citeproc)
-(package! copilot
-  :recipe (:host github :repo "copilot-emacs/copilot.el" :files ("*.el")))
 ;; Doom's own pin predates the fix for [1], a face inheritance cycle that Emacs
 ;; 31 rejects, which makes `load-theme' fail. Pin to a newer upstream commit
 ;; until we update Doom itself.

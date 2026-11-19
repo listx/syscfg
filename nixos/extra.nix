@@ -64,7 +64,6 @@ in
     imagemagick
     inkscape
 
-    copilot-language-server
     ffmpeg
     gnupg
     graphviz
