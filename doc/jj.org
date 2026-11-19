@@ -10,12 +10,6 @@ everything all the time for you (whenever you edit stuff in the history, the
 commits on top get rebased). So it saves a couple steps and is generally faster
 than using raw Git if you're constantly fixing up your work.
 
-One disadvantage though is that it does not work well with
-[[https://github.com/listx/melby][Melby]] (a shell prompt generator which aggressively queries Git for changes),
-whenever there is a merge conflict. It's most definitely Melby's fault, not
-Jujutsu's, but it's something that we need to fix (we first need to rewrite
-Melby to be less complicated, but that's for another day).
-
 * Configuration
 
 #+header: :tangle jj/config.toml
