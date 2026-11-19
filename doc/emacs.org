@@ -3277,10 +3277,19 @@ numbers are disabled. For relative line numbers, set this to "relative".
 
 In doom, the scratch buffer is persistent and can be visited with =, x=.
 
+This is a different buffer from Emacs's own =*scratch*= buffer, whose major mode
+comes from ~initial-major-mode~. Doom sets that to ~fundamental-mode~, but not in
+a daemon, so the daemon's =*scratch*= ends up in ~lisp-interaction-mode~.
+Turning on that mode runs all of our ~prog-mode~ and Emacs Lisp hooks, which
+takes about a third of a second of daemon startup. We always start Emacs by
+opening a file and almost never use =*scratch*=, so we use ~fundamental-mode~
+for it in the daemon too.
+
 #+name: scratch
 #+begin_src elisp
 ;; Use text-mode for scratch buffer.
 (setq-default doom-scratch-initial-major-mode 'text-mode)
+(setq initial-major-mode 'fundamental-mode)
 #+end_src
 
 ** Dead code

@@ -1638,6 +1638,7 @@ Also add the number of windows in the window configuration."
 
 ;; Use text-mode for scratch buffer.
 (setq-default doom-scratch-initial-major-mode 'text-mode)
+(setq initial-major-mode 'fundamental-mode)
 
 ; Colors taken from PastelDark.dhall.
 (setq l/color-text "#000000")
