@@ -1516,6 +1516,7 @@ Also add the number of windows in the window configuration."
   (l/kill-this-buffer))
 
 (use-package! notmuch
+  :defer t
   :config
   (add-hook 'notmuch-message-mode-hook 'l/customize-notmuch-message-mode)
   (defun l/customize-notmuch-message-mode ()

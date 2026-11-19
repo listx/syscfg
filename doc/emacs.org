@@ -2681,9 +2681,15 @@ Set indentation to 8.
 
 * Notmuch
 
+Loading notmuch also loads most of Emacs's mail stack (~message~, ~mm-view~,
+~icalendar~ and so on), which takes about half a second. We only need it once we
+start reading or writing mail, so we defer it. Everything below is in ~:config~,
+so it still takes effect as soon as notmuch loads.
+
 #+name: notmuch
 #+begin_src elisp
 (use-package! notmuch
+  :defer t
   :config
   <<notmuch-hooks>>
   <<notmuch-bindings>>
