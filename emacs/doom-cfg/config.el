@@ -2,6 +2,10 @@
 
 
 
+(when (daemonp)
+  (setq doom-incremental-first-idle-timer 0.5
+        doom-incremental-idle-timer 0.1))
+
 (defun l/copy-to-clipboard (orig-fun string)
   "Copy killed text or region into the system clipboard, by shelling out to a
 script which knows what to do depending on the environment."

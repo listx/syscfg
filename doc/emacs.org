@@ -295,6 +295,8 @@ other configurations that are pulled in. And so we define it first here.
 
 <<doom-bug-workarounds>>
 
+<<daemon-startup>>
+
 <<copy-to-clipboard>>
 <<CSI-u-mode-support>>
 
@@ -374,6 +376,30 @@ Here are some workarounds for upstream bugs that have not yet been fixed.
 
 #+name: doom-bug-workarounds
 #+begin_src elisp
+#+end_src
+
+* Daemon startup
+
+Doom normally loads a list of packages (~doom-incremental-packages~, which
+includes Magit and yasnippet) a few at a time while Emacs sits idle, so that
+they are ready by the time we need them. In a daemon it skips this and loads
+the whole list in ~doom-after-init-hook~ instead, which keeps the daemon from
+accepting clients for about 1.8 seconds longer.
+
+We let the daemon load these packages on idle timers after all. Then the daemon
+is ready as soon as our config has loaded, and the packages still get loaded in
+the background shortly after. The loader wraps each ~require~ in
+~while-no-input~, so a client that connects in the middle of it is not kept
+waiting. Doom waits ~doom-incremental-idle-timer~ seconds (0.75 by default)
+between packages, which for about 40 packages would stretch the preload over
+half a minute. Nobody types into the daemon before the first client connects,
+so a much shorter gap is fine.
+
+#+name: daemon-startup
+#+begin_src elisp
+(when (daemonp)
+  (setq doom-incremental-first-idle-timer 0.5
+        doom-incremental-idle-timer 0.1))
 #+end_src
 
 * Global key-bindings
