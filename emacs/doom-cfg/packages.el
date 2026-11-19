@@ -49,7 +49,6 @@
 ;(unpin! t)
 (package! auto-dim-other-buffers)
 (package! citeproc)
-(package! hyperbole)
 (package! git-gutter)
 (package! org-appear)
 (package! org-fancy-priorities)

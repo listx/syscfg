@@ -1071,31 +1071,19 @@ details."
          :desc "Double"        "d" #'org-fc-type-double-init
          :desc "Text-Input"    "t" #'org-fc-type-text-input-init))))
 
-(use-package! hyperbole
-  :defer t
-  :init
-  (run-with-idle-timer 1 nil #'hyperbole-mode 1)
-  :config
-  (let ((l/jira-base-url (getenv "L_JIRA_BASE_URL")))
-    (when l/jira-base-url
-      ;; Define action for button.
-      (defun l/browse-jira-ticket (ticket)
-        "Open ticket in JIRA."
-        (let ((url (concat l/jira-base-url ticket)))
-          (browse-url-default-browser url)))
-      ;; Define text pattern for button.
-      (defib l/open-jira-ticket-at-point ()
-        "Get the Jira ticket identifier at point and load ticket in browser."
-        (when-let ((regex "\\([A-Z]+-[0-9]+\\)")
-                   (ticket (save-excursion
-                             (skip-chars-backward "A-Z0-9-")
-                             (looking-at regex)
-                             (match-string-no-properties 1))))
-          (ibut:label-set ticket
-                          (match-beginning 1)
-                          (match-end 1))
-          (hact 'l/browse-jira-ticket ticket)))))
-  )
+(when-let ((l/jira-base-url (getenv "L_JIRA_BASE_URL")))
+  (defun l/browse-jira-ticket-at-point ()
+    "Open the JIRA ticket at point in the browser."
+    (interactive)
+    (let ((ticket (save-excursion
+                    (skip-chars-backward "A-Z0-9-")
+                    (when (looking-at "[A-Z]+-[0-9]+")
+                      (match-string-no-properties 0)))))
+      (if ticket
+          (browse-url-default-browser (concat l/jira-base-url ticket))
+        (user-error "No JIRA ticket at point"))))
+  (map! :leader
+        :desc "JIRA ticket" "o j" #'l/browse-jira-ticket-at-point))
 
 (map! :after alchemist
       :map alchemist-mode-map

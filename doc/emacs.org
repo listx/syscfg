@@ -260,7 +260,6 @@ still type a ~,~ to access the leader key after typing ~, u~).
 ;(unpin! t)
 (package! auto-dim-other-buffers)
 (package! citeproc)
-(package! hyperbole)
 (package! git-gutter)
 (package! org-appear)
 (package! org-fancy-priorities)
@@ -306,7 +305,7 @@ other configurations that are pulled in. And so we define it first here.
 <<org>>
 <<org-roam>>
 <<org-fc>>
-<<hyperbole>>
+<<jira-ticket>>
 <<elixir>>
 <<clojure>>
 <<c-indentation>>
@@ -386,12 +385,14 @@ accepting clients for about 1.8 seconds longer.
 
 We let the daemon load these packages on idle timers after all. Then the daemon
 is ready as soon as our config has loaded, and the packages still get loaded in
-the background shortly after. The loader wraps each ~require~ in
-~while-no-input~, so a client that connects in the middle of it is not kept
-waiting. Doom waits ~doom-incremental-idle-timer~ seconds (0.75 by default)
-between packages, which for about 40 packages would stretch the preload over
-half a minute. Nobody types into the daemon before the first client connects,
-so a much shorter gap is fine.
+the background shortly after. The loader loads one package at a time from a
+timer, so a client that connects in the middle of it waits only for the package
+being loaded and is served before the next one. (The loader also wraps each
+~require~ in ~while-no-input~, but that only notices keyboard input, not an
+emacsclient request.) Doom waits ~doom-incremental-idle-timer~ seconds (0.75 by
+default) between packages, which for about 40 packages would stretch the
+preload over half a minute. Nobody types into the daemon before the first
+client connects, so a much shorter gap is fine.
 
 #+name: daemon-startup
 #+begin_src elisp
@@ -2977,80 +2978,40 @@ The config was stolen from [[https://github.com/jokatzke/nixos-configuration/blo
          :desc "Text-Input"    "t" #'org-fc-type-text-input-init))))
 #+end_src
 
-* Hyperbole
+* JIRA tickets
 
-Hyperbole is a minor mode that can add implicit buttons (links) to existing text
-by recognizing special patterns. Turn it on globally.
-
-Loading Hyperbole takes about two seconds, mostly because it also loads HyWiki,
-which in turn loads Org and its exporters. So instead of turning it on while our
-config loads, we wait until Emacs has been idle for a second. In a daemon this
-happens right after the daemon is ready for clients, so startup does not have
-to wait for Hyperbole.
-
-#+name: hyperbole
-#+begin_src elisp
-(use-package! hyperbole
-  :defer t
-  :init
-  (run-with-idle-timer 1 nil #'hyperbole-mode 1)
-  :config
-  <<jira-ticket>>
-  )
-#+end_src
-
-** JIRA ticket recognition
-
-Adapted from [[https://www.beorgapp.com/blog/hyperbole-implicit-buttons/][this blog post]]. In order to use this button, you have to define
-in your environment the =L_JIRA_BASE_URL= environment variable.
-
-#+name: jira-ticket
-#+begin_src elisp
-(let ((l/jira-base-url (getenv "L_JIRA_BASE_URL")))
-  (when l/jira-base-url
-    ;; Define action for button.
-    <<l/browse-jira-ticket>>
-    ;; Define text pattern for button.
-    <<l/open-jira-ticket-at-point>>))
-#+end_src
-
-First define how to recognize a JIRA ticket reference. We expect such references
-to be of the form =<ALLCAPS>-<NUMBER>=, such as
+Open the JIRA ticket under the cursor in the browser with ~SPC o j~. A ticket
+reference looks like =<ALLCAPS>-<NUMBER>=, such as
 
 #+begin_example
 FOO-123
 QUUX-9102
 #+end_example
 
-As we want to let the user have the cursor anywhere along such a string, we have
-to first move the cursor to the beginning of the word. Then we parse the string
-with a regex, and call =l/browse-jira-ticket= if we find a match. This is what
-=l/open-jira-ticket-at-point= does below.
+and the ticket's URL is that reference appended to the =L_JIRA_BASE_URL=
+environment variable. Machines that don't set it have no JIRA, so there we
+define neither the command nor its binding.
 
-#+name: l/open-jira-ticket-at-point
+The cursor can be anywhere on the reference, so we first move back over the
+characters a reference can contain, and then check that a reference starts
+there. We read the variable when this config loads, as nothing changes it while
+Emacs runs.
+
+#+name: jira-ticket
 #+begin_src elisp
-(defib l/open-jira-ticket-at-point ()
-  "Get the Jira ticket identifier at point and load ticket in browser."
-  (when-let ((regex "\\([A-Z]+-[0-9]+\\)")
-             (ticket (save-excursion
-                       (skip-chars-backward "A-Z0-9-")
-                       (looking-at regex)
-                       (match-string-no-properties 1))))
-    (ibut:label-set ticket
-                    (match-beginning 1)
-                    (match-end 1))
-    (hact 'l/browse-jira-ticket ticket)))
-#+end_src
-
-Now, =l/browse-jira-ticket= just concatenates the ticket string with
-=l/jira-base-url=.
-
-#+name: l/browse-jira-ticket
-#+begin_src elisp
-(defun l/browse-jira-ticket (ticket)
-  "Open ticket in JIRA."
-  (let ((url (concat l/jira-base-url ticket)))
-    (browse-url-default-browser url)))
+(when-let ((l/jira-base-url (getenv "L_JIRA_BASE_URL")))
+  (defun l/browse-jira-ticket-at-point ()
+    "Open the JIRA ticket at point in the browser."
+    (interactive)
+    (let ((ticket (save-excursion
+                    (skip-chars-backward "A-Z0-9-")
+                    (when (looking-at "[A-Z]+-[0-9]+")
+                      (match-string-no-properties 0)))))
+      (if ticket
+          (browse-url-default-browser (concat l/jira-base-url ticket))
+        (user-error "No JIRA ticket at point"))))
+  (map! :leader
+        :desc "JIRA ticket" "o j" #'l/browse-jira-ticket-at-point))
 #+end_src
 
 * Magit (and other Git-related things)
