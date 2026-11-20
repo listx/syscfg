@@ -52,9 +52,6 @@
 (package! git-gutter)
 (package! org-appear)
 (package! org-fancy-priorities)
-(package! org-fc
-  :recipe (:host github :repo "l3kn/org-fc"
-           :files (:defaults "awk" "demo.org")))
 ;; Workaround for [1], as suggested in [2].
 ;; [1] https://github.com/integral-dw/org-superstar-mode/issues/63
 ;; [2] https://github.com/integral-dw/org-superstar-mode/issues/63#issuecomment-3671354248

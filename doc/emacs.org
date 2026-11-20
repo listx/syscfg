@@ -262,9 +262,6 @@ still type a ~,~ to access the leader key after typing ~, u~).
 (package! git-gutter)
 (package! org-appear)
 (package! org-fancy-priorities)
-(package! org-fc
-  :recipe (:host github :repo "l3kn/org-fc"
-           :files (:defaults "awk" "demo.org")))
 ;; Workaround for [1], as suggested in [2].
 ;; [1] https://github.com/integral-dw/org-superstar-mode/issues/63
 ;; [2] https://github.com/integral-dw/org-superstar-mode/issues/63#issuecomment-3671354248
@@ -305,7 +302,6 @@ other configurations that are pulled in. And so we define it first here.
 <<magit>>
 <<org>>
 <<org-roam>>
-<<org-fc>>
 <<jira-ticket>>
 <<elixir>>
 <<clojure>>
@@ -449,7 +445,9 @@ took about 3.4 seconds from starting ~emacsclient~ to a drawn tty frame, of
 which Doom's own startup is only about 0.6 seconds.
 
 Much of the rest was work that we don't need to see the file, or that didn't
-need to happen at all. With the changes below it takes about 2.7 seconds.
+need to happen at all. With the changes below (and with ~org-habit~ loaded only
+for the agenda, and without the ~org-fc~ flashcards package, which Org loaded
+along with itself) it takes about 2.5 seconds.
 
 #+name: cold-start
 #+begin_src elisp
@@ -2036,7 +2034,11 @@ keymap there, and we give it a label and put ~org-export-dispatch~ under ~e d~.
   ; "+" as we continue to nest. This helps keep track of nesting.
   (setq org-list-demote-modify-bullet '(("-" . "+") ("+" . "-")))
   ; Enable habits (see https://orgmode.org/manual/Tracking-your-habits.html).
-  (add-to-list 'org-modules 'org-habit t)
+  ; Habits only show up in the agenda, so load them with it rather than with
+  ; Org, which pulls in all of org-agenda whenever we open an Org file.
+  (after! org-agenda
+    (add-to-list 'org-modules 'org-habit t)
+    (require 'org-habit))
   ; Show daily habits in the agenda even if they have already been completed for
   ; today. This is useful for the consistency graph being displayed even for
   ; completed items.
@@ -3114,58 +3116,6 @@ See [[https://emacs.stackexchange.com/a/36279/13006][this post]] from 2017 which
         (format "%s %s ${doom-hierarchy}"
                 (propertize "${doom-type:10}" 'face 'font-lock-keyword-face)
                 (propertize "${doom-tags:50}" 'face 'org-tag))))
-#+end_src
-
-* =org-fc= (flashcards)
-
-The config was stolen from [[https://github.com/jokatzke/nixos-configuration/blob/1452a290f95a916a050668d2feb4660719d4cfa3/doom/config.el#L645-L698][here]].
-
-#+name: org-fc
-#+begin_src elisp
-
-(use-package org-fc
-  :after org
-
-  :custom
-  (org-fc-directories '("~/lo/note"))
-
-  :config
-  (require 'org-fc-keymap-hint)
-
-  :init
-  ;; Set keys that were overridden by evil-mode.
-
-  ;; Keys while viewing a prompt.
-  (evil-define-minor-mode-key 'normal 'org-fc-review-flip-mode
-    (kbd "RET") 'org-fc-review-flip
-    (kbd "n") 'org-fc-review-flip
-    (kbd "p") 'org-fc-review-edit
-    (kbd "s") 'org-fc-review-suspend-card
-    (kbd "q") 'org-fc-review-quit)
-  ;; Keys while evaluating the result.
-  (evil-define-minor-mode-key 'normal 'org-fc-review-rate-mode
-    (kbd "a") 'org-fc-review-rate-again
-    (kbd "h") 'org-fc-review-rate-hard
-    (kbd "g") 'org-fc-review-rate-good
-    (kbd "e") 'org-fc-review-rate-easy
-    (kbd "s") 'org-fc-review-suspend-card
-    (kbd "q") 'org-fc-review-quit)
-  ;; Keys while in the dashboard.
-  (evil-define-key 'normal org-fc-dashboard-mode-map
-    (kbd "q") 'kill-current-buffer
-    (kbd "r") 'org-fc-dashboard-review)
-
-  ;; Keys to invoke org-fc.
-  (map! :leader
-       (:prefix ("r" . "Flashcards")
-        :desc "Dashboard"     "R" #'org-fc-dashboard
-        :desc "Review"        "r" #'org-fc-review
-        (:prefix ("n" . "New Flashcard")
-         :desc "Normal"        "i" #'org-fc-type-normal-init
-         :desc "Normal"        "n" #'org-fc-type-normal-init
-         :desc "Cloze"         "c" #'org-fc-type-cloze-init
-         :desc "Double"        "d" #'org-fc-type-double-init
-         :desc "Text-Input"    "t" #'org-fc-type-text-input-init))))
 #+end_src
 
 * JIRA tickets
