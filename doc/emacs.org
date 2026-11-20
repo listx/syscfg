@@ -378,7 +378,7 @@ Here are some workarounds for upstream bugs that have not yet been fixed.
 * Daemon startup
 
 Doom normally loads a list of packages (~doom-incremental-packages~, which
-includes Magit and yasnippet) a few at a time while Emacs sits idle, so that
+includes yasnippet) a few at a time while Emacs sits idle, so that
 they are ready by the time we need them. In a daemon it skips this and loads
 the whole list in ~doom-after-init-hook~ instead, which keeps the daemon from
 accepting clients for about 1.8 seconds longer.
@@ -3045,12 +3045,61 @@ Emacs runs.
 
 #+name: magit
 #+begin_src elisp
+<<magit-defer>>
 <<magit-bindings>>
 <<magit-set-repositories>>
 <<magit-commit-message-use-org-mode>>
 <<magit-commit-message-misc>>
 <<git-gutter>>
 #+end_src
+
+** Load Magit only when we use it
+
+Doom loads much of Magit long before we use it, in two ways. First, its
+~:tools magit~ module adds ~global-git-commit-mode~ to ~doom-first-file-hook~,
+so that a commit message file (like =COMMIT_EDITMSG=) gets ~git-commit-mode~ when
+we open it. But that mode lives in ~git-commit~, which requires much of Magit,
+so turning it on loads all of that the first time we open any file. Second, the
+module adds ~with-editor~, ~git-commit~, and ~magit~ to the packages that Doom
+loads while Emacs is idle (see [[daemon-startup][Daemon startup]]).
+
+In the daemon, a client that connects right after the daemon has started gets
+there before the idle loading does, so it paid for loading ~git-commit~ (about
+half a second) before its frame was drawn.
+
+So we take both out. In place of ~global-git-commit-mode~ we add a small
+function to ~find-file-hook~ that checks the file name against the same pattern
+that ~git-commit~ uses (~git-commit-filename-regexp~, which we can't use before
+the library is loaded), and only then loads ~git-commit~ and sets up the
+buffer. Loading ~git-commit~ turns on ~global-git-commit-mode~ (its initial
+value is ~t~), which handles every commit message file after that, so our
+function then removes itself.
+
+Loading Magit used to also load some built-in libraries that Flycheck (which
+Doom turns on for the first buffer) needs, such as ~compile~, ~package~, and
+~url~. Without Magit in the idle loading, the first client loaded them instead,
+which made its frame take about 0.15 seconds longer to draw. So we load those
+while idle instead.
+
+#+name: magit-defer
+#+begin_src elisp
+(remove-hook 'doom-first-file-hook #'global-git-commit-mode)
+(setq doom-incremental-packages
+      (seq-difference doom-incremental-packages '(with-editor git-commit magit)))
+(doom-load-packages-incrementally '(compile package url diff-mode))
+(defun l/git-commit-setup-check-buffer ()
+  (when (and buffer-file-name
+             (string-match-p
+              "/\\(\\(\\(COMMIT\\|NOTES\\|PULLREQ\\|MERGEREQ\\|TAG\\)_EDIT\\|MERGE_\\|\\)MSG\\|\\(BRANCH\\|EDIT\\)_DESCRIPTION\\)\\'"
+              buffer-file-name))
+    (require 'git-commit)
+    (remove-hook 'find-file-hook #'l/git-commit-setup-check-buffer)
+    (git-commit-setup)))
+(add-hook 'find-file-hook #'l/git-commit-setup-check-buffer)
+#+end_src
+
+Because Magit may not be loaded when we edit a commit message, the settings for
+commit message buffers below wait for ~git-commit~, not ~magit~.
 
 ** Rebind keys
 
@@ -3078,10 +3127,13 @@ We leave ~g~ itself without a label, because Doom already labels it "git".
 As with the [[org][Org mode localleader keys]], giving it a label of our own
 would replace Doom's whole ~SPC g~ keymap with an empty one.
 
+These are global leader keys, so we bind them right away instead of waiting
+for Magit to load, because we now [[magit-defer][load Magit only when we use
+it]]. The few functions here that need Magit load what they need themselves.
+
 #+name: magit-enhanced-copy
 #+begin_src elisp
-(map! :after magit
-      :map global-map
+(map! :map global-map
       :leader
       :prefix "g"
       <<git-gutter-bindings>>
@@ -3111,6 +3163,7 @@ optional region).
   "Get Git SHA underneath point. Checks that the SHA is valid (that
 the object exists locally)."
   (interactive)
+  (require 'magit-git)
   (when-let ((regex "\\([a-f0-9]+\\)")
              (sha (save-excursion
                     (skip-chars-backward "a-f0-9")
@@ -3167,7 +3220,7 @@ the object exists locally)."
 
 #+name: magit-commit-message-use-org-mode
 #+begin_src elisp
-(after! magit
+(after! git-commit
   (setq git-commit-major-mode #'org-mode))
 #+end_src
 
@@ -3190,7 +3243,7 @@ there are many parentheses around.
   (rainbow-mode -1)
   (smartparens-mode -1)
   (yas-minor-mode -1))
-(after! magit
+(after! git-commit
   (add-hook 'git-commit-setup-hook #'l/git-commit-setup))
 #+end_src
 

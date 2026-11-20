@@ -282,6 +282,20 @@ Return an event vector, such as [C-M-tab]."
     (auto-fill-mode 1)
     (setq fill-column 72)))
 
+(remove-hook 'doom-first-file-hook #'global-git-commit-mode)
+(setq doom-incremental-packages
+      (seq-difference doom-incremental-packages '(with-editor git-commit magit)))
+(doom-load-packages-incrementally '(compile package url diff-mode))
+(defun l/git-commit-setup-check-buffer ()
+  (when (and buffer-file-name
+             (string-match-p
+              "/\\(\\(\\(COMMIT\\|NOTES\\|PULLREQ\\|MERGEREQ\\|TAG\\)_EDIT\\|MERGE_\\|\\)MSG\\|\\(BRANCH\\|EDIT\\)_DESCRIPTION\\)\\'"
+              buffer-file-name))
+    (require 'git-commit)
+    (remove-hook 'find-file-hook #'l/git-commit-setup-check-buffer)
+    (git-commit-setup)))
+(add-hook 'find-file-hook #'l/git-commit-setup-check-buffer)
+
 (map! :after magit
       :map magit-mode-map
       ;; Remap C-{j,k} bindings.
@@ -289,8 +303,7 @@ Return an event vector, such as [C-M-tab]."
       :mnvi "C-j" nil
       :mnvi "M-k" #'magit-section-backward
       :mnvi "M-j" #'magit-section-forward)
-(map! :after magit
-      :map global-map
+(map! :map global-map
       :leader
       :prefix "g"
       (:prefix
@@ -319,6 +332,7 @@ Return an event vector, such as [C-M-tab]."
   "Get Git SHA underneath point. Checks that the SHA is valid (that
 the object exists locally)."
   (interactive)
+  (require 'magit-git)
   (when-let ((regex "\\([a-f0-9]+\\)")
              (sha (save-excursion
                     (skip-chars-backward "a-f0-9")
@@ -365,7 +379,7 @@ the object exists locally)."
       `(("~/prog" . 1)
         ("~/syscfg" . 0))))
 
-(after! magit
+(after! git-commit
   (setq git-commit-major-mode #'org-mode))
 
 (defun l/git-commit-setup ()
@@ -379,7 +393,7 @@ the object exists locally)."
   (rainbow-mode -1)
   (smartparens-mode -1)
   (yas-minor-mode -1))
-(after! magit
+(after! git-commit
   (add-hook 'git-commit-setup-hook #'l/git-commit-setup))
 
 (defun l/git-gutter:next-hunk ()
