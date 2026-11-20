@@ -1,6 +1,9 @@
 ;;; $DOOMDIR/config.el -*- lexical-binding: t; -*-
 
-
+(defadvice! l/org-dir-without-tag-a (fn tag)
+  "Leave the link \"org\" alone instead of failing."
+  :around #'+org-dir
+  (if tag (funcall fn tag) "org"))
 
 (when (daemonp)
   (setq doom-incremental-first-idle-timer 0.5

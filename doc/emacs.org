@@ -370,8 +370,19 @@ other configurations that are pulled in. And so we define it first here.
 
 Here are some workarounds for upstream bugs that have not yet been fixed.
 
+Doom adds an ~org~ link abbreviation, so that ~org:foo~ means ~foo~ under
+~org-directory~. But Org also expands abbreviations in links without a colon,
+such as a link to a block named ~org~ (as in ~emacs.org~), and then calls
+~+org-dir~ with no tag. That fails, so Org disables the abbreviation and pops up
+a ~*Warnings*~ window the first time it parses such a file. We leave links
+without a tag alone.
+
 #+name: doom-bug-workarounds
 #+begin_src elisp
+(defadvice! l/org-dir-without-tag-a (fn tag)
+  "Leave the link \"org\" alone instead of failing."
+  :around #'+org-dir
+  (if tag (funcall fn tag) "org"))
 #+end_src
 
 * Daemon startup
