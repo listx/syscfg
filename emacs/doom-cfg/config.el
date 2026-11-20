@@ -54,6 +54,21 @@
           (defun l/defer-org-roam-init-h ()
             (l/after-draw #'+org-init-roam-h)))
 
+(defadvice! l/envrc-maybe-wait-a ()
+  "Like `envrc--maybe-wait', but check much more often."
+  :override #'envrc--maybe-wait
+  (when (and envrc--running (not (eq t envrc-async)))
+    (let ((waited 0)
+          (step 0.01))
+      (ignore-error quit
+        (while (and envrc--running
+                    (or (null envrc-async) (< waited envrc-async)))
+          (accept-process-output nil step)
+          (setq waited (+ waited step))))
+      (when envrc--running
+        (message "direnv continuing async in %s"
+                 (envrc--direnv-buffer-name envrc--env-dir))))))
+
 (defun l/copy-to-clipboard (orig-fun string)
   "Copy killed text or region into the system clipboard, by shelling out to a
 script which knows what to do depending on the environment."

@@ -447,13 +447,14 @@ which Doom's own startup is only about 0.6 seconds.
 Much of the rest was work that we don't need to see the file, or that didn't
 need to happen at all. With the changes below (and with ~org-habit~ loaded only
 for the agenda, and without the ~org-fc~ flashcards package, which Org loaded
-along with itself) it takes about 2.5 seconds.
+along with itself) it takes about 2.3 seconds.
 
 #+name: cold-start
 #+begin_src elisp
 <<after-draw>>
 <<defer-flycheck>>
 <<defer-org-roam>>
+<<envrc-wait>>
 #+end_src
 
 *** Running code after the first file is drawn
@@ -543,6 +544,33 @@ calling it loads org-roam first.
 (add-hook 'org-load-hook
           (defun l/defer-org-roam-init-h ()
             (l/after-draw #'+org-init-roam-h)))
+#+end_src
+
+*** direnv
+
+When a buffer turns on ~envrc-mode~ in a directory that direnv hasn't been run
+for yet, envrc runs direnv and waits for it, checking whether it has finished
+with ~(sleep-for 0.2)~. In our directories direnv finishes in a few
+milliseconds, but it was still the first 0.2 seconds of every cold start. We
+check every 10 milliseconds instead, with ~accept-process-output~, which (unlike
+~sleep-for~) also doesn't redisplay the frame halfway through opening the file.
+
+#+name: envrc-wait
+#+begin_src elisp
+(defadvice! l/envrc-maybe-wait-a ()
+  "Like `envrc--maybe-wait', but check much more often."
+  :override #'envrc--maybe-wait
+  (when (and envrc--running (not (eq t envrc-async)))
+    (let ((waited 0)
+          (step 0.01))
+      (ignore-error quit
+        (while (and envrc--running
+                    (or (null envrc-async) (< waited envrc-async)))
+          (accept-process-output nil step)
+          (setq waited (+ waited step))))
+      (when envrc--running
+        (message "direnv continuing async in %s"
+                 (envrc--direnv-buffer-name envrc--env-dir))))))
 #+end_src
 
 * Global key-bindings
