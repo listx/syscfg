@@ -1452,10 +1452,11 @@ over ten seconds to open and almost a second per screen to scroll through, so
 we avoid each of them here.
 
 First, ~org-superstar-mode~ fontifies the /whole/ buffer as soon as it is
-turned on. It thinks that every diff line starting with ~-~ or ~+~ is a plain
-list item, and for each one it scans the buffer to see whether it is inside a
-block. Turning the mode off again in ~l/jj-description-setup~ is too late,
-because by then the work is already done. Doom turns the mode on from an
+turned on (unless we [[org-superstar-fontify-lazily][skip that]], which we now
+do for all Org buffers). It thinks that every diff line starting with ~-~ or ~+~
+is a plain list item, and for each one it scans the buffer to see whether it is
+inside a block. Turning the mode off again in ~l/jj-description-setup~ is too
+late, because by then the work is already done. Doom turns the mode on from an
 anonymous function in ~org-mode-hook~, which we can't easily remove, so we
 advise ~org-superstar-mode~ to do nothing in these buffers instead.
 
@@ -2480,7 +2481,33 @@ Org table.
         '((?- . #x25CF)    ;; ● BLACK CIRCLE
           (?+ . #x21AA)    ;; ↪ RIGHT ARROW WITH HOOK
           (?* . #x2738)))) ;; ✸ HEAVY EIGHT POINTED RECTILINEAR BLACK STAR
+<<org-superstar-fontify-lazily>>
 (add-hook 'org-mode-hook (lambda () (org-superstar-mode 1)))
+#+end_src
+
+When ~org-superstar-mode~ is turned on or off, it adds or removes its font-lock
+keywords and then calls ~org-superstar--fontify-buffer~. That function widens
+the buffer, runs ~font-lock-ensure~ on all of it, and then calls
+~font-lock-flush~, which marks the whole buffer as unfontified again. So the
+eager pass is thrown away right after it is done, and jit-lock fontifies again
+whatever is shown. The eager pass is not cheap, either: for each source block
+Org copies the block into a hidden buffer and turns on the block's major mode
+there to fontify it natively, which runs all of that mode's hooks. For this
+3,700-line file it took about 0.9 seconds, and that was most of the time before
+a newly opened Org file was drawn.
+
+We only flush. Jit-lock then fontifies just the part of the buffer that is
+shown, with the new keywords. This brought the time to open and draw an Org
+file in a tty frame from about 1.8 seconds to between 0.3 and 1 second (the
+upper end is for files whose first screen shows a source block in a language
+whose major mode hasn't been loaded yet).
+
+#+name: org-superstar-fontify-lazily
+#+begin_src elisp
+(after! org-superstar
+  (define-advice org-superstar--fontify-buffer (:override () l/flush-only)
+    (when font-lock-mode
+      (font-lock-flush))))
 #+end_src
 
 ** org-fancy-priorities (programmer priorities)

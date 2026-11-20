@@ -702,6 +702,10 @@ LINK-NAME."
           '((?- . #x25CF)    ;; ● BLACK CIRCLE
             (?+ . #x21AA)    ;; ↪ RIGHT ARROW WITH HOOK
             (?* . #x2738)))) ;; ✸ HEAVY EIGHT POINTED RECTILINEAR BLACK STAR
+  (after! org-superstar
+    (define-advice org-superstar--fontify-buffer (:override () l/flush-only)
+      (when font-lock-mode
+        (font-lock-flush))))
   (add-hook 'org-mode-hook (lambda () (org-superstar-mode 1)))
 
   (after! (org org-fancy-priorities)
