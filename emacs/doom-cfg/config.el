@@ -12,6 +12,48 @@
    '(ox flycheck package-lint flycheck-package evil-surround evil-embrace
      go-mode parinfer-rust-mode)))
 
+(defvar l/after-draw-functions nil
+  "Functions to call after the next visited file has been drawn.")
+
+(defun l/after-draw (fn)
+  "Call FN after the next visited file has been drawn."
+  (push fn l/after-draw-functions))
+
+(defun l/run-after-draw-functions ()
+  (let ((fns (nreverse l/after-draw-functions)))
+    (setq l/after-draw-functions nil)
+    (dolist (fn fns)
+      (with-demoted-errors "l/after-draw: %S"
+        (funcall fn)))))
+
+(defun l/after-draw-redisplay-h (_window)
+  (remove-hook 'pre-redisplay-functions #'l/after-draw-redisplay-h)
+  (run-at-time 0 nil #'l/run-after-draw-functions))
+
+(defun l/after-draw-arm-h ()
+  (when l/after-draw-functions
+    (add-hook 'pre-redisplay-functions #'l/after-draw-redisplay-h)))
+
+(add-hook 'find-file-hook #'l/after-draw-arm-h 90)
+
+(remove-hook 'doom-first-buffer-hook #'global-flycheck-mode)
+(add-hook 'doom-first-buffer-hook
+          (defun l/defer-global-flycheck-mode-h ()
+            (l/after-draw #'global-flycheck-mode)))
+
+(add-hook 'find-file-hook
+          (defun l/reserve-flycheck-margin-h ()
+            (unless (or (bound-and-true-p global-flycheck-mode)
+                        (display-graphic-p)
+                        (not buffer-file-name))
+              (setq-local left-margin-width 1)))
+          -90)
+
+(remove-hook 'org-load-hook #'+org-init-roam-h)
+(add-hook 'org-load-hook
+          (defun l/defer-org-roam-init-h ()
+            (l/after-draw #'+org-init-roam-h)))
+
 (defun l/copy-to-clipboard (orig-fun string)
   "Copy killed text or region into the system clipboard, by shelling out to a
 script which knows what to do depending on the environment."

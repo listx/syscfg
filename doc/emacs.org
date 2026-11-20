@@ -293,6 +293,8 @@ other configurations that are pulled in. And so we define it first here.
 
 <<daemon-startup>>
 
+<<cold-start>>
+
 <<copy-to-clipboard>>
 <<CSI-u-mode-support>>
 
@@ -410,8 +412,9 @@ load before its frame is drawn:
   - ~ox~, because Flycheck checks an Org buffer with ~org-lint~ when it is first
     shown, and ~org-lint~ loads Org's exporter and its backends,
 
-  - ~flycheck~, ~package-lint~, and ~flycheck-package~, because Doom turns on
-    ~global-flycheck-mode~ for the first buffer,
+  - ~flycheck~, ~package-lint~, and ~flycheck-package~, because we turn on
+    ~global-flycheck-mode~ right after the first file is drawn (see
+    [[cold-start][Cold start]]),
 
   - ~evil-surround~ and ~evil-embrace~, because Doom turns on
     ~global-evil-surround-mode~ on the first input,
@@ -434,6 +437,114 @@ When the daemon had been idle for a while, this brought the time to open
   (doom-load-packages-incrementally
    '(ox flycheck package-lint flycheck-package evil-surround evil-embrace
      go-mode parinfer-rust-mode)))
+#+end_src
+
+** Cold start
+
+The idle loading above helps only once the daemon has had some time to itself.
+When ~emacsclient~ starts the daemon itself (with ~--alternate-editor ""~), the
+client connects as soon as Doom has loaded, and everything that opening the
+first file needs gets loaded before its frame is drawn. For ~emacs.org~ this
+took about 3.4 seconds from starting ~emacsclient~ to a drawn tty frame, of
+which Doom's own startup is only about 0.6 seconds.
+
+Much of the rest was work that we don't need to see the file, or that didn't
+need to happen at all. With the changes below it takes about 2.7 seconds.
+
+#+name: cold-start
+#+begin_src elisp
+<<after-draw>>
+<<defer-flycheck>>
+<<defer-org-roam>>
+#+end_src
+
+*** Running code after the first file is drawn
+
+The obvious way to put off work until after the frame is drawn is an idle timer,
+but that doesn't work here. Emacs counts as idle from the moment it starts
+waiting for input, and handling the emacsclient request doesn't end that period,
+because it happens in a process filter while Emacs waits. So an idle timer set
+up while the daemon starts (or while the client's request is being handled)
+usually fires before the first redisplay, and redisplay waits for it.
+
+Instead, ~l/after-draw~ queues a function, and the next file we visit arms a
+one-time ~pre-redisplay-functions~ hook. That hook runs at the start of the
+redisplay which draws the file, and it starts a timer with no delay. Timers only
+run once that redisplay is over, so the queued functions run right after the
+frame has been drawn. If the daemon visits a file while it has no client frame,
+the queue may run earlier, which costs nothing because nobody is waiting.
+
+#+name: after-draw
+#+begin_src elisp
+(defvar l/after-draw-functions nil
+  "Functions to call after the next visited file has been drawn.")
+
+(defun l/after-draw (fn)
+  "Call FN after the next visited file has been drawn."
+  (push fn l/after-draw-functions))
+
+(defun l/run-after-draw-functions ()
+  (let ((fns (nreverse l/after-draw-functions)))
+    (setq l/after-draw-functions nil)
+    (dolist (fn fns)
+      (with-demoted-errors "l/after-draw: %S"
+        (funcall fn)))))
+
+(defun l/after-draw-redisplay-h (_window)
+  (remove-hook 'pre-redisplay-functions #'l/after-draw-redisplay-h)
+  (run-at-time 0 nil #'l/run-after-draw-functions))
+
+(defun l/after-draw-arm-h ()
+  (when l/after-draw-functions
+    (add-hook 'pre-redisplay-functions #'l/after-draw-redisplay-h)))
+
+(add-hook 'find-file-hook #'l/after-draw-arm-h 90)
+#+end_src
+
+*** Flycheck
+
+Doom turns on ~global-flycheck-mode~ for the first buffer. In a cold start that
+meant loading Flycheck (about 0.35 seconds), and then checking the Org buffer
+with ~org-lint~, which loads Org's exporter (another 0.35 seconds), all before
+the frame was drawn. We turn it on after the first file is drawn instead.
+
+In a tty, Flycheck shows its error markers in a one-column left margin, which it
+adds when it is turned on in a buffer. Turning it on after the first draw would
+then shift all of that buffer's text one column to the right. So for files
+visited before Flycheck is on, we reserve the column up front. Flycheck leaves
+a margin alone if it is already there.
+
+#+name: defer-flycheck
+#+begin_src elisp
+(remove-hook 'doom-first-buffer-hook #'global-flycheck-mode)
+(add-hook 'doom-first-buffer-hook
+          (defun l/defer-global-flycheck-mode-h ()
+            (l/after-draw #'global-flycheck-mode)))
+
+(add-hook 'find-file-hook
+          (defun l/reserve-flycheck-margin-h ()
+            (unless (or (bound-and-true-p global-flycheck-mode)
+                        (display-graphic-p)
+                        (not buffer-file-name))
+              (setq-local left-margin-width 1)))
+          -90)
+#+end_src
+
+*** org-roam
+
+Doom sets up org-roam (loading it and turning on
+~org-roam-db-autosync-mode~) as soon as Org loads, which took about 0.2 seconds
+while the first Org file opened. We only need it when we save a note or run an
+org-roam command, so we do it after the file is drawn. Doom only defines
+~+org-init-roam-h~ when org-roam loads, but its ~:hook~ makes it an autoload, so
+calling it loads org-roam first.
+
+#+name: defer-org-roam
+#+begin_src elisp
+(remove-hook 'org-load-hook #'+org-init-roam-h)
+(add-hook 'org-load-hook
+          (defun l/defer-org-roam-init-h ()
+            (l/after-draw #'+org-init-roam-h)))
 #+end_src
 
 * Global key-bindings
