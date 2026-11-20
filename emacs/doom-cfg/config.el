@@ -10,7 +10,7 @@
         doom-incremental-idle-timer 0.1)
   (doom-load-packages-incrementally
    '(ox flycheck package-lint flycheck-package evil-surround evil-embrace
-     go-mode parinfer-rust-mode)))
+     parinfer-rust-mode)))
 
 (defvar l/after-draw-functions nil
   "Functions to call after the next visited file has been drawn.")
@@ -68,6 +68,15 @@
       (when envrc--running
         (message "direnv continuing async in %s"
                  (envrc--direnv-buffer-name envrc--env-dir))))))
+
+(setq magic-mode-alist
+      (cons (cons (defun l/go-asm-p ()
+                    (and buffer-file-name
+                         (string-suffix-p ".s" buffer-file-name)
+                         (go--is-go-asm)))
+                  #'go-asm-mode)
+            (seq-remove (lambda (entry) (eq (car entry) #'go--is-go-asm))
+                        magic-mode-alist)))
 
 (defun l/copy-to-clipboard (orig-fun string)
   "Copy killed text or region into the system clipboard, by shelling out to a
