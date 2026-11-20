@@ -21,7 +21,6 @@
        multiple-cursors
        parinfer
        rotate-text
-       snippets
        word-wrap
 
        :emacs

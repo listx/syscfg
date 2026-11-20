@@ -103,7 +103,6 @@ DOOM requires 3 configuration files in the =$DOOMDIR=:
        multiple-cursors
        parinfer
        rotate-text
-       snippets
        word-wrap
 
        :emacs
@@ -378,7 +377,7 @@ Here are some workarounds for upstream bugs that have not yet been fixed.
 * Daemon startup
 
 Doom normally loads a list of packages (~doom-incremental-packages~, which
-includes yasnippet) a few at a time while Emacs sits idle, so that
+includes Org) a few at a time while Emacs sits idle, so that
 they are ready by the time we need them. In a daemon it skips this and loads
 the whole list in ~doom-after-init-hook~ instead, which keeps the daemon from
 accepting clients for about 1.8 seconds longer.
@@ -1950,6 +1949,7 @@ keymap there, and we give it a label and put ~org-export-dispatch~ under ~e d~.
 <<org-misc>>
 <<org-agenda>>
 <<org-wrappers>>
+<<org-tempo>>
 #+end_src
 
 ** l/org-insert-thing
@@ -1963,6 +1963,22 @@ keymap there, and we give it a label and put ~org-export-dispatch~ under ~e d~.
         ((org-at-heading-p) (org-insert-heading))
         ((org-at-table-p)   (org-table-insert-row 1))
         (t                  (insert ?\n))))
+#+end_src
+
+** Structure templates
+
+We type ~<s~ and then =TAB= to insert a source block. This used to come from a
+snippet in Doom's ~:editor snippets~ module, but that module turns on
+yasnippet everywhere, and in the daemon a client that connected right after the
+daemon started had to wait for yasnippet and all of Doom's snippets to load
+before its frame was drawn. We don't use any other snippets, so we dropped the
+module and use Org's own ~org-tempo~ instead, which expands the same ~<s~,
+~<q~, ~<e~, and so on into blocks.
+
+#+name: org-tempo
+#+begin_src elisp
+(after! org
+  (require 'org-tempo))
 #+end_src
 
 ** org-todo-keywords
@@ -3241,8 +3257,7 @@ there are many parentheses around.
   (org-fancy-priorities-mode -1)
   (org-superstar-mode -1)
   (rainbow-mode -1)
-  (smartparens-mode -1)
-  (yas-minor-mode -1))
+  (smartparens-mode -1))
 (after! git-commit
   (add-hook 'git-commit-setup-hook #'l/git-commit-setup))
 #+end_src

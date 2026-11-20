@@ -391,8 +391,7 @@ the object exists locally)."
   (org-fancy-priorities-mode -1)
   (org-superstar-mode -1)
   (rainbow-mode -1)
-  (smartparens-mode -1)
-  (yas-minor-mode -1))
+  (smartparens-mode -1))
 (after! git-commit
   (add-hook 'git-commit-setup-hook #'l/git-commit-setup))
 
@@ -995,6 +994,9 @@ details."
      dir-expanded
      ;; Initial input
      pat)))
+
+(after! org
+  (require 'org-tempo))
 
 (map! :after org-roam
       :map org-roam-mode-map
