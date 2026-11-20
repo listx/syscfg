@@ -393,11 +393,36 @@ default) between packages, which for about 40 packages would stretch the
 preload over half a minute. Nobody types into the daemon before the first
 client connects, so a much shorter gap is fine.
 
+We also add to this list some libraries that the first client would otherwise
+load before its frame is drawn:
+
+  - ~ox~, because Flycheck checks an Org buffer with ~org-lint~ when it is first
+    shown, and ~org-lint~ loads Org's exporter and its backends,
+
+  - ~flycheck~, ~package-lint~, and ~flycheck-package~, because Doom turns on
+    ~global-flycheck-mode~ for the first buffer,
+
+  - ~evil-surround~ and ~evil-embrace~, because Doom turns on
+    ~global-evil-surround-mode~ on the first input,
+
+  - ~go-mode~, because it adds an autoloaded function to ~magic-mode-alist~ to
+    recognize Go assembly files, so choosing the major mode for the first file of
+    any kind loads all of ~go-mode~, and
+
+  - ~parinfer-rust-mode~, because Org fontifies Emacs Lisp source blocks in
+    ~emacs-lisp-mode~, which turns it on.
+
+When the daemon had been idle for a while, this brought the time to open
+~emacs.org~ in the first tty client from about 1.6 seconds to 1.0 second.
+
 #+name: daemon-startup
 #+begin_src elisp
 (when (daemonp)
   (setq doom-incremental-first-idle-timer 0.5
-        doom-incremental-idle-timer 0.1))
+        doom-incremental-idle-timer 0.1)
+  (doom-load-packages-incrementally
+   '(ox flycheck package-lint flycheck-package evil-surround evil-embrace
+     go-mode parinfer-rust-mode)))
 #+end_src
 
 * Global key-bindings

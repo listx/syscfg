@@ -4,7 +4,10 @@
 
 (when (daemonp)
   (setq doom-incremental-first-idle-timer 0.5
-        doom-incremental-idle-timer 0.1))
+        doom-incremental-idle-timer 0.1)
+  (doom-load-packages-incrementally
+   '(ox flycheck package-lint flycheck-package evil-surround evil-embrace
+     go-mode parinfer-rust-mode)))
 
 (defun l/copy-to-clipboard (orig-fun string)
   "Copy killed text or region into the system clipboard, by shelling out to a
