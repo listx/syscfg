@@ -85,11 +85,16 @@ Rules that differ from vanilla Org (this is where agents usually go wrong):
   click-to-expand (good for figure-generating code that shouldn't dominate the
   page). To show a literal `<<x>>` in the woven output without expanding it,
   turn Noweb off for that block (check `parse.org` for the exact header).
-- Lilac does not set the executable bit, even with `:shebang`: a newly tangled
-  file is created as `644`. Run `chmod +x` on a new script after the first tangle
-  and commit that mode. Rewriting a tangled file keeps its existing mode.
+- A root block with `:shebang` is tangled as an executable file (owner `+x`,
+  the bit Git records), and `lilac tangle` restores that bit on every run.
+  Lilac releases before this change didn't set it, so with an older `lilac`,
+  run `chmod +x` on a new script after the first tangle and commit that mode.
+  Other tangled files keep their existing mode when rewritten.
 - Tangled files only get rewritten when their contents change, so `make`
-  timestamps stay meaningful. Trailing spaces are trimmed.
+  timestamps stay meaningful. Trailing whitespace that a block has is kept;
+  Lilac only trims the spaces and tabs left at the end of a line by a Noweb
+  prefix (as on an empty line) or by a `(ref:...)` line label that tangling
+  removes.
 
 Other syntax constraints:
 
