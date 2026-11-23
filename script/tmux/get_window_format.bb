@@ -14,6 +14,7 @@
     (= pane-current-command "zsh") :zsh
     (= pane-current-command "emacsclient") :emacs
     (= pane-current-command "claude") :claude
+    (= pane-current-command "tig") :tig
     :else :other-command))
 
 (defn- get-tmux-pane-pwd-cached
@@ -45,6 +46,13 @@
             name))
         sessions))
 
+(defn find-repo-root
+  "Return the root of the Git repo that DIR is in, or nil."
+  [dir]
+  (some #(when (fs/exists? (fs/path % ".git"))
+           (str %))
+        (take-while some? (iterate fs/parent (fs/path dir)))))
+
 (defn get-modified-window-name
   [window-type
    window-name
@@ -67,6 +75,11 @@
                                     (read-claude-sessions)
                                     pane-id)
                                    (pwd)))
+      :tig (format "t [%s]" (get-tmux-pane-pwd-cached
+                             window-id
+                             pane-id
+                             (or (find-repo-root pane-current-path)
+                                 pane-current-path)))
       pane-current-command)))
 
 (defn get-window-style

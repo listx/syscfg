@@ -1,5 +1,6 @@
 (ns get-window-format-test
-  (:require [clojure.test :refer [deftest is testing]]
+  (:require [babashka.fs :as fs]
+            [clojure.test :refer [deftest is testing]]
             [get-window-format :as sut]))
 (deftest get-window-type
   (is (= :other-command (sut/get-window-type "" "")))
@@ -9,6 +10,7 @@
   (is (= :ssh (sut/get-window-type "" "ssh")))
   (is (= :emacs (sut/get-window-type "emacsclient" "emacsclient")))
   (is (= :claude (sut/get-window-type "claude" "claude")))
+  (is (= :tig (sut/get-window-type "tig" "tig")))
   (is (= :manually-named (sut/get-window-type "mnw->foo" "some-command"))))
 
 (deftest get-modified-window-name
@@ -27,6 +29,17 @@
     (is (= "ddx-e8" (sut/claude-session-name sessions "%2")))
     (is (= "lilac-aa" (sut/claude-session-name sessions "%18")))
     (is (nil? (sut/claude-session-name sessions "%1")))))
+
+(deftest find-repo-root
+  (let [root (fs/create-temp-dir)
+        sub (fs/create-dirs (fs/path root "a" "b"))]
+    (try
+      (is (nil? (sut/find-repo-root (str sub))))
+      (fs/create-dir (fs/path root ".git"))
+      (is (= (str root) (sut/find-repo-root (str sub))))
+      (is (= (str root) (sut/find-repo-root (str root))))
+      (finally
+        (fs/delete-tree root)))))
 
 (deftest get-window-name-format
   (testing "manually named window"

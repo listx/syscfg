@@ -999,6 +999,7 @@ however for simplicity we just call this the window name here.
 <<f:get-window-type>>
 <<f:get-tmux-pane-pwd-cached>>
 <<f:claude-session-name>>
+<<f:find-repo-root>>
 <<f:get-modified-window-name>>
 <<f:get-window-style>>
 <<f:get-window-name-format>>
@@ -1009,7 +1010,7 @@ however for simplicity we just call this the window name here.
 
 **** Window type
 
-There are 6 types of windows based on what the currently active pane inside
+There are 7 types of windows based on what the currently active pane inside
 that window is doing:
 
   1) manually named (windows that were manually named (via =tmux rename-window=)
@@ -1022,12 +1023,14 @@ that window is doing:
 
   4) emacs (~emacsclient~),
 
-  5) claude (Claude Code), and
+  5) claude (Claude Code),
 
-  6) other (where the window is running some other command).
+  6) tig, and
 
-We often have several Emacs and Claude windows open at once, one or two for each
-project, and their command names alone don't tell them apart. So these two get
+  7) other (where the window is running some other command).
+
+We often have several Emacs, Claude, and tig windows open at once, one or two for
+each project, and their command names alone don't tell them apart. So these get
 types of their own, which [[f:get-modified-window-name]] names after their
 project.
 
@@ -1043,6 +1046,7 @@ project.
     (= pane-current-command "zsh") :zsh
     (= pane-current-command "emacsclient") :emacs
     (= pane-current-command "claude") :claude
+    (= pane-current-command "tig") :tig
     :else :other-command))
 #+end_src
 
@@ -1058,6 +1062,7 @@ project.
   (is (= :ssh (sut/get-window-type "" "ssh")))
   (is (= :emacs (sut/get-window-type "emacsclient" "emacsclient")))
   (is (= :claude (sut/get-window-type "claude" "claude")))
+  (is (= :tig (sut/get-window-type "tig" "tig")))
   (is (= :manually-named (sut/get-window-type "mnw->foo" "some-command"))))
 #+end_src
 
@@ -1107,6 +1112,10 @@ what it's working on.
     session name if we've renamed the session ourselves. If we can't find the
     session, we show the path instead.
 
+  - For tig it's the [[f:find-repo-root][root of the repo]] it's browsing, as in ~t [\~s]~. We
+    start from the path tig was started in, which may be a subdirectory of the
+    repo. Outside a repo (where tig fails to start anyway) we show the path.
+
 #+name: f:get-modified-window-name
 #+begin_src clojure
 (defn get-modified-window-name
@@ -1131,6 +1140,11 @@ what it's working on.
                                     (read-claude-sessions)
                                     pane-id)
                                    (pwd)))
+      :tig (format "t [%s]" (get-tmux-pane-pwd-cached
+                             window-id
+                             pane-id
+                             (or (find-repo-root pane-current-path)
+                                 pane-current-path)))
       pane-current-command)))
 #+end_src
 
@@ -1190,6 +1204,41 @@ it.
     (is (= "ddx-e8" (sut/claude-session-name sessions "%2")))
     (is (= "lilac-aa" (sut/claude-session-name sessions "%18")))
     (is (nil? (sut/claude-session-name sessions "%1")))))
+#+end_src
+
+**** Repo root
+
+We find the root of a Git repo the way Git does, by looking for ~.git~ in the
+directory and then in each of its parents. We do this ourselves instead of
+running ~git rev-parse --show-toplevel~, because this script runs every second
+for every window, and starting Git each time would cost more than looking at a
+few directories. ~.git~ is a file, not a directory, in a worktree or a
+submodule, so we accept either.
+
+#+name: f:find-repo-root
+#+begin_src clojure
+(defn find-repo-root
+  "Return the root of the Git repo that DIR is in, or nil."
+  [dir]
+  (some #(when (fs/exists? (fs/path % ".git"))
+           (str %))
+        (take-while some? (iterate fs/parent (fs/path dir)))))
+#+end_src
+
+***** Test
+
+#+name: t:find-repo-root
+#+begin_src clojure
+(deftest find-repo-root
+  (let [root (fs/create-temp-dir)
+        sub (fs/create-dirs (fs/path root "a" "b"))]
+    (try
+      (is (nil? (sut/find-repo-root (str sub))))
+      (fs/create-dir (fs/path root ".git"))
+      (is (= (str root) (sut/find-repo-root (str sub))))
+      (is (= (str root) (sut/find-repo-root (str root))))
+      (finally
+        (fs/delete-tree root)))))
 #+end_src
 
 **** Colors for window types
@@ -1377,11 +1426,13 @@ interact with the file in the CLI and also the REPL.
 #+header: :tangle script/tmux/get_window_format_test.clj
 #+begin_src clojure
 (ns get-window-format-test
-  (:require [clojure.test :refer [deftest is testing]]
+  (:require [babashka.fs :as fs]
+            [clojure.test :refer [deftest is testing]]
             [get-window-format :as sut]))
 <<t:get-window-type>>
 <<t:get-modified-window-name>>
 <<t:claude-session-name>>
+<<t:find-repo-root>>
 <<t:get-window-name-format>>
 #+end_src
 
