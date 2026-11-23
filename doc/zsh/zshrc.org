@@ -472,6 +472,9 @@ bindkey '^x' autosuggest-execute
 # See https://stackoverflow.com/a/66060510/437583.
 add-zsh-hook precmd __l_command_not_found
 
+# Don't let the tmux pane keep the title of the program that just exited.
+add-zsh-hook precmd __l_clear_title
+
 # Load fzf bindings (upstream) to ZSH.
 if [[ -n "${commands[fzf-share]}" ]]; then
   # Use a tmux popup instead of a pane.

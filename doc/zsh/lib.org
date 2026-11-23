@@ -12,6 +12,9 @@ early on. Functions with the ~__l_~ prefix are internal helpers. They cover
 
   - pulling mistyped commands back out of the history ([[lib-command-not-found][~__l_command_not_found~]]),
 
+  - clearing the terminal title that the last program left behind
+    ([[lib-clear-title][~__l_clear_title~]]),
+
   - lazily loading ~kubectl~ completions ([[lib-lazy-load-completions][~__l_lazy_load_completions~]]),
 
   - picking a ~tmux~ session name, reusing the smallest free number
@@ -33,6 +36,7 @@ directly to start a new ~tmux~ session and switch to it, without nesting.
 <<lib-prompt-tick>>
 <<lib-accept-line>>
 <<lib-command-not-found>>
+<<lib-clear-title>>
 <<lib-maybe-load-completions>>
 <<lib-lazy-load-completions>>
 <<lib-is-ssh-connection>>
@@ -126,6 +130,26 @@ __l_command_not_found () {
   # f -1'.
   if (( global_exit_status == 127 )) ; then
     hist -fs f -1 || echo "\`hist' is not installed"
+  fi
+}
+#+end_src
+
+* ~__l_clear_title~
+
+Programs such as Emacs and Claude Code set the terminal title, and nothing
+clears it when they exit. tmux keeps a pane's title until something else sets
+it, so the next program in that pane would appear under the old title in the
+[[id:9170fae9-85de-4fd8-96fb-f3d3d2215f94::f:get-modified-window-name][tmux window names]] if it doesn't set one itself. We clear the title before each
+prompt, which is whenever a program has handed the terminal back to the shell.
+
+We do this only inside tmux. Outside it the title belongs to the terminal
+emulator's window, which shows its own default if we leave it alone.
+
+#+name: lib-clear-title
+#+begin_src zsh
+__l_clear_title () {
+  if [[ -n "${TMUX:-}" ]]; then
+    print -n '\e]2;\a'
   fi
 }
 #+end_src

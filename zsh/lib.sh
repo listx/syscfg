@@ -68,6 +68,12 @@ __l_command_not_found () {
   fi
 }
 
+__l_clear_title () {
+  if [[ -n "${TMUX:-}" ]]; then
+    print -n '\e]2;\a'
+  fi
+}
+
 __l_maybe_load_completions_and_autocorrect()
 {
   # Remove leading whitespace from BUFFER, to catch cases where we enter some
