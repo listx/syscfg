@@ -822,8 +822,13 @@ set -g window-status-separator " "
 
 Set window name contents by automatically renaming them. We use
 [[get_window_format.bb]] for this, but basically if the current command is zsh (our
-usual shell), then use the current path as the name. Otherwise display the name
-of the running command.
+usual shell), then use the current path as the name. Emacs and Claude Code get
+the project they're working on, and any other command is shown by name.
+
+The pane title is the last argument, and it's quoted with tmux's ~q:~ modifier
+instead of single quotes like the others, because programs set it to whatever
+they like. Claude Code puts its task summary there, so a title such as "Fix
+user's bug" would end a single-quoted argument early and break the command.
 
 See https://stackoverflow.com/a/68043814/437583 for the inspiration.
 
@@ -839,7 +844,9 @@ set -g automatic-rename-format \
     '#{pane_id}'\
     '#{window_flags}'\
     '#{window_panes}'\
-    0)"
+    0\
+    '#{host_short}'\
+    #{q:pane_title})"
 #+end_src
 
 Colorize window names, for active and inactive windows.
@@ -855,7 +862,9 @@ set -gw window-status-current-format \
     '#{pane_id}'\
     '#{window_flags}'\
     '#{window_panes}'\
-    1)"
+    1\
+    '#{host_short}'\
+    #{q:pane_title})"
 set -gw window-status-format \
     "#(~/syscfg/script/tmux/get_window_format.bb \
     '#{pane_current_command}'\
@@ -865,7 +874,9 @@ set -gw window-status-format \
     '#{pane_id}'\
     '#{window_flags}'\
     '#{window_panes}'\
-    0)"
+    0\
+    '#{host_short}'\
+    #{q:pane_title})"
 #+end_src
 
 ** Panes and borders
@@ -981,10 +992,13 @@ however for simplicity we just call this the window name here.
 #+header: :shebang #!/usr/bin/env bb
 #+begin_src clojure
 (ns get-window-format
-  (:require [clojure.string :as str]
-            [babashka.process :refer [shell]]))
+  (:require [babashka.fs :as fs]
+            [babashka.process :refer [shell]]
+            [cheshire.core :as json]
+            [clojure.string :as str]))
 <<f:get-window-type>>
 <<f:get-tmux-pane-pwd-cached>>
+<<f:claude-session-name>>
 <<f:get-modified-window-name>>
 <<f:get-window-style>>
 <<f:get-window-name-format>>
@@ -995,7 +1009,7 @@ however for simplicity we just call this the window name here.
 
 **** Window type
 
-There are 4 types of windows based on what the currently active pane inside
+There are 6 types of windows based on what the currently active pane inside
 that window is doing:
 
   1) manually named (windows that were manually named (via =tmux rename-window=)
@@ -1004,10 +1018,18 @@ that window is doing:
 
   2) ssh (typically a remote (nested) =tmux= session),
 
-  3) zsh (our interactive shell of choice), and
+  3) zsh (our interactive shell of choice),
 
-  4) other (where the window is running some other command other than =ssh= or
-     =zsh=).
+  4) emacs (~emacsclient~),
+
+  5) claude (Claude Code), and
+
+  6) other (where the window is running some other command).
+
+We often have several Emacs and Claude windows open at once, one or two for each
+project, and their command names alone don't tell them apart. So these two get
+types of their own, which [[f:get-modified-window-name]] names after their
+project.
 
 #+name: f:get-window-type
 #+begin_src clojure
@@ -1019,6 +1041,8 @@ that window is doing:
     (or (str/starts-with? window-name "ssh")
         (= pane-current-command "ssh")) :ssh
     (= pane-current-command "zsh") :zsh
+    (= pane-current-command "emacsclient") :emacs
+    (= pane-current-command "claude") :claude
     :else :other-command))
 #+end_src
 
@@ -1032,6 +1056,8 @@ that window is doing:
   (is (= :zsh (sut/get-window-type "" "zsh")))
   (is (= :ssh (sut/get-window-type "ssh" "some-command")))
   (is (= :ssh (sut/get-window-type "" "ssh")))
+  (is (= :emacs (sut/get-window-type "emacsclient" "emacsclient")))
+  (is (= :claude (sut/get-window-type "claude" "claude")))
   (is (= :manually-named (sut/get-window-type "mnw->foo" "some-command"))))
 #+end_src
 
@@ -1063,6 +1089,24 @@ displayed in the tmux status bar, other than some extra decorations around it.
 
 The default =window-name= in tmux is the name of the current command.
 
+Emacs and Claude windows are named like ~e [syscfg:emacs.org]~ and
+~c [syscfg-d1]~, where the letter says which program it is and the brackets say
+what it's working on.
+
+  - For Emacs that's the pane title, which our Emacs config [[id:94c338ac-e9e7-4700-ad42-80cbd86e5247][sets]] to the
+    project and buffer. If the title is empty, Emacs hasn't set one (it may not
+    have loaded that config yet), and we show the path Emacs was started in
+    instead. Our shell [[id:af7d3c1d-058f-4b11-944b-284c14ef2b38::lib-clear-title][clears the title]] at every prompt, so we never see one
+    left over from an earlier program in the pane. A pane where nothing has
+    set the title yet has the host name as its title (tmux's default), so we
+    treat that like an empty one.
+
+  - For Claude it's the [[f:claude-session-name][name of the session]], which by default is the directory
+    it started in plus a short suffix. We don't use the pane title here, because
+    Claude Code puts a summary of the current task there, and only shows the
+    session name if we've renamed the session ourselves. If we can't find the
+    session, we show the path instead.
+
 #+name: f:get-modified-window-name
 #+begin_src clojure
 (defn get-modified-window-name
@@ -1071,12 +1115,23 @@ The default =window-name= in tmux is the name of the current command.
    window-id
    pane-id
    pane-current-command
-   pane-current-path]
-  (case window-type
-    :manually-named (subs window-name 5)
-    :ssh (if (str/starts-with? window-name "ssh") window-name "ssh")
-    :zsh (get-tmux-pane-pwd-cached window-id pane-id pane-current-path)
-    pane-current-command))
+   pane-current-path
+   host-short
+   pane-title]
+  (let [pwd #(get-tmux-pane-pwd-cached window-id pane-id pane-current-path)]
+    (case window-type
+      :manually-named (subs window-name 5)
+      :ssh (if (str/starts-with? window-name "ssh") window-name "ssh")
+      :zsh (pwd)
+      :emacs (format "e [%s]" (if (or (str/blank? pane-title)
+                                      (= host-short pane-title))
+                                (pwd)
+                                pane-title))
+      :claude (format "c [%s]" (or (claude-session-name
+                                    (read-claude-sessions)
+                                    pane-id)
+                                   (pwd)))
+      pane-current-command)))
 #+end_src
 
 ***** Test
@@ -1084,11 +1139,57 @@ The default =window-name= in tmux is the name of the current command.
 #+name: t:get-modified-window-name
 #+begin_src clojure
 (deftest get-modified-window-name
-  (is (= "foo" (sut/get-modified-window-name :manually-named "mnw->foo" "@1" "%2" "some-command" "/path/foo/bar")))
-  (is (= "ssh" (sut/get-modified-window-name :ssh "ssh" "@1" "%2" "some-command" "/path/foo/bar")))
-  (is (= "ssh->remote" (sut/get-modified-window-name :ssh "ssh->remote" "@1" "%2" "some-command" "/path/foo/bar")))
-  (is (= "/path/foo/bar" (sut/get-modified-window-name :zsh "ssh" "@1" "%2" "some-command" "/path/foo/bar")))
-  (is (= "some-command" (sut/get-modified-window-name :other-command "" "@1" "%2" "some-command" "/path/foo/bar"))))
+  (is (= "foo" (sut/get-modified-window-name :manually-named "mnw->foo" "@1" "%2" "some-command" "/path/foo/bar" "k0" "k0")))
+  (is (= "ssh" (sut/get-modified-window-name :ssh "ssh" "@1" "%2" "some-command" "/path/foo/bar" "k0" "k0")))
+  (is (= "ssh->remote" (sut/get-modified-window-name :ssh "ssh->remote" "@1" "%2" "some-command" "/path/foo/bar" "k0" "k0")))
+  (is (= "/path/foo/bar" (sut/get-modified-window-name :zsh "ssh" "@1" "%2" "some-command" "/path/foo/bar" "k0" "k0")))
+  (is (= "e [syscfg:emacs.org]" (sut/get-modified-window-name :emacs "emacsclient" "@1" "%2" "emacsclient" "/path/foo/bar" "k0" "syscfg:emacs.org")))
+  (is (= "e [/path/foo/bar]" (sut/get-modified-window-name :emacs "emacsclient" "@1" "%2" "emacsclient" "/path/foo/bar" "k0" "k0")))
+  (is (= "some-command" (sut/get-modified-window-name :other-command "" "@1" "%2" "some-command" "/path/foo/bar" "k0" "k0"))))
+#+end_src
+
+**** Claude session name
+
+Each running Claude Code session keeps a file in ~\~/.claude/sessions/~, named
+after its process ID, that records its name and the tmux pane it runs in, such
+as ~"tmux": "k0-0:@0.%2"~. The pane ID (~%2~) is unique within the tmux server,
+so we match on that. These files aren't a documented interface, so a Claude Code
+update could change them; then we just fall back to the path.
+
+We read every file each time, which is fine for the handful of sessions we run.
+A file that Claude Code is in the middle of writing may not parse, so we skip
+it.
+
+#+name: f:claude-session-name
+#+begin_src clojure
+(defn- read-claude-sessions
+  []
+  (let [dir (fs/expand-home "~/.claude/sessions")]
+    (when (fs/directory? dir)
+      (keep #(try (json/parse-string (slurp (str %)))
+                  (catch Exception _ nil))
+            (fs/glob dir "*.json")))))
+
+(defn claude-session-name
+  "Return the name of the session in SESSIONS that runs in tmux pane PANE-ID."
+  [sessions pane-id]
+  (some (fn [{:strs [tmux name]}]
+          (when (and tmux (str/ends-with? tmux (str "." pane-id)))
+            name))
+        sessions))
+#+end_src
+
+***** Test
+
+#+name: t:claude-session-name
+#+begin_src clojure
+(deftest claude-session-name
+  (let [sessions [{"name" "ddx-e8" "tmux" "k0-0:@0.%2"}
+                  {"name" "lilac-aa" "tmux" "k0-0:@13.%18"}
+                  {"name" "no-tmux"}]]
+    (is (= "ddx-e8" (sut/claude-session-name sessions "%2")))
+    (is (= "lilac-aa" (sut/claude-session-name sessions "%18")))
+    (is (nil? (sut/claude-session-name sessions "%1")))))
 #+end_src
 
 **** Colors for window types
@@ -1161,6 +1262,16 @@ window renaming]]:
 The =is-current-window= is a boolean "1" or "0" we denote ourselves (to save
 =get-window-name-format= the trouble of figuring out what the active window is).
 
+After that come two more:
+
+  - host-short :: the host name, which is what tmux uses as a pane's title
+    until a program sets one
+
+  - pane-title :: the title the program in the pane set for its terminal
+
+The pane title is optional because of how it's quoted: ~q:~ turns an empty title
+into nothing at all, not ~''~, so that the script gets one argument fewer.
+
 #+name: f:get-window-name-format
 #+begin_src clojure
 (defn get-window-name-format
@@ -1171,7 +1282,9 @@ The =is-current-window= is a boolean "1" or "0" we denote ourselves (to save
     pane-id
     window-flags
     window-panes
-    is-current-window]
+    is-current-window
+    host-short
+    & [pane-title]]
   (let [window-flags-str (if (= "" window-flags)
                            " "
                            window-flags)
@@ -1187,7 +1300,9 @@ The =is-current-window= is a boolean "1" or "0" we denote ourselves (to save
                                        window-id
                                        pane-id
                                        pane-current-command
-                                       pane-current-path)]
+                                       pane-current-path
+                                       host-short
+                                       pane-title)]
     (format "%s%s%s%s %s #[default]"
             style1
             window-flags-str
@@ -1206,21 +1321,21 @@ combinations. We just test a few key examples.
 (deftest get-window-name-format
   (testing "manually named window"
     (is (= "#[bold bg=cyan fg=#343c48]*2#[bold bg=brightcyan fg=#343c48] foo #[default]"
-           (sut/get-window-name-format "zsh" "/path/foo/bar" "mnw->foo" "@1" "%2" "*" "3" "1"))))
+           (sut/get-window-name-format "zsh" "/path/foo/bar" "mnw->foo" "@1" "%2" "*" "3" "1" "k0" "k0"))))
   (testing "zsh shows path"
     (is (= "#[bold bg=yellow fg=#343c48]*2#[bold bg=brightyellow fg=#343c48] /path #[default]"
-           (sut/get-window-name-format "zsh" "/path" "zsh" "@1" "%2" "*" "3" "1"))))
+           (sut/get-window-name-format "zsh" "/path" "zsh" "@1" "%2" "*" "3" "1" "k0" "k0"))))
   (testing "ssh"
     (is (= "#[bold bg=blue fg=#343c48]*2#[bold bg=brightblue fg=#343c48] ssh #[default]"
-           (sut/get-window-name-format "ssh" "/path" "ssh" "@1" "%2" "*" "3" "1"))))
+           (sut/get-window-name-format "ssh" "/path" "ssh" "@1" "%2" "*" "3" "1" "k0" "k0"))))
   (testing "other-command"
     (is (= "#[bold bg=green fg=#343c48]*2#[bold bg=brightgreen fg=#343c48] some-command #[default]"
-           (sut/get-window-name-format "some-command" "/path" "some-command" "@1" "%2" "*" "3" "1")))))
+           (sut/get-window-name-format "some-command" "/path" "some-command" "@1" "%2" "*" "3" "1" "k0" "k0")))))
 #+end_src
 
 *** Main
 
-We expect exactly 8 arguments:
+We expect 9 or 10 arguments:
 
   1) pane-current-command
 
@@ -1238,11 +1353,15 @@ We expect exactly 8 arguments:
 
   8) is-current-window
 
+  9) host-short
+
+  10) pane-title (missing if it's empty)
+
 #+name: f:main
 #+begin_src clojure
 (defn -main [& args]
-  (when (not= 8 (count args))
-    (println (format "Need exactly 8 arguments; got %d." (count args)))
+  (when-not (<= 9 (count args) 10)
+    (println (format "Need 9 or 10 arguments; got %d." (count args)))
     (System/exit 1))
   (println (apply get-window-name-format args)))
 (when (= *file* (System/getProperty "babashka.file"))
@@ -1262,6 +1381,7 @@ interact with the file in the CLI and also the REPL.
             [get-window-format :as sut]))
 <<t:get-window-type>>
 <<t:get-modified-window-name>>
+<<t:claude-session-name>>
 <<t:get-window-name-format>>
 #+end_src
 

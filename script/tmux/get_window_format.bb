@@ -1,7 +1,9 @@
 #!/usr/bin/env bb
 (ns get-window-format
-  (:require [clojure.string :as str]
-            [babashka.process :refer [shell]]))
+  (:require [babashka.fs :as fs]
+            [babashka.process :refer [shell]]
+            [cheshire.core :as json]
+            [clojure.string :as str]))
 (defn get-window-type
   [window-name
    pane-current-command]
@@ -10,6 +12,8 @@
     (or (str/starts-with? window-name "ssh")
         (= pane-current-command "ssh")) :ssh
     (= pane-current-command "zsh") :zsh
+    (= pane-current-command "emacsclient") :emacs
+    (= pane-current-command "claude") :claude
     :else :other-command))
 
 (defn- get-tmux-pane-pwd-cached
@@ -25,18 +29,45 @@
       :out
       str/trimr))
 
+(defn- read-claude-sessions
+  []
+  (let [dir (fs/expand-home "~/.claude/sessions")]
+    (when (fs/directory? dir)
+      (keep #(try (json/parse-string (slurp (str %)))
+                  (catch Exception _ nil))
+            (fs/glob dir "*.json")))))
+
+(defn claude-session-name
+  "Return the name of the session in SESSIONS that runs in tmux pane PANE-ID."
+  [sessions pane-id]
+  (some (fn [{:strs [tmux name]}]
+          (when (and tmux (str/ends-with? tmux (str "." pane-id)))
+            name))
+        sessions))
+
 (defn get-modified-window-name
   [window-type
    window-name
    window-id
    pane-id
    pane-current-command
-   pane-current-path]
-  (case window-type
-    :manually-named (subs window-name 5)
-    :ssh (if (str/starts-with? window-name "ssh") window-name "ssh")
-    :zsh (get-tmux-pane-pwd-cached window-id pane-id pane-current-path)
-    pane-current-command))
+   pane-current-path
+   host-short
+   pane-title]
+  (let [pwd #(get-tmux-pane-pwd-cached window-id pane-id pane-current-path)]
+    (case window-type
+      :manually-named (subs window-name 5)
+      :ssh (if (str/starts-with? window-name "ssh") window-name "ssh")
+      :zsh (pwd)
+      :emacs (format "e [%s]" (if (or (str/blank? pane-title)
+                                      (= host-short pane-title))
+                                (pwd)
+                                pane-title))
+      :claude (format "c [%s]" (or (claude-session-name
+                                    (read-claude-sessions)
+                                    pane-id)
+                                   (pwd)))
+      pane-current-command)))
 
 (defn get-window-style
   [window-type
@@ -77,7 +108,9 @@
     pane-id
     window-flags
     window-panes
-    is-current-window]
+    is-current-window
+    host-short
+    & [pane-title]]
   (let [window-flags-str (if (= "" window-flags)
                            " "
                            window-flags)
@@ -93,7 +126,9 @@
                                        window-id
                                        pane-id
                                        pane-current-command
-                                       pane-current-path)]
+                                       pane-current-path
+                                       host-short
+                                       pane-title)]
     (format "%s%s%s%s %s #[default]"
             style1
             window-flags-str
@@ -102,8 +137,8 @@
             name)))
 
 (defn -main [& args]
-  (when (not= 8 (count args))
-    (println (format "Need exactly 8 arguments; got %d." (count args)))
+  (when-not (<= 9 (count args) 10)
+    (println (format "Need 9 or 10 arguments; got %d." (count args)))
     (System/exit 1))
   (println (apply get-window-name-format args)))
 (when (= *file* (System/getProperty "babashka.file"))
