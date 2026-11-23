@@ -20,6 +20,7 @@
 #+begin_src conf
 <<extended-keys>>
 <<extended-keys-shifted-letters>>
+<<extended-keys-shift-without-meaning>>
 <<keybindings-insert-mode>>
 <<keybindings-passthrough-mode>>
 <<keybindings-copy-mode>>
@@ -562,7 +563,9 @@ set -s extended-keys-format csi-u
 How much tmux sends to a pane depends on the ~modifyOtherKeys~ mode that the
 pane's program asks for. With ~always~, every pane gets at least mode 1, where a
 key that has a traditional encoding still uses it. So the shell still gets plain
-~TAB~ for ~C-i~ and ~RET~ for ~C-m~, as it expects. Emacs [[id:100011e3-ba36-4078-975e-6136d25e60cc::modify-other-keys-mode-2][asks for mode 2]], where
+~TAB~ for ~C-i~ and ~RET~ for ~C-m~, as it expects. (Shift with Space,
+Backspace, or Enter has no traditional encoding, though, so even mode 1 sends
+it as CSI u; see [[extended-keys-shift-without-meaning][below]].) Emacs [[id:100011e3-ba36-4078-975e-6136d25e60cc::modify-other-keys-mode-2][asks for mode 2]], where
 tmux sends every modified key as CSI u, so Emacs can bind ~C-i~ apart from
 ~TAB~, ~C-m~ apart from ~RET~, and ~C-S-o~ apart from ~C-o~. You can see a pane's
 mode with ~tmux display -p '#{pane_key_mode}'~ (~Ext 1~ or ~Ext 2~).
@@ -597,6 +600,37 @@ run-shell 'for c in a b c d e f g h i j k l m n o p q r s t u v w x y z; do \
 		tmux bind-key -T root "$m$u" send-keys -K "$m$c"; \
 	done; \
 done'
+#+end_src
+
+*** Shift with Space, Backspace, and Enter
+
+When we type a capitalized word, we often still hold Shift as we press Space,
+Backspace, or Enter. Ghostty reports these chords with the Shift, so tmux reads
+them as ~S-Space~, ~S-BSpace~ and ~S-Enter~. None of them has a traditional
+encoding, so tmux sends them as CSI u even to a pane in ~modifyOtherKeys~ mode 1:
+~\e[32;2u~ for ~S-Space~. A shell doesn't know these sequences. In zsh's
+[[id:9b76d360-8483-4449-b3a5-6c3678defc58::zshrc-bindings-and-plugins][vi mode]],
+the leading ~ESC~ switches to normal mode, and the rest of the sequence runs as
+normal mode commands. Other programs, like bash or a Python REPL, have the same
+problem.
+
+So send these chords to a pane as the keys without Shift, unless its program
+asked for mode 2 (~Ext 2~), as Emacs and Claude Code do. Those programs get the
+chords as tmux read them. Emacs leaves ~S-SPC~ unbound so that it [[id:100011e3-ba36-4078-975e-6136d25e60cc::CSI-u-mode-support][types a
+space]], but Claude Code, for example, can use ~S-Enter~ for a newline.
+~send-keys~ without ~-K~ goes straight to the pane, so these bindings don't
+trigger themselves again.
+
+Before we turned on [[extended-keys][extended keys]], tmux didn't ask the
+terminal for them, so it never saw the Shift in these chords. The hand-written
+CSI u bindings that we used then (see the historical note below) left out
+~S-Space~ for the same reason as here.
+
+#+name: extended-keys-shift-without-meaning
+#+begin_src conf
+bind-key -T root S-Space  if -F '#{==:#{pane_key_mode},Ext 2}' 'send-keys S-Space'  'send-keys Space'
+bind-key -T root S-BSpace if -F '#{==:#{pane_key_mode},Ext 2}' 'send-keys S-BSpace' 'send-keys BSpace'
+bind-key -T root S-Enter  if -F '#{==:#{pane_key_mode},Ext 2}' 'send-keys S-Enter'  'send-keys Enter'
 #+end_src
 
 *** Historical note
