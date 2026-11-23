@@ -1885,6 +1885,24 @@ Also add the number of windows in the window configuration."
 
 (setq visible-cursor nil)
 
+(setq xterm-set-window-title t
+      frame-title-format '((:eval (l/frame-title))))
+
+(defvar-local l/frame-title-project nil
+  "Name of this buffer's project, or \"\" if it has none.")
+
+(defun l/frame-title ()
+  "Return PROJECT:BUFFER, or just BUFFER outside of a project."
+  (unless l/frame-title-project
+    (setq l/frame-title-project
+          (if-let* ((root (doom-project-root)))
+              (file-name-nondirectory (directory-file-name root))
+            "")))
+  (let ((name (string-replace "%" "%%" (buffer-name))))
+    (if (string-empty-p l/frame-title-project)
+        name
+      (concat l/frame-title-project ":" name))))
+
 ;; Broken. See README.org for discussion.
 ;; (tty--set-output-buffer-size (* 128 1024))
 

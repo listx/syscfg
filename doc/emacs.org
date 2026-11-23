@@ -343,6 +343,7 @@ other configurations that are pulled in. And so we define it first here.
 <<theme>>
 <<misc-ui>>
 <<tty-cursor-blink>>
+<<tty-title>>
 <<known-emacs-bugs>>
 <<spelling>>
 
@@ -3645,6 +3646,51 @@ GUI Emacs ignores this variable.
 #+name: tty-cursor-blink
 #+begin_src elisp
 (setq visible-cursor nil)
+#+end_src
+
+*** Tell tmux which project we're in
+:PROPERTIES:
+:ID:       94c338ac-e9e7-4700-ad42-80cbd86e5247
+:END:
+
+Every terminal Emacs window shows up as ~emacsclient~ in the tmux status bar,
+which doesn't tell us which project each one is for. tmux can't see inside
+Emacs, but it does record the title that a program sets for its terminal (as
+~#{pane_title}~), and the [[id:9170fae9-85de-4fd8-96fb-f3d3d2215f94::f:get-modified-window-name][tmux window names]] use it. So we have Emacs set the
+title to the current project and buffer, as in ~syscfg:emacs.org~.
+
+Emacs only sets the title of a tty frame when ~xterm-set-window-title~ is
+non-nil. It's checked when each ~emacsclient -t~ connects and sets up its
+terminal (~term/tmux.el~ runs the xterm setup, so this works under tmux), which
+is after this file is loaded. After that, Emacs sends ~frame-title-format~ as
+the title after every command.
+
+Because the title is computed after every command, it must be cheap. Finding the
+project root looks for marker files up the directory tree, so we do it once per
+buffer and remember the answer in ~l/frame-title-project~. A buffer outside any
+project gets ~""~ there, so that we don't look again, and its title is just its
+name. ~format-mode-line~ treats ~%~ in what our ~:eval~ returns as a
+mode-line escape, so we double any ~%~ in the buffer name.
+
+#+name: tty-title
+#+begin_src elisp
+(setq xterm-set-window-title t
+      frame-title-format '((:eval (l/frame-title))))
+
+(defvar-local l/frame-title-project nil
+  "Name of this buffer's project, or \"\" if it has none.")
+
+(defun l/frame-title ()
+  "Return PROJECT:BUFFER, or just BUFFER outside of a project."
+  (unless l/frame-title-project
+    (setq l/frame-title-project
+          (if-let* ((root (doom-project-root)))
+              (file-name-nondirectory (directory-file-name root))
+            "")))
+  (let ((name (string-replace "%" "%%" (buffer-name))))
+    (if (string-empty-p l/frame-title-project)
+        name
+      (concat l/frame-title-project ":" name))))
 #+end_src
 
 *** TTY buffers and flickering
