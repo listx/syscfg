@@ -795,6 +795,14 @@ LINK-NAME."
     (define-advice org-superstar--fontify-buffer (:override () l/flush-only)
       (when font-lock-mode
         (font-lock-flush))))
+
+  (after! org-superstar
+    (define-advice org-invisible-p
+        (:around (fn &optional pos folding-only) l/ignore-hidden-stars)
+      (let ((pos (or pos (point))))
+        (if (eq (get-char-property pos 'invisible) 'org-superstar-hide)
+            (org-fold-folded-p pos)
+          (funcall fn pos folding-only)))))
   (add-hook 'org-mode-hook (lambda () (org-superstar-mode 1)))
 
   (after! (org org-fancy-priorities)

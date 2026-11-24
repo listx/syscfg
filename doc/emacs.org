@@ -2692,6 +2692,7 @@ Org table.
           (?+ . #x21AA)    ;; ↪ RIGHT ARROW WITH HOOK
           (?* . #x2738)))) ;; ✸ HEAVY EIGHT POINTED RECTILINEAR BLACK STAR
 <<org-superstar-fontify-lazily>>
+<<org-superstar-visible-headings>>
 (add-hook 'org-mode-hook (lambda () (org-superstar-mode 1)))
 #+end_src
 
@@ -2718,6 +2719,31 @@ whose major mode hasn't been loaded yet).
   (define-advice org-superstar--fontify-buffer (:override () l/flush-only)
     (when font-lock-mode
       (font-lock-flush))))
+#+end_src
+
+~org-superstar-remove-leading-stars~ hides the leading stars of a heading by
+giving them the ~invisible~ property ~org-superstar-hide~. But Org decides
+whether a heading is visible with ~org-invisible-p~ on its first character,
+which is the first leading star for any heading below level 1, and that function
+counts every kind of invisible text, not only folded text. So Org takes every
+such heading for a hidden one. ~org-back-to-heading~ skips hidden headings, so
+pressing TAB on a folded child heading went back to its parent and folded the
+parent instead of opening the child.
+
+So we tell ~org-invisible-p~ that text hidden by org-superstar is visible, unless
+it's also inside a fold. We don't use the ~folding-only~ argument for this,
+because then other text that's meant to be invisible, such as emphasis markers,
+would count as visible too.
+
+#+name: org-superstar-visible-headings
+#+begin_src elisp
+(after! org-superstar
+  (define-advice org-invisible-p
+      (:around (fn &optional pos folding-only) l/ignore-hidden-stars)
+    (let ((pos (or pos (point))))
+      (if (eq (get-char-property pos 'invisible) 'org-superstar-hide)
+          (org-fold-folded-p pos)
+        (funcall fn pos folding-only)))))
 #+end_src
 
 ** org-fancy-priorities (programmer priorities)
