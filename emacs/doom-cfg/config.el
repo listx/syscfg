@@ -1843,11 +1843,17 @@ Also add the number of windows in the window configuration."
 (set-fringe-mode '(10 . 0))
 
 ; Disable hl-line mode, because it can be surprisingly disorienting. Besides, we
-; can always use "v" or "V" to get a visual queue easily enough. We used to
-; remove `global-hl-line-mode' from the hook Doom turns it on with, but Doom has
-; since moved it to a different hook. An empty `global-hl-line-modes' tells
-; Doom's `global-hl-line-mode' to skip every buffer, whatever hook runs it.
-(setq global-hl-line-modes nil)
+; can always use "v" or "V" to get a visual queue easily enough.
+;
+; First, don't let Doom turn on `global-hl-line-mode' (it does this from
+; `doom-first-input-hook'). Doom has moved this call between hooks before, so in
+; case it does again, also make `global-hl-line-modes' exclude every buffer.
+; Doom reads that variable differently depending on the Emacs version: on Emacs
+; 30 a nil value excludes every buffer, but on Emacs 31 (where Doom builds on
+; `global-hl-line-buffers') nil means "no filter" and highlights every buffer.
+; A list with a mode that doesn't exist excludes every buffer on both.
+(remove-hook 'doom-first-input-hook #'global-hl-line-mode)
+(setq global-hl-line-modes '(l/no-such-mode))
 
 (use-package! vim-empty-lines-mode
   :config
