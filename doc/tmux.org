@@ -1243,6 +1243,11 @@ submodule, so we accept either.
 
 **** Colors for window types
 
+Each window type gets its own color, so that we can find a window by what's in
+it at a glance. Claude windows are red, tig windows blue, and Emacs windows
+white. tig shares blue with ssh, but the two are hard to confuse because their
+names look nothing alike (~t [\~s]~ versus ~ssh->...~).
+
 Note how the colors are inversed when the window becomes active. This makes it
 much easier to visually see which window is the current window in the status
 bar.
@@ -1273,6 +1278,27 @@ bar.
        :style2 "#[bold bg=brightyellow fg=#343c48]"}
       {:style1 "#[bg=black fg=yellow]"
        :style2 "#[bg=black fg=yellow]"})
+
+    :emacs
+    (if is-current-window?
+      {:style1 "#[bold bg=white fg=#343c48]"
+       :style2 "#[bold bg=brightwhite fg=#343c48]"}
+      {:style1 "#[bg=black fg=white]"
+       :style2 "#[bg=black fg=white]"})
+
+    :claude
+    (if is-current-window?
+      {:style1 "#[bold bg=red fg=#343c48]"
+       :style2 "#[bold bg=brightred fg=#343c48]"}
+      {:style1 "#[bg=black fg=red]"
+       :style2 "#[bg=black fg=red]"})
+
+    :tig
+    (if is-current-window?
+      {:style1 "#[bold bg=blue fg=#343c48]"
+       :style2 "#[bold bg=brightblue fg=#343c48]"}
+      {:style1 "#[bg=black fg=blue]"
+       :style2 "#[bg=black fg=blue]"})
 
     (if is-current-window?
       {:style1 "#[bold bg=green fg=#343c48]"
@@ -1377,6 +1403,9 @@ combinations. We just test a few key examples.
   (testing "ssh"
     (is (= "#[bold bg=blue fg=#343c48]*2#[bold bg=brightblue fg=#343c48] ssh #[default]"
            (sut/get-window-name-format "ssh" "/path" "ssh" "@1" "%2" "*" "3" "1" "k0" "k0"))))
+  (testing "emacs"
+    (is (= "#[bg=black fg=white]  #[bg=black fg=white] e [syscfg:emacs.org] #[default]"
+           (sut/get-window-name-format "emacsclient" "/path" "emacsclient" "@1" "%2" "" "1" "0" "k0" "syscfg:emacs.org"))))
   (testing "other-command"
     (is (= "#[bold bg=green fg=#343c48]*2#[bold bg=brightgreen fg=#343c48] some-command #[default]"
            (sut/get-window-name-format "some-command" "/path" "some-command" "@1" "%2" "*" "3" "1" "k0" "k0")))))

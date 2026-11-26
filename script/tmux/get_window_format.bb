@@ -107,6 +107,27 @@
       {:style1 "#[bg=black fg=yellow]"
        :style2 "#[bg=black fg=yellow]"})
 
+    :emacs
+    (if is-current-window?
+      {:style1 "#[bold bg=white fg=#343c48]"
+       :style2 "#[bold bg=brightwhite fg=#343c48]"}
+      {:style1 "#[bg=black fg=white]"
+       :style2 "#[bg=black fg=white]"})
+
+    :claude
+    (if is-current-window?
+      {:style1 "#[bold bg=red fg=#343c48]"
+       :style2 "#[bold bg=brightred fg=#343c48]"}
+      {:style1 "#[bg=black fg=red]"
+       :style2 "#[bg=black fg=red]"})
+
+    :tig
+    (if is-current-window?
+      {:style1 "#[bold bg=blue fg=#343c48]"
+       :style2 "#[bold bg=brightblue fg=#343c48]"}
+      {:style1 "#[bg=black fg=blue]"
+       :style2 "#[bg=black fg=blue]"})
+
     (if is-current-window?
       {:style1 "#[bold bg=green fg=#343c48]"
        :style2 "#[bold bg=brightgreen fg=#343c48]"}
