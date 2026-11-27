@@ -80,6 +80,13 @@
                                  pane-current-path)))
       pane-current-command)))
 
+(defn label-window-name
+  [label
+   name]
+  (if (str/blank? label)
+    name
+    (format "[%s] %s" label name)))
+
 (defn get-window-style
   [window-type
    is-current-window?]
@@ -135,6 +142,7 @@
     window-panes
     is-current-window
     host-short
+    label
     & [pane-title]]
   (let [window-flags-str (if (= "" window-flags)
                            " "
@@ -146,14 +154,15 @@
         window-type (get-window-type window-name pane-current-command)
         current-window? (= "1" is-current-window)
         {:keys [style1 style2]} (get-window-style window-type current-window?)
-        name (get-modified-window-name window-type
-                                       window-name
-                                       window-id
-                                       pane-id
-                                       pane-current-command
-                                       pane-current-path
-                                       host-short
-                                       pane-title)]
+        name (label-window-name (subs label 1) ;
+                                (get-modified-window-name window-type
+                                                          window-name
+                                                          window-id
+                                                          pane-id
+                                                          pane-current-command
+                                                          pane-current-path
+                                                          host-short
+                                                          pane-title))]
     (format "%s%s%s%s %s #[default]"
             style1
             window-flags-str
@@ -162,8 +171,8 @@
             name)))
 
 (defn -main [& args]
-  (when-not (<= 9 (count args) 10)
-    (println (format "Need 9 or 10 arguments; got %d." (count args)))
+  (when-not (<= 10 (count args) 11)
+    (println (format "Need 10 or 11 arguments; got %d." (count args)))
     (System/exit 1))
   (println (apply get-window-name-format args)))
 (when (= *file* (System/getProperty "babashka.file"))

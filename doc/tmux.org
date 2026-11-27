@@ -162,6 +162,7 @@ session.
 <<keybindings-sessions>>
 <<keybindings-window-create>>
 <<keybindings-window-navigate>>
+<<keybindings-window-label>>
 <<keybindings-pane-create>>
 <<keybindings-pane-navigate>>
 <<keybindings-pane-move>>
@@ -197,6 +198,21 @@ Navigate across windows.
 #+begin_src conf
 bind-key -T root         C-M-h      previous-window
 bind-key -T root         C-M-l      next-window
+#+end_src
+
+Give the current window a [[f:label-window-name][label]], or change or remove its label. The prompt
+starts out with the current label, and an empty answer clears it. The command
+is in braces, so tmux parses it once when it reads this file, and then puts the
+answer in place of ~%%~ without parsing it again. So a label like
+~don't "touch" $HOME~ is kept just as we typed it. (In a quoted command, tmux
+would parse the answer along with it, and we'd have to escape it with ~%%%~,
+which still expands ~$HOME~.)
+
+#+name: keybindings-window-label
+#+begin_src conf
+bind-key -T root         C-M-r      command-prompt -p "label:" -I "#{@label}" {
+    set -w @label "%%"
+}
 #+end_src
 
 **** Panes
@@ -830,6 +846,13 @@ instead of single quotes like the others, because programs set it to whatever
 they like. Claude Code puts its task summary there, so a title such as "Fix
 user's bug" would end a single-quoted argument early and break the command.
 
+The window's [[f:label-window-name][label]] (the ~@label~ window option) comes just before the
+pane title, and we quote it with ~q:~ too, because we can type anything into
+it. But ~q:~ turns an empty string into no argument at all, and only the last
+argument may go missing, or the script couldn't tell which one did. So we put
+~_~ in front of the label, which keeps the argument there even for a window
+without a label, and the script [[(label-drop-underscore)][drops the ~_~]] again.
+
 See https://stackoverflow.com/a/68043814/437583 for the inspiration.
 
 #+name: appearance-windows-automatic-naming
@@ -846,6 +869,7 @@ set -g automatic-rename-format \
     '#{window_panes}'\
     0\
     '#{host_short}'\
+    _#{q:@label}\
     #{q:pane_title})"
 #+end_src
 
@@ -864,6 +888,7 @@ set -gw window-status-current-format \
     '#{window_panes}'\
     1\
     '#{host_short}'\
+    _#{q:@label}\
     #{q:pane_title})"
 set -gw window-status-format \
     "#(~/syscfg/script/tmux/get_window_format.bb \
@@ -876,6 +901,7 @@ set -gw window-status-format \
     '#{window_panes}'\
     0\
     '#{host_short}'\
+    _#{q:@label}\
     #{q:pane_title})"
 #+end_src
 
@@ -1001,6 +1027,7 @@ however for simplicity we just call this the window name here.
 <<f:claude-session-name>>
 <<f:find-repo-root>>
 <<f:get-modified-window-name>>
+<<f:label-window-name>>
 <<f:get-window-style>>
 <<f:get-window-name-format>>
 <<f:main>>
@@ -1233,6 +1260,43 @@ submodule, so we accept either.
         (fs/delete-tree root)))))
 #+end_src
 
+**** Window label
+
+A window can have a label that we choose ourselves, which goes in front of the
+name that the rest of this script works out, as in ~[notes] t (\~s)~. It's for
+telling apart windows that would otherwise look the same, like two shells in
+one directory. We set it with [[keybindings-window-label][~C-M-r~]].
+
+The label is in the ~@label~ window option (an option whose name starts with
+~@~ is ours, and tmux leaves it alone). We don't keep it in the window name,
+because automatic renaming replaces the name every second. Renaming the window
+ourselves would stop that, and then the name would stop following the active
+pane. An option on the window lasts as long as the window does, no matter which
+panes come and go in it.
+
+The label is in brackets, and that is why the names above put the project in
+parentheses, so that the two parts don't look alike.
+
+#+name: f:label-window-name
+#+begin_src clojure
+(defn label-window-name
+  [label
+   name]
+  (if (str/blank? label)
+    name
+    (format "[%s] %s" label name)))
+#+end_src
+
+***** Test
+
+#+name: t:label-window-name
+#+begin_src clojure
+(deftest label-window-name
+  (is (= "~/s" (sut/label-window-name "" "~/s")))
+  (is (= "~/s" (sut/label-window-name " " "~/s")))
+  (is (= "[notes] t (~/s)" (sut/label-window-name "notes" "t (~/s)"))))
+#+end_src
+
 **** Colors for window types
 
 Each window type gets its own color, so that we can find a window by what's in
@@ -1322,10 +1386,12 @@ window renaming]]:
 The =is-current-window= is a boolean "1" or "0" we denote ourselves (to save
 =get-window-name-format= the trouble of figuring out what the active window is).
 
-After that come two more:
+After that come three more:
 
   - host-short :: the host name, which is what tmux uses as a pane's title
     until a program sets one
+
+  - label :: the window's [[f:label-window-name][label]] with ~_~ in front of it
 
   - pane-title :: the title the program in the pane set for its terminal
 
@@ -1344,6 +1410,7 @@ into nothing at all, not ~''~, so that the script gets one argument fewer.
     window-panes
     is-current-window
     host-short
+    label
     & [pane-title]]
   (let [window-flags-str (if (= "" window-flags)
                            " "
@@ -1355,14 +1422,15 @@ into nothing at all, not ~''~, so that the script gets one argument fewer.
         window-type (get-window-type window-name pane-current-command)
         current-window? (= "1" is-current-window)
         {:keys [style1 style2]} (get-window-style window-type current-window?)
-        name (get-modified-window-name window-type
-                                       window-name
-                                       window-id
-                                       pane-id
-                                       pane-current-command
-                                       pane-current-path
-                                       host-short
-                                       pane-title)]
+        name (label-window-name (subs label 1) ; (ref:label-drop-underscore)
+                                (get-modified-window-name window-type
+                                                          window-name
+                                                          window-id
+                                                          pane-id
+                                                          pane-current-command
+                                                          pane-current-path
+                                                          host-short
+                                                          pane-title))]
     (format "%s%s%s%s %s #[default]"
             style1
             window-flags-str
@@ -1381,21 +1449,24 @@ combinations. We just test a few key examples.
 (deftest get-window-name-format
   (testing "zsh shows path"
     (is (= "#[bold bg=yellow fg=#343c48]*2#[bold bg=brightyellow fg=#343c48] /path #[default]"
-           (sut/get-window-name-format "zsh" "/path" "zsh" "@1" "%2" "*" "3" "1" "k0" "k0"))))
+           (sut/get-window-name-format "zsh" "/path" "zsh" "@1" "%2" "*" "3" "1" "k0" "_" "k0"))))
   (testing "ssh"
     (is (= "#[bold bg=blue fg=#343c48]*2#[bold bg=brightblue fg=#343c48] ssh #[default]"
-           (sut/get-window-name-format "ssh" "/path" "ssh" "@1" "%2" "*" "3" "1" "k0" "k0"))))
+           (sut/get-window-name-format "ssh" "/path" "ssh" "@1" "%2" "*" "3" "1" "k0" "_" "k0"))))
   (testing "emacs"
     (is (= "#[bg=black fg=white]  #[bg=black fg=white] e (syscfg:emacs.org) #[default]"
-           (sut/get-window-name-format "emacsclient" "/path" "emacsclient" "@1" "%2" "" "1" "0" "k0" "syscfg:emacs.org"))))
+           (sut/get-window-name-format "emacsclient" "/path" "emacsclient" "@1" "%2" "" "1" "0" "k0" "_" "syscfg:emacs.org"))))
+  (testing "label"
+    (is (= "#[bold bg=yellow fg=#343c48]*2#[bold bg=brightyellow fg=#343c48] [notes] /path #[default]"
+           (sut/get-window-name-format "zsh" "/path" "zsh" "@1" "%2" "*" "3" "1" "k0" "_notes" "k0"))))
   (testing "other-command"
     (is (= "#[bold bg=green fg=#343c48]*2#[bold bg=brightgreen fg=#343c48] some-command #[default]"
-           (sut/get-window-name-format "some-command" "/path" "some-command" "@1" "%2" "*" "3" "1" "k0" "k0")))))
+           (sut/get-window-name-format "some-command" "/path" "some-command" "@1" "%2" "*" "3" "1" "k0" "_" "k0")))))
 #+end_src
 
 *** Main
 
-We expect 9 or 10 arguments:
+We expect 10 or 11 arguments:
 
   1) pane-current-command
 
@@ -1415,13 +1486,15 @@ We expect 9 or 10 arguments:
 
   9) host-short
 
-  10) pane-title (missing if it's empty)
+  10) label (with ~_~ in front)
+
+  11) pane-title (missing if it's empty)
 
 #+name: f:main
 #+begin_src clojure
 (defn -main [& args]
-  (when-not (<= 9 (count args) 10)
-    (println (format "Need 9 or 10 arguments; got %d." (count args)))
+  (when-not (<= 10 (count args) 11)
+    (println (format "Need 10 or 11 arguments; got %d." (count args)))
     (System/exit 1))
   (println (apply get-window-name-format args)))
 (when (= *file* (System/getProperty "babashka.file"))
@@ -1444,6 +1517,7 @@ interact with the file in the CLI and also the REPL.
 <<t:get-modified-window-name>>
 <<t:claude-session-name>>
 <<t:find-repo-root>>
+<<t:label-window-name>>
 <<t:get-window-name-format>>
 #+end_src
 

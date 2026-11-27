@@ -39,16 +39,24 @@
       (finally
         (fs/delete-tree root)))))
 
+(deftest label-window-name
+  (is (= "~/s" (sut/label-window-name "" "~/s")))
+  (is (= "~/s" (sut/label-window-name " " "~/s")))
+  (is (= "[notes] t (~/s)" (sut/label-window-name "notes" "t (~/s)"))))
+
 (deftest get-window-name-format
   (testing "zsh shows path"
     (is (= "#[bold bg=yellow fg=#343c48]*2#[bold bg=brightyellow fg=#343c48] /path #[default]"
-           (sut/get-window-name-format "zsh" "/path" "zsh" "@1" "%2" "*" "3" "1" "k0" "k0"))))
+           (sut/get-window-name-format "zsh" "/path" "zsh" "@1" "%2" "*" "3" "1" "k0" "_" "k0"))))
   (testing "ssh"
     (is (= "#[bold bg=blue fg=#343c48]*2#[bold bg=brightblue fg=#343c48] ssh #[default]"
-           (sut/get-window-name-format "ssh" "/path" "ssh" "@1" "%2" "*" "3" "1" "k0" "k0"))))
+           (sut/get-window-name-format "ssh" "/path" "ssh" "@1" "%2" "*" "3" "1" "k0" "_" "k0"))))
   (testing "emacs"
     (is (= "#[bg=black fg=white]  #[bg=black fg=white] e (syscfg:emacs.org) #[default]"
-           (sut/get-window-name-format "emacsclient" "/path" "emacsclient" "@1" "%2" "" "1" "0" "k0" "syscfg:emacs.org"))))
+           (sut/get-window-name-format "emacsclient" "/path" "emacsclient" "@1" "%2" "" "1" "0" "k0" "_" "syscfg:emacs.org"))))
+  (testing "label"
+    (is (= "#[bold bg=yellow fg=#343c48]*2#[bold bg=brightyellow fg=#343c48] [notes] /path #[default]"
+           (sut/get-window-name-format "zsh" "/path" "zsh" "@1" "%2" "*" "3" "1" "k0" "_notes" "k0"))))
   (testing "other-command"
     (is (= "#[bold bg=green fg=#343c48]*2#[bold bg=brightgreen fg=#343c48] some-command #[default]"
-           (sut/get-window-name-format "some-command" "/path" "some-command" "@1" "%2" "*" "3" "1" "k0" "k0")))))
+           (sut/get-window-name-format "some-command" "/path" "some-command" "@1" "%2" "*" "3" "1" "k0" "_" "k0")))))
