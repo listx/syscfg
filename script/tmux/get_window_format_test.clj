@@ -16,8 +16,8 @@
   (is (= "ssh" (sut/get-modified-window-name :ssh "ssh" "@1" "%2" "some-command" "/path/foo/bar" "k0" "k0")))
   (is (= "ssh->remote" (sut/get-modified-window-name :ssh "ssh->remote" "@1" "%2" "some-command" "/path/foo/bar" "k0" "k0")))
   (is (= "/path/foo/bar" (sut/get-modified-window-name :zsh "ssh" "@1" "%2" "some-command" "/path/foo/bar" "k0" "k0")))
-  (is (= "e [syscfg:emacs.org]" (sut/get-modified-window-name :emacs "emacsclient" "@1" "%2" "emacsclient" "/path/foo/bar" "k0" "syscfg:emacs.org")))
-  (is (= "e [/path/foo/bar]" (sut/get-modified-window-name :emacs "emacsclient" "@1" "%2" "emacsclient" "/path/foo/bar" "k0" "k0")))
+  (is (= "e (syscfg:emacs.org)" (sut/get-modified-window-name :emacs "emacsclient" "@1" "%2" "emacsclient" "/path/foo/bar" "k0" "syscfg:emacs.org")))
+  (is (= "e (/path/foo/bar)" (sut/get-modified-window-name :emacs "emacsclient" "@1" "%2" "emacsclient" "/path/foo/bar" "k0" "k0")))
   (is (= "some-command" (sut/get-modified-window-name :other-command "" "@1" "%2" "some-command" "/path/foo/bar" "k0" "k0"))))
 
 (deftest claude-session-name
@@ -47,7 +47,7 @@
     (is (= "#[bold bg=blue fg=#343c48]*2#[bold bg=brightblue fg=#343c48] ssh #[default]"
            (sut/get-window-name-format "ssh" "/path" "ssh" "@1" "%2" "*" "3" "1" "k0" "k0"))))
   (testing "emacs"
-    (is (= "#[bg=black fg=white]  #[bg=black fg=white] e [syscfg:emacs.org] #[default]"
+    (is (= "#[bg=black fg=white]  #[bg=black fg=white] e (syscfg:emacs.org) #[default]"
            (sut/get-window-name-format "emacsclient" "/path" "emacsclient" "@1" "%2" "" "1" "0" "k0" "syscfg:emacs.org"))))
   (testing "other-command"
     (is (= "#[bold bg=green fg=#343c48]*2#[bold bg=brightgreen fg=#343c48] some-command #[default]"

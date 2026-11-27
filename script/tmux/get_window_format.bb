@@ -65,15 +65,15 @@
     (case window-type
       :ssh (if (str/starts-with? window-name "ssh") window-name "ssh")
       :zsh (pwd)
-      :emacs (format "e [%s]" (if (or (str/blank? pane-title)
+      :emacs (format "e (%s)" (if (or (str/blank? pane-title)
                                       (= host-short pane-title))
                                 (pwd)
                                 pane-title))
-      :claude (format "c [%s]" (or (claude-session-name
+      :claude (format "c (%s)" (or (claude-session-name
                                     (read-claude-sessions)
                                     pane-id)
                                    (pwd)))
-      :tig (format "t [%s]" (get-tmux-pane-pwd-cached
+      :tig (format "t (%s)" (get-tmux-pane-pwd-cached
                              window-id
                              pane-id
                              (or (find-repo-root pane-current-path)
