@@ -1010,24 +1010,20 @@ however for simplicity we just call this the window name here.
 
 **** Window type
 
-There are 7 types of windows based on what the currently active pane inside
+There are 6 types of windows based on what the currently active pane inside
 that window is doing:
 
-  1) manually named (windows that were manually named (via =tmux rename-window=)
-     as =mnw->NAME= where the =mnw->= is our own magic prefix denoting such a
-     window),
+  1) ssh (typically a remote (nested) =tmux= session),
 
-  2) ssh (typically a remote (nested) =tmux= session),
+  2) zsh (our interactive shell of choice),
 
-  3) zsh (our interactive shell of choice),
+  3) emacs (~emacsclient~),
 
-  4) emacs (~emacsclient~),
+  4) claude (Claude Code),
 
-  5) claude (Claude Code),
+  5) tig, and
 
-  6) tig, and
-
-  7) other (where the window is running some other command).
+  6) other (where the window is running some other command).
 
 We often have several Emacs, Claude, and tig windows open at once, one or two for
 each project, and their command names alone don't tell them apart. So these get
@@ -1040,7 +1036,6 @@ project.
   [window-name
    pane-current-command]
   (cond
-    (str/starts-with? window-name "mnw->") :manually-named
     (or (str/starts-with? window-name "ssh")
         (= pane-current-command "ssh")) :ssh
     (= pane-current-command "zsh") :zsh
@@ -1062,8 +1057,7 @@ project.
   (is (= :ssh (sut/get-window-type "" "ssh")))
   (is (= :emacs (sut/get-window-type "emacsclient" "emacsclient")))
   (is (= :claude (sut/get-window-type "claude" "claude")))
-  (is (= :tig (sut/get-window-type "tig" "tig")))
-  (is (= :manually-named (sut/get-window-type "mnw->foo" "some-command"))))
+  (is (= :tig (sut/get-window-type "tig" "tig"))))
 #+end_src
 
 **** Shorten PWD
@@ -1129,7 +1123,6 @@ what it's working on.
    pane-title]
   (let [pwd #(get-tmux-pane-pwd-cached window-id pane-id pane-current-path)]
     (case window-type
-      :manually-named (subs window-name 5)
       :ssh (if (str/starts-with? window-name "ssh") window-name "ssh")
       :zsh (pwd)
       :emacs (format "e [%s]" (if (or (str/blank? pane-title)
@@ -1153,7 +1146,6 @@ what it's working on.
 #+name: t:get-modified-window-name
 #+begin_src clojure
 (deftest get-modified-window-name
-  (is (= "foo" (sut/get-modified-window-name :manually-named "mnw->foo" "@1" "%2" "some-command" "/path/foo/bar" "k0" "k0")))
   (is (= "ssh" (sut/get-modified-window-name :ssh "ssh" "@1" "%2" "some-command" "/path/foo/bar" "k0" "k0")))
   (is (= "ssh->remote" (sut/get-modified-window-name :ssh "ssh->remote" "@1" "%2" "some-command" "/path/foo/bar" "k0" "k0")))
   (is (= "/path/foo/bar" (sut/get-modified-window-name :zsh "ssh" "@1" "%2" "some-command" "/path/foo/bar" "k0" "k0")))
@@ -1258,13 +1250,6 @@ bar.
   [window-type
    is-current-window?]
   (case window-type
-    :manually-named
-    (if is-current-window?
-      {:style1 "#[bold bg=cyan fg=#343c48]"
-       :style2 "#[bold bg=brightcyan fg=#343c48]"}
-      {:style1 "#[bg=black fg=cyan]"
-       :style2 "#[bg=black fg=cyan]"})
-
     :ssh
     (if is-current-window?
       {:style1 "#[bold bg=blue fg=#343c48]"
@@ -1394,9 +1379,6 @@ combinations. We just test a few key examples.
 #+name: t:get-window-name-format
 #+begin_src clojure
 (deftest get-window-name-format
-  (testing "manually named window"
-    (is (= "#[bold bg=cyan fg=#343c48]*2#[bold bg=brightcyan fg=#343c48] foo #[default]"
-           (sut/get-window-name-format "zsh" "/path/foo/bar" "mnw->foo" "@1" "%2" "*" "3" "1" "k0" "k0"))))
   (testing "zsh shows path"
     (is (= "#[bold bg=yellow fg=#343c48]*2#[bold bg=brightyellow fg=#343c48] /path #[default]"
            (sut/get-window-name-format "zsh" "/path" "zsh" "@1" "%2" "*" "3" "1" "k0" "k0"))))

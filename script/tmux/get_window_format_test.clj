@@ -10,11 +10,9 @@
   (is (= :ssh (sut/get-window-type "" "ssh")))
   (is (= :emacs (sut/get-window-type "emacsclient" "emacsclient")))
   (is (= :claude (sut/get-window-type "claude" "claude")))
-  (is (= :tig (sut/get-window-type "tig" "tig")))
-  (is (= :manually-named (sut/get-window-type "mnw->foo" "some-command"))))
+  (is (= :tig (sut/get-window-type "tig" "tig"))))
 
 (deftest get-modified-window-name
-  (is (= "foo" (sut/get-modified-window-name :manually-named "mnw->foo" "@1" "%2" "some-command" "/path/foo/bar" "k0" "k0")))
   (is (= "ssh" (sut/get-modified-window-name :ssh "ssh" "@1" "%2" "some-command" "/path/foo/bar" "k0" "k0")))
   (is (= "ssh->remote" (sut/get-modified-window-name :ssh "ssh->remote" "@1" "%2" "some-command" "/path/foo/bar" "k0" "k0")))
   (is (= "/path/foo/bar" (sut/get-modified-window-name :zsh "ssh" "@1" "%2" "some-command" "/path/foo/bar" "k0" "k0")))
@@ -42,9 +40,6 @@
         (fs/delete-tree root)))))
 
 (deftest get-window-name-format
-  (testing "manually named window"
-    (is (= "#[bold bg=cyan fg=#343c48]*2#[bold bg=brightcyan fg=#343c48] foo #[default]"
-           (sut/get-window-name-format "zsh" "/path/foo/bar" "mnw->foo" "@1" "%2" "*" "3" "1" "k0" "k0"))))
   (testing "zsh shows path"
     (is (= "#[bold bg=yellow fg=#343c48]*2#[bold bg=brightyellow fg=#343c48] /path #[default]"
            (sut/get-window-name-format "zsh" "/path" "zsh" "@1" "%2" "*" "3" "1" "k0" "k0"))))

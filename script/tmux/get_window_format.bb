@@ -8,7 +8,6 @@
   [window-name
    pane-current-command]
   (cond
-    (str/starts-with? window-name "mnw->") :manually-named
     (or (str/starts-with? window-name "ssh")
         (= pane-current-command "ssh")) :ssh
     (= pane-current-command "zsh") :zsh
@@ -64,7 +63,6 @@
    pane-title]
   (let [pwd #(get-tmux-pane-pwd-cached window-id pane-id pane-current-path)]
     (case window-type
-      :manually-named (subs window-name 5)
       :ssh (if (str/starts-with? window-name "ssh") window-name "ssh")
       :zsh (pwd)
       :emacs (format "e [%s]" (if (or (str/blank? pane-title)
@@ -86,13 +84,6 @@
   [window-type
    is-current-window?]
   (case window-type
-    :manually-named
-    (if is-current-window?
-      {:style1 "#[bold bg=cyan fg=#343c48]"
-       :style2 "#[bold bg=brightcyan fg=#343c48]"}
-      {:style1 "#[bg=black fg=cyan]"
-       :style2 "#[bg=black fg=cyan]"})
-
     :ssh
     (if is-current-window?
       {:style1 "#[bold bg=blue fg=#343c48]"
